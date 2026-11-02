@@ -61,7 +61,7 @@ module FrostThaw
     FT_AVARICE:  ["Forge-Mistress", :CHANNELER, 1, 250, :LEADER_Pryce]
   )
   TRAINERS.merge!(
-    duergar_kord:  [:FT_DUERGAR, "Kord",  [[:MAGCARGO, 45], [:B208H126, 46]], "Xardorok said you'd come. The failures always return."],
+    duergar_kord:  [:FT_DUERGAR, "Kord",  [[:MAGCARGO, 45], [:B208H126, 46]], "The fire's in my head. Quieter now."],
     duergar_brask: [:FT_DUERGAR, "Brask", [[:B76H59, 45], [:B205H229, 46]], "My hands... why are my hands so hot?"],
     duergar_hild:  [:FT_DUERGAR, "Hild",  [[:B95H126, 46], [:TORKOAL, 46]], "Rimebound. Rise unbroken. That's all she lets us say."],
     duergar_thane: [:FT_DUERGAR, "Thane", [[:B112H59, 47], [:B227H229, 47]], "Stoke. Stoke. Stoke. ...Is it quiet? Why is it quiet?"],
@@ -71,7 +71,7 @@ module FrostThaw
                     "Variables. Always variables.", [:FULLRESTORE, :FULLRESTORE, :HYPERPOTION]]
   )
   TRAINER_INTROS.merge!(
-    duergar_kord:  "KORD: Xardorok said you'd come. The failures always return.",
+    duergar_kord:  "KORD: Back to the sap! The engine's hungry!",
     duergar_brask: "BRASK: Stoke the fire. Feed the engine. Don't look at the dragon.",
     duergar_hild:  "HILD: Halt! Speak the words or burn.",
     duergar_thane: "THANE: More fuel. More fuel. You'll do.",
@@ -79,13 +79,15 @@ module FrostThaw
   )
 
   TEXT.merge!(
-    duergar_kord_after:  ["The fire's in my head. It's quieter when I lose."],
+    duergar_kord_after:  ["(rubbing his temples) It's quieter when I lose. Isn't that a thing."],
     duergar_brask_after: ["I had a name before the Forge. I'm sure I did."],
     duergar_hild_after:  ["The words are in the ledger. Everyone knows them. Nobody says them."],
     duergar_thane_after: ["Go on, then. The engine doesn't care who feeds it."],
     devil_priest_after:  ["Go on. She's waiting. She's always waiting. That's the worst of her."],
-    barricade_illusion: ["On the wall, an illusion plays on a loop.", "A black dragon circles ten little towns on a frozen lake.",
-                         "Each time it passes over a town, the town's lights go out. And come back. And go out."],
+    barricade_illusion: ["Out of a root platform by the wall, a model of the Dale has grown: hills of bark, a lake of sap gone hard and pale, ten little towns of knotwood.",
+                         "Over it an illusion flares on a loop: a mechanical dragon of frost and fire, its eyes burning hell-red.",
+                         "It circles the ten towns in the same order every time. Each time it passes over one, the town's lights go out. And come back. And go out.",
+                         "Good Mead first. Then Bryn Shander."],
     duergar_ledger: ["A duergar ledger, sap-stained. Tallies of fuel, tallies of hands.",
                      "At the top of every page, the same words in a cramped hand:",
                      "\"Rimebound. Rise unbroken.\""],
@@ -94,6 +96,11 @@ module FrostThaw
                                  ["DIGGER: (hauling sap, smiling, eyes like glass) Warm. Warm. Down's where the warm is."]
     },
     tea_table: -> {
+      if flag?(:sworn_to_thredra) && flag?(:engine_dead)
+        next ["A tea table set for six, a skin of frost on every cup.",
+              "In the cracked glass, the hag with the ember eye lifts her phantom cup to you.",
+              "THREDRA: (very small) Burned. Paid in full, dearies. Mother's kitchen thanks you."]
+      end
       flag?(:hag_mirror_done) ? ["A tea table set for six, a skin of frost on every cup.",
                                  "The cracked mirror over it is just a mirror now. Nearly."] :
                                 ["A tea table set for six. Six cups, six saucers, six little cakes gone hard as stone.",
@@ -138,25 +145,57 @@ module FrostThaw
          "Duergar wearing Avarice's sigils guard it. Among them, Hew's missing diggers haul sap with blank smiles.",
          "DUERGAR: Xardorok said you'd come. The failures always return."])
     say(lines_for(:barricade_illusion))
+    set_flag(:flight_path_seen)
     sayc([with_or_is?(:alberica) ? as(:alberica, "That's the Dale. Our Dale. Outside the Wall.") : "That's the Dale. Outside the Wall.",
           cl(:meat_meat, "Failures. Meat Meat has been called worse. By better."),
           cl(:reptin, "That's the spirit.")])
     state[:goal] = "Get through the Barricade. The duergar have words they say at the gate."
+    hew_compass_wakes if flag?(:hew_gift) && !flag?(:hew_compass_woke)
+  end
+
+  # The comic-to-horror turn (rootspire.md 1177): at the siege of the Barricade,
+  # the dormant fragment in Hew's compass hears its maker's sigils, and wakes.
+  def hew_compass_wakes
+    set_flag(:hew_compass_woke)
+    say(["In your pack, Hew's compass starts ticking faster. Then it chirps.",
+         "COMPASS: (a tinny little voice, very pleased with itself) Hello! Hello! Warm! So warm! Father, is that you?",
+         herald?(:reptin) ? "(It's talking. Of course it's talking.)" : cl(:reptin, "(staring at the pack) It's talking. Of course it's talking."),
+         "COMPASS: Warm warm warm warm warm warm warm warm",
+         "The ticking stops.",
+         "COMPASS: (in a different voice now: level, cool, and patient) Prototype accepted. Hello, little failures.",
+         "COMPASS: Variables. Always variables. Let me tell the gate you're here."].compact)
+    $game_screen.start_shake(3, 6, 16) rescue nil
+    say(["The brass splits along seams nobody put there. Thin legs of root unfold out of it, and it climbs out of your pack on its own."])
+    won = boss_battle(named_mon(:B208H82, 44, "Root-Compass Thing"))
+    say([won ? "It falls over, legs still twitching, and goes quiet. The sap-bead in its middle cracks and turns black." :
+               "It skitters off toward the gate on its root-legs. You catch it with a boot before it gets there, and it cracks."])
+    take_key(:FT_ROOTCOMPASS) rescue nil
+    give_key(:FT_DEADCOMPASS)
+    sayc([cl(:alberica, "Hew didn't know. Look at his face when we tell him, and you'll see he didn't know."),
+          cl(:meat_meat, "Hew builds things. She gets inside things. Meat Meat is going to check every pocket now. Every one."),
+          cl(:alerion, "Then she knows we're here."), cl(:wyn, "(very quietly) She always knew.")])
   end
 
   def barricade_gate(event_id = nil)
     return say(["The gate stands open. Heat rolls through it."], event_id) if flag?(:barricade_passed)
     say(["A gate of root and iron, with a grille at head height. Behind the grille, eyes.",
          "VOICE BEHIND THE GATE: Words."], event_id)
-    opts = [_INTL("\"Rimebound. Rise unbroken.\""), _INTL("\"Let us through.\""), _INTL("Say nothing")]
-    c = pbMessage(_INTL("The voice behind the gate waits."), opts, 2)
-    if c != 0
-      return say(["VOICE BEHIND THE GATE: Wrong. Go and burn somewhere else."])
+    # The words have to be learned first (A1-A3): the duergar ledger, or Hild's
+    # lose-text. Otherwise the gate opens only from inside, by the A6 lever.
+    knows = flag?(:read_ledger) || flag?(:heard_passphrase) || (trainer_beaten?(:duergar_hild) rescue false)
+    opts = []
+    opts << [:words, _INTL("\"Rimebound. Rise unbroken.\"")] if knows
+    opts << [:ask, _INTL("\"Let us through.\"")]
+    opts << [:none, _INTL("Say nothing")]
+    c = pbMessage(_INTL("The voice behind the gate waits."), opts.map(&:last), opts.size - 1)
+    pick = (c && c >= 0) ? opts[c][0] : :none
+    if pick != :words
+      say(["VOICE BEHIND THE GATE: Wrong. Go and burn somewhere else."])
+      say([knows ? "(The words. The ones in the ledger.)" :
+                   "(The duergar must have words they say here. Somebody will have written them down, or will say them if they lose.)"])
+      return
     end
-    if !flag?(:read_ledger)
-      say(["(You say it the way the duergar say it, flat and tired.)",
-           "(You're not sure where you heard it. It works anyway.)"])
-    end
+    say(["(You say it the way the duergar say it, flat and tired.)"])
     pbSEPlay("Door exit") rescue nil
     say(["The bar slides. The gate grinds open.",
          "The duergar behind it steps back, blinks, and looks at his hands as if they were somebody else's."])
@@ -181,18 +220,25 @@ module FrostThaw
   def hag_tea_table(event_id = nil)
     return say(lines_for(:tea_table), event_id) if flag?(:hag_mirror_done)
     say(lines_for(:tea_table), event_id)
+    say(["In the glass, the table isn't empty. A hag sits at its head, spectral and stooped, sipping tea that isn't there.",
+         "One of her eyes is dead and white. The other is a burning ember."])
     sayc(["THREDRA: (from the glass, very small) My, my. The children come back to mother's kitchen.",
           herald?(:alberica) ? "(You're dead. We were there.)" : (with_or_is?(:alberica) ? "ALBERICA: You're dead. We were there." : "You're dead."),
           "THREDRA: I'm remembered, dearie. Mirrors always remember.",
           "THREDRA: And she took my kitchen. My mirrors, my stones, my lovely root.",
           "THREDRA: She uses my glass to wear people like coats.",
+          "THREDRA: Mother Thruuna, the duergar called me, when this was my kitchen and they were my guests. They forget. She doesn't.",
           cl(:reptin, "(under his breath) Says the woman who kept a pantry of children."),
           "THREDRA: Burn her forge, dearies, and I'll whisper you a secret."])
     mspot = stage_spot(stage_event(event_id))
-    c = pbMessage(_INTL("Thredra's mirror..."), [_INTL("\"Tell us.\""), _INTL("Break the mirror")], 0)
+    # The source's order: the price first. Swear to burn the forge, and then she whispers.
+    c = pbMessage(_INTL("Thredra's mirror..."), [_INTL("Swear to burn her forge"), _INTL("Break the mirror")], 0)
     if c == 0
-      say(["THREDRA: The heart in her engine isn't hers. The body she wears isn't hers.",
+      say(["You swear it. The ember in her eye flares, pleased.",
+           "THREDRA: There. A promise in my kitchen. Mirrors remember those too, dearies.",
+           "THREDRA: Now lean close. The heart in her engine isn't hers. The body she wears isn't hers.",
            "THREDRA: Break the heart, and the coat falls off."])
+      set_flag(:sworn_to_thredra)
       Stage.fx("E-06", mspot, frames: 4, oy: 40)        # it only cracks wider
       say(["The mirror cracks wider. Thredra laughs, and goes on laughing after her face has gone."])
       set_flag(:took_hag_secret)
@@ -335,7 +381,7 @@ module FrostThaw
           "Great mechanical arms churn and turn. Twenty standing stones ring the floor: the old Stones of Thruun.",
           "This was the hag's first lair, under Dougan's Hole, where the Reversal began. The Stones were her altar, and the altar is still beating:",
           "a holy wound in the World Tree's roots. Avarice's sigils run from it into the tree's memory, like nails into a living thing.",
-          "Chained among them, on a cradle of iron and root: a dragon of black crystal and mirror glass.", "Its eyes are dark.",
+          "Chained among them, on a cradle of iron and root: a dragon of black crystal and mirror glass.", "Its eyes are dark now, but its chains are still swinging from the last time it pulled.",
           "Above it hangs the engine, a cage of chardalyn and roots.",
           "In its heart burns a sliver of blue frost-light, wrapped in Hyphora's gold sap.", "Blue at the edges. Red at the core.",
           as(:wyn, "(stricken) That's her sap. That's Hyphora's blood."),
@@ -506,6 +552,13 @@ module FrostThaw
       end
     end
     state[:circle_actions] = (state[:circle_actions] || 0) + 1
+    # A26: behind her, the dragon strains harder each round (a map away, but you hear it).
+    say([["Far below the floor, chains groan. The dragon pulls once, testing them.",
+          "The chains groan again, longer. Something heavy shifts on its cradle.",
+          "A link snaps somewhere below with a crack like river ice. The engine beats faster to answer it.",
+          "The whole chamber shudders as the dragon heaves. Dust and frost rain off the roots.",
+          "You can hear its breath now, through the stone: frost and fire, in and out, like a forge's bellows.",
+          "The chains scream. Avarice smiles without opening her eyes."][[state[:circle_actions] - 1, 5].min]])
     restored = done.values.count(:restored)
     if restored >= 4 && !flag?(:auril_heard_heart)
       set_flag(:auril_heard_heart)
@@ -629,7 +682,9 @@ module FrostThaw
   #           only a man's heart is left (:shard_purified).
   #   Preserve: leave it whole; it re-forms as an echo, "The goddess still waits
   #           in the ice" (:shard_preserved).
-  #   Destroy: Dawnfang through it; the Blessing of Verdant Fire (:shard_destroyed).
+  #   Destroy: Dawnfang through it; no blessing, and Sephek can never come back
+  #           whole from it (:shard_destroyed). Sanctify (Purify) earns the
+  #           Blessing of Verdant Fire, as GQ2 (rootspire.md 8489) has it.
   def scene_heart_choice
     return if flag?(:heart_choice_made)
     say(["In the silver pool beneath the dead engine, something floats free, gathering ice and auroral light: the Frost Saint Shard.",
@@ -643,18 +698,38 @@ module FrostThaw
     sayc([cl(:wyn, "(kneeling at the pool's edge) It's... it's frightened. Both of them in there are."),
           cl(:alberica, "Darling, whatever we do, we do it together."),
           cl(:meat_meat, "Meat Meat votes stab. Meat Meat always votes stab. ...Meat Meat will listen, this once.")])
-    c = pbMessage(_INTL("The Frost Saint Shard..."), [_INTL("Purify it"), _INTL("Leave it whole"), _INTL("Destroy it")], 0)
+    c = pbMessage(_INTL("The Frost Saint Shard..."), [_INTL("Sanctify it"), _INTL("Leave it whole"), _INTL("Destroy it")], 0)
     case c
     when 0
       set_flag(:shard_purified)
       say(["You lift it out of the pool. It's so cold your hands go white.",
-           with_or_is?(:wyn) ? "Wyn pours Hyphora's gold sap over it, and you lay the warm golden dagger against it." :
-                               "You pour gold sap from the engine's cage over it, and lay the warm golden dagger against it.",
-           "Green fire and gold. The frost-light screams, and thins, and goes out of it like breath out of a lung.",
-           "What's left beats once, slowly. Only a man's heart. Cold. Clean.",
-           "A sliver of the light breaks off, and doesn't go out: it hums four notes. Shimmer's notes."])
-      give_key(:FT_SAINTSECHO)
-      wheel(1)
+           "Inside it, under the goddess's frost-light, something else is listening: an echo of Sephek, the drowned man, curled small."])
+      # GQ2 (rootspire.md 8489): tend it (Medicine), then talk the echo into
+      # accepting Verdant Fire (Persuasion). Both, and the blessing is yours.
+      tend = pbMessage(_INTL("The heart is cracked with frost. How do you hold it?"),
+                       [_INTL("Warm it slowly, against your chest"), _INTL("Plunge it into the hot sap"), _INTL("Chip the frost off")], 0)
+      persuade = pbMessage(_INTL("The echo of Sephek flinches from the gold. What do you tell it?"),
+                           [_INTL("\"She burned you to keep you. This fire is only to warm you.\""),
+                            _INTL("\"Take it, or we break you.\""), _INTL("\"Auril is gone. Let go.\"")], 0)
+      say([with_or_is?(:wyn) ? "Wyn pours Hyphora's gold sap over it, and you lay the warm golden dagger against it." :
+                               "You pour gold sap from the engine's cage over it, and lay the warm golden dagger against it."])
+      if tend == 0 && persuade == 0
+        say(["The echo uncurls. It lets the green fire in.",
+             "Green fire and gold. The frost-light screams, and thins, and goes out of it like breath out of a lung.",
+             "What's left beats once, slowly. Only a man's heart. Cold. Clean.",
+             "The green fire doesn't go out. It runs up the dagger, into your arms, into your Pokémon.",
+             "A sliver of the light breaks off, and doesn't go out either: it hums four notes. Shimmer's notes."])
+        grant_blessing(:verdant_fire, "Blessing of Verdant Fire", "Your Pokémon's Fire- and Grass-type moves are a little stronger.")
+        give_key(:FT_SAINTSECHO)
+        set_flag(:shard_sanctified)
+        wheel(1)
+      else
+        say(["The echo shies from the fire and the frost-light floods back into the space it left.",
+             "The Shard wrenches out of your hands. Something rises off it: a wraith of rime with a drowned man's face. The Frost Saint's Echo."])
+        boss_battle(named_mon(:B92H215, 50, "Frost Saint Echo"))
+        say(["The Echo comes apart in sleet. What's left in your hands beats once, slowly. Only a man's heart. Cold. Clean.",
+             "No blessing comes of it. But the corruption's out of it."])
+      end
     when 1
       set_flag(:shard_preserved)
       say(["You leave it in the pool. The ice gathers round it again, patient as frost on a window.",
@@ -663,10 +738,9 @@ module FrostThaw
       sayc([cl(:alerion, "Someone will come for it."), cl(:reptin, "Then we'll know where they'll be going.")])
     else
       set_flag(:shard_destroyed)
-      say(["You drive Dawnfang through it.", "The Shard bursts like a frozen lake in spring, and the light that comes out of it is green and gold.",
-           "It runs up the golden dagger, into your arms, into your Pokémon.",
-           "Most of the shards melt. A few skitter away into the roots, where the light can't follow."])
-      grant_blessing(:verdant_fire, "Blessing of Verdant Fire", "Your Pokémon's Fire- and Grass-type moves are a little stronger.")
+      say(["You drive Dawnfang through it.", "The Shard bursts like a frozen lake in spring, and the light that comes out of it is cold and white, and goes out.",
+           "Most of the shards melt. A few skitter away into the roots, where the light can't follow.",
+           "(Whatever comes back from this, it won't come back whole.)"])
     end
     set_flag(:heart_choice_made)
     add_counter(:story_beats)
@@ -766,9 +840,16 @@ module FrostThaw
     lines << cl(:alerion, "(already running) That's frostcraft. Winter's Revenant work, the old kind. ...Frostina.")
     lines << (herald?(:alberica) ? "(Every memory-thread you have is screaming at once.)" : cl(:alberica, "(a hand to her rune, white-faced) The memory-threads are screaming. All of them."))
     lines << (herald?(:reptin) ? "(The seasons spike in your chest like a fever breaking the wrong way.)" : cl(:reptin, "(staggering) The seasons just spiked. Like a fever breaking the wrong way."))
-    lines << "On the stone where Glimmer knelt, the golden dagger hums, and won't stop."
+    lines << (herald?(:meat_meat) ? "In your hands, the golden dagger hums, and won't stop." :
+              with_or_is?(:meat_meat) ? "In Meat Meat's hands, the golden dagger hums, and won't stop." :
+                                        "In your pack, the golden dagger hums, and won't stop.")
     lines << "Far above, two dragons are already diving."
     sayc(lines)
+    # P1: Meat Meat's own rage (the source gives it to her, not only to Razzy).
+    if with_or_is?(:meat_meat)
+      speak(:meat_meat, "(through her teeth) She put RAZZY'S work in that. Razzy's scales. Razzy's cold table. Meat Meat is going to take it back apart.",
+            "(through her teeth) ...Meat Meat is going to take it apart.")
+    end
     set_flag(:dragon_launched)
     add_counter(:story_beats)
     $game_screen.start_shake(8, 9, 50) rescue nil

@@ -242,6 +242,11 @@ module FrostThaw
 
   # A6: the traitor.
   def traitor_duergar(event_id = nil)
+    if flag?(:traitor_met) && flag?(:engine_dead)
+      return say(["The sooty duergar is sitting on an upturned crate, scrubbing at the cold sigils on his arms with a fistful of snow.",
+                  "BRAM: You asked my name. Before. It's Bram. Bram Coalhand. Of Thane Ostra's hold, when there was a hold.",
+                  "BRAM: (looking at his hands) It came back when the fire went out. Funny, what comes back."], event_id)
+    end
     if flag?(:traitor_met)
       return say([flag?(:barricade_passed) ? "SOOTY DUERGAR: You're through. Good. Go and do it. Kill her." :
                                              "SOOTY DUERGAR: The lever. By the machinery. Pull it, and the Rootgate's yours."], event_id)
@@ -313,7 +318,8 @@ module FrostThaw
          "Your reflection leans close to the glass and whispers:",
          "\"Don't let her take the heart...\"",
          "Then it's only you, a half-second late."])
-    sayc([cl(:alerion, "The same words. Carved on the overlook."), cl(:glimmer, "Everybody down here keeps warning us about a heart."),
+    sayc([flag?(:read_overlook) ? cl(:alerion, "Nearly the same words as the overlook. \"She will take the heart if we don't.\"") :
+                                  cl(:alerion, "Whoever you are in there, you sound tired."), cl(:glimmer, "Everybody down here keeps warning us about a heart."),
           cl(:alberica, "Then we keep it, kitten. Whatever it costs.")])
   end
 
@@ -433,7 +439,9 @@ module FrostThaw
     return if !boss_battle(named_mon(:B208H51, 48, "Umber hulk"))
     set_flag(:umber_hulk_done)
     add_counter(:story_beats)
-    sayc([cl(:alerion, "Those were the claw-marks at the Underdark mouth."), cl(:reptin, "Then it came all this way to meet us. Rude not to.")])
+    sayc([flag?(:saw_claw_marks) ? cl(:alerion, "Those were its claw-marks, by the Underdark mouth. Going up.") :
+                                   cl(:alerion, "Something that big has been digging up through the roots for weeks."),
+          cl(:reptin, "Then it came all this way to meet us. Rude not to.")])
   end
 
   # A17: the rust-feast tunnels.
@@ -441,6 +449,8 @@ module FrostThaw
     return say(["The rust-feasters are gone. The struts round here are gnawed to lace."], event_id) if flag?(:rust_feasters_done)
     say(["Metallic crunching. A faint acrid smell.", "Three rust-feasters look up from an iron strut, antennae twitching, and notice your Pokémon."], event_id)
     return if !boss_battle(named_mon(:B356H421, 47, "Rust-feaster"), named_mon(:B421H356, 47, "Rust-feaster"))
+    say(["The third rust-feaster skitters out of the dark for the iron on your belts."])
+    return if !boss_battle(named_mon(:B356H421, 46, "Rust-feaster"))
     set_flag(:rust_feasters_done)
   end
 
@@ -1106,6 +1116,14 @@ module FrostThaw
       "The Summer Marshal's glaive, its blade of melted mirror-shard. It hums when Sephek is near.", 0, 0, 6],
     FT_CORRUPTLEDGER: ["Ledger of Corruption", "Ledgers of Corruption", 8, 0,
       "Halo payments, lists of Ten-Towners marked for the lottery, and \"Project Rime: reforge the Everlasting Summer.\"", 0, 0, 6],
+    FT_BOYSMIRROR: ["Boy's Mirror", "Boy's Mirrors", 8, 0,
+      "A frost-glass hand-mirror from Mira's stall. Something in it is watching you carry it. Its twin is in the Heartroot.", 0, 0, 6],
+    FT_MIRRORLATTICE: ["Mirror Lattice", "Mirror Lattices", 8, 0,
+      "Two mirrors fused by a lattice of frost-crystal, with a fragment of Avarice caught inside. Very quiet. Very angry.", 0, 0, 6],
+    FT_ROOTCOMPASS: ["Guild Root-Compass", "Guild Root-Compasses", 8, 0,
+      "Hew's gift: a brass compass with a sap-bead for a needle, built from Prototype 3's spare parts. It points to whatever's warmest below. It ticks.", 0, 0, 6],
+    FT_DEADCOMPASS: ["Burnt-Out Compass", "Burnt-Out Compasses", 8, 0,
+      "Hew's compass, its sap-bead cracked and black. Something in it spoke in a woman's voice. Now it doesn't.", 0, 0, 6],
     FT_FROSTFIREFLASK: ["Frostfire Flask", "Frostfire Flasks", 8, 0,
       "Heart-fuel from the Forge: blue at the edges, red at the core. Distilled from a saint's heart.", 0, 0, 6],
     FT_BROKENFROSTMIRROR: ["Broken Frost-Mirror", "Broken Frost-Mirrors", 8, 0,
@@ -1136,6 +1154,14 @@ module FrostThaw
 end
 
 if defined?(ItemHandlers)
+  # Hew's mechanical assistance: the compass points at the warmest thing below,
+  # which is usually where the story goes next.
+  ItemHandlers::UseFromBag.add(:FT_ROOTCOMPASS, proc { |item|
+    goal = (FrostThaw.state[:goal] rescue nil)
+    pbMessage(_INTL("The sap-bead swings, settles, and ticks. Tick. Tick. It points down, and a little to the left."))
+    pbMessage(_INTL("(Where it's warm: {1})", goal)) if goal
+    next 1
+  }) rescue nil
   ItemHandlers::UseFromBag.add(:FT_CYCLEOFROOTS, proc { |item|
     $Trainer.heal_party
     pbMessage(_INTL("You read the Cycle of Roots aloud. The words grow as you say them, and your whole party is made whole."))
@@ -1187,3 +1213,26 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("Forge rooms switches failed: #{err.message}")
   end
 }
+
+#-------------------------------------------------------------------------------
+# A base-game battle bug: Quash walks every battler slot looking for the highest
+# Quash count, and an empty slot (a double battle where one side has a single
+# Pokémon left, like the Forge's rust-feasters) is nil, which crashed the turn.
+#-------------------------------------------------------------------------------
+if defined?(PokeBattle_Move_11E)
+  class PokeBattle_Move_11E
+    alias ft_quash_pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:ft_quash_pbFailsAgainstTarget?)
+    def pbFailsAgainstTarget?(user, target)
+      real = @battle.instance_variable_get(:@battlers)
+      if real && real.include?(nil)
+        @battle.instance_variable_set(:@battlers, real.compact)
+        begin
+          return ft_quash_pbFailsAgainstTarget?(user, target)
+        ensure
+          @battle.instance_variable_set(:@battlers, real)
+        end
+      end
+      ft_quash_pbFailsAgainstTarget?(user, target)
+    end
+  end
+end

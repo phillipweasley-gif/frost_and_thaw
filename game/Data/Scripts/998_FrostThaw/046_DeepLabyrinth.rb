@@ -961,22 +961,48 @@ module FrostThaw
          "In the centre floats a broken mask of ice, shaped like a woman's face."])
   end
 
+  # GQ2 (rootspire.md 8487): three successes to unbind the vault (Arcana or
+  # Religion); every failure animates a Mirror Sentinel you have to fight while
+  # you keep working. Progress survives a lost fight.
+  WARD_THREADS = [
+    ["A thread of frost and a thread of hellfire, knotted round the largest shard.",
+     ["Unpick the hellfire first; frost was here before it", "Cut both at once", "Pull the frost thread"], 0],
+    ["Three shards turn in a ring, each one reflecting the next. A sigil burns where the reflections cross.",
+     ["Turn one shard so the ring breaks", "Smash the burning sigil", "Speak a prayer into the ring"], 0],
+    ["The last thread runs into the broken ice mask itself, and pulses in time with your heartbeat.",
+     ["Name what the mask was made for: a vessel. Refuse it.", "Hold your breath until it stops", "Pull it out of the mask"], 0]
+  ]
+
   def mirror_root_wards(event_id = nil)
     return say(["The shards hang dull and harmless now, turning slowly."], event_id) if flag?(:mirror_wards_down)
     say(["The floating shards are bound with old enchantments: threads of frost and hellfire running between them."], event_id)
-    opts = []
-    opts << _INTL("Find the pattern with the Mirror Shard Focus") if flag?(:shard_focus_found) && !flag?(:shard_focus_used)
-    opts << _INTL("Pull the threads apart")
-    c = pbMessage(_INTL("Disable the enchantments?"), opts + [_INTL("Leave them")], opts.size)
-    return if c.nil? || c >= opts.size
-    if opts[c].include?("Focus") && use_shard_focus
-      say(["Through the shard you see where every thread is tied. You untie them in order. The shards sigh and go still."])
-    else
-      say(["You pull the first thread. Every shard in the vault turns to look at you.",
-           "They fly together, edge to edge, into shapes like people made of knives: Mirror Sentinels!"])
-      return if !boss_battle(named_mon(:B122H478, 46, "Mirror Sentinel"), named_mon(:B478H122, 46, "Mirror Sentinel"))
-      say(["The sentinels shatter. This time they stay shattered."])
+    done = state[:ward_successes] || 0
+    if done == 0 && flag?(:shard_focus_found) && !flag?(:shard_focus_used) &&
+       pbConfirmMessage(_INTL("Look for the pattern through the Mirror Shard Focus?")) && use_shard_focus
+      say(["Through the shard you see where two of the threads are tied, plain as knots in string. You untie them in order."])
+      done = 2
     end
+    return if done == 0 && !pbConfirmMessage(_INTL("Try to unbind the vault's enchantments?"))
+    while done < 3
+      text, opts, right = WARD_THREADS[done]
+      say([text])
+      c = pbMessage(_INTL("The thread..."), opts.map { |o| _INTL(o) } + [_INTL("Step back")], opts.size)
+      return (state[:ward_successes] = done) if c.nil? || c >= opts.size
+      if c == right
+        done += 1
+        say(["The thread parts with a sound like a held note ending. (#{done} of 3.)"])
+      else
+        say(["Wrong. Every shard in the vault turns to look at you.",
+             "Some of them fly together, edge to edge, into a shape like an empty suit of armour made of knives: a Mirror Sentinel!"])
+        if !boss_battle(named_mon(:B478H122, 46, "Mirror Sentinel"))
+          state[:ward_successes] = done
+          return
+        end
+        say(["The sentinel shatters. The threads are still there, waiting."])
+      end
+    end
+    state[:ward_successes] = 3
+    say(["The last thread lets go. The shards sigh and go still, and sink a little, like birds landing."])
     set_flag(:mirror_wards_down)
   end
 

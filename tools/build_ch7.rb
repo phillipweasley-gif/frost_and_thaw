@@ -63,7 +63,7 @@ rg.event(17, 20, "Seal circle", [
 end
 rg.warp(5, 2, ROOTSPIRE, 44, 17, 2, name: "Up the root-spiral")
 rg.cutscene(4, 4, :heartroot_enter)
-rg.event(36, 23, "Overlook railing", [{ graphic: "", tile_id: 792, script: "FT.talk(:warden_overlook, @event_id)" }])
+rg.event(36, 23, "Overlook railing", [{ graphic: "", tile_id: 792, script: "FT.set_flag(:read_overlook); FT.talk(:warden_overlook, @event_id)" }])
 rg.trainer(13, 31, nil, :thrall_oren, :FT_ROOTWARDEN, dir: 6, sight: 3)
 rg.trainer(29, 29, nil, :thrall_mae, :FT_ROOTWARDEN, dir: 4, sight: 3)
 rg.trainer(19, 28, nil, :thrall_bryce, :FT_ROOTWARDEN, dir: 2, sight: 2)

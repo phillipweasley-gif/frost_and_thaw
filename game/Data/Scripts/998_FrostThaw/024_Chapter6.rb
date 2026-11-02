@@ -427,7 +427,7 @@ module FrostThaw
     festival_shudder_extras if respond_to?(:festival_shudder_extras)
     Stage.overlay("O-01", scroll_x: 0.25, opacity: 210, pulse: :hard, fade: 8)
     say(["Overhead, the aurora flickers in a hard, even rhythm. Like a pulse. Like something built.",
-         cl(:glimmer, "(a hand on his chest) Something under us is burning."),
+         cl(:glimmer, "(a hand on his chest, head cocked) Something under us is burning. ...And hammering. Deep in the roots. Can none of you hear that?"),
          herald?(:meat_meat) ? "(You know that sound. Hammers. The cold table had hammers under it.)" :
                                cl(:meat_meat, "(gone white) Meat Meat knows that sound. Hammers. The cold table had hammers under it."),
          with_or_is?(:meat_meat) ? cl(:alerion, "(low, to #{herald?(:meat_meat) ? 'you' : 'Meat Meat'}) Then we go down and break them.") : nil,

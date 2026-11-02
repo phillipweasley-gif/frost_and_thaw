@@ -190,6 +190,10 @@ module FrostThaw
                                   "Through the bond Meat Meat feels what he feels, and goes grey: a dragon, made, not born. A heart in it that's screaming. And her.",
             cl(:meat_meat, "The woman who hurt him. She is down there. Under all of it.")].compact)
     end
+    # rootspire.md 5662-5667: both twins grow restless, not only Razzilith.
+    sayc(["Up on the Shrine, Frostina won't settle either. She paces the dragons' hollow, tail lashing, and every so often she stops and listens to the floor.",
+          herald?(:alerion) ? "(Through the bond, cold and clear: she can hear hammers. She doesn't like the song they're making.)" :
+                              cl(:alerion, "(a hand to his chest) Frostina's awake. She can hear them too. Hammers.")].compact)
     state[:goal] = "The Rootwardens' missing patrol: scorch marks at the Echo Gate, on the west road."
     true
   end

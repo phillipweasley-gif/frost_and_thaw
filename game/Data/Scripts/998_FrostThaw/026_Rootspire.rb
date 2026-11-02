@@ -1238,7 +1238,7 @@ module FrostThaw
             cl(:reptin, "Faith, hope, love, balance. All finished. The tree felt that."),
             cl(:reptin, "And I felt it feel it. Which is a sentence I never expected to say."),
             cl(:wyn, "...They're resting now. Properly. Thank you for helping them.")].compact)
-      grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and slick sap: no more sliding.")
+      grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and snow: no more sliding on the frozen ground. (Sap is another matter.)")
     end
   end
 

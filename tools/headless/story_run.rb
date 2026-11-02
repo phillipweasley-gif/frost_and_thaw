@@ -54,6 +54,42 @@ module Story
     end
 
     # Walk to another map through the doors, as a player would.
+    # Slides across ice (or the Overflow Channel's slick sap) to stand next to an
+    # event, the way a player would: once you're moving, you're moving.
+    def slide_to_event(re)
+      ev = $game_map.events.values.find { |e| e.name =~ re }
+      return false if !ev
+      dirs = { 2 => [0, 1], 4 => [-1, 0], 6 => [1, 0], 8 => [0, -1] }
+      ice = ->(x, y) { ($game_map.terrain_tag(x, y).ice rescue false) }
+      mv = lambda do |(x, y), d|
+        return nil if !$game_player.passable?(x, y, d)
+        dx, dy = dirs[d]; x += dx; y += dy
+        while ice.(x, y) && $game_player.passable?(x, y, d)
+          x += dx; y += dy
+        end
+        [x, y]
+      end
+      start = [$game_player.x, $game_player.y]
+      prev = { start => nil }; q = [start]; goal = nil
+      until q.empty? || goal
+        c = q.shift
+        dirs.each do |d, (dx, dy)|
+          (goal = [c, d]; break) if [c[0] + dx, c[1] + dy] == [ev.x, ev.y]
+          n = mv.(c, d)
+          next if !n || prev.key?(n)
+          prev[n] = [c, d]; q << n
+        end
+      end
+      return false if !goal
+      path = []; c = goal[0]
+      while prev[c]
+        pc, d = prev[c]; path.unshift(d); c = pc
+      end
+      path.each { |d| HL.step(d) }
+      HL.face(goal[1]); HL.press_c
+      true
+    end
+
     def travel(to, tries: 12)
       tries.times do
         return true if $game_map.map_id == to
@@ -773,7 +809,10 @@ module Story
       fit(64)
       until_flag(:relic_seal, 2) { travel(2057); talk(/Auril's relic \(seal\)/) }
       until_flag(:relic_wells, 2) { travel(2058); talk(/Auril's relic \(relic_wells\)/) }
-      until_flag(:relic_overflow, 2) { travel(2067); talk(/Auril's relic \(relic_overflow\)/) }
+      until_flag(:relic_overflow, 2) do
+        travel(2067)
+        slide_to_event(/Auril's relic \(relic_overflow\)/) || talk(/Auril's relic \(relic_overflow\)/)
+      end
       beat("side: Auril's three relics smashed (no Divine Rejuvenation)", :auril_relics_destroyed)
       return if !FrostThaw.flag?(:sigils_merged)
       travel(2078); talk(/^Old boat$/); HL.settle(3000)
@@ -887,6 +926,11 @@ module Story
       talk(/Whispering attendant/)
       travel(2058); talk(/Selrae Vorn/)
       beat("SC 7B.07 Selrae, below (the Root-Key)", :root_key)
+      # M2 is Meat Meat's: take the boy's mirror off him in the Bazaar first.
+      if !($PokemonBag.pbHasItem?(:FT_BOYSMIRROR) rescue false) && !FrostThaw.flag?(:mirror_child_free)
+        until_flag(:boy_mirror_taken, 3) { travel(2050); talk(/Boy with a mirror/) }
+        beat("  M2: Meat Meat takes the boy's mirror", :boy_mirror_taken)
+      end
       travel(2067); HL.frames(20); HL.settle(3000)
       # (the slide puzzle is checked by its builder; the test walks onto the mirror's ledge)
       $game_player.moveto(8, 24); HL.settle(1000)

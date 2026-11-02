@@ -480,6 +480,10 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def requiem_vault(event_id = nil)
     return talk(:requiem_vault_shut, event_id) if !flag?(:mira_freed)
+    if flag?(:mira_left_possessed)
+      return say(["The strongbox is locked. On the deck above, Mira watches you through a hand-mirror, and smiles with both her voices.",
+                  "MIRA: Ours, little failures. Everything on this ship is ours now."], event_id)
+    end
     if flag?(:scale_core_given)
       return say(["The vault is open, and mostly empty. The Corsairs have started returning things to their owners."], event_id)
     end
