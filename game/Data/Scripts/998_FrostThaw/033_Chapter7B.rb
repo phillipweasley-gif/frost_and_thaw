@@ -40,7 +40,7 @@ module FrostThaw
     FT_CORSAIR_CAPT: ["Corsair Captain", :SAILOR, 1, 140, :LEADER_Brock]
   )
   TRAINERS.merge!(
-    guild_worker_pell: [:FT_GUILD, "Pell", [[:B76H95, 41], [:B208H75, 42]], "Forty years down here and I never saw the tree bleed till this week."],
+    guild_worker_pell: [:FT_GUILD, "Teodric", [[:B76H95, 41], [:B208H75, 42]], "Forty years down here and I never saw the tree bleed till this week."],
     guild_worker_rusk: [:FT_GUILD, "Rusk", [[:MAGNETON, 41], [:B205H232, 42]], "Go on. He's waiting. He's been waiting for somebody to stop him."],
     hew:  [:FT_GUILDMASTER, "Hew", [[:B208H76, 42], [:B95H205, 42], [:B232H82, 43], [:B76H208, 44]],
            "Guild Seal. And here's the truth.", [:HYPERPOTION, :FULLRESTORE]],
@@ -48,7 +48,7 @@ module FrostThaw
            "Tide Seal. And the Requiem is yours.", [:HYPERPOTION, :FULLRESTORE]]
   )
   TRAINER_INTROS.merge!(
-    guild_worker_pell: "PELL: Guild Annex. Masters only past here. Today that means whoever beats me.",
+    guild_worker_pell: "TEODRIC: Guild Annex. Masters only past here. Today that means whoever beats me.",
     guild_worker_rusk: "RUSK: Hew said you'd come through. Hew says a lot of things this week.",
     hew: "HEW: Ladder's earned, not given.",
     mira: "MIRA: Properly, now. One voice."

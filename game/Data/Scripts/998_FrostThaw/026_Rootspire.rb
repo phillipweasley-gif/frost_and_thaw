@@ -121,7 +121,7 @@ module FrostThaw
     sky_talla:   [:FT_SKYSAILOR, "Talla", [[:XATU, 38], [:B227H18, 39]], "You win. Don't tell the Aerie. I had money on me."],
     halo_ilse:   [:FT_HALO, "Sister Ilse", [[:JYNX, 38], [:B87H215, 39]], "She's the goddess's daughter. Someone should tell her."],
     halo_vosk:   [:FT_HALO, "Brother Vosk", [[:DELIBIRD, 38], [:B91H200, 39]], "The orb was nearly cold. Nearly."],
-    scholar_pell:  [:FT_SCHOLAR, "Orrin",  [[:KADABRA, 37], [:PORYGON2, 38]], "My thesis survives. Barely. Footnotes everywhere."],
+    scholar_pell:  [:FT_SCHOLAR, "Hollis",  [[:KADABRA, 37], [:PORYGON2, 38]], "My thesis survives. Barely. Footnotes everywhere."],
     scholar_quill: [:FT_SCHOLAR, "Quill", [[:XATU, 37], [:B82H122, 38]], "Chronal anomalies hit harder than expected. Noted."],
     # The Undercanopy
     masked_trader: [:FT_HALO, "Masked Trader", [[:SNEASEL, 39], [:B429H124, 40], [:B200H215, 40]],
@@ -143,7 +143,7 @@ module FrostThaw
     sky_talla:      "TALLA: The Aerie bets on everything. Today I'm betting on me.",
     halo_ilse:      "ILSE: Leave the orb. She's listening. She's nearly listening.",
     halo_vosk:      "VOSK: The Matron said winter's daughter comes home through this orb. Not past you, then.",
-    scholar_pell:   "ORRIN: Chronal anomalies! The Professor said you'd come. I'm testing you first.",
+    scholar_pell:   "HOLLIS: Chronal anomalies! The Professor said you'd come. I'm testing you first.",
     scholar_quill:  "QUILL: A practical, then. My Pokémon against your four hundred years.",
     masked_trader:  "MASKED TRADER: Whispers of the Echo Gate! Rare goods for... ah. You read the sign properly.",
     hellen_gym:     "HELLEN: Sleeves up, love. Let's see you.",
