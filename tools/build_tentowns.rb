@@ -15,21 +15,21 @@ ID = {
   termalaine: 2120, termalaine_path: 2121, blue_clam: 2122, eastside: 2123, velryn: 2124,
   open_tundra: 2125, cairn: 2126, cairn_heights: 2127, yeti_cave: 2128,
   lonely_woods: 2129, elven_tomb: 2130, elven_barrow: 2131, gm_woods: 2132, verbeeg_lair: 2133,
-  gem_mine: 2135, gem_mine_deep: 2136, ramshackle: 2137
+  gem_mine: 2135, gem_mine_deep: 2136, ramshackle: 2137, lakeshore_road: 2101
 }
 NAMES = {
   termalaine: "Termalaine", termalaine_path: "Termalaine Path", blue_clam: "The Blue Clam", eastside: "The Eastside",
   velryn: "Velryn House", open_tundra: "Open Tundra", cairn: "Kelvin's Cairn", cairn_heights: "Kelvin's Cairn Heights",
   yeti_cave: "Yeti Cave", lonely_woods: "Lonelywood Forest", elven_tomb: "The Elven Tomb", elven_barrow: "The Elven Barrow",
   gm_woods: "Good Mead Woods", verbeeg_lair: "Verbeeg Lair", gem_mine: "Termalaine Gem Mine",
-  gem_mine_deep: "Termalaine Gem Mine (Deep)", ramshackle: "Ramshackle"
+  gem_mine_deep: "Termalaine Gem Mine (Deep)", ramshackle: "Ramshackle", lakeshore_road: "Maer Dualdon Shore Road"
 }
 MUSIC = {
   termalaine: "lake of rage", termalaine_path: "route38_39", blue_clam: "Lostlorn Forest", eastside: "mom_theme",
   velryn: "mom_theme", open_tundra: "strongWind", cairn: "Reversal Mountain (White 2)", cairn_heights: "strongWind",
   yeti_cave: "Seafoam Islands Music", lonely_woods: "Lostlorn Forest", elven_tomb: "sinjoh", elven_barrow: "newmoonIsland",
   gm_woods: "Lostlorn Forest", verbeeg_lair: "Seafoam Islands Music", gem_mine: "Seafoam Islands Music",
-  gem_mine_deep: "Seafoam Islands Music", ramshackle: "Lavender Town"
+  gem_mine_deep: "Seafoam Islands Music", ramshackle: "Lavender Town", lakeshore_road: "route38_39"
 }
 TARGOS = 2001
 BRYN = 2012
@@ -321,6 +321,14 @@ w.sign(21, 9, :lodge_exterior)
     { switch: SW_PACK_GONE, graphic: "", through: true }
   ])
 end
+# ...and the moment they come into view, across the full width of the crossing,
+# so nobody walks round them (the bite is Reptin's curse: it can't be skipped)
+(4..30).each do |y|
+  w.event(35, y, "The pack watches", [
+    { trigger: 1, through: true, script: "FT.starving_pack_sighted(@event_id)" },
+    { switch: SW_PACK_GONE, through: true }
+  ])
+end
 # L1: Koran and Kanan, sitting east of the main opening; once the children are
 # out, they're the ambush
 [[21, 14, "Koran"], [21, 16, "Kanan"]].each do |x, y, n|
@@ -524,9 +532,11 @@ tlake = []
 end
 carve_into(tmopen, 15, 0, 6, 7)          # north along the shore, to Lonelywood
 carve_into(tmopen, 24, 35, 6, 5)         # south, the path to Bryn Shander
+carve_into(tmopen, 15, 35, 4, 5)         # south-west, round the lake's east shore to Targos (RotF: 4 hours)
 (0..8).each { |i| carve_into(tmopen, 38 + (i * 0.6).round, 10 - i, 4, 2) }   # the trail into the woods, north-east
 carve_into(tmopen, 41, 3, 5, 3)          # the mine's mouth
 forest_except(tm, TMW, TMH, tmopen)
+(33..39).each { |y| [13, 14].each { |x| tm.set(x, y, 2, EDGE_ROCK) if !tmopen[[x, y]] } }   # rocks between the shore road and the lake
 tm.autotile(0, 5, tlake)
 # the docks
 [[10, 6], [22, 7], [28, 6]].each do |y, len|
@@ -555,10 +565,13 @@ tm.door(43, 3, ID[:gem_mine], 17, 27, 8, name: "Door Gem Mine")
 end
 (15..20).each { |x| tm.warp(x, 0, LONELY_ROAD, x < 18 ? 14 : 15, 58, 8, name: "To Lonelywood Road") }
 (24..29).each { |x| tm.warp(x, TMH - 1, ID[:termalaine_path], x < 27 ? 14 : 15, 1, 2, name: "To the Termalaine Path") }
+(15..18).each { |x| tm.warp(x, TMH - 1, ID[:lakeshore_road], 32 + x, 1, 2, name: "To the Shore Road (Targos)") }
+tm.sign(19, 36, :sign_shore_road_tm)
 tm.cutscene(40, 34, :termalaine_arrival)
 # the square
 tm.event(24, 23, "Darmo Mazlu", [{ graphic: "BW (17)", direction: 2, step_anime: true, script: "FT.darmo_mazlu(@event_id)" }])
-tm.event(14, 19, "Oarus Masthew", [{ graphic: "BW (54)", direction: 6, script: "FT.oarus_masthew(@event_id)" }])
+tm.event(14, 19, "Oarus Masthew", [{ graphic: "BW (54)", direction: 6, script: "FT.oarus_masthew(@event_id)" },
+                                   { switch: SW_TM_OARUS_GONE, graphic: "", through: true }])   # the grell took him
 tm.npc(15, 19, "BWOldWoman", :tm_shaelen, dir: 4, name: "Shaelen Masthew")
 tm.set(21, 21, 2, CRATE); tm.set(22, 21, 2, CRATE)
 tm.event(21, 22, "Trader", [{ graphic: "BW (62)", direction: 2, script: "FT.mart(:termalaine, @event_id)" }])
@@ -577,6 +590,50 @@ prop_sign(tm, 35, 21, :eastside_tunnels)
 prop_sign(tm, 41, 6, :mine_sign)
 seal_edges(tm)
 save(tm, :termalaine)
+
+# --- 2101: the Maer Dualdon shore road (RotF: Targos to Termalaine round the
+# lake's east side, about four hours). West to Targos's east gate; north up the
+# east shore to Termalaine. The lake fills the north-west.
+SRW, SRH = 56, 24
+sr = Builder.new(SRW, SRH)
+sr.fill(0, SNOW)
+sropen = {}
+srlake = []
+(0...SRW).each do |x|
+  (0...SRH).each do |y|
+    if y < 7 - (x > 30 ? (x - 30) / 3 : 0) && x < 42 - y
+      sropen[[x, y]] = true; srlake << [x, y]
+    elsif (y >= 8 && y <= 17 && x <= 48) || (x >= 45 && x <= 52 && y <= 17)
+      sropen[[x, y]] = true
+    end
+  end
+end
+forest_except(sr, SRW, SRH, sropen)
+sr.autotile(0, 5, srlake)
+grass(sr, 10, 13, 6, 3); grass(sr, 24, 9, 5, 3); grass(sr, 38, 13, 5, 4); grass(sr, 46, 4, 4, 4)
+[[18, 9], [33, 15], [47, 10]].each { |x, y| sr.stamp(ICE_BOULDER, x, y) }
+[11, 12].each { |y| sr.warp(0, y, TARGOS, 46, y + 15, 4, name: "To Targos") }
+(47..50).each { |x| sr.warp(x, 0, ID[:termalaine], x - 32, TMH - 2, 8, name: "To Termalaine") }
+sr.sign(3, 10, :sign_shore_road_targos)
+sr.npc(28, 8, "BWFisherman", :shore_road_fisher, dir: 8, name: "Ice fisher")
+sr.trainer(20, 14, "BW (72)", :shore_hunter_ilsa, :HIKER, dir: 4, sight: 3)
+sr.trainer(41, 9, "BWFisherman", :shore_fisher_dov, :FISHERMAN, dir: 2, sight: 3)
+seal_edges(sr)
+save(sr, :lakeshore_road)
+
+# Targos's east gate: the road outside the wall, buried in drifts until Bryn
+# Shander's seal is won (the speakers send diggers once the lottery is broken).
+tg = reopen(TARGOS)
+(44..47).each { |x| [26, 27].each { |y| tg.set(x, y, 1, 0); tg.set(x, y, 2, 0) } }
+(45..47).each { |x| [26, 27].each { |y| tg.set(x, y, 0, SNOW) } }
+[26, 27].each do |y|
+  tg.event(44, y, "East gate drift", [
+    { tile_id: EDGE_ROCK, through: false, script: "FT.talk(:targos_termalaine_road, @event_id)" },
+    { switch: 3913, graphic: "", through: true }
+  ])
+  tg.warp(47, y, ID[:lakeshore_road], 1, y - 15, 6, name: "To the Shore Road (Termalaine)")
+end
+resave(tg, TARGOS)
 
 # --- 2122: the Blue Clam. Long benches by the hearths; scrimshaw on the walls.
 bc, ex = Builder.from_existing(768)
@@ -1035,7 +1092,8 @@ gm.map.events.each_value do |ev|
     ev.pages[0].instance_variable_set(:@list, gm.send(:script_commands, "FT.fef_moryn(@event_id)") + [gm.send(:command, 0, [])])
   when "Fef's fox"
     next if ev.pages.size > 1                        # (already patched)
-    ev.pages << gm.build_page(ev.pages[0], { self_switch: "A", graphic: "", through: true })
+    # bought: it walks with you (and later rides off with the chwinga); gone from Fef's feet either way
+    ev.pages << gm.build_page(ev.pages[0], { switch: SW_GM_FOX_BOUGHT, graphic: "", through: true })
   when "Shandar Froth"
     ev.pages[0].instance_variable_set(:@list, gm.send(:script_commands, "FT.shandar(@event_id)") + [gm.send(:command, 0, [])])
     next if ev.pages.size > 1

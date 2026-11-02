@@ -419,7 +419,7 @@ module FrostThaw
          "From the right, black and rimed with frost: an old woman weeping in the dark. It rises, then hushes.",
          "CHILD'S VOICE: H-hello? Is someone there? Please... help me...",
          "CHILD'S VOICE: Shade? Shade, it's me. Shimmer. I'm lost. I'm so cold.",
-         "SHADE: (already moving) That's..."])
+         as(:shade, "(already moving) That's...")])
     speak(:alerion, "(grabbing their arm) Your sister's gone, Shade. And she was never that small.",
                     "(grabbing their arm) Shade. She was never that small.")
     illusion_fork_study
@@ -431,7 +431,7 @@ module FrostThaw
             [:listen, _INTL("Listen to the weeping")], [:ask, _INTL("Call out: \"Who are you?\"")]]
     loop do
       opts = left.map(&:last) + [_INTL("Choose a way")]
-      c = pbMessage(_INTL("Your reflections wait for you to choose."), opts, opts.size - 1)
+      c = pbMessage(_INTL("Your reflections wait for you to choose."), opts, opts.size)
       break if c.nil? || c < 0 || c >= left.size
       key = left.delete_at(c)[0]
       case key
@@ -525,7 +525,7 @@ module FrostThaw
   def fork_after
     return if flag?(:fork_talked)
     set_flag(:fork_talked)
-    say(["SHADE: She knew her name. How did she know her name?",
+    say([as(:shade, "She knew her name. How did she know her name?"),
          as(:meat_meat, "Hags know everything you're scared of. That is their whole job."),
          cl(:alberica, "(an arm around Shade's shoulders, just for a moment) And it's a rotten job, sugar.")].compact)
   end
@@ -606,8 +606,10 @@ module FrostThaw
     death_opts << [:snow, _INTL("A handful of snow")]
     death_opts << [:silence, _INTL("Stand in silence")]
     death_opts << [:coin, _INTL("A coin")]
+    return say(["You step back from the bowls. The whisper waits, patient as stone."]) if life.nil? || life < 0
     di = pbMessage(_INTL("What do you give the scythe and child?"), death_opts.map(&:last), -1)
-    death = di >= 0 ? death_opts[di][0] : nil
+    return say(["You step back from the bowls. The whisper waits, patient as stone."]) if di.nil? || di < 0
+    death = death_opts[di][0]
     if life == 0 && [:bone, :silence].include?(death)
       say([herald?(:reptin) ? "You hold your bitten hand over the life bowl. The stone drinks the blood as if it were thirsty." :
                               "Reptin holds his bitten hand over the life bowl before you can. The stone drinks the blood as if it were thirsty."])
@@ -645,10 +647,11 @@ module FrostThaw
   end
 
   def hollow_wall(event_id = nil)
-    if !flag?(:gate_open) && !flag?(:order_locket)
-      return say(["You knock on the ice. It sounds hollow."], event_id)
+    if !flag?(:gate_open)
+      return say(["You knock on the ice. It sounds hollow.",
+                  flag?(:order_locket) ? "The locket in your pocket grows warm, as if it knows this wall. But the ice won't give. Not yet." : nil].compact, event_id)
     end
-    say(["The ice here sounds hollow. " + (flag?(:order_locket) ? "The locket in your pocket grows warm." : "A hairline seam runs down it."),
+    say(["The ice here sounds hollow. " + (flag?(:order_locket) ? "The locket in your pocket grows warm. A hairline seam has opened down the ice." : "A hairline seam runs down it."),
          "You put your shoulder to it, and a sheet of ice falls away. Behind it, a narrow crevice."], event_id)
     transfer(MAPS[:sanctum], 6, 7, 8)
   end
@@ -780,7 +783,7 @@ module FrostThaw
     qs << [:glimmer, _INTL("\"Who was Glimmer?\"")] if flag?(:read_glimmer_journal)
     loop do
       opts = qs.map(&:last) + [_INTL("\"Tell us how to stop her.\"")]
-      c = pbMessage(_INTL("Ask the ghost..."), opts, opts.size - 1)
+      c = pbMessage(_INTL("Ask the ghost..."), opts, opts.size)
       break if c.nil? || c < 0 || c >= qs.size
       key = qs.delete_at(c)[0]
       case key
@@ -850,7 +853,7 @@ module FrostThaw
       end
       set_flag(:thredra_beaten)
     end
-    return chasm_dark_ending(:failed) if !hag_lunge
+    hag_lunge
     thr = Stage.find("Thredra")
     Stage.pose(thr, "P-THR-02", 0, frames: [0, 1], per: 8) if thr
     say([flag?(:broke_hag_staff) ? "Her broken staff falls out of her hands in two pieces. The hag shrieks and leaps backward into the largest mirror." :

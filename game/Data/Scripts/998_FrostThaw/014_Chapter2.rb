@@ -314,6 +314,20 @@ module FrostThaw
   # SC 2.09 - The Morninglord's acorn (after the gym).
   def morninglord(event_id = nil)
     if flag?(:badge_bryn) && !flag?(:golden_acorn)
+      morninglord_acorn(event_id)
+      return
+    end
+    say(["MISHANN: Come in out of the dark. The Morninglord turns no one away.",
+         "MISHANN: Sit by the fire a moment. Your Pokémon too."], event_id)
+    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    say(["MISHANN: There. The dawn comes back, you know. Even here. It always comes back."], event_id)
+  end
+
+  # The acorn the whole act turns on (the third way). Mishann doesn't leave it to
+  # chance: she comes to find Reptin the moment the seal is won.
+  def morninglord_acorn(event_id = nil)
+    return if flag?(:golden_acorn)
+    if true
       say(["MISHANN: You gave blood to something the cold had taken. It's still on your hand."], event_id) if flag?(:razzy_egg)
       say([herald?(:reptin) ? "She presses something into your palm: a golden acorn." :
                               "She presses something into Reptin's palm: a golden acorn.",
@@ -326,12 +340,7 @@ module FrostThaw
            cl(:alberica, "Oh, I like her.")].compact, event_id)
       give_key(:FT_GOLDENACORN)
       set_flag(:golden_acorn)
-      return
     end
-    say(["MISHANN: Come in out of the dark. The Morninglord turns no one away.",
-         "MISHANN: Sit by the fire a moment. Your Pokémon too."], event_id)
-    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
-    say(["MISHANN: There. The dawn comes back, you know. Even here. It always comes back."], event_id)
   end
 
   def apply_story_switches
@@ -685,7 +694,10 @@ module FrostThaw
       pbMessage(_INTL("\\me[Badge get]{1} received the Palisade Seal!", $Trainer.name))
       pbReceiveItem(:TM118) rescue nil
       say(["DUVESSA: That TM teaches Steel Wing. Fitting for a town that's all walls and watchmen."], event_id)
-      state[:goal] = "Sephek is in Lonelywood: out the north gate, through Termalaine. (Mishann at the House of the Morninglord wanted a word with Reptin.)"
+      state[:goal] = "Sephek is in Lonelywood: out the north gate, through Termalaine."
+      say(["Outside the hall, a priestess of the Morninglord is waiting on the steps, out of breath, her lantern still lit.",
+           "MISHANN: There you are. I've been looking for #{herald?(:reptin) ? 'you' : 'your wolf-friend'} since the draw. I had a feeling."])
+      morninglord_acorn
     end
   end
 

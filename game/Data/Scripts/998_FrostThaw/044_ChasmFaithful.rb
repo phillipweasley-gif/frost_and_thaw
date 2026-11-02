@@ -76,6 +76,12 @@ module FrostThaw
                     "Business is business. And business is closed.", [:SUPERPOTION]],
     torg_hand:     [:FT_TORGHAND,      "Brannig", [[:HOUNDOUR, 17], [:MIGHTYENA, 18]],
                     "She pays us to drive dogs, not to bleed."],
+    torg_hand2:    [:FT_TORGHAND,      "Oska", [[:SNEASEL, 17], [:MIGHTYENA, 17]],
+                    "Not my sled. Not my fight. Not my teeth, either."],
+    torg_hand3:    [:FT_TORGHAND,      "Hale", [[:POOCHYENA, 16], [:HOUNDOUR, 18]],
+                    "...You could've just bought something."],
+    torg_hand4:    [:FT_TORGHAND,      "Skeld", [[:MURKROW, 17], [:STOUTLAND, 18]],
+                    "Tell the boss I tried."],
     ethel:         [:FT_HAG,           "Ethel", [[:B124H71, 31], [:B44H94, 32]],
                     "Sister... you promised me a share..."],
     thredra_crown: [:FT_WINTERCROWN,   "Thredra", [[:B429H124, 36], [:B272H310, 36], [:B255H200, 37], [:B124H429, 38]],
@@ -85,6 +91,9 @@ module FrostThaw
   TRAINER_INTROS.merge!(
     torrga:        "TORRGA: You've had your hands in my sacks. That's theft, that is. Brannig! Business!",
     torg_hand:     "BRANNIG: Boss says you're done shopping.",
+    torg_hand2:    "OSKA: Off the sleds! Now!",
+    torg_hand3:    "HALE: Boss wants you gone. So. Gone.",
+    torg_hand4:    "SKELD: Four of us and one of her. You picked a bad fight.",
     thredra_crown: "THREDRA: Winter's mine now, dearies. All of it. Come and have a taste.",
     ethel:         "ETHEL: A share of the cutting, sister promised. I'll start with you."
   )
@@ -446,6 +455,18 @@ module FrostThaw
   # The ice troll knits itself back together unless fire stops it.
   def minions_round(battle, round)
     battle.pbDisplay(_INTL("KANAN: Warm blood! Warm blood!")) if round == 1
+    if round == 2 && !$ft_battle_script[:reptin_in]
+      $ft_battle_script[:reptin_in] = true
+      kanan = live_battlers(battle, true).find { |b| b.name.to_s =~ /Kanan/ }
+      if kanan
+        battle.pbDisplay(_INTL(herald?(:reptin) ? "The wolf in you surges up the way it did on the tundra. You let it." :
+                                                  "Reptin's eyes go yellow. The wolf in him surges up, and he lets it."))
+        battle.pbDisplay(_INTL(herald?(:reptin) ? "You hit Kanan from the side, wolf against wolf, and your teeth find his ruff!" :
+                                                  "He hits Kanan from the side, wolf against wolf, and his teeth find the winter wolf's ruff!"))
+        kanan.pbReduceHP((kanan.totalhp / 6.0).ceil) if kanan.hp > 1
+        set_flag(:reptin_fought_kanan)
+      end
+    end
     troll = live_battlers(battle, true).find { |b| b.name.to_s =~ /troll/i }
     return if !troll || troll.hp >= troll.totalhp
     burned = troll.tookDamage && Array(troll.lastAttacker).any? do |i|
@@ -481,7 +502,14 @@ module FrostThaw
       else
         live_battlers(battle, false).each { |b| b.pbReduceHP((b.totalhp / 12.0).ceil) if b.hp > 1 }
       end
-      battle.pbDisplay(_INTL("Somewhere behind the pillars, the chained cub cries louder.")) if script[:kind] == :thredra
+      if script[:kind] == :thredra && !flag?(:freed_cub_midfight)
+        if talisman
+          battle.pbDisplay(_INTL("Somewhere behind the pillars, the chained cub cries louder."))
+        else
+          battle.pbDisplay(_INTL("The grey wave washes over the chained cub too. It goes limp in its chains for a moment, then whimpers."))
+          state[:cub_hurt] = (state[:cub_hurt] || 0) + 1
+        end
+      end
     when 1
       battle.pbDisplay(_INTL("Thredra flickers, and there are three of her, cackling in three voices!"))
       if talisman
@@ -505,6 +533,82 @@ module FrostThaw
     if !script[:offered] && live_battlers(battle, false).any? { |b| b.hp <= b.totalhp / 4 }
       script[:offered] = true
       battle.pbDisplay(_INTL("THREDRA: Still time to reconsider, dearies! Lay down your arms and I'll spare you. Let Granny finish!"))
+    end
+    hag_lunge_in_battle(battle) if script[:kind] == :thredra && hag_cornered?(battle)
+  end
+
+  # Her last Pokémon below a quarter: "If I can't have victory, at least I'll have
+  # your despair." (CC 1046-1050, 1086-1092)
+  def hag_cornered?(battle)
+    return false if flag?(:lunge_done)
+    foes = live_battlers(battle, true)
+    left = (battle.pbParty(1).count { |pk| pk && pk.hp > 0 && !pk.egg? } rescue foes.size)
+    left <= 1 && foes.size == 1 && foes[0].hp <= foes[0].totalhp / 4
+  end
+
+  def hag_lunge_in_battle(battle)
+    set_flag(:lunge_done)
+    set_flag(:lunge_in_battle)
+    battle.pbDisplay(_INTL("THREDRA: No. No, no, no. If I can't have my victory..."))
+    battle.pbDisplay(_INTL("She snatches a knife of black ice out of her rags and throws herself at the chained cub!"))
+    battle.pbDisplay(_INTL("THREDRA: ...then I'll have your despair!"))
+    c = battle.pbShowCommands(_INTL("She's going for the cub!"), hag_lunge_options.map(&:last), false) rescue 0
+    lunge_outcome(hag_lunge_options[[c.to_i, 0].max][0]).each { |l| battle.pbDisplay(_INTL(l)) }
+    if flag?(:broke_hag_staff)
+      live_battlers(battle, true).each { |b| b.stages[:EVASION] = 0 rescue nil }
+    elsif flag?(:shielded_cub) && !flag?(:locket_caught_wrist)
+      lead = live_battlers(battle, false).first
+      lead.pbReduceHP((lead.totalhp / 8.0).ceil) if lead && lead.hp > 1
+    end
+  end
+
+  def hag_lunge_options
+    [[:shield, _INTL("Throw yourself between them")], [:staff, _INTL("Smash her black staff")],
+     [:chains, _INTL("Wrench the cub's chains free")], [:stay, _INTL("Stay where you are. It's another illusion.")]]
+  end
+
+  # What happens at the lunge. Nothing here kills the cub: the only way the cub
+  # dies is the bargain itself, agreed to out loud.
+  def lunge_outcome(pick)
+    case pick
+    when :shield
+      set_flag(:shielded_cub)
+      ["You get there first. The black knife opens your arm instead of the cub's throat.",
+       "Your lead Pokémon roars and knocks her sprawling."]
+    when :staff
+      set_flag(:broke_hag_staff)
+      [flag?(:tip_staff) ? "\"Destroy her black staff. It focuses her power.\" You remember, and you swing." :
+                           "You go for the thing she's always holding. You swing.",
+       "The black staff cracks across with a sound like a frozen lake breaking. Every frozen thing hanging from it shatters.",
+       "Her knife-hand spasms. The blade goes skittering across the ice."]
+    when :chains
+      set_flag(:freed_cub_midfight)
+      ["You throw your weight on the chains. They tear out of the pillar,",
+       "and the cub drops into your arms and scrambles behind you, shaking.",
+       "Her knife bites into the pillar where its throat was."]
+    else
+      lines = ["You hold still. It's a trick. It has to be a trick."]
+      if flag?(:locket_talisman)
+        lines += ["The locket against your chest burns like a coal. Not an illusion. Real!",
+                  "You move without thinking and catch her wrist an inch from the cub."]
+        set_flag(:shielded_cub); set_flag(:locket_caught_wrist)
+      end
+      if flag?(:ghost_blessing)
+        lines += [flag?(:locket_caught_wrist) ? "She twists free, and the knife comes down again, and a hand of silver light closes over the blade:" :
+                                               "It isn't. The knife comes down, and a hand of silver light closes over the blade:",
+                  "a dwarf woman in dark green robes, there and gone. The knife shatters."]
+        set_flag(:ghost_caught_knife)
+      end
+      if !flag?(:locket_caught_wrist) && !flag?(:ghost_caught_knife)
+        rep = herald?(:reptin)
+        lines += ["It isn't.",
+                  rep ? "The wolf moves before you do. You're across the ice faster than anything should move," :
+                        "Reptin's wolf moves before anyone else can. He's across the ice faster than anything should move,",
+                  "and the black blade skids off a shoulder of grey fur instead of the cub's throat.",
+                  "Not clean. The cub is cut, badly. But it's breathing."]
+        set_flag(:cub_wounded); set_flag(:reptin_wolf_surged)
+      end
+      lines
     end
   end
 
@@ -542,49 +646,20 @@ module FrostThaw
   # After her own fight, before the mirror: "If I can't have victory, at least
   # I'll have your despair." Returns false if the cub died.
   def hag_lunge
-    return true if flag?(:lunge_done)
-    set_flag(:lunge_done)
-    say(["Thredra reels back against the dais, smoking, her Pokémon down.",
-         "THREDRA: No. No, no, no. If I can't have my victory...",
-         "She snatches a knife of black ice out of her rags and throws herself at the chained cub.",
-         "THREDRA: ...then I'll have your despair!"])
-    opts = [_INTL("Throw yourself between them"), _INTL("Smash her black staff"), _INTL("Wrench the cub's chains free"),
-            _INTL("Stay where you are. It's another illusion.")]
-    c = pbMessage(_INTL("She's going for the cub!"), opts, 0)
-    case c
-    when 0
-      say(["You get there first. The black knife opens your arm instead of the cub's throat.",
-           "Your lead Pokémon roars and knocks her sprawling."])
-      hurt_party(0.1)
-      set_flag(:shielded_cub)
-    when 1
-      say([flag?(:tip_staff) ? "\"Destroy her black staff. It focuses her power.\" You remember, and you swing." :
-                               "You go for the thing she's always holding. You swing.",
-           "The black staff cracks across with a sound like a frozen lake breaking. Every frozen thing hanging from it shatters.",
-           "Her knife-hand spasms. The blade goes skittering across the ice."])
-      set_flag(:broke_hag_staff)
-    when 2
-      say(["You throw your weight on the chains. They tear out of the pillar,",
-           "and the cub drops into your arms and scrambles behind you, shaking.",
-           "Her knife bites into the pillar where its throat was."])
-      set_flag(:freed_cub_midfight)
-    else
-      if flag?(:locket_talisman)
-        say(["The locket against your chest burns like a coal. Not an illusion. Real!",
-             "You move without thinking and catch her wrist an inch from the cub."])
-        set_flag(:shielded_cub)
-      elsif flag?(:ghost_blessing)
-        say(["You hold still. It's a trick. It has to be a trick.",
-             "It isn't. The knife comes down, and a hand of silver light closes over the blade:",
-             "a dwarf woman in dark green robes, there and gone. The knife shatters."])
-        set_flag(:ghost_caught_knife)
-      else
-        say(["You hold still. It's a trick. It has to be a trick.",
-             "It isn't."])
-        return false
-      end
+    if !flag?(:lunge_done)
+      set_flag(:lunge_done)
+      say(["Thredra reels back against the dais, smoking, her Pokémon down.",
+           "THREDRA: No. No, no, no. If I can't have my victory...",
+           "She snatches a knife of black ice out of her rags and throws herself at the chained cub.",
+           "THREDRA: ...then I'll have your despair!"])
+      c = pbMessage(_INTL("She's going for the cub!"), hag_lunge_options.map(&:last), 0)
+      say(lunge_outcome(hag_lunge_options[[c.to_i, 0].max][0]))
+      hurt_party(0.1) if flag?(:shielded_cub) && !flag?(:locket_caught_wrist)
     end
-    say([cl(:meat_meat, "(arriving at a dead run) MINE. Meat Meat's baby now. Back off, granny."),
+    return true if flag?(:lunge_aftermath_said)
+    set_flag(:lunge_aftermath_said)
+    say([flag?(:cub_wounded) ? cl(:meat_meat, "(arriving at a dead run, pressing both hands over the cut) MINE. Meat Meat's baby now. Stay breathing, baby.") :
+                               cl(:meat_meat, "(arriving at a dead run) MINE. Meat Meat's baby now. Back off, granny."),
          cl(:reptin, "(between her and the cub, every hair on end) Not one more step.")].compact)
     true
   end
@@ -680,7 +755,8 @@ module FrostThaw
     say(["You dream of the Heart of the Chasm.",
          "The hag sits on her dais, cackling, the Heart in her lap. Your own bodies lie frozen at her feet.",
          "The sun rises over a Dale that belongs to her.",
-         "You wake by the warm fissure, gasping. It hasn't happened. Not yet."])
+         flag?(:camp_disturbed) ? "You wake by the warm fissure, gasping. It hasn't happened. Not yet." :
+                                     "You wake with a gasp, a long way from the chasm. It hasn't happened. Not yet."])
   end
 
   #-----------------------------------------------------------------------------
@@ -694,6 +770,12 @@ module FrostThaw
       say(["The mother yeti breaks the cub's chains with her hands."])
     else
       say(["The cub's chains snap in the flood of light."])
+    end
+    if flag?(:cub_wounded)
+      say(["The cut along the cub's neck has stopped bleeding. Meat Meat has bound it with a strip of her own scarf.",
+           "It'll scar. It'll live."])
+    elsif (state[:cub_hurt] || 0) > 0
+      say(["The cub is shivering from the Heart's grey cold, frost still in its fur. It'll mend."])
     end
     if mother_alive && !flag?(:yeti_calmed)
       say(["Down the tunnel from the feast hall comes the mother, limping, roaring, and the cub runs to her."])
@@ -709,6 +791,8 @@ module FrostThaw
     if pbConfirmMessage(_INTL("Take Yetot with you?"))
       cub = Pokemon.new(:YETOT, 25)
       cub.calc_stats
+      # a wounded cub comes with you scarred, and slower to trust anything with a knife
+      cub.hp = [(cub.totalhp / 2.0).ceil, 1].max if flag?(:cub_wounded)
       set_flag(:got_yeti_cub) if pbAddPokemon(cub)
       set_flag(:got_yetot) if flag?(:got_yeti_cub)
     elsif mother_alive
@@ -927,6 +1011,15 @@ module FrostThaw
       sayc([cl(:shade, "She paid. A Ten-Towner, paying what she said she would. I need to sit down.")])
       return
     end
+    # First met after the Moon Temple: she's heard already, and pays for work you did without her.
+    if !flag?(:hlin_hired) && flag?(:sephek_defeated)
+      say(["An elderly shield dwarf sits apart from everyone else, a nasty scar across her nose, smoking a long pipe.",
+           "HLIN: Sit. Hlin Trollbane. Retired. Bounty hunter. You'd be the lot who went up to the Moon Temple.",
+           "HLIN: Three murders this past month, each with a dagger of ice through the heart. I'd followed Torg's a tenday.",
+           "HLIN: Their bodyguard. Sephek Kaltro. I was going to hire somebody to deal with him. Seems I'm late."], event_id)
+      set_flag(:hlin_hired)
+      return hlin(event_id)
+    end
     if flag?(:hlin_hired)
       return say(["HLIN: Torg's is camped by the clearing, past the fisher's house. Sephek's the one in his shirtsleeves.",
                   "HLIN: Get him alone if you can. He's no trouble to anyone while Torrga's open for business."], event_id)
@@ -1012,6 +1105,12 @@ module FrostThaw
            "TORRGA: Torrga Icevein. Torg's is my company. Cut wood, flint, whale oil, blankets, wine, medicines.",
            "TORRGA: Prices are prices. Twice what you'd pay in Bryn Shander, and worth every copper, out here."], event_id)
     end
+    if flag?(:sephek_defeated) && !flag?(:torrga_grudge_said)
+      set_flag(:torrga_grudge_said)
+      say(["TORRGA: (not looking up from her ledger) My bodyguard went up to the Moon Temple and didn't come back down.",
+           "TORRGA: Frozen solid, they're saying. And here you are, warm as toast.",
+           "TORRGA: I've done business in every town on these lakes for twenty years. They listen to me. Remember that."])
+    end
     if flag?(:found_torgs_corpse) || flag?(:sephek_defeated)
       opts = [_INTL("Buy something"), _INTL("Confront her"), _INTL("Leave")]
       c = pbMessage(_INTL("Torrga waits."), opts, 2)
@@ -1021,7 +1120,15 @@ module FrostThaw
       lines << "You tell her what's in her sack." if flag?(:found_torgs_corpse)
       lines << "You tell her what her bodyguard did, and where he is now." if flag?(:sephek_defeated)
       say(lines + ["TORRGA: (very still) I sell things. What my people do after hours is their business.",
-                   "TORRGA: And what's in my sacks is mine. Brannig. Kill them."])
+                   "TORRGA: And what's in my sacks is mine. Boys. Kill them.",
+                   "Her four drivers drop the dogs' traces and come round the sleds."])
+      # the drivers first, two by two, then Torrga and her lead driver
+      won = pbDoubleTrainerBattle(:FT_TORGHAND, "Oska", 0, nil, :FT_TORGHAND, "Hale", 0, nil) rescue nil
+      won = pbTrainerBattle(:FT_TORGHAND, "Oska", nil, false, 0) if won.nil?
+      return if !won
+      say(["Oska and Hale go down in the snow. Skeld looks at them, looks at you, and doesn't run."])
+      won = pbTrainerBattle(:FT_TORGHAND, "Skeld", nil, false, 0)
+      return if !won
       won = pbDoubleTrainerBattle(:FT_BANDITCAPTAIN, "Torrga", 0, nil, :FT_TORGHAND, "Brannig", 0, nil) rescue nil
       won = pbTrainerBattle(:FT_BANDITCAPTAIN, "Torrga", nil, false, 0) if won.nil?
       return if !won
@@ -1030,7 +1137,9 @@ module FrostThaw
       give_money(4700, "Torrga's strongbox: ninety-two gold, seventy-six silver and a scatter of copper.")
       give(:FT_GEMSTONE, 7)
       say(["By morning Torg's has packed its sleds and gone south, fast, and without its sack."])
+      say(["(Whatever she was telling the merchants about you, she won't be telling it any more.)"]) if flag?(:torrga_grudge)
       set_flag(:torrga_beaten)
+      set_flag(:torrga_grudge, false)
       $game_switches[SW_TORRGA_GONE] = true if $game_switches
       return
     end
@@ -1067,8 +1176,29 @@ module FrostThaw
   end
 
   # Lonelywood after the Moon Temple: the ice-dagger murders have stopped.
+  # Shops whose keepers would rather not cross Torrga Icevein.
+  TORRGA_FRIENDS = %i[lonelywood termalaine good_mead]
+
+  def torrga_refuses?(key)
+    flag?(:torrga_grudge) && !flag?(:torrga_beaten) && TORRGA_FRIENDS.include?(key)
+  end
+
+  def torrga_refusal(key, event_id = nil)
+    say(["The shopkeeper looks at you, then out of the window, toward the Lonelywood road.",
+         "SHOPKEEPER: ...I'm sorry. I can't sell to you. Torrga Icevein brings half my stock up the lakes.",
+         "SHOPKEEPER: She says you killed her man. I don't care if you did. I care that she says so.",
+         "SHOPKEEPER: Sort it out with her, and come back."], event_id)
+    if !flag?(:torrga_grudge_felt)
+      set_flag(:torrga_grudge_felt)
+      sayc([cl(:shade, "She said they'd listen to her. They're listening."),
+            cl(:alberica, "Then we'll go and have a word with Torrga, sweetheart. A long one.")])
+    end
+  end
+
   def apply_w1_switches
     return if !active? || !$game_switches
+    # Torrga survives, and believes you slew her bodyguard: she leans on the merchants
+    set_flag(:torrga_grudge) if flag?(:sephek_defeated) && !flag?(:torrga_beaten) && !flag?(:torrga_grudge)
     sync_switch(SW_TORRGA_GONE, flag?(:torrga_beaten))
     sync_switch(SW_HLIN_PAID, flag?(:hlin_paid))
     sync_switch(SW_WALKER_DOWN, flag?(:walker_down))

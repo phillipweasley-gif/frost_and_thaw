@@ -103,9 +103,13 @@ module FrostThaw
     tm_miner_out: [{ if: { flag: :mine_done }, lines: ["Back to work! Picks in the walls again. Best sound in the world."] },
                    ["The mine's closed. Kobolds. We ran out when they came in. Didn't stop to ask what they wanted.",
                     "And Hessa never came back up, the week before. They say she fell down the shaft. They say."]],
-    tm_shaelen: ["SHAELEN: Shaelen Masthew. I was Speaker here, once. Now I'm Oarus's mother, which is harder.",
+    tm_shaelen: [{ if: { flag: :oarus_dead }, lines: ["Shaelen Masthew stands where her son used to stand, outside the Blue Clam, looking at the mine road.",
+                                                      "SHAELEN: He went in with a lantern. I told him to send someone. He said a speaker doesn't send people where he won't go.",
+                                                      "SHAELEN: The town wants me back in the chair. I've told them I'm too old to bury another one.",
+                                                      "SHAELEN: ...Something lives down there that you didn't kill. Don't come back here without killing it."] },
+                 ["SHAELEN: Shaelen Masthew. I was Speaker here, once. Now I'm Oarus's mother, which is harder.",
                  "SHAELEN: His parents were adventurers. Half-orcs. They didn't come back from a job. I did.",
-                 "SHAELEN: He won the speakership by a hair. Half the militia still won't salute him. He hasn't told you that, has he?"],
+                 "SHAELEN: He won the speakership by a hair. Half the militia still won't salute him. He hasn't told you that, has he?"]],
     tm_officer_hint: ["OFFICER: The mine? Not our job. Speaker asked. We declined.",
                       "OFFICER: Termalaine needs a speaker who knows how things work. Speaker Maxildanarr in Targos agrees.",
                       "OFFICER: You didn't hear that. Move along."],
@@ -186,6 +190,7 @@ module FrostThaw
   # The town
   #-----------------------------------------------------------------------------
   def scene_termalaine_arrival
+    set_flag(:termalaine_arrived)
     say(["Termalaine spreads out from the shore of Maer Dualdon, bordered north and west by tall pines.",
          "The houses are carved with wizards and homunculi, tigers and smiling djinn.",
          "It's the most picturesque town in Icewind Dale. Then the north wind comes down off the lake and finds you."])

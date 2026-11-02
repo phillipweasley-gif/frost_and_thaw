@@ -45,7 +45,6 @@ module FrostThaw
     closed_off: ["That way is closed off."],
     targos_barricade: ["A barricade of frozen crates and sledges blocks the road north."],
     targos_sign_square: ["TARGOS - Seat of Speaker Naerth Maxildanarr.", "Visitors are asked to mind their purses."],
-    targos_termalaine_road: ["The east road to Termalaine runs outside the wall. It's buried in drifts higher than the gate."],
     targos_sign_hall: ["TARGOS TOWN HALL", "Speaker Naerth Maxildanarr. Petitions heard by appointment. Challengers welcome."],
 
     fisher_hob_after: ["HOB: Lake's colder than cold this year.",
@@ -99,8 +98,9 @@ module FrostThaw
     },
     fisher_widow: ["WIDOW: He went fishing near Dougan's Hole. They heard laughing out on the ice. Then nothing.",
                    "WIDOW: Take his Spheal. It sits by the door every night. It shouldn't have to wait alone."],
-    lantern_mother: ["We keep a lantern lit for my sister. The lottery took her last new moon.",
-                     "Auril's chosen came for her himself. In his shirtsleeves. He didn't even shiver."],
+    lantern_mother: ["We keep a lantern lit for my sister. She paid the clerk to leave her name off the board. Everyone does it, if they can.",
+                     "They found her on the ice a week later, frozen, with a knife of ice in her. In her own coat.",
+                     "A man in his shirtsleeves was seen on our street that night. He didn't even shiver."],
     lantern_child: ["Is the sun real? Mama says it used to come up every day.", "Every day! That sounds made up."],
 
     # --- The Luskan Arms -----------------------------------------------------

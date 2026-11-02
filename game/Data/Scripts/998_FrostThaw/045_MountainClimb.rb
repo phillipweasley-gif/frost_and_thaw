@@ -173,6 +173,7 @@ module FrostThaw
       return say(["KEEGAN: Kelvin's Cairn. East, past the Bryn Shander road and across the tundra.",
                   "KEEGAN: Boy knows the way. He'll take you straight to the camp. Please hurry."], event_id)
     end
+    return keegan_after_garret(event_id) if flag?(:garret_found)
     say(["A handsome man in his thirties opens the door. The dog races past him inside.",
          "When he sees you instead of his husband, his smile fades.",
          "KEEGAN: ...Come in. Come in out of the cold. You'll want cider. Everyone wants cider. Sit.",
@@ -203,6 +204,38 @@ module FrostThaw
     set_switch(SW_MC_TAKEN, true)
     state[:climb_goal_prev] = state[:goal]
     state[:goal] = "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn."
+  end
+
+  # You found Garret on the mountain before anyone asked you to. Keegan already
+  # knows (Garret's home, or he's standing behind you); the others are still up there.
+  def keegan_after_garret(event_id = nil)
+    if flag?(:keegan_told_garret)
+      say(["KEEGAN: (opening the door before you knock) You came back. He's been watching the mountain all day."], event_id)
+    elsif flag?(:garret_sent_home)
+      say(["Keegan opens the door with Garret's coat still over his arm. Garret is asleep by the fire, bandaged to the eyebrows.",
+           "KEEGAN: You're the ones. He told me. A yeti, and the cats, and you, out of nowhere.",
+           "KEEGAN: He won't stop talking about the others. Perilou, Astrix, Mokingo. He keeps trying to get up."], event_id)
+    else
+      say(["Keegan opens the door, sees who's standing behind you, and makes a sound you'll remember for a long time.",
+           "GARRET: (sheepish, bloody) I'm all right. I'm all right. They found me. Ow. Not so hard.",
+           "KEEGAN: (not letting go) You absolute idiot. You absolute, impossible idiot."], event_id)
+      set_flag(:garret_with_you, false)
+      set_flag(:garret_sent_home)
+      set_switch(SW_MC_GARRET_HOME, true)
+    end
+    set_flag(:keegan_told_garret)
+    say(["KEEGAN: I've no money. The Luskan Arms will give you rooms, I'll see to it, and my scrimshaw, what it's worth.",
+         "KEEGAN: But his friends are still on that mountain. Would you go back up for them?"])
+    if !pbConfirmMessage(_INTL("Go back up Kelvin's Cairn for the others?"))
+      return say(["KEEGAN: ...Of course. You've done more than enough. (He looks at the window, at the mountain, for a long time.)"])
+    end
+    sayc([cl(:reptin, "All three. We swore it on the mountain and we'll swear it here."),
+          "KEEGAN: Take Boy. He knows the way up better than anyone now."])
+    set_flag(:climb_taken)
+    set_flag(:boy_with_you)
+    set_switch(SW_MC_TAKEN, true)
+    state[:climb_goal_prev] = state[:goal]
+    state[:goal] = "Kelvin's Cairn, again: find Perilou, Astrix and Mokingo."
   end
 
   #-----------------------------------------------------------------------------

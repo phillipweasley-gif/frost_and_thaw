@@ -395,7 +395,7 @@ module FrostThaw
     say(["A hungry brown bear is pulling low branches off a pine and gnawing them. It sees you,",
          "and comes toward you, looking for tastier food."])
     if with_or_is?(:meat_meat)
-      sayc([as(:meat_meat, "(drawing himself up to his full height, and roaring) MEAT MEAT IS NOT FOOD."),
+      sayc([as(:meat_meat, "(drawing herself up to her full height, and roaring) MEAT MEAT IS NOT FOOD."),
             "The bear stops. Considers. Leaves."])
       return
     end
