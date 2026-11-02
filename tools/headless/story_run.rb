@@ -541,8 +541,10 @@ module Story
       talk(/Hiding duergar/); talk(/Shelves of flasks/)
       beat("  A21 the heart-fuel", :frostfire_flask)
       until_flag(:rootbreaker_elevator, 3) { travel(2150); talk(/Infernal Rootbreaker/) }
-      travel(2151); HL.frames(20); HL.settle(3000)
-      talk(/Balcony rail/); clear_trainers; talk(/Bolt-slits/); talk(/Ritual circle/)
+      until_flag(:vantage_cleared, 3) do
+        travel(2151); HL.frames(20); HL.settle(3000)
+        talk(/Balcony rail/); clear_trainers; talk(/Bolt-slits/); talk(/Ritual circle/)
+      end
       beat("  A24/A25 the vantage towers cleared", :vantage_cleared)
       beat("  A29 the mind-flayer corpse", :saw_mindflayer)
       until_flag(:rootkeep_gate_open, 3) { travel(2150); clear_trainers; talk(/Root-keep gate/) }
