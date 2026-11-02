@@ -125,6 +125,15 @@ check("every trainer is in the game's trainer list") {
 check("every trainer's Pokémon is a real species or fusion") {
   bad = FT::TRAINERS.flat_map { |k, (_t, _n, party)| party.map { |sp, _l| [k, sp] } }.reject { |_k, sp| (GameData::Species.get(sp) rescue nil) }
   bad.empty? || (puts bad.inspect; false) }
+check("every wild and boss Pokémon in the scripts is a real species or fusion") {
+  syms = Dir[File.join(FT_DIR, "*.rb")].flat_map { |f| File.read(f, encoding: "UTF-8").scan(/named_mon\(:(\w+)/).flatten }
+  syms += FT::ENCOUNTERS.values.flat_map { |t| t.reject { |k, _| k == :step_chances }.values.flatten(1).map { |e| e[1] } }
+  bad = syms.uniq.reject { |sp| (GameData::Species.get(sp.to_sym) rescue nil) }
+  bad.empty? || (puts bad.inspect; false) }
+check("the Heartroot's lower zones and the Forge's rooms are named, with their switches in range") {
+  (2140..2155).all? { |id| FT::MAP_NAMES[id] } &&
+    [FT::SW_HEARTWALL, FT::SW_RING_DONE, FT::SW_BARRACKS_DONE, FT::SW_LIFT_NODE, FT::SW_AMBER_PODS, FT::SW_SAPLIFT,
+     FT::SW_ROOTWATCH, FT::SW_L3_GATE, FT::SW_MECHS, FT::SW_ANTECHAPEL, FT::SW_CIRCLE_PHASE, FT::SW_GOLEMS].all? { |s| (4080..4119).include?(s) } }
 check("Chapter 4's story switches are 3918-3926") { (FT::SW_DH_WEST_OPEN..FT::SW_WOLVES_GONE).to_a == (3918..3926).to_a }
 check("Chapter 4's maps are named") { (2030..2040).all? { |id| FT::MAP_NAMES[id] } }
 check("every trainer class exists") { FT::TRAINERS.values.all? { |(type)| GameData::TrainerType.try_get(type) } }

@@ -42,7 +42,8 @@ cave_paint(rg, floor_rects([
   [12, 28, 22, 3],                    # the passage past the door
   [30, 20, 7, 8],                     # H3: the overlook
   [10, 30, 3, 4], [6, 31, 10, 4],     # H4: the guard post, and the stair down
-  [2, 32, 4, 2]                       # the Guild's dig breaks in from the west
+  [16, 31, 5, 4],                     # H35: the Captain's Alcove (Tab 3)
+  [2, 32, 4, 2]                      # the Guild's dig breaks in from the west
 ]))
 [[4, 3], [7, 9], [13, 13], [19, 15], [12, 18], [22, 18], [12, 25], [22, 25], [31, 21], [35, 26], [27, 29], [14, 33]].each { |x, y| rg.set(x, y, 2, 792) }
 # the four seasonal runes, bleeding coloured sap, on the circle's rim
@@ -68,6 +69,8 @@ rg.trainer(29, 29, nil, :thrall_mae, :FT_ROOTWARDEN, dir: 4, sight: 3)
 rg.trainer(19, 28, nil, :thrall_bryce, :FT_ROOTWARDEN, dir: 2, sight: 2)
 rg.trainer(25, 30, nil, :thrall_ulla, :FT_ROOTWARDEN, dir: 8, sight: 2)
 [32, 33].each { |y| rg.warp(2, y, 2066, 33, y - 20, 4, name: "Into the Guild dig") }
+rg.trainer(19, 32, nil, :sapwarden_captain_hesk, :FT_ROOTWARDEN, dir: 4, sight: 3)
+rg.event(20, 34, "Captain's root-desk", [{ graphic: "", tile_id: 581, script: "FT.captains_alcove(@event_id)" }])
 rg.event(8, 32, "Rootguard brazier", [{ graphic: "", tile_id: 581, script: "FT.talk(:rootguard_post, @event_id)" }])
 [7, 8].each { |x| rg.warp(x, 34, ID[:sap_wells], x == 7 ? 4 : 5, 3, 2, name: "Down to the Sap Wells") }
 save(rg, :root_gate)

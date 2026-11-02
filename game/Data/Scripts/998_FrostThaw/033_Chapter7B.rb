@@ -14,9 +14,14 @@
 #   7B.04 Gym 6: Mira of the North Wind, aboard the Boreal Requiem at the Split
 #         Dock. A mirror-core in the hold first; then Mira, herself again.
 #   7B.05 The aurora seal at the Root Gate (025_Chapter7.rb).
-#   7B.06 Three wells, and the attendant's three answers.
-#   7B.07 Selrae, below: home, or ahead. The Root-Key.
-#   7B.08 The door of iron and glass at the bottom of Hew's last ladder.
+#   7B.06 Three wells (visions, their backlash, and a second Vault Map
+#         fragment), and the attendant's answers, for a promise: burn the
+#         forge, or free the heart.
+#   7B.07 Selrae, below: the White Womb; home, or ahead. The Root-Key.
+#   7B.07+ The Root-Key opens the heart-wall: the Labyrinth's lower zones,
+#         down to Avarice's Scriptory and its glass sigil (046_DeepLabyrinth.rb).
+#   7B.08 The door of iron and glass at the bottom of Hew's last ladder: the
+#         Root-Key for the iron, the glass sigil for the glass.
 #
 # The Heartroot's maps join up the way they did before (the well in the market
 # and Hew's ladder both lead down), so the beats can come in more than one
@@ -319,12 +324,21 @@ module FrostThaw
     Stage.overlay("O-03", fade: 20)
     say(WELL_VISIONS[n])
     Stage.overlay_off("O-03", fade: 20)
+    # the visions bite back (Tab 3: psychic backlash)
+    $Trainer.party.each { |pk| pk.hp = [pk.hp - [pk.totalhp / 10, 1].max, 1].max if pk.hp > 0 } rescue nil
+    say(["The vision lets go all at once. Your head rings like a struck bell, and your Pokémon flinch and shake theirs."])
     if (1..3).all? { |i| flag?(:"well_vision_#{i}") }
       set_flag(:wells_seen)
       add_counter(:story_beats)
       sayc([cl(:alberica, "Three wells, three bad dreams. Somebody else's memories."),
             cl(:alberica, "Or somebody else's plans."),
             cl(:alerion, "Plans.")])
+      if !flag?(:vault_map_2)
+        say(["In the third basin, where the visions overlapped, the sap has set into something flat and pale:",
+             "a second fragment of the frost-drawn map. A glacier. A door. A dragon's eye."])
+        set_flag(:vault_map_2)
+        sayc([cl(:alberica, "Two pieces, darling. Told you there'd be more."), cl(:alerion, "One to go.")])
+      end
     end
   end
 
@@ -332,6 +346,17 @@ module FrostThaw
     sayc(["A sap-thing clings to a root column.", "Half its face is smooth. The other half is a swirl of mouths.",
           "ATTENDANT: (in Avarice's voice, then in #{herald?(:alberica) ? 'your own' : "Alberica's own"}) Ask. One question each.",
           cl(:alberica, "Don't do my voice. Nobody does my voice.")], event_id)
+    if !state[:attendant_promise]
+      say(["ATTENDANT: (every mouth at once) But a question costs a promise. Burn the forge. Or free the heart."])
+      c0 = pbMessage(_INTL("The attendant's price..."), [_INTL("\"We'll burn the forge.\""), _INTL("\"We'll free the heart.\""), _INTL("Promise nothing")], 2)
+      if c0 == 2 || c0.nil?
+        return say(["ATTENDANT: Then ask nothing. The sap is listening. The sap remembers who promises."])
+      end
+      state[:attendant_promise] = c0 == 0 ? :burn : :free
+      set_flag(:attendant_promise)
+      say([c0 == 0 ? "ATTENDANT: Burn it. Yes. Burn the hot heart out of the tree." : "ATTENDANT: Free it. Yes. Nothing should beat in a cage.",
+           "ATTENDANT: Remember. We will."])
+    end
     asked = state[:attendant_asked] ||= []
     opts = []
     opts << [:summer, _INTL("About Summer")] if !asked.include?(:summer)
@@ -365,7 +390,9 @@ module FrostThaw
           "SELRAE: I didn't know it was her.",
           herald?(:alberica) ? "(Avarice.)" : (with_or_is?(:alberica) ? "ALBERICA: (very plainly) Avarice." : "Avarice."),
           "SELRAE: (closing her eyes) I've read that name in the oldest ledgers. I hoped it was a story.",
-          cl(:meat_meat, "Not a story. Meat Meat has the scars.")], event_id)
+          cl(:meat_meat, "Not a story. Meat Meat has the scars."),
+          "SELRAE: She has a vault. Far north, under the glacier, where the goddess keeps what she can't bear to look at.",
+          "SELRAE: (softly, like a prayer) The White Womb. That's what the old priests called it. I never thought I'd say it aloud."], event_id)
     c = pbMessage(_INTL("What do you tell Selrae?"), [_INTL("\"Come home. Tell the Council.\""), _INTL("\"Come with us.\"")], 0)
     if c == 1
       set_flag(:selrae_ahead)
@@ -385,7 +412,7 @@ module FrostThaw
     set_flag(:selrae_faced)
     ($game_switches[SW_SELRAE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    state[:goal] = "The door of iron and glass at the bottom of Hew's last ladder, in the Guild Dig."
+    state[:goal] = "The Root-Key: the knotted heart-wall here in the Sap Wells, and the Heartroot's lower zones below it."
   end
 
   def apply_road_b_switches
