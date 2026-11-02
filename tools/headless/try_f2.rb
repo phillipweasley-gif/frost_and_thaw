@@ -38,6 +38,14 @@ $Trainer.party.each { |pk| pk.level = 80; pk.calc_stats; pk.heal }
 $Trainer.money = 100_000
 rest
 
+#--- the dead Glimmer's journal, read at the Rift (reaudit A item 2) ------------
+T.state[:companions] = [:alberica, :reptin, :alerion, :shade, :meat_meat]
+$PokemonBag.pbStoreItem(:FT_GLIMMERJOURNAL) rescue nil
+at(2061, 31, 7); talk("Lumen Shard"); heal
+ok("Shade comes back as Glimmer, and reads the dead Glimmer's journal: his own hand", T.flag?(:glimmer_joined) && T.flag?(:glimmer_knows_journal) &&
+   HL.instance_variable_get(:@log).any? { |l| l.include?("Will you bear hope when even the sun freezes?") })
+T.state[:companions] = [:alberica, :reptin, :alerion, :glimmer, :meat_meat]
+
 #--- Hellen's errands and the old passages -----------------------------------
 T.set_flag(:badge_hearth)
 rest
@@ -60,6 +68,19 @@ at(2059, 4, 23); talk("Sign herald_shrine")
 ok("...Tobin, talked down: the lantern-hooks named", T.flag?(:tobin_turned) && T.flag?(:shrine_frost_solved) && T.flag?(:lantern_runes_known))
 rest
 ok("...and Hellen's thanks", T.flag?(:shrine_frost_thanked) && has?(:LEFTOVERS))
+
+#--- Alerion's Day 5: the potions don't lock the desk (reaudit C B11) ----------
+(T.state[:dt] ||= {})[:alerion] = 3; (T.state[:dt_day] ||= {})[:alerion] = 0
+money = $Trainer.money; $Trainer.money = 100
+T.alerion_potions
+ok("Alerion's Day 5 counts even when the six potions can't be bought", T.dt_done(:alerion) == 4 && T.flag?(:alerion_potions_held) && !T.flag?(:alerion_potions_bought))
+$Trainer.money = money
+T.alerion_held_potions
+ok("...and Nivva holds them until he can", T.flag?(:alerion_potions_bought) && has?(:FT_RENEWALDRAUGHT))
+
+#--- Kethan's clue: the warden map (reaudit B B1) ------------------------------
+at(2183, 12, 20); talk("Sign warden_map")
+ok("reading the Rootwarden Hall's patrol map counts as Kethan's clue", T.flag?(:warden_map_seen))
 
 #--- the favour track --------------------------------------------------------
 T.state[:favour] = { spring: 2 }; T.state[:patron_faction] = nil
