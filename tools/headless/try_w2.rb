@@ -225,7 +225,7 @@ begin
       if BRANCH == "letgo" then check(flag(:shandar_speaker), "let the thug go: Shandar wins, and Naerth has his speaker")
       else
         check(flag(:shandar_exposed), "the thug talks: Naerth hired them")
-        check(BRANCH == "run" ? flag(:pc_speaker) : flag(:olivessa_speaker), "the new speaker")
+        check(pick == 0 ? flag(:pc_speaker) : flag(:olivessa_speaker), "the new speaker")
       end
     end
 
