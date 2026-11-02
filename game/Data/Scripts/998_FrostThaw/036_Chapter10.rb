@@ -700,11 +700,21 @@ module FrostThaw
 
   # Witness to restraint (Q1 evidence): Eirwen, at the Still Sky Shrine.
   def eirwen_shrine(event_id = nil)
-    if flag?(:eirwen_restraint)
+    if flag?(:eirwen_restraint) && flag?(:naerth_ledger)
       return say(["EIRWEN: I'll say it at the trial. I'll say it on a leaf, too, so it's said forever."], event_id)
     end
     say(["Eirwen Solglass sits barefoot by the scorched throne, frost-dust in their hair, writing on a crystal leaf.",
          "EIRWEN: Heralds. The leaves are full of you this week. Half of them say 'murderer'."], event_id)
+    # Naerth's last ledger (rootspire.md, Eirwen: kept in the oldest roots; never shown to anyone)
+    if !flag?(:naerth_ledger) && pbConfirmMessage(_INTL("Ask Eirwen: \"Naerth's last ledger. Will you show it to the court?\""))
+      say(["EIRWEN: (very still) I've kept it twelve years. I never knew who to show it to.",
+           "EIRWEN: Every page: Targos's sap money, its fish money, its lamp-oil, going north to a summer that never came.",
+           "EIRWEN: \"A.\", in the margin, in Naerth's hand. Over and over. He knew. He was afraid to say.",
+           "EIRWEN: ...Yes. The crystals should read it. He'd have wanted someone braver than him to carry it."])
+      set_flag(:naerth_ledger)
+      add_support(:eirwen, 1)
+    end
+    return if flag?(:eirwen_restraint)
     if pbConfirmMessage(_INTL("Ask Eirwen: \"Have you seen Reptin abuse his powers?\""))
       say(["EIRWEN: (looking up, considering) I watched the Mycolith fight from the Fane's ledge. And the Forge, in the leaves."])
       ok = challenge("Persuade Eirwen.", ["Ask them to read what the leaves actually recorded", "Remind them Reptin planted the tree",

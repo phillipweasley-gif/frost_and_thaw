@@ -549,6 +549,8 @@ module Story
         talk(/The golden leaf/); HL.settle(3000)
       end
       beat("SC 10.02 roots of love: the Heartroot's Test (#{FrostThaw.flag?(:anduin_reconciled) ? 'reconciled' : 'doubtful'})", :attunement_done)
+      travel(2056); talk(/Eirwen at the shrine/)
+      beat("  Eirwen: witness to restraint, and Naerth's last ledger", :naerth_ledger)
       # Q2: Meat Meat, Phildendrin, Autumn's mirror
       travel(2054); talk(/Root-cells/)
       beat("SC 10.03 assassin's reckoning (Phildendrin)", :phildendrin_found)
