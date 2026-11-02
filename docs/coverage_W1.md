@@ -25,22 +25,22 @@ No row is left Compressed or Missing.
 | # | Item | Status now | Where | Test |
 |---|---|---|---|---|
 | C1 | The hag froze Dougan's Hole; foiled, she survived | Changed (deliberate), kept | 022:790-897 | R |
-| C2 | The hag's bargain: end Auril's winter and cure Reptin | Full: offered at the Twenty Stones in her words, with a choice to ask the task; called in at the Heart | 044:792 `hag_bargain_offer` (from 022:825); 023:891 `thredra_parley` | T "the hag offers her bargain…", "…the winter and Reptin's wolf"; S "the hag makes her bargain…" |
+| C2 | The hag's bargain: end Auril's winter and cure Reptin | Full: offered at the Twenty Stones in her words, with a choice to ask the task; called in at the Heart | 044:802 `hag_bargain_offer` (from 022:825); 023:892 `thredra_parley` | T "the hag offers her bargain…", "…the winter and Reptin's wolf"; S "the hag makes her bargain…" |
 | C3 | Order of Life and Death; werewolf wardens; Reptin's curse marks him, bound by blood | Full: the lineage is now said ("It found the warden already in your blood") | 023:660 `order_ghost` | T "the ghost: … the Order's fall, the wardens…" |
 | C4 | The Heart; the hag's hidden truths (temporary, empowers her, removes a warden) | Changed (deliberate: World-Tree root), and the three hidden truths are now told | 023:660 `order_ghost` | T "…the questions: the winter, the cure" |
 | C5 | Hook: a parley invitation with a bargain | Full: the Stones parley carries the bargain; "Granny keeps her bargains" | 022:825, 022:874 | T, R |
 | C6 | Hook: hunters' rumours of cackling | Full (unchanged) | 023 TEXT `waste_trapper`, `dh_south_block` | R |
 | C7 | Reptin's vision: chained wolf, "Abandon your bond…" | Full, now with the crone's offer in the dream | 023:180 `scene_waste_start` | T "Reptin's dream carries the crone's offer" |
 | C8 | General features: dark, cold, slick floors, echoes, smell, names whispered | Full: four whisper points (names, shadows like hands, a slip on glazed ice, smoke and herbs, frost on every buckle) | 044:166 `chasm_whisper`; events "Whisper" on 2042, 2044, 2046 | T "names are whispered once"; S "every chasm whisper speaks once" |
-| C9 | Escalating horror toward a terrible moral choice | Full: the choice is now real (agree is possible) | 023:891 `thredra_parley` | T "you can agree to her bargain" |
+| C9 | Escalating horror toward a terrible moral choice | Full: the choice is now real (agree is possible) | 023:892 `thredra_parley` | T "you can agree to her bargain" |
 | C10 | Reptin anxious; nearly loses control at the blood | Full: amber eyes and fangs in the feast hall, steadied by the party | 044:189 `scene_feast_hall_enter` | T "the feast hall: Reptin's eyes go amber…" |
-| C11 | "Take me instead!" and her scornful refusal | Full: the module's refusal ("none of you reek of innocence") | 023:891 | R (story run picks it) |
-| C12 | She uses Reptin in the finale (threatens, holds him) | Full: the curse-tug, then frost holds him to the knees through the parley | 023:891 | T "the hag in full…" |
+| C11 | "Take me instead!" and her scornful refusal | Full: the module's refusal ("none of you reek of innocence") | 023:892 | R (story run picks it) |
+| C12 | She uses Reptin in the finale (threatens, holds him) | Full: the curse-tug, then frost holds him to the knees through the parley | 023:892 | T "the hag in full…" |
 | C13 | Her illusory greeting | Full: silhouette, embers for eyes, "This way… if you dare" | 023:231 | T "…after Granny's fire and the cure ahead" |
 | C14 | Detecting the illusion | Full: "Watch her closely" shows it's a projection | 023:231 | T "watching the crone closely shows she's an illusion" |
 | C15 | Icefall trap | Full (unchanged) | 023:258 | R |
 | C16 | Ice mephits | Full (unchanged) | 023:258 | R |
-| C17 | The frozen locket, Alberica's portrait | Changed (deliberate), kept; it now becomes a talisman and a daily blessing | 023:277; 044:854-886 | S "the Order's locket is only a portrait…", "…then it smiles, and blesses" |
+| C17 | The frozen locket, Alberica's portrait | Changed (deliberate), kept; it now becomes a talisman and a daily blessing | 023:277; 044:866-898 | S "the Order's locket is only a portrait…", "…then it smiles, and blesses" |
 | C18 | Gnoll femur frozen in the fallen ice | Full: "Fallen ice" event after the icefall | 044:178; 2042 (15,31) | T "the gnoll femur in the fallen ice" |
 | C19 | Feast-hall carnage incl. a human arm, a trapper, a dwarf | Full | 044:189 | T "…the carnage and the runes in full" |
 | C20 | Dead male yeti, heart cut out | Full, plus the frostbitten wound | 023:294 | R |
@@ -48,7 +48,7 @@ No row is left Compressed or Missing.
 | C22 | The grieving mother yeti who fights to the death | Owner decision: she lives or dies by how you handle her. Sing (if you stood with Alberica): calmed, helps against the troll. Back away: lives, guarding her mate. Fight: she fights to the death and dies curled over him | 023:324 `mother_yeti`; 2042 page on 4003 | T "backing away…", "the lullaby…", "fighting her: she fights to the death…", "…and stays dead" |
 | C23 | Footprints and drag marks | Full | 023:294 | T "the swaddling, and Reptin's vow" |
 | C24 | Swaddling in the father's fist | Full | 023:294 | T (same) |
-| C25 | Backpack, potion, Glimmer's journal ("…desperate to save Alberica…") | Full: the journal's lines as written, signed "Glimmer", kept as a readable key item; its last line appears after the Reversal | 023:392; 044:818 | T "Glimmer's journal, as written" |
+| C25 | Backpack, potion, Glimmer's journal ("…desperate to save Alberica…") | Full: the journal's lines as written, signed "Glimmer", kept as a readable key item; its last line appears after the Reversal | 023:392; 044:830 | T "Glimmer's journal, as written" |
 | C26 | Coins, gnoll greataxe, necklace of ears | Full: coins (₽1,250), the axe can be taken, the ears are left | 044:220, 226; 2042 (21,25), (12,25) | T "the scattered coins…", "the gnoll's greataxe…" |
 | C27 | Her echo: "such violence… time is ticking" | Full | 044:237 `yeti_after_echo` | T "…and the hag's echo: time is ticking" |
 | C28 | Glassy mirror corridor, reflections that linger and grin | Full | 023:411 | T "the fork: grinning reflections…" |
@@ -85,36 +85,36 @@ No row is left Compressed or Missing.
 | C59 | Prophecy of the wolf, the innocent and the crone | Full | 023:660 | T "…the prophecy" |
 | C60 | Ghost fades, body crumbles, lichen dims | Full | 023:660 | R |
 | C61 | Tip: only flame quells the ice-eater | Full, and it's real: the ice troll regenerates every round unless fire hit it | 023:660; 044:447 `minions_round` | T "the ice troll's flesh knits back…", "…unless fire hit it" |
-| C62 | The Heart | Full (unchanged) | 023:805 | R |
-| C63 | The cub in chains | Full (unchanged) | 023:805 | R |
-| C64 | Her look: bruise skin, baby-teeth necklace, staff of frozen sprites | Full | 023:891 | T "the hag in full…" |
-| C65 | Iron cauldron of ritual brew on blue flames | Full: in the scene, the parley, and an event | 023:805, 891; 2046 (10,7) | T, R |
-| C66 | Winter wolf (Kanan) and ice troll | Full (unchanged) | 023:816 | R |
-| C67 | "A life for a life… I always keep my end of a bargain… will you honour our deal?" | Full, in her words | 023:891 | T "…her bargain called in…" |
-| C68 | She half pulls Reptin's curse out | Full | 023:891 | T |
-| C69 | The choice: refuse, offer yourself, or agree | Full: "Never", Reptin's offer, the acorn, or "…Do it" (with a confirm) | 023:891 | T "you can agree to her bargain" |
-| C70 | "The new Winter… not so fickle"; "one little monster? How weak" | Full | 023:891 | T "…and her taunt" |
+| C62 | The Heart | Full (unchanged) | 023:806 | R |
+| C63 | The cub in chains | Full (unchanged) | 023:806 | R |
+| C64 | Her look: bruise skin, baby-teeth necklace, staff of frozen sprites | Full | 023:892 | T "the hag in full…" |
+| C65 | Iron cauldron of ritual brew on blue flames | Full: in the scene, the parley, and an event | 023:806, 892; 2046 (10,7) | T, R |
+| C66 | Winter wolf (Kanan) and ice troll | Full (unchanged) | 023:817 | R |
+| C67 | "A life for a life… I always keep my end of a bargain… will you honour our deal?" | Full, in her words | 023:892 | T "…her bargain called in…" |
+| C68 | She half pulls Reptin's curse out | Full | 023:892 | T |
+| C69 | The choice: refuse, offer yourself, or agree | Full: "Never", Reptin's offer, the acorn, or "…Do it" (with a confirm) | 023:892 | T "you can agree to her bargain" |
+| C70 | "The new Winter… not so fickle"; "one little monster? How weak" | Full | 023:892 | T "…and her taunt" |
 | C71 | Her tactics: spells, flight on the staff, illusions | Full: she rides her staff into the air (evasion up); she splits into three (evasion again, unless the locket shows the true one) | 044:465 `thredra_round` | T "her battle: the flight on the staff…" |
 | C72 | The Heart's lair actions | Full: a draining grey wave, visions of the dead (confusion), a pulse of life that heals everyone | 044:465 | T "…the Heart's lair magic" |
-| C73 | The cub in danger; freeing it mid-fight | Full: the cub cries as the Heart drains; you can wrench its chains free in the lunge | 044:465, 534 | T |
-| C74 | At low HP she lunges to kill the cub | Full: four answers; doing nothing without the ghost's help lets the knife fall | 044:534 `hag_lunge` | T "her lunge at the cub is stopped…", "holding still without the ghost's help: the knife falls…" |
-| C75 | The ghost intervenes once | Full (unchanged), and she can catch the knife | 023:816; 044:534 | R |
-| C76 | The hag dies; the Heart goes dormant | Changed (deliberate: the mirrors), kept; the Heart's backlash is used on the dark path | 023:962; 044:584 | T |
-| C77 | The cub saved; a home | Full: with its mother if she lives; orphaned, it comes to you, or Reptin calls the wolves to keep it | 044:679 | T |
-| C78 | The dark ending | Full: agree (or let the knife fall) and the cub dies, the sun rises, Reptin is cured and howls; she turns on you (win: a tragic victory; lose: the witch-queen ending); the wheel turns back to the start, and the next loop remembers | 044:584-667 | T "you can agree…", "…the cub dies, the winter breaks…", "…the wheel turns back", "…remembered next time round", "losing to her after the bargain: the witch-queen ending" |
-| C79 | Reptin embraces his guardianship | Full: the Heart turns to him, the wolf lies down, his vow to come back | 044:679 | T "the Heart knows its warden; Reptin's vow" |
-| C80 | Treasure and epilogue | Changed (deliberate: the fall) kept, and the module's treasure and legacy restored: staff, opals, scroll, cold draught, ring, pelt, Order's chest, Heart shard; wildflower, howls, the Speaker's toast, the song, the dream, the owl feather, the carving | 044:736 `chasm_spoils`, 767 `chasm_falling_glimpses`, 782 `chasm_keepsakes` | T "the spoils and the keepsakes…", "the legacy glimpses as you fall" |
+| C73 | The cub in danger; freeing it mid-fight | Full: the cub cries as the Heart drains; you can wrench its chains free in the lunge | 044:465, 544 | T |
+| C74 | At low HP she lunges to kill the cub | Full: four answers; doing nothing without the ghost's help lets the knife fall | 044:544 `hag_lunge` | T "her lunge at the cub is stopped…", "holding still without the ghost's help: the knife falls…" |
+| C75 | The ghost intervenes once | Full (unchanged), and she can catch the knife | 023:817; 044:544 | R |
+| C76 | The hag dies; the Heart goes dormant | Changed (deliberate: the mirrors), kept; the Heart's backlash is used on the dark path | 023:963; 044:594 | T |
+| C77 | The cub saved; a home | Full: with its mother if she lives; orphaned, it comes to you, or Reptin calls the wolves to keep it | 044:689 | T |
+| C78 | The dark ending | Full: agree (or let the knife fall) and the cub dies, the sun rises, Reptin is cured and howls; she turns on you (win: a tragic victory; lose: the witch-queen ending); the wheel turns back to the start, and the next loop remembers | 044:594-677 | T "you can agree…", "…the cub dies, the winter breaks…", "…the wheel turns back", "…remembered next time round", "losing to her after the bargain: the witch-queen ending" |
+| C79 | Reptin embraces his guardianship | Full: the Heart turns to him, the wolf lies down, his vow to come back | 044:689 | T "the Heart knows its warden; Reptin's vow" |
+| C80 | Treasure and epilogue | Changed (deliberate: the fall) kept, and the module's treasure and legacy restored: staff, opals, scroll, cold draught, ring, pelt, Order's chest, Heart shard; wildflower, howls, the Speaker's toast, the song, the dream, the owl feather, the carving | 044:746 `chasm_spoils`, 767 `chasm_falling_glimpses`, 782 `chasm_keepsakes` | T "the spoils and the keepsakes…", "the legacy glimpses as you fall" |
 
 ## E: Cold-Hearted Killer (R20-R27)
 
 | # | Item | Status now | Where | Test |
 |---|---|---|---|---|
-| R20 | Hlin Trollbane hires the party (100 gp) | Full: in the Lucky Liar, her pitch in the book's words; she pays when the murders stop | 044:897 `hlin`; 2024 (15,9) | T "Hlin Trollbane hires you…", "Hlin pays out…" |
-| R21 | Torrga Icevein and Torg's caravan | Full: camped in Lonelywood's clearing; sleds, flag, dogs, a hand; her double-price shop of fenced goods; the frozen half-elf with a Luskan bounty in her sack; confront her (a fight), her strongbox | 044:980-1043; 2021 (35-37,17-23), (29,18) | T "the frozen half-elf…", "confronting Torrga…" |
-| R22 | Three ice-dagger murders (Easthaven trapper, Targos shipbuilder, Bryn Shander glassblower) | Full: Hlin tells them; the glassblower ties to Kip's list | 044:897 | T "…three ice-dagger murders" |
-| R23 | Motive: he kills lottery cheats | Full alongside the campaign's motive: at Torg's he admits it ("She is owed. I collect.") | 044:946 `sephek_torgs` | T "Sephek at Torg's: he admits the murders…" |
-| R24 | His appearance | Full, now also at Torg's (no coat, the frozen-lake eyes, born at Midwinter) | 044:946 | T |
-| R25 | His true nature: a drowned mariner possessed by a frost druid's spirit | Full: revealed in two voices when he falls at the Moon Temple | 044:1045; 015:538 | T "what Sephek really is…" |
+| R20 | Hlin Trollbane hires the party (100 gp) | Full: in the Lucky Liar, her pitch in the book's words; she pays when the murders stop | 044:909 `hlin`; 2024 (15,9) | T "Hlin Trollbane hires you…", "Hlin pays out…" |
+| R21 | Torrga Icevein and Torg's caravan | Full: camped in Lonelywood's clearing; sleds, flag, dogs, a hand; her double-price shop of fenced goods; the frozen half-elf with a Luskan bounty in her sack; confront her (a fight), her strongbox | 044:992-1055; 2021 (35-37,17-23), (29,18) | T "the frozen half-elf…", "confronting Torrga…" |
+| R22 | Three ice-dagger murders (Easthaven trapper, Targos shipbuilder, Bryn Shander glassblower) | Full: Hlin tells them; the glassblower ties to Kip's list | 044:909 | T "…three ice-dagger murders" |
+| R23 | Motive: he kills lottery cheats | Full alongside the campaign's motive: at Torg's he admits it ("She is owed. I collect.") | 044:958 `sephek_torgs` | T "Sephek at Torg's: he admits the murders…" |
+| R24 | His appearance | Full, now also at Torg's (no coat, the frozen-lake eyes, born at Midwinter) | 044:958 | T |
+| R25 | His true nature: a drowned mariner possessed by a frost druid's spirit | Full: revealed in two voices when he falls at the Moon Temple | 044:1057; 015:538 | T "what Sephek really is…" |
 | R26 | Cold Regeneration | Changed (deliberate: frozen, returns in Act III), kept; the spirit "can't leave him" now explains it | 015:508 | R |
 | R27 | Sephek, Shimmer and the Glade | Changed (deliberate), kept | 015 | R |
 
@@ -124,9 +124,9 @@ No row is left Compressed or Missing.
 | Item | Status now | Where | Test |
 |---|---|---|---|
 | The hag froze Dougan's Hole and survived | Full | 022:790 | R |
-| Her offer: break the curse and cure Reptin | Full | 044:792 | T |
+| Her offer: break the curse and cure Reptin | Full | 044:802 | T |
 | Order; werewolf wardens; Reptin marked by blood | Full | 023:660 | T |
-| The Heart; needs innocent blood; a yeti baby | Changed (deliberate root), kept | 023:660, 891 | T |
+| The Heart; needs innocent blood; a yeti baby | Changed (deliberate root), kept | 023:660, 892 | T |
 | Her hidden truths | Full | 023:660, 777 | T |
 | Hook: A Hag's Bargain (parley) | Full | 022:825 | T |
 | Hook: Howling in the Dark | Full | 023 TEXT | R |
@@ -137,9 +137,9 @@ No row is left Compressed or Missing.
 | Tone: King's horror, Jordan's gravitas | Full: the horror beats are restored (carnage, guilt, voices, the corpse rising, the dark path) and the prophecy; the party's banter is the game's established voice | throughout | T |
 | Party composition notes | N/A (D&D balance notes) | – | – |
 | Reptin anxious, guilt-ridden | Full | 023:180 | T |
-| She singles him out ("Poor boy… Give it to me") | Full | 023:180; 044:792 | T |
+| She singles him out ("Poor boy… Give it to me") | Full | 023:180; 044:802 | T |
 | He briefly loses control, steadied | Full | 023:180; 044:189 | T |
-| "Take me instead!" | Full, with the module's refusal | 023:891 | R |
+| "Take me instead!" | Full, with the module's refusal | 023:892 | R |
 | If Reptin is absent, she holds a token | N/A: in this game Reptin is always with you or is you | – | – |
 
 ### Area 1
@@ -150,7 +150,7 @@ No row is left Compressed or Missing.
 | "Right this way… the cure for all your troubles…" | Full | 023:231 | T |
 | Icefall | Full | 023:258 | R |
 | Mephits | Full | 023:258 | R |
-| The locket | Changed (deliberate), kept and extended | 023:277; 044:854 | S |
+| The locket | Changed (deliberate), kept and extended | 023:277; 044:866 | S |
 | Gnoll femur in the ice | Full | 044:178 | T |
 
 ### Area 2
@@ -166,7 +166,7 @@ No row is left Compressed or Missing.
 | Swaddling | Full | 023:294 | T |
 | Healing potion | Full | 023:392 | R |
 | Coins, greataxe, necklace of ears | Full | 044:220, 226 | T |
-| Glimmer's journal | Full | 023:392; 044:818 | T |
+| Glimmer's journal | Full | 023:392; 044:830 | T |
 | Her voice: "such violence… time is ticking" | Full | 044:237 | T |
 | Reptin shaken; "We won't let her do this to anyone else" | Full | 044:189; 023:294 | T |
 | Bone dust for the death bowl | Full | 023:383 | T |
@@ -223,64 +223,64 @@ No row is left Compressed or Missing.
 | The yeti child; "prevent this atrocity"; soul-debt | Full | 023:660, 777 | T |
 | Reptin's cure vs duty | Full | 023:660, 777 | T |
 | Hint: cursed or freely given blood | Full | 023:660 | T |
-| Boon: heal, return | Full | 023:660, 816 | R |
-| Locket recognised and enchanted | Full | 023:660; 044:465, 534 | T |
+| Boon: heal, return | Full | 023:660, 817 | R |
+| Locket recognised and enchanted | Full | 023:660; 044:465, 544 | T |
 | Sacred weapon (silver dagger) | Full | 023:660; 044 `FT_ORDERDAGGER` | T |
 | Motherly words to Reptin | Full | 023:660 | T |
 | "Confront the witch. Save the innocent." | Full | 023:660 | T |
 | Prophecy | Full | 023:660 | T |
 | She lies down; dust; lichen dims | Full | 023:660 | T |
-| Tips: the staff, the flame | Full | 023:660; 044:447, 534 | T |
+| Tips: the staff, the flame | Full | 023:660; 044:447, 544 | T |
 | The Druidic Codex on the shelf | Full | 044:409; 2045 (8,3) | T "the Druidic Codex from the shelf" |
 
 ### Area 7
 | Item | Status now | Where | Test |
 |---|---|---|---|
-| Domed cavern, dais, the Heart | Full | 023:805 | R |
-| The cub in chains | Full | 023:805 | R |
-| Her true form | Full | 023:891 | T |
-| Cauldron | Full | 023:805, 891; 2046 | T |
+| Domed cavern, dais, the Heart | Full | 023:806 | R |
+| The cub in chains | Full | 023:806 | R |
+| Her true form | Full | 023:892 | T |
+| Cauldron | Full | 023:806, 892; 2046 | T |
 | "Granny Thredra" | Full | 023 | R |
-| Winter wolf and ice troll; "Warm blood!" | Full | 023:816; 044:447 | T |
-| The winter wolf is a Dougan's Hole extortionist (Kanan) | Full | 023:816 | R |
-| "Ssooo, my dearies… grand finale!" | Full | 023:891 | T |
-| Curse-tug; "I always keep my end of a bargain"; "will you honour our deal?" | Full | 023:891 | T |
-| "The new Winter, not so fickle as Auril" | Full | 023:891 | T |
-| The morality taunt | Full | 023:891 | T |
-| The choice | Full (with agreeing) | 023:891 | T |
-| Coven option | Full: on Hard, her sister Ethel steps out of the ice and fights beside her | 044:508 `thredra_battle` | T "on Hard, her coven sister…" |
+| Winter wolf and ice troll; "Warm blood!" | Full | 023:817; 044:447 | T |
+| The winter wolf is a Dougan's Hole extortionist (Kanan) | Full | 023:817 | R |
+| "Ssooo, my dearies… grand finale!" | Full | 023:892 | T |
+| Curse-tug; "I always keep my end of a bargain"; "will you honour our deal?" | Full | 023:892 | T |
+| "The new Winter, not so fickle as Auril" | Full | 023:892 | T |
+| The morality taunt | Full | 023:892 | T |
+| The choice | Full (with agreeing) | 023:892 | T |
+| Coven option | Full: on Hard, her sister Ethel steps out of the ice and fights beside her | 044:518 `thredra_battle` | T "on Hard, her coven sister…" |
 | Lair actions | Full | 044:465 | T |
-| At low HP she goes for the cub | Full | 044:534 | T |
-| Freeing the cub | Full | 044:534, 679 | T |
-| Her death | Changed (deliberate: the mirrors), kept; the Heart's backlash on the dark path | 023:962; 044:584 | T |
+| At low HP she goes for the cub | Full | 044:544 | T |
+| Freeing the cub | Full | 044:544, 689 | T |
+| Her death | Changed (deliberate: the mirrors), kept; the Heart's backlash on the dark path | 023:963; 044:594 | T |
 | The Heart dormant | Full | 023 TEXT `heart_crystal_after` | R |
-| Winter persists; a moral victory | Changed (deliberate: the Reversal), kept | 023:962 | R |
-| Reptin keeps the wolf; the Heart recognises him | Full | 044:679 | T |
-| Cub to a kind PC; party pet | Full | 044:679 | R |
-| Leave the Heart; destroying it would be catastrophic; Reptin volunteers | Full: you choose; her voice warns you off | 044:679 | T |
-| Reptin stays behind as guardian | Changed (cannot be done): the campaign's own Rootspire timeline has Reptin fall through time with the party at this moment and needs him in Acts II and III. He swears to come back, and answers the wardens' howl ("Keep the watch till I'm back") | 044:679 | T |
-| Dark ending | Full | 044:584 | T |
-| TPK ending (witch-queen) | Full: losing after the bargain plays it; losing in her lair plays it as a nightmare before you wake by the fissure | 044:641, 667 | T "…the witch-queen ending", "losing in her lair: the witch-queen nightmare" |
+| Winter persists; a moral victory | Changed (deliberate: the Reversal), kept | 023:963 | R |
+| Reptin keeps the wolf; the Heart recognises him | Full | 044:689 | T |
+| Cub to a kind PC; party pet | Full | 044:689 | R |
+| Leave the Heart; destroying it would be catastrophic; Reptin volunteers | Full: you choose; her voice warns you off | 044:689 | T |
+| Reptin stays behind as guardian | Changed (cannot be done): the campaign's own Rootspire timeline has Reptin fall through time with the party at this moment and needs him in Acts II and III. He swears to come back, and answers the wardens' howl ("Keep the watch till I'm back") | 044:689 | T |
+| Dark ending | Full | 044:594 | T |
+| TPK ending (witch-queen) | Full: losing after the bargain plays it; losing in her lair plays it as a nightmare before you wake by the fissure | 044:651, 677 | T "…the witch-queen ending", "losing in her lair: the witch-queen nightmare" |
 
 ### Rewards, legacy, epilogue
 | Item | Status now | Where | Test |
 |---|---|---|---|
-| Black Ice Staff (cackling dreams) | Full: a held item (Ice moves ×1.2) | 044:736 | T "the spoils…" |
-| Opals, counterspell scroll, cold-resistance potion, Black Ice Ring | Full: three Hag's Opals, the scroll (works like a Guard Spec), the draught (an Ice Heal), the ring | 044:736 | T |
-| Winter wolf pelt | Full: the hank Kanan leaves (held: halves Ice damage) | 044:736 | T |
-| The locket smiles; daily Bless | Full: the description changes; usable once a day (heals a quarter, cures status) | 044:854-886 | S |
-| Druidic Codex | Full | 044:409, 831 | T |
-| Never-melting Heart fragment | Full (optional to take) | 044:736, 849 | T |
-| Wildflower; wolf howls | Full | 044:767; 044:679 | T |
-| Ten-Towns' brief respite | Changed (deliberate: the Reversal), kept; the dark path gives the module's sunrise | 044:584 | T |
-| The Speaker thanks them | Full: Durmoot's toast | 044:767 | T |
-| "Glimmer in the Chasm" | Full | 044:767 | T |
-| Reptin sends word by wolf | Full: he answers the wardens' howl | 044:679 | T |
+| Black Ice Staff (cackling dreams) | Full: a held item (Ice moves ×1.2) | 044:746 | T "the spoils…" |
+| Opals, counterspell scroll, cold-resistance potion, Black Ice Ring | Full: three Hag's Opals, the scroll (works like a Guard Spec), the draught (an Ice Heal), the ring | 044:746 | T |
+| Winter wolf pelt | Full: the hank Kanan leaves (held: halves Ice damage) | 044:746 | T |
+| The locket smiles; daily Bless | Full: the description changes; usable once a day (heals a quarter, cures status) | 044:866-898 | S |
+| Druidic Codex | Full | 044:409, 843 | T |
+| Never-melting Heart fragment | Full (optional to take) | 044:746, 861 | T |
+| Wildflower; wolf howls | Full | 044:777; 044:689 | T |
+| Ten-Towns' brief respite | Changed (deliberate: the Reversal), kept; the dark path gives the module's sunrise | 044:594 | T |
+| The Speaker thanks them | Full: Durmoot's toast | 044:777 | T |
+| "Glimmer in the Chasm" | Full | 044:777 | T |
+| Reptin sends word by wolf | Full: he answers the wardens' howl | 044:689 | T |
 | The Order rekindled; the party as wardens | Full: the ghost names them wardens | 023:660 | T |
-| Auril's owl feather | Full: it settles on your collar (a key item) | 044:782 | T |
-| The dream: Alberica and a glowing child, "Balance is restored… for now" | Full | 044:767 | T |
-| The wolf-and-bloom carving | Full (a key item) | 044:782 | T |
-| The legend of the Heroes of the Cackling Chasm | Full | 044:767 | T |
+| Auril's owl feather | Full: it settles on your collar (a key item) | 044:792 | T |
+| The dream: Alberica and a glowing child, "Balance is restored… for now" | Full | 044:777 | T |
+| The wolf-and-bloom carving | Full (a key item) | 044:792 | T |
+| The legend of the Heroes of the Cackling Chasm | Full | 044:777 | T |
 
 ## Also fixed
 - `023_Chapter5.rb:135`: Reptin's "She promised to take it away" now refers to a promise the player has seen.
