@@ -707,7 +707,7 @@ module FrostThaw
   # rest anywhere is a day.
   #-----------------------------------------------------------------------------
   ELECTION_DAYS = 8          # the vote: a week and a day after Olivessa asks
-  GOOD_MEAD_MAPS = [2031, 2032, 2033]
+  GOOD_MEAD_MAPS = (2031..2033).to_a       # the town, the mead hall, the cooperage
 
   def start_election_clock
     state[:gm_election_day] = 0
