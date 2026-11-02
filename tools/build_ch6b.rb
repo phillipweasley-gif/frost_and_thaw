@@ -17,6 +17,15 @@ SW_LAKE_CLEAN = 3943
 
 def save(b, key) = save_map(b, ID[key], MUSIC[key])
 
+# --- the faithful build-out (W5) --------------------------------------------
+PROMENADE = 2189
+SW_LANTERN = 4166; SW_ORB_HALO = 4167; SW_KELYN_ORB = 4169; SW_EREN_TROUBLED = 4170
+SW_SPIRITS = 4171; SW_STILL_BEAST = 4172; SW_TALWYN_FIELDS = 4173; SW_HALDEN = 4176; SW_FROSTFELL = 4177
+def shown_on(b, x, y, name, switch, graphic, script, dir: 2, opacity: 255)
+  b.event(x, y, name, [{ graphic: "", through: true },
+                       { switch: switch, graphic: graphic, direction: dir, opacity: opacity, script: script }])
+end
+
 def stairs_closed(b, x, y)
   b.event(x, y, "Closed", [{ trigger: 1, script: "FT.talk(:closed_off, @event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward])" }])
 end
@@ -85,6 +94,9 @@ fl.sign(33, 13, :boundary_stone)
 end
 fl.event(45, 13, "Frozen hunter", [{ graphic: "BW029", direction: 6, opacity: 170, step_anime: false, walk_anime: false, script: "FT.frozen_hunter(@event_id)" }])
 [9, 17].each { |y| fl.sign(FW - 2, y, :auroral_wall) }
+shown_on(fl, 24, 14, "Talwyn, guarding", SW_TALWYN_FIELDS, "BW (28)", "FT.talwyn_fields(@event_id)", dir: 4)
+shown_on(fl, 40, 18, "The Still Beast", SW_STILL_BEAST, "Followers/PILOSWINE", "FT.still_beast(@event_id)", dir: 4, opacity: 210)
+shown_on(fl, 34, 6, "Two spirits", SW_SPIRITS, "Followers/VULPIX", "FT.fields_spirits(@event_id)", opacity: 180)
 seal_edges(fl)
 save(fl, :fields)
 
@@ -105,6 +117,12 @@ cn.event(20, 22, "Lumin Weavemoss", [
   { switch: SW_TWINS_MET, graphic: "Followers/LOPUNNY", direction: 2, script: "FT.lumin(@event_id)" }
 ])
 cn.event(31, 5, "Lumen Shard", [{ graphic: "", script: "FT.lumen_shard(@event_id)" }])
+cn.door(9, 12, PROMENADE, 29, 44, 8, name: "Leaf-bridge to the Lightfall Promenade")
+shown_on(cn, 21, 25, "Sister Ilse", SW_ORB_HALO, "BW (40)", "FT.twin_orb(@event_id)", dir: 8)
+shown_on(cn, 23, 25, "Brother Vosk", SW_ORB_HALO, "BW (40)", "FT.twin_orb(@event_id)", dir: 8)
+shown_on(cn, 23, 23, "Kelyn at the orb", SW_KELYN_ORB, "BW (30)", "FT.kelyn_orb(@event_id)", dir: 4)
+cn.event(24, 21, "Sister Selene Marr", [{ graphic: "BW (107)", direction: 6, script: "FT.selene(@event_id)" }])
+shown_on(cn, 32, 6, "Portal to the Frostfell", SW_FROSTFELL, "Followers/FROSLASS", "FT.frostfell_portal(@event_id)", opacity: 140)
 # (Shade used to keep watch here; Shade became Glimmer at the Rift in Ch6. The twins carry SC 9.02 now.)
 cn.sign(30, 5, :rift_sign)
 # the twins, once they've come down (SC 6.03): around the Shrine from now on
@@ -126,8 +144,14 @@ save(cn, :canopy)
 lb, ex = Builder.from_existing(96)
 lb.map.events.clear
 [6, 7].each { |y| lb.door(17, y, ID[:canopy], 34, 17, 8, name: "Exit") }   # (the museum's own way out was out of reach)
-lb.npc(7, 4, "BW (30)", :eirwen, dir: 2, name: "Eirwen Solglass")
-lb.npc(4, 9, "BW (72)", :lorn_scribe, dir: 6, name: "The Lorn Scribe")
+lb.event(7, 4, "Eirwen Solglass", [{ graphic: "BW (30)", direction: 2, script: "FT.eirwen(@event_id)" }])
+lb.event(4, 9, "The Lorn Scribe", [{ graphic: "BW (72)", direction: 6, script: "FT.lorn_scribe(@event_id)" }])
+lb.event(10, 3, "Solvaran's counter", [{ graphic: "BW (109)", direction: 2, script: "FT.solvaran(@event_id)" }])
+lb.event(12, 10, "Pimmlet Natch", [{ graphic: "BW (17)", direction: 4, script: "FT.pimmlet(@event_id)" }])
+lb.event(6, 10, "Professor Halden Vex", [{ graphic: "BW (55)", direction: 6, script: "FT.halden_vex(@event_id)" }])
+shown_on(lb, 7, 11, "Halden's engine", SW_HALDEN, "", "FT.halden_reset(@event_id)")
+lb.event(11, 5, "Alerion's desk", [{ graphic: "", script: "FT.alerion_desk(@event_id)" }])
+lb.sign(2, 9, :prophecy_leaf)
 lb.npc(14, 8, "Followers/BUNEARY", :wennen_scholar, dir: 4, name: "Wennen scholar")
 lb.sign(4, 4, :library_note)
 lb.event(15, 4, "Sub-vault", [{ graphic: "", script: "FT.subvault(@event_id)" }])

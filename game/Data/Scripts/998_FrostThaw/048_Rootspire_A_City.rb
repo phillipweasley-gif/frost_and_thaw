@@ -69,7 +69,7 @@ module FrostThaw
                2198 => :smugglers_run, 2199 => :frozen_run)
 
   # Every Rootspire map where the city's life (vignettes, watchers, omens) can find you.
-  ROOTSPIRE_MAPS = [2050, 2051, 2052, 2053, 2054, 2055, 2056, 2059, 2060, 2061, 2062, 2063] + (2180..2199).to_a
+  ROOTSPIRE_MAPS = (2180..2199).to_a + [2050, 2051, 2052, 2053, 2054, 2055, 2056, 2059, 2060, 2061, 2062, 2063]
 
   ENCOUNTERS[2198] = { step_chances: { Cave: 7 },
                        Cave: [[25, :GOLBAT, 38, 40], [20, :RATICATE, 37, 39], [15, :MISDREAVUS, 38, 40],

@@ -786,6 +786,8 @@ module FrostThaw
   def wynsnow(event_id = nil)
     if flag?(:grafting)
       if flag?(:lecture_done)
+        return if respond_to?(:wynsnow_chronal) && wynsnow_chronal(event_id)   # the Chronal Debt (048)
+        return if respond_to?(:research_sigils) && research_sigils(event_id)   # researching the sigils (048)
         return say(["WYNSNOW: Remember: no cocoon holds a stranger.",
                     "WYNSNOW: Graft what loves each other, and the tree remembers both."], event_id)
       end
@@ -882,6 +884,7 @@ module FrostThaw
 
   def lumin(event_id = nil)
     return twin_orb(event_id) if !flag?(:orb_visions)
+    return if respond_to?(:lumin_rite) && lumin_rite(event_id)      # Glimmer's seven-day rite (048)
     talk(:wennen_scholar, event_id)
   end
 
