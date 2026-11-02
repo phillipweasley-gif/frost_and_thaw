@@ -684,7 +684,7 @@ module FrostThaw
       pbMessage(_INTL("\\me[Badge get]{1} received the Palisade Seal!", $Trainer.name))
       pbReceiveItem(:TM118) rescue nil
       say(["DUVESSA: That TM teaches Steel Wing. Fitting for a town that's all walls and watchmen."], event_id)
-      state[:goal] = "Sephek is in Lonelywood. North gate. (Mishann at the House of the Morninglord wanted a word with Reptin.)"
+      state[:goal] = "Sephek is in Lonelywood: out the north gate, through Termalaine. (Mishann at the House of the Morninglord wanted a word with Reptin.)"
     end
   end
 
