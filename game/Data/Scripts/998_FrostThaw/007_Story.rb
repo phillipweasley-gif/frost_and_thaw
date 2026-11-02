@@ -73,6 +73,7 @@ module FrostThaw
   end
 
   def mart(key, event_id = nil)
+    return torrga_refusal(key, event_id) if respond_to?(:torrga_refuses?) && torrga_refuses?(key)
     stock = (MARTS[key] || MARTS[:targos]).dup
     stock.insert(1, :DNASPLICERS) if flag?(:badge_targos) && !stock.include?(:DNASPLICERS)   # Twinning, after Naerth's seal
     pbPokemonMart(stock)
@@ -306,7 +307,7 @@ module FrostThaw
          "NAERTH: Here is how Targos works. Everyone owes me something.",
          "NAERTH: Each new moon, Targos draws a name. So do Bryn Shander and Easthaven. Whoever's drawn walks out onto the tundra.",
          as(:reptin, "(under his breath) And everyone thanks him for the privilege. Charming."),
-         "NAERTH: People who run before the draw get found. By a man who doesn't feel the cold.",
+         "NAERTH: Some people pay to keep their names off the board. Lately, those people get found. Frozen. By a man who doesn't feel the cold.",
          "SHIMMER: Sephek.",
          "NAERTH: ...You know his name. Interesting.",
          "NAERTH: My seal says you aren't running. Earn it. Town Hall. I'll be waiting.",

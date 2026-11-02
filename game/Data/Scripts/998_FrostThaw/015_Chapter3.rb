@@ -66,7 +66,7 @@ module FrostThaw
     FT_SEPHEK: ["Auril's Chosen", :MYSTICALMAN, 0, 120, :LEADER_Pryce]
   )
   TRAINERS.merge!(
-    bug_catcher_pell: [:BUGCATCHER,       "Pell",   [[:SPINARAK, 15], [:PINECO, 16]],
+    bug_catcher_pell: [:BUGCATCHER,       "Nettle",  [[:SPINARAK, 15], [:PINECO, 16]],
                        "My bugs hate the cold. I'm starting to see their point."],
     lady_maren:       [:BEAUTY,           "Maren",  [[:B35H220, 16], [:SNUBBULL, 16]],
                        "Lonelywood's dreadful, darling. That's why I love it."],
@@ -144,7 +144,9 @@ module FrostThaw
     aurilite_four_after: ["Every time someone tells her no, the winter gets longer. You lot say no a lot."],
     ranger_tamsa_after: ["Lonelywood's Speaker bakes cookies for strangers. That's how you know you're welcome."],
     # --- Lonelywood ------------------------------------------------------------------
-    lonely_sign: ["LONELYWOOD", "Logging, fishing, scrimshaw. Speaker: Nimsy Huddle.", "(The house with the green roof.)"],
+    lonely_sign: ["LONELYWOOD", "Logging, fishing, scrimshaw. Speaker: Nimsy Huddle.", "(The house with the green roof.)",
+                  "The post is old Sembian work, like the oldest docks: carved dragons, lions and goats, all bowing toward a chimera.",
+                  "The crest of the family from Urmlaspyr that founded the town. Nobody here remembers their name. Nobody asks."],
     sign_moon_temple: ["North: the Moon Temple.", "Someone has carved little spirals into the post. They glow faintly."],
     sign_glade_road: ["East: the old logging road.", "Scratched underneath: \"NOT PAST THE STONES.\""],
     ramshackle_closed: ["RAMSHACKLE. The town's only inn. Closed since its owner was found hanged, two winters back.",
@@ -407,6 +409,33 @@ module FrostThaw
     say([cl(:alberica, "Shade. Look at me. We go together. Nobody goes alone."),
          "Outside, under the window, a tall figure with long ears and a lantern waits in the snow."].compact)
     state[:goal] = "The Glade of the Unmade, east of Lonelywood."
+  end
+
+  # The Happy Scrimshander's keeper: a doughy spinster of few words, who never
+  # talks about her past, only, fondly, about people she once knew who are dead.
+  IRISKREE_DEAD = [
+    ["IRISKREE: Corvin Tull used to buy that very needle. Steadiest hands in the Dale. Went through the ice off Targos.",
+     "IRISKREE: He'd have liked you. He liked anyone who paid."],
+    ["IRISKREE: Mags Ullan carved the best whales I ever saw. Lost her to a winter like this one.",
+     "IRISKREE: She laughed at everything. Even at the end. Especially at the end."],
+    ["IRISKREE: There was a man in Luskan who taught me to hold a blade very still. (She looks at the scrimshaw knife in her hand.)",
+     "IRISKREE: He's dead now. Most of the people I knew then are. I'm the one who isn't."]
+  ]
+
+  def iriskree(event_id = nil)
+    if first_time?(:met_iriskree)
+      say(["A doughy woman with grey hair pulled tight looks up from a whale tooth she's engraving, and back down.",
+           "IRISKREE: Iriskree Harrowhill. Needles, knives, inks, wax. Look. Buy. Don't chatter."], event_id)
+    else
+      lines = IRISKREE_DEAD[((counter(:iriskree_talks) rescue 0).to_i) % IRISKREE_DEAD.size]
+      add_counter(:iriskree_talks)
+      say(lines, event_id)
+    end
+    if first_time?(:iriskree_noticed)
+      sayc([cl(:shade, "(very quietly, once she's turned away) She stands like someone who's killed people for money."),
+            cl(:alerion, "Then she's retired. Leave it.")])
+    end
+    mart(:lonelywood, event_id)
   end
 
   #-----------------------------------------------------------------------------

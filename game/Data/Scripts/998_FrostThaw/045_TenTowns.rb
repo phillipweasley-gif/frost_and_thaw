@@ -20,9 +20,20 @@
 module FrostThaw
   SW_TT_COUNCIL_DONE = 4040    # the Council of Speakers has met (its chairs empty again)
 
-  MAPS.merge!(keegan_house: 2124, council_hall: 2134)
-  MAP_NAMES.merge!(2124 => "Velryn House", 2134 => "Council Hall")
-  AREAS.merge!(2124 => :targos, 2134 => :council_hall)
+  MAPS.merge!(keegan_house: 2124, council_hall: 2134, lakeshore_road: 2101)
+  MAP_NAMES.merge!(2124 => "Velryn House", 2134 => "Council Hall", 2101 => "Maer Dualdon Shore Road")
+  AREAS.merge!(2124 => :targos, 2134 => :council_hall, 2101 => :termalaine_path)
+  MAP_METADATA.merge!(2101 => { outdoor_map: true, announce_location: true, weather: [:Snow, 60], battle_environment: :Snow })
+  # RotF: the shore of Maer Dualdon between Targos and Termalaine
+  ENCOUNTERS[2101] = { step_chances: { Land: 21 },
+                       Land: [[25, :SWINUB, 13, 15], [20, :SNORUNT, 13, 15], [15, :SPHEAL, 13, 15],
+                              [15, :HOOTHOOT, 13, 15], [10, :DELIBIRD, 14, 16], [10, :SNEASEL, 14, 16], [5, :STANTLER, 15, 16]] }
+  TRAINERS.merge!(
+    shore_hunter_ilsa: [:HIKER, "Edda", [[:SWINUB, 14], [:TEDDIURSA, 15]], "Four hours of shore, and you're the only thing I've caught."],
+    shore_fisher_dov:  [:FISHERMAN, "Dov", [[:SPHEAL, 14], [:GOLDEEN, 15]], "Knucklehead trout. They're worth more than me. Ask anyone."]
+  )
+  TRAINER_INTROS.merge!(shore_hunter_ilsa: "EDDA: Trail's long and cold. Let's warm up.",
+                        shore_fisher_dov: "DOV: You're on my ice. That's a battle where I'm from.")
 
   TRAINER_TYPES.merge!(
     FT_SELLSWORD: ["Sellsword", :BLACKBELT, 0, 60],
@@ -30,15 +41,15 @@ module FrostThaw
   )
   TRAINER_INTROS.merge!(
     scramsax: "SCRAMSAX: Pay up, or we do this the old way. I always liked the old way.",
-    bhall_militia_1: "PELL: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.",
-    bhall_militia_2: "RHOSK: Last gap before the Speaker. Last chance to turn round."
+    bhall_militia_1: "GARVIN: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.",
+    bhall_militia_2: "HASKEL: Last gap before the Speaker. Last chance to turn round."
   )
   TRAINERS.merge!(
     scramsax:          [:FT_SELLSWORD, "Scramsax", [[:MACHOKE, 18], [:B57H83, 18], [:B262H68, 19]],
                         "Ha! Still got it. Not as much as you, mind."],
-    bhall_militia_1:   [:FT_MILITIA,   "Pell",     [[:GROWLITHE, 14], [:MAGNEMITE, 14]],
+    bhall_militia_1:   [:FT_MILITIA,   "Garvin",     [[:GROWLITHE, 14], [:MAGNEMITE, 14]],
                         "The Sheriff said strangers would come knocking. He didn't say they'd hit this hard."],
-    bhall_militia_2:   [:FT_MILITIA,   "Rhosk",    [[:SKARMORY, 14], [:B227H58, 15]],
+    bhall_militia_2:   [:FT_MILITIA,   "Haskel",  [[:SKARMORY, 14], [:B227H58, 15]],
                         "Walls hold. I don't, apparently."]
   )
 
@@ -70,6 +81,19 @@ module FrostThaw
   ]
 
   TEXT.merge!(
+    # --- The shore road: Targos to Termalaine, round Maer Dualdon (RotF) ----------
+    targos_termalaine_road: [{ if: { flag: :badge_bryn }, lines: ["The east road to Termalaine, round the lake's east shore. About four hours on foot.",
+                                                                  "Bryn Shander's diggers have cut the drifts back from the gate."] },
+                             ["The east road to Termalaine runs outside the wall, round the lake's east shore.",
+                              "It's buried in drifts higher than the gate. The speakers dig the roads out when the roads matter.",
+                              "(Nobody's dug it out since the last storm.)"]],
+    sign_shore_road_targos: ["MAER DUALDON SHORE ROAD", "West: Targos. North, up the east shore: Termalaine. Four hours. Keep the lake on your left."],
+    shore_hunter_ilsa_after: ["Four hours of shore. I've walked it forty times. It never gets shorter, but it gets quieter."],
+    shore_fisher_dov_after: ["Knucklehead trout bite best when the ice sings. Hear it? That groaning? That's singing."],
+    sign_shore_road_tm: ["SHORE ROAD", "South-west round the lake to Targos. Four hours, if the drifts are kind."],
+    shore_road_fisher: ["An ice fisher sits on an upturned bucket, a line down a hole in the lake, a sledge of knucklehead trout beside him.",
+                        "FISHER: Targos boats fish the middle of the lake. Termalaine fishes the east side. Out here's nobody's.",
+                        "FISHER: That's why the trout are fat. Don't tell either town."],
     # --- Targos: the Luskan Arms --------------------------------------------------
     luskan_rats: ["A rat scurries along the skirting and vanishes between the floorboards.",
                   "The floorboards are rotten. A cold draft comes up through them from the cellar."],
@@ -95,6 +119,8 @@ module FrostThaw
                    "COPPER: ...Thanks for saying you'd look. Nobody looks."],
     council_clerk: [{ if: { flag: :council_session }, lines: ["CLERK: The chairs are empty again. They will be until something worse happens.",
                                                              "CLERK: Then they'll all come back and argue about it."] },
+                    { if: { flag: :lottery_stand }, lines: ["CLERK: The speakers sat the morning after the draw. You missed it. Shouting, mostly.",
+                                                            "CLERK: Speaker Shane kept Bryn Shander's name. The others went home to think about it."] },
                     ["CLERK: The Council Hall. The speakers of all ten towns sit here, when there's call to.",
                      "CLERK: Shared business. Disputes between towns. Which happen more, the colder it gets."]],
     council_plaques: ["Ten chairs around a long table, a plaque on each:",
@@ -230,6 +256,8 @@ module FrostThaw
       set_flag(:met_elza)
       say(["ELZA: Elza. Garn's sister. He makes the swords; I sell the things that keep you alive long enough to use them.",
            "ELZA: Rations, cold-weather gear, ice picks, snowshoes. Poké Balls, potions. Whatever the tundra wants from you."], event_id)
+    elsif flag?(:mugs_done) && first_time?(:elza_thanked)
+      say(lines_for(:elza_after_mugs), event_id)
     end
     stock = MARTS[:bryn].dup
     $game_temp.mart_prices = {} if $game_temp && $game_temp.mart_prices.nil?
@@ -366,12 +394,16 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Stepping in from the door: if the speakers are sitting, the session starts.
   def council_enter(event_id = nil)
-    return if !flag?(:lottery_stand) || flag?(:council_session)
+    return if !council_sitting?
     council_session(event_id)
   end
 
+  def council_sitting?
+    flag?(:lottery_stand) && !flag?(:council_session) && !flag?(:termalaine_arrived) && !flag?(:lonelywood_arrived)
+  end
+
   def council_session(event_id = nil)
-    if !flag?(:lottery_stand) || flag?(:council_session)
+    if !council_sitting?
       return say(lines_for(:council_clerk), event_id)
     end
     set_flag(:council_session)

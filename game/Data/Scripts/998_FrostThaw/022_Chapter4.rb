@@ -116,7 +116,7 @@ module FrostThaw
     # the tundra
     aurilite_nine:  [:FT_AURILITE,     "Vesk",  [[:B428H215, 26], [:GLALIE, 25]],
                      "Go on, then. To the giant's house. The cold's expecting you."],
-    hunter_ulf:     [:HIKER,           "Ulf",   [[:PILOSWINE, 25], [:B503H310, 26]],
+    hunter_ulf:     [:HIKER,           "Orrin", [[:PILOSWINE, 25], [:B503H310, 26]],
                      "I hunt wolves. Two of them hunt me back. The talking ones."],
     # Speaker Durmoot's lodge (Gym 3)
     trapper_brann:  [:FT_TRAPPER,      "Brann", [[:SANDSLASH, 26], [:B87H28, 26]],
@@ -193,16 +193,20 @@ module FrostThaw
                        "Like they're melting it from below."],
     aurilite_eight_after: ["Twenty stones in a ring, in Dougan's Hole. Older than the town. She likes old things."],
     trapper_birk_after: ["Dougan's Hole? Mind your fingers. They'll bite you for a trout."],
-    channeler_mag_after: ["There's a chasm south of the Hole. It used to laugh. Now it waits."],
+    channeler_mag_after: ["There's a chasm south of the Hole. Hunters say it laughs on the new moon. The cackling carries for miles on the wind.",
+                          "Folk here think the witch who froze us made it her lair. Somebody ought to make sure she can't come back up out of it."],
     # --- Dougan's Hole -----------------------------------------------------------------
     sign_dougans: ["DOUGAN'S HOLE", "Speaker: Edgra Durmoot.", "(Someone has carved a crude wolf into the post, and scratched it out.)"],
     sign_twenty_stones: ["THE TWENTY STONES OF THRUUN.", "Nineteen granite menhirs in a rough triangle, and one at the centre.",
                          "Nobody knows who raised them. They were here when Dougan Dubrace found the place."],
     dh_door_closed: ["Nobody answers. A curtain twitches."],
-    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
-                     ["Them wolves are big as horses! They know words, an' a mighty lot of 'em!"]],
-    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["Sil an' Finn are home! I'm gonna tell everybody! I already told everybody!"] },
-                      ["They took Sil an' her brother Finn th' other day! Big ol' wolves did!"]],
+    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["(A local with small, misshapen ears, beaming) You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
+                     ["A local with small, misshapen ears grabs your sleeve.", "Them wolves are big as horses! They know words, an' a mighty lot of 'em!"]],
+    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["(Grinning a mouthful of little pointed teeth) Sil an' Finn are home! I'm gonna tell everybody! I already told everybody!"] },
+                      ["Someone grins at you with a mouthful of little pointed teeth.", "They took Sil an' her brother Finn th' other day! Big ol' wolves did!"]],
+    dh_pier: ["A single wooden pier, buckled by the ice so it humps up like a frozen wave.",
+              "Two keelboats are locked in the ice beside it, their masts white with rime. Nobody has sailed since the Rime came.",
+              "Fifty people live in Dougan's Hole. You'd guess fewer."],
     dh_chorus_sister: [{ if: { flag: :kids_home }, lines: ["Hilda's not stopped crying since. The good kind, mind."] },
                        ["Wolves say they ain't givin' 'em back till the town pays a king's ransom. Food an' gold.",
                         "This town can barely feed itself. An' there ain't no gold."]],
@@ -402,7 +406,8 @@ module FrostThaw
   def scene_good_mead_arrival
     set_flag(:good_mead_arrived)
     set_flag(:good_mead_met)
-    sayc(["Good Mead: squat houses carved with serpents, and a mead hall with eaves painted like wyverns.",
+    sayc(["Good Mead: squat houses carved with dinosaurs and serpents, and a two-storey mead hall with eaves painted like wyverns.",
+          "Its founders came from Chult and the Vilhon Reach, and it shows: the beasts on the lintels have never seen snow.",
           "Bees hum somewhere in a heated hall. The whole town smells of honey.",
           "OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
           cl(:alberica, "A woman who feeds strangers on sight. I think I'm in love."),
@@ -622,7 +627,8 @@ module FrostThaw
           "DURMOOT: Thank you.",
           "DURMOOT: ...Don't tell anyone I said that.",
           cl(:alberica, "Oh, sugar, I'm writing a song about it."),
-          "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind."])
+          "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind.",
+          "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns. ...Don't tell anyone I said that either."])
     pbReceiveItem(:TM95) rescue nil
     set_flag(:dh_morning)
     state[:goal] = "The Cackling Chasm, south of Dougan's Hole. She's there."

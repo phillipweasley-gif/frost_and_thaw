@@ -99,7 +99,7 @@ module FrostThaw
       set_switch(SW_FM_DWARVES, false)
     else
       say(["HRUNA: Hmph. Suit yerselves. We'll find someone with spine.",
-           "They stump away in a huff, and you don't see them again for days."])
+           "They stump away in a huff toward the Bryn Shander road, looking for somebody with spine. You don't see them again."])
       set_flag(:mugs_refused)
       set_switch(SW_FM_DWARVES, true)
     end
@@ -177,6 +177,9 @@ module FrostThaw
     give_key(:FT_BONEWHISTLE)
     $Trainer.money += 400
     pbMessage(_INTL("You found $400 in a dropped sealskin pouch."))
+    say(["Rolled up in the pouch with the coins: two stoppered vials sealed with a paw print. Potions of animal friendship.",
+         "(A creature that drinks one is your friend for a while. They work like Friend Balls.)"])
+    give(:FRIENDBALL, 2)
     set_flag(:izobai_fled)
     goblins_resolved
   end

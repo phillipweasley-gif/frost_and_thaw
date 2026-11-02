@@ -64,11 +64,11 @@ module FrostThaw
 
   TRAINER_TYPES.merge!(FT_FROSTDRUID: ["Frost Druid", :CHANNELER, 1, 120])
   TRAINER_INTROS.merge!(
-    forest_hunter_brann: "BRANN: You're after MY moose? Over my dead Pokémon.",
+    forest_hunter_brann: "HALVARD: You're after MY moose? Over my dead Pokémon.",
     forest_logger_tova:  "TOVA: Can't cut, can't haul, can't go home without wood. Might as well battle."
   )
   TRAINERS.merge!(
-    forest_hunter_brann: [:FT_TRAPPER, "Brann", [[:NOCTOWL, 18], [:B58H216, 18]], "Fine. You find it, then. I've been out here a month."],
+    forest_hunter_brann: [:FT_TRAPPER, "Halvard", [[:NOCTOWL, 18], [:B58H216, 18]], "Fine. You find it, then. I've been out here a month."],
     forest_logger_tova:  [:WORKER, "Tova", [[:MACHOP, 17], [:B185H216, 18]], "Strong arms, weak bench. Story of my life."]
   )
   TRAINER_INTROS[:ravisin] = "RAVISIN: Ten-Towns will be destroyed, if not by my hand, then by the Frostmaiden's!"
@@ -125,7 +125,7 @@ module FrostThaw
                         "Under it, in a different hand, in pencil: \"He didn't do it himself.\""],
     sahnar_after: ["The sarcophagus is empty and smells, inexplicably, of pumpkin spice."],
     tomb_bones: ["Bones, mostly animal. A few aren't."],
-    forest_hunter_brann_after: ["BRANN: A month. Not one clean look at it. It's like it KNOWS where I'll be."],
+    forest_hunter_brann_after: ["HALVARD: A month. Not one clean look at it. It's like it KNOWS where I'll be."],
     forest_logger_tova_after: [{ if: { flag: :white_moose_done }, lines: ["TOVA: Back to work. Thanks. I mean it."] },
                                ["TOVA: If you find that moose, tell it I said something rude."]]
   )
@@ -395,7 +395,7 @@ module FrostThaw
     say(["A hungry brown bear is pulling low branches off a pine and gnawing them. It sees you,",
          "and comes toward you, looking for tastier food."])
     if with_or_is?(:meat_meat)
-      sayc([as(:meat_meat, "(drawing himself up to his full height, and roaring) MEAT MEAT IS NOT FOOD."),
+      sayc([as(:meat_meat, "(drawing herself up to her full height, and roaring) MEAT MEAT IS NOT FOOD."),
             "The bear stops. Considers. Leaves."])
       return
     end

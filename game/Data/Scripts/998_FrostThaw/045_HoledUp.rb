@@ -106,7 +106,9 @@ module FrostThaw
             cl(:meat_meat, "Meat Meat will walk next to the doggy. Close. Very friendly.")])
       set_flag(:followed_koran)
     end
-    say(["Koran trots off west into the white, and something else white trots after him, just out of sight."])
+    if !flag?(:refused_wolves)
+      say(["Koran trots off west into the white, and something else white trots after him, just out of sight."])
+    end
     set_flag(:met_wolves)
     set_switch(SW_HU_WOLVES_WAIT, true)
     set_self_switch(event_id, "A")
@@ -138,12 +140,30 @@ module FrostThaw
   end
 
   def scene_tundra_start
+    # RotF: the blizzard on the crossing (DH10); wolves walking with you take its edge off.
+    shield = flag?(:followed_koran) && !flag?(:refused_wolves)
     sayc(["West of Dougan's Hole, everything is white. The blizzard comes in sideways.",
+          shield ? "Koran and Kanan fall in on the windward side without being asked, shoulder to shoulder, and their thick white coats take the worst of it." :
           flag?(:met_wolves) ? "The wolves' tracks run ahead, west, filling with snow almost as fast as you find them." :
                                "Under the drifts there are tracks: two wolves, enormous ones, heading west.",
+          shield ? cl(:reptin, "(quietly) Very thoughtful of them. Suspiciously thoughtful.") : nil,
           as(:shade, "Thirteen miles of this. Wonderful."),
           cl(:alberica, "Think of it as a long, cold walk with excellent company."),
-          cl(:shade, "I am. That's the problem.")])
+          cl(:shade, "I am. That's the problem.")].compact)
+    if shield
+      say(["Half a mile on, the wolves lope ahead into the white. \"We'll go first,\" Koran calls back. \"Make sure the way's clear.\""])
+    else
+      say(["The wind finds every gap in your furs. By the time the snow eases, everyone is numb, Pokémon included."])
+      $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 10), 1].max if !pk.egg? && pk.hp > 0 } rescue nil
+    end
+  end
+
+  # The pack comes into view across the whole width of the tundra: you can't
+  # walk round it (the campaign's bite is the root of Reptin's curse).
+  def starving_pack_sighted(event_id = nil)
+    return if ($game_switches && $game_switches[SW_PACK_GONE]) || flag?(:reptin_bitten)
+    say(["Shapes rise out of the snow ahead and come toward you, low and slow: four wolves, all ribs and eyes."])
+    starving_pack(event_id)
   end
 
   # SC 4.05 - The starving pack. Ordinary wolves, gaunt with hunger. Reptin

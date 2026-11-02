@@ -170,6 +170,13 @@ t.event(29, 18, "Torg's hand", [
   { graphic: "BW054", direction: 6, script: "FT.talk(:torgs_hand_idle, @event_id)" },
   { switch: SW_TORRGA_GONE, graphic: "", through: true }
 ])
+# (RotF: four hands drive and guard the other sleds)
+[[37, 18, "BW (38)", 4], [34, 22, "BW (40)", 6], [37, 23, "BW (72)", 4]].each do |x, y, g, dir|
+  t.event(x, y, "Torg's hand", [
+    { graphic: g, direction: dir, script: "FT.talk(:torgs_hand_idle, @event_id)" },
+    { switch: SW_TORRGA_GONE, graphic: "", through: true }
+  ])
+end
 seal_edges(t)
 save(t, :lonelywood)
 
@@ -199,7 +206,7 @@ save(ll, :lucky_liar)
 # 2028: the Happy Scrimshander (Iriskree Harrowhill's shop)
 sc, ex = Builder.from_existing(81)
 exits_to(sc, ex, ID[:lonelywood], 15, 16)
-sc.event(6, 6, "Iriskree", [{ graphic: "BWOldWoman", direction: 2, script: "FT.mart(:lonelywood, @event_id)" }])
+sc.event(6, 6, "Iriskree", [{ graphic: "BWOldWoman", direction: 2, script: "FT.iriskree(@event_id)" }])
 sc.npc(10, 9, "BW (62)", :scrim_customer, dir: 6)
 save(sc, :scrimshander)
 

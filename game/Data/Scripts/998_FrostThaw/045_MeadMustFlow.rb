@@ -180,7 +180,7 @@ module FrostThaw
       sayc([cl(:shade, "Show us where."),
             "FEF: (backing off) No. No, no. I'm not going back. But my tracks are plain enough. Follow those."])
     end
-    return if $game_switches[SW_GM_FOX_BOUGHT]
+    return if $game_switches[SW_GM_FOX_BOUGHT] || flag?(:fox_with_chwinga)
     say(["The fox in Fef's trap is rattled but unhurt. FEF: Want it? Not for less than a gold piece. It's a good fox."])
     return if !pbConfirmMessage(_INTL("Buy the fox for $100?"))
     return say(["You don't have it. FEF: No coin, no fox."]) if $Trainer.money < 100
@@ -220,7 +220,7 @@ module FrostThaw
     set_self_switch(event_id, "A")
     say(["A tiny figure pops out of the snow and hurls a wee snowball. It hits you square in the face.",
          "Then it capers about on top of the snow, delighted with itself. A chwinga."], event_id)
-    if $game_switches[SW_GM_FOX_BOUGHT]
+    if $game_switches[SW_GM_FOX_BOUGHT] && !flag?(:fox_with_chwinga)
       c = pbMessage(_INTL("The fox is straining toward the chwinga. Let it go?"), [_INTL("Let it go."), _INTL("Hold on to it.")], 0)
       if c == 0
         sayc(["The fox bolts across the snow. The chwinga bows to it, low and grave, and offers it a frozen berry.",
@@ -231,8 +231,7 @@ module FrostThaw
         give_key(:FT_CHWINGACHARM)
         state[:chwinga_charges] = CHWINGA_CHARGES
         say(["(The Charm of Animal Conjuring: use it from the Bag in battle, up to three times.)"])
-        set_switch(SW_GM_FOX_BOUGHT, false)
-        set_flag(:fox_with_chwinga)
+        set_flag(:fox_with_chwinga)              # (the switch stays on: Fef sold it, and it's gone)
         return
       end
     end
@@ -243,10 +242,6 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The lair
   #-----------------------------------------------------------------------------
-  def scene_verbeeg_lair_outside
-    say(lines_for(:lair_v1))
-  end
-
   LAIR_CENTRE = [2133, 15, 30, 8]
 
   def lair_hillside(event_id = nil)

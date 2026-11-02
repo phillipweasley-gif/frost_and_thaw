@@ -177,7 +177,7 @@ cave_bridge_h(r, 9, 25, 22)
 [[3, 20], [8, 27], [27, 16], [36, 18], [36, 28], [26, 28]].each { |x, y| tall_crystal(r, x, y) }
 [4, 5, 6].each { |x| r.warp(x, 32, ID[:upper_caves], 27, 2, 2, name: "Up to the caves") }
 r.cutscene(5, 28, :rift_arrive)
-trigger_row(r, [[4, 30], [5, 30], [6, 30]], "FT.chasm_whisper(3, @event_id)", "Whisper")
+trigger_row(r, [[4, 26], [5, 26], [6, 26]], "FT.chasm_whisper(3, @event_id)", "Whisper")   # (ahead of you as you arrive at y 28)
 trigger_row(r, [[10, 22], [10, 23]], "FT.scene_rift_walker_wakes", "Walker wakes")
 trigger_row(r, [[13, 22], [13, 23]], "FT.bridge_crack(@event_id)", "Bridge")
 trigger_row(r, [[16, 22], [16, 23]], "FT.bridge_slip(@event_id)", "Slip")

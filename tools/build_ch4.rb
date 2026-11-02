@@ -230,6 +230,7 @@ pier.each do |x, y|
   d.set(x, y, 1, PLANK[:c])
   d.set(x, y, 0, SNOW) if ice_at[[x, y]]     # no sliding along the boards (the game reads the ice under them)
 end
+d.sign(34, 31, :dh_pier)        # RotF: the buckled pier, and the two keelboats locked in the ice
 # the main street (packed boards) from the north-east road down to the pier
 street = Builder.rect_cells(24, 14, 16, 2) + Builder.rect_cells(38, 2, 2, 12)
 street.each { |x, y| d.set(x, y, 1, PLANK[:c]) }

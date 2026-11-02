@@ -20,7 +20,12 @@ module FrostThaw
   def loop_snapshot(act)
     snaps = (state[:loop_snap] ||= {})
     flags = (state[:flags] || {}).select { |k, v| v && !LOOP_SNAP_SKIP.include?(k) }.keys
-    snaps[act] = { flags: flags, companions: (state[:companions] || []).dup }
+    # ...and the story's own state and counters (start_loop clears them; a skip puts yours back)
+    keep = defined?(LOOP_KEEP_STATE) ? LOOP_KEEP_STATE : %i[flags counters companions loop_snap]
+    story = state.reject { |k, _v| keep.include?(k) }
+    story = (Marshal.load(Marshal.dump(story)) rescue {})
+    counters = (state[:counters] || {}).reject { |k, _v| k == :loop_count }.dup
+    snaps[act] = { flags: flags, companions: (state[:companions] || []).dup, state: story, counters: counters }
   rescue StandardError => e
     log("loop snapshot failed: #{e.message}") rescue nil
   end
@@ -31,6 +36,18 @@ module FrostThaw
     act == :act1 ? LOOP_ACT1_FLAGS : LOOP_ACT2_FLAGS
   end
 
+  # Your own state and counters from the act you're skipping (quest clocks,
+  # scores, favours): a skip replays them like the flags.
+  def loop_skip_state(act)
+    snap = state[:loop_snap] && state[:loop_snap][act]
+    return if !snap
+    (snap[:state] || {}).each { |k, v| state[k] = (Marshal.load(Marshal.dump(v)) rescue v) }
+    state[:counters] ||= {}
+    (snap[:counters] || {}).each { |k, v| state[:counters][k] = v if !%i[loop_count wheel].include?(k) }
+  rescue StandardError => e
+    log("loop skip state failed: #{e.message}") rescue nil
+  end
+
   # Returns true if the player chose to skip (and has been moved on).
   def loop_skip(act)
     return false if !loop? || flag?(:"loop_skip_asked_#{act}")
@@ -39,6 +56,7 @@ module FrostThaw
                             _INTL("You remember this, too. Skip ahead to the night of the Vote, at the end of Act II?")
     return false if !pbConfirmMessage(prompt)
     loop_skip_flags(act).each { |f| set_flag(f) }
+    loop_skip_state(act)
     badges = act == :act1 ? (0..2) : (0..7)
     badges.each { |i| $Trainer.badges[i] = true } rescue nil
     if act == :act1

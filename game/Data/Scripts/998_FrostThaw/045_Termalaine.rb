@@ -79,14 +79,14 @@ module FrostThaw
     path_skier_esk:    "ESK: The wind off the lake can knock you flat. Can you knock me flat?",
     path_aurilite_rho: "RHO: The north wind is Hers. Termalaine was built right in its teeth.",
     miner_jory:        "JORY: Mine's closed, so I'm out here with nothing to hit but you.",
-    tm_officer_varn:   "VARN: The Speaker sent you to do our job? Let's see if you're worth his gold."
+    tm_officer_varn:   "STENNIS: The Speaker sent you to do our job? Let's see if you're worth his gold."
   )
   TRAINERS.merge!(
     path_hiker_dun:    [:HIKER, "Dun", [[:GEODUDE, 15], [:B74H220, 16]], "Fine! It's your path too. Mind the drifts."],
     path_skier_esk:    [:BEAUTY, "Esk", [[:SMOOCHUM, 15], [:B124H215, 16]], "Flat. Very flat. I'll stay down here a while."],
     path_aurilite_rho: [:FT_AURILITE, "Rho", [[:SNORUNT, 16], [:B220H92, 16]], "The wind will have you anyway."],
     miner_jory:        [:FT_MINER, "Jory", [[:GEODUDE, 16], [:ONIX, 17]], "Should've been kobolds you were hitting. Not me."],
-    tm_officer_varn:   [:FT_MILITIA, "Varn", [[:GROWLITHE, 16], [:B227H58, 17]], "...You'll tell Masthew we helped. Won't you."],
+    tm_officer_varn:   [:FT_MILITIA, "Stennis", [[:GROWLITHE, 16], [:B227H58, 17]], "...You'll tell Masthew we helped. Won't you."],
     trex_ghost:        [:FT_SPIRIT, "Janth", [[:MISDREAVUS, 18], [:B200H92, 19]], "My lichens... my... lichens..."]
   )
   TRAINER_INTROS[:trex_ghost] = "JANTH: (from the empty air where the kobold was) You'll carry my satchel. You'll carry ME."
@@ -103,9 +103,13 @@ module FrostThaw
     tm_miner_out: [{ if: { flag: :mine_done }, lines: ["Back to work! Picks in the walls again. Best sound in the world."] },
                    ["The mine's closed. Kobolds. We ran out when they came in. Didn't stop to ask what they wanted.",
                     "And Hessa never came back up, the week before. They say she fell down the shaft. They say."]],
-    tm_shaelen: ["SHAELEN: Shaelen Masthew. I was Speaker here, once. Now I'm Oarus's mother, which is harder.",
+    tm_shaelen: [{ if: { flag: :oarus_dead }, lines: ["Shaelen Masthew stands where her son used to stand, outside the Blue Clam, looking at the mine road.",
+                                                      "SHAELEN: He went in with a lantern. I told him to send someone. He said a speaker doesn't send people where he won't go.",
+                                                      "SHAELEN: The town wants me back in the chair. I've told them I'm too old to bury another one.",
+                                                      "SHAELEN: ...Something lives down there that you didn't kill. Don't come back here without killing it."] },
+                 ["SHAELEN: Shaelen Masthew. I was Speaker here, once. Now I'm Oarus's mother, which is harder.",
                  "SHAELEN: His parents were adventurers. Half-orcs. They didn't come back from a job. I did.",
-                 "SHAELEN: He won the speakership by a hair. Half the militia still won't salute him. He hasn't told you that, has he?"],
+                 "SHAELEN: He won the speakership by a hair. Half the militia still won't salute him. He hasn't told you that, has he?"]],
     tm_officer_hint: ["OFFICER: The mine? Not our job. Speaker asked. We declined.",
                       "OFFICER: Termalaine needs a speaker who knows how things work. Speaker Maxildanarr in Targos agrees.",
                       "OFFICER: You didn't hear that. Move along."],
@@ -149,7 +153,7 @@ module FrostThaw
     path_aurilite_rho_after: ["RHO: Termalaine's pretty. The Frostmaiden likes pretty things. She keeps them."],
     miner_jory_after: [{ if: { flag: :mine_done }, lines: ["JORY: Back to work tomorrow! Thanks to you. Don't let it go to your head."] },
                        ["JORY: Fifty gold from the Speaker, they say. The militia won't touch it. Wonder why."]],
-    tm_officer_varn_after: ["VARN: Masthew won by a hair. Hairs get cut."],
+    tm_officer_varn_after: ["STENNIS: Masthew won by a hair. Hairs get cut."],
     tm_kobold_worker: ["KOBOLD: Termalaine! Warm! Work! The big ones laugh at our tails. Then they share chowder.",
                        "KOBOLD: Good town. Trex is quiet now. Trex is just Trex. That is fine. We like just Trex."]
   )
@@ -186,6 +190,7 @@ module FrostThaw
   # The town
   #-----------------------------------------------------------------------------
   def scene_termalaine_arrival
+    set_flag(:termalaine_arrived)
     say(["Termalaine spreads out from the shore of Maer Dualdon, bordered north and west by tall pines.",
          "The houses are carved with wizards and homunculi, tigers and smiling djinn.",
          "It's the most picturesque town in Icewind Dale. Then the north wind comes down off the lake and finds you."])
@@ -400,7 +405,21 @@ module FrostThaw
     say(["On a table in the miners' break room, two kobolds are poking a dead giant rat with their javelins.",
          "They screech when they see you and charge!"], event_id)
     if boss_battle(named_mon(:GIBLE, 17, "Grek"), named_mon(:GIBLE, 16, "Smol"))
-      say(["The moment one of them is hurt, both have a change of heart and flee north, down the tunnel to level three."])
+      say(["The moment one of them is hurt, both have a change of heart and bolt for the tunnel north."])
+      # RotF "Captured Kobolds": no check needed, they talk (R 5411-5422)
+      if pbConfirmMessage(_INTL("Grab the slower one before it gets away?"))
+        say(["You catch Smol by the tail. It squeals, then goes limp and very talkative.",
+             "SMOL: Trex led us here! He has wings like dragon!",
+             "SMOL: Trex smart! He speaks like human who knows a lot. He don't speak Dragon no more.",
+             "SMOL: Trex says miners want their mine back. Trex wants something better in return.",
+             "SMOL: Trex says we be safer in town. There's food in town!",
+             "You let go. Smol is gone down the tunnel before its feet touch the floor."])
+        sayc([cl(:alerion, "A kobold who stopped speaking Draconic. That's not a kobold thing. That's a someone-else thing."),
+              cl(:reptin, "Wings like a dragon, and a deal in mind. Let's go and hear it.")])
+        set_flag(:kobold_questioned)
+      else
+        say(["They flee north, down the tunnel to level three."])
+      end
       set_flag(:grek_fled)
       set_switch(SW_TM_GREK, true)
     end

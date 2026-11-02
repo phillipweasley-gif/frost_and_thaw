@@ -578,21 +578,28 @@ module FrostThaw
 
   # Flags that survive the loop; everything else is the story, and replays.
   LOOP_KEEP = %i[intro_done fell_through]
+  # Everything else in state is the story, and replays. These belong to the
+  # player (the team, the bag and what's in it, the save), not the story.
+  LOOP_KEEP_STATE = %i[flags counters companions goal loop_snap bargain_memory mode herald version active starter
+                       bag_limit bank pip_upgrades pip_yes chwinga_charges grass_line_v2 locket_day]
+  # Counters that are the player's, not the story's: the wheel, the beats and
+  # the loops themselves, and how many trainers you've beaten.
+  LOOP_KEEP_COUNTERS = %i[wheel story_beats loop_count trainers_beaten]
 
   def start_loop
     n = (counter(:loop_count) rescue 0).to_i + 1
-    keep_counters = { wheel: counter(:wheel), story_beats: counter(:story_beats) } rescue {}
     flags = state[:flags] || {}
     flags.keys.each { |k| flags.delete(k) unless LOOP_KEEP.include?(k) }
     state[:flags] = flags
     state[:counters] ||= {}
+    state[:counters].keys.each { |k| state[:counters].delete(k) unless LOOP_KEEP_COUNTERS.include?(k) }   # omens, watchers... replay
     state[:counters][:loop_count] = n
-    keep_counters.each { |k, v| state[:counters][k] = v if v }
     state[:companions] = []
     state[:goal] = nil
-    state.delete(:auril_stage); state.delete(:seams); state.delete(:attendant_asked)
+    state.keys.each { |k| state.delete(k) unless LOOP_KEEP_STATE.include?(k) }
     STORY_SWITCHES.each { |i| $game_switches[i] = false } if $game_switches
-    $game_self_switches.instance_variable_get(:@data)&.delete_if { |(m, _e, _c), _| m >= 2001 && m < 2100 } rescue nil
+    # every Frost & Thaw map (2001 up: Act I, its side quests at 2100+, Rootspire and on)
+    $game_self_switches.instance_variable_get(:@data)&.delete_if { |(m, _e, _c), _| m >= 2001 && m < 2400 } rescue nil
     set_flag(:in_loop)
     pbMessage(_INTL("(Loop {1}. You keep your team, your items and your Pokédex. The story starts again.)", n)) rescue nil
     if journey?
