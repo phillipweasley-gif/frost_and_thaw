@@ -167,19 +167,36 @@ module FrostThaw
       set_flag(:talion_foreshadowed)
     end
     return if !pbConfirmMessage(_INTL("Step into the reflection, after it?"))
+    enter_mirror_maze
+  end
+
+  # A1's way in (the notes: "Alerion must succeed on a Wisdom save to resist the
+  # gate's chilling whispers"): from the Echo Gate, after the wraiths in Ch6
+  # (048 echoes_at_the_wall), or the frost door from Ch7 on (echo_frost).
+  def enter_mirror_maze
     if !flag?(:maze_entered)
-      ok = with_or_is?(:alerion) ? true : challenge("The whispers press in.", ["Breathe, and let them pass", "Shout back", "Cover your ears"], 0)
+      who = with_or_is?(:alerion) ? (herald?(:alerion) ? "You" : "Alerion") : "You"
+      ok = challenge("The gate's whispers press in on #{who == 'You' ? 'you' : 'Alerion'}.",
+                     ["Breathe, and let them pass", "Shout back", "Cover your ears"], 0)
       if !ok
-        say(["The whispers get in. Your head rings; your Pokémon flinch."])
+        say(["The whispers get in. Heads ring; your Pokémon flinch and stagger, cold to the bone."])
         $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 6), 1].max if !pk.egg? && pk.hp > 0 } rescue nil
       end
     end
     transfer(*MIRROR_MAZE_ARRIVAL)
   end
 
+  def reflection_done?
+    flag?(:reflection_claimed) || flag?(:alerion_reflection)
+  end
+
   def scene_mirror_maze
     return if flag?(:maze_entered)
     set_flag(:maze_entered)
+    if reflection_done?
+      return sayc(["A pocket of the world made entirely of mirror-ice. Corridors that reflect corridors.",
+                   "Nobody walks away from you in it any more. At its heart, the wraiths wait in a ring."])
+    end
     sayc(["A pocket of the world made entirely of mirror-ice. Corridors that reflect corridors.",
           "Somewhere in it, very far off, a figure is walking away from you, wearing your face.",
           cl(:alerion, "(very quietly) That one's mine. I left it here. When the time broke, and we fell."),
@@ -187,9 +204,11 @@ module FrostThaw
   end
 
   # The maze's three junctions (skill challenge: 3 successes before 2 failures).
+  # A failed check brings a Mirror Wraith; beating it counts as a success. Two
+  # failures and the maze folds up on you: the round starts again.
   def maze_junction(which, event_id = nil)
     st = (state[:maze] ||= { ok: 0, bad: 0, done: [] })
-    return say(lines_for(:maze_pane), event_id) if st[:done].include?(which)
+    return say(lines_for(:maze_pane), event_id) if st[:done].include?(which) || reflection_done?
     prompt, opts = { stealth: ["Mirror Wraiths drift along the corridor ahead.", ["Wait for them to pass, then slip by", "Charge", "Call out"]],
                      path: ["Three corridors, each reflecting the others.", ["Follow the one where your reflection lags", "Follow the brightest", "Follow the coldest"]],
                      shadow: ["A flicker, at the edge of the ice.", ["Look for the shadow that doesn't match its owner", "Look for movement", "Look away"]] }[which]
@@ -202,6 +221,13 @@ module FrostThaw
         st[:ok] += 1                                   # (defeating a wraith counts as a success)
       else
         st[:bad] += 1
+        if st[:bad] >= 2
+          say(["The corridors turn, and turn again, and fold up like a letter. You're back where you came in.",
+               cl(:alerion, "(breathing hard) It's still in there. It'll wait. It's very good at waiting. So am I.")].compact)
+          state[:maze] = { ok: 0, bad: 0, done: [] }
+          return
+        end
+        return say(["(The wraith drives you back. This way's still open: try it again.)"])
       end
     end
     st[:done] << which
@@ -209,7 +235,12 @@ module FrostThaw
 
   # A1: claiming the reflection
   def maze_reflection(event_id = nil)
-    return say(["A pane of ice. Just ice now."], event_id) if flag?(:reflection_claimed)
+    return say(["A pane of ice. Just ice now."], event_id) if reflection_done?
+    today = (pbGetTimeNow.strftime("%Y%m%d") rescue "0")
+    if state[:reflection_dawn] && state[:reflection_dawn] == today
+      return say(["Your reflection's gone deep into the ice, past where you can follow.",
+                  "(It's escaped until the next dawn.)"], event_id)
+    end
     st = (state[:maze] ||= { ok: 0, bad: 0, done: [] })
     if st[:ok] < 3
       return say(["Far down the corridor, your reflection's back, turning a corner. You can't catch it from here.",
@@ -224,20 +255,30 @@ module FrostThaw
     tries = (state[:reflection_tries] ||= 0)
     ok = challenge("Meditate, and take it back.", ["Breathe slow, and let it come", "Reach in and grab it", "Talk to it"], [0, 2])
     if ok
+      say(["The face of the man who walked into the winter four hundred years ago, and left a piece of himself here."])
+      speak(:alerion, "(laying his palm flat on the glass) Come on, then. I've kept your seat warm. Well. Cold.",
+            "(a palm flat on the glass) ...Come home.")
       say([al ? "You breathe out. The reflection breathes in. Then it's not in the ice any more." :
                 "Alerion breathes out. The reflection breathes in. Then it's not in the ice any more.",
-           as(:alerion, "(steadier than any of you have heard him) ...There. I'm all here now.")])
+           as(:alerion, "(steadier than any of you have heard him) ...There. I'm all here now."),
+           cl(:alberica, "We won't ask, pretty boy. We'll just be very smug about it.")].compact)
       set_flag(:reflection_claimed)
+      set_flag(:alerion_reflection)
+      wheel(1)
+      add_counter(:story_beats)
+      give(:MENTALHERB, 2)
       grant_blessing(:reflection, "Alerion's Reflection", "Your Pokémon can no longer be confused.")
     else
+      # "Failure causes the reflection to flee deeper, requiring another round of checks.
+      #  If he fails three times, the reflection escapes until the next dawn."
       state[:reflection_tries] = tries + 1
+      st[:ok] = 0; st[:bad] = 0; st[:done] = []
       if tries + 1 >= 3
         say(["The reflection flees deeper, into ice you can't follow. It'll be back at dawn."])
         state[:reflection_tries] = 0
-        st[:ok] = 0; st[:done] = []
+        state[:reflection_dawn] = today
       else
-        say(["The reflection flinches and slides deeper. You'll have to go after it again."])
-        skirmish(named_mon(:B122H429, 55, "Mirror Wraith"))
+        say(["The reflection flinches and slides deeper, back into the corridors. You'll have to go after it again, junction by junction."])
       end
     end
   end

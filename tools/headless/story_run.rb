@@ -470,6 +470,7 @@ module Story
         travel(2050)
         HL.walk_to(8, 22) rescue nil; HL.step(4) rescue nil; HL.frames(20)
         HL.settle(3000)
+        mirror_maze if $game_map.map_id == 2161     # (A1: with Alerion along, the Gate opens on the maze)
       end
       beat("side: the Echo Gate's Mirror Wraiths (a Frostshard Sigil)", :echo_wraiths_down) unless ENV["NO_SIDE"]
       puts "ECHO GATE (the Wall holds until Ch9): #{$game_map.map_id == 2050 ? 'ok' : "FAILED (map #{$game_map.map_id} #{HL.pos})"}"
@@ -703,17 +704,26 @@ module Story
       travel(2053); talk(/Hellen/); HL.settle(3000)
     end
 
+    # A1 in the Mirror Maze: three junctions (three successes before two
+    # failures; a lost round folds the maze up), then the pane; a failed
+    # meditation sends you back through the junctions.
+    def mirror_maze
+      HL.frames(20); HL.settle(3000)
+      4.times do
+        break if FrostThaw.flag?(:reflection_claimed)
+        [/Junction: wraiths/, /Junction: three ways/, /Junction: the shadow/].each { |j| talk(j) }
+        talk(/Alerion's reflection/)
+        ($Trainer.heal_party rescue nil)
+      end
+      6.times { talk(/The ring of wraiths/) unless FrostThaw.flag?(:sigil_echo) || (FrostThaw.flag?(:echo_wraiths_down) && FrostThaw.flag?(:wraith_echo_avarice)) }
+      travel(2050)
+    end
+
     # The trial week's side stories (rootspire.md Tab 4 and Tab 6).
     def trial_week_side
       # the Mirror Maze, behind the Echo Gate's frost (A1; the wraiths' testimony; the Echo sigil)
       travel(2050); talk(/Echo Gate frost/); HL.settle(3000)
-      if $game_map.map_id == 2161
-        HL.frames(20); HL.settle(3000)
-        talk(/Junction: wraiths/); talk(/Junction: three ways/); talk(/Junction: the shadow/)
-        talk(/Alerion's reflection/)
-        6.times { talk(/The ring of wraiths/) unless FrostThaw.flag?(:sigil_echo) || (FrostThaw.flag?(:echo_wraiths_down) && FrostThaw.flag?(:wraith_echo_avarice)) }
-        travel(2050)
-      end
+      mirror_maze if $game_map.map_id == 2161
       beat("side: the Mirror Maze (Alerion's reflection; the wraiths' testimony)", :reflection_claimed)
       beat("  the Echo sigil (from the maze, or the Echo Gate's wraiths)", nil) if FrostThaw.flag?(:sigil_echo) || FrostThaw.flag?(:echo_wraiths_down)
       # W1: the Smuggler's Run

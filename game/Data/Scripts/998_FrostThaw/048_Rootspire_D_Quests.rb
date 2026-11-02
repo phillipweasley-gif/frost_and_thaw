@@ -752,50 +752,16 @@ module FrostThaw
   # Reversal broke time. Three successes before two failures, then the pane.
   #-----------------------------------------------------------------------------
   def echoes_at_the_wall
-    return false if flag?(:alerion_reflection) || !flag?(:echo_wraiths_down) || !with_or_is?(:alerion)
+    done = flag?(:alerion_reflection) || flag?(:reflection_claimed)
+    return false if done || !flag?(:echo_wraiths_down) || !with_or_is?(:alerion)
     return false if !pbConfirmMessage(_INTL("The frost in the Echo Gate is moving like a door. Go through, after Alerion's reflection?"))
     sayc(["Wind pours out of the Gate: laughter, sobbing. The frost patterns on the walls are eyes, and they follow.",
           "The wind whispers your names. Then a voice, familiar and cold: \"The lake remembers.\"",
           herald?(:alerion) ? "In the ice beside you, your reflection stops walking. You don't." :
                               "In the ice beside him, Alerion's reflection stops walking. He doesn't.",
           "It turns, and walks away from you, deeper into a maze of mirror-ice that wasn't there a moment ago."])
-    wins = 0; losses = 0
-    steps = [
-      ["Two Mirror Wraiths glide across the passage ahead.", [_INTL("Hold still and let them pass."), _INTL("Rush past.")], 0],
-      ["The corridor splits into four. Every one reflects the others.", [_INTL("Follow the frost that's thinnest."), _INTL("Follow the voices.")], 0],
-      ["A shadow moves in a pane of ice: his reflection, watching.", [_INTL("Look where the shadow points."), _INTL("Look where it's looking.")], 1],
-      ["The maze tightens. The cold presses on your ears.", [_INTL("Keep low, along the wall."), _INTL("Call his name.")], 0]
-    ]
-    steps.each do |text, opts, good|
-      break if wins >= 3 || losses >= 2
-      say([text])
-      c = pbMessage(_INTL("Which way?"), opts, 0)
-      if c == good
-        wins += 1
-      else
-        losses += 1
-        say(["A Mirror Wraith peels off the wall with Alerion's face, cracked."])
-        boss_battle(named_mon(:B122H429, 41, "Mirror Wraith"))
-      end
-    end
-    if wins < 3
-      sayc(["The reflection slips deeper into the ice and is gone. The maze folds up like a letter.",
-            cl(:alerion, "(breathing hard) It's still in there. It'll wait. It's very good at waiting. So am I.")].compact)
-      return true
-    end
-    sayc(["At the heart of the maze: a pane of clear ice. In it, Alerion's face, staring back. Younger. Frightened.",
-          "The face of the man who walked into the winter four hundred years ago, and left a piece of himself there."])
-    speak(:alerion, "(laying his palm flat on the glass) Come on, then. I've kept your seat warm. Well. Cold.",
-          "(a palm flat on the glass) ...Come home.")
-    set_flag(:alerion_reflection)
-    wheel(1)
-    add_counter(:story_beats)
-    sayc(["The reflection lays its palm against his from the other side. The ice goes soft as breath, and it steps through him.",
-          "The maze is gone. You're in the Echo Gate, and the wind has stopped whispering.",
-          herald?(:alerion) ? "(You feel heavier. In the good way. The way a coat does when it finally fits.)" :
-                              cl(:alerion, "...I'm heavier. In the good way. Don't ask me to explain it."),
-          cl(:alberica, "We won't, pretty boy. We'll just be very smug about it.")].compact)
-    give(:MENTALHERB, 2)
+    # One quest, one place: the Mirror Maze (047b, map 2161), with its junctions and its pane.
+    enter_mirror_maze
     true
   end
 
