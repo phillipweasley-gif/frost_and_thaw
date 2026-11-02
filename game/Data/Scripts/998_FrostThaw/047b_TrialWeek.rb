@@ -543,12 +543,20 @@ module FrostThaw
          "In her fist, something that catches the light in a hundred colours: a crystal leaf.",
          "Her cloak's clasp: the Bough circle. One of the patrols that went missing beyond the Wall."], event_id)
     fire = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && pk.moves.any? { |m| m && (%i[FIRE FAIRY].include?(GameData::Move.get(m.id).type) rescue false) } }
-    if !fire
-      return say(["(The ice is old and hard. It would need fire, or radiant light: a Fire- or Fairy-type move.)"])
+    token = ($PokemonBag.pbHasItem?(:FT_FIELDSPIRITS) rescue false)
+    if !fire && !token
+      return say(["(The ice is old and hard. It would need fire, or radiant light: a Fire- or Fairy-type move.)",
+                  "(Or a summer that owes you a favour.)"])
     end
-    return if !pbConfirmMessage(_INTL("Have {1} melt the ice?", fire.name))
-    say(["#{fire.name} melts the ice, slowly, carefully. The warden drops into your arms, breathing.",
-         "And out of the ice behind her, something else steps free: a wight of frozen time, with a face like a stopped clock."])
+    if fire
+      return if !pbConfirmMessage(_INTL("Have {1} melt the ice?", fire.name))
+      say(["#{fire.name} melts the ice, slowly, carefully. The warden drops into your arms, breathing."])
+    else
+      return if !pbConfirmMessage(_INTL("Hold up the Seasons' Token, and call the summer spirit?"))
+      say(["The green half of the token warms in your hand. A hot wind comes from nowhere, smelling of cut grass,",
+           "and the ice runs off the warden like rain off a roof. She drops into your arms, breathing."])
+    end
+    say(["And out of the ice behind her, something else steps free: a wight of frozen time, with a face like a stopped clock."])
     if skirmish(named_mon(:B92H478, 58, "Time Wight"))
       say(["The wight comes apart into seconds, and the seconds fall like snow.",
            "WARDEN BRISA: (coughing) ...How long? It was autumn. It was autumn a minute ago.",

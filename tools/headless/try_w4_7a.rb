@@ -81,7 +81,8 @@ begin
   S.beat("H5 the Memory Trade", :memory_traded)
   S.step_on(/Root tremor/)
   S.beat("H1 the root tremor", :tremor_done)
-  S.talk(/^Eira/); S.talk(/^Eira/); S.talk(/^Eira/)
+  S.talk(/^Eira/); S.talk(/^Eira/)
+  S.until_flag(:spore_guard, 3) { S.fit(48); S.travel(2068); S.talk(/^Eira/) }
   S.beat("Eira: the stalkers, the missing patrols, the spore-guard", :spore_guard)
   S.fit(48)
   S.talk(/The Blight/)

@@ -344,7 +344,7 @@ module FrostThaw
             mm ? "(You bite the needle in half.)" : "MEAT MEAT: (biting the needle in half) Meat Meat owes you NOTHING."])
     end
     sayc([cl(:reptin, "(stepping in front of her, as he did at the Forge) No. Not her. Not ever."),
-          cl(:alerion, "You faked your death to hide in a fridge. Come out."),
+          cl(:alerion, "You faked your death to hide in an icebox. Come out."),
           "AVARICE: Oh, I'll come out."])
     circuits = VAULT_CIRCUITS.count { |k| flag?(k) }
     type, name = TRAINERS[:avarice_reforged]

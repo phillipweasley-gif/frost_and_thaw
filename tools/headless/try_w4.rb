@@ -24,7 +24,7 @@ flags = %i[intro_done act1_done reversal rootspire_arrived met_hellen wardens_sw
            dragon_launched summer_ended mounted_up air_seams good_mead_saved air_pursuit dragon_down refugees_follow
            heralds_arrested twins_met glimmer_joined sap_gate_open wyn_joined]
 flags.each { |f| FT.set_flag(f) }
-FT.state[:companions] = %i[alberica reptin alerion meat_meat wyn]
+FT.state[:companions] = %i[alberica reptin alerion meat_meat wyn] - [FT.state[:herald]]
 [3934, 3935, 3936, 3937, 3938, 3942, 3944, 3945, 3974, 3981].each { |s| $game_switches[s] = true }
 $Trainer.party.clear
 %i[B330H152 FORGEL B7H221 SPOREYE B331H154 MYCONARCH].each { |sp| $Trainer.party << Pokemon.new(sp, 56) }

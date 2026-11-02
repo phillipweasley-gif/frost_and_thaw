@@ -453,7 +453,8 @@ module Story
       beat("SC 6.09 festival night (both roads open)", :ch7_started)
       beat("  Wyn joins", :wyn_joined) unless FrostThaw.herald?(:wyn)
       puts "  party now: #{FrostThaw.companions.inspect}"
-      chapter7 unless ENV["STOP_AT"] == "6"
+      # (before Chapter 7: chapter7 plays on to the ending, and after Ch9 the
+      # thinned Wall lets you through the Echo Gate)
       2.times do
         travel(2050)
         HL.walk_to(8, 22) rescue nil; HL.step(4) rescue nil; HL.frames(20)
@@ -462,6 +463,7 @@ module Story
       beat("side: the Echo Gate's Mirror Wraiths (a Frostshard Sigil)", :echo_wraiths_down) unless ENV["NO_SIDE"]
       puts "ECHO GATE (the Wall holds until Ch9): #{$game_map.map_id == 2050 ? 'ok' : "FAILED (map #{$game_map.map_id} #{HL.pos})"}"
       sweep("Rootspire") if ENV["SWEEP"]
+      chapter7 unless ENV["STOP_AT"] == "6"
     end
 
     # Act II, Chapter 7: the Heartroot's Root Gate and Sap Wells, and Selrae.
@@ -608,10 +610,11 @@ module Story
         HL.frames(20); HL.settle(3000)
         talk(/Junction: wraiths/); talk(/Junction: three ways/); talk(/Junction: the shadow/)
         talk(/Alerion's reflection/)
-        6.times { talk(/The ring of wraiths/) unless FrostThaw.flag?(:sigil_echo) }
+        6.times { talk(/The ring of wraiths/) unless FrostThaw.flag?(:sigil_echo) || (FrostThaw.flag?(:echo_wraiths_down) && FrostThaw.flag?(:wraith_echo_avarice)) }
         travel(2050)
       end
-      beat("side: the Mirror Maze (Alerion's reflection; the Echo sigil)", :sigil_echo)
+      beat("side: the Mirror Maze (Alerion's reflection; the wraiths' testimony)", :reflection_claimed)
+      beat("  the Echo sigil (from the maze, or the Echo Gate's wraiths)", nil) if FrostThaw.flag?(:sigil_echo) || FrostThaw.flag?(:echo_wraiths_down)
       # W1: the Smuggler's Run
       travel(2055); talk(/Dockworker/); talk(/Hatch to the Smuggler's Run/); HL.settle(3000)
       if $game_map.map_id == 2160
