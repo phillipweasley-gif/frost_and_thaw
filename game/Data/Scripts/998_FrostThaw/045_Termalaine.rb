@@ -420,8 +420,8 @@ module FrostThaw
     end
     say(["Into the bucket, one or two at a time. Hand over hand along the rope, the dark breathing up at you.",
          "Nobody looks down. Everybody looks down."])
-    step = west ? PBMoveRoute::Left : PBMoveRoute::Right
-    pbMoveRoute($game_player, [step] * 4) rescue nil
+    to_x = west ? MINE_SHUTTLE_WEST_X - 1 : MINE_SHUTTLE_EAST_X + 1
+    pbFadeOutIn { $game_player.moveto(to_x, $game_player.y) } rescue $game_player.moveto(to_x, $game_player.y)
   end
 
   MINE_SHUTTLE_EAST_X = 24

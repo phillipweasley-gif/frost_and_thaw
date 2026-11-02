@@ -151,8 +151,9 @@ module FrostThaw
   end
 
   def self.nimsy(event_id = nil)
+    settled = flag?(:rested_lonelywood)   # (not on your first night: that night belongs to Shimmer)
     nimsy_without_moose(event_id)
-    white_moose_nimsy(event_id) if flag?(:met_nimsy) && flag?(:rested_lonelywood)
+    white_moose_nimsy(event_id) if settled && flag?(:met_nimsy)
   end
 
   def white_moose_nimsy(event_id = nil)
