@@ -229,6 +229,32 @@ begin
       end
     end
 
+  when "charm"
+    # the Charm of Animal Conjuring: three uses in battle, then it fades
+    FrostThaw.give_key(:FT_CHWINGACHARM) rescue $PokemonBag.pbStoreItem(:FT_CHWINGACHARM)
+    FrostThaw.state[:chwinga_charges] = FrostThaw::CHWINGA_CHARGES
+    class PokeBattle_AI
+      alias w2_choose pbDefaultChooseEnemyCommand unless method_defined?(:w2_choose)
+      def pbDefaultChooseEnemyCommand(idx)
+        if @battle.pbOwnedByPlayer?(idx) && !$w2_used_this_battle && FrostThaw.chwinga_charm_usable?
+          $w2_used_this_battle = true
+          $w2_foe_hp_before = @battle.battlers[1].hp
+          return if @battle.pbRegisterItem(idx, :FT_CHWINGACHARM, -1)
+        end
+        w2_choose(idx)
+      end
+    end
+    3.times do |i|
+      $w2_used_this_battle = false
+      HL.battle_log = []
+      pbWildBattle(:SNORLAX, 40) rescue check(false, "battle #{i + 1}: #{$!.message}")
+      check(HL.battle_log.any? { |m| m =~ /struck by the conjured beasts/ }, "use #{i + 1}: the conjured beasts strike the foe")
+      check(FrostThaw.state[:chwinga_charges] == 2 - i, "use #{i + 1}: #{2 - i} use(s) left")
+      $Trainer.party.each(&:heal)
+    end
+    check(!($PokemonBag.pbHasItem?(:FT_CHWINGACHARM) rescue true), "after three uses the charm fades from the bag")
+    check(!FrostThaw.chwinga_charm_usable?, "and can't be used again")
+
   when "climb", "mugs", "holed", "council", "bryn", "targos"
     load File.join(__dir__, "try_w2_more.rb")
   end

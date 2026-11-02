@@ -66,8 +66,8 @@ module FrostThaw
       "A wand from a chieftain's dead hand. The pictographs show her blasting monsters with it. The curse comes with it.", 0, 0, 6],
     FT_GAHGBASKET: ["Basket of Bits", "Baskets of Bits", 1, 7500,
       "Gahg's wicker basket of shiny metal fragments. The metal isn't from this world: pieces of something that fell burning out of the sky.", 0, 0, 0],
-    FT_CHWINGACHARM: ["Chwinga's Charm", "Chwinga's Charms", 8, 0,
-      "A chwinga's supernatural gift, given riding on a fox's back. You can feel the beasts of the Dale paying attention to you.", 0, 0, 6]
+    FT_CHWINGACHARM: ["Charm of Animal Conjuring", "Charms of Animal Conjuring", 8, 0,
+      "A chwinga's gift. In battle, call the beasts of the Dale: spirit wolves, owls and bears strike every foe. Three uses; then the charm fades.", 0, 10, 6]
   )
 
   TRAINER_INTROS.merge!(
@@ -121,7 +121,36 @@ module FrostThaw
   PARTY_CHAT[:meat_meat].merge!(gm_woods: ["Meat Meat smells ogre. Ogre smells like old cheese and bad decisions."],
                                 verbeeg_lair: ["Meat Meat will not eat the roast. Meat Meat is not hungry any more. Forever, maybe."]) if PARTY_CHAT[:meat_meat]
 
+  CHWINGA_CHARGES = 3
+
   module_function
+
+  # The Charm of Animal Conjuring (RotF p. 74; the DMG's charm casts conjure
+  # animals, three times, then vanishes). In a battle: beasts of the Dale come
+  # at the chwinga's call and strike every foe for a quarter of its health.
+  def chwinga_charm_usable?
+    $PokemonBag && ($PokemonBag.pbHasItem?(:FT_CHWINGACHARM) rescue false) && state[:chwinga_charges].to_i > 0
+  end
+
+  def chwinga_charm_strike(battle)
+    beasts = [["a pack of spirit wolves", "lopes"], ["a cloud of snowy owls", "dives"], ["a great white bear", "charges"]]
+    kind, verb = beasts[(CHWINGA_CHARGES - state[:chwinga_charges].to_i) % beasts.size]
+    battle.pbDisplay(_INTL("The charm warms in your hand. Out of nowhere, {1} {2} across the field!", kind, verb))
+    battle.eachOtherSideBattler(0) do |b|
+      next if b.fainted?
+      dmg = [(b.totalhp / 4.0).round, 1].max
+      b.pbReduceHP(dmg, false)
+      battle.pbDisplay(_INTL("{1} is struck by the conjured beasts!", b.pbThis))
+      b.pbFaint if b.fainted?
+    end
+    state[:chwinga_charges] = state[:chwinga_charges].to_i - 1
+    if state[:chwinga_charges] <= 0
+      $PokemonBag.pbDeleteItem(:FT_CHWINGACHARM) rescue nil
+      battle.pbDisplay(_INTL("The beasts melt back into the snow, and the charm fades away with them."))
+    else
+      battle.pbDisplay(_INTL("The beasts melt back into the snow. (The charm has {1} use(s) left.)", state[:chwinga_charges]))
+    end
+  end
 
   #-----------------------------------------------------------------------------
   # Getting the quest
@@ -200,6 +229,8 @@ module FrostThaw
               "and something settles over you like a warm scarf. Then the two of them ride off between the pines.",
               cl(:alberica, "(misty-eyed) Darling, that was the most beautiful thing I've ever seen. I'm not crying. It's snow.")])
         give_key(:FT_CHWINGACHARM)
+        state[:chwinga_charges] = CHWINGA_CHARGES
+        say(["(The Charm of Animal Conjuring: use it from the Bag in battle, up to three times.)"])
         set_switch(SW_GM_FOX_BOUGHT, false)
         set_flag(:fox_with_chwinga)
         return
@@ -637,4 +668,22 @@ module FrostThaw
     end
     mead_hall_rest_dry(event_id)
   end
+end
+
+#-------------------------------------------------------------------------------
+# The Charm of Animal Conjuring in battle (no target; the bag doesn't use it up:
+# its three uses are counted in the story state)
+#-------------------------------------------------------------------------------
+if defined?(ItemHandlers::UseInBattle)
+ItemHandlers::CanUseInBattle.add(:FT_CHWINGACHARM, proc { |item, pokemon, battler, move, firstAction, battle, scene, showMessages|
+  if !FrostThaw.chwinga_charm_usable?
+    scene.pbDisplay(_INTL("The charm is cold. Its magic is spent.")) if showMessages
+    next false
+  end
+  next true
+}) if defined?(ItemHandlers::CanUseInBattle)
+
+ItemHandlers::UseInBattle.add(:FT_CHWINGACHARM, proc { |item, battler, battle|
+  FrostThaw.chwinga_charm_strike(battle)
+})
 end
