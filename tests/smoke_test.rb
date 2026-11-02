@@ -236,9 +236,16 @@ check("festival night needs the rite, Glimmer and Hellen's seal") {
   %i[rite_stopped glimmer_joined badge_hearth festival_night].each { |f| (FT.state[:flags] || {}).delete(f) rescue nil }
   a = !FT.festival_ready?
   FT.set_flag(:rite_stopped); FT.set_flag(:glimmer_joined); FT.set_flag(:badge_hearth)
+  d = FT.state[:rs_day]; FT.state[:rs_day] = 2
+  early = !FT.festival_ready?                 # ...and the seventh night: the downtime week comes first
+  FT.state[:rs_day] = FT::FESTIVAL_NIGHT
   b = FT.festival_ready?
   FT.scene_festival_night
-  a && b && FT.flag?(:ch7_started) && (FT.herald?(:wyn) || FT.companions.include?(:wyn)) && !FT.festival_ready? }
+  # the roads open only with the Council's summons, after the Rootwardens' night, the scorch and Eirwen
+  c = !FT.flag?(:ch7_started); FT.council_summons
+  FT.state[:rs_day] = d
+  a && early && b && c && FT.flag?(:ch7_started) && FT.flag?(:council_summoned) &&
+    (FT.herald?(:wyn) || FT.companions.include?(:wyn)) && !FT.festival_ready? }
 check("the Heart takes you to Rootspire only after the Reversal") {
   FT.define_singleton_method(:transfer) { |*a| $ft_transfer = a }
   FT.clear_flag(:reversal) rescue (FT.state[:flags] || {}).delete(:reversal)
@@ -883,9 +890,28 @@ FT.state[:companions] = [:alerion]; FT.state[:omens] = {}
 check("...and never without her") { !FT.omen_check }
 check("the ten night events and a Verdant Storm are all written") {
   FT::NIGHT_ORDER.size == 11 && FT::NIGHT_ORDER.all? { |k| FT.respond_to?(:"night_#{k}") } }
-check("the dossier's faction events (10 by map, 4 at the Hearth) and 11 ambient events are all there") {
-  FT::FACTION_EVENTS.size == 10 && FT::HEARTH_VIGNETTES.size == 4 && FT::AMBIENT.size == 11 }
+check("the dossier's faction events (9 by map, 5 at the Hearth: Autumn's leaf is on your pillow) and 11 ambient events are all there") {
+  FT::FACTION_EVENTS.size == 9 && FT::HEARTH_VIGNETTES.size == 5 && FT::HEARTH_VIGNETTES.any? { |k, *_| k == :autumn_pillow } && FT::AMBIENT.size == 11 }
 check("all seven of Alberica's rumours are in the tavern") { FT::TAVERN_RUMOURS.size == 7 }
+f2_src = %w[023_Chapter5 024_Chapter6 026_Rootspire 029_Glimmer 048_Rootspire_B_People 048_Rootspire_E_Nights 048_Rootspire_F_Downtime].to_h { |f| [f, File.read(File.join(FT_DIR, "#{f}.rb"))] }
+{ "026_Rootspire" => ["her breath silver in the night, her eyes locked on a man with a shield", "Both roads are his.", "in the tears there is fire",
+                      "they blaze with life", "two dragons cower", "wolf-bite in your hand", "as the curse bound him to hunger", "Even ruin is motion",
+                      "...Still gone. Of course it is.", "sing a line of the Cycle Canticle", "The Vault of the North", "the tender and the terrible both",
+                      "Here they're scripture", "chronal leaves", "Verse Eleven"],
+  "024_Chapter6" => ["Wardens Emeritus of Rootspire", "I still can't sleep in a cold room", "Expansion is a wall, Kelyn", "Mirror-ice"],
+  "029_Glimmer" => ["Will you bear hope when even the sun freezes?", ":glimmer_knows_journal"],
+  "023_Chapter5" => ["too long in the arm to be human"],
+  "048_Rootspire_B_People" => ["set_flag(:warden_map_seen)", "Brightmane said I'd"],
+  "048_Rootspire_E_Nights" => ["a newborn's cry", "Frostina won't settle", "Hammers. Deep in the roots"],
+  "048_Rootspire_F_Downtime" => ["Festival Circle", "children of the Reversal", "carved into the living bark"] }.each do |f, needles|
+  check("F2's restored lines in #{f}") { miss = needles.reject { |n| f2_src[f].include?(n) }; miss.empty? || (puts("  missing: #{miss.inspect}"); false) }
+end
+check("the omens stop with the Whisper, and harden when Alberica strays") {
+  s = f2_src["048_Rootspire_E_Nights"]; s.include?("flag?(:auril_whisper)") && !s.include?("ch11_whisper") && !s.include?("flag?(:ch11_started)") && s.include?("alberica_strayed >= 2") }
+check("the downtime week and the GM outline end at the Forge's door") {
+  FT.set_flag(:barricade_entered); a = !FT.dt_ready?(:alberica) && !FT.eirwen_audience_due?; FT.set_flag(:barricade_entered, false); a }
+check("the Cycle Canticle has three verses (hope, loss, endurance), matching Ch13") {
+  FT::CANTICLE_VERSES.map(&:first) == %i[spring autumn winter] && File.read(File.join(FT_DIR, "039_Chapter13.rb")).include?("three verses. Hope, loss, endurance") }
 check("each Herald's downtime days are written (Arvik 2-7, Alerion 2-7, Glimmer 2-7, Meat Meat 2-5)") {
   (2..7).all? { |d| FT.respond_to?(:"arvik_day#{d}") && FT.respond_to?(:"glimmer_day#{d}") } &&
     [2, 3, 4, 6, 7].all? { |d| FT.respond_to?(:"alerion_day#{d}") } && (2..5).all? { |d| FT.respond_to?(:"meat_meat_day#{d}") } }

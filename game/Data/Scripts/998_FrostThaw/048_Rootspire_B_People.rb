@@ -37,6 +37,7 @@ module FrostThaw
     },
     armory_targets: ["Vine-woven targets that bloom when an arrow hits them. One has been hit so often it's a bouquet."],
     warden_map: -> {
+      T.set_flag(:warden_map_seen)          # one of Kethan's infiltrator clues (048_D)
       lines = ["A glowing map of the Auroral Wall, pinned with Rootwarden markers.",
                "Bough circle patrols, in green. Three green pins have been moved to the edge and marked with a small black X."]
       lines << "Someone has added a fourth X since this morning." if T.flag?(:ch7_started) && !T.flag?(:ash_exposed)
@@ -120,7 +121,7 @@ module FrostThaw
   def nivva_shop(event_id = nil)
     say(["NIVVA: Run & Bloom's annex stand! Red heals. Green's for frost and the long road.",
          "NIVVA: The muddled one's red and green together. Heartroot Renewal. It's a surprise every time. A good one."], event_id)
-    alerion_potions if respond_to?(:alerion_potions)
+    (alerion_potions || alerion_held_potions) if respond_to?(:alerion_potions)
     mart(:run_bloom, event_id)
   end
 

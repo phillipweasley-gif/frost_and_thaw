@@ -310,7 +310,13 @@ module FrostThaw
     if clues < 2
       say(["KETHAN: Not enough. Look at who moves the patrol pins. Who carries what off the docks. Who passes notes."])
     else
-      say(["You lay it out: the patrol pins moved to the Wall's edge, the ore off the docks, the notes between Autumn's people.",
+      found = []
+      found << "the patrol pins moved to the Wall's edge" if flag?(:warden_map_seen)
+      found << "the ore off the docks" if flag?(:jorik_confessed)
+      found << "the notes between Autumn's people" if flag?(:autumn_note)
+      found << "the gem that hums toward the Root-Gate Ash guards" if flag?(:gem_vibrates)
+      list = found.size > 1 ? "#{found[0..-2].join(', ')} and #{found[-1]}" : found[0]
+      say(["You lay it out: #{list}.",
            "One name sits under all of it: the Warden on the civic ring's south steps. Ash.",
            "KETHAN: (very quietly) Ash. Ash trained half my initiates.",
            "KETHAN: Go and talk to him. I'll be watching. If he runs, he runs into me."])
@@ -500,6 +506,7 @@ module FrostThaw
   end
 
   def ivran(event_id = nil)
+    return hellen_note_delivery(event_id) if respond_to?(:hellen_note_due?) && hellen_note_due?   # Hellen's errand (048_H)
     if flag?(:frozen_run_done)
       return say(["IVRAN: My sledge-ship's crossed the cold half three times since. No revenants. The crews sing about you, badly."], event_id)
     end
@@ -560,8 +567,10 @@ module FrostThaw
   # and the ritual that lets you relive one day of the frozen past.
   #-----------------------------------------------------------------------------
   def eirwen(event_id = nil)
+    first = !flag?(:met_eirwen)
     talk(:eirwen, event_id)
     return eirwen_audience(event_id) if respond_to?(:eirwen_audience) && eirwen_audience_due?
+    return canticle_research if respond_to?(:canticle_research) && canticle_research_due?   # the Canticle's lost verses (048_H)
     if flag?(:canticle_learned) && !flag?(:sigil_eirwen)
       set_flag(:sigil_eirwen)
       say(["EIRWEN: You sang the Canticle in the hall of four lights. The leaves wrote it down in gold.",
@@ -573,6 +582,8 @@ module FrostThaw
       add_counter(:story_beats)
       return
     end
+    # Eirwen's hidden motive (rootspire.md 930): the ledger, and whether to publish it.
+    return eirwen_dilemma if !first && respond_to?(:eirwen_dilemma) && eirwen_dilemma_due?
     if flag?(:met_eirwen) && !flag?(:eirwen_ritual)
       eirwen_ritual_offer
     end

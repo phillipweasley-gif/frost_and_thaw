@@ -98,15 +98,29 @@ module FrostThaw
 
   module_function
 
+  # The tier follows the story (rootspire.md: "present every session") and
+  # turns harsher if Alberica strays toward Auril (session_log L94-102): each
+  # Auril-leaning choice she or the party has made pulls the next tier closer.
   def omen_tier
-    return 3 if flag?(:summer_ended) || flag?(:glimmer_gone)
-    return 2 if flag?(:ch7_started)
-    1
+    base = if flag?(:summer_ended) || flag?(:glimmer_gone) then 3
+           elsif flag?(:ch7_started) then 2
+           else 1
+           end
+    [base + (alberica_strayed >= 2 ? 1 : 0), 3].min
   end
 
-  # One omen, if one is due. Only for Alberica (in the party, or you).
+  # Choices that lean toward the Frostmaiden: looking for her in Bryn Shander's
+  # crowd, the hag's bargain, buying Still Shards from Eira Voss, answering the
+  # frost sigil in the Silent Chapel, leaving the goddess whole in the Shard.
+  def alberica_strayed
+    %i[saw_auril_bryn hag_bargain_taken chapel_auril shard_preserved tree_leans_frost].count { |f| flag?(f) } +
+      ((counter(:stillshards_cursed) rescue 0).to_i > 0 ? 1 : 0)
+  end
+
+  # One omen, if one is due. Only for Alberica (in the party, or you). The
+  # omens lead up to Auril's Whisper at the Hearth (037), and stop with it.
   def omen_check
-    return false if !with_or_is?(:alberica) || flag?(:ch11_whisper)
+    return false if !with_or_is?(:alberica) || flag?(:auril_whisper)
     state[:omens] ||= {}
     OMENS.each do |key, (who, triggers, tiers)|
       next if who != :alberica && !with_or_is?(who) && !(key == :spark && flag?(:glimmer_gone))
@@ -146,7 +160,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Called by Hellen's rest (024) after the party's healed.
   def hearth_night(event_id = nil)
-    return if !flag?(:met_hellen) || flag?(:ch11_started)
+    return if !flag?(:met_hellen) || flag?(:auril_whisper)    # Chapter 11 begins with the Whisper at the Hearth
     if !state[:rs_day]                 # the night you arrive is Day 1
       state[:rs_day] = 1
       return
@@ -156,6 +170,7 @@ module FrostThaw
     dawn_hue
     return if investigation_night
     downtime_morning if respond_to?(:downtime_morning)
+    return if respond_to?(:hearth_extras) && hearth_extras   # the Cycle Day rumours, standing boons, Autumn's ruin (048_H)
     return if omen_check
     hearth_vignette || night_event
   end
@@ -170,12 +185,16 @@ module FrostThaw
       elsif flag?(:ch7_started) then "gold. Deep gold. It lingers far too long"
       else "gold, the way it's been gold for thirty years"
       end
+    hue += flag?(:tree_leans_frost) ? ", with a rim of hard white frost at its edges that wasn't there before" : ""
+    hue += flag?(:tree_leans_verdant) && !flag?(:summer_ended) ? ", and the leaves along the Wall a little greener for it" : ""
     say(["Dawn over Rootspire: #{hue}."])
   end
 
   # After the festival: the Rootwardens come to the door (GM outline, steps 1-6).
+  # Steps 1-6 run between the festival and the descent, in the source's order:
+  # the door, the scorch, Eirwen, Razzilith, the summons (council_summons, 024).
   def investigation_night
-    return false if !flag?(:ch7_started) || flag?(:rootwardens_at_door)
+    return false if !flag?(:festival_night) || flag?(:ch7_started) || flag?(:rootwardens_at_door)
     set_flag(:rootwardens_at_door)
     set_switch(SW_SCORCH, true)
     sayc(["Past midnight, someone hammers on the Hearth's door.",
@@ -190,10 +209,12 @@ module FrostThaw
                                   "Through the bond Meat Meat feels what he feels, and goes grey: a dragon, made, not born. A heart in it that's screaming. And her.",
             cl(:meat_meat, "The woman who hurt him. She is down there. Under all of it.")].compact)
     end
-    # rootspire.md 5662-5667: both twins grow restless, not only Razzilith.
-    sayc(["Up on the Shrine, Frostina won't settle either. She paces the dragons' hollow, tail lashing, and every so often she stops and listens to the floor.",
-          herald?(:alerion) ? "(Through the bond, cold and clear: she can hear hammers. She doesn't like the song they're making.)" :
-                              cl(:alerion, "(a hand to his chest) Frostina's awake. She can hear them too. Hammers.")].compact)
+    # rootspire.md 5662-5667: both twins grow restless, not only Razzilith; and Glimmer hears the hammers.
+    sayc([flag?(:twins_met) ? "Up on the Shrine, Frostina won't settle either. She paces the dragons' hollow, wings half open, and every few breaths she stops to listen to the floor." : nil,
+          flag?(:twins_met) ? (herald?(:alerion) ? "(Through the bond, cold and clear: she can hear hammers. She doesn't like the song they're making.)" :
+                                                   cl(:alerion, "(a hand to his chest) Frostina's awake. She can hear them too. Hammers.")) : nil,
+          with_or_is?(:glimmer) ? (herald?(:glimmer) ? "(And you can hear it now, under everything. Hammers. Deep in the roots, keeping time.)" :
+                                                       "GLIMMER: (very quietly, a hand on his chest) Hammers. Deep in the roots. They're keeping time.") : nil].compact)
     state[:goal] = "The Rootwardens' missing patrol: scorch marks at the Echo Gate, on the west road."
     true
   end
@@ -281,7 +302,10 @@ module FrostThaw
       sayc(["You stare back. The glass fogs with heat.",
             "A cathedral of burning sap. Iron arms, swinging. A dragon on a slab, made of dark crystal and mirror-glass, not yet alive.",
             "And a woman with white hair and red-gold eyes, turning, as if she'd heard you looking.",
-            "She smiles, the way your reflection did. Then the mirror cracks straight across.",
+            "She smiles, the way your reflection did. Her lips move, and out of the glass, very small, comes a newborn's cry.",
+            "Then another. A third. A fourth. A fifth. Each one different. Each one, somehow, yours: the first sound each of you ever made.",
+            "\"I know every name ever spoken in my laboratory, variables. I know the ones you were born with.\"",
+            "Then the mirror cracks straight across.",
             cl(:meat_meat, "(from the doorway, very quiet) Meat Meat saw her too. In the spoon. Meat Meat is not using spoons any more.")].compact)
       wheel(1)
     end
@@ -501,12 +525,6 @@ module FrostThaw
             "Then they melt and run down the glass like tears."])
       favour(:winter, 1)
     }],
-    [:autumn_pillow, [2189, 2190, 2195], -> { true }, -> {
-      sayc(["A small velvet box sits on a bench at the Promenade's edge, with a card: FOR THE HERALDS.",
-            "Inside, a single gold-leaf charm on dark silk. No note. It smells of Lirielle's perfume, and of something warmer."])
-      give_key(:FT_GOLDLEAF)
-      favour(:autumn, 1)
-    }],
     [:summer_window, [2189, 2194], -> { true }, -> {
       sayc(["As you pass the shuttered Suncleft Emporium, one high window glows dull orange for the span of a single breath.",
             "Then it goes dark. Nobody's lived there in a year."])
@@ -545,6 +563,14 @@ module FrostThaw
 
   # These two come in the morning, at the Hearth (the dossier puts them there).
   HEARTH_VIGNETTES = [
+    # Autumn's "Leaf on the Pillow" (dossier 3023-3026): on your bed, where you sleep.
+    [:autumn_pillow, -> { flag?(:met_lumea) || flag?(:met_maera) || rs_day >= 3 }, -> {
+      sayc(["When you go up to your room at the Hearth, a small velvet box sits on your bed. The door was locked.",
+            "Inside, a single gold-leaf charm rests on dark silk. No note. It smells faintly of Lirielle's perfume... and something warmer.",
+            cl(:alberica, "(turning it over) Someone's courting us, darlings. Or measuring us for a cage. In Autumn it's the same tailor.")].compact)
+      give_key(:FT_GOLDLEAF)
+      favour(:autumn, 1)
+    }],
     [:summer_scorch, -> { flag?(:warm_window_seen) || flag?(:met_gorran) }, -> {
       sayc(["In the morning, a faint singe mark on your sleeve where nothing should have touched it.",
             "It smells like the Sap-Smith's forge, and something older."])
