@@ -49,6 +49,11 @@ ba.trainer(26, 13, nil, :duergar_hild, :FT_DUERGAR, dir: 4, sight: 2)
   ])
 end
 [13, 14].each { |y| ba.warp(33, y, ID[:hag_domain], 2, y - 3, 6, name: "Into the hag's lair") }
+# A2-A7: the inner rooms, up from the north alcove (build_ch8_deep.rb, 2146)
+[22, 23].each { |x| ba.warp(x, 8, 2146, 18, 21, 8, name: "Into the inner rooms") }
+# A13: the sap-lift's Root stop, once the Rootwatch is cleared
+ba.event(28, 15, "Sap-lift", [{ graphic: "", through: true },
+                              { switch: 4087, tile_id: 582, script: "FT.sap_lift(:root, @event_id)" }])
 save(ba, :barricade)
 
 # ---------------------------------------------------------------------------
@@ -62,15 +67,19 @@ hd.event(12, 8, "Tea table", [
   { tile_id: 581, script: "FT.hag_tea_table(@event_id)" }
 ])
 hd.event(12, 4, "Cracked mirror", [{ graphic: "", script: "FT.hag_tea_table(@event_id)" }])
-[24, 25, 26].each { |x| hd.warp(x, 17, ID[:hag_pens], 3, 3, 2, name: "Down to the pens") }
+[24, 25, 26].each { |x| hd.warp(x, 17, 2147, 5, 4, 2, name: "Down the Deep Root Shaft") }
 save(hd, :hag_domain)
 
 # ---------------------------------------------------------------------------
 # 2074: the Cocoon Pens. Rows of amber cocoons in the root walls; the journal;
 # Selrae in the last cocoon (if she went ahead); Garagai's axe-head.
 cp = cave_map(28, 20)
-paint(cp, [2, 2, 4, 4], [4, 5, 20, 10], [22, 14, 3, 4])
-[2, 3, 4].each { |x| cp.warp(x, 1, ID[:hag_domain], 25, 16, 8, name: "Up to the kitchen") }
+paint(cp, [2, 2, 4, 4], [4, 5, 20, 10], [22, 14, 3, 4], [6, 15, 10, 4])
+[2, 3, 4].each { |x| cp.warp(x, 1, 2149, 42, 25, 8, name: "Up to the root-keep gate") }
+# A27: the rootbeast pens (failed prototypes for Razzy); A28: the prison root-cocoons
+cp.event(10, 17, "Rootbeasts", [{ graphic: "Followers/MAMOSWINE", direction: 8, script: "FT.rootbeast_pens(@event_id)" }])
+cp.event(13, 16, "Cage", [{ tile_id: 809, script: "FT.talk(:rootbeast_cage, @event_id)" }])
+[[8, 13], [16, 13], [20, 12]].each_with_index { |(x, y), i| cp.event(x, y, "Prison pod #{i + 1}", [{ tile_id: 808, script: "FT.prison_pod(#{i + 1}, @event_id)" }]) }
 cp.cutscene(3, 4, :cocoon_pens)
 [6, 9, 12, 15, 18].each { |x| cp.event(x, 4, "Cocoon", [{ tile_id: 809, script: "FT.talk(:cocoon_plate, @event_id)" }]) }
 cp.event(21, 4, "Cocoon V-7", [{ tile_id: 808, script: "FT.talk(:cocoon_v7, @event_id)" }])
@@ -80,7 +89,7 @@ cp.event(23, 7, "Last cocoon", [
   { switch: SW_SELRAE_PEN, graphic: "BWOldWoman", direction: 2, opacity: 170, step_anime: false, script: "FT.selrae_cocoon(@event_id)" }
 ])
 cp.event(5, 14, "Shelf", [{ tile_id: 581, script: "FT.garagai_shelf(@event_id)" }])
-[22, 23, 24].each { |x| cp.warp(x, 18, ID[:dragonforge], 2, 14, 6, name: "On toward the forge") }
+[22, 23, 24].each { |x| cp.warp(x, 18, 2150, 5, 4, 2, name: "Down into the Dragonforge's upper works") }
 save(cp, :hag_pens)
 
 # ---------------------------------------------------------------------------
@@ -90,7 +99,7 @@ save(cp, :hag_pens)
 df = cave_map(40, 30)
 paint(df, [0, 13, 6, 3], [16, 4, 21, 23])
 cave_bridge_h(df, 6, 15, 14)                                    # over the boiling sap
-[13, 14, 15].each { |y| df.warp(0, y, ID[:hag_pens], 23, 16, 8, name: "Back to the pens") }
+[13, 14, 15].each { |y| df.warp(0, y, 2150, 13, 27, 8, name: "Back up to the root-keep gate") }
 df.event(11, 14, "Darrus Fell", [
   { graphic: "BW (55)", direction: 4, script: "FT.scene_autumn_falls" },
   { switch: SW_AUTUMN_FELL, graphic: "", through: true }
@@ -114,33 +123,43 @@ df.event(0, 0, "Cutscene dragonforge", [{ switch: SW_AUTUMN_FELL, trigger: 3, sc
 df.trainer(20, 20, nil, :duergar_thane, :FT_DUERGAR, dir: 6, sight: 3)
 df.event(26, 6, "Devil-priest", [
   { graphic: "BW (40)", direction: 2, script: "FT.devil_priest(@event_id)" },
-  { switch: SW_FORGE_CLEARED, graphic: "BW (40)", direction: 4, script: "FT.devil_priest(@event_id)" }
+  { switch: SW_FORGE_CLEARED, graphic: "BW (40)", direction: 4, script: "FT.devil_priest(@event_id)" },
+  { self_switch: "B", graphic: "", through: true }                # (fled, outnumbered: 034_Chapter8.rb)
 ])
 [25, 26, 27].each do |x|
   df.event(x, 4, "Black-glass stair", [
     { trigger: 1, script: "FT.talk(:forge_stair_shut, @event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward])" },
-    { switch: SW_FORGE_CLEARED, trigger: 1, through: true, commands: [df.send(:command, 201, [0, ID[:heart_chamber], 9, 12, 8, 0])] }
+    { switch: SW_FORGE_CLEARED, trigger: 1, through: true, commands: [df.send(:command, 201, [0, 2152, 21, 29, 8, 0])] }
   ])
 end
 save(df, :dragonforge)
 
 # ---------------------------------------------------------------------------
-# 2076: the Heart Chamber. The engine hangs over a pit of light; Var at the
-# controls. The fight starts when you walk in (and again if you come back).
-hc = cave_map(20, 16)
-paint(hc, [3, 3, 13, 8], [8, 11, 3, 3])
-[8, 9, 10].each { |x| hc.warp(x, 13, ID[:dragonforge], 26, 5, 2, name: "Down the black-glass stair") }
-# the engine: the Sealed Chamber's great machine, hanging over the pit (6x6 tiles, layer 2)
-(0..5).each { |dy| (0..5).each { |dx| hc.set(7 + dx, dy, 2, 704 + dy * 8 + dx) } }
-hc.event(9, 6, "The engine", [
-  { tile_id: 809, script: "FT.talk(:engine_dead, @event_id)" }
-])
-hc.event(9, 8, "Var Rime-Breaker", [
+# 2076: the Heart Chamber (H23): an enormous cavern of glowing roots round a
+# pool of silver sap. The engine hangs over the pool; Var at the controls.
+# Twelve root-spires ring the pool (H24, the Breaking Circle). In from the
+# Auroral Antechapel on the west; the fight starts when you walk in.
+SW_CIRCLE_PHASE = 4095
+hc = cave_map(32, 24)
+hfloor = {}
+Builder.rect_cells(3, 3, 26, 18).each { |c| hfloor[c] = true }
+Builder.rect_cells(13, 9, 6, 5).each { |c| hfloor.delete(c) }        # the pool of silver sap
+cave_paint(hc, hfloor)
+[11, 12, 13].each { |y| hc.warp(3, y, 2153, 41, 14, 4, name: "Back to the Antechapel") }
+# the engine: the Sealed Chamber's great machine, hanging over the pool (6x6 tiles, layer 2)
+(0..5).each { |dy| (0..5).each { |dx| hc.set(13 + dx, 3 + dy, 2, 704 + dy * 8 + dx) } }
+hc.event(15, 14, "The engine", [{ tile_id: 809, script: "FT.talk(:engine_dead, @event_id)" }])
+[[11, 7], [20, 7], [21, 9], [22, 11], [21, 13], [19, 15], [17, 16], [14, 16], [12, 15], [10, 13], [9, 11], [10, 9]].each_with_index do |(x, y), i|
+  hc.event(x, y, "Root-spire #{i + 1}", [{ tile_id: 792, script: "FT.breaking_spire(#{i + 1}, @event_id)" }])
+end
+hc.event(16, 18, "Var Rime-Breaker", [
   { graphic: "FT_var", direction: 8 },
+  { switch: SW_CIRCLE_PHASE, graphic: "FT_var_cracked", direction: 4, script: "FT.avarice_phase_two(@event_id)" },
   { switch: SW_ENGINE_DEAD, graphic: "", through: true }
 ])
 hc.event(0, 0, "Heart chamber", [
   { trigger: 3, script: "FT.scene_heart_chamber" },
+  { switch: SW_CIRCLE_PHASE },
   { switch: SW_ENGINE_DEAD }
 ])
 save(hc, :heart_chamber)

@@ -178,9 +178,43 @@ module FrostThaw
   # Air battles: a phase of the chase. Every phase you win knocks a piece off
   # the dragon's chardalyn seams, and it starts the final fight weaker.
   #-----------------------------------------------------------------------------
+  # The dragon's three weapons (audit C108): frostfire breath, a sonic shatter
+  # from the mirror-glass in its throat, and the burst when it dies. In battle
+  # the breath is Ice Beam and Flamethrower, the shatter is Hyper Voice.
+  DRAGON_MOVES = [:ICEBEAM, :FLAMETHROWER, :HYPERVOICE, :DRAGONPULSE]
+
+  def chardalyn_dragon(level)
+    pk = named_mon(CHARDALYN, level, "Chardalyn Dragon")
+    begin
+      pk.forget_all_moves rescue (pk.moves.clear rescue nil)
+      DRAGON_MOVES.each { |m| pk.learn_move(m) rescue nil }
+    rescue
+    end
+    pk
+  end
+
+  DRAGON_TELLS = {
+    seams:   ["The dragon's jaw unhinges. Behind the black glass teeth, something burns blue and orange at once.",
+              "Frostfire: a breath that freezes and scorches in the same breath. The snow under it turns to steam, then to ice again.",
+              "Infernal runes glow along its ribs, red in the chardalyn, keeping time with the fire."],
+    pursuit: ["The dragon opens its throat and screams. It isn't a roar: it's the sound of a mirror breaking, held for a whole breath.",
+              "A sonic shatter. Every icicle on the Dale's roofs falls at once. Your ears ring and the cold in your chest cracks.",
+              "Frost essence leaks from the cracks in its seams like breath on a cold morning."]
+  }
+
+  def dragon_tell(phase)
+    lines = DRAGON_TELLS[phase] or return
+    say(lines)
+    if phase == :pursuit
+      $Trainer.party.each { |p| next if p.fainted?; p.hp = [p.hp - (p.totalhp / 10), 1].max } rescue nil
+      say(["(Your team is shaken by the shatter.)"])
+    end
+  end
+
   def air_battle(phase, level)
     setBattleRule("canLose") rescue nil
-    won = boss_battle(named_mon(CHARDALYN, level, "Chardalyn Dragon"))
+    dragon_tell(phase)
+    won = boss_battle(chardalyn_dragon(level))
     if won
       state[:seams] = (state[:seams] || 0) + 1
       rider = rider_key
@@ -329,7 +363,13 @@ module FrostThaw
     say(["The black dragon lands in the square, scattering the crowd. It roars.",
          "#{mount_name} comes down beside you, wings spread over the crowd."])
     seams = state[:seams] || 0
-    dragon = named_mon(CHARDALYN, 55, "Chardalyn Dragon")
+    dragon = chardalyn_dragon(55)
+    say(["Up close you can see what it's made of: black chardalyn, mirror-glass panes for scales, and red infernal runes cut into every plate.",
+         "Under its breastplate something beats. Not an engine. A heart: an old wyrm's, stolen and frozen black.",
+         "The runes are Avarice's sigils. They hold the heart in place the way a nail holds a picture.",
+         "Every rune is drinking from the crowd. You can feel it pulling, a thread from every chest in the square, toward the dragon.",
+         cl(:alerion, "It isn't here to burn Bryn Shander. It's here to collect it."),
+         cl(:alberica, "(her memory-threads pulled tight toward it) A soul harvest. Everyone at once, all of them for the White Womb.")].compact)
     if seams > 0
       dragon.hp = [(dragon.totalhp * (1.0 - 0.2 * seams)).floor, 1].max
       say([seams >= 2 ? "(Its chardalyn seams are cracked all over where you hit them in the air. It's badly hurt.)" :
@@ -339,6 +379,11 @@ module FrostThaw
          "It staggers."])
     dragon.hp = [(dragon.hp * 0.85).floor, 1].max
     return if !boss_battle(dragon)
+    $game_screen.start_flash(Color.new(200, 230, 255, 255), 20) rescue nil
+    say(["As it dies, everything inside it bursts at once: frost essence and infernal fire, in a ring that races out across the square.",
+         "#{mount_name} throws its wings wide over the crowd. The ring breaks on them like a wave on a sea-wall.",
+         "Where it touched the ground, the cobbles are frozen and scorched in the same stroke."])
+    $Trainer.party.each { |p| next if p.fainted?; p.hp = [p.hp - (p.totalhp / 8), 1].max } rescue nil
     say(["The dragon shatters into a thousand pieces of black crystal.",
          "One shard skitters to your feet. In it, a pale face, smiling.",
          "AVARICE: (from the shard) Pick me up.",

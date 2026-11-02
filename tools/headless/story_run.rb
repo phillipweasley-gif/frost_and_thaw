@@ -7,6 +7,8 @@ require_relative "driver"
 require "set"
 
 module Story
+  # People and things that move you between maps by script (no warp event).
+  SCRIPTED_PASSAGES = { heartwall: /Knotted heart-wall/, rootcage: /Root-lift cage/, rootlift: /^Root-lift$/ }
   @world = nil
   @beats = []
   class << self
@@ -30,6 +32,9 @@ module Story
         w[2061] << [:lift, 12, 34, 2050]
         w[2050] << [:hew, 48, 27, 2066]       # Hew takes you down his ladder (a person, not a door)
         w[2066] << [:ladder, 5, 4, 2050]      # and the ladder back up (a bell-rope and a question)
+        w[2058] << [:heartwall, 20, 26, 2140] # the Root-Key opens the knotted heart-wall (046_DeepLabyrinth.rb)
+        w[2144] << [:rootcage, 21, 18, 2066]  # the Root-Lift Node rides down to the forge door
+        w[2066] << [:rootlift, 19, 19, 2144, 4083]   # ...and back up, once it runs
         w.each_value(&:uniq!)
         w
       end
@@ -64,6 +69,11 @@ module Story
         end
         if world[$game_map.map_id].any? { |e, _x, _y, d| e == :ladder && d == nxt }
           talk(/Ladder shaft/); HL.settle(3000)
+          next
+        end
+        sp = world[$game_map.map_id].find { |e, _x, _y, d| SCRIPTED_PASSAGES[e] && d == nxt }
+        if sp
+          talk(SCRIPTED_PASSAGES[sp[0]]); HL.frames(20); HL.settle(3000)
           next
         end
         doors = world[$game_map.map_id].select { |e, _x, _y, d| d == nxt && !e.is_a?(Symbol) }
@@ -180,6 +190,7 @@ module Story
     # Try a beat; if a battle is lost, train up (like a player would) and retry.
     def until_flag(flag, tries = 4)
       tries.times do |i|
+        return true if FrostThaw.flag?(flag)     # (already done, e.g. inside an earlier talk)
         yield
         return true if FrostThaw.flag?(flag)
         lv = ($Trainer.party.map(&:level).max || 10) + 3
@@ -477,29 +488,119 @@ module Story
       beat("SC 8.01 the Rootward Barricade", :barricade_entered)
       fit(48)
       clear_trainers
-      talk(/Duergar ledger/); talk(/Barricade gate/)
-      beat("  the passphrase", :barricade_passed)
+      talk(/Duergar ledger/)
+      # Level 1's inner rooms (A2-A7)
+      travel(2146); HL.frames(20); HL.settle(3000)
+      beat("  A2 the Echo Hall", :inner_rooms_entered)
+      talk(/Sap puddle/); clear_trainers
+      talk(/Mural/); talk(/Open journal/); talk(/Loose floorboard/)
+      beat("  A5 Avarice's quarters: the journal, and the Ledger of Corruption", :ledger_found)
+      until_flag(:effigy_broken, 3) { travel(2146); talk(/Mirror-root effigy/) }
+      beat("  A5 the mirror-root effigy", :effigy_broken)
+      talk(/Sooty duergar/); talk(/Root-maps/)
+      beat("  A6 the traitor: the Great Unchaining", :knows_great_unchaining)
+      talk(/Sap-fed machinery/)
+      travel(2072); talk(/Barricade gate/)
+      beat("  the Rootgate open (#{FrostThaw.flag?(:traitor_lever) ? 'the traitor\'s lever' : 'the passphrase'})", :barricade_passed)
       travel(2073); talk(/Tea table/)
       beat("SC 8.02 mother's kitchen (#{FrostThaw.flag?(:took_hag_secret) ? 'took the secret' : 'broke the mirror'})", :hag_mirror_done)
+      # Level 2 (A9-A18)
+      travel(2147); HL.frames(20); HL.settle(3000)
+      beat("  A9 the Deep Root Shaft", :deep_shaft_entered)
+      talk(/Rib-roots/); talk(/Cracked mirror/); talk(/Workbench/); talk(/Scribbled notes/)
+      beat("  A10/A11 the dragon limb, and a future self", :future_self_warned)
+      fit(49)
+      travel(2148); HL.frames(20); HL.settle(3000)
+      until_flag(:golems_down, 3) { travel(2148); talk(/Thorn-bound dummy/) }
+      beat("  A12 the training hall's sap golems", :golems_down)
+      clear_trainers
+      until_flag(:rootwatch_cleared, 3) { travel(2148); clear_trainers; talk(/Infernal Rootbreaker/) }
+      beat("  A14 the Rootwatch and its Infernal Rootbreaker (the sap-lift runs)", :rootwatch_cleared)
+      talk(/Heartroot of command/)
+      beat("  A15 the sap-gate controls (once a winter altar)", :winter_altar_known)
+      travel(2149); HL.frames(20); HL.settle(3000)
+      until_flag(:umber_hulk_done, 3) { travel(2149); step_on(/Soft earth/) }
+      beat("  A16 the Umbound Chasm", :umber_hulk_done)
+      until_flag(:rust_feasters_done, 3) { travel(2149); talk(/Rust-feasters/) }
+      beat("  A17 the rust-feast tunnels", :rust_feasters_done)
+      clear_trainers
       travel(2074); HL.frames(20); HL.settle(3000)
       beat("SC 8.03 the cocoon pens", :pens_seen)
       talk(/Shelf/); talk(/Last cocoon/)
       beat("  Garagai's axe-head", :garagai_axe) if FrostThaw.flag?(:garagai_vow)
       beat("  Selrae cut free", :selrae_rescued) if FrostThaw.flag?(:selrae_ahead)
+      talk(/Rootbeasts/); talk(/Prison pod 1/); talk(/Prison pod 1/); talk(/Prison pod 2/); talk(/Prison pod 3/)
+      beat("  A27/A28 the rootbeast pens and the prison cocoons", :prisoners_freed)
+      # Level 3 (A19-A25, A29, A30)
+      fit(50)
+      travel(2150); HL.frames(20); HL.settle(3000)
+      beat("  Level 3: the womb of iron", :forge_womb_seen)
+      until_flag(:quaggoth_down, 3) { travel(2150); talk(/Quaggoth/) }
+      talk(/Tortured myconid/)
+      beat("  A19 the Root-Throne: the quaggoth, and the myconid that begs to die", :myconid_spores_known)
+      talk(/Hiding duergar/); talk(/Shelves of flasks/)
+      beat("  A21 the heart-fuel", :frostfire_flask)
+      until_flag(:rootbreaker_elevator, 3) { travel(2150); talk(/Infernal Rootbreaker/) }
+      until_flag(:vantage_cleared, 3) do
+        travel(2151); HL.frames(20); HL.settle(3000)
+        talk(/Balcony rail/); clear_trainers; talk(/Bolt-slits/); talk(/Ritual circle/)
+      end
+      beat("  A24/A25 the vantage towers cleared", :vantage_cleared)
+      beat("  A29 the mind-flayer corpse", :saw_mindflayer)
+      until_flag(:rootkeep_gate_open, 3) { travel(2150); clear_trainers; talk(/Root-keep gate/) }
+      beat("  A23 the root-keep gate", :rootkeep_gate_open)
       travel(2075); HL.frames(20); HL.settle(3000)
       HL.walk_to(16, 14) rescue nil; HL.frames(30); HL.settle(5000)
       beat("SC 8.04 Autumn falls", :autumn_fell)
       beat("SC 8.05 the Dragonforge", :forge_seen)
-      fit(50)
+      fit(51)
       clear_trainers
       until_flag(:forge_reached) { travel(2075); talk(/Devil-priest/) }
-      beat("  the devil-priest", :forge_reached)
+      beat("  the devil-priest (A31)", :forge_reached)
+      # Avarice's rooms (A32-A37) and Zone VI
+      travel(2152); HL.frames(20); HL.settle(3000)
+      talk(/Chanting duergar/); talk(/Flickering silhouette/); talk(/Bound captain/)
+      until_flag(:mirror_hall_sprung, 2) { travel(2152); step_on(/Wrong reflections/) }
+      beat("  A32 the mirror-hall trap (wrong reflections)", :mirror_hall_sprung)
+      beat("  A34/A35 the tortured captain and Mother Thruuna's chamber", :thruuna_lore)
+      until_flag(:mechs_down, 3) { travel(2152); talk(/Rootbound mech/) }
+      talk(/Pedestal/)
+      5.times { talk(/Vault relic/) }
+      beat("  A37 Avarice's root-vault", :vault_looted)
       fit(52)
-      until_flag(:engine_dead) { travel(2076); HL.frames(30); HL.settle(8000) }
-      beat("SC 8.06 Summer (Avarice)", :engine_dead)
+      travel(2153); HL.frames(20); HL.settle(3000)
+      talk(/Ghost of the Shard/)
+      beat("  H22 the ghost of the Shard", :shard_echo_heard)
+      until_flag(:antechapel_cleared, 3) { travel(2153); talk(/Aurora-lit guardian/) }
+      talk(/Shrine of two sigils/)
+      until_flag(:hammer_heart_done, 2) { travel(2153); talk(/Hanging root-golem/) }
+      beat("  H22/H33/H37 the Antechapel", :antechapel_cleared)
+      fit(53)
+      travel(2076); HL.frames(30); HL.settle(8000)
+      until_flag(:circle_phase, 3) { travel(2076); HL.frames(30); HL.settle(8000) } if !FrostThaw.flag?(:circle_done)
+      beat("  H32 the Thorn-Run Hall", :thorn_run_crossed)
+      beat("SC 8.06 Summer (Avarice): her opening and her mechs", :heart_mechs_won)
+      # H24: work the spires (the sixth action wakes her); then the fight itself
+      (1..12).each { |n| break if FrostThaw.flag?(:circle_done); talk(/^Root-spire #{n}$/) }
+      beat("  H24 the Breaking Circle (#{(FrostThaw.state[:circle_restored] || 0)} restored, #{(FrostThaw.state[:circle_broken] || 0)} broken)", :circle_done)
+      until_flag(:engine_dead, 3) { travel(2076); HL.frames(30); HL.settle(8000) }
+      beat("SC 8.06 Avarice", :engine_dead)
       beat("SC 8.07 a better fire (Glimmer is gone)", :glimmer_gone)
-      beat("SC 8.08 the coat falls off", :avarice_fled)
+      beat("  H23 the Frost Saint Shard rises (#{FrostThaw.flag?(:shard_beaten) ? 'beaten' : 'outlasted'})", :shard_fought)
+      beat("  H23 the Frost Saint Shard (#{%i[shard_purified shard_preserved shard_destroyed].find { |f| FrostThaw.flag?(f) }})", :heart_choice_made)
+      beat("SC 8.08 the coat falls off (she burns)", :avarice_faked_death)
       beat("SC 8.09 launch", :dragon_launched)
+      HL.frames(30); HL.settle(3000)
+      beat("  H25 the Sloughing Veins", :veins_entered)
+      travel(2155); HL.frames(20); HL.settle(3000)
+      beat("  H26 the Echo Vault", :echo_vault_entered)
+      until_flag(:echo_guardian_done, 2) { talk(/Drifting guardian/) }
+      talk(/Seed-pods/); talk(/Chardalyn fragments/); talk(/The tree's whisper/)
+      until_flag(:aurora_treasury_done, 2) { talk(/Auroral roots/) }
+      beat("  H26/H36 the tree's prophecy and the Aurora Treasury", :tree_prophecy)
+      beat("  H26 the Mirror Lens and the charm (tailored relics)", :mirror_lens)
+      beat("  the personal-quest visions", :personal_visions)
+      talk(/Root-stair up/); HL.frames(30); HL.settle(3000)
       puts "  party now: #{FrostThaw.companions.inspect}; on map #{$game_map.map_id}"
       chapter9 if FrostThaw.flag?(:dragon_launched) && ENV["STOP_AT"] != "8"
     end
@@ -638,6 +739,12 @@ module Story
       talk(/Seal circle/)
       FrostThaw.rune_answer.each { |season| talk(/Rune of #{season.to_s.capitalize}/) }
       beat("SC 7B.05 the aurora seal", :seal_open)
+      # H35 sits on the Root Gate's lower landing, past the thralls and Captain Hesk.
+      until_flag(:labyrinth_mapped, 3) do
+        (travel(2050); talk(/Root-Gate/); HL.frames(30); HL.settle(3000)) if $game_map.map_id != 2057
+        clear_trainers; talk(/Captain's root-desk/)
+      end
+      beat("H35 the Captain's Alcove", :labyrinth_mapped)
       travel(2058); HL.frames(20); HL.settle(3000)
       talk(/Sap well 1/); talk(/Sap well 2/); talk(/Sap well 3/)
       beat("SC 7B.06 three wells", :wells_seen)
@@ -654,8 +761,65 @@ module Story
       fit(47)
       until_flag(:badge_mira) { travel(2055); talk(/Boreal Requiem/) }
       beat("SC 7B.04 GYM 6: Mira's Tide Seal (v#{FrostThaw.scaled_version rescue '?'})", :mira_freed)
+      deep_labyrinth
       travel(2066); talk(/Door of iron and glass/)
       beat("SC 7B.08 the door of iron and glass (road B done)", :road_b_done)
+    end
+
+    # The Heartroot Labyrinth's lower zones (046_DeepLabyrinth.rb): through the
+    # heart-wall under the Sap Wells, down to the Scriptory's glass sigil, and the
+    # Root-Lift back to the forge door.
+    def deep_labyrinth
+      travel(2058); talk(/Knotted heart-wall/); HL.frames(30); HL.settle(3000)
+      beat("the heart-wall opens (the Root-Key)", :heartwall_open)
+      fit(47)
+      beat("H9 the Mirror Garden", :mirror_garden_entered)
+      talk(/Mirror-flower/); talk(/Mirror-petal/)
+      until_flag(:ring_done, 3) { travel(2140); talk(/Petal-gate/) }
+      beat("H10 the Reflection Ring (#{FrostThaw.flag?(:mirror_clones_beaten) ? 'the Mirror Clones' : 'crossed without looking'})", :ring_done)
+      talk(/Glass-roots/)
+      beat("H11 the Shattered Bed: the Mirror Shard Focus", :shard_focus_found)
+      talk(/Moss bed/)
+      beat("H12 the Perfume Grotto", :grotto_boon)
+      travel(2141); HL.frames(20); HL.settle(3000)
+      beat("H13 the Hollow Core", :hollow_core_entered)
+      clear_trainers
+      until_flag(:crossways_construct, 3) { travel(2141); talk(/Root-construct/) }
+      talk(/Cocoon 1/); talk(/Cocoon 2/); talk(/Cocoon 3/); talk(/Pale sovereign/)
+      beat("H14/H15 the crossways and the Cocoon Gallery", :core_warned)
+      travel(2142); HL.frames(20); HL.settle(3000)
+      beat("H16 the Frozen Drop", :frozen_drop_entered)
+      clear_trainers
+      talk(/The Underdark Mouth/); talk(/Root-drakes/)
+      until_flag(:barracks_done, 3) { travel(2142); talk(/Sleeping sap-soldiers/) }
+      beat("H17/H34/H27 the Underdark Mouth, the nursery, the Root-Kin Barracks", :barracks_done)
+      fit(48)
+      travel(2143); HL.frames(20); HL.settle(3000)
+      beat("H18 the Vault of Amber Dreams", :amber_vault_entered)
+      until_flag(:amber_sentries_down, 3) { travel(2143); talk(/Amber pod$/) }
+      talk(/Lab notes/)
+      until_flag(:core_destroyed, 3) { travel(2143); talk(/Amber pod 4/) }
+      beat("H19 the Stasis Gallery: the Homunculus Core and the lab notes", :core_destroyed)
+      talk(/Cataloguing construct/); talk(/Root-table/); talk(/Sealed crates/)
+      beat("H20 the Dissectory Annex (Autumn's crates)", :autumn_labs_seen)
+      until_flag(:dissectory_golem, 2) { travel(2143); talk(/Hammer-arm construct/) }
+      until_flag(:torturer_down, 2) { travel(2143); talk(/Torturer construct/) }
+      talk(/Pain-pod 1/); talk(/Pain-pod 2/)
+      beat("H28 the Suffering Pods", :pain_pods_freed)
+      travel(2145); HL.frames(20); HL.settle(3000)
+      until_flag(:mirror_wards_down, 3) { travel(2145); talk(/Floating shards/) }
+      talk(/Broken ice mask/)
+      until_flag(:var_story_known, 3) { travel(2145); talk(/The liquid mirror/) }
+      beat("H3 the Mirror-Root Vault: Ithryn Athis, and Var's echo", :var_story_known)
+      travel(2144); HL.frames(20); HL.settle(3000)
+      clear_trainers
+      until_flag(:scriptory_read, 3) { travel(2144); talk(/Script pool/) }
+      talk(/Chardalyn pages/); talk(/Sealed crystal/)
+      beat("H21 the Mirror Scriptory: the glass sigil", :glass_sigil)
+      talk(/Seed-pod nest/); talk(/Black-glass bloom/)
+      beat("H29/H31 the guest nests and the Devil's Bloom", :bloom_done)
+      until_flag(:lift_node_run, 3) { travel(2144); talk(/Root-lift cage/) }
+      beat("H30 the Root-Lift Node, down to the forge door", :lift_node_run)
     end
 
     # Act II side paths out of Rootspire (each one tied to a reward).

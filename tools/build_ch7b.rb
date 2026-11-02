@@ -54,10 +54,13 @@ gd.trainer(15, 12, nil, :guild_worker_rusk, :FT_GUILD, dir: 4, sight: 2)
 # SC 7B.08: the door of iron and glass at the bottom of Hew's last ladder
 [15, 16].each do |x|
   gd.event(x, 21, "Door of iron and glass", [
-    { tile_id: 582, trigger: 1, script: "FT.forge_door(:b, @event_id)" },
-    { switch: 3981, tile_id: 582, trigger: 1, script: "FT.forge_door(:b, @event_id)", commands: [gd.send(:command, 201, [0, 2072, 4, 14, 6, 1])] }
+    { tile_id: 582, trigger: 1, script: "FT.labyrinth_forge_door(@event_id)" },
+    { switch: 3981, tile_id: 582, trigger: 1, script: "FT.labyrinth_forge_door(@event_id)", commands: [gd.send(:command, 201, [0, 2072, 4, 14, 6, 1])] }
   ])
 end
+# the Root-Lift Node's cage comes up here once it's working (build_ch7_deep.rb, 2144)
+gd.event(19, 19, "Root-lift", [{ graphic: "", through: true },
+                               { switch: 4083, graphic: "Followers/KLINKLANG", direction: 2, script: "FT.root_lift_up(@event_id)" }])
 gd.event(5, 4, "Ladder shaft", [{ graphic: "", tile_id: 582, script: "FT.guild_ladder(@event_id)" }])
 save(gd, :guild_dig)
 

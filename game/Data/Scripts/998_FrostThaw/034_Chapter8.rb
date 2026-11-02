@@ -4,16 +4,26 @@
 # Find the Summer Marshal and stop what's burning. Both roads end here, in the
 # hag's old lair under the ruins of Dougan's Hole.
 #
-#   2072 The Rootward Barricade (8.01): root and iron fused into a wall;
-#        enthralled duergar and Hew's missing diggers; the passphrase.
-#   2073 The Hag's Abandoned Domain (8.02): a tea table set for six, and
+#   2072 The Rootward Barricade (8.01, A1/A3/A4): root and iron fused into a
+#        wall; enthralled duergar and Hew's missing diggers; the passphrase.
+#   2146 its inner rooms (046_ForgeRooms.rb): A2, A3, A5, A6, A7.
+#   2073 The Hag's Abandoned Domain (8.02, A8): a tea table set for six, and
 #        Thredra's echo in a cracked mirror.
-#   2074 The Domain's lower level (8.03): the cocoon pens. RAZ-MKI, MKII, V-3,
-#        V-5, V-6, and an empty one: V-7.
-#   2075 The Dragonforge (8.04, 8.05, 8.09): the sap-pit bridge where Autumn
-#        falls; the Twenty Stones and the chardalyn dragon.
-#   2076 The Heart Chamber (8.06-8.08): Var, who is Avarice; Glimmer's better
-#        fire; the coat falls off.
+#   2147-2149 the rest of Level 2 (046_ForgeRooms.rb): A9-A18.
+#   2074 The Domain's lower level (8.03, A27, A28): the cocoon pens. RAZ-MKI,
+#        MKII, V-3, V-5, V-6, and an empty one: V-7. The rootbeast pens; the
+#        prison cocoons.
+#   2150-2151 Level 3's upper works (046_ForgeRooms.rb): A19-A25, A29, A30.
+#   2075 The Dragonforge (8.04, 8.05, A26, A31): the sap-pit bridge where
+#        Autumn falls; the Twenty Stones and the chardalyn dragon; the
+#        devil-priest at the black-glass stair.
+#   2152 Avarice's rooms (046_ForgeRooms.rb): A32-A37. 2153: the Heartroot
+#        Labyrinth's Zone VI, the Antechapel (H22, H32, H33, H37).
+#   2076 The Heart Chamber (8.06-8.08, H23, H24): Var, who is Avarice; her
+#        opening and her mechs; the Breaking Circle; Glimmer's better fire;
+#        the Frost Saint Shard and your choice; the coat falls off, and she
+#        burns (or seems to). 8.09: the launch; then the Sloughing Veins
+#        (H25), the Echo Vault (H26, H36), and the way up (046_ForgeRooms.rb).
 #===============================================================================
 module FrostThaw
   SW_BARRICADE_OPEN = 3975   # the passphrase was spoken: the Barricade's gate is open
@@ -22,6 +32,7 @@ module FrostThaw
   SW_FORGE_CLEARED  = 3978   # the forge's gauntlet is beaten: the way to the Heart Chamber
   SW_ENGINE_DEAD    = 3979   # the engine is dead (Glimmer is gone)
   SW_SELRAE_PEN     = 3980   # Selrae is in the last cocoon (selrae_ahead, not yet rescued)
+  SW_CIRCLE_PHASE   = 4095   # the Breaking Circle: the engine drinks, and you can work the spires
 
   MAPS.merge!(barricade: 2072, hag_domain: 2073, hag_pens: 2074, dragonforge: 2075, heart_chamber: 2076)
   MAP_NAMES.merge!(2072 => "The Rootward Barricade", 2073 => "The Hag's Abandoned Domain", 2074 => "The Cocoon Pens",
@@ -50,7 +61,7 @@ module FrostThaw
     FT_AVARICE:  ["Forge-Mistress", :CHANNELER, 1, 250, :LEADER_Pryce]
   )
   TRAINERS.merge!(
-    duergar_kord:  [:FT_DUERGAR, "Kord",  [[:MAGCARGO, 45], [:B208H126, 46]], "The Forge-Mistress said you'd come. The failures always return."],
+    duergar_kord:  [:FT_DUERGAR, "Kord",  [[:MAGCARGO, 45], [:B208H126, 46]], "Xardorok said you'd come. The failures always return."],
     duergar_brask: [:FT_DUERGAR, "Brask", [[:B76H59, 45], [:B205H229, 46]], "My hands... why are my hands so hot?"],
     duergar_hild:  [:FT_DUERGAR, "Hild",  [[:B95H126, 46], [:TORKOAL, 46]], "Rimebound. Rise unbroken. That's all she lets us say."],
     duergar_thane: [:FT_DUERGAR, "Thane", [[:B112H59, 47], [:B227H229, 47]], "Stoke. Stoke. Stoke. ...Is it quiet? Why is it quiet?"],
@@ -60,7 +71,7 @@ module FrostThaw
                     "Variables. Always variables.", [:FULLRESTORE, :FULLRESTORE, :HYPERPOTION]]
   )
   TRAINER_INTROS.merge!(
-    duergar_kord:  "KORD: The Forge-Mistress said you'd come. The failures always return.",
+    duergar_kord:  "KORD: Xardorok said you'd come. The failures always return.",
     duergar_brask: "BRASK: Stoke the fire. Feed the engine. Don't look at the dragon.",
     duergar_hild:  "HILD: Halt! Speak the words or burn.",
     duergar_thane: "THANE: More fuel. More fuel. You'll do.",
@@ -105,7 +116,10 @@ module FrostThaw
                                  "Its eyes are dark."]
     },
     forge_stair_shut: ["A stair of black glass winds up toward the engine.", "The devil-priest stands on the bottom step, smiling."],
-    engine_dead: ["The engine hangs dark and cold. Where Glimmer knelt, the stone is still warm."]
+    engine_dead: -> {
+      flag?(:engine_dead) ? ["The engine hangs dark and cold. Where Glimmer knelt, the stone is still warm."] :
+                            ["The engine hangs over the silver pool, a cage of chardalyn and roots, beating slowly, like something refusing to die."]
+    }
   )
 
   module_function
@@ -118,9 +132,11 @@ module FrostThaw
     set_flag(:barricade_entered)
     add_counter(:story_beats)
     set_rest_at(FORGE_REST) rescue nil
-    say(["Root and iron, fused into a wall. Duergar wearing Avarice's sigils guard it.",
-         "Among them, Hew's missing diggers haul sap with blank smiles.",
-         "DUERGAR: The Forge-Mistress said you'd come. The failures always return."])
+    say(["The tunnel narrows until a wall of fused root and blackened iron blocks the way.",
+         "The exposed wood pulses faintly, like a heart under strain. Infernal sigils glow along the iron plates hammered into it.",
+         "A single slit near the top leaks a strip of red-gold light. Something beyond is hammering. Something patient. Something building.",
+         "Duergar wearing Avarice's sigils guard it. Among them, Hew's missing diggers haul sap with blank smiles.",
+         "DUERGAR: Xardorok said you'd come. The failures always return."])
     say(lines_for(:barricade_illusion))
     sayc([with_or_is?(:alberica) ? as(:alberica, "That's the Dale. Our Dale. Outside the Wall.") : "That's the Dale. Outside the Wall.",
           cl(:meat_meat, "Failures. Meat Meat has been called worse. By better."),
@@ -300,7 +316,11 @@ module FrostThaw
     set_flag(:forge_seen)
     dragon = stage_event("Chardalyn dragon")
     heart = dragon ? Stage.fx("E-14", [dragon.x, dragon.y], oy: 40, loop_from: 0) : nil   # the stolen heart, beating
-    sayc(["A cavern ringed by twenty standing stones.",
+    sayc(["Heat slams into you like a living wall.",
+          "A cathedral-sized cavern: a hollow womb carved into the fused roots of the World Tree, where molten sap rivers churn like liquid gold.",
+          "Great mechanical arms churn and turn. Twenty standing stones ring the floor: the old Stones of Thruun.",
+          "This was the hag's first lair, under Dougan's Hole, where the Reversal began. The Stones were her altar, and the altar is still beating:",
+          "a holy wound in the World Tree's roots. Avarice's sigils run from it into the tree's memory, like nails into a living thing.",
           "Chained among them, on a cradle of iron and root: a dragon of black crystal and mirror glass.", "Its eyes are dark.",
           "Above it hangs the engine, a cage of chardalyn and roots.",
           "In its heart burns a sliver of blue frost-light, wrapped in Hyphora's gold sap.", "Blue at the edges. Red at the core.",
@@ -313,40 +333,203 @@ module FrostThaw
   end
 
   def devil_priest(event_id = nil)
-    return say(lines_for(:devil_priest_after), event_id) if flag?(:forge_reached)
-    sayc(["A barbed devil in priest's robes turns from the stones, smiling with too many teeth.",
+    if flag?(:forge_reached)
+      return say(["Where the priest knelt, a scorch-mark in the shape of folded wings."], event_id) if flag?(:devil_fled)
+      return say(lines_for(:devil_priest_after), event_id)
+    end
+    sayc(["A duergar priest kneels before a mirror-root altar at the foot of the stair, chanting in a guttural language.",
+          "As you come close, its shadow ripples, and wings unfold from it, stretching impossibly wide.",
+          "It turns: a barbed devil in priest's robes, smiling with too many teeth.",
           cl(:alberica, "Ooh. Lovely smile. Too many teeth, but lovely.")], event_id)
     return if !trainer(:devil_priest, event_id)
     set_flag(:forge_reached)
     ($game_switches[SW_FORGE_CLEARED] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    say(["VEXMORTIS: Go on. She's waiting. She's always waiting. That's the worst of her.",
-         "Behind him, a stair of black glass winds up into the engine's heart."])
-    state[:goal] = "The Heart Chamber. The engine."
+    say(["VEXMORTIS: Go on. She's waiting. She's always waiting. That's the worst of her."])
+    if companions.size >= 3
+      set_flag(:devil_fled)
+      say(["He counts you, and counts again, and decides he's outnumbered.",
+           "VEXMORTIS: I serve her willingly. Not THAT willingly.",
+           "His wings fold round him, and he's gone in a smell of struck matches."])
+      set_self_switch(event_id, "B") if event_id
+    end
+    say(["Behind the altar, a stair of black glass winds up toward her rooms, and the Heart beyond them."])
+    state[:goal] = "Up the black-glass stair: Avarice's rooms, and the Heart Chamber."
   end
 
   #-----------------------------------------------------------------------------
   # SC 8.06 - Summer; 8.07 - A better fire; 8.08 - The coat falls off
   #-----------------------------------------------------------------------------
+  # The Heart Chamber (H23), with the Breaking Circle (H24) round its pool:
+  #   1. Var turns; the coat cracks; Avarice (her taunt, her plan, her alias).
+  #   2. Her opening; then two Infernal Rootbreaker mechs join (round two).
+  #   3. The Breaking Circle: while the engine drinks, six actions among twelve
+  #      root-spires: scour her glyphs (Auril's sigils show through) or break
+  #      both. Talk to her, or spend the sixth action, and she's ready again.
+  #   4. Avarice. Then Glimmer's better fire; then the Shard, and your choice;
+  #      then she burns, and the dragon flies, and the chamber comes down.
   def scene_heart_chamber
-    return if flag?(:engine_dead)
-    say(["A big, scarred man in the Summer Marshal's gold stands at the engine's controls, his back to you.",
-         "KELYN: (over a sending-stone) Var? Var, thank the seasons...",
-         "He turns. His face is Var's. His eyes are red-gold, and they don't blink.",
-         "VAR: (a woman's voice, amused) Variables that refused to die. Hello again, my little failures.",
-         "The face cracks like a mirror.", "Behind the cracks: white hair, infernal sigils, a smile like arithmetic.",
-         "AVARICE: Thirty years I've worn this man. Thirty years of summer.",
-         "AVARICE: A season that never ends has a god's worth of power in it. Mine.",
-         "AVARICE: The Frostmaiden wants the world still. I want it running. On my schedule. Forever."])
-    if with_or_is?(:meat_meat)
-      speak(:meat_meat, "You took Razzy's voice.", "...You.")
+    return if flag?(:engine_dead) || flag?(:circle_phase)
+    if !flag?(:heart_met)
+      set_flag(:heart_met)
+      say(["The enormous cavern of glowing roots opens round a pool of silver sap.",
+           "Over the pool hangs the engine, beating slowly, unnaturally, like something refusing to die.",
+           "Twelve root-spires ring the pool. On every one, two sets of runes: frost underneath, fire scarred on top.",
+           "A big, scarred man in the Summer Marshal's gold stands at the engine's controls, his back to you.",
+           "KELYN: (over a sending-stone) Var? Var, thank the seasons...",
+           "He turns. His face is Var's. His eyes are red-gold, and they don't blink.",
+           "VAR: (a woman's voice, amused) Variables that refused to die. Hello again, my little failures.",
+           "The face cracks like a mirror.", "Behind the cracks: white hair spilling like frostfire, infernal sigils burned into her arms, eyes burning red-gold with ambition.",
+           "AVARICE: Thirty years I've worn this man. Thirty years of summer.",
+           "AVARICE: You survived my early prototypes. You lived through the frost that should have hollowed you.",
+           "AVARICE: And now you've come home, to die in the womb that birthed you."])
+      if flag?(:var_story_known)
+        say(["(Var, at the Split Dock, his glaive coming up: \"Who in the Nine Hells are you?\" Thirty years ago. He never got an answer.)"])
+      end
+      say(["AVARICE: The duergar call me Xardorok. Names are coats too. So is summer.",
+           "AVARICE: A season that never ends has a god's worth of power in it. Mine. And when my dragon flies,",
+           "AVARICE: Ten-Towns melts, and every soul in the Dale is harvested warm, and I sit where the Frostmaiden sits.",
+           "AVARICE: My patron gets the rest. The whole Dale, stitched to the Nine Hells like a new pocket on an old coat.",
+           "AVARICE: He likes his meals warm. I'll be the one who serves them."])
+      if flag?(:avarice_shard_lodged)
+        say(["AVARICE: (to you, almost fond) I watched you come down through my garden. You've been carrying my eye since the Shattered Bed."])
+      end
+      if with_or_is?(:meat_meat)
+        speak(:meat_meat, "You took Razzy's voice.", "...You.")
+      end
+      sayc(["AVARICE: I took a great deal more than that, V-7. Come here and I'll show you.",
+            herald?(:meat_meat) ? cl(:reptin, "(stepping in front of you) She's not going anywhere near you.") :
+                                  cl(:reptin, "(stepping in front of Meat Meat) She's not going anywhere near you.")])
+      if flag?(:took_hag_secret)
+        say(["(The hag's whisper: the heart in her engine isn't hers.)",
+             "(You can see it now, under the gold: a seam of blue frost-light where the coat is stitched on.)"])
+      end
+    else
+      say(["Avarice is back at the engine's controls, still wearing what's left of Var, humming.",
+           "AVARICE: Again? Again. I love a repeatable experiment."])
     end
-    sayc(["AVARICE: I took a great deal more than that, V-7. Come here and I'll show you.",
-          herald?(:meat_meat) ? cl(:reptin, "(stepping in front of you) She's not going anywhere near you.") :
-                                cl(:reptin, "(stepping in front of Meat Meat) She's not going anywhere near you.")])
-    if flag?(:took_hag_secret)
-      say(["(The hag's whisper: the heart in her engine isn't hers.)",
-           "(You can see it now, under the gold: a seam of blue frost-light where the coat is stitched on.)"])
+    heart_lair_actions
+    return avarice_fight if flag?(:circle_done)
+    if !flag?(:heart_opening_won)
+      won = pbTrainerBattle(:FT_AVARICE, "Avarice (opening)", nil, false, 0) ? true : false
+      return if !won
+      set_flag(:heart_opening_won)
+    end
+    if !flag?(:heart_mechs_won)
+      $game_screen.start_shake(4, 6, 16) rescue nil
+      say(["AVARICE: Round two, little failures.",
+           "The silver pool heaves. Two Infernal Rootbreaker mechs climb out of it, sap sheeting off their plates."])
+      setBattleRule("double")
+      won = pbTrainerBattle(:FT_AVARICE, "Infernal Rootbreakers", nil, false, 0) ? true : false
+      return if !won
+      set_flag(:heart_mechs_won)
+    end
+    start_breaking_circle
+  end
+
+  # Lair actions: molten sap bursts and frost-blasts every round, and the
+  # towers' bolts if nobody cleared them.
+  def heart_lair_actions
+    lead = $Trainer.first_able_pokemon rescue nil
+    lines = ["The pool spits molten sap. Frost blasts out of the engine's vents."]
+    if lead
+      lead.hp = [lead.hp - [lead.totalhp / 10, 1].max, 1].max
+      lines << "#{lead.name} is caught between them."
+    end
+    if !flag?(:vantage_cleared)
+      lines << "And from the vantage towers above the forge, red-hot bolts come down through the roots!"
+      if lead
+        lead.hp = [lead.hp - [lead.totalhp / 10, 1].max, 1].max
+        lines << "#{lead.name} takes a bolt."
+      end
+    end
+    say(lines)
+  end
+
+  # H24: the Breaking Circle. Six actions, twelve spires.
+  def start_breaking_circle
+    set_flag(:circle_phase)
+    state[:circle_actions] ||= 0
+    say(["Avarice steps back to the engine and lays both hands on it. It drinks from her, or she from it.",
+         "AVARICE: (eyes half closed) The engine needs a minute to drink. So do I. Fiddle with my circle, if you like.",
+         "AVARICE: Every second you spend, my dragon wakes a little more.",
+         "Twelve root-spires ring the pool. Auril's frost-sigils underneath. Avarice's infernal glyphs scarred on top."])
+    if flag?(:captain_hints)
+      say(["(The tortured captain: scratch hers off, and she drinks less.)"])
+    end
+    sayc([cl(:alerion, "Scour her glyphs and the frost shows through. Break both and nothing does."),
+          cl(:alberica, "And if Auril's sigils show through, darling, Auril gets a word in."),
+          "(Before the engine's next beat, you have time to work on six spires. Speak to Avarice when you're ready.)"])
+    ($game_switches[SW_CIRCLE_PHASE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
+  end
+
+  def breaking_spire(n, event_id = nil)
+    done = (state[:circle_spires] ||= {})
+    if flag?(:engine_dead)
+      return say([done[n] == :restored ? "A root-spire, its frost-sigil showing clean through the scratched-out fire." :
+                  done[n] == :broken ? "A root-spire, both its runes broken. Silent." : "A root-spire, its runes cold and quiet now."], event_id)
+    end
+    if !flag?(:circle_phase)
+      return say(["A root-spire carved with overwritten runes: Auril's frost-sigils underneath, Avarice's infernal glyphs scarred on top.",
+                  "Whispers come off it. Not loud. Not yet."], event_id)
+    end
+    return say(["You've already worked this spire."], event_id) if done[n]
+    left = 6 - (state[:circle_actions] || 0)
+    say(["Spire #{n}. Under Avarice's glyph, a frost-sigil glitters, half buried. (#{left} more before the engine's beat.)"], event_id)
+    c = pbMessage(_INTL("The spire..."), [_INTL("Scour off her glyph"), _INTL("Break both runes"), _INTL("Leave it")], 2)
+    return if c.nil? || c == 2
+    if c == 0
+      done[n] = :restored
+      say(["You scrape the infernal glyph off with whatever's to hand. The frost-sigil underneath lights, cold and clean.",
+           "The engine shudders. Avarice frowns without opening her eyes."])
+    else
+      done[n] = :broken
+      say(["You break the spire's runes, both of them. The whispers off it stop dead."])
+      lead = $Trainer.first_able_pokemon rescue nil
+      if lead
+        lead.hp = [lead.hp - [lead.totalhp / 12, 1].max, 1].max
+        say(["The backlash burns #{lead.name}."])
+      end
+    end
+    state[:circle_actions] = (state[:circle_actions] || 0) + 1
+    restored = done.values.count(:restored)
+    if restored >= 4 && !flag?(:auril_heard_heart)
+      set_flag(:auril_heard_heart)
+      say(["From under the silver pool, from very far away, a voice like a winter morning, almost clear:",
+           "AURIL: Little thief. Little moth. You burn my saint for a candle, and call it summer.",
+           "AVARICE: (eyes snapping open) Be QUIET."])
+    end
+    return avarice_phase_two(nil, true) if state[:circle_actions] >= 6
+  end
+
+  # Avarice, rested. Called from her event (talk to her) or the sixth spire.
+  def avarice_phase_two(event_id = nil, forced = false)
+    return if flag?(:engine_dead)
+    done = state[:circle_spires] || {}
+    restored = done.values.count(:restored)
+    broken = done.values.count(:broken)
+    set_flag(:circle_phase, false)
+    set_flag(:circle_done)
+    ($game_switches[SW_CIRCLE_PHASE] = false; $game_map.need_refresh = true if $game_map) if $game_switches
+    state[:circle_restored] = restored
+    state[:circle_broken] = broken
+    set_flag(:circle_worked) if restored + broken > 0
+    say([forced ? "The engine beats, once, like a door slamming. Avarice opens her eyes." : "AVARICE: (opening her eyes) Done? Good.",
+         "AVARICE: Let's see what you've cost me."], event_id)
+    if restored > 0
+      say(["She draws on the engine, and it gives her less than it should. #{restored == 1 ? 'One spire' : "#{restored} spires"} of frost won't feed her."])
+    end
+    if broken == 0
+      say(["The whispers off the spires press in on all of you, Auril's and Avarice's both, deafening."])
+      if (flag?(:gallery_boon) && !flag?(:gallery_boon_used)) || (flag?(:grotto_boon) && !flag?(:grotto_boon_used))
+        set_flag(:gallery_boon_used) if flag?(:gallery_boon)
+        set_flag(:grotto_boon_used) if !flag?(:gallery_boon) && flag?(:grotto_boon)
+        say(["(But you've been blessed against fear down here, and the whispers find nothing to hold.)"])
+      else
+        $Trainer.party.each { |pk| pk.hp = [pk.hp - [pk.totalhp / 12, 1].max, 1].max if pk.hp > 0 } rescue nil
+      end
+    else
+      say(["Where you broke the spires, the whispers have stopped. It's quieter. You can think."])
     end
     avarice_fight
   end
@@ -365,8 +548,10 @@ module FrostThaw
         pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
       end
       $ft_avarice_weak = flag?(:took_hag_secret)
+      $ft_avarice_spires = (state[:circle_restored] || 0)
       won = pbTrainerBattle(type, name, nil, false, 0, i == 0) ? true : false
       $ft_avarice_weak = false
+      $ft_avarice_spires = 0
       break if won
     end
     return if !won
@@ -420,20 +605,131 @@ module FrostThaw
     Stage.cleanup rescue nil
     give_key(:FT_DAWNFANG)
     pbMessage(_INTL("Glimmer is gone.")) rescue nil
+    scene_heart_choice
     scene_coat_falls
   end
 
+  # H23's moral multi-ending: the engine is dead, and in the silver pool the Frost
+  # Saint Shard floats free: Sephek's heart, with Auril poured into it.
+  #   Purify: burn Auril out of it with Hyphora's sap and the dagger's gold;
+  #           only a man's heart is left (:shard_purified).
+  #   Preserve: leave it whole; it re-forms as an echo, "The goddess still waits
+  #           in the ice" (:shard_preserved).
+  #   Destroy: Dawnfang through it; the Blessing of Verdant Fire (:shard_destroyed).
+  def scene_heart_choice
+    return if flag?(:heart_choice_made)
+    say(["In the silver pool beneath the dead engine, something floats free, gathering ice and auroral light: the Frost Saint Shard.",
+         "Sephek's heart, veined with frost-light. It whispers prayers in a voice that isn't his."])
+    lines = []
+    lines << "(The notes in the Dissectory: a goddess poured into a drowned man's heart. An experiment that went too right.)" if flag?(:knows_shard_origin)
+    lines << "(The ghost in the Antechapel: cleanse me, leave me whole, or break me. None of them clean.)" if flag?(:shard_echo_heard)
+    lines << "(The whispering attendant's price, still owing: #{state[:attendant_promise] == :free ? 'free the heart' : 'burn the forge'}.)" if state[:attendant_promise]
+    say(lines) if !lines.empty?
+    shard_battle if !flag?(:shard_fought)
+    sayc([cl(:wyn, "(kneeling at the pool's edge) It's... it's frightened. Both of them in there are."),
+          cl(:alberica, "Darling, whatever we do, we do it together."),
+          cl(:meat_meat, "Meat Meat votes stab. Meat Meat always votes stab. ...Meat Meat will listen, this once.")])
+    c = pbMessage(_INTL("The Frost Saint Shard..."), [_INTL("Purify it"), _INTL("Leave it whole"), _INTL("Destroy it")], 0)
+    case c
+    when 0
+      set_flag(:shard_purified)
+      say(["You lift it out of the pool. It's so cold your hands go white.",
+           with_or_is?(:wyn) ? "Wyn pours Hyphora's gold sap over it, and you lay the warm golden dagger against it." :
+                               "You pour gold sap from the engine's cage over it, and lay the warm golden dagger against it.",
+           "Green fire and gold. The frost-light screams, and thins, and goes out of it like breath out of a lung.",
+           "What's left beats once, slowly. Only a man's heart. Cold. Clean.",
+           "A sliver of the light breaks off, and doesn't go out: it hums four notes. Shimmer's notes."])
+      give_key(:FT_SAINTSECHO)
+      wheel(1)
+    when 1
+      set_flag(:shard_preserved)
+      say(["You leave it in the pool. The ice gathers round it again, patient as frost on a window.",
+           "It re-forms, piece by piece, until it's whole, and its whisper is suddenly very clear:",
+           "\"The goddess still waits in the ice.\""])
+      sayc([cl(:alerion, "Someone will come for it."), cl(:reptin, "Then we'll know where they'll be going.")])
+    else
+      set_flag(:shard_destroyed)
+      say(["You drive Dawnfang through it.", "The Shard bursts like a frozen lake in spring, and the light that comes out of it is green and gold.",
+           "It runs up the golden dagger, into your arms, into your Pokémon.",
+           "Most of the shards melt. A few skitter away into the roots, where the light can't follow."])
+      grant_blessing(:verdant_fire, "Blessing of Verdant Fire", "Your Pokémon's Fire- and Grass-type moves are a little stronger.")
+    end
+    set_flag(:heart_choice_made)
+    add_counter(:story_beats)
+    if state[:attendant_promise] == :free && flag?(:shard_destroyed)
+      set_flag(:attendant_promise_broken)
+      say(["(Somewhere in the roots, many small voices go quiet. You promised to free the heart.)"])
+    end
+  end
+
+  # H23's boss (rootspire.md: "a fragment of Auril, part ritual object, part
+  # angel-of-winter"): with the engine dead, the Shard defends itself. Every
+  # spire you restored in the Breaking Circle let Auril speak through it less
+  # angrily (it starts weaker); every one you broke left it nothing to hold.
+  def shard_battle
+    set_flag(:shard_fought)
+    say(["The Shard rises out of the pool. Ice gathers on it, plate by plate, into a shape: tall, winged, faceless, a spear of rime in its hand.",
+         "The air round it goes so cold your breath falls as snow.",
+         "SHARD: (in a voice like a frozen lake cracking) You killed the fire that fed me. Now feed me yourselves."])
+    restored = state[:circle_restored] || 0
+    broken = state[:circle_broken] || 0
+    shard = named_mon(:B448H429, 52, "Frost Saint Shard")
+    cut = [0.06 * restored + 0.04 * broken, 0.5].min
+    if cut > 0
+      shard.hp = [(shard.totalhp * (1.0 - cut)).floor, 1].max
+      say([restored > 0 ? "(Where you scoured the spires, Auril's frost-sigils hum. The Shard flinches from them.)" :
+                          "(The broken spires are silent. The Shard has less to draw on.)"])
+    end
+    if !flag?(:gallery_boon_used) && !flag?(:grotto_boon_used) && (flag?(:gallery_boon) || flag?(:grotto_boon))
+      say(["(Auril's Echo presses on your mind, but the blessing you carry from the Labyrinth holds it off.)"])
+    else
+      $Trainer.party.each { |pk| pk.hp = [pk.hp - [pk.totalhp / 16, 1].max, 1].max if pk.hp > 0 } rescue nil
+      say(["(Frozen Sanctity: the chill bites your whole team before the fight even starts.)"])
+    end
+    setBattleRule("canLose") rescue nil
+    if boss_battle(shard)
+      set_flag(:shard_beaten)
+      say(["The ice-shape shatters. The Shard falls back into the pool, small again, and the whispering stops for a breath."])
+    else
+      set_flag(:shard_overcame)
+      say(["The Shard's spear drives you back to the edge of the pool, and then, spent, the ice-shape slumps and falls apart on its own.",
+           "It sinks back into the silver, still whispering. It has nothing left to fight with. Neither do you."])
+    end
+    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+  end
+
+  # Avarice fakes her death (the owner's canon): Hell's Veil takes her, and what's
+  # left in the ring of melted glass is a body with white hair. The party believes
+  # it. A careful player can catch the lie: Vessel IX (the Stasis Gallery's last
+  # page), bare arms, and a mirror shard that fogs once, as if breathed on.
   def scene_coat_falls
     sayc(["With the engine dead, Var's body cracks all over, like ice on a lake.",
           "Avarice looks down at her hands.",
           "AVARICE: (almost admiring) Oh. That was clever.",
-          "She steps backward into a shard of the hag's old mirror. She's half gone before anyone can move.",
-          "AVARICE: We'll speak again in the White Womb, little failures. Mind the dragon."])
+          "She reaches for a shard of the hag's old mirror, and the shard is cracked through. It won't take her.",
+          "A pillar of red-black flame roars up round her: Hell's Veil, eating the air.",
+          "From inside the fire, her voice, not laughing now:",
+          "AVARICE: We will speak again in the White Womb, little failures.",
+          "The pillar collapses inward with a sound like a door slamming. Then nothing."])
     var = stage_event("Var Rime-Breaker")
-    Stage.fx("E-06", stage_spot(var, 0, -2), frames: 10, oy: 32)   # the mirror shatters behind her
-    sayc(["The mirror shatters. Var Rime-Breaker's body falls, empty, and turns to glass.",
-          cl(:alberica, "(very plainly) She doesn't get away. Not from us. Not after this.")])
-    set_flag(:avarice_fled)
+    Stage.fx("E-06", stage_spot(var, 0, -2), frames: 10, oy: 32)   # the shard shatters in the heat
+    sayc(["When the smoke clears, there's a body in a ring of melted mirror-glass: white hair, burned black at the ends, face down.",
+          "Beside it, Var Rime-Breaker's borrowed body falls, empty, and turns to glass, and breaks.",
+          with_or_is?(:alerion) ? as(:alerion, "(crouching, one hand over her, not touching) ...Dead. Nothing in her. Nothing at all.") : "She doesn't move.",
+          cl(:alberica, "(very plainly) She doesn't get to come back from that. Not even her."),
+          cl(:meat_meat, "(after a long time) ...Good.")])
+    if flag?(:decoy_clue)
+      c = pbMessage(_INTL("The body in the glass..."), [_INTL("Look more closely"), _INTL("Leave it")], 1)
+      if c == 0
+        set_flag(:avarice_doubt)
+        say(["You look at the arms. They're bare.", "Avarice's arms were covered in burned sigils. These have none.",
+             "(Vessel IX: viable. Keep it warm. If they come, let them find me.)",
+             "You don't say anything. Nobody else noticed. You're not sure you want them to."])
+      end
+    end
+    say(["On the floor, a last splinter of the hag's mirror fogs once, as if somebody very far away had breathed on it."])
+    set_flag(:avarice_faked_death)
+    set_flag(:avarice_believed_dead)
     set_flag(:summer_dead)
     add_counter(:story_beats)
     scene_launch
@@ -445,18 +741,27 @@ module FrostThaw
   def scene_launch
     pbSEPlay("Earth3") rescue nil
     $game_screen.start_shake(6, 8, 40) rescue nil
-    sayc(["Below, among the Twenty Stones, the black dragon's eyes light up, gold.",
-          "It doesn't need the engine. It was always meant to fly on its own.",
-          "It tears free of its chains, roars, and smashes straight up through the roots, toward the sky.",
-          herald?(:meat_meat) ? "(You scream it before you know you're going to: RAZZY!)" : "MEAT MEAT: RAZZY!",
-          cl(:alerion, "(already running) Frostina."),
-          "Far above, two dragons are already diving."])
+    sayc(["Below, among the Twenty Stones, the heart-engine's last pulse runs down into the dragon's chains.",
+          "The molten sap rivers surge. Chains snap like thunder. A roar comes up the roots and shakes the World Tree itself.",
+          "The dragon tears free. Infernal runes blaze. Frost pours from its jaws. Wings of mirror-glass unfurl.",
+          "In its chest, something beats that was never its own: an old wyrm's heart, stolen from the ice and corrupted.",
+          "It blasts through the cavern roof, through the roots, through the Heartroot, and rises into the night: toward Ten-Towns."])
+    say([herald?(:meat_meat) ? "(You scream it before you know you're going to: RAZZY!) And far above, Razzilith panics: a picture in your head of every scale on end." :
+                               "MEAT MEAT: RAZZY! (Far above, Razzilith panics: a picture in all your heads of every scale on end, and then pure rage.)"])
+    lines = []
+    lines << cl(:alerion, "(already running) That's frostcraft. Winter's Revenant work, the old kind. ...Frostina.")
+    lines << (herald?(:alberica) ? "(Every memory-thread you have is screaming at once.)" : cl(:alberica, "(a hand to her rune, white-faced) The memory-threads are screaming. All of them."))
+    lines << (herald?(:reptin) ? "(The seasons spike in your chest like a fever breaking the wrong way.)" : cl(:reptin, "(staggering) The seasons just spiked. Like a fever breaking the wrong way."))
+    lines << "On the stone where Glimmer knelt, the golden dagger hums, and won't stop."
+    lines << "Far above, two dragons are already diving."
+    sayc(lines)
     set_flag(:dragon_launched)
     add_counter(:story_beats)
-    say(["END OF CHAPTER 8"]) rescue nil
-    state[:goal] = "Up. Back to the market. The dragon is loose."
-    return chapter9_start if respond_to?(:chapter9_start)
-    transfer(2050, 31, 28, 2)
+    $game_screen.start_shake(8, 9, 50) rescue nil
+    say(["The Heart Chamber starts to come apart. Roots slough off the walls. Part of the cavern folds into a tunnel of cooling sap.",
+         cl(:reptin, "That's our way out. GO!")].compact)
+    state[:goal] = "Out through the Sloughing Veins, before the Heart Chamber comes down."
+    transfer(*VEINS_ARRIVAL)
   end
 
   # The Rootsun Forge mends nothing, but the Barricade's diggers can rest you.
@@ -500,9 +805,15 @@ if Events.respond_to?(:onTrainerPartyLoad)
 Events.onTrainerPartyLoad += proc { |_sender, e|   # (guarded below for the test harness)
   begin
     trainer = e.is_a?(Array) ? e[0] : e
-    if $ft_avarice_weak && trainer && trainer.name == "Avarice" && trainer.party && !trainer.party.empty?
+    if trainer && trainer.name == "Avarice" && trainer.party && !trainer.party.empty?
       ace = trainer.party.last
-      ace.hp = [(ace.totalhp * 0.55).floor, 1].max
+      ace.hp = [(ace.totalhp * 0.55).floor, 1].max if $ft_avarice_weak
+      # every frost-sigil scoured clean on the Breaking Circle feeds her less
+      n = ($ft_avarice_spires || 0).to_i
+      if n > 0
+        frac = [1.0 - 0.08 * n, 0.4].max
+        trainer.party.each { |pk| pk.hp = [(pk.hp * frac).floor, 1].max }
+      end
     end
   rescue StandardError => err
     FrostThaw.log("Avarice's weak point failed: #{err.message}")
