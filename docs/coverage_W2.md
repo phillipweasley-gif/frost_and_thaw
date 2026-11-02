@@ -112,6 +112,15 @@ Tests:
 | The sun ("hasn't cleared the mountains since the Rime set in") | Fixed | `006_Dialogue.rb:25` | smoke |
 | The Holed Up header promised a frost-giant story the dialogue didn't tell | Fixed (the lie is told) | `045_HoledUp.rb:87-114` | try_w2 holed |
 
-## Story runs
+## Story runs (STOP_AT=5, under `flock /tmp/ft_heavy.lock`)
 
-See the final report for the STOP_AT=5 runs (Journey, and a Herald).
+- Journey: **63/63** story beats (68 s, 2 retries after lost battles). The way north now runs
+  Bryn Shander, the Termalaine Path, Termalaine, the Lonelywood Road; the Northlook's
+  "Rest until sundown? ($300, or on credit)" prompt still starts lottery night.
+- Herald (Reptin): **59/59** story beats (77 s, 2 retries).
+- One earlier Journey run lost to Duvessa and then reported her as unreachable for every
+  retry (20/63). The next run passed 63/63, and a focused repro found a route to her both
+  before and after a loss, so I'm treating it as harness flakiness after a whiteout, not a
+  map fault. Worth watching.
+- The harness (`tools/headless/story_run.rb:271`) now talks to `/Innkeeper|Scramsax/`, because
+  the Northlook's keeper is Scramsax.
