@@ -536,7 +536,8 @@ FT.state[:flags] = { met_party: true, badge_targos: true, lottery_stand: true }
 $battle_result = true
 $messages.clear
 FT.leader_duvessa(nil)
-check("beating Duvessa gives the second badge and Steel Wing, and opens the north gate") { $Trainer.badges[1] && FT.flag?(:badge_bryn) && $received == :TM118 && $game_switches[3912] && $game_switches[3913] }
+check("beating Duvessa gives the second badge and Steel Wing, and opens the north gate") { $Trainer.badges[1] && FT.flag?(:badge_bryn) && $messages.any? { |m| m.to_s.include?("Steel Wing") } && $game_switches[3912] && $game_switches[3913] }
+check("...and Mishann brings Reptin the golden acorn on the hall steps (the third way can't go missing)") { FT.flag?(:golden_acorn) && $received == :FT_GOLDENACORN }
 FT.state[:flags] = { met_party: true, badge_targos: true }; $messages.clear; FT.leader_duvessa(nil)
 check("...but not before the lottery (SC 2.08)") { !FT.flag?(:badge_bryn) && $messages.join.include?("draw night") }
 FT.state[:flags] = {}

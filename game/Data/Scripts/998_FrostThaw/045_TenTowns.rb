@@ -88,6 +88,8 @@ module FrostThaw
                               "It's buried in drifts higher than the gate. The speakers dig the roads out when the roads matter.",
                               "(Nobody's dug it out since the last storm.)"]],
     sign_shore_road_targos: ["MAER DUALDON SHORE ROAD", "West: Targos. North, up the east shore: Termalaine. Four hours. Keep the lake on your left."],
+    shore_hunter_ilsa_after: ["Four hours of shore. I've walked it forty times. It never gets shorter, but it gets quieter."],
+    shore_fisher_dov_after: ["Knucklehead trout bite best when the ice sings. Hear it? That groaning? That's singing."],
     sign_shore_road_tm: ["SHORE ROAD", "South-west round the lake to Targos. Four hours, if the drifts are kind."],
     shore_road_fisher: ["An ice fisher sits on an upturned bucket, a line down a hole in the lake, a sledge of knucklehead trout beside him.",
                         "FISHER: Targos boats fish the middle of the lake. Termalaine fishes the east side. Out here's nobody's.",

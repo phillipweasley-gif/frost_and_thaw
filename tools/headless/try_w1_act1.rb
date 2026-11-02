@@ -198,25 +198,34 @@ won = FT.thredra_battle
 ok(won && FT.flag?(:coven_sister) && said_since?(m, /ETHEL: You promised me a share/), "on Hard, her coven sister steps out of the ice and fights beside her")
 $Trainer.selected_difficulty = old_diff
 
-# --- letting the knife fall: the other dark ending -------------------------------------
+# --- holding still at her lunge, with no help: the cub is cut, not killed (F1) --------------
+# Only the bargain, agreed out loud, ends the act; a wrong pick at the lunge mustn't.
 FT.state[:companions] = %i[alberica reptin alerion shade meat_meat]
 %i[golden_acorn stood_with_alberica].each { |f| FT.set_flag(f) }
 strong_party
 HL.warp(2046, 12, 45, 8)
-clear(:thredra_parley, :minions_down, :thredra_beaten, :reversal, :lunge_done, :cub_sacrificed, :ghost_blessing, :locket_talisman)
-HL.answers.unshift([/What do you do\?/, 0], [/She's going for the cub/, 3])
+clear(:thredra_parley, :minions_down, :thredra_beaten, :reversal, :lunge_done, :lunge_in_battle, :lunge_aftermath_said,
+      :cub_sacrificed, :ghost_blessing, :locket_talisman, :locket_caught_wrist, :ghost_caught_knife, :cub_wounded,
+      :reptin_wolf_surged, :shielded_cub, :broke_hag_staff, :freed_cub_midfight, :cub_home)
+HL.answers.unshift([/What do you do\?/, 0], [/She's going for the cub/, 3], [/Take Yetot with you/, 1])
+# (the mid-battle lunge is its own test in try_f1.rb; here she's KO'd before she can try, so it's the after-battle prompt)
+orig_cornered = FT.method(:hag_cornered?)
+FT.define_singleton_method(:hag_cornered?) { |_battle| false }
 loops = FT.counter(:loop_count).to_i
 m = mark
 FT.thredra(ev("Thredra")&.id); HL.frames(10); HL.settle(1500)
-ok(said_since?(m, /It isn't\./) && FT.counter(:loop_count).to_i == loops + 1, "holding still without the ghost's help: the knife falls, and the wheel turns back")
-2.times { HL.answers.shift }
+ok(FT.flag?(:cub_wounded) && FT.flag?(:reptin_wolf_surged) && !FT.flag?(:cub_sacrificed) && FT.counter(:loop_count).to_i == loops,
+   "holding still without help: Reptin's wolf turns the knife, the cub is cut but lives, and the act goes on")
+ok(FT.flag?(:reversal) && said_since?(m, /It'll scar\. It'll live\./), "...the third way follows, and the cub's scar is remembered")
+3.times { HL.answers.shift }
+FT.define_singleton_method(:hag_cornered?, orig_cornered)
 
 # --- losing to the Winter-Crowned hag: the witch-queen ending ---------------------------
 $Trainer.party.clear
 pk = Pokemon.new(:MAGIKARP, 5); pk.calc_stats; $Trainer.party << pk
 HL.warp(2046, 12, 45, 8)
 FT.state[:companions] = %i[alberica reptin alerion shade meat_meat]
-clear(:thredra_parley, :minions_down, :thredra_beaten, :reversal, :lunge_done, :cub_sacrificed)
+clear(:thredra_parley, :minions_down, :thredra_beaten, :reversal, :lunge_done, :cub_sacrificed, :golden_acorn)   # (no acorn: "...Do it." is the third choice)
 HL.answers.unshift([/What do you do\?/, 2], [/Let her kill the cub/, 0])
 m = mark
 FT.thredra(ev("Thredra")&.id); HL.frames(10); HL.settle(1500)
@@ -237,6 +246,7 @@ ok(said_since?(m, /You dream of the Heart of the Chasm/), "losing in her lair: t
 # --- Sephek: Hlin, Torg's, and what he is ---------------------------------------------
 FT.state[:companions] = %i[alberica reptin alerion shade shimmer]
 HL.warp(2024, 15, 10, 8)
+clear(:sephek_defeated, :hlin_hired, :hlin_paid, :torrga_beaten, :torrga_grudge)   # (met before the Moon Temple)
 HL.answers.unshift([/Take Hlin's job/, 0])
 m = mark; FT.hlin(ev("Hlin Trollbane")&.id)
 ok(FT.flag?(:hlin_hired) && said_since?(m, /glassblower in Bryn Shander/) && said_since?(m, /Torg's/), "Hlin Trollbane hires you: three ice-dagger murders, Torg's")

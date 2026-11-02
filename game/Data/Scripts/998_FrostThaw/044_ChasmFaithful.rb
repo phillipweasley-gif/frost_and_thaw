@@ -80,7 +80,7 @@ module FrostThaw
                     "Not my sled. Not my fight. Not my teeth, either."],
     torg_hand3:    [:FT_TORGHAND,      "Hale", [[:POOCHYENA, 16], [:HOUNDOUR, 18]],
                     "...You could've just bought something."],
-    torg_hand4:    [:FT_TORGHAND,      "Skeld", [[:MURKROW, 17], [:STOUTLAND, 18]],
+    torg_hand4:    [:FT_TORGHAND,      "Skeld", [[:MURKROW, 17], [:MIGHTYENA, 18]],
                     "Tell the boss I tried."],
     ethel:         [:FT_HAG,           "Ethel", [[:B124H71, 31], [:B44H94, 32]],
                     "Sister... you promised me a share..."],
