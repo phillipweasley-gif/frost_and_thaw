@@ -245,6 +245,7 @@ module FrostThaw
       pbMoveRoute($game_player, [PBMoveRoute::Right]) rescue nil
       return
     end
+    return geas_turns_back(event_id) if respond_to?(:geas_binds?) && geas_binds?
     say(["The Auroral Wall has gone thin as breath.", "Beyond it, snow is falling again, slowly, over the Dale."], event_id)
     if pbConfirmMessage(_INTL("Walk out through the Wall, into the Dale?"))
       transfer(*DALE_GATE)

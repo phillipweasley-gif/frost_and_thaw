@@ -122,12 +122,26 @@ module FrostThaw
   def voyage
     case voyage_route
     when :ship
-      say(["The Boreal Requiem noses through the pack ice.",
-           "MIRA: If you hear singing, that's the ice. If you hear laughing, that's me.",
-           "MIRA: Don't worry about either."])
+      paid = flag?(:council_mira) ? nil : flag?(:council_heralds) ? "the Council's warrant" : "Darrus Fell's coin"
+      if flag?(:mira_left_possessed)
+        # (F3's branch: Mira was left possessed; her first mate sails the Requiem)
+        say(["The Boreal Requiem noses through the pack ice#{paid ? ", on #{paid}" : ''}.",
+             "FIRST MATE: (at the wheel) Captain's below, talking to the mirrors again. I've got the ship.",
+             "FIRST MATE: If you hear singing, that's the ice. If you hear laughing, don't go below."])
+      else
+        say(["The Boreal Requiem noses through the pack ice#{paid ? ", on #{paid}" : ''}.",
+             paid ? "MIRA: (at the wheel) No chair on the Council for me. Still the Requiem's captain, though. Somebody has to be." : nil,
+             "MIRA: If you hear singing, that's the ice. If you hear laughing, that's me.",
+             "MIRA: Don't worry about either."].compact)
+      end
+      if flag?(:darrus_redeemed)
+        say(["Down in the hold, a tiefling in a Corsair's coat is counting barrels. Twice.",
+             "DARRUS: (not looking up) Every one paid for. Go on. Somebody has to keep count."])
+      end
     when :griffons
       say(["Griffons, beating hard over a white sea.",
-           "RHEVEN: Don't look down. ...No. Actually, do. You'll never see anything like it again."])
+           flag?(:council_rheven) ? "RHEVEN: Don't look down. ...No. Actually, do. You'll never see anything like it again." :
+                                    "KETHAN: (on the lead griffon) Don't look down. ...No. Do. Skytower's never flown this far north."])
     else
       if voyage_route == :bell
         say(["Nobody you elected has a ship, or a griffon, or a whale.",
@@ -206,7 +220,7 @@ module FrostThaw
           "SOPO: (cackling at nothing) She's expecting you! Everybody's expecting you. Even the dead ones!",
           cl(:reptin, "Charming. We'll find our own way, thank you."),
           cl(:meat_meat, "Meat Meat will bite it. Not fondly.")], event_id)
-    help = flag?(:council_mira) || flag?(:corsair_favour)
+    help = flag?(:council_mira) || flag?(:corsair_favour) || voyage_route == :ship   # (the Requiem's crew came too)
     if help
       say(["A Corsair sloop slides out of the fog and grinds against the dock.",
            "Mira's people pile off, shouting, and fall on Sopo's pack.",

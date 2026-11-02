@@ -247,6 +247,7 @@ module FrostThaw
       return if !flag?(:amulets_returned)
     else
       talk(:faria, event_id)
+      faria_wand if respond_to?(:faria_wand)      # (the Wand of Spores: 047d)
     end
     mart(:faria, event_id) if respond_to?(:mart)
   end
@@ -307,6 +308,17 @@ module FrostThaw
     say(["The sap pool at the Fane's heart reflects the aurora, and pulses with Hyphora's heartbeat."], event_id)
     if !flag?(:badge_undercanopy)
       return say(["(The Sovereign hasn't given you leave to drink.)"])
+    end
+    if flag?(:pool_poisoned) && !flag?(:pool_cured)
+      say(["The pool runs cold, a skin of blue frost on it. The frost-venom the false warden poured in is still there."])
+      if flag?(:yarro_errand_done) || flag?(:lake_cleansed)
+        say(["YARRO: (padding up with a jar) The lake told me its story. This is the end of it. Clean water, and moss, and patience.",
+             "Yarro tips the tincture in, a drop at a time, humming. The frost cracks, and melts, and the pool warms."])
+        set_flag(:pool_cured)
+        say(["(The three sick myconids sit up in their beds. The pool is clean.)"])
+      else
+        return say(["YARRO: (sadly) It needs a tincture. The lake knows how, but I haven't heard the lake's story yet. Walk me down there?"])
+      end
     end
     if flag?(:vision_today)
       return say(["(You've drunk today. The sap's heavy in you still.)"])
@@ -577,6 +589,7 @@ module FrostThaw
     end
     opts = []
     opts << [:patrols, _INTL("Ask about her missing patrols")] if !flag?(:eira_patrols)
+    opts << [:report, _INTL("Tell her what you found beyond the Wall")] if flag?(:eira_patrols) && flag?(:missing_patrol_found) && !flag?(:eira_patrols_reported)
     opts << [:trial, _INTL("Ask about the spore-guard's trial")] if (with_or_is?(:wyn)) && !flag?(:spore_guard)
     opts << [:bye, _INTL("Nothing")]
     c = pbMessage(_INTL("Eira..."), opts.map(&:last), opts.size - 1)
@@ -586,6 +599,8 @@ module FrostThaw
            "EIRA: They didn't come back. The wind there sounds like someone counting.",
            "EIRA: When the Wall can be crossed, look for them. Please."])
       set_flag(:eira_patrols)
+    when :report
+      eira_patrol_report
     when :trial
       say(["EIRA: A Rootwarden wants to learn the rites? Mercy, and fury, Wyn. Both, in the same hand.",
            "EIRA: Hold both against me, and the guard will have you."])

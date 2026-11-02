@@ -161,7 +161,8 @@ module FrostThaw
   end
 
   def eira(event_id = nil)
-    if flag?(:blight_cleared) && flag?(:badge_undercanopy) && !(flag?(:eira_lore) && flag?(:eira_patrols) && (flag?(:spore_guard) || !with_or_is?(:wyn)))
+    if flag?(:blight_cleared) && flag?(:badge_undercanopy) && (!(flag?(:eira_lore) && flag?(:eira_patrols) && (flag?(:spore_guard) || !with_or_is?(:wyn))) ||
+                                                         (flag?(:missing_patrol_found) && flag?(:eira_patrols) && !flag?(:eira_patrols_reported)))
       return eira_development(event_id)
     end
     if flag?(:hyphora_leave)
@@ -246,6 +247,12 @@ module FrostThaw
   def leader_luminara(event_id = nil)
     if flag?(:badge_undercanopy)
       return luminara_blessing(event_id) if flag?(:spores_debated) && !flag?(:colony_recognised) && !flag?(:colony_exiled)
+      # Q6's lead: the summer's memory, asked for in its own audience during the trial week
+      if flag?(:trials_open) && !flag?(:ch10_done) && !flag?(:memory_bubble) && !flag?(:colony_exiled) &&
+         pbConfirmMessage(_INTL("Ask Luminara for the memory of the summer's work in the roots?"))
+        return luminara_bubble(event_id)
+      end
+      return if respond_to?(:luminara_gifts) && luminara_gifts
       if flag?(:mycolith_down)
         return say(["LUMINARA: The lake is clean. The god is still. Now we help you, surface-friend. Ask."], event_id)
       end
@@ -367,6 +374,7 @@ module FrostThaw
     return if !boss_battle(named_mon(:B73H130, 45, "Scalded Lake-Wyrm"))
     ($game_switches[SW_LAKE_DOWN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     say(["The creature sinks back under the slick, exhausted. The water still stinks of rot and heat."])
+    lake_purification
     stage_act(with_or_is?(:reptin) ? :reptin : :wyn, :kneel, dx: 0, dy: -1, dir: 8)   # a hand flat on the root
     if herald?(:reptin)
       say(["You kneel at the edge and lay your hand flat on the root that runs under the water."])
@@ -394,6 +402,29 @@ module FrostThaw
     give_key(:FT_BALANUSSEED)
     say(["(A fossilised seed, heavy as a stone. Cornipus on the Canopy-Tier would know what it is.)"])
     state[:goal] = "On, past the lake. Something down there wouldn't let go."
+  end
+
+  # H4 (Tab 5): Yarro's purification ritual, before the rain: "channeling
+  # magic, DC 13 Medicine checks to mix herbs, fending off lingering pseudopods".
+  def lake_purification
+    return if flag?(:lake_ritual_done)
+    yarro = flag?(:yarro_errand_done)
+    say([yarro ? "Yarro comes padding down the root-tunnel with his jars, humming. He heard the lake's story; he knows the end of it." :
+                 "Yarro comes padding down the root-tunnel with his jars, out of breath. \"The lake! Don't let it scar!\"",
+         "YARRO: Herbs first. Then the tree's rain. Then it sleeps clean. Keep the slick off me."])
+    good = 0
+    good += 1 if challenge("Mix the herbs.", [yarro ? "Moss, sap and the lake's own clean silt, the way the sample said" : "Moss and warm sap, packed close",
+                                              "Everything in the jars at once", "Snow, to cool it"], 0)
+    good += 1 if challenge("Grind them.", ["Slowly, sunwise, while Yarro hums", "As fast as you can", "Let Meat Meat do it"], 0)
+    say(["The slick bulges again: pseudopods, grey and blind, feeling along the shore for Yarro's jars."])
+    if good < 2
+      say(["The mixture smokes wrong. The slick smells it, and comes for it faster."])
+      skirmish(named_mon(:B114H72, 45, "Spore-Lash Creeper"), named_mon(:B114H72, 45, "Spore-Lash Creeper"))
+    else
+      skirmish(named_mon(:B114H72, 45, "Spore-Lash Creeper"))
+    end
+    say(["YARRO: (tipping the jar into the water) Now. Ask her for the rain."])
+    set_flag(:lake_ritual_done)
   end
 
   #-----------------------------------------------------------------------------
@@ -460,7 +491,10 @@ module FrostThaw
       return if !mycolith_minions(2)
       set_flag(:mycolith_minions_2)
     end
-    return if !boss_battle(named_mon(:B439H47, 48, "Mycolith, Enraged"))
+    # (Tab 6: "It does not heal to full": 165 -> 215, of 350.)
+    enraged = named_mon(:B439H47, 48, "Mycolith, Enraged")
+    enraged.hp = [(enraged.totalhp * 215 / 350.0).floor, 1].max
+    return if !boss_battle(enraged)
     set_flag(:mycolith_down)
     ($game_switches[SW_MYCOLITH] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)

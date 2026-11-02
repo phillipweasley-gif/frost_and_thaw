@@ -141,6 +141,15 @@ module FrostThaw
     sayc(["Sephek lifts one hand. Two of the Halo step out of the ranks and throw back their hoods:",
           "frost druids, their beards white with rime. The snow at the altar's foot boils, and ice mephits climb out of it, giggling.",
           "SEPHEK: (gently) Mine, while they stand. Let's see how long they stand."])
+    # rootspire.md Tab 1 (Sephek): Meat Meat's blood, "Prototype Verdant"; Alerion the rival aspect of frost.
+    if with_or_is?(:meat_meat)
+      sayc(["SEPHEK: (his blue eyes finding Meat Meat, and staying) ...Prototype Verdant. You're smaller than the notes said.",
+            "SEPHEK: Your blood was cooked in summer's engine and it won't freeze. She'd like a drop of it. So would I.",
+            cl(:meat_meat, "Meat Meat's blood is for Meat Meat. Bite the frost man, Razzy.")])
+    end
+    if with_or_is?(:alerion)
+      sayc(["SEPHEK: (to Alerion, almost kindly) Two of us hear her. One too many. When she wakes, one of us stops."])
+    end
     # (losing to his followers doesn't end the scene: they just keep standing, and he keeps his strength)
     fought = 0
     %i[frost_druid_ansel frost_druid_ilse].each do |k|
@@ -375,7 +384,14 @@ module FrostThaw
       set_flag(:mira_freed_late)
     end
     soul = named_mon(AVARICE_SOUL, 64, "Avarice's Reflection")
-    soul.hp = [(soul.totalhp * (1.0 - 0.2 * circuits)).floor, 1].max
+    broken = circuits
+    if flag?(:chapel_avarice)
+      # (the Silent Chapel: you answered the fire, and a door you open stays open)
+      say(["AVARICE'S REFLECTION: (warmly) You answered me once, in my little chapel. Leave the engine running, I said. You listened.",
+           "AVARICE'S REFLECTION: A door you open for me stays open, darlings."])
+      broken = [circuits - 1, 0].max
+    end
+    soul.hp = [(soul.totalhp * (1.0 - 0.2 * broken)).floor, 1].max
     caught = boss_battle(soul)
     if caught
       sayc(["Her reflection shatters. One splinter of it, no bigger than a fingernail, flies off north, toward Solstice.",

@@ -199,7 +199,7 @@ uc.event(9, 30, "Yarro", [{ graphic: "Followers/SHROOMISH", direction: 2, step_a
 uc.npc(8, 33, "Followers/SHROOMISH", :yarro, dir: 6, name: "Sporeling")
 uc.event(12, 25, "The Blight", [{ graphic: "Followers/SHROOMISH", direction: 2, blend_type: 2, step_anime: false, walk_anime: false, script: "FT.yarro_blight(@event_id)" }])
 uc.npc(13, 17, "Followers/GLOOM", :lysella, dir: 2, name: "Lysella")
-uc.npc(8, 19, "Followers/BRELOOM", :korun, dir: 6, name: "Korun")
+uc.event(8, 19, "Korun", [{ graphic: "Followers/BRELOOM", direction: 6, script: "FT.korun_smith(@event_id)" }])   # (his forge: 047d)
 uc.event(17, 12, "Mnemosyne Myr", [{ graphic: "Followers/PARASECT", direction: 2, script: "FT.myr(@event_id)" }])
 uc.sign(19, 12, :myr_threads)
 uc.event(21, 20, "Faria", [{ graphic: "Followers/SHROOMISH", direction: 2, step_anime: true, script: "FT.talk(:faria, @event_id)\nFT.mart(:faria, @event_id)" }])

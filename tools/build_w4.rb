@@ -13,6 +13,7 @@
 #   2168 The White Vault  2169 The Mirror Circuits  2170 The Seraph Cradle
 #   2171 A Sporeling's Dream         (H5: the Dream Rescue)
 #   2172 The Disused Root            (H2: the kobolds' nest)
+#   2173 Summer's Quarters           (Q6: the Ledger of Corruption, atop the Council tower)
 #
 # Run after build_act3.rb (it reopens maps every chapter builder has made).
 require_relative "ft_common"
@@ -29,7 +30,7 @@ NAMES = {
   2077 => "The Underdark Door", 2078 => "Glasswater Lake", 2160 => "The Undercity", 2161 => "The Mirror Maze",
   2163 => "Beyond the Auroral Wall", 2164 => "The Drowned Hall", 2165 => "The Attunement Way", 2166 => "The Crystals' Dream",
   2168 => "The White Vault", 2169 => "The Mirror Circuits", 2170 => "The Seraph Cradle", 2171 => "A Sporeling's Dream",
-  2172 => "The Disused Root"
+  2172 => "The Disused Root", 2173 => "Summer's Quarters"
 }
 
 # Switches (the scripts' SW_ constants)
@@ -42,6 +43,7 @@ SW_TALION_FIELDS, SW_WALL_WORKS, SW_DEBATES, SW_PETITIONS, SW_FOUR_SEASONS, SW_E
 SW_AURIL_RELICS, SW_SIGILS_MERGED, SW_VAULT_BROKEN = 4138, 4139, 4140
 SW_MIRA_MIRROR, SW_REFUGEE_CAMP, SW_SLAUDI, SW_WOLF_RAID = 4142, 4143, 4144, 4145
 SW_APPEAL, SW_CRIERS, SW_WYN_HEARING, SW_PELL = 4150, 4151, 4152, 4153
+SW_SAP_RAID, SW_CANOPY_GUARD = 4154, 4155
 
 def cells(*rects) = rects.flat_map { |x, y, w, h| Builder.rect_cells(x, y, w, h) }
 
@@ -462,13 +464,18 @@ sel = find_event(ch, "Selrae Vorn")
 sel.pages << ch.build_page(sel.pages[0], { switch: SW_FOUR_SEASONS, graphic: "BWOldWoman", direction: 2, script: "FT.selrae_bid(@event_id)" })
 person_when(ch, 12, 13, "Captain Kethan Vale (hearing)", "BW029", "FT.wyn_hearing(@event_id)", SW_WYN_HEARING, dir: 2)
 person_when(ch, 7, 11, "Spring and Winter", "BW (30)", "FT.spores_debate(@event_id)", SW_TRIALS, dir: 6)
+# The stair in the back corner (the base map's closed-off upper floor) climbs the
+# tower to Summer's quarters (2173): sealed until the trial week, and after it.
+st = ch.map.events.values.find { |e| e.x == 6 && e.y == 4 }
+ch.map.events.delete(st.id) if st
+ch.event(6, 4, "Tower stair", [{ trigger: 1, script: "FT.tower_stair(@event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward]) if !$game_temp.player_transferring" }])
 resave(ch, 2054)
 
 # 2055 the Root-Tier: Pell at the tunnel mouth; the dockworker and the hatch
 # down to the Smuggler's Run; Mira's trial-week page; the dockers sign.
 rt = reopen(2055)
 rt.map.events.delete_if { |_id, e| e.name == "To the Glasswater" }      # (the Glasswater is past the Wall now)
-person_when(rt, 12, 19, "Pell", "BW029", "FT.pell(@event_id)", SW_PELL, dir: 4)
+person_when(rt, 12, 19, "Ivo", "BW029", "FT.pell(@event_id)", SW_PELL, dir: 4)
 rt.npc(24, 9, "BW (38)", :smuggler_dockworker, dir: 2, name: "Dockworker")
 # (The way down to the Undercity is the crack at the far end of the Smuggler's Run, 2198, below.)
 mira = find_event(rt, "Mira of the North Wind")
@@ -529,6 +536,8 @@ rf = find_event(cn, "Frostfell rifts")
 rf.pages[1].graphic.instance_variable_set(:@blend_type, 1)
 rf.pages[1].graphic.instance_variable_set(:@opacity, 190)
 rf.pages[1].instance_variable_set(:@step_anime, true)
+# A warden on the walkway while the Canopy is watched, or under martial law (GQ5's outcome).
+person_when(cn, 14, 31, "Walkway warden", "BW029", "FT.canopy_warden(@event_id)", SW_CANOPY_GUARD, dir: 8)
 resave(cn, 2061)
 
 # 2062 the Wind-Glass Library: the gap on the chronal shelf; the oldest shelf;
@@ -576,7 +585,26 @@ person_when(uc, 16, 11, "Tether threads", "", "FT.tether_threads(@event_id)", SW
 tt = find_event(uc, "Tether threads"); tt.pages[1].graphic.instance_variable_set(:@tile_id, MIRROR_TILE)
 person_when(uc, 18, 14, "Archive thief", "BW (40)", "FT.memory_heist(@event_id)", SW_MEMORY_HEIST, dir: 8)
 person_when(uc, 10, 38, "Signer myconids", "Followers/BRELOOM", "FT.petition_signer(:myconids, @event_id)", SW_PETITIONS)
+# after the sap raid night (the Fane delegation's grudge): a shared watch on the vats
+person_when(uc, 46, 24, "Sap vat watch", "BW029", "FT.talk(:sap_raid_after, @event_id)", SW_SAP_RAID, dir: 4)
 resave(uc, 2068)
+
+# ==============================================================================
+# 2173: Summer's Quarters, atop the Council tower (Tab 8 Q6, the Ledger of
+# Corruption): up the stair from the Council Hall's back corner. Two lines of
+# alarm glyphs across the floor; a bone-and-ice construct in the desk alcove;
+# the loose floorboard under the desk; Var's wardrobe; a mirror turned to the wall.
+sq, sq_ex = Builder.from_existing(35)          # (a captain's cabin: one room, one door, an alcove)
+exits_to(sq, sq_ex, 2054, 6, 5)
+sq.cutscene(1, 1, :summer_quarters)
+(4..12).each { |x| sq.event(x, 8, "Alarm glyph #{x}", [{ trigger: 1, through: true, script: "FT.quarters_glyph(1, @event_id)" }]) }
+(5..14).each { |x| sq.event(x, 6, "Alarm glyph #{x}b", [{ trigger: 1, through: true, script: "FT.quarters_glyph(2, @event_id)" }]) }
+sq.event(12, 5, "Bone-and-ice construct", [{ graphic: "Followers/MAROWAK", direction: 2, script: "FT.quarters_construct(@event_id)" },
+                                            { self_switch: "A", through: true }])
+sq.event(14, 4, "Loose floorboard", [{ tile_id: 1665, script: "FT.quarters_floorboard(@event_id)" }])   # (her desk, with the board under it)
+in_wall(sq, 7, 5, "Wardrobe", "FT.quarters_wardrobe(@event_id)")
+in_wall(sq, 14, 5, "Turned mirror", "FT.quarters_mirror(@event_id)")
+save_map(sq, 2173)
 
 merge_infos(NAMES)
 puts "built #{NAMES.size} maps into #{OUT} (and added W4's people to 2012, 2050, 2053-2058, 2060-2062, 2067, 2068)"

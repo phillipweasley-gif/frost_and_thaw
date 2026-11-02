@@ -65,9 +65,15 @@ ok("the Amber Experiment: the fuel that whispers", T.flag?(:amber_tested))
 # the Echo Gate: the wraiths, then Alerion's reflection (A1)
 HL.answers.unshift([/Which way\?/, ->(t, c) { $echo_pick ||= [0, 0, 1, 0]; $echo_pick.shift || 0 }])
 at(2050, 9, 22); HL.frames(2)
+HL.answers.unshift([/whispers press in|Mirror Wraiths drift|Three corridors|A flicker|Meditate, and take it back/, 0])
 T.echo_wraiths; heal
 ok("the Echo Gate whispers, and Talion is foreshadowed", T.flag?(:echo_wraiths_down) && T.flag?(:talion_foreshadowed))
-ok("Alerion's Echoes at the Wall: the reflection comes home", T.flag?(:alerion_reflection))
+# (A1 is one quest: the Echo Gate opens on the Mirror Maze, 2161, its junctions and its pane)
+HL.frames(30); HL.settle(2000)
+ok("the Echo Gate's frost door leads into the Mirror Maze", $game_map.map_id == 2161)
+%i[stealth path shadow].each { |j| T.maze_junction(j); heal }
+T.maze_reflection
+ok("Alerion's Echoes at the Wall: the reflection comes home", T.flag?(:alerion_reflection) && T.flag?(:reflection_claimed))
 
 # the library: Eirwen's sigil and ritual; Wynsnow's Chronal Debt; the sigils researched
 T.set_flag(:key_found); T.set_flag(:canticle_learned); T.set_flag(:lecture_done); T.set_flag(:grafting)
