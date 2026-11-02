@@ -125,14 +125,18 @@ begin
     check(BRANCH == "cookies" || flag(:moose_fee), "pressing her: the fee and Ramshackle")
     go(2129, 2, 17, 6)
     HL.answers.unshift([/Spend an hour searching/, 0])
-    4.times do
+    searches = 0
+    tracks = $game_map.events.values.select { |x| x.name == "Moose tracks" }
+    40.times do |i|
       break if sw(4068)
-      FrostThaw.state[:false_trails] = 3 if !sw(4068)     # (the tracks are a d6; the 4th search always finds them)
-      e = $game_map.events.values.select { |x| x.name == "Moose tracks" }.find { |x| !flag(:"tracks_2129_#{x.id}") }
-      break if !e
-      HL.talk_to(e); HL.settle(3000)
+      searches += 1
+      HL.talk_to(tracks[i % tracks.size]); HL.settle(3000)
+      $Trainer.party.each(&:heal)
     end
-    check(sw(4068), "the white moose's tracks are found")
+    check(sw(4068), "the white moose's tracks are found (#{searches} hour-long searches, #{FrostThaw.state[:track_sets].to_i} sets of tracks)")
+    check(FrostThaw.state[:track_sets].to_i <= FrostThaw::WHITE_MOOSE_PITY, "never more than #{FrostThaw::WHITE_MOOSE_PITY} sets of tracks")
+    check(searches == 1 || HL.log.any? { |l| l =~ /squinting at snow|hunter's snare|turn out to be wolves|realise you're lost|hunter's cache|catches your eye|sense of being watched|find a moose/ },
+          "the searches that don't find the white moose still turn something up")
     talk(/Fox/)
     %w[Pinecone Owl\ feather Twig].each { |n| talk(/^#{n}/) }
     walk(46, 16); walk(47, 16); check($game_map.map_id == 2130, "past the ward to the elven tomb (#{$game_map.map_id})")
@@ -228,6 +232,22 @@ begin
         check(pick == 0 ? flag(:pc_speaker) : flag(:olivessa_speaker), "the new speaker")
       end
     end
+
+  when "searches"
+    # every outcome of a failed search for moose tracks plays without error
+    go(2129, 20, 17)
+    seen = {}
+    60.times do
+      before = HL.log.size
+      FrostThaw.failed_track_search
+      $Trainer.party.each(&:heal)
+      HL.log[before..].each do |l|
+        { snow: /squinting at snow/, snare: /hunter's snare/, wolves: /turn out to be wolves/, lost: /realise you're lost/,
+          cache: /hunter's cache/, find: /catches your eye|sense of being watched/ }.each { |k, re| seen[k] = true if l =~ re }
+      end
+    end
+    check(seen.size == 6, "all six things a failed search can turn up happen (#{seen.keys.join(', ')})")
+    check((($PokemonBag.pbHasItem?(:PECHABERRY) && $PokemonBag.pbHasItem?(:SUPERPOTION)) rescue false), "the snare's berry and the cache's potion")
 
   when "charm"
     # the Charm of Animal Conjuring: three uses in battle, then it fades

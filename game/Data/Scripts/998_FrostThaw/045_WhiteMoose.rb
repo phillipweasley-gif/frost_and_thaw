@@ -262,28 +262,62 @@ module FrostThaw
     end
   end
 
+  # The book: an hour's search and a DC 15 Wisdom (Survival) check finds a set
+  # of moose tracks; a d6 says whose (only a 6 is the white moose); otherwise an
+  # ordinary moose after 1d4 hours, and you search again. Every three hours in
+  # the forest, the encounters table. (So it can't go on for ever: the sixth set
+  # of tracks you find is always the white moose's.)
+  WHITE_MOOSE_PITY = 6
+
   def moose_tracks(event_id = nil)
-    key = :"tracks_#{$game_map.map_id}_#{event_id}"
-    return say(["Your own footprints, and the ordinary moose's, going round in circles."], event_id) if flag?(key)
     return say(["Moose tracks. Lots of them. You've found the one set that matters already."], event_id) if $game_switches[SW_WM_TOMB_FOUND]
     say(["Moose tracks crisscross the snow under the pines. Old ones, new ones, all sizes."], event_id)
     return if !pbConfirmMessage(_INTL("Spend an hour searching for a fresh set of moose tracks?"))
     forest_hours(1)
-    found = with_or_is?(:shade) || rand(100) < 60
-    if !found
-      sayc(["An hour of squinting at snow. Every set of tracks leads into every other set.",
-            cl(:meat_meat, "Meat Meat is cold. Meat Meat also cannot find moose.")])
-      return
-    end
+    return if $game_switches[SW_WM_TOMB_FOUND]          # (the fox may have led you to them meanwhile)
+    found = rand(100) < (with_or_is?(:shade) ? 80 : 50)
+    return failed_track_search if !found
     sayc([cl(:shade, "(crouching) Here. Fresh. Heavy, steady. We follow these.")]) if with_or_is?(:shade)
-    set_flag(key)
-    state[:false_trails] = (state[:false_trails] || 0) + 1
-    if rand(6) == 5 || state[:false_trails] >= 4
+    state[:track_sets] = state[:track_sets].to_i + 1
+    if rand(6) == 5 || state[:track_sets] >= WHITE_MOOSE_PITY
       return white_moose_tracks
     end
     say(["You follow the tracks for an hour or two..."])
     forest_hours(1 + rand(4))
     ordinary_moose
+  end
+
+  # A search that finds no fresh tracks still takes the hour, and the forest
+  # gives you something for it, good or bad.
+  def failed_track_search
+    case rand(6)
+    when 0
+      sayc(["An hour of squinting at snow. Every set of tracks leads into every other set.",
+            cl(:meat_meat, "Meat Meat is cold. Meat Meat also cannot find moose.")])
+    when 1
+      say(["No moose. But under a fallen pine, a hunter's snare, long abandoned, still baited with a frozen berry."])
+      pbReceiveItem(:PECHABERRY) rescue nil
+    when 2
+      say(["The tracks you follow turn out to be wolves'. A lot of wolves. Very fresh.",
+           "You hear them before you see them."])
+      forest_wolves
+    when 3
+      sayc(["You follow a trail for an hour before it doubles back on itself, and you realise you're lost.",
+            cl(:alerion, "The moss is on the wrong side of every tree here. Somebody did that on purpose."),
+            "Another hour gone, finding the logging road again."])
+      forest_hours(1)
+    when 4
+      say(["No tracks. But in the hollow of an old stump: a hunter's cache, wrapped in oilcloth. Whoever left it isn't coming back."])
+      pbReceiveItem(:SUPERPOTION) rescue nil
+    else
+      need = %i[FT_TWIG FT_PINECONE FT_OWLFEATHER].reject { |i| $PokemonBag.pbHasItem?(i) rescue false }
+      if need.empty?
+        say(["Nothing but snow, and the sense of being watched. Off in the trees, something white moves, and is gone."])
+      else
+        say(["No tracks. But something catches your eye in the snow."])
+        forest_pickup(need.first)
+      end
+    end
   end
 
   def ordinary_moose
