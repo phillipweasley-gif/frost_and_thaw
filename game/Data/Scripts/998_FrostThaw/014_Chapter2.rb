@@ -374,7 +374,7 @@ module FrostThaw
            as(:shimmer, "I'm in tune. It isn't."),
            cl(:alberica, "Darling, nobody's in tune at this temperature.")].compact)
     end
-    state[:goal] = "Follow the road north to Bryn Shander."
+    state[:goal] = "Follow the road south-east to Bryn Shander."
   end
 
   # SC 2.02 - A voiceless goblin
@@ -464,7 +464,7 @@ module FrostThaw
     give_key(:FT_MOONEGG)
     set_flag(:razzy_egg)
     add_counter(:story_beats)
-    state[:goal] = "Keep the egg warm. North to Bryn Shander."
+    state[:goal] = "Keep the egg warm. South-east to Bryn Shander."
   rescue StandardError => e
     log("scene_razzy_falls: #{e.message}")
     Stage.cleanup rescue nil

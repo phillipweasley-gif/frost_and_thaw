@@ -12,7 +12,7 @@ module FrostThaw
     targos_gate_guard: -> {
       if T.flag?(:badge_targos)
         ["GUARD: That's the Speaker's seal. On you go.",
-         "GUARD: The north road's dug out as far as Bryn Shander. Past that, you're on your own."]
+         "GUARD: The east road's dug out as far as Bryn Shander. Past that, you're on your own."]
       elsif T.flag?(:naerth_terms)
         ["GUARD: Lottery season. Nobody leaves Targos without the Speaker's seal.",
          "GUARD: He's back at the Town Hall. Ask him nicely. He likes nicely."]

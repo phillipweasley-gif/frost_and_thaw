@@ -1059,5 +1059,19 @@ end
 resave(co2, 2033)
 
 # ===========================================================================
+# Small patches: the Lucky Liar's rumour-teller, and townsfolk who explain each
+# town's sacrifice to Auril (RotF p. 21: warmth in Good Mead and Dougan's Hole,
+# food in Lonelywood).
+ll2 = reopen(2024)
+has_event?(ll2, "Fisher (rumours)") || ll2.event(7, 6, "Fisher (rumours)", [{ graphic: "BWFisherman", direction: 4, script: "FT.ten_towns_rumor(\"LIAR\", @event_id)" }])
+resave(ll2, 2024)
+[[2021, 18, 30, "BWOldWoman", :sacrifice_food_lw], [2031, 13, 15, "BW (62)", :sacrifice_warmth_gm],
+ [2035, 30, 30, "BW (54)", :sacrifice_warmth_dh]].each do |id, x, y, g, key|
+  b = reopen(id)
+  has_event?(b, "NPC #{key}") || b.npc(x, y, g, key, dir: 2)
+  resave(b, id)
+end
+
+# ===========================================================================
 merge_infos(ID.map { |k, v| [v, NAMES[k]] }.select { |id, _| File.exist?(File.join(OUT, format("Map%04d.rxdata", id))) })
 puts "built Ten-Towns maps into #{OUT}"
