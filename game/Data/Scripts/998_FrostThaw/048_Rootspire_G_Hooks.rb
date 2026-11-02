@@ -20,6 +20,52 @@ module FrostThaw
     great_root: ["A root as wide as a house, rising out of the market toward the trunk. It's warm. It's always warm."]
   )
 
+  # What the party says in the city's new places (the party-chat menu).
+  {
+    alberica: { verdant_halls: ["Clerks, shops and a bank run by mushrooms. Civilisation, darling.", "I've missed paperwork. I've never said that before."],
+                warden_hall: ["All these serious young people with spears. I want to adopt every one."],
+                ledger_bank: ["The spores keep whispering a name. I'd rather they whispered mine."],
+                frozen_cellar: ["Cold in the middle of summer. Somebody's praying very hard down here.", "To the wrong god, sweetheart."],
+                promenade: ["Autumn's quarter. Everyone's beautiful and nobody's honest.", "I feel right at home."],
+                suncleft: ["Warm as a hand on a fevered forehead.", "Whoever lived here left in a hurry, or didn't leave."],
+                mirror_dust: ["Every mirror in here is looking at me. Normally I'd be flattered."],
+                smugglers_run: ["Fish oil, smoke and somebody else's secrets.", "Lead on, sweetheart. Quietly."],
+                frozen_run: ["Don't look down. There are people in the ice.", "...I looked down."] },
+    reptin:   { verdant_halls: ["Four seasons carved over every door. Diplomatically, I approve."],
+                warden_hall: ["My creed, on the wall, in letters taller than me.", "I'd have proofread it if I'd known."],
+                ledger_bank: ["Breloom accountants. The future is strange and fungal."],
+                frozen_cellar: ["The pulse goes quiet down here. Like a held breath."],
+                promenade: ["Everyone here wants something. Politely. With canapés."],
+                suncleft: ["Summer's house. Nobody home. The fire's still lit."],
+                mirror_dust: ["The wolf in me wants to break every mirror in this shop. I'm overruling it."],
+                smugglers_run: ["Rootwarden knots on the walls. Old ones. My knots, nearly."],
+                frozen_run: ["The lake remembers every one of them. So will I."] },
+    alerion:  { verdant_halls: ["Too many people. Too many windows."],
+                warden_hall: ["They train well. They watch the door well. Good."],
+                ledger_bank: ["Something in the spores is counting us."],
+                frozen_cellar: ["Halo. Close. Quiet now."],
+                promenade: ["Every one of them is watching every other one."],
+                suncleft: ["Too warm. Something under the floor."],
+                mirror_dust: ["Don't look in the tall one."],
+                smugglers_run: ["Low light. Good. Stay behind me."],
+                frozen_run: ["The ice is old. Walk where I walk."] },
+    meat_meat: { verdant_halls: ["Meat Meat counted forty shops. Meat Meat has money for one."],
+                 warden_hall: ["Big tree-guards. Meat Meat could take three. Maybe four."],
+                 ledger_bank: ["Mushrooms with money. Meat Meat respects this."],
+                 frozen_cellar: ["Cold table cold. Meat Meat does not like it here."],
+                 promenade: ["Fancy people. Meat Meat is keeping her hands in her pockets. For now."],
+                 suncleft: ["Smells like the bad forge. Little bit."],
+                 mirror_dust: ["Meat Meat is not looking at the mirrors. Meat Meat is very busy not looking."],
+                 smugglers_run: ["Tunnels! Meat Meat was raised in a tunnel. This one is nicer."],
+                 frozen_run: ["Ice people. Meat Meat will not step on them. Out of respect."] },
+    glimmer:  { verdant_halls: ["Lanterns in every window. A city that does that on purpose."],
+                warden_hall: ["They salute the cat. I could get used to that."],
+                promenade: ["Sun-thread for sale. I know what that's for now."],
+                suncleft: ["The Shard's burning. Something here hates the light."],
+                mirror_dust: ["I came back through a mirror once. I'm not doing it again."],
+                frozen_cellar: ["The knife likes it down here. That's how I know it's wrong."] }
+  }.each { |k, areas| (PARTY_CHAT[k] ||= {}).merge!(areas) if defined?(PARTY_CHAT) }
+
   module_function
 
   #-----------------------------------------------------------------------------

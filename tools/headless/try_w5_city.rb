@@ -41,6 +41,7 @@ def rest
   talk("Hellen")
   heal
 end
+rest                                     # (the night you arrive: Day 1)
 6.times do |i|
   HL.warp(2061, 20, 23, 8); HL.frames(5)
   talk("Lumin")
@@ -54,7 +55,8 @@ ok("some of the ten night events have happened", (T.state[:nights_done] || []).s
 ok("Auril's omens came to Alberica", T.counter(:omens_seen) >= 1)
 
 # --- Reptin: Arvik's training ---------------------------------------------------
-6.times do
+9.times do
+  break if T.dt_done(:reptin) >= 6
   HL.warp(2183, 11, 22, 8); HL.frames(5)
   talk("Arvik"); heal
   rest
@@ -78,7 +80,8 @@ talk("Darrus Fell")
 ok("Darrus offers Meat Meat the reliquary job", T.flag?(:heist_offered))
 HL.warp(2055, 29, 14, 8); HL.frames(10)
 ok("the dock hatch is unbarred", $game_switches[T::SW_RUN_OPEN])
-r = HL.walk_to(29, 13)
+r = HL.walk_to(29, 14)
+HL.face(8); HL.step(8)
 HL.settle(2000)
 ok("down the hatch into the Smuggler's Run", $game_map.map_id == 2198, "on #{$game_map.map_id} #{r}")
 [[10, 5], [25, 10], [18, 15], [8, 15]].each { |x, y| HL.walk_to(x, y); HL.settle(2000); heal }
@@ -101,10 +104,15 @@ T.set_flag(:ch7_started)
 HL.warp(2055, 25, 6, 8); HL.frames(5)
 talk("Captain Ivran")
 ok("Ivran's sledge-ship sets out on the Frozen Run", $game_map.map_id == 2199)
-HL.walk_to(44, 9); HL.settle(4000); heal
-HL.walk_to(44, 9); HL.settle(4000)
+HL.settle(3000)
+$game_map.events.values.select { |e| e.name.start_with?("Trainer") }.sort_by(&:x).each do |e|
+  next if $game_self_switches[[2199, e.id, "A"]]
+  HL.talk_to(e); HL.settle(5000); heal
+end
+beaten = $game_map.events.values.count { |e| e.name.start_with?("Trainer") && $game_self_switches[[2199, e.id, "A"]] }
+ok("the three revenant crews beaten on the ice", beaten == 3, "#{beaten} on #{$game_map.map_id}")
 talk("The far shore") if $game_map.map_id == 2199
-ok("across the still half to the far shore", T.flag?(:frozen_run_done))
+ok("across the still half to the far shore", T.flag?(:frozen_run_done), "on #{$game_map.map_id} at #{HL.pos}")
 
 # --- Reptin's Pulse of the Blooming Fields -------------------------------------
 HL.warp(2060, 30, 8, 8); HL.frames(10)
