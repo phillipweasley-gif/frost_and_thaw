@@ -1114,6 +1114,11 @@ co2.map.events.each_value do |ev|
   next unless ev.name == "Olivessa Untapoor"
   ev.pages[0].instance_variable_set(:@list, co2.send(:script_commands, "FT.olivessa(@event_id)") + [co2.send(:command, 0, [])])
 end
+# ...and the thug you caught, tied up among the staves until the vote
+has_event?(co2, "Captured thug") || co2.event(11, 5, "Captured thug", [
+  { graphic: "", through: true },
+  { switch: 4006, graphic: "BW (38)", direction: 2, script: "FT.talk(:gm_thug_after, @event_id)" }
+])
 resave(co2, 2033)
 
 # ===========================================================================

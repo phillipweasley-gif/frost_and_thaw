@@ -242,10 +242,6 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The lair
   #-----------------------------------------------------------------------------
-  def scene_verbeeg_lair_outside
-    say(lines_for(:lair_v1))
-  end
-
   LAIR_CENTRE = [2133, 15, 30, 8]
 
   def lair_hillside(event_id = nil)

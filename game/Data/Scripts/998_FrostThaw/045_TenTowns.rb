@@ -41,15 +41,15 @@ module FrostThaw
   )
   TRAINER_INTROS.merge!(
     scramsax: "SCRAMSAX: Pay up, or we do this the old way. I always liked the old way.",
-    bhall_militia_1: "PELL: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.",
-    bhall_militia_2: "RHOSK: Last gap before the Speaker. Last chance to turn round."
+    bhall_militia_1: "GARVIN: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.",
+    bhall_militia_2: "TOMA: Last gap before the Speaker. Last chance to turn round."
   )
   TRAINERS.merge!(
     scramsax:          [:FT_SELLSWORD, "Scramsax", [[:MACHOKE, 18], [:B57H83, 18], [:B262H68, 19]],
                         "Ha! Still got it. Not as much as you, mind."],
-    bhall_militia_1:   [:FT_MILITIA,   "Pell",     [[:GROWLITHE, 14], [:MAGNEMITE, 14]],
+    bhall_militia_1:   [:FT_MILITIA,   "Garvin",     [[:GROWLITHE, 14], [:MAGNEMITE, 14]],
                         "The Sheriff said strangers would come knocking. He didn't say they'd hit this hard."],
-    bhall_militia_2:   [:FT_MILITIA,   "Rhosk",    [[:SKARMORY, 14], [:B227H58, 15]],
+    bhall_militia_2:   [:FT_MILITIA,   "Toma",    [[:SKARMORY, 14], [:B227H58, 15]],
                         "Walls hold. I don't, apparently."]
   )
 
@@ -254,6 +254,8 @@ module FrostThaw
       set_flag(:met_elza)
       say(["ELZA: Elza. Garn's sister. He makes the swords; I sell the things that keep you alive long enough to use them.",
            "ELZA: Rations, cold-weather gear, ice picks, snowshoes. Poké Balls, potions. Whatever the tundra wants from you."], event_id)
+    elsif flag?(:mugs_done) && first_time?(:elza_thanked)
+      say(lines_for(:elza_after_mugs), event_id)
     end
     stock = MARTS[:bryn].dup
     $game_temp.mart_prices = {} if $game_temp && $game_temp.mart_prices.nil?

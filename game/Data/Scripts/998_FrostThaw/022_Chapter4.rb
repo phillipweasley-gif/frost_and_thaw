@@ -199,10 +199,13 @@ module FrostThaw
     sign_twenty_stones: ["THE TWENTY STONES OF THRUUN.", "Nineteen granite menhirs in a rough triangle, and one at the centre.",
                          "Nobody knows who raised them. They were here when Dougan Dubrace found the place."],
     dh_door_closed: ["Nobody answers. A curtain twitches."],
-    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
-                     ["Them wolves are big as horses! They know words, an' a mighty lot of 'em!"]],
-    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["Sil an' Finn are home! I'm gonna tell everybody! I already told everybody!"] },
-                      ["They took Sil an' her brother Finn th' other day! Big ol' wolves did!"]],
+    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["(A local with small, misshapen ears, beaming) You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
+                     ["A local with small, misshapen ears grabs your sleeve.", "Them wolves are big as horses! They know words, an' a mighty lot of 'em!"]],
+    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["(Grinning a mouthful of little pointed teeth) Sil an' Finn are home! I'm gonna tell everybody! I already told everybody!"] },
+                      ["Someone grins at you with a mouthful of little pointed teeth.", "They took Sil an' her brother Finn th' other day! Big ol' wolves did!"]],
+    dh_pier: ["A single wooden pier, buckled by the ice so it humps up like a frozen wave.",
+              "Two keelboats are locked in the ice beside it, their masts white with rime. Nobody has sailed since the Rime came.",
+              "Fifty people live in Dougan's Hole. You'd guess fewer."],
     dh_chorus_sister: [{ if: { flag: :kids_home }, lines: ["Hilda's not stopped crying since. The good kind, mind."] },
                        ["Wolves say they ain't givin' 'em back till the town pays a king's ransom. Food an' gold.",
                         "This town can barely feed itself. An' there ain't no gold."]],
@@ -402,7 +405,8 @@ module FrostThaw
   def scene_good_mead_arrival
     set_flag(:good_mead_arrived)
     set_flag(:good_mead_met)
-    sayc(["Good Mead: squat houses carved with serpents, and a mead hall with eaves painted like wyverns.",
+    sayc(["Good Mead: squat houses carved with dinosaurs and serpents, and a two-storey mead hall with eaves painted like wyverns.",
+          "Its founders came from Chult and the Vilhon Reach, and it shows: the beasts on the lintels have never seen snow.",
           "Bees hum somewhere in a heated hall. The whole town smells of honey.",
           "OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
           cl(:alberica, "A woman who feeds strangers on sight. I think I'm in love."),

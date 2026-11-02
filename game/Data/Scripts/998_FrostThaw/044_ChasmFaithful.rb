@@ -1200,6 +1200,8 @@ module FrostThaw
     # Torrga survives, and believes you slew her bodyguard: she leans on the merchants
     set_flag(:torrga_grudge) if flag?(:sephek_defeated) && !flag?(:torrga_beaten) && !flag?(:torrga_grudge)
     sync_switch(SW_TORRGA_GONE, flag?(:torrga_beaten))
+    # Good Mead: the exposed thug waits in Olivessa's cooperage until the vote (045_MeadMustFlow)
+    sync_switch(4006, flag?(:shandar_exposed) && !$game_switches[4079])
     sync_switch(SW_HLIN_PAID, flag?(:hlin_paid))
     sync_switch(SW_WALKER_DOWN, flag?(:walker_down))
     sync_switch(SW_MOTHER_DEAD, flag?(:yeti_mother_dead))

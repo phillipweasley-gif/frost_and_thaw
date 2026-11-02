@@ -405,7 +405,21 @@ module FrostThaw
     say(["On a table in the miners' break room, two kobolds are poking a dead giant rat with their javelins.",
          "They screech when they see you and charge!"], event_id)
     if boss_battle(named_mon(:GIBLE, 17, "Grek"), named_mon(:GIBLE, 16, "Smol"))
-      say(["The moment one of them is hurt, both have a change of heart and flee north, down the tunnel to level three."])
+      say(["The moment one of them is hurt, both have a change of heart and bolt for the tunnel north."])
+      # RotF "Captured Kobolds": no check needed, they talk (R 5411-5422)
+      if pbConfirmMessage(_INTL("Grab the slower one before it gets away?"))
+        say(["You catch Smol by the tail. It squeals, then goes limp and very talkative.",
+             "SMOL: Trex led us here! He has wings like dragon!",
+             "SMOL: Trex smart! He speaks like human who knows a lot. He don't speak Dragon no more.",
+             "SMOL: Trex says miners want their mine back. Trex wants something better in return.",
+             "SMOL: Trex says we be safer in town. There's food in town!",
+             "You let go. Smol is gone down the tunnel before its feet touch the floor."])
+        sayc([cl(:alerion, "A kobold who stopped speaking Draconic. That's not a kobold thing. That's a someone-else thing."),
+              cl(:reptin, "Wings like a dragon, and a deal in mind. Let's go and hear it.")])
+        set_flag(:kobold_questioned)
+      else
+        say(["They flee north, down the tunnel to level three."])
+      end
       set_flag(:grek_fled)
       set_switch(SW_TM_GREK, true)
     end
