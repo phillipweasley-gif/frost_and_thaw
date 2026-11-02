@@ -2,7 +2,7 @@
 # the real game, headless. One scenario per run:
 #   PIF_DIR=/home/claude/pifrun_W2 SCEN=mine BRANCH=ghost ruby tools/headless/try_w2.rb
 # Scenarios (BRANCH in brackets): route, mine [clean|ghost|grell|town], moose
-# [outside|barrow|cookies], mead [run|back|decline|letgo|curse], climb [peace|fight],
+# [outside|barrow|cookies|spare], mead [run|back|decline|letgo|curse], climb [peace|fight],
 # mugs [fight|bears|kindness], holed [lie|bad], council, bryn, targos, termalaine.
 $stdout.sync = true
 require_relative "driver"
@@ -141,7 +141,7 @@ begin
     end
     talk(/Moon dial/); check(flag(:dial_read), "the moon dial's inscriptions are read")
     walk(10, 9); walk(10, 8); check($game_map.map_id == 2131, "the hole in the hill leads to the barrow (#{$game_map.map_id})")
-    HL.settle(3000)
+    HL.settle(3000); walk(12, 9)
     check(sw(4069), "the white moose is dead")
     talk(/Bones/); check(($PokemonBag.pbHasItem?(:FT_SKELETALHAND) rescue false), "a hand from the bones")
     talk(/Lever/); check(sw(4071), "the barrow door opens from inside")
@@ -157,6 +157,13 @@ begin
     go(2131, 25, 10, 8)
     talk(/Half-moon door \(E8\)/); walk(25, 6)
     answer([/Lift the sarcophagus/, 0]); talk(/Sarcophagus \(E8\)/); check(flag(:e8_opened), "the first half-moon tomb: bow, arrowheads, cup")
+    if BRANCH == "spare"     # leave Ravisin be: newly awakened beasts keep coming
+      go(2027, 13, 8, 8); talk(/Nimsy/)
+      check(flag(:white_moose_done) && sw(4074), "with Ravisin alive, the reward comes with a warning: awakened beasts")
+      go(2129, 20, 24, 8); check(visible?(/Awakened bear/), "an awakened polar bear harasses the loggers")
+      answer([/What do you do/, 0]); talk(/Awakened bear/)
+      raise StopIteration
+    end
     go(2131, 25, 15, 2)
     talk(/Half-moon door \(E9\)/); walk(25, 19)
     talk(/Ravisin/); check(sw(4070), "Ravisin is beaten")
@@ -225,6 +232,7 @@ begin
   when "climb", "mugs", "holed", "council", "bryn", "targos"
     load File.join(__dir__, "try_w2_more.rb")
   end
+rescue StopIteration
 rescue Exception => e
   check(false, "ERROR #{e.class}: #{e.message} @ #{e.backtrace.first(3).join(' <- ')}")
 end
