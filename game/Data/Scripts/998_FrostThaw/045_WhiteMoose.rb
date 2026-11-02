@@ -47,7 +47,7 @@ module FrostThaw
   RELIC_ITEMS.merge!(
     FT_TWIG: ["Twig", "Twigs", 8, 0, "A dry twig from the Lonelywood forest. One of four things the gazebo brazier wants.", 0, 0, 6],
     FT_PINECONE: ["Pinecone", "Pinecones", 8, 0, "A fat pinecone. The pillar by the sarcophagus has one carved on it.", 0, 0, 6],
-    FT_OWLFEATHER: ["Owl Feather", "Owl Feathers", 8, 0, "A soft grey owl's feather, dropped in the snow.", 0, 0, 6],
+    FT_GREYFEATHER: ["Owl Feather", "Owl Feathers", 8, 0, "A soft grey owl's feather, dropped in the snow.", 0, 0, 6],
     FT_SKELETALHAND: ["Skeletal Hand", "Skeletal Hands", 8, 0,
       "An old, old hand from the barrow's bones. It doesn't need to come from a living person, the pillar says. Thankfully.", 0, 0, 6],
     FT_MOOSEHEAD: ["White Moose's Head", "White Moose's Heads", 8, 0,
@@ -310,7 +310,7 @@ module FrostThaw
       say(["No tracks. But in the hollow of an old stump: a hunter's cache, wrapped in oilcloth. Whoever left it isn't coming back."])
       pbReceiveItem(:SUPERPOTION) rescue nil
     else
-      need = %i[FT_TWIG FT_PINECONE FT_OWLFEATHER].reject { |i| $PokemonBag.pbHasItem?(i) rescue false }
+      need = %i[FT_TWIG FT_PINECONE FT_GREYFEATHER].reject { |i| $PokemonBag.pbHasItem?(i) rescue false }
       if need.empty?
         say(["Nothing but snow, and the sense of being watched. Off in the trees, something white moves, and is gone."])
       else
@@ -421,7 +421,7 @@ module FrostThaw
       return say(["Plenty more where that came from. You only need the one."], event_id)
     end
     text = { FT_TWIG: "A dry twig, snapped off clean.", FT_PINECONE: "A fat pinecone, half-buried in the snow.",
-             FT_OWLFEATHER: "A soft grey owl feather, caught on a branch." }[item]
+             FT_GREYFEATHER: "A soft grey owl feather, caught on a branch." }[item]
     say([text], event_id)
     give_key(item)
   end
@@ -474,7 +474,7 @@ module FrostThaw
     say(lines_for(:tomb_gazebo), event_id)
     say(["In the middle of the gazebo sits an unlit stone brazier, its bowl twenty inches across,",
          "full of snow and pine needles the wind has swept off the floor. It's fixed to the marble. It won't budge."])
-    need = %i[FT_TWIG FT_PINECONE FT_OWLFEATHER FT_SKELETALHAND]
+    need = %i[FT_TWIG FT_PINECONE FT_GREYFEATHER FT_SKELETALHAND]
     have = need.select { |i| $PokemonBag.pbHasItem?(i) rescue false }
     return if have.size < need.size && !pbConfirmMessage(_INTL("Put something in the brazier?"))
     if have.size < need.size

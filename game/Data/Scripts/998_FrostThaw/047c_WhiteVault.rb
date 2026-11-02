@@ -40,8 +40,7 @@ module FrostThaw
   RELIC_ITEMS.merge!(
     FT_SERAPHSIGIL: ["Seraph Sigil", "Seraph Sigils", 8, 0,
       "Three Frostshard Sigils, merged: wings spread over a frozen eye. It pulls north, toward a door beyond the Auroral Wall.", 0, 0, 6],
-    FT_SCALECORE: ["Scale Core", "Scale Cores", 8, 0,
-      "A crystal grown round one of Razzilith's first scales, labelled RAZ-MKIII. Avarice's. Nobody else should ever have it.", 0, 0, 6]
+    # (FT_SCALECORE is defined once, in 048_Rootspire_D_Quests.rb: the Corsairs' wyrmling scale core.)
   )
 
   TRAINER_TYPES.merge!(
@@ -364,9 +363,16 @@ module FrostThaw
       sayc(["Her reflection slides into the ice and away, north, laughing, toward Solstice.",
             "AVARICE: (from very far) I'll see you at her throne."])
     end
-    give_key(:FT_SCALECORE)
-    sayc(["The case of ice cracks open. Razzilith's first scale, in its crystal, drops into your hands. It's warm.",
-          cl(:meat_meat, "(holding it against her chest) Razzy's. Razzy's FIRST. Meat Meat keeps this. Forever."),
+    if flag?(:scale_core_given)
+      sayc(["The case of ice cracks open. Empty, except for a label in the neat white hand: RAZ-MKIII CORE. RECOVER FROM THE CORSAIRS.",
+            cl(:meat_meat, "(patting her pack) Mira gave it to Meat Meat. She never got it back. Ha.")])
+    else
+      give_key(:FT_SCALECORE)
+      sayc(["The case of ice cracks open. A crystal core grown round a cluster of green wyrmling scales drops into your hands. RAZ-MKIII. It's warm.",
+            cl(:meat_meat, "(holding it against her chest) Razzy's. From the cold table. Meat Meat keeps this. Forever.")])
+      set_flag(:scale_core_given)
+    end
+    sayc([
           cl(:alberica, "She isn't dead. She's never been dead. Why do the clever ones never stay dead?"),
           cl(:wyn, "...She went north. To the island. To Auril.")])
     set_flag(:avarice_revealed)

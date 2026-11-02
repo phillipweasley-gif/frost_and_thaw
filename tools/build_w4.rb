@@ -243,10 +243,10 @@ mz.event(13, 17, "Junction: wraiths", [{ tile_id: ICE_CRYSTAL, script: "FT.maze_
 mz.event(5, 7, "Junction: three ways", [{ tile_id: ICE_CRYSTAL, script: "FT.maze_junction(:path, @event_id)" }])
 mz.event(19, 7, "Junction: the shadow", [{ tile_id: ICE_CRYSTAL, script: "FT.maze_junction(:shadow, @event_id)" }])
 mz.event(8, 2, "Alerion's reflection", [{ tile_id: ICE_CRYSTAL, script: "FT.maze_reflection(@event_id)" }])
-mz.event(12, 2, "The ring of wraiths", [{ graphic: "Followers/MISMAGIUS_fly", direction: 2, opacity: 160, step_anime: true,
+mz.event(12, 3, "The ring of wraiths", [{ graphic: "Followers/MISMAGIUS_fly", direction: 2, opacity: 160, step_anime: true,
                                           script: "FT.maze_witness(@event_id)" }])
-mz.event(11, 2, "Wraith", [{ graphic: "Followers/MISMAGIUS_fly", direction: 6, opacity: 140, step_anime: true, script: "FT.maze_witness(@event_id)" }])
-mz.event(13, 2, "Wraith ", [{ graphic: "Followers/MISMAGIUS_fly", direction: 4, opacity: 140, step_anime: true, script: "FT.maze_witness(@event_id)" }])
+mz.event(11, 3, "Wraith", [{ graphic: "Followers/MISMAGIUS_fly", direction: 6, opacity: 140, step_anime: true, script: "FT.maze_witness(@event_id)" }])
+mz.event(13, 3, "Wraith ", [{ graphic: "Followers/MISMAGIUS_fly", direction: 4, opacity: 140, step_anime: true, script: "FT.maze_witness(@event_id)" }])
 [[9, 10], [15, 10], [8, 16], [16, 16]].each_with_index do |(x, y), i|
   mz.event(x, y, "Sign maze_pane #{i}", [{ tile_id: ICE_CRYSTAL, script: "FT.talk(:maze_pane, @event_id)" }]) if !mz_floor[[x, y]]
 end

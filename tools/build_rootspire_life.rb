@@ -379,8 +379,9 @@ fr.trainer(24, 10, nil, :revenant_moirin, :SAILOR, dir: 4, sight: 4)
 fr.trainer(33, 9, nil, :revenant_tobe, :SAILOR, dir: 4, sight: 4)
 fr.event(45, 9, "The far shore", [{ graphic: "", script: "FT.frozen_run_end(@event_id)" }])
 fr.event(45, 10, "The far shore", [{ graphic: "", script: "FT.frozen_run_end(@event_id)" }])
-[[11, 5], [22, 15], [33, 5], [41, 14]].each_with_index do |(x, y), i|
-  fr.event(x, y + 2, "Frozen sailor #{i + 1}", [{ graphic: "BW_Sailor", direction: 2, opacity: 150, step_anime: false, walk_anime: false,
+# (each stands on the ice just below a frozen hull)
+[[11, 7], [22, 16], [33, 7], [41, 15]].each_with_index do |(x, y), i|
+  fr.event(x, y, "Frozen sailor #{i + 1}", [{ graphic: "BW_Sailor", direction: 2, opacity: 150, step_anime: false, walk_anime: false,
                                                     script: "FT.talk(:frozen_sailor, @event_id)" }])
 end
 seal_edges(fr)

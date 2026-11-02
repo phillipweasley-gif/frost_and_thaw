@@ -21,7 +21,7 @@
 module FrostThaw
   RELIC_ITEMS.merge!(
     FT_SCALECORE: ["Wyrmling Scale Core", "Wyrmling Scale Cores", 8, 0,
-      "From the Boreal Requiem's relic vault: Razzy's first green scale, grown hard and bright. Avarice wanted it. Mira gave it to you.", 0, 0, 6]
+      "A crystal core grown hard round a cluster of green wyrmling scales, shed by Razzy at the cold table. Labelled RAZ-MKIII. Avarice wanted it back badly.", 0, 0, 6]
   )
 
   TEXT.merge!(
@@ -485,10 +485,10 @@ module FrostThaw
     end
     sayc(["MIRA: (unlocking it herself) My vault. Thirty years of confiscated relics. Thirty years of somebody else choosing what to keep.",
           "Frost-glass, chardalyn shavings, a mirror wrapped in sailcloth, a Halo prayer-token.",
-          "And in a box of its own, padded with moss: a single green scale, grown hard and bright as jade.",
+          "And in a box of its own, padded with moss: a crystal core, grown hard and bright as jade round a cluster of small green scales. A tag: RAZ-MKIII.",
           "MIRA: That one hummed whenever the mirrors were loudest. She wanted it more than anything else on this ship.",
-          herald?(:meat_meat) ? "You know it before Mira says anything. You've touched that scale before. On a small warm egg." :
-                                cl(:meat_meat, "(very small) That is Razzy's. That is Razzy's first scale. From the cold table."),
+          herald?(:meat_meat) ? "You know those scales before Mira says anything. Razzy shed them on the cold table, the week before you ran." :
+                                cl(:meat_meat, "(very small) Those are Razzy's. He shed them on the cold table. Before we ran."),
           "MIRA: A wyrmling scale core, the ledger says. Dormant. Take it. Keep it where she can't."].compact, event_id)
     give_key(:FT_SCALECORE)
     set_flag(:scale_core_given)

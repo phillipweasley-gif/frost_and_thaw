@@ -779,7 +779,7 @@ f.event(34, 21, "Fox", [{ graphic: "Followers/VULPIX", direction: 6, script: "FT
 f.event(37, 21, "Hare", [{ graphic: "Followers/BUNEARY", direction: 6, script: "FT.fox_and_hare(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
 # the four things the brazier wants (three of them grow out here)
 on_boulder(f, 32, 28, "Pinecone", "FT.forest_pickup(:FT_PINECONE, @event_id)")
-on_boulder(f, 41, 6, "Owl feather", "FT.forest_pickup(:FT_OWLFEATHER, @event_id)")
+on_boulder(f, 41, 6, "Owl feather", "FT.forest_pickup(:FT_GREYFEATHER, @event_id)")
 on_boulder(f, 13, 23, "Twig", "FT.forest_pickup(:FT_TWIG, @event_id)")
 # the elven ward: until you're following the white moose's tracks, it turns you round
 (14..19).each { |y| f.event(44, y, "Elven ward", [{ trigger: 1, through: true, script: "FT.tomb_ward(@event_id)" }, { switch: SW_WM_TOMB_FOUND, through: true }]) }

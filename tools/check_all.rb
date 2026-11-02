@@ -48,6 +48,7 @@ extra.each { |id, x, y, why| arrivals[id] << [x, y, why] }
 # ...and every point the story scripts send you to (constants and transfer calls)
 Dir[File.join(__dir__, "../game/Data/Scripts/998_FrostThaw/*.rb")].each do |f|
   File.read(f, encoding: "UTF-8").scan(/(?:([A-Z][A-Z0-9_]+)\s*=\s*\[|transfer\()\s*(2\d\d\d),\s*(\d+),\s*(\d+)/) do |name, id, x, y|
+    next if x.to_i >= 1000 || y.to_i >= 1000      # a list of map ids (e.g. ROOT_MAPS = [2196, 2197, ...]), not a place
     arrivals[id.to_i] << [x.to_i, y.to_i, "script #{name || 'transfer'} (#{File.basename(f)})"]
   end
 end
