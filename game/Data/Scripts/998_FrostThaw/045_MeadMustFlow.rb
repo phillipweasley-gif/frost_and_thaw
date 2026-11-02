@@ -100,11 +100,13 @@ module FrostThaw
                                                                   "Folk say it was crying."] },
                          { if: { flag: :mead_returned }, lines: ["The mead's back! Drink, drink! It's on the town. It's ALL on the town.",
                                                                  "...The verbeeg's not coming back, is he? Tell me he's not coming back."] }],
-    gm_new_speaker: [{ if: { flag: :pc_speaker }, lines: ["(A logger tips his cap.) Speaker. Mead's flowing, verbeeg's gone. Not bad for an outsider."] },
-                     { if: { flag: :olivessa_speaker }, lines: ["OLIVESSA: Speaker Untapoor. It still sounds like somebody else.",
-                                                                "OLIVESSA: Well. Somebody has to feed this town. Honey cake?"] },
-                     { if: { flag: :shandar_speaker }, lines: ["SHANDAR: Speaker Froth. Good Mead's in good hands. Strong hands.",
-                                                               "SHANDAR: (quieter) I go to Targos once a month. On business. Mind yours."] }],
+    gm_new_speaker: [{ if: { flag: :pc_speaker }, lines: ["LOGGER: (tipping his cap) Speaker. Mead's flowing, verbeeg's gone. Not bad for an outsider."] },
+                     { if: { flag: :olivessa_speaker }, lines: ["LOGGER: Speaker Untapoor's down at the cooperage, still making casks. Says it's how she thinks.",
+                                                                "LOGGER: Shandar? Gone. His own crew went looking for him with axes."] },
+                     { if: { flag: :shandar_speaker }, lines: ["LOGGER: Speaker Froth! Hero of the mead hall! Drinks are on him. Again.",
+                                                               "LOGGER: Funny. He's off to Targos again. Once a month, regular as the moon."] }],
+    gm_gossip_before: ["The verbeeg ran off west with three casks under one arm. Like they were loaves.",
+                       "Five of the militia went after it. They're not back. Fef went out to check his traps that way."],
     gm_thug_after: ["THUG: Naerth'll have my hide. Then the Black Network will have what's left."]
   )
 
@@ -212,6 +214,33 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def scene_verbeeg_lair_outside
     say(lines_for(:lair_v1))
+  end
+
+  LAIR_CENTRE = [2133, 15, 30, 8]
+
+  def lair_hillside(event_id = nil)
+    return if flag?(:lair_seen)
+    set_flag(:lair_seen)
+    sayc(["The ogre's tracks lead to a frozen stream, and along it, eight hours from Good Mead, to the verbeeg's lair."] +
+         lines_for(:lair_v1) +
+         [cl(:shade, "The tracks go in the big one. Firelight. Nobody hides in the room with the fire."),
+          cl(:alerion, "And there's a fourth mouth, round the east side. Past those bones.")], event_id)
+  end
+
+  def gm_carnage_first(event_id = nil)
+    gm_carnage(event_id) if !flag?(:saw_carnage)
+  end
+
+  def gm_townsfolk(event_id = nil)
+    return mead_quest_offer(event_id) if !flag?(:mead_taken)
+    return say(lines_for(:gm_townsfolk_after), event_id) if flag?(:mead_returned)
+    say(lines_for(:gm_townsfolk), event_id)
+  end
+
+  def gm_gossip(event_id = nil)
+    return election_inquiries(event_id) if flag?(:election_asked) && !$game_switches[SW_GM_ELECTED]
+    return say(lines_for(:gm_new_speaker), event_id) if $game_switches[SW_GM_ELECTED]
+    say(lines_for(:gm_gossip_before), event_id)
   end
 
   def sneaky?(dc_easy = false)

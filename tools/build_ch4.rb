@@ -101,7 +101,7 @@ glake = []
 (0...GH).each do |y|
   (0...GW).each do |x|
     if x >= gshore.(y) + 2 then glake << [x, y]; gopen[[x, y]] = true
-    elsif x >= 5 && y >= 3 || ([16, 17].include?(x) && y < 3) then gopen[[x, y]] = true
+    elsif x >= 5 && y >= 3 || ([16, 17].include?(x) && y < 3) || (x < 5 && [27, 28].include?(y)) then gopen[[x, y]] = true   # (west: the woods)
     end
   end
 end
@@ -124,6 +124,10 @@ shut_door(g, 15, 25, :gm_door_closed)
 [16, 17].each { |x| g.warp(x, 0, ID[:eastway], x == 16 ? 44 : 45, H - 2, 8, name: "To the Eastway") }
 [20, 21].each { |x| g.warp(x, GH - 1, ID[:redwaters], x == 20 ? 14 : 15, 1, 2, name: "To Redwaters Shore") }
 g.cutscene(16, 2, :good_mead_arrival)
+[27, 28].each { |y| g.warp(0, y, 2132, 38, y - 7, 4, name: "To the woods") }          # "The Mead Must Flow" (build_tentowns.rb)
+[27, 28].each { |y| g.event(2, y, "Home with the mead", [{ trigger: 1, through: true, script: "FT.mead_homecoming(@event_id)" }]) }
+npc_when(g, 20, 23, "BW (77)", :gm_new_speaker, 4079, dir: 2, name: "Logger (the election)")
+g.event(9, 19, "Gossip", [{ graphic: "BW (38)", direction: 6, script: "FT.gm_gossip(@event_id)" }])
 g.sign(18, 4, :sign_good_mead)
 g.npc(10, 8, "BW (54)", :gm_beekeeper, dir: 2)
 g.npc(24, 23, "BWHiker", :shandar_froth, dir: 4, name: "Shandar Froth")

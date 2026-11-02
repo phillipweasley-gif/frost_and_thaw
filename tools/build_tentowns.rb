@@ -920,5 +920,144 @@ end
 resave(gl2, GLADE)
 
 # ===========================================================================
+# "The Mead Must Flow" (RotF pp. 72-78): the woods west of Good Mead (the
+# carnage, the chwinga, the ogre's tracks, the hillside with the lair's mouths)
+# and the verbeeg lair (map 1.13, V1-V10).
+SW_GM_FOX_BOUGHT = 4076; SW_GM_SHANDAR_AWAY = 4077; SW_GM_THUGS = 4078
+GOOD_MEAD = 2031
+CHWINGA = "Followers/CLEFFA"
+OGRE = "Followers/HARIYAMA"
+VERBEEG = "Followers/MACHAMP"
+
+# --- 2132: Good Mead woods. In from Good Mead's west edge; the five dead
+# militia in a clearing; the chwinga on the trail; eight hours of ogre tracks
+# north-west to a rocky hillside with three caves (and a fourth, round east).
+WW, WH = 40, 40
+w2 = Builder.new(WW, WH)
+w2.fill(0, SNOW)
+wopen2 = {}
+carve_into(wopen2, 30, 19, 10, 4)          # in from Good Mead
+carve_into(wopen2, 18, 16, 14, 12)         # the clearing where the militia died
+carve_into(wopen2, 10, 12, 10, 6)          # the ogre's trail, north-west
+carve_into(wopen2, 4, 6, 8, 8)             # ...and north
+carve_into(wopen2, 2, 5, 38, 6)            # along the foot of the hillside
+forest_except(w2, WW, WH, wopen2)
+grass(w2, 22, 22, 6, 4); grass(w2, 12, 13, 5, 4); grass(w2, 26, 7, 6, 3)
+[[6, 2], [14, 2], [22, 2], [31, 3]].each { |x, y| w2.stamp(CAVE, x, y) }   # mouths (7,4) (15,4) (23,4) (32,5)
+w2.door(7, 4, ID[:verbeeg_lair], 5, 30, 8, name: "Door lair (west, the frozen creek)")
+w2.event(15, 4, "Door lair (centre, the fallen logs)", [{ trigger: 1, script: "FT.say([\"You squeeze between the tight stand of conifers and the two massive fallen logs.\"])\nFT.transfer(*FT::LAIR_CENTRE)" }])
+w2.door(23, 4, ID[:verbeeg_lair], 28, 30, 8, name: "Door lair (north-east, firelight)")
+w2.door(32, 5, ID[:verbeeg_lair], 38, 30, 8, name: "Door lair (main, past the mammoth)")
+[[14, 5], [16, 5]].each { |x, y| w2.set(x, y, 2, CRATE) }   # the fallen logs either side of the centre mouth
+w2.stamp(BOULDER, 34, 6); w2.event(34, 7, "Mammoth bones", [{ graphic: "", script: "FT.talk(:lair_v2, @event_id)" }])
+# leaving with the casks, Gahg comes striding through the snow
+[[7, 5], [15, 5], [23, 5], [32, 6]].each { |x, y| w2.event(x, y + 1, "Gahg arrives", [{ trigger: 1, through: true, script: "FT.lair_exit_gahg(@event_id)" }]) }
+(4..11).each { |x| w2.event(x, 11, "The hillside", [{ trigger: 1, through: true, script: "FT.lair_hillside(@event_id)" }]) }
+# the militia, where the ogre left them
+[[21, 18], [25, 20], [28, 17]].each_with_index do |(x, y), i|
+  w2.stamp(ICE_BOULDER, x, y)
+  w2.event(x, y + 1, "Militia body #{i + 1}", [{ graphic: "", script: "FT.gm_carnage(@event_id)" }])
+end
+(19..26).each { |y| w2.event(31, y, "The clearing", [{ trigger: 1, through: true, script: "FT.gm_carnage_first(@event_id)" }]) }
+w2.stamp(BOULDER, 18, 13); w2.event(18, 14, "Ogre tracks", [{ graphic: "", script: "FT.gm_ogre_tracks(@event_id)" }])
+# the chwinga on the trail
+w2.event(13, 9, "Chwinga", [{ graphic: CHWINGA, direction: 2, step_anime: true, script: "FT.gm_chwinga(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
+(12..17).each { |y| w2.event(16, y, "Chwinga's snowball", [{ trigger: 1, through: true, script: "FT.gm_chwinga(@event_id)" }]) }
+[0, 1].each { |i| w2.warp(WW - 1, 20 + i, GOOD_MEAD, 1, 27 + i, 6, name: "To Good Mead") }
+w2.set(36, 18, 2, CRATE); w2.sign(36, 18, :gm_woods_sign)
+seal_edges(w2)
+save(w2, :gm_woods)
+
+# --- 2133: the verbeeg lair (map 1.13). Every tunnel slopes down to the
+# firelit cave (V3). The west cave follows the frozen creek (V6) north to the
+# bear's pool (V7) and east to Duhg (V9), the burial niches (V8) and the old
+# tomb (V10). The casks and the ogre are north of the fire (V5); the refuse
+# pit (V4) is off the main entrance's passage.
+vl = cave_map(44, 32)
+vfl = {}
+carve_into(vfl, 4, 20, 3, 12)            # V1 west: the low mouth and the frozen creek
+carve_into(vfl, 3, 14, 6, 6)             # V6: the split
+carve_into(vfl, 2, 2, 11, 10)            # V7: the bear's cave and the frozen pool
+carve_into(vfl, 4, 11, 2, 3)             #     (the creek's way north)
+carve_into(vfl, 9, 16, 9, 2)             # V6 -> east
+carve_into(vfl, 17, 13, 7, 7)            # V9: Duhg's ring
+carve_into(vfl, 19, 7, 2, 6)             # V8: the burial niches
+carve_into(vfl, 16, 1, 8, 6)             # V10: the old tomb (up its five-foot steps)
+carve_into(vfl, 24, 16, 2, 2)            # V9 -> the fire (a short tunnel)
+carve_into(vfl, 14, 24, 3, 8)            # V1 centre: the hewn passage
+carve_into(vfl, 16, 24, 12, 2)           #     ...east, under the fire, to the north-east passage
+carve_into(vfl, 27, 23, 3, 9)            # V1 north-east: the big mouth
+carve_into(vfl, 26, 13, 9, 10)           # V3: the firelit cave (sunken)
+carve_into(vfl, 37, 20, 3, 12)           # V2: the main entrance's passage
+carve_into(vfl, 34, 19, 4, 3)            #     ...to the fire
+carve_into(vfl, 36, 11, 7, 8)            # V4: the refuse pit
+carve_into(vfl, 29, 10, 2, 3)            # V3 -> V5
+carve_into(vfl, 26, 3, 8, 7)             # V5: the ogre, the casks, the baskets
+[[38, 14], [39, 14], [38, 15], [39, 15]].each { |c| vfl.delete(c) }   # the pit itself
+[4, 6, 14, 16, 27, 29, 37, 39].each { |x| vfl.delete([x, 31]) }        # (only the mouths themselves reach the edge)
+cave_paint(vl, vfl)
+vl.door(5, 31, ID[:gm_woods], 7, 5, 2, name: "Exit (west)")
+vl.door(15, 31, ID[:gm_woods], 15, 5, 2, name: "Exit (centre)")
+vl.door(28, 31, ID[:gm_woods], 23, 5, 2, name: "Exit (north-east)")
+vl.door(38, 31, ID[:gm_woods], 32, 6, 2, name: "Exit (main)")
+rocks = ->(x, y) { CAVE_ROCKS.each_with_index { |row, j| row.each_with_index { |tl, i| vl.set(x + i, y + j, 1, tl) } } }
+# V3: the bonfire and the spit, the cart and crates, the pen
+rocks.(28, 17); vl.event(29, 18, "Bonfire", [{ graphic: "", script: "FT.lair_spit(@event_id)" }])
+rocks.(27, 14); vl.event(27, 15, "Cart and crates", [{ graphic: "", script: "FT.talk(:lair_v3_cart, @event_id)" }])
+[["SKIDDO", 32, 14], ["MAREEP", 33, 15], ["SKIDDO", 31, 16], ["MAREEP", 33, 17], ["SKIDDO", 32, 18], ["MAREEP", 31, 14]].each do |sp, x, y|
+  vl.event(x, y, "Livestock", [{ graphic: "Followers/#{sp}", direction: 4, step_anime: true, script: "FT.lair_livestock(@event_id)" }])
+end
+# V4: the refuse pit
+vl.event(38, 14, "Refuse pit", [{ graphic: "", script: "FT.talk(:lair_v4, @event_id)" }])
+# V5: Friend, the casks, six baskets on their pulleys
+vl.event(27, 5, "Friend", [{ graphic: OGRE, direction: 6, step_anime: false, script: "FT.lair_ogre(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
+rocks.(31, 7); vl.event(31, 8, "Mead casks", [{ graphic: "", script: "FT.lair_casks(@event_id)" }])
+(27..32).each { |x| vl.event(x, 2, "Basket", [{ graphic: "", script: "FT.lair_basket(@event_id)" }]) }
+# V6 / V7: the frozen creek, Yogobor, the pool
+vl.event(4, 4, "Yogobor", [{ graphic: "Followers/URSARING", direction: 2, step_anime: false, script: "FT.lair_bear(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
+rocks.(2, 2); vl.event(2, 3, "Bear's niche", [{ graphic: "", script: "FT.lair_bear_niche(@event_id)" }])
+rocks.(8, 5); vl.event(8, 6, "Frozen pool", [{ graphic: "", script: "FT.lair_silvanus(@event_id)" }])
+rocks.(3, 18); vl.event(3, 19, "Frozen creek", [{ graphic: "", script: "FT.talk(:lair_v6, @event_id)" }])
+# V8 / V9 / V10
+vl.event(21, 9, "Burial niches", [{ graphic: "", script: "FT.talk(:lair_v8, @event_id)" }])
+vl.event(20, 16, "Duhg", [{ graphic: VERBEEG, direction: 2, step_anime: false, script: "FT.lair_duhg(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
+vl.event(17, 12, "Ring niches", [{ graphic: "", script: "FT.talk(:lair_v9_ring, @event_id)" }])
+rocks.(19, 2); vl.event(19, 3, "Stone block", [{ graphic: "", script: "FT.lair_tomb(@event_id)" }])
+seal_edges(vl)
+save(vl, :verbeeg_lair)
+
+# --- Good Mead's new pieces: the way west into the woods, Fef, the fox,
+# Shandar and the town's talk (build_ch4.rb builds the town; these are patches).
+gm = reopen(GOOD_MEAD)
+gm.map.events.each_value do |ev|
+  case ev.name
+  when "NPC fef_moryn", "Fef Moryn"
+    ev.pages[0].instance_variable_set(:@list, gm.send(:script_commands, "FT.fef_moryn(@event_id)") + [gm.send(:command, 0, [])])
+  when "Fef's fox"
+    next if ev.pages.size > 1                        # (already patched)
+    ev.pages << gm.build_page(ev.pages[0], { self_switch: "A", graphic: "", through: true })
+  when "Shandar Froth"
+    ev.pages[0].instance_variable_set(:@list, gm.send(:script_commands, "FT.shandar(@event_id)") + [gm.send(:command, 0, [])])
+    next if ev.pages.size > 1
+    ev.pages << gm.build_page(ev.pages[0], { switch: SW_GM_SHANDAR_AWAY, graphic: "", through: true })
+  when "NPC gm_townsfolk"
+    ev.pages[0].instance_variable_set(:@list, gm.send(:script_commands, "FT.gm_townsfolk(@event_id)") + [gm.send(:command, 0, [])])
+  end
+end
+resave(gm, GOOD_MEAD)
+
+# the mead hall: the thugs' "rescue"
+mh2 = reopen(2032)
+has_event?(mh2, "Cutscene gm_thugs") || mh2.event(1, 1, "Cutscene gm_thugs", [{}, { switch: SW_GM_THUGS, trigger: 3, script: "FT.scene(:gm_thugs, @event_id)" }, { self_switch: "A" }])
+resave(mh2, 2032)
+# the cooperage: Olivessa asks
+co2 = reopen(2033)
+co2.map.events.each_value do |ev|
+  next unless ev.name == "Olivessa Untapoor"
+  ev.pages[0].instance_variable_set(:@list, co2.send(:script_commands, "FT.olivessa(@event_id)") + [co2.send(:command, 0, [])])
+end
+resave(co2, 2033)
+
+# ===========================================================================
 merge_infos(ID.map { |k, v| [v, NAMES[k]] }.select { |id, _| File.exist?(File.join(OUT, format("Map%04d.rxdata", id))) })
 puts "built Ten-Towns maps into #{OUT}"
