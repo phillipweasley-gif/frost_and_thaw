@@ -28,14 +28,12 @@ module FrostThaw
   SW_DARRUS_HIDING = 4165   # exposed, Darrus hides at the Run's old moorings
   SW_LANTERN       = 4166   # you carry Jast's Lantern of Revealing: the watchers show
   SW_ORB_HALO      = 4167   # the Halo splinter is kneeling at the orb (before the visions)
-  SW_MIRA_STALL    = 4168   # Mira's mirror stall is in the Bazaar (until her flagship's core breaks)
   SW_KELYN_ORB     = 4169   # Kelyn is at the orb by night, dreaming with Razzilith
   SW_EREN_TROUBLED = 4170   # Eren is at the Armory, troubled by the gift of memory
   SW_SPIRITS       = 4171   # the summer and winter spirits are quarrelling in the Blooming Fields
   SW_STILL_BEAST   = 4172   # the Still Beast prowls the thaw line
   SW_TALWYN_FIELDS = 4173   # Talwyn has followed you as far as the Blooming Fields
   SW_SCORCH        = 4174   # warm scorch marks by the Echo Gate (after the festival)
-  SW_RILKA_CANOPY  = 4175   # Rilka meditates on the Canopy after the Forge
   SW_HALDEN        = 4176   # Halden Vex has set up his reset-engine in the Library
 
   ROOTSPIRE_LIFE_MAPS = {
