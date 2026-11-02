@@ -123,15 +123,15 @@ module FrostThaw
   TRAINER_INTROS.merge!(
     climber_hask: "HASK: You're climbing the Cairn? In this? Prove you can climb ME first!",
     climber_vala: "VALA: Ranger patrol. Everyone going up gets tested. Everyone coming down gets counted.",
-    tundra_runner: "TOBB: Out of my way, I'm hauling! ...Or battle me. Hauling's boring.",
-    tundra_aurilite: "YSOLDE: You cross Her tundra without an offering? Then you are the offering."
+    tundra_runner: "GUNNAR: Out of my way, I'm hauling! ...Or battle me. Hauling's boring.",
+    tundra_aurilite: "VESNA: You cross Her tundra without an offering? Then you are the offering."
   )
   TRAINER_TYPES.merge!(FT_CLIMBER: ["Climber", :HIKER, 0, 40])
   TRAINERS.merge!(
     climber_hask:  [:HIKER, "Hask", [[:GRAVELER, 19], [:B75H220, 20]], "The mountain wins again. You win too, I suppose."],
     climber_vala:  [:POKEMONRANGER_F, "Vala", [[:SNEASEL, 20], [:B227H220, 20]], "Watch the cornices up top. They'll go if you breathe on them."],
-    tundra_runner: [:WORKER, "Tobb", [[:MIGHTYENA, 17], [:B503H58, 18]], "I'm hauling for the dwarves. Even dwarves need someone to haul."],
-    tundra_aurilite: [:FT_AURILITE, "Ysolde", [[:SNORUNT, 17], [:B220H124, 18]], "She'll take the mountain too, one day. All of it."]
+    tundra_runner: [:WORKER, "Gunnar", [[:MIGHTYENA, 17], [:B503H58, 18]], "I'm hauling for the dwarves. Even dwarves need someone to haul."],
+    tundra_aurilite: [:FT_AURILITE, "Vesna", [[:SNORUNT, 17], [:B220H124, 18]], "She'll take the mountain too, one day. All of it."]
   )
   TEXT.merge!(
     climber_hask_after: ["Cairn's named for Kelvin. He climbed it once. That's the whole story. Nobody remembers why."],

@@ -80,7 +80,7 @@ module FrostThaw
                      "The light below is hers. Whatever goes into it, she keeps."],
     aurilite_three: [:FT_AURILITE,     "Orla",    [[:GASTLY, 13], [:SNEASEL, 13]],
                      "Go on, then. See what the cold makes of your little friend."],
-    bryn_zhent_a:   [:FT_ZHENTARIM,    "Kell",    [[:MEOWTH, 13], [:B19H81, 13]],
+    bryn_zhent_a:   [:FT_ZHENTARIM,    "Brosk",   [[:MEOWTH, 13], [:B19H81, 13]],
                      "The Speaker won't take our coin. Everyone takes it eventually."],
     northlook_zhent: [:FT_ZHENTARIM,   "Dorn",    [[:KOFFING, 13], [:B52H109, 14]],
                      "The Black Network doesn't forget. Neither do I."],

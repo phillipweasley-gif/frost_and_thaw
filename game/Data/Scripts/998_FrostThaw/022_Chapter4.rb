@@ -116,7 +116,7 @@ module FrostThaw
     # the tundra
     aurilite_nine:  [:FT_AURILITE,     "Vesk",  [[:B428H215, 26], [:GLALIE, 25]],
                      "Go on, then. To the giant's house. The cold's expecting you."],
-    hunter_ulf:     [:HIKER,           "Ulf",   [[:PILOSWINE, 25], [:B503H310, 26]],
+    hunter_ulf:     [:HIKER,           "Orrin", [[:PILOSWINE, 25], [:B503H310, 26]],
                      "I hunt wolves. Two of them hunt me back. The talking ones."],
     # Speaker Durmoot's lodge (Gym 3)
     trapper_brann:  [:FT_TRAPPER,      "Brann", [[:SANDSLASH, 26], [:B87H28, 26]],

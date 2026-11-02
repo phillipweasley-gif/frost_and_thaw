@@ -66,7 +66,7 @@ module FrostThaw
     FT_SEPHEK: ["Auril's Chosen", :MYSTICALMAN, 0, 120, :LEADER_Pryce]
   )
   TRAINERS.merge!(
-    bug_catcher_pell: [:BUGCATCHER,       "Tobin",   [[:SPINARAK, 15], [:PINECO, 16]],
+    bug_catcher_pell: [:BUGCATCHER,       "Nettle",  [[:SPINARAK, 15], [:PINECO, 16]],
                        "My bugs hate the cold. I'm starting to see their point."],
     lady_maren:       [:BEAUTY,           "Maren",  [[:B35H220, 16], [:SNUBBULL, 16]],
                        "Lonelywood's dreadful, darling. That's why I love it."],
@@ -414,7 +414,7 @@ module FrostThaw
   # The Happy Scrimshander's keeper: a doughy spinster of few words, who never
   # talks about her past, only, fondly, about people she once knew who are dead.
   IRISKREE_DEAD = [
-    ["IRISKREE: Corvin Hale used to buy that very needle. Steadiest hands in the Dale. Went through the ice off Targos.",
+    ["IRISKREE: Corvin Tull used to buy that very needle. Steadiest hands in the Dale. Went through the ice off Targos.",
      "IRISKREE: He'd have liked you. He liked anyone who paid."],
     ["IRISKREE: Mags Ullan carved the best whales I ever saw. Lost her to a winter like this one.",
      "IRISKREE: She laughed at everything. Even at the end. Especially at the end."],

@@ -29,10 +29,10 @@ module FrostThaw
                        Land: [[25, :SWINUB, 13, 15], [20, :SNORUNT, 13, 15], [15, :SPHEAL, 13, 15],
                               [15, :HOOTHOOT, 13, 15], [10, :DELIBIRD, 14, 16], [10, :SNEASEL, 14, 16], [5, :STANTLER, 15, 16]] }
   TRAINERS.merge!(
-    shore_hunter_ilsa: [:HIKER, "Ilsa", [[:SWINUB, 14], [:TEDDIURSA, 15]], "Four hours of shore, and you're the only thing I've caught."],
+    shore_hunter_ilsa: [:HIKER, "Edda", [[:SWINUB, 14], [:TEDDIURSA, 15]], "Four hours of shore, and you're the only thing I've caught."],
     shore_fisher_dov:  [:FISHERMAN, "Dov", [[:SPHEAL, 14], [:GOLDEEN, 15]], "Knucklehead trout. They're worth more than me. Ask anyone."]
   )
-  TRAINER_INTROS.merge!(shore_hunter_ilsa: "ILSA: Trail's long and cold. Let's warm up.",
+  TRAINER_INTROS.merge!(shore_hunter_ilsa: "EDDA: Trail's long and cold. Let's warm up.",
                         shore_fisher_dov: "DOV: You're on my ice. That's a battle where I'm from.")
 
   TRAINER_TYPES.merge!(
@@ -42,14 +42,14 @@ module FrostThaw
   TRAINER_INTROS.merge!(
     scramsax: "SCRAMSAX: Pay up, or we do this the old way. I always liked the old way.",
     bhall_militia_1: "GARVIN: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.",
-    bhall_militia_2: "TOMA: Last gap before the Speaker. Last chance to turn round."
+    bhall_militia_2: "HASKEL: Last gap before the Speaker. Last chance to turn round."
   )
   TRAINERS.merge!(
     scramsax:          [:FT_SELLSWORD, "Scramsax", [[:MACHOKE, 18], [:B57H83, 18], [:B262H68, 19]],
                         "Ha! Still got it. Not as much as you, mind."],
     bhall_militia_1:   [:FT_MILITIA,   "Garvin",     [[:GROWLITHE, 14], [:MAGNEMITE, 14]],
                         "The Sheriff said strangers would come knocking. He didn't say they'd hit this hard."],
-    bhall_militia_2:   [:FT_MILITIA,   "Toma",    [[:SKARMORY, 14], [:B227H58, 15]],
+    bhall_militia_2:   [:FT_MILITIA,   "Haskel",  [[:SKARMORY, 14], [:B227H58, 15]],
                         "Walls hold. I don't, apparently."]
   )
 

@@ -79,14 +79,14 @@ module FrostThaw
     path_skier_esk:    "ESK: The wind off the lake can knock you flat. Can you knock me flat?",
     path_aurilite_rho: "RHO: The north wind is Hers. Termalaine was built right in its teeth.",
     miner_jory:        "JORY: Mine's closed, so I'm out here with nothing to hit but you.",
-    tm_officer_varn:   "VARN: The Speaker sent you to do our job? Let's see if you're worth his gold."
+    tm_officer_varn:   "STENNIS: The Speaker sent you to do our job? Let's see if you're worth his gold."
   )
   TRAINERS.merge!(
     path_hiker_dun:    [:HIKER, "Dun", [[:GEODUDE, 15], [:B74H220, 16]], "Fine! It's your path too. Mind the drifts."],
     path_skier_esk:    [:BEAUTY, "Esk", [[:SMOOCHUM, 15], [:B124H215, 16]], "Flat. Very flat. I'll stay down here a while."],
     path_aurilite_rho: [:FT_AURILITE, "Rho", [[:SNORUNT, 16], [:B220H92, 16]], "The wind will have you anyway."],
     miner_jory:        [:FT_MINER, "Jory", [[:GEODUDE, 16], [:ONIX, 17]], "Should've been kobolds you were hitting. Not me."],
-    tm_officer_varn:   [:FT_MILITIA, "Varn", [[:GROWLITHE, 16], [:B227H58, 17]], "...You'll tell Masthew we helped. Won't you."],
+    tm_officer_varn:   [:FT_MILITIA, "Stennis", [[:GROWLITHE, 16], [:B227H58, 17]], "...You'll tell Masthew we helped. Won't you."],
     trex_ghost:        [:FT_SPIRIT, "Janth", [[:MISDREAVUS, 18], [:B200H92, 19]], "My lichens... my... lichens..."]
   )
   TRAINER_INTROS[:trex_ghost] = "JANTH: (from the empty air where the kobold was) You'll carry my satchel. You'll carry ME."
@@ -153,7 +153,7 @@ module FrostThaw
     path_aurilite_rho_after: ["RHO: Termalaine's pretty. The Frostmaiden likes pretty things. She keeps them."],
     miner_jory_after: [{ if: { flag: :mine_done }, lines: ["JORY: Back to work tomorrow! Thanks to you. Don't let it go to your head."] },
                        ["JORY: Fifty gold from the Speaker, they say. The militia won't touch it. Wonder why."]],
-    tm_officer_varn_after: ["VARN: Masthew won by a hair. Hairs get cut."],
+    tm_officer_varn_after: ["STENNIS: Masthew won by a hair. Hairs get cut."],
     tm_kobold_worker: ["KOBOLD: Termalaine! Warm! Work! The big ones laugh at our tails. Then they share chowder.",
                        "KOBOLD: Good town. Trex is quiet now. Trex is just Trex. That is fine. We like just Trex."]
   )

@@ -78,7 +78,7 @@ module FrostThaw
                     "She pays us to drive dogs, not to bleed."],
     torg_hand2:    [:FT_TORGHAND,      "Oska", [[:SNEASEL, 17], [:MIGHTYENA, 17]],
                     "Not my sled. Not my fight. Not my teeth, either."],
-    torg_hand3:    [:FT_TORGHAND,      "Hale", [[:POOCHYENA, 16], [:HOUNDOUR, 18]],
+    torg_hand3:    [:FT_TORGHAND,      "Corran", [[:POOCHYENA, 16], [:HOUNDOUR, 18]],
                     "...You could've just bought something."],
     torg_hand4:    [:FT_TORGHAND,      "Skeld", [[:MURKROW, 17], [:MIGHTYENA, 18]],
                     "Tell the boss I tried."],
@@ -92,7 +92,7 @@ module FrostThaw
     torrga:        "TORRGA: You've had your hands in my sacks. That's theft, that is. Brannig! Business!",
     torg_hand:     "BRANNIG: Boss says you're done shopping.",
     torg_hand2:    "OSKA: Off the sleds! Now!",
-    torg_hand3:    "HALE: Boss wants you gone. So. Gone.",
+    torg_hand3:    "CORRAN: Boss wants you gone. So. Gone.",
     torg_hand4:    "SKELD: Four of us and one of her. You picked a bad fight.",
     thredra_crown: "THREDRA: Winter's mine now, dearies. All of it. Come and have a taste.",
     ethel:         "ETHEL: A share of the cutting, sister promised. I'll start with you."
@@ -1131,10 +1131,10 @@ module FrostThaw
                    "TORRGA: And what's in my sacks is mine. Boys. Kill them.",
                    "Her four drivers drop the dogs' traces and come round the sleds."])
       # the drivers first, two by two, then Torrga and her lead driver
-      won = pbDoubleTrainerBattle(:FT_TORGHAND, "Oska", 0, nil, :FT_TORGHAND, "Hale", 0, nil) rescue nil
+      won = pbDoubleTrainerBattle(:FT_TORGHAND, "Oska", 0, nil, :FT_TORGHAND, "Corran", 0, nil) rescue nil
       won = pbTrainerBattle(:FT_TORGHAND, "Oska", nil, false, 0) if won.nil?
       return if !won
-      say(["Oska and Hale go down in the snow. Skeld looks at them, looks at you, and doesn't run."])
+      say(["Oska and Corran go down in the snow. Skeld looks at them, looks at you, and doesn't run."])
       won = pbTrainerBattle(:FT_TORGHAND, "Skeld", nil, false, 0)
       return if !won
       won = pbDoubleTrainerBattle(:FT_BANDITCAPTAIN, "Torrga", 0, nil, :FT_TORGHAND, "Brannig", 0, nil) rescue nil
