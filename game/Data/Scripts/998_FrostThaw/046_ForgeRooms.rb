@@ -211,19 +211,18 @@ module FrostThaw
   end
 
   # Under the loose floorboard: the Ledger of Corruption (evidence for the Trials).
+  # The Ledger of Corruption lives atop the Council tower (Tab 8 Q6: the trial
+  # week's break-in into Summer's quarters, 047d tower_stair): down here, only
+  # the hollow it was kept in, and the note that sends you up the tower.
   def loose_floorboard(event_id = nil)
-    return say(["The loose floorboard, and the empty hollow under it."], event_id) if flag?(:ledger_found)
+    return say(["The loose floorboard, and the empty hollow under it."], event_id) if flag?(:ledger_found) || flag?(:ledger_trail)
     say(["One floorboard of frostglass root sits a finger higher than the rest."], event_id)
     return if !pbConfirmMessage(_INTL("Lift it?"))
-    say(["Under it, wrapped in oilcloth: a leather ledger.",
-         "Payments from Frostmaiden cultists, in Halo script. Lists of Ten-Towners, town by town, with a little cross beside each name.",
-         "And on the first page, underlined twice: \"Project Rime: reforge the Everlasting Summer.\""])
-    give_key(:FT_CORRUPTLEDGER)
-    set_flag(:ledger_found)
-    add_counter(:story_beats)
-    sayc([cl(:alberica, "The Halo paid her. And she sent them names for the lottery. She ran BOTH sides."),
-          cl(:reptin, "This is the sort of thing a Council asks to see. Keep it dry."),
-          cl(:alerion, "Keep it safe.")])
+    say(["Under it, a hollow lined with oilcloth, the shape of a book. Empty.",
+         "Caught in the fold, a scrap of paper in a neat white hand: \"Ledger to the tower. Nothing that matters stays below.\""])
+    set_flag(:ledger_trail)
+    sayc([cl(:alberica, "The tower. Her rooms, at the top of the Council tower. Nobody's been up that stair in thirty years."),
+          cl(:reptin, "Then it's waiting for us up there. When the city lets us anywhere near a stair.")])
   end
 
   # A5's trap: the mirror-root effigy of Auril lashes out with psychic cold.

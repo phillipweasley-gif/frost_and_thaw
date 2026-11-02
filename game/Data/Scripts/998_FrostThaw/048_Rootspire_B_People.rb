@@ -321,6 +321,9 @@ module FrostThaw
             cl(:reptin, "Then we're in good hands. Large ones. Very large.")].compact)
     end
     kethan_business(event_id) if respond_to?(:kethan_business)
+    if flag?(:wyn_barred) && !flag?(:wyn_bar_lifted)
+      return say(["KETHAN: The stores are closed to you. Council's word, not mine. Until the Council says otherwise."])
+    end
     if pbConfirmMessage(_INTL("Look at the Hall's stores?"))
       mart(:warden_hall, event_id)
     end

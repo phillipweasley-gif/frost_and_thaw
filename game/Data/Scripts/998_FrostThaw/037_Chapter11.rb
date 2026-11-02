@@ -51,13 +51,19 @@ module FrostThaw
     auril = (Stage.actor(:auril, $game_player.x, $game_player.y - 2, 2, graphic: "FT_auril_furs") rescue nil)
     say(["A woman in frost-furs is sitting across the table. Nobody else can see her.",
          "AURIL: Hear the wheel, and the ones who bind it.",
-         "AURIL: The dark half guards silence. The light half births flame.",
-         "AURIL: And flame consumes as easily as it warms. The spark is spent.",
+         "AURIL: The dark half guards silence, a sentinel chained to frost.",
+         "AURIL: The light half births flame. And flame consumes as easily as it warms. The spark is spent.",
          "Her breath frosts the table between you.",
-         "AURIL: Life and death march only as long as they move.",
-         "AURIL: And memory keeps the key. Keys open, Alberica. They also lock.",
-         "She leans in.",
+         "AURIL: Life and death march only so long as they move. Stop them, and all is mine.",
+         "AURIL: And memory keeps the key. Keys open, Alberica. They also lock."])
+    # The omens she sent all through the city (048_E): she knows which ones you saw.
+    if (counter(:omens_seen) rescue 0).to_i >= 3
+      say(["AURIL: You've seen them. Every sign. Frost on his shadow. Vines on her breath. Your own throat, cold.",
+           "AURIL: You told no one. That's how I knew you were mine."])
+    end
+    say(["She leans in.",
          "AURIL: You are my vessel, little songbird. You always were.",
+         "AURIL: Guard them if you must. But remember: they cannot escape their fates, and the wheel turns for me.",
          "AURIL: Come and be beautiful forever."])
     Stage.hide(auril) if auril
     Stage.overlay_off("O-04", fade: 20)
@@ -216,6 +222,7 @@ module FrostThaw
     lines << "PHILDENDRIN: Duvessa's people will hold this city. Go. And bring my daughter home." if flag?(:council_phildendrin)
     lines << "ANDUIN: The Wennen will ring the old bell. Something very large will answer." if flag?(:council_anduin)
     say(lines) if !lines.empty?
+    four_chairs_consequences if respond_to?(:four_chairs_consequences)
     say([as(:alerion, "(bandaged, standing anyway) I'm coming."),
          cl(:reptin, "You can barely walk."),
          as(:alerion, "I've walked on less. She's mine to watch. I'm not done watching."),
@@ -244,9 +251,11 @@ module FrostThaw
 
   # How you get to Solstice: Mira's ship, Rheven's griffons, Anduin's whale, or Lumin's bell.
   def voyage_route
+    return state[:voyage_pick] if flag?(:council_heralds) && state[:voyage_pick]   # (the Heralds' own seat chose)
     return :ship if flag?(:council_mira)
     return :griffons if flag?(:council_rheven)
     return :whale if flag?(:council_anduin)
+    return :ship if flag?(:darrus_redeemed)                                         # (Darrus chartered the Requiem)
     :bell
   end
 

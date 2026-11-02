@@ -357,8 +357,13 @@ module FrostThaw
     key = :"spore_trail_#{n}"
     return if flag?(key)
     say(["The spore-cloud thickens. It splits two ways."], event_id)
-    ok = with_or_is?(:wyn) ? challenge("Which way?", ["Where it's thickest and coldest", "Where it's thinnest", "Back"], 0) :
-                            challenge("Which way?", ["Where it's thickest and coldest", "Where it's thinnest", "Back"], 0)
+    if with_or_is?(:wyn)
+      # (Survival: Wyn knows the Undercity's spores by smell.)
+      say([as(:wyn, "(sniffing, then pointing) That way. Where it's cold. Breathe through your sleeve.")])
+      ok = challenge("Which way?", ["Follow Wyn, sleeve over your mouth", "Go the other way", "Back"], 0)
+    else
+      ok = challenge("Which way?", ["Where it's thickest and coldest", "Where it's thinnest", "Back"], 0)
+    end
     set_flag(key)
     if !ok
       say(["You breathe a lungful. The cavern walls breathe back. Everything has eyes for a while."])
@@ -378,7 +383,11 @@ module FrostThaw
     say(["A mass of mushrooms pulsing with dark light, every cap with an eye in it. They all turn to you.",
          "Whispers, not words: things people dropped down here. Secrets. Bad dreams."], event_id)
     ok = challenge("Commune with it.", ["Listen to what it wants", "Push your mind into it", "Ask it to stop"], 0)
-    ok = false if flag?(:undercity_spored) && !ok
+    if ok && flag?(:undercity_spored)
+      # (W1: breathing the spores is disadvantage on the commune.)
+      say(["The spores in your lungs answer it before you do. The colony's whispers come back in your own voice."])
+      ok = challenge("Hold on to your own voice.", ["Breathe out slowly, and listen for Wyn's", "Shout over it", "Let it talk"], 0)
+    end
     if ok
       say([as(:wyn, "(very softly) ...It's hungry. For stories. It eats them, and it dreams them back out wrong."),
            as(:wyn, "It doesn't mean to frighten anyone. It just doesn't know what else to do with them.")])
@@ -663,9 +672,28 @@ module FrostThaw
     if !challenge("Get back to the Wall!", ["Run together, holding hands", "Every one for themselves", "Wait for it to steady"], 0)
       say(["You're too slow. The world stops round you, and something stands up out of the stopped snow."])
       skirmish(named_mon(:B92H478, 57, "Ice Wight"))
+      beyond_trapped
     end
     say(["You come through the Wall in a gasp of warm air, onto the Glasswater's far shore."])
     transfer(2078, 26, 12, 4)
+  end
+
+  # GQ4: "If trapped, they lose half their god points and require rescue."
+  def beyond_trapped
+    say(["The aurora closes. You're in the stopped snow, and it's very quiet, and nothing moves, and you can't.",
+         "The wheel in you slows. Whatever the gods put in you runs out like warmth out of a hand."])
+    w = (counter(:wheel) rescue 0).to_i
+    if w > 0
+      add_counter(:wheel, -(w / 2.0).ceil)
+      say(["(Half of what the Wheel had given you is gone.)"])
+    end
+    rescuer = flag?(:missing_patrol_found) ? "Warden Brisa, the one you pulled out of the ice, at the head of a Rootwarden rope-line" :
+                                             "A Rootwarden rope-line, Eira's spore-guard glowing at the end of it"
+    say(["Then a rope. A light. #{rescuer}, wading out into the stopped snow after you, one slow step at a time.",
+         "They haul you back, hand over hand. It takes them all night. It feels like a second."])
+    set_flag(:beyond_rescued)
+    trial[:done_today] = true if flag?(:trials_open) && !flag?(:ch10_done) && respond_to?(:trial)
+    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
   end
 
   #-----------------------------------------------------------------------------

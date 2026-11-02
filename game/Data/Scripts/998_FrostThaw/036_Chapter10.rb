@@ -141,6 +141,8 @@ module FrostThaw
     [[:maera_apprentice_heard], "Maera Vell's apprentice", "She took the gold robes down herself. She said Autumn needed a hand that wouldn't shake.", :autumn],
     [[:watcher_weasel], "Maera Vell's garden-whisper weasel", "It stole the details of the Heralds, every night, and carried them to Autumn's clothier.", :autumn],
     [[:frostfire_flask], "A flask of frostfire", "Frost and fire in one flask: the engine's fuel, off Summer's own Forge shelves.", :summer],
+    [[:pain_pods_freed], "A caravan driver from Bryn Shander", "Cut out of a pod under the Forge: they took the whole caravan, food and all. For the summer. The summer was hungry.", :summer],
+    [[:pods_quiet], "The pale sovereign, by spore", "Spores drift up through the Council floor. The sleepers in Summer's pods dream of her, and the dreams say whose they were.", :summer],
     [[:oath_of_roots], "The Rootwardens' Oath of Roots", "Sworn with Rheven, in the old way.", :summer],
     [[:selrae_witness], "Selrae Vorn", "Her word, for whatever an old Halo-sheltering fool's word is worth.", :summer],
     [[:wardens_sworn], "Kelyn of Spring", "They swore the Wardens' oath the day they came home.", :summer]
@@ -446,6 +448,7 @@ module FrostThaw
              when :eirwen then flag?(:anduin_reconciled) || flag?(:colony_recognised)
              when :phildendrin then flag?(:autumn_labs_seen) || flag?(:refugees_testify) || flag?(:ledger_found)
              when :anduin then flag?(:anduin_reconciled) && flag?(:reptin_endorsed)
+             when :heralds then flag?(:wolves_driven_off) || flag?(:blankets_given) || flag?(:ledger_found)
              end
       if deed || how == 1
         say([how == 2 ? "You stare the hecklers down. One by one they find something interesting to look at on the floor." :
@@ -498,10 +501,13 @@ module FrostThaw
   end
 
   def petition_signer(who, event_id = nil)
-    open = %i[phildendrin anduin].select { |k| flag?(:"petition_#{k}") && !nominated?(k) }
+    open = %i[phildendrin anduin heralds].select { |k| flag?(:"petition_#{k}") && !nominated?(k) }
     signed = (state[:signed] ||= {})
     if open.empty?
       return say(["#{who.to_s.tr('_', ' ').capitalize}: Petitions? Nobody's put one in front of me."], event_id)
+    end
+    if who == :myconids && flag?(:sap_raided) && !flag?(:ch10_done)
+      return say(["EIRA: (turning her cap away) The sap went up the ramp in Rootwarden carts, and you watched. The spore-guard signs nothing this week."], event_id)
     end
     k = open.first
     if signed[[who, k]]
@@ -510,6 +516,8 @@ module FrostThaw
     n = { refugees: 4, bazaar: 3, hearth: 3, myconids: 4, guild: 2, dockers: 3, scholars: 1 }[who] || 1
     if k == :anduin && who == :myconids
       say(["EIRA: A man who'd forbid god-sparks. ...The spore-guard signs. Gods make the roots nervous."], event_id)
+    elsif k == :heralds && who == :refugees
+      say(["REFUGEE: You carried us out of the snow. Of course I'll sign. Give me the pen before I cry."], event_id)
     elsif k == :phildendrin && who == :refugees
       say(["REFUGEE: The goblin woman? She sat with our children every night this week. Give me the pen."], event_id)
     else
@@ -932,7 +940,9 @@ module FrostThaw
     pick = opts[[c, 0].max][0]
     case pick
     when :autumn
-      if flag?(:wall_helped) || challenge("Rheven looks at you a long time.", ["\"You saw the pens. You know.\"", "\"Tell us or we'll find out.\"", "\"Never mind.\""], 0)
+      angered = flag?(:rootwardens_angered)
+      say(["RHEVEN: (not looking up) You burned a colony under my docks without asking. Don't expect favours."]) if angered
+      if (flag?(:wall_helped) && !angered) || challenge("Rheven looks at you a long time.", ["\"You saw the pens. You know.\"", "\"Tell us or we'll find out.\"", "\"Never mind.\""], 0)
         say(["RHEVEN: (lowering his voice) Autumn kept lists. Refugees, by name and by weight.",
              flag?(:heist_exposed) ? "RHEVEN: Darrus drew them up. When he ran, Maera Vell carried them below. For the Frostmaiden, or for Summer, I never learned which." :
                                      "RHEVEN: Darrus meant to turn them into sacrifices. For the Frostmaiden, or for Summer, I never learned which.",
@@ -1013,6 +1023,10 @@ module FrostThaw
     else
       say(["Wyn says nothing. The silence is noted."])
       trial[:mud] += 1
+    end
+    if flag?(:rootwardens_angered)
+      say(["KETHAN: (flatly) And this is the Rootwarden whose friends burned a colony under our docks without a word to us."])
+      believed -= 1
     end
     if believed >= 1
       say(["KELYN: (slowly) ...At least one of us is willing to think there's another explanation."])
@@ -1419,8 +1433,24 @@ module FrostThaw
       say([as(:wyn, "(very small, but out loud) I kept the door under those spores for three years. They kept me.")])
       set_flag(:ally_wyn_spores)
     end
-    ok = challenge("The councillors wait.", ["Tell them what the spores do: they feed the tree, they let the myconids speak",
-                                            "Tell them it's harmless, really, mostly", "Tell them it's none of their business"], 0)
+    c = pbMessage(_INTL("The councillors wait."), [_INTL("Tell them what the spores do: they feed the tree, they let the myconids speak"),
+                                                  _INTL("Tell them it's harmless, really, mostly"), _INTL("Tell them it's none of their business")], -1)
+    ok = c == 0
+    if c == 2
+      # (Q5: "Combat may erupt if the party refuses.")
+      say(["SELRAE: None of our business. Under our own roots. ...Wardens.",
+           "Two of Selrae's wardens step off the wall, spears level."])
+      if pbTrainerBattle(:FT_ROOTWARDEN, "Selrae's Warden", nil, false, 0, true)
+        say(["KELYN: (between you, both hands up) ENOUGH. This is the Council Hall. Selrae, call them off.",
+             "SELRAE: (calling them off) Then they'll answer for themselves, down there."])
+      else
+        pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+        say(["The wardens put you on the floor of the Council Hall, in front of the crystals.",
+             "KELYN: (very cold) Enough. Let them up. We'll go down and see for ourselves."])
+        trial[:mud] += 1
+      end
+      set_flag(:spores_fought)
+    end
     if ok || adv > 0
       say(["KELYN: (to Selrae) Well. I'd like to see it. Wouldn't you?", "SELRAE: ...Fine. Show us."])
     else
@@ -1590,6 +1620,11 @@ module FrostThaw
          "The room turns to you, the Heralds of Dawn and Dusk, for judgment."], event_id)
     # The debate (four successes before two failures)
     ok, bad = 0, 0
+    # (R1's partial failure: "disadvantage on one Council skill challenge")
+    if flag?(:blight_scarred)
+      say(["DRUID OF THE SPRING SEAT: (unhappily) ...Though the Heralds let the blight scar a root under the Undercanopy. The Council remembers."])
+      bad = 1
+    end
     [["Sway the undecided councillors.", ["Remind them the Canopy is everyone's", "Promise them safety", "Tell them they're cowards"], 0],
      ["Read the room.", ["Notice the druids are afraid too, not just Selrae", "Notice nobody likes Selrae", "Notice nothing"], 0],
      ["Selrae says the Heralds let the Rift open.", ["Counter it: you closed the Frostfell rifts", "Admit it", "Lie"], flag?(:rifts_closed) ? 0 : [0, 1]],
@@ -1753,6 +1788,7 @@ module FrostThaw
     say(["The seventh day. The Council Hall is packed: Rootspire, the refugees, Rootwardens on the walls.",
          "Winter and Spring preside. The empty chairs of Summer and Autumn are draped in white cloth."])
     say(["The crystals hear every witness: " + all.map { |_, who, _, _| who }.join(", ") + "."]) if !all.empty?
+    say(["(Luminara kept her memory bubble. The crystals can only hear what you bring them.)"]) if flag?(:bubble_declined) && !flag?(:memory_bubble)
     neglect = [t[:neglected] - t[:helped], 0].max
     say(["(#{t[:helped]} day#{t[:helped] == 1 ? '' : 's'} on the wall and in the camp; the city remembers it.)"]) if t[:helped] > 0
     say(["(Days you didn't help: the city remembers those too.)"]) if neglect > 0
@@ -1813,19 +1849,36 @@ module FrostThaw
   def scene_vote
     say(["Out in the Blooming Fields, the candidates stand on a stage of braided roots.",
          "Flowers and snow grow side by side at their feet."])
+    # Endorse, stand, or stay out of it (Tab 8 Q6.3); asked now if Kelyn never asked in the week.
+    stance = election_stance(true)
+    stance = :endorse if stance == :stand && !nominated?(:heralds)
     keys = CANDIDATES.keys.select { |k| nominated?(k) }
     keys.each { |k| say(["#{CANDIDATES[k][0]}: #{CANDIDATES[k][1]}"]) }
     picks = []
-    2.times do |i|
+    case stance
+    when :neutral
+      say(["You stand at the back of the crowd and speak for nobody.",
+           "People keep turning round to look at you, to see which way you'll lean. You don't."])
+    when :stand
+      picks << :heralds
+      say(["You climb onto the stage of braided roots with the other candidates.",
+           "Somebody in the crowd cheers. Somebody else throws a frost-fruit. It's a start."])
       left = keys - picks
-      c = pbMessage(_INTL(i == 0 ? "Who do you endorse first?" : "And second?"), left.map { |k| _INTL(CANDIDATES[k][0]) }, 0)
+      c = pbMessage(_INTL("And who do you speak for, for the other chair?"), left.map { |k| _INTL(CANDIDATES[k][0]) }, 0)
       picks << left[[c, 0].max]
+    else
+      2.times do |i|
+        left = keys - picks
+        c = pbMessage(_INTL(i == 0 ? "Who do you endorse first?" : "And second?"), left.map { |k| _INTL(CANDIDATES[k][0]) }, 0)
+        picks << left[[c, 0].max]
+      end
     end
     votes = {}
     keys.each { |k| votes[k] = CANDIDATE_BASE[k] + (trial[:support][k] || 0) }
     standing = [trial[:opinion] - trial[:mud], 0].max
-    votes[picks[0]] += 2 + (standing >= 3 ? 2 : standing >= 1 ? 1 : 0)
-    votes[picks[1]] += 1 + (standing >= 3 ? 1 : 0)
+    votes[picks[0]] += 2 + (standing >= 3 ? 2 : standing >= 1 ? 1 : 0) if picks[0]
+    votes[picks[1]] += 1 + (standing >= 3 ? 1 : 0) if picks[1]
+    favour_votes(votes, picks) if respond_to?(:favour_votes)
     winners = keys.sort_by { |k| [-votes[k], picks.index(k) || 9, keys.index(k)] }.first(2)
     winners.each { |k| set_flag(:"council_#{k}") }
     say(["The city votes. #{winners.map { |k| CANDIDATES[k][0] }.join(' and ')} take the empty chairs.",
@@ -1835,7 +1888,25 @@ module FrostThaw
          cl(:alberica, "To full chairs! Somebody find me a drink."),
          cl(:meat_meat, "Somebody find Meat Meat a coffee."),
          cl(:wyn, "...I made both. They're by the door. Sorry.")].compact)
-    if !(winners & %i[mira rheven anduin]).any?
+    case stance
+    when :stand
+      if winners.include?(:heralds)
+        say(["KELYN: (at the end, very quietly) ...And Summer's chair, to the Heralds. Gods help us all.",
+             cl(:reptin, "(faintly) I'm a councillor. Anduin is going to laugh until he's sick.")].compact)
+      else
+        say(["The Heralds' name comes third. The crowd claps anyway, for the nerve of it.",
+             cl(:alberica, "Third! Darlings, third is a podium.")].compact)
+      end
+    when :neutral
+      say(["KELYN: (to the new councillors, not to you) The Heralds spoke for nobody. We'll have to work out what that means."])
+      set_flag(:council_uncertain)
+    else
+      if picks[0] && winners.include?(picks[0])
+        state[:council_ally] = picks[0]
+        say(["#{CANDIDATES[picks[0]][0].split.first.upcase}: (finding you in the crowd) You spoke first for me. I won't forget it."])
+      end
+    end
+    if !(winners & %i[mira rheven anduin heralds]).any?
       say(["LUMIN: (later) Nobody's got a ship, or a griffon, or a whale-bell.",
            "LUMIN: Then I'll ring Angajuk's bell myself. It'll be a longer voyage."])
       set_flag(:long_voyage)
@@ -1862,7 +1933,7 @@ module FrostThaw
     $game_switches[SW_WALL_WORKS] = week && flag?(:criers_heard)
     $game_switches[SW_REFUGEE_CAMP] = flag?(:trials_open)
     $game_switches[SW_DEBATES] = week && flag?(:criers_heard)
-    $game_switches[SW_PETITIONS] = week && (flag?(:petition_phildendrin) || flag?(:petition_anduin))
+    $game_switches[SW_PETITIONS] = week && (flag?(:petition_phildendrin) || flag?(:petition_anduin) || flag?(:petition_heralds))
     $game_switches[SW_FOUR_SEASONS] = week && !flag?(:badge_selrae)
     $game_switches[SW_EIRWEN_SHRINE] = week
     $game_switches[SW_MIRA_MIRROR] = flag?(:mira_mirror_testimony) && !flag?(:mira_mirror_taken)

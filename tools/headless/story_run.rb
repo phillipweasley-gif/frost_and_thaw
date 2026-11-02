@@ -497,7 +497,7 @@ module Story
       beat("  A2 the Echo Hall", :inner_rooms_entered)
       talk(/Sap puddle/); clear_trainers
       talk(/Mural/); talk(/Open journal/); talk(/Loose floorboard/)
-      beat("  A5 Avarice's quarters: the journal, and the Ledger of Corruption", :ledger_found)
+      beat("  A5 Avarice's quarters: the journal, and the Ledger's empty hollow (it's up the Council tower)", :ledger_trail)
       until_flag(:effigy_broken, 3) { travel(2146); talk(/Mirror-root effigy/) }
       beat("  A5 the mirror-root effigy", :effigy_broken)
       talk(/Sooty duergar/); talk(/Root-maps/)
@@ -726,6 +726,17 @@ module Story
       mirror_maze if $game_map.map_id == 2161
       beat("side: the Mirror Maze (Alerion's reflection; the wraiths' testimony)", :reflection_claimed)
       beat("  the Echo sigil (from the maze, or the Echo Gate's wraiths)", nil) if FrostThaw.flag?(:sigil_echo) || FrostThaw.flag?(:echo_wraiths_down)
+      # Q6: the break-in at Summer's quarters, atop the Council tower (the Ledger of Corruption)
+      travel(2054)
+      if (st = find_event(/Tower stair/))
+        HL.walk_to(st.x, st.y + 1); HL.step(8); HL.settle(3000); HL.frames(20); HL.settle(3000)
+        if $game_map.map_id == 2173
+          HL.walk_to(9, 9); HL.step(8); HL.settle(2000)
+          talk(/Bone-and-ice construct/); talk(/Loose floorboard/)
+          travel(2054)
+        end
+      end
+      beat("side Q6: Summer's quarters atop the Council tower (the Ledger of Corruption)", :ledger_found)
       # W1: the Smuggler's Run
       travel(2055); talk(/Dockworker/); travel(2198); talk(/Spore-choked crack/); HL.settle(3000)
       if $game_map.map_id == 2160

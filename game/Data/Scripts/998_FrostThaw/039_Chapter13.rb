@@ -297,12 +297,30 @@ module FrostThaw
                              "He breathes out for what looks like the first time since the Shrine."])
   end
 
+  def sephek_motive_lines
+    return if flag?(:sephek_motives_crown)
+    set_flag(:sephek_motives_crown)
+    if with_or_is?(:meat_meat)
+      say(["SEPHEK: (looking past you, at Meat Meat) Prototype Verdant. The engine's child. Your blood doesn't freeze.",
+           "SEPHEK: One drop of it in her new heart, and winter would never thaw again. I'd have asked nicely. Once."])
+    end
+    if with_or_is?(:alerion)
+      say(["SEPHEK: (to Alerion) And you. She speaks to two of us. Frost doesn't share.",
+           as(:alerion, "Then stop listening.")])
+    end
+    if flag?(:took_cold_blessing)
+      say(["SEPHEK: You took my blessing on the road, in the dream. You know what the cold is for. It keeps things."])
+    end
+  end
+
   def sephek_crown(event_id = nil)
     return if flag?(:sephek_turned) || flag?(:sephek_beaten)
     return say(["Iskra stands between you and the crystal."], event_id) if !flag?(:iskra_passed)
     say(["SEPHEK: (standing between you and the crystal) I held the knife.",
          "SEPHEK: I've held a lot of knives for her. Four hundred years in the ice.",
          "SEPHEK: The only thing I remembered was a woman laughing on an altar."], event_id)
+    # rootspire.md Tab 1: he wants Meat Meat's altered blood, and Alerion is the rival he must break.
+    sephek_motive_lines
     opts = []
     opts << [:rose, _INTL("Show him the Undying Rose")] if flag?(:rose_cutting)
     opts << [:shade, _INTL("Let Alerion speak")]
@@ -373,10 +391,11 @@ module FrostThaw
   # SC 13.08 - The Frostmaiden; 13.09 - The Rewritten Auril
   #-----------------------------------------------------------------------------
   # One stage of the final fight: weaker if its test was broken; the twins breathe once each.
-  def auril_stage(species, level, name, weakened)
+  def auril_stage(species, level, name, weakened, courtesy = false)
     mon = named_mon(species, level, name)
     frac = 1.0
     frac -= 0.35 if weakened
+    frac -= 0.10 if courtesy          # (the Silent Chapel: "I'll remember you were polite")
     frac -= 0.15                      # Twin Breath: Razzilith and Frostina, one turn each
     mon.hp = [(mon.totalhp * frac).floor, 1].max
     boss_battle(mon)
@@ -404,7 +423,13 @@ module FrostThaw
               [AURIL_WOMB, 68, "Winter's Womb", :test_isolation_broken]]
     while stage < stages.size
       sp, lv, nm, f = stages[stage]
-      return if !auril_stage(sp, lv, nm, flag?(f))
+      polite = stage == 0 && flag?(:chapel_auril)
+      if polite && !flag?(:auril_courtesy_said)
+        set_flag(:auril_courtesy_said)
+        say(["AURIL: (to you, almost fond) You answered me politely once. In a little shrine, under the Forge.",
+             "AURIL: I said I'd remember. I'll give you the first breath."])
+      end
+      return if !auril_stage(sp, lv, nm, flag?(f), polite)
       stage += 1
       state[:auril_stage] = stage
       say([["The crone's furs fall away. Under them is a woman made of ice, so thin the light goes through.",
@@ -600,6 +625,14 @@ module FrostThaw
       lines << ["Razzilith lands in the market with Meat Meat and Phildendrin on his back.",
                 "Phildendrin is screaming happily#{flag?(:council_phildendrin) ? ", in the Autumn councillor's sash" : ''}.",
                 herald?(:meat_meat) ? "(Hold on with your KNEES, Mama!)" : "MEAT MEAT: Mama! Hold on with your KNEES!"]
+    end
+    if flag?(:council_heralds)
+      lines << "In the Council Hall, Summer's chair has a Herald's cloak over the back of it, and a coffee ring on the arm."
+    end
+    if flag?(:reptin_warden_vow)
+      lines << [herald?(:reptin) ? "Every winter you go back to the Cackling Chasm, as you swore. The wolves meet you at the bridge." :
+                                   "Every winter Reptin goes back to the Cackling Chasm, as he swore. The wolves meet him at the bridge.",
+                "#{flag?(:chasm_watch_kept) ? 'The grey wolf is greyer now. ' : ''}Nothing feeds on the Heart while he's there."]
     end
     if flag?(:anduin_reconciled)
       lines << ["Reptin and Anduin kneel together in the Heartroot, planting something.",
