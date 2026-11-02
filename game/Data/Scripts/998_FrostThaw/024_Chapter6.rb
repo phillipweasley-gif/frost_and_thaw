@@ -266,7 +266,12 @@ module FrostThaw
          "A tangle of people, one goblin and a great deal of snow tumbles out onto the market stones."])
     rootspire_sky
     Stage.panel("S-09", fade: 20)
-    say(["Gold light. Warm air. A tree so tall its crown is lost in the aurora."])
+    say(["Gold light. Warm air. A tree so tall its crown is lost in the aurora.",
+         "The wind that once screamed through Icewind Dale hums here: a deep, living note that vibrates in your ribs.",
+         "Bark veined with light. Branches tangled with frost-glass leaves that catch the aurora and scatter it in a thousand colours.",
+         "Thawed earth and pine resin. Water dripping, birds crying, distant bells.",
+         "For the first time in centuries, the air tastes of spring.",
+         "Welcome to Rootspire, the City of the Verdant Dawn."])
     Stage.panel_off(fade: 20)
     if journey?
       say(["TAMSIN: (screaming, then grabbing you) WHERE DID YOU GO. You were gone an HOUR.",
@@ -350,6 +355,7 @@ module FrostThaw
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     set_rest_at(HEARTH_REST)
     hearth_coffee
+    hearth_night(event_id) if respond_to?(:hearth_night)   # a night in Rootspire (048)
   end
 
   def festival_ready?
@@ -408,14 +414,17 @@ module FrostThaw
     return if flag?(:festival_night)
     set_flag(:festival_night)
     add_counter(:story_beats)
+    festival_opening if respond_to?(:festival_opening)
     say(["The seventh night. Lanterns on every root, pine-mead in every hand, the whole city in the market.",
          "Beside the Heralds stands the Summer Throne, carried out for the night: empty, and scorched black.",
          "KELYN: (raising a glass) Heralds of Dawn and Dusk. Tonight, Rootspire remembers.",
          cl(:alberica, "Finally, a toast with my name in it. Somebody top me up."),
          cl(:reptin, "(under his breath, smiling at the crowd) Wave. They carved us. We owe them the faces.")].compact)
+    festival_toast if respond_to?(:festival_toast)
     pbSEPlay("Earth3") rescue nil
     $game_screen.start_shake(4, 6, 20) rescue nil
-    say(["The ground shudders. Once. The same shudder as the lantern."])
+    say(["The ground shudders. Once. The same shudder as the lantern.", "The music falters. Everyone goes silent."])
+    festival_shudder_extras if respond_to?(:festival_shudder_extras)
     Stage.overlay("O-01", scroll_x: 0.25, opacity: 210, pulse: :hard, fade: 8)
     say(["Overhead, the aurora flickers in a hard, even rhythm. Like a pulse. Like something built.",
          cl(:glimmer, "(a hand on his chest) Something under us is burning."),
@@ -427,7 +436,9 @@ module FrostThaw
       say(["Rheven's direwolf has pushed her nose into #{herald?(:reptin) ? 'your' : "Reptin's"} hand and won't leave.",
            "RHEVEN: She's tundra stock. Old line. She knows you."])
     end
-    say(["EIRWEN: The library's oldest maps show the hag's lair. Under Dougan's Hole.", "EIRWEN: Which is under us."])
+    festival_voices if respond_to?(:festival_voices)
+    say(["EIRWEN: The library's oldest maps show the hag's lair. Under Dougan's Hole.", "EIRWEN: Which is under us.",
+         "Then it stops. The crowd starts cheering again, a little too loudly. The Heralds know better."])
     if herald?(:wyn)
       say(["(The spores went silent. You know what that means.)",
            "(You've heard that silence once before: the night you left your post.)"])
@@ -548,8 +559,17 @@ module FrostThaw
     set_flag(:wardens_emeritus)      # the Root-Tier stair opens either way (switch 3935)
     ($game_switches[SW_WARDENS] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    say(["SELRAE: There's a rite at the Still Sky Shrine tonight that I'd like you to watch. Closely.",
+    say(["Over the Council's seats, carved in the living wood: a ring of four leaves, each a different season, round a single drop of sap.",
+         "Under it the motto: BALANCE IS SURVIVAL.",
+         "KELYN: Growth, Memory, Balance. Reptin's legacy, Alberica's line, Glimmer's faith. We were founded on you three.",
+         "KELYN: (quieter) And a season too long. Thirty years of summer. I want to know why. Captain Kethan of the Rootwardens says it was no accident.",
+         "KELYN: He keeps the Rootwarden Hall, in the Verdant Halls off the Bazaar. Hear him out.",
+         "SELRAE: If the Halo moves tonight, Kelyn, I'll want the Canopy under martial law. My wardens. To protect the Rift.",
+         "KELYN: No.",
+         "SELRAE: (to you, mildly) She always says no. Then something burns, and she says yes.",
+         "SELRAE: There's a rite at the Still Sky Shrine tonight that I'd like you to watch. Closely.",
          "KELYN: The Wardens' stair down to the Root-Tier is in the woodcarver's workshop, by the old gate."])
+    selrae_court if respond_to?(:selrae_court)
     state[:goal] = "The Still Sky Shrine, in the Root-Tier. (The woodcarver's workshop has the stair down.)"
   end
 
@@ -596,6 +616,7 @@ module FrostThaw
            "ELINE: Tonight we cool the tree. A little. Just enough to start."].compact, event_id)
       speak(:reptin, "(pleasantly) Matron, I'm going to ask you nicely to stop. That was the nice part.",
             "Stop. Please.") if with_or_is?(:reptin)
+      eline_conversion if respond_to?(:eline_conversion)
       set_flag(:eline_spoke)
     end
     return if !trainer(:eline, event_id)

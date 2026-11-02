@@ -13,3 +13,4 @@ build/*
 !build/*.json
 __pycache__/
 .DS_Store
+/.w5/

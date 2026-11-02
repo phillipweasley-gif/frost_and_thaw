@@ -18,6 +18,37 @@ SW_RITE_STOPPED = 3936  # Matron Eline's Rite of Stillness is broken
 
 def save(b, key) = save_map(b, ID[key], MUSIC[key])
 
+# --- the faithful build-out (W5): Rootspire as a living city -----------------
+LIFE = { halls: 2180, stables: 2196, mirror_dust: 2197, smugglers_run: 2198 }
+SW_RUN_OPEN = 4162; SW_ASH_EXPOSED = 4163; SW_LANTERN = 4166; SW_MIRA_FREED = 3974
+SW_KELYN_ORB = 4169; SW_SCORCH = 4174
+# A faction's watcher: faint until you've met its master (or carry Jast's
+# lantern, which shows it plainly); gone once caught or driven off.
+def watcher(b, x, y, key, sprite)
+  b.event(x, y, "Watcher #{key}", [
+    { graphic: sprite, direction: 2, opacity: 60, step_anime: true, script: "FT.watcher(:#{key}, @event_id)" },
+    { switch: SW_LANTERN, graphic: sprite, direction: 2, opacity: 230, step_anime: true, script: "FT.watcher(:#{key}, @event_id)" },
+    { self_switch: "A", graphic: "", through: true }
+  ])
+end
+
+# Someone whose talk is a function, who leaves once a switch is on.
+def person_until(b, x, y, graphic, fn, switch, dir: 2, name: nil)
+  b.event(x, y, name || fn.to_s, [{ graphic: graphic, direction: dir, script: "FT.#{fn}(@event_id)" },
+                                  { switch: switch, graphic: "", through: true }])
+end
+
+# A doorway in a cave wall (no house door): steps you through.
+def cave_doorway(b, x, y, to, name, switch: nil, closed: nil)
+  se = MapKit.deep_copy(b.instance_variable_get(:@door_template).pages[0].list[0].parameters[0])
+  cmds = [b.send(:command, 250, [se]), b.send(:command, 223, [Tone.new(-255, -255, -255, 0), 6]), b.send(:command, 106, [8]),
+          b.send(:command, 201, [0, *to, 1]), b.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])]
+  pages = []
+  pages << { trigger: 1, tile_id: 582, script: "#{closed}\npbMoveRoute($game_player, [PBMoveRoute::Backward])" } if switch
+  pages << { switch: switch, trigger: 1, tile_id: 582, commands: cmds }
+  b.event(x, y, name, pages)
+end
+
 # A door that only opens once a story switch is on (before that, it says why and steps you back).
 def gated_door(b, x, y, to_map, to_x, to_y, dir, switch, key, name: "Door")
   se = MapKit.deep_copy(b.instance_variable_get(:@door_template).pages[0].list[0].parameters[0])
@@ -84,8 +115,25 @@ rs.npc(16, 23, "BWParasolLady", :rs_festival_goer, dir: 2)
 rs.npc(44, 27, "BW (30)", :rs_lantern_maker, dir: 6)   # (standing still: the east gap under the ledge is one tile wide)
 rs.npc(13, 25, "BW (29)", :rs_mural_kid, dir: 8)
 rs.trainer(28, 25, nil, :warden_ash, :FT_ROOTWARDEN, dir: 8, sight: 3)
+ash = rs.map.events.values.max_by(&:id)                      # Ash, after his battle: the Summer infiltrator (048)
+ash.pages[1] = rs.send(:build_page, ash.pages[0], { graphic: ash.pages[0].graphic.character_name, direction: 8,
+                                                    self_switch: "A", script: "FT.warden_ash(@event_id)" })
+ash.pages << rs.send(:build_page, ash.pages[0], { switch: SW_ASH_EXPOSED, graphic: "", through: true })
 rs.trainer(42, 20, nil, :warden_lis, :FT_ROOTWARDEN, dir: 4, sight: 3)
 rs.trainer(18, 31, nil, :warden_tobin, :FT_ROOTWARDEN, dir: 8, sight: 2)
+# W5: the root-stair up to the Verdant Halls (the civic ring), at the top of the north lane
+rs.door(17, 8, LIFE[:halls], 62, 40, 4, name: "Root-stair to the Verdant Halls")
+# Mira of the North Wind's mirror stall in the Bazaar, until she's herself again; the boy with the mirror
+person_until(rs, 36, 20, "BW (33)", :mira_stall, SW_MIRA_FREED, dir: 2, name: "Mira's mirror stall")
+rs.event(37, 21, "Frost-glass mirrors", [{ graphic: "", script: "FT.mira_stall(@event_id)" }, { switch: SW_MIRA_FREED, graphic: "", through: true }])
+rs.event(38, 20, "Boy with a mirror", [{ graphic: "BW (17)", direction: 2, script: "FT.rs_mirror_child(@event_id)" }])
+rs.event(10, 23, "Krolf the Mossback", [{ graphic: "BW (115)", direction: 4, script: "FT.krolf(@event_id)" }])
+rs.event(47, 18, "Mistress Felka", [{ graphic: "BWOldWoman", direction: 4, script: "FT.felka(@event_id)" }])
+rs.event(46, 29, "Guild assessor", [{ graphic: "BW (84)", direction: 4, script: "FT.amber_assessor(@event_id)" }])
+rs.event(46, 17, "The great root", [{ graphic: "", script: "FT.tree_communion_or_talk(@event_id)" }])
+rs.event(9, 21, "Scorch marks", [{ graphic: "", through: true }, { switch: SW_SCORCH, graphic: "", script: "FT.scorch_marks(@event_id)" }])
+watcher(rs, 15, 14, :stalker, "Followers/SUDOWOODO")
+watcher(rs, 43, 18, :wraithling, "Followers/HAUNTER_fly")
 save(rs, :rootspire)
 
 # 2051: Pokémon Center (the nurse, machine and PC kept)
@@ -99,6 +147,9 @@ sw, ex = Builder.from_existing(81)
 exits_to(sw, ex, ID[:rootspire], 34, 17)
 sw.event(6, 6, "Tarin Goldlash", [{ graphic: "BW (85)", direction: 2, script: "FT.tarin(@event_id)" }])
 sw.npc(10, 9, "BW (62)", :sap_customer, dir: 6)
+sw.event(3, 6, "Gorran Ashal-Forge", [{ graphic: "BW (113)", direction: 2, script: "FT.gorran(@event_id)" }])
+sw.event(12, 6, "Dathra Spineshade", [{ graphic: "BW (104)", direction: 2, script: "FT.dathra(@event_id)" }])
+watcher(sw, 3, 9, :ember_rat, "Followers/RATICATE")
 save(sw, :sap_shop)
 
 # 2053: the Rooted Hearth, a tavern grown into a hollow knot of the tree
@@ -109,6 +160,7 @@ rh.event(13, 5, "Rumours", [{ graphic: "BW (85)", direction: 4, script: "FT.hear
 rh.npc(10, 8, "BW (54)", :hearth_drinker, dir: 2)
 rh.npc(7, 10, "BW (62)", :hearth_bard, dir: 8)
 gated_door(rh, 5, 3, 2059, 11, 24, 8, 3934, :hearth_stair_shut, name: "Cellar stair")
+watcher(rh, 12, 9, :lurker, "Followers/GENGAR")
 save(rh, :hearth)
 
 # 2054: the Council Hall of Seasons (grown from Sprout Tower's hall: a round
@@ -119,8 +171,9 @@ exits_to(ch, ex, ID[:rootspire], 20, 29)
 ch.event(14, 13, "Kelyn of Spring", [
   { graphic: "BW (30)", direction: 2, script: "FT.kelyn(@event_id)" }
 ])
-ch.npc(8, 13, "BW (55)", :darrus_fell, dir: 2, name: "Darrus Fell")
-ch.npc(17, 12, "BWOldWoman", :selrae_vorn, dir: 4, name: "Selrae Vorn")
+ch.event(8, 13, "Darrus Fell", [{ graphic: "BW (55)", direction: 2, script: "FT.darrus(@event_id)" }])
+ch.event(17, 12, "Selrae Vorn", [{ graphic: "BWOldWoman", direction: 4, script: "FT.selrae_hall(@event_id)" }])
+ch.event(14, 11, "Kelyn's alcove", [{ graphic: "", script: "FT.talk(:kelyn_mural, @event_id)" }])
 # the Heralds' statues along the side aisles (each with their partner Pokémon carved at their feet)
 { [5, 6] => [:statue_alberica, "Followers/CHINGLING"], [5, 9] => [:statue_reptin, "Followers/BULBASAUR"],
   [18, 6] => [:statue_alerion, "Followers/ZORUA"], [18, 9] => [:statue_meat_meat, "Followers/NOIBAT_fly"] }.each do |(x, y), (key, g)|
@@ -167,7 +220,18 @@ rt.event(30, 10, "Driftwood chest", [
   { graphic: "BWPokeball", direction: 2, script: "FT.driftwood_chest(@event_id)" },
   { self_switch: "A", graphic: "", through: true }
 ])
-rt.npc(25, 5, "BW (54)", :ivran, dir: 2, name: "Captain Ivran Solmar")
+rt.event(25, 5, "Captain Ivran Solmar", [{ graphic: "BW (54)", direction: 2, script: "FT.ivran(@event_id)" }])
+cave_doorway(rt, 11, 25, [LIFE[:stables], 6, 13, 8], "Verdant Stables")
+cave_doorway(rt, 19, 19, [LIFE[:mirror_dust], 8, 12, 8], "Mirror-Dust Curiosity Shop")
+cave_doorway(rt, 29, 13, [LIFE[:smugglers_run], 5, 3, 2], "Dock hatch", switch: SW_RUN_OPEN, closed: "FT.talk(:dock_hatch_barred, @event_id)")
+rt.event(33, 9, "Corsair sailor", [{ graphic: "BW_Sailor", direction: 2, script: "FT.corsair_sailor(@event_id)" }])
+rt.event(34, 7, "Captain's strongbox", [{ graphic: "", tile_id: 1056, script: "FT.requiem_vault(@event_id)" }])
+rt.event(26, 10, "Jorik Pinebellow", [{ graphic: "BW (75)", direction: 4, script: "FT.jorik(@event_id)" }])
+rt.event(27, 12, "Split crate", [{ graphic: "", tile_id: 1056, script: "FT.dock_ore(@event_id)" }])
+rt.event(31, 9, "Shivven Pearlbite", [{ graphic: "BW (38)", direction: 2, script: "FT.shivven(@event_id)" }])
+rt.event(23, 6, "Viessa Arialune", [{ graphic: "BW (107)", direction: 2, script: "FT.viessa(@event_id)" }])
+watcher(rt, 20, 23, :homunculus, "Followers/PORYGON")
+watcher(rt, 15, 6, :raven, "Followers/MURKROW")
 save(rt, :root_tier)
 
 # 2056: the Still Sky Shrine (grown from the Sealed Chamber: blue stone, a long
@@ -220,6 +284,8 @@ sh.event(13, 21, "Sephek in ice", [
   { graphic: "FT_sephek_frozen", direction: 2, step_anime: false, walk_anime: false, script: "FT.talk(:sephek_altar, @event_id)" }
 ])
 [13, 14, 15].each { |x| sh.event(x, 24, "Frost Saint runes", [{ graphic: "", script: "FT.shrine_cleanse(@event_id)" }]) }
+sh.event(10, 12, "Eira Voss", [{ graphic: "", through: true },
+                               { switch: SW_RITE_STOPPED, graphic: "BW (40)", direction: 6, script: "FT.eira_black_market(@event_id)" }])
 save(sh, :shrine)
 
 merge_infos(ID.map { |k, v| [v, NAMES[k]] })
