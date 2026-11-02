@@ -711,6 +711,7 @@ module FrostThaw
     say([herald?(:reptin) ? "GHOST: (to you) And you. Child of the wolf." : "GHOST: (to Reptin) And you. Child of the wolf.",
          "GHOST: Wolves were the wardens of this place. The Children of the Wolf, bound by oath, generations ago.",
          "GHOST: Their gift was long life and great strength to guard the Heart. Its price was the moon.",
+         "GHOST: That bite didn't find you by chance. It found the warden already in your blood.",
          "GHOST: The curse in your blood is no curse at all. It's a sacred charge.",
          "GHOST: Only a wolf bound by honour can stand watch over the Heart without falling to its temptation."])
     # the hag's scheme, and what she isn't telling you
@@ -775,7 +776,7 @@ module FrostThaw
   # What you can ask the last guardian before she fades.
   def ghost_questions
     qs = [[:winter, _INTL("\"Would it end the winter?\"")]]
-    qs << [:cure, _INTL("\"She promised to cure Reptin.\"")] if flag?(:hag_bargain_offered)
+    qs << [:cure, herald?(:reptin) ? _INTL("\"She promised to cure me.\"") : _INTL("\"She promised to cure Reptin.\"")] if flag?(:hag_bargain_offered)
     qs << [:glimmer, _INTL("\"Who was Glimmer?\"")] if flag?(:read_glimmer_journal)
     loop do
       opts = qs.map(&:last) + [_INTL("\"Tell us how to stop her.\"")]
@@ -789,7 +790,8 @@ module FrostThaw
              "GHOST: or the Heart darkens and demands more. And more. It never stops at one."])
       when :cure
         say(["GHOST: (her face hardening) Of course she did. That's the hook in it.",
-             "GHOST: Cut the wolf out of him and you cut the last warden from the Heart. Then the door's wide open.",
+             herald?(:reptin) ? "GHOST: Cut the wolf out of you and you cut the last warden from the Heart. Then the door's wide open." :
+                                "GHOST: Cut the wolf out of him and you cut the last warden from the Heart. Then the door's wide open.",
              "GHOST: Her cure is a ploy, child. It always was."])
       when :glimmer
         say(["GHOST: (a long look at you, then at the journal) Someone who wanted very badly to save someone.",
@@ -840,7 +842,7 @@ module FrostThaw
     end
     if !flag?(:thredra_beaten)
       say(["THREDRA: Useless, the both of them. Let's dance upon the glass, and see who shatters first."])
-      won = with_battle_script(:thredra) { pbTrainerBattle(:FT_HAG, "Thredra", nil, false, 0) }
+      won = thredra_battle
       if !won
         state[:chasm_nightmare] = true
         chasm_loss_nightmare

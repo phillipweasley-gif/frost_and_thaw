@@ -76,6 +76,8 @@ module FrostThaw
                     "Business is business. And business is closed.", [:SUPERPOTION]],
     torg_hand:     [:FT_TORGHAND,      "Brannig", [[:HOUNDOUR, 17], [:MIGHTYENA, 18]],
                     "She pays us to drive dogs, not to bleed."],
+    ethel:         [:FT_HAG,           "Ethel", [[:B124H71, 31], [:B44H94, 32]],
+                    "Sister... you promised me a share..."],
     thredra_crown: [:FT_WINTERCROWN,   "Thredra", [[:B429H124, 36], [:B272H310, 36], [:B255H200, 37], [:B124H429, 38]],
                     "Winter... kept... its... bargain..."]
   )
@@ -83,7 +85,8 @@ module FrostThaw
   TRAINER_INTROS.merge!(
     torrga:        "TORRGA: You've had your hands in my sacks. That's theft, that is. Brannig! Business!",
     torg_hand:     "BRANNIG: Boss says you're done shopping.",
-    thredra_crown: "THREDRA: Winter's mine now, dearies. All of it. Come and have a taste."
+    thredra_crown: "THREDRA: Winter's mine now, dearies. All of it. Come and have a taste.",
+    ethel:         "ETHEL: A share of the cutting, sister promised. I'll start with you."
   )
 
   #-----------------------------------------------------------------------------
@@ -152,6 +155,7 @@ module FrostThaw
     1 => ["Somewhere in the dark ahead, very faintly, someone whispers your name.",
           "When you stop to listen, there's only the wind, and the wind laughing."],
     2 => ["Your torchlight shivers in the draught. The shadows on the walls reach like hands, and let go.",
+          "The floor here is glazed with ice. Somebody's feet go out from under them, and they land hard, and laugh too loudly getting up.",
           "Out of the corner of your eye, something watches. When you turn, it's your own reflection in the ice."],
     3 => ["A whiff of smoke and herbs drifts down from somewhere deep. Somebody is cooking.",
           "Under it, the old, sweet smell of rot."],
@@ -462,7 +466,11 @@ module FrostThaw
     talisman = flag?(:locket_talisman)
     if round == 1
       battle.pbDisplay(_INTL("Thredra seats herself on her black staff and rises into the air, cackling!"))
-      live_battlers(battle, true).each { |b| b.pbRaiseStatStage(:EVASION, 1, b) if b.pbCanRaiseStatStage?(:EVASION, b) }
+      if talisman
+        battle.pbDisplay(_INTL("The Order's locket throws a silver light up after her. She can't hide up there."))
+      else
+        live_battlers(battle, true).each { |b| hag_evade(b) }
+      end
       return
     end
     case (round - 2) % 3
@@ -475,6 +483,12 @@ module FrostThaw
       end
       battle.pbDisplay(_INTL("Somewhere behind the pillars, the chained cub cries louder.")) if script[:kind] == :thredra
     when 1
+      battle.pbDisplay(_INTL("Thredra flickers, and there are three of her, cackling in three voices!"))
+      if talisman
+        battle.pbDisplay(_INTL("The locket shines true. Two of the crones are only frost and light."))
+      else
+        live_battlers(battle, true).each { |b| hag_evade(b) }
+      end
       target = live_battlers(battle, false).sample
       if target
         battle.pbDisplay(_INTL("{1} sees something dead reaching for it out of the Heart's red light!", target.pbThis))
@@ -492,6 +506,27 @@ module FrostThaw
       script[:offered] = true
       battle.pbDisplay(_INTL("THREDRA: Still time to reconsider, dearies! Lay down your arms and I'll spare you. Let Granny finish!"))
     end
+  end
+
+  # Her flight and her illusions make her harder to hit: one stage, never more.
+  def hag_evade(b)
+    return if (b.stages[:EVASION] rescue 0).to_i >= 1
+    b.pbRaiseStatStage(:EVASION, 1, b) if b.pbCanRaiseStatStage?(:EVASION, b)
+  end
+
+  # On Hard, the module's coven: a second hag waiting in the ice at the cavern's edge.
+  def thredra_battle
+    if ($Trainer.selected_difficulty rescue 1).to_i >= 2
+      say(["A second cold laugh answers hers, from the edge of the cavern.",
+           "What you took for an ice statue cracks open, and a hag in rotting green steps out of it, dripping.",
+           "THREDRA: Sister! Just in time for the cutting.",
+           "ETHEL: You promised me a share, Thredra. I've come to collect it."])
+      set_flag(:coven_sister)
+      return with_battle_script(:thredra) do
+        pbDoubleTrainerBattle(:FT_HAG, "Thredra", 0, nil, :FT_HAG, "Ethel", 0, nil)
+      end
+    end
+    with_battle_script(:thredra) { pbTrainerBattle(:FT_HAG, "Thredra", nil, false, 0) }
   end
 
   def with_battle_script(kind)
@@ -770,9 +805,11 @@ module FrostThaw
     say(["THREDRA: (her ember eyes sliding to #{rep ? 'you' : 'Reptin'}) But that's business. Let's talk about something nicer.",
          "THREDRA: This winter. Auril's Everlasting Rime. Two years of night, and the Speakers drawing lots for children.",
          "THREDRA: Granny knows how to break it. Granny knows a place where life and death can be traded, and the scales come out even.",
-         "THREDRA: And your poor cursed friend. The moon's been so cruel to him, hasn't it? All that rage and pain inside him.",
+         rep ? "THREDRA: And you, poor cursed thing. The moon's been so cruel to you, hasn't it? All that rage and pain inside you." :
+               "THREDRA: And your poor cursed friend. The moon's been so cruel to him, hasn't it? All that rage and pain inside him.",
          rep ? "(She's looking right at you. The bite on your hand throbs.)" : "Reptin's hand closes over the bite on his hand.",
-         "THREDRA: Do a little task for Granny, dearies, and I'll end the winter. And I'll take the wolf out of him. Root and all."], event_id)
+         rep ? "THREDRA: Do a little task for Granny, dearies, and I'll end the winter. And I'll take the wolf out of you. Root and all." :
+               "THREDRA: Do a little task for Granny, dearies, and I'll end the winter. And I'll take the wolf out of him. Root and all."], event_id)
     c = pbMessage(_INTL("The hag waits for your answer."), [_INTL("\"What's the task?\""), _INTL("\"No deals.\"")], 1)
     if c == 0
       set_flag(:asked_hag_task)
