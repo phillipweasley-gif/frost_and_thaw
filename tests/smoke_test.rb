@@ -393,6 +393,35 @@ check("every map is named") { (2000..2018).all? { |i| FT::MAP_NAMES[i] } && (202
 check("every built map has a name in the game") {
   Dir[File.expand_path("../build/maps/Map*.rxdata", __dir__)].all? { |f| FT::MAP_NAMES[f[/Map(\d+)/, 1].to_i] } }
 
+# the Ten-Towns side quests (W2: 045_*.rb, maps 2120-2139, switches 4040-4079)
+calls = []
+Dir[File.expand_path("../build/maps/Map*.rxdata", __dir__)].each do |f|
+  Marshal.load(File.binread(f)).events.each_value do |e|
+    e.pages.each { |pg| pg.list.select { |c| [355, 655].include?(c.code) }.each { |c| c.parameters[0].scan(/FT\.(\w+[?!]?)\(/) { |(m)| calls << [m, File.basename(f)] } } }
+  end
+end
+check("every FT method a map event calls exists (#{calls.size} calls)") {
+  bad = calls.reject { |m, _| FT.respond_to?(m) }.uniq
+  bad.empty? || (puts bad.inspect; false) }
+w2_src = Dir[File.expand_path("../game/Data/Scripts/998_FrostThaw/045_*.rb", __dir__)].map { |f| File.read(f, encoding: "UTF-8") }.join("\n")
+check("the Ten-Towns quests' switches are all 4040-4079, and distinct") {
+  sws = w2_src.scan(/^\s*(SW_[A-Z_]+)\s*=\s*(\d{4})/).map { |n, v| [n, v.to_i] }
+  sws.size > 30 && sws.all? { |_, v| (4040..4079).cover?(v) } && sws.map(&:last).uniq.size == sws.size }
+check("the Ten-Towns maps are built and named") {
+  [*2120..2137].all? { |id| FT::MAP_NAMES[id] && File.exist?(File.expand_path(format("../build/maps/Map%04d.rxdata", id), __dir__)) } }
+check("every Pokémon the Ten-Towns quests send at you exists") {
+  sp = w2_src.scan(/(?:named_mon|pbWildBattle)\(:(\w+)/).flatten.uniq
+  bad = sp.reject { |s| GameData::Species.try_get(s.to_sym) || s =~ /\AB\d+H\d+\z/ }
+  bad.empty? || (puts bad.inspect; false) }
+check("every Frost & Thaw item the Ten-Towns quests give or take is registered") {
+  it = w2_src.scan(/(?:give_key|take_key|pbReceiveItem|pbHasItem\?)\(:(FT_\w+)/).flatten.uniq
+  bad = it.reject { |i| FT::RELIC_ITEMS.key?(i.to_sym) }
+  bad.empty? || (puts bad.inspect; false) }
+check("Lonelywood is reached through Termalaine, not straight from Bryn Shander") {
+  lr = Marshal.load(File.binread(File.expand_path("../build/maps/Map2020.rxdata", __dir__)))
+  to = lr.events.values.flat_map { |e| e.pages.flat_map { |pg| pg.list.select { |c| c.code == 201 }.map { |c| c.parameters[1] } } }.uniq
+  to.include?(2120) && !to.include?(2012) }
+
 # party chat
 FT.state[:companions] = [:alberica, :reptin, :alerion, :shade, :shimmer]
 FT.state[:herald] = :reptin
