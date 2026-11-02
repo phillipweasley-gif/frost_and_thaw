@@ -750,6 +750,9 @@ missing_fns = calls.reject { |fn, _, _| FT.respond_to?(fn) }.uniq
 check("every story function a map event calls exists (#{calls.size} calls)") { missing_fns.empty? || (puts missing_fns.inspect; false) }
 check("W4's switches are ones the game reads (4120-4159)") {
   FT.constants.select { |c| c.to_s.start_with?("SW_") }.map { |c| FT.const_get(c) }.select { |v| v.is_a?(Integer) && v >= 4120 && v < 4160 }.all? { |v| FT::STORY_SWITCHES.include?(v) } }
+check("no wild table holds a fusion (the game's wild-fusion roll breaks on one)") {
+  bad = FT::ENCOUNTERS.select { |_id, t| t.any? { |k, list| k != :step_chances && list.any? { |e| e[1].to_s =~ /^B\d+H\d+$/ } } }.keys
+  bad.empty? || (puts bad.inspect; false) }
 check("W4's maps are named and in the 2160-2179 range") { [2077, 2078, 2160, 2161, 2163, 2164, 2165, 2166, *2168..2172].all? { |i| FT::MAP_NAMES[i] } }
 def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? 0 : 0; end
 def pbConfirmMessage(t); $messages << t; true; end

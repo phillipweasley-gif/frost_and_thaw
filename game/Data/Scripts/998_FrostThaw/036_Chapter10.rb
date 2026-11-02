@@ -245,6 +245,18 @@ module FrostThaw
     Array(right).include?(c)
   end
 
+  # A fight the story carries on through, win or lose (an ambush on the road,
+  # a hazard): losing doesn't send you back to a Pokémon Center mid-scene.
+  def skirmish(*mons)
+    setBattleRule("canLose") rescue nil
+    won = boss_battle(*mons)
+    if !won
+      say(["You fall back, battered, and get your breath."])
+      pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    end
+    won
+  end
+
   def chapter10_start
     set_switch(SW_TRIBUNAL, true)
     transfer(2054, 11, 17, 8)
@@ -1153,7 +1165,7 @@ module FrostThaw
       say([al ? "You reach for the necromancy." : "Alerion reaches for the necromancy.",
            "Talion's face goes hungry and grey. The flowers round his feet frost over.",
            "TALION: (in a voice like ice cracking) Stay. Stay in the house."])
-      boss_battle(named_mon(:B92H122, 56, "Mirror-Blade Specter"))
+      skirmish(named_mon(:B92H122, 56, "Mirror-Blade Specter"))
       say(["Afterwards, Talion is gone anyway. Not gone. Watching. You can feel it."])
       quiet = Stage.herald(:alerion, 1, 0, 2) if with_or_is?(:alerion)
       Stage.balloon(quiet, "B-01", frames: 60) if quiet
@@ -1354,19 +1366,19 @@ module FrostThaw
     say(["The councillors follow you down through the glowing beds.",
          "Selrae keeps her hands in her sleeves. Kelyn keeps stopping to look.",
          cl(:wyn, "(shyly, to Kelyn) ...That one's a lantern-cap. It likes being looked at.")].compact)
-    pbWildBattle(:PARASECT, 52) rescue nil
+    skirmish(named_mon(:PARASECT, 52, "Parasect"))
     if challenge("Something's wrong with the dark ice by the path.", ["Stop, and look properly", "Keep moving", "Light a lantern-puff and throw it"], [0, 2])
       say(["Two shapes in the ice with your faces, waiting. You go round the long way, and they never see you.",
            "SELRAE: (very quietly) ...Thank you."])
     else
       say(["The dark ice opens like eyes. Mirror Wraiths step out of it."])
-      boss_battle(named_mon(:B122H429, 53, "Mirror Wraith"), named_mon(:B122H429, 53, "Mirror Wraith"))
+      skirmish(named_mon(:B122H429, 53, "Mirror Wraith"), named_mon(:B122H429, 53, "Mirror Wraith"))
     end
     say(["Halfway across the gardens, the ceiling groans.",
          "It comes down in a slide of rock and roots. You get everyone through.",
          "Kelyn's cloak doesn't make it.",
          cl(:alberica, "Lose the cloak, Councillor. You look ten years younger.")].compact)
-    pbWildBattle(:BRELOOM, 53) rescue nil
+    skirmish(named_mon(:BRELOOM, 53, "Breloom"))
     say(["LUMINARA: (to the councillors) Surface. Sap-takers.",
          "LUMINARA: Our spores feed her. Hyphora. They knit her roots. They let us speak, all of us, to all of us.",
          "LUMINARA: Three hundred years we've done it. Under your feet. You never asked."])

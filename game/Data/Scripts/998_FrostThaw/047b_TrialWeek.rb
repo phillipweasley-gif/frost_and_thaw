@@ -198,7 +198,7 @@ module FrostThaw
       say(["(A step closer.)"])
     else
       say(["Something in the ice notices you. A Mirror Wraith steps out, wearing your face, cracked."], event_id)
-      if boss_battle(named_mon(:B122H429, 54, "Mirror Wraith"))
+      if skirmish(named_mon(:B122H429, 54, "Mirror Wraith"))
         st[:ok] += 1                                   # (defeating a wraith counts as a success)
       else
         st[:bad] += 1
@@ -237,7 +237,7 @@ module FrostThaw
         st[:ok] = 0; st[:done] = []
       else
         say(["The reflection flinches and slides deeper. You'll have to go after it again."])
-        boss_battle(named_mon(:B122H429, 55, "Mirror Wraith"))
+        skirmish(named_mon(:B122H429, 55, "Mirror Wraith"))
       end
     end
   end
@@ -531,7 +531,7 @@ module FrostThaw
              "It takes the others to drag them out of the loop."])
       else
         say(["The ice under your feet cracks, and grey hands come up through it: ice wights."], event_id)
-        boss_battle(named_mon(:B92H478, 56, "Ice Wight"), named_mon(:B92H478, 56, "Ice Wight"))
+        skirmish(named_mon(:B92H478, 56, "Ice Wight"), named_mon(:B92H478, 56, "Ice Wight"))
       end
     end
   end
@@ -549,7 +549,7 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Have {1} melt the ice?", fire.name))
     say(["#{fire.name} melts the ice, slowly, carefully. The warden drops into your arms, breathing.",
          "And out of the ice behind her, something else steps free: a wight of frozen time, with a face like a stopped clock."])
-    if boss_battle(named_mon(:B92H478, 58, "Time Wight"))
+    if skirmish(named_mon(:B92H478, 58, "Time Wight"))
       say(["The wight comes apart into seconds, and the seconds fall like snow.",
            "WARDEN BRISA: (coughing) ...How long? It was autumn. It was autumn a minute ago.",
            "She opens her fist. The chronal leaf, whole."])
@@ -613,7 +613,7 @@ module FrostThaw
     say(["Behind you the aurora flickers. The Wall is closing."], event_id)
     if !challenge("Get back to the Wall!", ["Run together, holding hands", "Every one for themselves", "Wait for it to steady"], 0)
       say(["You're too slow. The world stops round you, and something stands up out of the stopped snow."])
-      boss_battle(named_mon(:B92H478, 57, "Ice Wight"))
+      skirmish(named_mon(:B92H478, 57, "Ice Wight"))
     end
     say(["You come through the Wall in a gasp of warm air, onto the Glasswater's far shore."])
     transfer(2078, 26, 12, 4)

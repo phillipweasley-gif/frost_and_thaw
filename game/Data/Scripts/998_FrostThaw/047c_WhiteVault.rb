@@ -142,10 +142,16 @@ module FrostThaw
     sayc(["Sephek lifts one hand. Two of the Halo step out of the ranks and throw back their hoods:",
           "frost druids, their beards white with rime. The snow at the altar's foot boils, and ice mephits climb out of it, giggling.",
           "SEPHEK: (gently) Mine, while they stand. Let's see how long they stand."])
+    # (losing to his followers doesn't end the scene: they just keep standing, and he keeps his strength)
     fought = 0
-    fought += 1 if trainer(:frost_druid_ansel, nil)
-    fought += 1 if trainer(:frost_druid_ilse, nil)
+    %i[frost_druid_ansel frost_druid_ilse].each do |k|
+      type, name = TRAINERS[k]
+      won = pbTrainerBattle(type, name, nil, false, 0, true) ? true : false
+      fought += 1 if won
+      pbFadeOutIn { $Trainer.heal_party } rescue nil if !won
+    end
     say(["The mephits come at you in a cackling knot."])
+    setBattleRule("canLose") rescue nil
     fought += 1 if boss_battle(named_mon(:B361H215, 56, "Ice Mephit"), named_mon(:B361H215, 56, "Ice Mephit"))
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     if fought >= 3
@@ -161,6 +167,7 @@ module FrostThaw
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     av = named_mon(SEPHEK_MINOR, 61, "Sephek, Minor Avatar")
     av.hp = [(av.totalhp * (fought >= 3 ? 0.5 : 1.0)).floor, 1].max   # alone, he can't heal above half
+    setBattleRule("canLose") rescue nil       # (he can't die here: win or lose, he shatters and reforms)
     won = boss_battle(av)
     if won
       say(["Your last blow goes through him like a hand through mist.",
@@ -223,6 +230,9 @@ module FrostThaw
     return false if !ok
     say(["His followers down, Sephek sways. He's below half, and he knows it."])
     return false if !trainer(:sephek_saint, nil)
+    say(["Behind him, in her crystal, Frostina's eyes find yours. Warmth comes off the crystal like a hearth.",
+         "(Your Pokémon get their breath back.)"])
+    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     sayc(["Auril pours herself into him.",
           "His form shatters into a whirlwind of ice and reassembles, taller, wider: a towering crystalline horror.",
           "The cold coming off him is a wall. Every follower who fell makes it colder.",

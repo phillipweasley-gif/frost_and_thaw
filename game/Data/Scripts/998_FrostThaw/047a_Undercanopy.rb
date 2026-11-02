@@ -133,7 +133,7 @@ module FrostThaw
       return true
     end
     say(["The ritual falters. The fungus heaves up out of the root and stands: a spore blight, red-black and dripping."])
-    if boss_battle(named_mon(:B47H45, 44, "Spore Blight"))
+    if skirmish(named_mon(:B47H45, 44, "Spore Blight"))
       say(["The blight falls apart. Reptin finishes the ritual over its pieces. The heartbeat comes back, quieter than it should."])
       set_flag(:blight_scarred)                # (the rot spread a little first: the Council remembers)
       true
@@ -551,7 +551,7 @@ module FrostThaw
     end
     say(["The giant logger turns. His face is a blank of sawdust. His axe is the size of a door.",
          "GIANT LOGGER: (a sound like a tree falling) MINE. ALL OF IT. MINE."], event_id)
-    if boss_battle(named_mon(:B68H185, 50, "The Giant Logger"))
+    if skirmish(named_mon(:B68H185, 50, "The Giant Logger"))
       say(["The logger falls like a felled pine, and is sawdust, and is gone.",
            "The red sky goes green. The stumps put out shoots."])
     else
@@ -604,18 +604,19 @@ module FrostThaw
     if phase == 1
       say(["As the seal cracks, the black water round the platforms heaves.",
            "A Shadow Quipper Swarm boils up out of it, straight at you."])
-      boss_battle(named_mon(:B318H92, 44, "Shadow Quipper Swarm"))
+      return false if !boss_battle(named_mon(:B318H92, 44, "Shadow Quipper Swarm"))
       say(["A wave of shadow rolls over the platforms. Someone goes into the water,",
            "and the lake-weed under the platform wraps their ankle and pulls."])
       if challenge("Something's dragging them under.", ["Grab their hand, and cut the weed", "Jump in after them", "Wait"], 0)
         say(["You haul them out, coughing. The weed slides back under the ice."])
       else
-        boss_battle(named_mon(:B114H72, 45, "Spore-Lash Creeper"))
+        return false if !boss_battle(named_mon(:B114H72, 45, "Spore-Lash Creeper"))
       end
     else
       say(["The enraged god thrashes. Shadow tentacles; spores; and the swarms come again, smelling blood."])
-      boss_battle(named_mon(:B318H92, 46, "Shadow Quipper Swarm"))
+      return false if !boss_battle(named_mon(:B318H92, 46, "Shadow Quipper Swarm"))
     end
+    true
   end
 
   def mycolith_hoard

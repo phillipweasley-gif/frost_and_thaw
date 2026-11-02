@@ -280,6 +280,7 @@ module FrostThaw
     set_flag(:badge_luminara)
     ($game_switches[SW_UNDER_BADGE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     set_switch(SW_LAKE_OPEN, true) if flag?(:hyphora_named)
+    (apply_undercanopy_switches; $game_map.need_refresh = true if $game_map) if respond_to?(:apply_undercanopy_switches)
     add_counter(:story_beats)
     say(["LUMINARA: Tasted. Honest. The Rapport Seal."])
     pbMessage(_INTL("\\me[Badge get]{1} received the Rapport Seal!", $Trainer.name))
@@ -323,6 +324,7 @@ module FrostThaw
     set_flag(:hyphora_named)
     add_counter(:story_beats)
     set_switch(SW_LAKE_OPEN, true) if flag?(:badge_undercanopy)
+    (apply_undercanopy_switches; $game_map.need_refresh = true if $game_map) if respond_to?(:apply_undercanopy_switches)
     state[:goal] = flag?(:badge_undercanopy) ? "The water past the Fane: the lake remembers." : "The Fane: Sovereign Luminara. Then the water beyond."
   end
 
@@ -447,7 +449,7 @@ module FrostThaw
           cl(:alerion, "(very quietly) I know how that goes."),
           "SHADOW MYCOLITH: (roots of sound) STILL. STAY. STILL."], event_id)
     if !flag?(:mycolith_minions_1)
-      mycolith_minions(1)
+      return if !mycolith_minions(1)
       set_flag(:mycolith_minions_1)
     end
     return if !boss_battle(named_mon(:B47H439, 46, "Shadow Mycolith"))
@@ -455,7 +457,7 @@ module FrostThaw
          "Something darker pours out of the gap, and stands up.",
          "SHADOW MYCOLITH: STILL! STAY! STILL!"])
     if !flag?(:mycolith_minions_2)
-      mycolith_minions(2)
+      return if !mycolith_minions(2)
       set_flag(:mycolith_minions_2)
     end
     return if !boss_battle(named_mon(:B439H47, 48, "Mycolith, Enraged"))
