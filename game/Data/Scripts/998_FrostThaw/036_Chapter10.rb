@@ -56,8 +56,8 @@ module FrostThaw
                       2166 => { announce_location: true, battle_environment: :Ice })
   AREAS.merge!(2077 => :root_tier, 2078 => :glasswater, 2165 => :root_tier, 2166 => :council)
   ENCOUNTERS[2077] = { step_chances: { Cave: 9 },
-                       Cave: [[30, :SABLEYE, 54, 56], [25, :B92H318, 54, 56], [20, :DUSKULL, 54, 56],
-                              [15, :B114H72, 55, 57], [10, :DUSCLOPS, 55, 57]] }
+                       Cave: [[30, :SABLEYE, 54, 56], [25, :CARVANHA, 54, 56], [20, :DUSKULL, 54, 56],
+                              [15, :TANGELA, 55, 57], [10, :DUSCLOPS, 55, 57]] }
   ENCOUNTERS[2078] = { step_chances: { Land: 7 },
                        Land: [[30, :SNEASEL, 54, 56], [25, :SNORUNT, 54, 56], [20, :DELIBIRD, 54, 56],
                               [15, :SWINUB, 54, 56], [10, :GLALIE, 55, 57]] }

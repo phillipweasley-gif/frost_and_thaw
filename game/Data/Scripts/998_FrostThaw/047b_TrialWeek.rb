@@ -33,8 +33,8 @@ module FrostThaw
   )
   AREAS.merge!(2160 => :root_tier, 2161 => :rootspire, 2163 => :beyond_wall, 2164 => :beyond_wall)
   ENCOUNTERS[2160] = { step_chances: { Cave: 8 },
-                       Cave: [[30, :PARAS, 52, 54], [25, :GLOAMCAP, 52, 54], [20, :B92H318, 52, 54],
-                              [15, :SHROOMISH, 52, 54], [10, :B114H72, 53, 55]] }
+                       Cave: [[30, :PARAS, 52, 54], [25, :GLOAMCAP, 52, 54], [20, :CARVANHA, 52, 54],
+                              [15, :SHROOMISH, 52, 54], [10, :TANGELA, 53, 55]] }
   ENCOUNTERS[2163] = { step_chances: { Land: 7 },
                        Land: [[30, :SNEASEL, 56, 58], [25, :GLALIE, 56, 58], [20, :SNORUNT, 56, 58],
                               [15, :DUSKULL, 56, 58], [10, :FROSLASS, 57, 59]] }
