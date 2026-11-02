@@ -223,7 +223,7 @@ check("the Heart takes you to Rootspire only after the Reversal") {
   $messages.clear; FT.heart_gateway(nil); before = $messages.none? { |m| m.include?("shard") }
   FT.set_flag(:reversal); $messages.clear; FT.heart_gateway(nil); before && $messages.any? { |m| m.include?("shard") } && $ft_transfer == FT::ARRIVAL_POINT }
 check("the mother yeti and the cub are the new yetis") {
-  src = File.read(File.join(FT_DIR, "023_Chapter5.rb"))
+  src = File.read(File.join(FT_DIR, "023_Chapter5.rb")) + File.read(File.join(FT_DIR, "044_ChasmFaithful.rb"))
   src.include?("named_mon(:YETITAN, 31") && src.include?("Pokemon.new(:YETOT, 25)") }
 check("the Cinderwright line is 582-584") { (582..584).map { |n| GameData::Species.get(n).id } == %i[WICKIT STOKETAIL FORGEL] }
 check("Cinderwright is a starter-strength line (309/405/530)") { [tot[:WICKIT], tot[:STOKETAIL], tot[:FORGEL]] == [309, 405, 530] }
@@ -733,6 +733,42 @@ FT.speak(:alerion, "(flat) No.", "...Fine.")
 check("...and the others just say theirs") { $messages == ["ALERION: (flat) No."] }
 FT.state[:herald] = :alerion; $messages.clear; $next_choice = 0
 check("a stage direction on your own line reads as narration") { FT.as(:alerion, "(a hand on her neck) Mine.") == "A hand on her neck. (Mine.)" }
+$next_choice = nil
+
+# --- Act I in full (W1: the Cackling Chasm and Sephek) ----------------------------
+FT.state[:mode] = :journey; FT.state[:herald] = nil
+FT.state[:companions] = %i[alberica reptin alerion shade meat_meat]
+check("the chasm's new keepsakes are real items") {
+  %i[FT_GRAYSTAFF FT_WOLFPELT FT_ORDERDAGGER FT_DRUIDCODEX FT_HEARTSHARD FT_WOLFBLOOM FT_OWLFEATHER
+     FT_GLIMMERJOURNAL FT_OPAL FT_GEMSTONE FT_BLACKICERING FT_GNOLLAXE].all? { |k| FT::RELIC_ITEMS.key?(k) } }
+check("...and the readable ones can be read from the bag") {
+  %i[FT_DRUIDCODEX FT_HEARTSHARD FT_WOLFBLOOM FT_OWLFEATHER FT_GLIMMERJOURNAL].all? { |k| FT::RELIC_ITEMS[k][5] == 2 } }
+check("the rift floor is a real map") { FT::MAPS[:rift_floor] == 2100 && FT::MAP_NAMES[2100] == "The Rift Floor" }
+check("Torrga, her hand and the Winter-Crowned hag are trainers") {
+  %i[torrga torg_hand thredra_crown].all? { |k| FT::TRAINERS.key?(k) } }
+(FT.state[:flags] || {}).delete(:ghost_blessing)
+check("the Order's locket is only a portrait until the ghost rests") { FT.locket_description.include?("never been here") }
+FT.set_flag(:ghost_blessing)
+check("...then it smiles, and blesses") { FT.locket_description.include?("smiles") }
+(FT.state[:flags] || {}).delete(:ghost_blessing)
+$messages.clear; $next_choice = 0
+FT.hag_bargain_offer(nil)
+check("the hag makes her bargain at the Stones: the winter and Reptin's wolf") {
+  FT.flag?(:hag_bargain_offered) && FT.flag?(:reptin_tempted) &&
+    $messages.any? { |m| m.include?("end the winter") } && $messages.any? { |m| m.include?("take the wolf out of him") } }
+check("...and asking about the task is remembered") { FT.flag?(:asked_hag_task) }
+check("the chasm's new lines all resolve") {
+  %i[fallen_ice blood_runes chasm_coins gnoll_axe_left gnoll_remains gnoll_quiet rift_wisp_light walker_after
+     heart_cauldron heart_cauldron_after codex_shelf codex_shelf_after torgs_flag torgs_dogs torgs_hand_idle
+     torgs_camp_gone mother_yeti_after].all? { |k| FT.lines_for(k).first != "..." } }
+FT.set_flag(:yeti_mother_dead)
+check("a mother yeti who fought to the death stays dead") { FT.lines_for(:mother_yeti_after).first.include?("doesn't move") }
+(FT.state[:flags] || {}).delete(:yeti_mother_dead)
+FT.set_flag(:cub_home); FT.set_flag(:got_yeti_cub)
+check("...and if you took her cub, she isn't shown curled round it") { !FT.lines_for(:mother_yeti_after).first.include?("curled around her cub") }
+%i[cub_home got_yeti_cub].each { |f| (FT.state[:flags] || {}).delete(f) }
+check("every chasm whisper speaks once") {
+  $messages.clear; FT.chasm_whisper(1); n = $messages.size; FT.chasm_whisper(1); n > 0 && $messages.size == n }
 $next_choice = nil
 
 puts "\n#{$checks - $fails}/#{$checks} checks passed"

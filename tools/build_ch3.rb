@@ -27,6 +27,8 @@ SW_REQUIEM_DONE = 3914    # the Moon Requiem is done: the laughing is the callin
 SW_WENNEN_FOLLOW = 3964   # the Wennen haul Sephek's ice south (SC 3.08)
 SW_MEAT_JOINED = 3965     # Meat Meat travels with you
 SW_HERALD_MEAT = 3904     # you ARE Meat Meat (Herald Mode)
+SW_TORRGA_GONE = 4000     # Torg's is dealt with: Torrga beaten, the camp packed up (044_ChasmFaithful.rb)
+SW_HLIN_PAID   = 4001     # Hlin Trollbane has paid out and gone
 LOPUNNY = "Followers/LOPUNNY"
 BUNEARY = "Followers/BUNEARY"
 
@@ -140,6 +142,34 @@ t.trainer(33, 12, "BWWorker", :logger_breck, :WORKER, dir: 4, sight: 4)
 t.sign(40, 33, :lonely_sign)
 t.sign(28, 3, :sign_moon_temple)
 t.sign(40, 10, :sign_glade_road)
+# Torg's (Rime of the Frostmaiden, "Cold-Hearted Killer"): Torrga Icevein's
+# travelling company, camped in the clearing past the fisher's house. Sephek
+# Kaltro is her bodyguard, until the night he takes Shimmer.
+t.set(36, 17, 2, CRATE); t.set(37, 17, 2, CRATE)                       # the sleds, laden
+t.event(35, 17, "Torg's flag", [
+  { graphic: "", tile_id: CRATE, script: "FT.talk(:torgs_flag, @event_id)" },
+  { switch: SW_TORRGA_GONE, graphic: "", tile_id: CRATE, script: "FT.talk(:torgs_camp_gone, @event_id)" }
+])
+t.event(36, 18, "Torrga", [
+  { graphic: "BW040", direction: 2, script: "FT.torrga(@event_id)" },
+  { switch: SW_TORRGA_GONE, graphic: "", through: true }
+])
+t.event(37, 20, "Sephek at Torg's", [
+  { graphic: "FT_sephek", direction: 4, script: "FT.sephek_torgs(@event_id)" },
+  { switch: SW_SHIMMER_TAKEN, graphic: "", through: true }
+])
+t.event(37, 21, "Torg's sack", [
+  { graphic: "BARREL", direction: 2, script: "FT.torgs_sack(@event_id)" },
+  { switch: SW_TORRGA_GONE, graphic: "", through: true }
+])
+t.event(35, 23, "Sled dogs", [
+  { graphic: "Followers/STOUTLAND", direction: 4, step_anime: true, script: "FT.talk(:torgs_dogs, @event_id)" },
+  { switch: SW_TORRGA_GONE, graphic: "", through: true }
+])
+t.event(29, 18, "Torg's hand", [
+  { graphic: "BW054", direction: 6, script: "FT.talk(:torgs_hand_idle, @event_id)" },
+  { switch: SW_TORRGA_GONE, graphic: "", through: true }
+])
 seal_edges(t)
 save(t, :lonelywood)
 
@@ -159,6 +189,11 @@ ll.event(3, 6, "Danae", [{ graphic: "BW (59)", direction: 6, script: "FT.talk(:d
 ll.npc(10, 8, "BW (54)", :liar_tall_tale, dir: 2)
 ll.npc(13, 5, "BWFisherman", :liar_fisher, dir: 4)
 ll.trainer(10, 10, "BW (57)", :liar_brawler, :ROUGHNECK, dir: 8, sight: 2)
+# Hlin Trollbane, sitting apart with her pipe: the ice-dagger killer's hunter
+ll.event(15, 9, "Hlin Trollbane", [
+  { graphic: "BWOldWoman", direction: 8, script: "FT.hlin(@event_id)" },
+  { switch: SW_HLIN_PAID, graphic: "", through: true }
+])
 save(ll, :lucky_liar)
 
 # 2028: the Happy Scrimshander (Iriskree Harrowhill's shop)
