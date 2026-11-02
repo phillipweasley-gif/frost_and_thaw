@@ -28,9 +28,10 @@ module FrostThaw
             e = $game_map.events[event_id]
             ev = e if e && !e.character_name.to_s.empty?
           end
-          if ev
+          if ev && Stage.on_screen?(ev)
             pbCallBub(2, ev.id)
-            note_offstage(tag, :off_camera) if !Stage.on_screen?(ev)
+          elsif ev
+            note_offstage(tag, :off_camera)      # (no bubble: it would point off the screen)
           else
             note_offstage(tag, :absent)
           end
