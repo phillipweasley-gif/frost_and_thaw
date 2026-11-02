@@ -303,7 +303,7 @@ module FrostThaw
     end
     say(["NAERTH: My honoured guests. Five strangers in a blizzard. Shall we speak plainly?",
          "NAERTH: Here is how Targos works. Everyone owes me something.",
-         "NAERTH: Each new moon, Ten-Towns draws a name. Whoever's drawn walks out onto the tundra.",
+         "NAERTH: Each new moon, Targos draws a name. So do Bryn Shander and Easthaven. Whoever's drawn walks out onto the tundra.",
          as(:reptin, "(under his breath) And everyone thanks him for the privilege. Charming."),
          "NAERTH: People who run before the draw get found. By a man who doesn't feel the cold.",
          "SHIMMER: Sephek.",
