@@ -852,25 +852,33 @@ module FrostThaw
           "You feel the ward like cold breath, and step where it isn't.", "You step straight into it. It wraps you in light and noise."]
   }
 
+  # Four successes before two failures: a ward you get past stays passed; one
+  # you fail can be tried again; fail twice and the Wardens chase you out, and
+  # every ward is set again.
   def heist_ward(n, event_id = nil)
     return if !flag?(:heist_offered) || ($PokemonBag.pbHasItem?(:FT_RELIQUARY) rescue false) || flag?(:heist_vault_open)
-    h = (state[:heist] ||= { wins: 0, fails: 0 })
+    h = (state[:heist] ||= { wins: 0, fails: 0, passed: [] })
+    h[:passed] ||= []
+    return if h[:passed].include?(n)
     text, opts, good, ok, bad = HEIST_WARDS[n]
     say([text], event_id)
     c = pbMessage(_INTL("Meat Meat's way, or yours?"), opts, 0)
     if c == good
       h[:wins] += 1
+      h[:passed] << n
       say([ok])
+      set_self_switch(event_id, "A") if event_id
     else
       h[:fails] += 1
       say([bad])
       pbTrainerBattle(:FT_ROOTWARDEN, "Moss", nil, false, 0, true) rescue nil
     end
     if h[:fails] >= 2 && h[:wins] < 4
-      h[:fails] = 0
+      state[:heist] = { wins: 0, fails: 0, passed: [] }
       say(["Wardens close in from both ends. You retreat up the hatch and wait for the tunnels to go quiet.",
-           "(You can try the wards again.)"])
+           "(Every ward is set again. You can try again.)"])
       (1..4).each { |i| ev = ($game_map.events.values.find { |e| e.name == "Ward #{i}" } rescue nil); set_self_switch(ev.id, "A", false) if ev }
+      transfer(2055, 29, 14, 2)
     end
   end
 
@@ -882,7 +890,7 @@ module FrostThaw
       return say(["A Guild vault door, bound in willow and iron, stamped with a hammer striking a root around an anvil."], event_id)
     end
     h = (state[:heist] ||= { wins: 0, fails: 0 })
-    if h[:wins] < 3
+    if h[:wins] < 4
       return say(["The vault door's wards are still awake. You'll have to get past the ones before it first."], event_id)
     end
     set_flag(:heist_vault_open)

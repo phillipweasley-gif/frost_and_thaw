@@ -6,7 +6,7 @@
 require_relative "driver"
 HL.start_up
 HL.quiet = !ENV["V"]
-HL.answers = [[/Which adventure/, 1], [/How would you like to play/, 0], [/Choose a difficulty/, 1]]
+HL.answers = [[/Which adventure/, 1], [/How would you like to play/, 0], [/Choose a difficulty/, 1], [/What will you take/, ->(_t, c) { c.size - 1 }]]
 HL.new_game
 HL.frames(60)
 T = FrostThaw
@@ -47,6 +47,7 @@ STATES.each do |st, flags|
     evs.each do |e|
       pg = e.instance_variable_get(:@page)
       next if !pg || pg.list.none? { |c| c.code == 355 }
+      (puts "  #{st} #{id} #{e.name}"; $stdout.flush) if ENV["TRACE"]
       begin
         e.start
         HL.settle(3000)

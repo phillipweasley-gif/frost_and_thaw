@@ -85,7 +85,7 @@ HL.face(8); HL.step(8)
 HL.settle(2000)
 ok("down the hatch into the Smuggler's Run", $game_map.map_id == 2198, "on #{$game_map.map_id} #{r}")
 [[10, 5], [25, 10], [18, 15], [8, 15]].each { |x, y| HL.walk_to(x, y); HL.settle(2000); heal }
-ok("past the four wards", (T.state[:heist] || {})[:wins].to_i >= 3, T.state[:heist].inspect)
+ok("past the four wards", (T.state[:heist] || {})[:wins].to_i >= 4, T.state[:heist].inspect)
 talk("Guild vault")
 ok("the sealed reliquary", ($PokemonBag.pbHasItem?(:FT_RELIQUARY) rescue false))
 HL.warp(2054, 11, 17, 8); HL.frames(5)
