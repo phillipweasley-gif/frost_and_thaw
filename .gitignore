@@ -1,0 +1,15 @@
+# Reference material (your own copies live on your Mac / Drive)
+sources/
+FrostThaw.log
+*.log
+# Scratch and intermediate art stages: everything in build/ except what ships
+build/*
+!build/Characters/
+!build/gfx/
+!build/items/
+!build/maps/
+!build/music/
+!build/*.py
+!build/*.json
+__pycache__/
+.DS_Store
