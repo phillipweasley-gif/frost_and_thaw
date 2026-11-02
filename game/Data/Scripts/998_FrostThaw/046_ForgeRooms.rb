@@ -1213,3 +1213,26 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("Forge rooms switches failed: #{err.message}")
   end
 }
+
+#-------------------------------------------------------------------------------
+# A base-game battle bug: Quash walks every battler slot looking for the highest
+# Quash count, and an empty slot (a double battle where one side has a single
+# Pokémon left, like the Forge's rust-feasters) is nil, which crashed the turn.
+#-------------------------------------------------------------------------------
+if defined?(PokeBattle_Move_11E)
+  class PokeBattle_Move_11E
+    alias ft_quash_pbFailsAgainstTarget? pbFailsAgainstTarget? unless method_defined?(:ft_quash_pbFailsAgainstTarget?)
+    def pbFailsAgainstTarget?(user, target)
+      real = @battle.instance_variable_get(:@battlers)
+      if real && real.include?(nil)
+        @battle.instance_variable_set(:@battlers, real.compact)
+        begin
+          return ft_quash_pbFailsAgainstTarget?(user, target)
+        ensure
+          @battle.instance_variable_set(:@battlers, real)
+        end
+      end
+      ft_quash_pbFailsAgainstTarget?(user, target)
+    end
+  end
+end
