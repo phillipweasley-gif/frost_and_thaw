@@ -193,7 +193,8 @@ module FrostThaw
                        "Like they're melting it from below."],
     aurilite_eight_after: ["Twenty stones in a ring, in Dougan's Hole. Older than the town. She likes old things."],
     trapper_birk_after: ["Dougan's Hole? Mind your fingers. They'll bite you for a trout."],
-    channeler_mag_after: ["There's a chasm south of the Hole. It used to laugh. Now it waits."],
+    channeler_mag_after: ["There's a chasm south of the Hole. Hunters say it laughs on the new moon. The cackling carries for miles on the wind.",
+                          "Folk here think the witch who froze us made it her lair. Somebody ought to make sure she can't come back up out of it."],
     # --- Dougan's Hole -----------------------------------------------------------------
     sign_dougans: ["DOUGAN'S HOLE", "Speaker: Edgra Durmoot.", "(Someone has carved a crude wolf into the post, and scratched it out.)"],
     sign_twenty_stones: ["THE TWENTY STONES OF THRUUN.", "Nineteen granite menhirs in a rough triangle, and one at the centre.",
@@ -626,7 +627,8 @@ module FrostThaw
           "DURMOOT: Thank you.",
           "DURMOOT: ...Don't tell anyone I said that.",
           cl(:alberica, "Oh, sugar, I'm writing a song about it."),
-          "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind."])
+          "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind.",
+          "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns. ...Don't tell anyone I said that either."])
     pbReceiveItem(:TM95) rescue nil
     set_flag(:dh_morning)
     state[:goal] = "The Cackling Chasm, south of Dougan's Hole. She's there."

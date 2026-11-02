@@ -41,7 +41,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   RELIC_ITEMS.merge!(
     FT_GRAYSTAFF: ["Black Ice Staff", "Black Ice Staffs", 1, 0,
-      "Granny Thredra's Graystaff, cracked. A held item that boosts the holder's Ice-type moves. Whoever carries it dreams of cackling.", 0, 0, 0],
+      "Granny Thredra's Graystaff, cracked. A held item that boosts the holder's Ice-type moves. Whoever carries it goes hungry in the deep cold, and dreams of cackling.", 0, 0, 0],
     FT_WOLFPELT: ["Winter Wolf Pelt", "Winter Wolf Pelts", 1, 0,
       "A hank of Kanan's white pelt, torn out at the Heart. A held item: the holder takes half damage from Ice-type moves.", 0, 0, 0],
     FT_ORDERDAGGER: ["Order's Silver Dagger", "Order's Silver Daggers", 1, 0,
@@ -809,6 +809,13 @@ module FrostThaw
          herald?(:reptin) ? "(A warden's bond. The rage was the curse. The rest of it is you.)" :
                             "REPTIN: (wondering) It's still there. It's just... quiet. It knows me now."])
     set_flag(:reptin_wolf_calm)
+    if flag?(:ghost_blessing)
+      say([herald?(:reptin) ? "You turn toward the tunnel to the sanctum, where she lies, and say a few words." :
+                              "Reptin turns toward the tunnel to the sanctum, where she lies, and says a few words."])
+      speak(:reptin, "Rest, warden. We kept it. Your wolves will keep it after us. I'll keep it, after them.",
+                     "...Rest, warden. We kept it.")
+      set_flag(:warden_honoured)
+    end
     c = pbMessage(_INTL("The Heart pulses, slow and warm."), [_INTL("Leave it be."), _INTL("Break it, so nobody ever uses it again.")], 0)
     if c == 1
       say(["You raise your hand over it.",
@@ -862,9 +869,10 @@ module FrostThaw
     say(["More moments fall past you, too fast to hold:",
          "The chasm mouth at dawn. In a crack in the frost, a single tiny wildflower, blooming.",
          "Wolves on the ridge above it at night, howling at nothing. Not hungry. Watchful.",
+         flag?(:order_wardens) ? "A ring of Reghed tents at the chasm mouth, and a carved post with a wolf and a scythe on it: a new Order, small and stubborn, keeping the watch you started." : nil,
          "Dougan's Hole. Speaker Durmoot lifting a cup: \"To the ones who went down into the chasm.\" A pause. \"...Don't tell anyone I said that.\"",
          "A smoky tavern in Bryn Shander, and a bard singing \"Glimmer in the Chasm\":",
-         "a small light of hope and an old spirit, guiding heroes through the dark."])
+         "a small light of hope and an old spirit, guiding heroes through the dark."].compact)
     sayc([cl(:shade, "(somewhere in the fall) ...Glimmer. That name again.")])
     say(["Years on, travellers in Dougan's Hole whisper about the Heroes of the Cackling Chasm.",
          "On certain nights, faint laughter still comes out of it: a child's giggle, and the howl of a watchful wolf.",
