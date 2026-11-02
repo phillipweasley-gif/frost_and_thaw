@@ -965,8 +965,9 @@ module FrostThaw
     transfer(2077, 9, 30, 8)
   end
 
-  # Kept for the Root-Tier event (the captain waits at the old tunnels).
-  def kethan(event_id = nil)
+  # The captain at the old guard tunnels during the trial week (the Root-Tier
+  # event). Not `kethan`: that's the Rootwarden Hall's captain (048).
+  def kethan_tunnels(event_id = nil)
     return say(lines_for(:kethan_after), event_id) if flag?(:wyn_cleared)
     if !flag?(:wyn_heard)
       return say(["Captain Kethan Vale, grey at the temples, waits at the mouth of the old guard tunnels.",

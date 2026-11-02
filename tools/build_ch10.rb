@@ -27,7 +27,7 @@ resave(rs, 2050)
 
 # 2055: Captain Kethan Vale, at the mouth of the old guard tunnels
 rt = reopen(2055)
-during_trials(rt, 10, 19, "Captain Kethan Vale", "BW029", "FT.kethan(@event_id)")
+during_trials(rt, 10, 19, "Captain Kethan Vale", "BW029", "FT.kethan_tunnels(@event_id)")
 resave(rt, 2055)
 
 # 2058: Autumn's spying mirror, in the Sap Wells

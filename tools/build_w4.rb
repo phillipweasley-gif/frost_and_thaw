@@ -516,7 +516,7 @@ person_when(fl, 10, 15, "Signer refugees", "BW (30)", "FT.petition_signer(:refug
 [[17, 19], [20, 18]].each { |x, y| fl.stamp(HAY, x, y) if [[x, y], [x + 1, y], [x, y + 1], [x + 1, y + 1]].all? { |c| walkable?(fl, *c) && !taken?(fl, *c) } }
 person_when(fl, 26, 9, "Debate stage (Fields)", "BW (30)", "FT.debate_stage(:fields, @event_id)", SW_DEBATES)
 person_when(fl, 39, 9, "Talion", "BW (17)", "FT.talion(@event_id)", SW_TALION_FIELDS, dir: 4)
-person_when(fl, 31, 5, "Two spirits", "Followers/CASTFORM", "FT.field_spirits(@event_id)", SW_FIELD_SPIRITS)
+# (R2's two spirits stand in the Fields from Chapter 6: tools/build_ch6b.rb.)
 fl.event(46, 14, "A thin place in the Wall", [{ through: true }, { switch: SW_GLASSWATER, trigger: 1, through: true,
                                                                    commands: [fl.command(201, [0, 2078, 1, 11, 6, 0])] }])
 resave(fl, 2060)

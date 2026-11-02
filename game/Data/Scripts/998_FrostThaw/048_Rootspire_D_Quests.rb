@@ -734,6 +734,10 @@ module FrostThaw
             "Where they sank, two berries have grown on one stem: one warm red, one frost-white."].compact)
       give(:OCCABERRY, 3)
       give(:YACHEBERRY, 3)
+      # The notes' reward: you can call on them for resistance (047b's blessing and token).
+      give_key(:FT_FIELDSPIRITS)
+      grant_blessing(:field_spirits, "The Fields' Two Spirits", "Once each battle, the first Fire- or Ice-type hit on your Pokémon is halved.")
+      set_flag(:field_spirits_done)
       say(["(When you need to, the spirits will stand between your Pokémon and fire, or frost.)"])
     else
       say(["The spirits howl. A mini-blizzard comes down across the Fields, flowers and hail together."])

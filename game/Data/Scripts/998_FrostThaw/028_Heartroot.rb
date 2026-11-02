@@ -125,16 +125,7 @@ module FrostThaw
     transfer(*GUILD_TOP)
   end
 
-  def digger(key, event_id = nil)
-    return say(lines_for(:"#{key}_after"), event_id) if flag?(:"beat_#{key}")
-    return if !trainer(key, event_id)
-    set_flag(:"beat_#{key}")
-    say(["The sap-daze clears from the digger's eyes all at once, and they sit down hard.",
-         "\"Where... we were digging, and the amber started talking. How long...?\"",
-         "\"Tell Hew. Tell Hew I'm sorry about the lamp.\"",
-         "They stumble off toward the ladder shaft.",
-         cl(:wyn, "(softly, after them) Drink some water. Not sap. Water.")].compact)
-  end
+  # (digger: see 033_Chapter7B.rb, which replaced this one.)
 
   #-----------------------------------------------------------------------------
   # The Overflow Channel

@@ -630,45 +630,11 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # R2: Pulse of the Blooming Fields (Reptin)
   #-----------------------------------------------------------------------------
+  # One quest, not two: R2 lives in the Blooming Fields from Chapter 6 on
+  # (048_Rootspire_D_Quests.rb fields_spirits), and its success sets this
+  # blessing and token. Kept as a name for old saves and scripts.
   def field_spirits(event_id = nil)
-    return say(["Flowers and snow, mingling at your feet. Somewhere a summer wind and a winter one are laughing together."], event_id) if flag?(:field_spirits_done)
-    say(["The Blooming Fields: daisies beside snowdrifts, green shoots through ice.",
-         "As you walk, the colours shift. Two voices in the wind, arguing: one hot as summer, one cold as winter.",
-         "Where they pass, flowers wilt and frost forms."], event_id)
-    if !with_or_is?(:reptin)
-      return say(["(They won't listen to you. They want the warden of the wild.)"])
-    end
-    if challenge("Who are they?", ["Look at what they leave behind: green fire, and pale frost", "Spirits of the dead", "Illusions"], 0)
-      say(["(Embodiments of Razzilith and Frostina: the twins' seasons, loose in the Fields, and quarrelling.)"])
-    else
-      say(["A hailstorm comes out of a clear sky and pelts you all."])
-      $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 10), 1].max if !pk.egg? && pk.hp > 0 } rescue nil
-    end
-    ok, bad = 0, 0
-    [["SUMMER SPIRIT: She's always taking. Every leaf I grow, she freezes!",
-      ["Remind them of their shared history: the same tree, the same egg-time", "Take Summer's side", "Ignore them"], 0],
-     ["WINTER SPIRIT: (circling, cold, low) He never stops. Never rests. Things need rest.",
-      ["Read them: they're not angry, they're afraid of each other's strength", "Take Winter's side", "Tell them to stop"], 0],
-     ["BOTH SPIRITS: Why should we listen to you?",
-      [herald?(:reptin) ? "Because I carried the seed. Because I'm the one who stands between" : "Because Reptin carried the seed", "Because I said so", "You shouldn't"], 0],
-     ["SUMMER SPIRIT: And if she takes everything?",
-      ["Then he takes it back in spring. That's the wheel", "Then fight her", "Then leave"], 0]].each do |prompt, opts, right|
-      break if ok >= 3 || bad >= 2
-      say([prompt])
-      challenge("Answer.", opts, right) ? ok += 1 : bad += 1
-    end
-    if ok >= 3
-      say(["The spirits stop circling. They look at each other. Then they intertwine, green and white,",
-           "and the flowers and the snow settle down together like old friends.",
-           as(:reptin, "(softly) There. Nobody has to win. That's all it ever was.")])
-      give_key(:FT_FIELDSPIRITS)
-      grant_blessing(:field_spirits, "The Fields' Two Spirits", "Once each battle, the first Fire- or Ice-type hit on your Pokémon is halved.")
-    else
-      say(["One of them turns on you. A mini-blizzard sweeps the Fields, and then they're gone, still arguing."])
-      $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 6), 1].max if !pk.egg? && pk.hp > 0 } rescue nil
-    end
-    set_flag(:field_spirits_done)
-    add_counter(:story_beats)
+    fields_spirits(event_id)
   end
 
   def apply_trial_week_switches
@@ -680,7 +646,7 @@ module FrostThaw
     $game_switches[SW_GLASSWATER] = flag?(:summer_ended)
     $game_switches[SW_BEYOND_WALL] = flag?(:summer_ended)
     $game_switches[SW_LEAF_SHELF] = flag?(:summer_ended) && !flag?(:leaf_restored)
-    $game_switches[SW_FIELD_SPIRITS] = flag?(:twins_met) && !flag?(:field_spirits_done)
+    $game_switches[SW_FIELD_SPIRITS] = false      # (R2 is 048's Fields event now)
   end
 end
 
