@@ -10,8 +10,8 @@ ID = {
   hut_a: 2006, mart: 2007, hut_b: 2008, hut_c: 2009
 }
 NAMES = {
-  intro: "Frost & Thaw", targos: "Targos", tavern: "The Three Sails", center: "Targos Pokémon Center",
-  luskan: "The Luskan Arms", gym: "Speaker's Hall", hut_a: "Thornweald's Relics", mart: "Targos Market",
+  intro: "Frost & Thaw", targos: "Targos", tavern: "Three Flags Sailing", center: "Targos Pokémon Center",
+  luskan: "The Luskan Arms", gym: "Speaker's Hall", hut_a: "Thornweald's Relics", mart: "Triglio",
   hut_b: "Fisher's Cottage", hut_c: "Lantern House"
 }
 # Switches the scripts turn on when the player IS that Herald (hides the NPC).
@@ -118,6 +118,7 @@ b.stamp(CENTER, 11, 21)        # Pokemon Center, door (14, 27)
 b.stamp(HUT, 3, 31)            # Thornweald's Relics, door (4, 34)
 b.stamp(HUT, 33, 31)           # Fisher's Cottage, door (34, 34)
 b.stamp(ROUND_HUT, 15, 34)     # Lantern House, door (16, 37)
+b.stamp(HOUSE, 40, 30)         # the Velryn house (Keegan and Garret), door (41, 34)
 [[7, 18], [10, 18], [7, 29], [10, 29], [20, 21], [30, 29], [20, 32]].each { |x, y| b.stamp(LAMP, x, y) }
 b.stamp(HAY, 18, 22); b.stamp(HAY, 18, 24)                          # Meat Meat's hiding place
 [[26, 23], [37, 22], [20, 7], [40, 28]].each { |x, y| b.set(x, y, 2, CRATE) }
@@ -132,6 +133,13 @@ b.door(14, 27, ID[:center], 10, 11, 8, name: "Door Pokemon Center")
 b.door(4, 34, ID[:hut_a], 9, 11, 8, name: "Door Thornweald")
 b.door(34, 34, ID[:hut_b], 9, 11, 8, name: "Door Fisher's Cottage")
 b.door(16, 37, ID[:hut_c], 9, 11, 8, name: "Door Lantern House")
+b.door(41, 34, 2124, 9, 11, 8, name: "Door Velryn")
+# "Mountain Climb": Boy, Garret Velryn's sled dog, runs loose in the streets with a broken harness
+b.event(18, 30, "Boy", [
+  { graphic: "Followers/MIGHTYENA", direction: 4, move_type: 1, move_frequency: 5, move_speed: 4, step_anime: true,
+    script: "FT.boy_sled_dog(@event_id)" },
+  { switch: 4043, graphic: "", through: true }
+])
 b.cutscene(33, 20, :targos_arrival)                                    # the ship docks at the long pier
 b.npc(8, H - 4, "BWPoliceman", :targos_gate_guard, dir: 2)
 b.npc(9, H - 4, "BWPoliceman", :targos_gate_guard, dir: 2)
@@ -176,6 +184,7 @@ t.event(3, 6, "Barkeep", [{ graphic: "BW (53)", direction: 6, script: "FT.barkee
   e.pages << t.build_page(e.pages[0], { switch: SW_PARTY_FORMED, graphic: "", through: true })
 end
 t.trainer(7, 7, "BWBiker", :tavern_brawler, :BIKER, dir: 2, sight: 3)
+t.event(6, 8, "Fisher (rumours)", [{ graphic: "BWFisherman", direction: 6, script: "FT.ten_towns_rumor(\"FISHER\", @event_id)" }])
 t.cutscene(0, 0, :tavern_convergence)
 save(t, :tavern)
 
@@ -192,6 +201,11 @@ l.npc(14, 7, "BW (63)", :marek_draeven, dir: 2)
 l.trainer(10, 8, "BW (57)", :zhent_thug_1, :ROUGHNECK, dir: 2, sight: 3)
 l.trainer(6, 8, "BWPunkGirl", :zhent_thug_2, :ROUGHNECK, dir: 2, sight: 3)
 l.npc(5, 8, "BW (26)", :skath, dir: 2)
+l.event(12, 8, "Owenn Tarsenel", [{ graphic: "BWOldMan", direction: 4, script: "FT.owenn_tarsenel(@event_id)" }])
+l.event(6, 9, "Rat", [{ graphic: "Followers/RATTATA", direction: 2, move_type: 1, move_frequency: 6, move_speed: 5,
+                        step_anime: true, through: true, script: "FT.talk(:luskan_rats, @event_id)" }])
+l.sign(5, 5, :luskan_decor)
+l.sign(9, 5, :naerth_snakes)
 # Naerth does business here until he's set his terms (SC 1.05), then waits at the Town Hall.
 l.event(8, 6, "Naerth", [{ graphic: "BW_giovanni", direction: 2, script: "FT.naerth_terms(@event_id)" },
                          { switch: SW_NAERTH_TERMS, graphic: "", through: true }])
@@ -276,8 +290,9 @@ save(h, :hut_a)
 
 m, ex = Builder.from_existing(81)
 exits_to(m, ex, 4, 27)
-m.event(6, 6, "Clerk", [{ graphic: "BW (85)", direction: 2, script: "FT.mart(:targos, @event_id)" }])
+m.event(6, 6, "Jestin Hunrae", [{ graphic: "BW (85)", direction: 2, script: "FT.jestin_hunrae(@event_id)" }])
 m.npc(10, 9, "BW (20)", :market_customer, dir: 6)
+m.sign(12, 7, :triglio_sign)
 save(m, :mart)
 
 h, ex = Builder.from_existing(644)

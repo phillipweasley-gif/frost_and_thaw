@@ -130,7 +130,7 @@ module FrostThaw
 
   TEXT.merge!(WENNEN_LINES)
   TEXT.merge!(
-    bryn_north_guard_open: ["GUARD: Lonelywood's up the north road. Loggers, fishers, folk who'd rather not be found.",
+    bryn_north_guard_open: ["GUARD: North path to Termalaine, and Lonelywood past it. Loggers, fishers, folk who'd rather not be found.",
                             "GUARD: The man in the shirt went that way. We didn't follow."],
     # --- Lonelywood Road -----------------------------------------------------------
     sign_lonely_road: ["LONELYWOOD ROAD", "North to Lonelywood. Beware the white moose."],

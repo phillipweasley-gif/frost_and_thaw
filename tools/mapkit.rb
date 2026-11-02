@@ -300,7 +300,9 @@ module MapKit
       BUGCATCHER: "BWBugCatcher_male", WORKER: "BW (75)", BEAUTY: "BW (33)", CHANNELER: "BW (40)",
       FT_ZHENTARIM: "BW054", FT_ZHENTARIM_F: "BW040", FT_AURILITE: "BW (40)",
       FT_TRAPPER: "BW (72)", FT_ROOTWARDEN: "BW029", FT_HALO: "BW (40)", FT_WINTER_MATRON: "BWOldWoman",
-      FT_SKYSAILOR: "BW (23)", FT_SCHOLAR: "BW (55)", FT_GUILD: "BW (75)", FT_DUERGAR: "BW054", FT_DEVIL: "BW (40)"
+      FT_SKYSAILOR: "BW (23)", FT_SCHOLAR: "BW (55)", FT_GUILD: "BW (75)", FT_DUERGAR: "BW054", FT_DEVIL: "BW (40)",
+      # Ten-Towns (045_*): Bryn Shander's militia, a sellsword, Zhentarim thugs, goblins, frost druids, miners
+      FT_MILITIA: "BWPoliceman", FT_SELLSWORD: "BW (72)", FT_THUG: "BW054", FT_GOBLIN: "BW (40)", FT_FROSTDRUID: "BW (40)", FT_MINER: "BW (75)"
     }
 
     # Trainer classes as the game scripts define them (key => class).

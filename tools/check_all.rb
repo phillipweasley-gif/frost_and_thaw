@@ -47,7 +47,7 @@ extra = [[2001, 33, 21, "new game start"], [2001, 20, 23, "Meat Meat start"], [2
 extra.each { |id, x, y, why| arrivals[id] << [x, y, why] }
 # ...and every point the story scripts send you to (constants and transfer calls)
 Dir[File.join(__dir__, "../game/Data/Scripts/998_FrostThaw/*.rb")].each do |f|
-  File.read(f, encoding: "UTF-8").scan(/(?:([A-Z][A-Z0-9_]+)\s*=\s*\[|transfer\()\s*(20\d\d),\s*(\d+),\s*(\d+)/) do |name, id, x, y|
+  File.read(f, encoding: "UTF-8").scan(/(?:([A-Z][A-Z0-9_]+)\s*=\s*\[|transfer\()\s*(2\d\d\d),\s*(\d+),\s*(\d+)/) do |name, id, x, y|
     arrivals[id.to_i] << [x.to_i, y.to_i, "script #{name || 'transfer'} (#{File.basename(f)})"]
   end
 end
@@ -68,7 +68,11 @@ maps.each do |id, m|
   blocking = {}
   m.events.each_value do |e|
     pg = e.pages[0]
-    blocking[[e.x, e.y]] = true if !pg.through && !(pg.graphic.character_name.to_s.empty? && pg.graphic.tile_id == 0)
+    next unless !pg.through && !(pg.graphic.character_name.to_s.empty? && pg.graphic.tile_id == 0)
+    # a gate that a story switch opens (a later page on a game switch that's
+    # walkable) isn't a wall: what's behind it is reachable once it opens
+    opens = e.pages[1..].any? { |p2| p2.condition.switch1_valid && (p2.through || (p2.graphic.character_name.to_s.empty? && p2.graphic.tile_id == 0)) }
+    blocking[[e.x, e.y]] = true unless opens
   end
   seen = {}; q = starts.dup; q.each { |c| seen[c] = true }
   until q.empty?
@@ -171,14 +175,19 @@ maps.each do |id, m|
 end
 # every switch an event page waits for must be one the game will actually read:
 # Infinite Fusion ignores unnamed switches, so ours must sit in the range
-# 019_Switches.rb reads directly (3900-4199)
+# 019_Switches.rb reads directly (STORY_SWITCHES there)
+STORY_RANGE = begin
+  src = File.read(File.join(__dir__, "../game/Data/Scripts/998_FrostThaw/019_Switches.rb"), encoding: "UTF-8")
+  m_ = src.match(/STORY_SWITCHES\s*=\s*\((\d+)\.\.(\d+)\)/)
+  m_ ? (m_[1].to_i..m_[2].to_i) : (3900..3999)
+end
 maps.each do |id, m|
   m.events.each_value do |e|
     e.pages.each do |pg|
       c = pg.condition
       [[c.switch1_valid, c.switch1_id], [c.switch2_valid, c.switch2_id]].each do |valid, sid|
         next unless valid
-        problems << "#{id}: #{e.name} waits for switch #{sid}, which the game would never see as on" unless (3900..4199).include?(sid)
+        problems << "#{id}: #{e.name} waits for switch #{sid}, which the game would never see as on" unless STORY_RANGE.include?(sid)
       end
     end
   end
@@ -224,6 +233,19 @@ maps.each do |id, m|
   if groups.size > 1
     sizes = groups.values.map { |g| g.map { |x, y| "(#{x},#{y})" }.join(" ") }
     problems << "#{id}: the map is split - from one way in you can't walk to the others (ledges, fences or people in the way): #{sizes.join('  |  ')}"
+  end
+end
+# two doors on one tile: which one fires is up to event order, so the tile
+# means two different places (an old builder's warp left under a new one)
+maps.each do |id, m|
+  by_cell = Hash.new { |h, k| h[k] = [] }
+  m.events.each_value do |e|
+    c = e.pages[0].list.find { |x| x.code == 201 } or next
+    by_cell[[e.x, e.y]] << [c.parameters[1], e.name]
+  end
+  by_cell.each do |(x, y), list|
+    next if list.map(&:first).uniq.size < 2
+    problems << "#{id}: (#{x},#{y}) has #{list.size} doors to different maps: #{list.map { |d, n| "#{n} -> #{d}" }.join(', ')}"
   end
 end
 # a sign you can't see on open ground can only be read by standing on it
