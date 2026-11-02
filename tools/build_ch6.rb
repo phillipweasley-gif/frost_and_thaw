@@ -236,7 +236,7 @@ rt.event(34, 9, "Barrel on the dock", [
   { switch: 4180, graphic: "BARREL", commands: [
     rt.send(:command, 355, ["FT.hearth_passage_up(@event_id)"]),
     rt.send(:command, 223, [Tone.new(-255, -255, -255, 0), 6]), rt.send(:command, 106, [8]),
-    rt.send(:command, 201, [0, 2059, 4, 23, 6, 1]), rt.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])] }
+    rt.send(:command, 201, [0, 2059, 6, 24, 4, 1]), rt.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])] }
 ])
 watcher(rt, 20, 23, :homunculus, "Followers/PORYGON")
 watcher(rt, 15, 6, :raven, "Followers/MURKROW")

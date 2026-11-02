@@ -46,12 +46,13 @@ hc.trainer(14, 15, nil, :hearth_corrie, :FISHERMAN, dir: 4, sight: 2)
 hc.trainer(12, 20, nil, :hearth_tallis, :GENTLEMAN, dir: 6, sight: 3)
 hc.event(3, 22, "Sign herald_shrine", [{ graphic: "", script: "FT.herald_shrine_event(@event_id)" }])   # Hellen's errand (048_H)
 # Hellen's old passage down to the Root-Tier docks, behind the sun-chalked cask (048_H; switch 4180)
-hc.event(3, 23, "Sun-chalked cask", [
+# (in the corner below the shrine: (3,23) is where you stand to pray at it)
+hc.event(5, 24, "Sun-chalked cask", [
   { graphic: "BARREL", script: "FT.talk(:old_cask, @event_id)" },
   { switch: 4180, graphic: "BARREL", commands: [
     hc.send(:command, 355, ["FT.hearth_passage_down(@event_id)"]),
     hc.send(:command, 223, [Tone.new(-255, -255, -255, 0), 6]), hc.send(:command, 106, [8]),
-    hc.send(:command, 201, [0, 2055, 34, 8, 4, 1]), hc.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])] }
+    hc.send(:command, 201, [0, 2055, 37, 9, 4, 1]), hc.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])] }
 ])
 hc.sign(14, 22, :cellar_sign)
 save(hc, :hearth_cellar)
