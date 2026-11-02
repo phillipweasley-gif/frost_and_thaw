@@ -504,9 +504,11 @@ module FrostThaw
     say(["A verbeeg strides through the snow toward the cave mouth. Her misshapen face bears a too-wide smile.",
          "She clutches a spear in one hand and cradles a wicker basket full of shiny bits of metal in the other.",
          "GAHG: Duhg? You home?"], event_id)
-    c = pbMessage(_INTL("What do you do?"), [_INTL("Stand aside."), _INTL("Stop her."), _INTL("Run.")], 0)
+    c = pbMessage(_INTL("What do you do?"), [_INTL("Stand aside."), _INTL("Stop her."), _INTL("Run."),
+                                              _INTL("Hide back in the cave.")], 0)
     case c
-    when 1
+    when 3
+      return gahg_hide_and_seek
       say(["You step into her path. Gahg's smile falls. Then her face twists.",
            "GAHG: What did you do to Duhg? WHAT DID YOU DO?", "She drops the basket and attacks."])
       if boss_battle(named_mon(:B68H297, 26, "Gahg"))
@@ -527,6 +529,56 @@ module FrostThaw
     end
   end
 
+  # You duck back into the lair to hide. Gahg finds Duhg first, and then she
+  # comes looking for whoever was at his door.
+  def gahg_hide_and_seek
+    sayc(["You back into the dark of the cave mouth, casks and all, and press yourselves into a niche behind the icicles.",
+          cl(:shade, "(a breath, no more) Nobody moves. Nobody breathes. Nobody sneezes, Meat Meat."),
+          "Gahg ducks in past you, calling Duhg's name."])
+    if flag?(:duhg_down)
+      say(["Deep in the lair, she finds him. The sound she makes isn't a word.",
+           "Then the torchlight comes back up the tunnel, slowly, and stops at every shadow. She's looking for you."])
+    else
+      say(["Deep in the lair, a booming, happy reunion. Then, quite suddenly, quiet.",
+           "DUHG: Where's Gahg's honey? Duhg had honey for Gahg! Somebody TOOK it!",
+           "Two torches come back up the tunnel, slowly, and stop at every shadow."])
+    end
+    if sneaky?
+      say(["The torchlight passes a hand's breadth from your faces. The spear-point turns over a drift beside you, and moves on."])
+      if flag?(:duhg_down)
+        say(["At last Gahg goes back to him. When you creep out into the snow, she's sitting by his body in the firelight, rocking.",
+             "Her basket of shiny bits lies forgotten by the door. You could take it. You do."])
+        pbReceiveItem(:FT_GAHGBASKET) rescue nil
+        set_flag(:gahg_vengeful)
+      else
+        say(["The two of them give up, grumbling, and go back to the fire. You slip out with the casks while they argue about it."])
+        set_flag(:verbeegs_both_alive)
+      end
+      return
+    end
+    say(["A torch swings round. Gahg's too-wide face looks straight at you."])
+    if flag?(:duhg_down)
+      say(["GAHG: YOU. YOU did it!", "She comes at you with the spear."])
+      if boss_battle(named_mon(:B68H297, 26, "Gahg"))
+        say(["Gahg falls beside the cave mouth. Her basket of shiny bits spills across the floor."])
+        pbReceiveItem(:FT_GAHGBASKET) rescue nil
+        set_flag(:gahg_down)
+      else
+        set_flag(:gahg_vengeful)
+      end
+    else
+      say(["DUHG: THIEVES! Gahg, THIEVES!", "Both verbeeg come at you at once."])
+      if boss_battle(named_mon(:B68H297, 27, "Duhg"), named_mon(:B68H297, 26, "Gahg"))
+        say(["Both verbeeg go down, one on top of the other, in the tunnel they shared."])
+        pbReceiveItem(:FT_GAHGBASKET) rescue nil
+        set_flag(:duhg_down)
+        set_flag(:gahg_down)
+      else
+        set_flag(:verbeegs_both_alive)
+      end
+    end
+  end
+
   #-----------------------------------------------------------------------------
   # Home with the mead
   #-----------------------------------------------------------------------------
@@ -537,7 +589,7 @@ module FrostThaw
     sayc(["You come out of the trees with the casks, and somebody sees you, and shouts, and the whole town comes running.",
           "\"The MEAD! The mead's back!\"",
           "Within the hour the mead hall is full, the bees are humming, and somebody is already singing about you, badly."])
-    if !flag?(:duhg_down) || flag?(:gahg_vengeful)
+    if !flag?(:duhg_down) || flag?(:gahg_vengeful) || flag?(:verbeegs_both_alive)
       sayc(["Later, when the singing stops, the brewmistress finds you by the hive fire.",
             "BREWMISTRESS: The giant. You left it alive. (Or its mate.) What's to stop it coming back?",
             cl(:alerion, "Nothing. Keep the militia on the treeline. And keep the bees inside.")])

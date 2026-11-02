@@ -43,6 +43,7 @@ while $Trainer.party.size < 3
   pk = Pokemon.new(%i[MACHAMP ARCANINE CLEFABLE][$Trainer.party.size], 48); HL.sensible_moves(pk, nil); pk.calc_stats; $Trainer.party << pk
 end
 FrostThaw.state[:companions] = %i[alberica reptin alerion shade meat_meat] unless ENV["HERALD"]
+FrostThaw.state[:companions] -= [:shade] if ENV["NOSHADE"] && FrostThaw.state[:companions]   # (no sneak, no tracker: the dice decide)
 $Trainer.money = 50_000
 $PokemonGlobal.repel = 999_999 rescue nil
 
@@ -203,7 +204,8 @@ begin
     answer([/What do you do/, 1]); talk(/Yogobor/); check(flag(:yogobor_gone), "Yogobor the cave bear")
     answer([/Break through the foot of ice/, 0]); talk(/Frozen pool/); check(flag(:silvanus_drunk), "the Silvanus pool, drunk from")
     HL.answers.reject! { |re, _| re.source == "What do you do" }
-    answer([/What do you do/, 0]); talk(/^Duhg$/); check(flag(:duhg_down), "Duhg, sharpening his knife")
+    answer([/What do you do/, BRANCH == "hidealive" ? 1 : 0]); talk(/^Duhg$/)
+    check(BRANCH == "hidealive" ? !flag(:duhg_down) : flag(:duhg_down), "Duhg, sharpening his knife (#{BRANCH == 'hidealive' ? 'left be' : 'fought'})")
     if BRANCH == "curse"
       answer([/Shift the stone block/, 0], [/Take the pearl and the wand/, 0])
       talk(/Stone block/); check(flag(:chieftain_curse), "the chieftain's curse")
@@ -212,10 +214,15 @@ begin
       answer([/Put the chieftain's pearl/, 0]); talk(/Stone block/); check(!flag(:chieftain_curse), "putting them back ends the curse")
     end
     HL.answers.reject! { |re, _| re.source == "What do you do" }
-    answer([/What do you do/, BRANCH == "back" ? 1 : 0])
+    answer([/What do you do/, { "back" => 1, "hide" => 3, "hidealive" => 3 }[BRANCH] || 0])
     go(2133, 28, 30, 2); walk(28, 31); HL.settle(2000); walk(23, 6)
     check(flag(:gahg_met), "Gahg arrives with her basket")
-    check(BRANCH == "back" ? flag(:gahg_down) : flag(:gahg_vengeful), "Gahg: #{BRANCH == 'back' ? 'stopped' : 'left grieving and vengeful'}")
+    case BRANCH
+    when "back" then check(flag(:gahg_down), "Gahg: stopped")
+    when "hide" then check(HL.log.any? { |l| l =~ /press yourselves into a niche/ } && (flag(:gahg_vengeful) || flag(:gahg_down)), "hiding: Gahg finds Duhg dead, and hunts for you (#{flag(:gahg_down) ? 'found you' : 'missed you'})")
+    when "hidealive" then check(HL.log.any? { |l| l =~ /Somebody TOOK it/ } && (flag(:verbeegs_both_alive) || flag(:duhg_down)), "hiding: the two of them come looking for their honey (#{flag(:duhg_down) ? 'found you' : 'missed you'})")
+    else check(flag(:gahg_vengeful), "Gahg: left grieving and vengeful")
+    end
     go(2132, 38, 20, 6); walk(39, 20); walk(2, 27); check(flag(:mead_returned), "home with the mead")
     pick = { "run" => 0, "back" => 1, "decline" => 2 }[BRANCH] || 0
     HL.answers.reject! { |re, _| re.source == "What do you do" }
