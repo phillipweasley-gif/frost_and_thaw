@@ -861,8 +861,19 @@ module Story
       beat("  the door at the bottom of Hew's ladder is locked (no key yet)", nil)
       travel(2050); talk(/Root-Gate/); HL.frames(30); HL.settle(3000)
       beat("down into the Heartroot", :heartroot_entered)
-      talk(/Seal circle/)
-      FrostThaw.rune_answer.each { |season| talk(/Rune of #{season.to_s.capitalize}/) }
+      # A wild battle between runes can knock the team out and send them up to
+      # the Hearth: go back down and carry on from the rune you were on (the
+      # game keeps state[:rune_seq]), the way a player would.
+      until_flag(:seal_open, 4) do
+        (fit(50); travel(2050); talk(/Root-Gate/); HL.frames(30); HL.settle(3000)) if $game_map.map_id != 2057
+        talk(/Seal circle/) if !FrostThaw.flag?(:seal_circle_read) rescue nil
+        FrostThaw.rune_answer.each do |season|
+          break if FrostThaw.flag?(:seal_open)
+          next if (FrostThaw.state[:rune_seq] || []).include?(season)
+          (travel(2050); talk(/Root-Gate/); HL.frames(30); HL.settle(3000)) if $game_map.map_id != 2057
+          talk(/Rune of #{season.to_s.capitalize}/)
+        end
+      end
       beat("SC 7B.05 the aurora seal", :seal_open)
       # H35 sits on the Root Gate's lower landing, past the thralls and Captain Hesk.
       until_flag(:labyrinth_mapped, 3) do
