@@ -57,3 +57,16 @@ Also: `ruby tools/syntax_all.rb` (new: checks every file one at a time; `ruby -c
 `:saw_claw_marks`, `:read_overlook`, `:flight_path_seen`, `:sworn_to_thredra`, `:hew_gift`, `:hew_compass_woke`,
 `:boy_mirror_taken`, `:mirror_sentinel_down`, `:avarice_fragment_kept`, `:mira_left_possessed`, `:mira_freed_late`,
 `:shard_sanctified`, `:heard_passphrase` (read only). Items: FT_ROOTCOMPASS, FT_DEADCOMPASS, FT_BOYSMIRROR, FT_MIRRORLATTICE.
+
+## Found while testing (also fixed)
+- **The story driver couldn't reach Auril's Overflow relic** once the Still Sky blessing stopped covering sap: the relic stands mid-flow at (13,14) and is only reachable by sliding (a player stops at (13,13) above it; verified by solver). The driver now has `slide_to_event`, a BFS over slide stops, and uses it there. `tools/headless/try_slide.rb` checks it (ok).
+- **A base-game battle crash:** Quash walks every battler slot, and an empty slot in an uneven double battle (the Forge's rust-feasters) is nil (`NoMethodError: effects for nil`, 007_Move_Effects_100-17F.rb:809). Guarded in 046_ForgeRooms.rb (end of file) by running Quash's check over the non-empty slots. The full runs after the fix logged no game errors.
+- **A prompt collided with the driver's preset answers:** "What do you say to him?" matched the driver's `/What do you say/` rule and picked the wrong line. Reworded to "How do you calm the boy?"; the driver also retries the boy (`until_flag(:boy_mirror_taken, 3)`). One more Herald-mode line fixed ("You put your palm on the glass" as Meat Meat).
+- **`ruby -c a b c` only checks `a`.** New `tools/syntax_all.rb` checks every file on its own; it caught a quoting error in the mirror boy's scene that a multi-file `ruby -c` had passed.
+
+## Test results
+- `ruby tools/syntax_all.rb`: 156 files OK.
+- Map checks (`tools/build_all.sh`): all 155 maps pass.
+- Smoke test: 206/211 in the worktree; the 5 failures are the gitignored cup-game and Grass-starter pictures, which pass in the full checkout.
+- `tools/headless/try_f3.rb`: 31/31 ok. `tools/headless/try_slide.rb`: ok.
+- Full story runs (under the heavy lock): Journey 234/234, no game errors; Herald Meat Meat 229/230, the one miss being Good Mead in Act I (the known Meat Meat run quirk, not in this slice), no game errors.

@@ -256,7 +256,8 @@ module FrostThaw
       say(["The Sentinel comes apart in plates of glass and slides into the sap."])
     end
     if !has_key?(:FT_BOYSMIRROR)
-      return say(["Meat Meat puts her palm on the glass. It won't break. It won't even crack.",
+      return say([herald?(:meat_meat) ? "You put your palm on the glass. It won't break. It won't even crack." :
+                                        "Meat Meat puts her palm on the glass. It won't break. It won't even crack.",
                   "In it, behind the girl, a woman's face with hollow eyes smiles. \"Not without my other half, V-7.\"",
                   "(The boy's mirror. In the Verdant Bazaar. It's the other half.)"])
     end

@@ -928,7 +928,7 @@ module Story
       beat("SC 7B.07 Selrae, below (the Root-Key)", :root_key)
       # M2 is Meat Meat's: take the boy's mirror off him in the Bazaar first.
       if !($PokemonBag.pbHasItem?(:FT_BOYSMIRROR) rescue false) && !FrostThaw.flag?(:mirror_child_free)
-        travel(2050); talk(/Boy with a mirror/)
+        until_flag(:boy_mirror_taken, 3) { travel(2050); talk(/Boy with a mirror/) }
         beat("  M2: Meat Meat takes the boy's mirror", :boy_mirror_taken)
       end
       travel(2067); HL.frames(20); HL.settle(3000)

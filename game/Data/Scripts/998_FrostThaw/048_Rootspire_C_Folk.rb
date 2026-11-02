@@ -703,7 +703,7 @@ module FrostThaw
     end
     say([mm ? "(Not his face. Hers, wearing his. A spirit, caught in glass, with its fingers in him.)" :
               "MEAT MEAT: (low) Not the boy. Something in the glass, wearing the boy's face. Meat Meat knows how that feels."])
-    c = pbMessage(_INTL(mm ? "What do you say to him?" : "What does Meat Meat say to him?"),
+    c = pbMessage(_INTL(mm ? "How do you calm the boy?" : "How does Meat Meat calm the boy?"),
                   [_INTL("\"Meat Meat had a mirror lady too. Meat Meat got away. You will.\""),
                    _INTL("\"Hold still and don't cry.\""), _INTL("Just grab it")], 0)
     if c != 0
