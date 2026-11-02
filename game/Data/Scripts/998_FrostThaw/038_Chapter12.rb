@@ -123,10 +123,17 @@ module FrostThaw
     case voyage_route
     when :ship
       paid = flag?(:council_mira) ? nil : flag?(:council_heralds) ? "the Council's warrant" : "Darrus Fell's coin"
-      say(["The Boreal Requiem noses through the pack ice#{paid ? ", on #{paid}" : ''}.",
-           paid ? "MIRA: (at the wheel) No chair on the Council for me. Still the Requiem's captain, though. Somebody has to be." : nil,
-           "MIRA: If you hear singing, that's the ice. If you hear laughing, that's me.",
-           "MIRA: Don't worry about either."].compact)
+      if flag?(:mira_left_possessed)
+        # (F3's branch: Mira was left possessed; her first mate sails the Requiem)
+        say(["The Boreal Requiem noses through the pack ice#{paid ? ", on #{paid}" : ''}.",
+             "FIRST MATE: (at the wheel) Captain's below, talking to the mirrors again. I've got the ship.",
+             "FIRST MATE: If you hear singing, that's the ice. If you hear laughing, don't go below."])
+      else
+        say(["The Boreal Requiem noses through the pack ice#{paid ? ", on #{paid}" : ''}.",
+             paid ? "MIRA: (at the wheel) No chair on the Council for me. Still the Requiem's captain, though. Somebody has to be." : nil,
+             "MIRA: If you hear singing, that's the ice. If you hear laughing, that's me.",
+             "MIRA: Don't worry about either."].compact)
+      end
       if flag?(:darrus_redeemed)
         say(["Down in the hold, a tiefling in a Corsair's coat is counting barrels. Twice.",
              "DARRUS: (not looking up) Every one paid for. Go on. Somebody has to keep count."])

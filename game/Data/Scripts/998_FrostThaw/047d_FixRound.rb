@@ -834,7 +834,8 @@ module FrostThaw
             [:whale, _INTL("By the old way: the Wennen bell, and Angajuk")]]
     c = pbMessage(_INTL("The Heralds will go north..."), opts.map(&:last), 0)
     state[:voyage_pick] = opts[[c, 0].max][0]
-    say([{ ship: "MIRA: (from the gallery) The Requiem's been provisioned for thirty years. It's about time.",
+    say([{ ship: flag?(:mira_left_possessed) ? "CORSAIR FIRST MATE: (from the gallery) The Requiem sails. The captain's... not herself. I'll take you." :
+                                             "MIRA: (from the gallery) The Requiem's been provisioned for thirty years. It's about time.",
            griffons: "KETHAN: Skytower owes your Skytower a debt. Griffons. You fly at dawn.",
            whale: "LUMIN: (both paws on the bell rope already) He'll come. He always comes for the bell." }[state[:voyage_pick]]])
   end

@@ -65,6 +65,49 @@ ok("...refugees and the Bazaar sign, and five names put the Heralds forward", T.
 ok("the Heralds take a turn at the debate stages", T::DEBATE_QUESTIONS.all? { |_, a| a[:heralds] })
 
 # ------------------------------------------------------------------------------
+# The trial's evidence (reaudit D 4-8, 16, 27; C B11)
+T.set_flag(:heist_exposed)
+ok("the Maera branch: Autumn's lists were carried below by Maera Vell when Darrus ran", T.witness_line("x{MAERA_CARRIED}") =~ /Maera Vell/)
+unflag(:heist_exposed)
+ok("...and Darrus kept them, if he never ran", T.witness_line("x{MAERA_CARRIED}") == "x")
+T.set_flag(:maera_apprentice_heard)
+ok("Maera Vell's apprentice is her own witness", T.witnesses(:autumn).any? { |_, who, _, _| who =~ /apprentice/ })
+T.set_flag(:talion_haunted)
+ok("Talion haunted gives no testimony (D16)", T.witnesses.none? { |_, who, _, _| who =~ /Talion/ })
+T.set_flag(:wyn_cleared)
+ok("Hyphora's alibi isn't heard just because Wyn's case closed (D7)", T.witnesses.none? { |_, who, _, _| who =~ /Hyphora/ })
+T.set_flag(:frostfire_flask)
+ok("the Frostfire Flask is evidence against Summer (C B11)", T.witnesses(:summer).any? { |_, who, _, _| who =~ /frostfire/i })
+T.set_flag(:mira_mirror_taken)
+answer([/Ask Mira/, ->(_t, c) { c.index { |o| o.to_s =~ /Give back/ } }])
+T.mira_trials
+ok("Mira's cursed mirror goes back to Mira, at the Requiem (D8)", T.flag?(:mira_mirror_returned))
+# Anduin: the nomination goes forward in whatever order its pieces arrive (D3)
+T.set_flag(:petition_anduin); T.trial[:signatures][:anduin] = 15
+ok("Anduin: fifteen names, but not yet the wardens' leave", !T.check_nomination(:anduin))
+T.set_flag(:rootwardens_accept_anduin); T.set_flag(:reptin_endorsed)
+ok("...then the wardens and Reptin's word, and the name goes forward", T.check_nomination(:anduin) && T.nominated?(:anduin))
+# ...and his doubt can be won back with Q1's evidence (D27)
+%i[anduin_doubtful eirwen_restraint leaf_presented].each { |f| T.set_flag(f) }
+T.anduin_after
+ok("Eirwen's word and Hyphora's leaf win back a doubtful Anduin", T.flag?(:anduin_reconciled) && !T.flag?(:anduin_doubtful))
+# Korun, Faria, Luminara (D25, D26)
+at(2068, 9, 19)
+answer([/^Korun\.\.\./, 1], [/^Buy\.\.\./, ->(_t, c) { c.index { |o| o.to_s =~ /Hyphal Lash/ } }])
+money = $Trainer.money
+talk("Korun")
+ok("Korun: a maker's discount on the Hyphal Lash", qty(:FT_HYPHALLASH) == 1 && $Trainer.money == money - 2250)
+T.set_flag(:badge_undercanopy)
+T.faria_wand
+ok("Faria sells the Wand of Spores", qty(:FT_WANDOFSPORES) == 1)
+%i[lake_cleansed hyphora_sworn colony_recognised].each { |f| T.set_flag(f) }
+T.luminara_gifts
+ok("Luminara: Hyphora's Seed for the lake, the Crown for the sworn", qty(:FT_HYPHORASEED) == 1 && qty(:FT_HYPHORACROWN) == 1)
+ok("the new goods work in battle", %i[FT_SAPSTONE FT_HYPHALLASH FT_WANDOFSPORES FT_HYPHORACROWN FT_HYPHORASEED].all? { |i| ItemHandlers.hasUseInBattle(i) })
+unflag(:colony_recognised, :lake_cleansed)
+ok("Ivo is the junior Rootwarden now (one Pell fewer)", (at(2055, 9, 21); $game_map.events.values.any? { |e| e.name == "Ivo" }))
+
+# ------------------------------------------------------------------------------
 # The week's nights: the pilgrim, Reptin's wolf, the sap raid
 T.set_flag(:reptin_warden_vow); T.set_flag(:sap_grudge); T.set_flag(:kobolds_freed)
 T.trial[:day] = 1
@@ -240,6 +283,39 @@ ok("...and she knows you saw every omen", said?(/You've seen them/, m))
 # Sephek's motives at the crown
 m = mark; T.sephek_motive_lines
 ok("at the crown Sephek wants Meat Meat's blood, and names Alerion his rival", said?(/Prototype Verdant/, m) && said?(/Frost doesn't share/, m))
+
+# The Minor Avatar, Avarice's cradle and the epilogue, with the fights stubbed
+$fought = []
+class << T
+  alias f4_boss_battle2 boss_battle
+  def boss_battle(*mons) = ($fought << mons.map { |pk| [pk.name, pk.hp, pk.totalhp] }; true)
+end
+alias f4_pbTrainerBattle pbTrainerBattle
+def pbTrainerBattle(*a) = true
+m = mark
+T.sephek_minor_avatar rescue puts("  (minor avatar: #{$!.message})")
+ok("the Minor Avatar: Sephek names Prototype Verdant, and Alerion one too many", said?(/Prototype Verdant\. You're smaller/, m) && said?(/One too many/, m))
+souls = lambda do
+  $fought.clear
+  unflag(:avarice_body_broken)
+  T.scene_vault_cradle rescue puts("  (cradle: #{$!.message})")
+  s = $fought.flatten(1).find { |n, _, _| n == "Avarice's Reflection" }
+  s && s[1].to_f / s[2]
+end
+%i[circuit_north circuit_east].each { |f| T.set_flag(f) }
+T.state[:flags].delete(:chapel_avarice)
+plain = souls.call
+T.set_flag(:chapel_avarice)
+m = mark
+answered = souls.call
+ok("the Silent Chapel's fire answered: Avarice's reflection is stronger at the cradle", plain && answered && answered > plain && said?(/You answered me once/, m), [plain, answered])
+alias pbTrainerBattle f4_pbTrainerBattle
+class << T
+  alias boss_battle f4_boss_battle2
+end
+m = mark
+T.epilogue rescue puts("  (epilogue: #{$!.message})")
+ok("the epilogue: Reptin goes back to the Chasm every winter, as he swore", said?(/Every winter Reptin goes back to the Cackling Chasm/, m))
 
 puts "\n#{$ok} ok, #{$bad} failed; problems: #{HL.problems.size}"
 HL.problems.each { |p| puts "  #{p}" }
