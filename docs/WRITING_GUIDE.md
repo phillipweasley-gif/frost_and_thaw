@@ -142,6 +142,43 @@ character sounds; this guide wins on mechanics (length, Herald mode, flags, stag
   conclude...", the canon text it must match, the lines it plays under, and what must stay legible and clear of the
   message box (bottom quarter of the screen). Never ask for what can't be seen in game.
 
+## 9a. Staging like a Pokémon game (hard rule)
+
+**Everyone who speaks is on screen, unless there is a story reason they aren't** (a voice through a door, a vision,
+a letter, Auril in your head). A line from someone the player can't see is a bug. Pokémon games tell their stories
+with a small set of on-map tools; use them before reaching for narration or a panel. All of them are in
+`Stage` (043_Stage.rb):
+
+| Tool | When | Call |
+|---|---|---|
+| Speech bubble on the speaker | every `NAME:` line (automatic: `say()` finds the character by name) | `say([...])` |
+| Walk in, walk off | people arrive and leave on screen, never pop in or vanish mid-scene | `Stage.actor`, `walk_to`, `leave` |
+| Walk up to you | someone starts a conversation with you | `Stage.approach(ev)` |
+| "!" / "?" / angry bubble | someone notices you, is puzzled, is cross; plays on them right before their line | `Stage.emote(ev, :exclaim)` |
+| Camera pan | the speaker or the thing that matters is off screen: slide over, then back | `Stage.pan_to(x, y)` / `pan_back` |
+| "Follow me!" | a character leads you somewhere; you walk one step behind | `Stage.escort(ev, x, y)` |
+| Body language | a hop for surprise or joy, turning away, facing whoever is speaking | `Stage.hop`, `turn_to`, `face` |
+| Character theme | the rival's music when they square up; the professor's when you meet; music cut for shocks | `Stage.theme(:tamsin)`, `theme(nil)` |
+| Jingles | Pokémon get, item get, healing, badge | `Stage.jingle(:heal)`, `\me[Pkmn get]` |
+| Cries | a Pokémon appears or reacts | `Stage.cry(species)` |
+| People as gates | an edge you can't pass yet is held by a person who says why and where to go instead | an NPC on the tile, `say` + step back |
+| Starter table | first Pokémon: balls on a table, look into each (picture + cry), confirm; the rival takes the counter | `pro_ball`, `pro_show_in_ball` |
+| First meeting | a character's name and role the first time you meet them, in one line | narration or their own line |
+| Fades | fade to black for a time skip; flash or shake for an impact | `pbFadeOutIn`, `$game_screen.start_shake` |
+
+Rules that come with them:
+
+1. **Introduce before you use.** A character's first appearance shows them, then names them (name and role in one
+   line), before they drive the plot. The rival appears before the starter scene; the professor is met on screen.
+2. **A scene starts when the people in it are visible.** Don't fire a scene on the first step into a room when the
+   speakers are 14 tiles away: put them in view, walk them over, pan to them, or trigger the scene where they stand.
+3. **Where to go next is always answerable.** Every step of the spine sets `state[:goal]` (the pause menu's "Goal"
+   shows it), the last person you talked to said it in plain words, and a character leads you if the way is not
+   obvious. Blocked edges say where to go instead.
+4. **Check it.** Run `tools/headless/stage_trace.rb` (same env as `story_run.rb`) and draw it with
+   `tools/storyboard.py trace.json build/maps out`: one frame per box with the camera, everyone on the map and the
+   line. The game log lists every `Off-stage speaker:` (absent or off camera) for the sweep.
+
 ## 10. Review method
 
 1. Run the checklist below on every new or changed scene.
@@ -208,7 +245,18 @@ character sounds; this guide wins on mechanics (length, Herald mode, flags, stag
 39. Makes sense in any order relative to other optional content.
 40. Its header comment names its thematic echo.
 
+**Pokémon staging (§9a)**
+41. Every speaker is on screen when they talk (or the scene says why not); the storyboard shows it.
+42. People arrive and leave by walking; nobody appears or vanishes mid-scene.
+43. Characters are introduced (seen, then named with their role) before they matter.
+44. Reactions use the bubbles, hops, themes, jingles and cries before narration.
+45. The next step is in `state[:goal]`, in someone's last line, and, if the way isn't obvious, someone leads you.
+
 ## 12. Known problems to fix (from the three books' scene reviews)
+
+- Off-stage speakers across the game (the Journey prologue is fixed and storyboarded). The first sweep run found the
+  Heralds talking at the Targos arrival before they're on the map (ALERION, SHIMMER, ALBERICA on 2001). Sweep every
+  chapter with `stage_trace.rb` and fix each one with the §9a tools.
 
 - Lines over the box limit: about 16 in `glimmer_arrives`, 11 in the tribunal, 3 in `scene_falling` (one 158 chars).
 - `as()` turns stage directions into third-person narration about the player in Herald mode (~65 candidates).

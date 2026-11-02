@@ -30,34 +30,61 @@ Each scene has an ID, its fields, then dialogue. The ID becomes the scene's func
 
 ### SC 0.01 — Festival morning `[mode: journey]`
 
-- **Map:** 2053 Rooted Hearth, then 2050 market. **Trigger:** new game. **Present:** you, Tamsin, Hellen. **Music:** *Hearth*.
-- **Goal:** get to the College before Wynsnow gives your Pokémon to someone else.
+- **Map:** 2090 (the prologue's Rooted Hearth). **Trigger:** new game. **Present:** you, Tamsin, Hellen. **Music:** *Hearth*.
+- **Purpose:** meet Tamsin and Hellen on screen; leave with the goal (the College, by the root-lift).
+- **Staging:** you start on the stool at the corner table (13,5). Tamsin comes in by the street door, walks up and
+  talks to you, then tows you to the bar ("Follow me"), where Hellen is. Tamsin leaves by the door at the end.
 
 Gold light through the tavern's knot-window. It's been gold every morning of your life.
 
+You fell asleep at the corner table again, somewhere in the middle of last night's stories.
+
 **TAMSIN** Up! UP! \[Name\]! Wynsnow said first light, and first light was an hour ago!
+
+*Tamsin walks up to you and hops.* Tamsin Brightrun: Hellen's kid, about your age, and set on being a Rootwarden since birth.
 
 **TAMSIN** Yes, it's always first light. That's not the point. The point is POKÉMON.
 
-**HELLEN** *(sliding a plate across)* Eat first. Heralds didn't save the Dale on an empty stomach.
+*Tamsin leads you to the bar.* Hellen Brightrun keeps the Rooted Hearth, and nobody has ever left it hungry.
+
+**HELLEN** *(sliding a plate over)* Eat first. Heralds didn't save the Dale on an empty stomach.
 
 **TAMSIN** They saved it on pine-mead and spite. You told us!
 
 **HELLEN** And I'll tell you again, with toast. Eat. Then College.
 
-Tamsin is already out of the door, toast in her teeth.
+*Tamsin hops and runs out of the door.* Tamsin's gone, toast in their teeth.
 
 *(The College of Auroral Arts is at the top of the tree. Take the root-lift from the market.)*
 
+- **Goal:** "Get to the College at the top of the tree. Take the root-lift from the market."
 - **Hellen, if you talk to her before the College:** "Eat that on the way. College. Go." / "Wynsnow won't hold a Pokémon for anybody, and you know it."
 - **Lift-keeper:** "Up to the Canopy-Tier? The College is right at the top. Hold on to the rail."
+- **Festival crowd** (holding the edges of town): the parade is coming through; they say where to go next (the
+  lift before the College, the Hearth after the battle, the lantern stall after the mural).
 
-* **Flow:** `intro_started`. The market is open; the College door is the only exit that works.
-* **Notes:** the mural of five heroes and the small sixth figure is on the tavern's east wall. Leave it examinable from the start (see SC 0.03).
+* **Flow:** `intro_started`. Everything in the market is shut for the festival but the Hearth and the lift.
+* **Notes:** the mural of five heroes and the small sixth figure is on the tavern's east wall. Examinable from the start (see SC 0.03).
 
 ### SC 0.02 — Three Pokémon `[mode: journey]`
 
-- **Map:** 2063 College. **Trigger:** enter. **Present:** Wynsnow, Tamsin. **Music:** *Thaw*.
+- **Map:** 2092 (the prologue's College). **Present:** Tamsin, Wynsnow. **Music:** *Thaw*; Wynsnow's theme when
+  you meet him; the rival's theme when Tamsin squares up.
+- **Purpose:** meet Professor Wynsnow; choose your first Pokémon from his table; your first battle, against Tamsin.
+- **Staging:** the east lecture room is cleared for the festival: one table with three Poké Balls (as in Oak's lab),
+  Wynsnow at the blackboard behind it, potted plants either side.
+
+*Arriving (the hall):* Tamsin, waiting in the hall, turns and sees you (!).
+
+**TAMSIN** THERE you are! He's put them out already, \[Name\]. All three!
+
+**TAMSIN** Wynsnow's lecture room, the east one. Come on, follow me!
+
+*Tamsin leads you up the hall and goes in to wait by the table. Goal: "Go into Professor Wynsnow's lecture room."*
+
+*In the doorway:* Wynsnow turns from the blackboard (!).
+
+Professor Aldric Wynsnow, Dean of the College. You've run his errands for years.
 
 **WYNSNOW** Ah. The errand-runner and the future Rootwarden.
 
@@ -65,74 +92,115 @@ Tamsin is already out of the door, toast in her teeth.
 
 **WYNSNOW** Three Pokémon, three futures. Choose before I start measuring them.
 
-▸ YOU: choose **Switle** (Ice), **Chikoiard** (Grass) or **Wickit** (Fire). Sets `starter`.
+**WYNSNOW** Look in each Poké Ball first, then pick one. I'll be writing all of it down.
+
+▸ YOU: walk up to each ball. Each shows the Pokémon in its opened ball, with its cry, and Wynsnow's note:
+**Switle** (Ice/Water) "Slow to get going, and nothing knocks it over." **Chikoiard** (Grass/Steel) "Leaf on top,
+blades below. Mind your fingers." **Wickit** (Fire) "It will set your sleeve alight at least once. Plan for twice."
+**WYNSNOW** So! You want \[it\], the \[type\] Pokémon? Yes takes it (Pokémon get, nickname); no: "Take your time.
+Not all of it, mind. The lanterns go up at dusk." Leaving the room first: **WYNSNOW** (!) "Not yet! A Pokémon
+first. They're on the table, errand-runner." Sets `starter`, `got_starter`.
+
+*Tamsin (!), the rival's theme.*
 
 **TAMSIN** Then I'll take the one that beats yours. Obviously.
 
-Tamsin scoops it up before Wynsnow can blink.
+*Tamsin walks to that ball and takes it. Its cry. "Tamsin received \[it\]!"*
 
-**WYNSNOW** Obviously. Battle in the courtyard. Not the lab. Never the lab.
+**WYNSNOW** Obviously. Battle in the hall. Not in my lecture room. Never in my lecture room.
+
+*Tamsin squares up in the hall; Wynsnow watches from his doorway.*
+
+**TAMSIN** Rootwarden against errand-runner. Ready? Doesn't matter. GO!
 
 *Battle: Tamsin (loss allowed).*
 
 `[won]` **TAMSIN** ...Best of three. Later. That one didn't count, \[Name\]. It was practice!
 
-`[lost]` **TAMSIN** Ha! HA! Rootwarden material. I told you. I told everyone.
+`[lost]` *Tamsin hops twice.* **TAMSIN** Ha! HA! Rootwarden material. I told you. I told everyone.
+
+*Wynsnow walks over; the party is healed (healing jingle).*
 
 **WYNSNOW** There. Patched up. Off you go, both of you. I have measuring to do.
 
-**TAMSIN** Hearth! Hellen's got festival cake, and there's something on the wall I want to show you.
+**TAMSIN** Hearth! Hellen's got festival cake.
+
+**TAMSIN** And there's something on the wall I want to show you.
 
 **TAMSIN** Come ON, \[Name\]!
 
-- **Flow:** first battle against Tamsin (loss allowed). Sets `got_starter`.
+*Tamsin runs down the hall and out. Goal: "Tamsin's run back to the Rooted Hearth. Take the root-lift down to the market."*
+
+- **In a loop** (the Still Keeper's wheel; you already have your partner): your ball is gone from the table.
+  **WYNSNOW** Three Pokémon, three futures. And... two balls. I counted three this morning. / **TAMSIN** *(staring at
+  your belt)* Where'd you get that? You didn't have it at breakfast. Then Tamsin takes the counter and battles you.
+- **Flow:** `met_wynsnow`, `got_starter`, `pro_battle_done`. The taken balls stay gone (self switch A).
+
+### SC 0.02c — Back to the Hearth `[mode: journey]`
+
+- **Map:** 2091 market (Tamsin waits by the lift). **Purpose:** nobody has to hunt for the way on.
+
+**TAMSIN** *(!)* Too slow! The Hearth's this way. Follow me!
+
+*Tamsin leads you across the market to the Hearth and goes in ahead. Sets `pro_led`. Goal: "Tamsin's at the mural in the Rooted Hearth."*
 
 ### SC 0.03 — The sixth figure `[mode: journey]`
 
-- **Map:** 2053, the mural wall. **Trigger:** speak to Tamsin after the battle. **Music:** *Heralds*.
+- **Map:** 2090, the mural wall. **Trigger:** coming into the Hearth after the battle (the camera finds Tamsin at the
+  far wall). **Music:** *Heralds*.
+
+**TAMSIN** *(!)* Over here! Quick, before the cake goes.
+
+*You walk to the wall.*
 
 **TAMSIN** Look. Every festival I check if it moved.
 
-Five heroes carved in the living wood: one wreathed in snow, one in flame, one with a lute, one with a wolf, and one half in shadow, with a knife.
+Five heroes, carved in the living wood. One wreathed in snow, one in flame, one with a lute.
 
-Two dragons coil above them. In the corner, half-hidden by a root, a small sixth figure. No face.
+One with a wolf. One half in shadow, with a knife. Two dragons coil above them.
+
+In the corner, half-hidden by a root, a small sixth figure. No face.
+
+`[after the loop]` And a seventh: a dwarf woman made of ice, hands over her heart. / Nobody remembers carving it.
 
 **TAMSIN** Hellen says nobody's ever known who that is. Not even the carver.
 
-`[after the loop]` And a seventh figure: a dwarf woman made of ice, hands over her heart. Nobody remembers carving it.
+*The camera pans to the bar.* **HELLEN** *(from the bar)* The carver was my great-great-something. She said the wood grew it.
 
-**HELLEN** *(from the bar)* The carver was my great-great-something. She said the wood grew it.
+**TAMSIN** Lanterns! The stall's right outside. Come on, before they sell the good ones.
 
-**TAMSIN** Lanterns! The stall's out by the door. Come on, \[Name\], before they sell the good ones.
+*Tamsin runs out. Goal: "Tamsin's at the lantern stall, just outside the Hearth."*
 
-- **Hellen, after:** "There it is. Your first. Here, it can have a crust. Everyone eats in my house." / "Don't let Tamsin tell you it was a fair fight, whichever way it went."
-
+- **Hellen, after:** "There it is. Your first. Here, it can have a crust. Everyone eats in my house." / "Don't let Tamsin tell you it was a fair fight, whichever way it went." / "They're at the wall. They check it every festival."
 * **Flow:** sets `saw_sixth_figure` (pays off in Chapter 6 and the epilogue).
 
 ### SC 0.04 — Reversal glass `[mode: journey]`
 
-- **Map:** 2050 market, lantern stall. **Trigger:** walk past the stall. **Present:** Tamsin, the lantern seller. **Music:** *Hearth*, then silence.
+- **Map:** 2091 market, outside the Hearth. **Trigger:** coming out of the Hearth after the mural. **Present:**
+  Tamsin (haggling at the stall), the lantern seller. **Music:** *Hearth*, then silence.
 - **Goal:** none. It's a gift.
 
 **LANTERN SELLER** Real Reversal glass! Dug out of the deep roots, where the old hag's mirrors broke!
 
-**TAMSIN** It's not real. Everybody knows it's not real.
+*Tamsin turns to you.* **TAMSIN** It's not real. Everybody knows it's not real.
 
-She buys it anyway.
+*Tamsin buys it anyway (the shop chime), then walks over.*
 
 **TAMSIN** Here. For your first Pokémon day, \[Name\].
 
-`[after the loop]` **TAMSIN** Weird. I already bought you this. Didn't I? ...Here.
+`[after the loop]` **TAMSIN** Weird. I already bought you this. Didn't I? / ...Here.
+
+*Item get: "Tamsin gave you a lantern of Reversal glass!"*
 
 The glass in the lantern is old, with a crack like frost.
 
-The ground shudders. Once. Every lantern in the market swings. Nobody else notices.
+*(Screen shake.)* The ground shudders. Once. Every lantern in the market swings. Nobody else notices.
 
 *(Story panel S-01.)* The crack in the glass widens. Inside it, it's night.
 
 A dock in a blizzard. Five figures coming down a gangplank.
 
-**TAMSIN** Hey... \[Name\]? What are you...
+*Panel off. Tamsin (!).* **TAMSIN** Hey... \[Name\]? What are you...
 
 - **Flow:** fade to white; your Pokémon goes with you. Teleport to 2001 Targos pier. Sets `fell_through`.
 - **Notes:** the shudder is the forge's first heat-pulse. Keep the same sound effect for every pulse in Chapter 6.

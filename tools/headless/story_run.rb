@@ -270,17 +270,25 @@ module Story
       HL.frames(30); HL.settle(3000)
       beat("festival morning at the Hearth", :intro_started)
       travel(2091)
-      talk(/Lift-keeper/); HL.frames(30); HL.settle(5000)
-      beat("first Pokémon from Wynsnow", :got_starter)
-      travel(2091); travel(2090)
-      talk(/^Tamsin/)
+      talk(/Lift-keeper/); HL.frames(30); HL.settle(8000)
+      beat("Tamsin leads you to the lecture room", :pro_led_to_room)
+      step_on(/Lecture room door/); HL.settle(8000)
+      beat("meet Professor Wynsnow", :met_wynsnow)
+      talk(/Starter ball #{(ENV["HL_STARTER"] || 0).to_i + 1}/) unless FrostThaw.flag?(:got_starter)   # (a loop: you have yours)
+      HL.settle(12000)
+      beat("first Pokémon from Wynsnow's table", :got_starter)
+      beat("first battle with Tamsin", :pro_battle_done)
+      travel(2091); HL.frames(30); HL.settle(12000)
+      beat("Tamsin leads you back to the Hearth", :pro_led)
+      HL.frames(30); HL.settle(8000)
       beat("the sixth figure", :saw_sixth_figure)
-      travel(2091); HL.frames(60); HL.settle(5000)
+      travel(2091); HL.frames(60); HL.settle(8000)
       beat("through the lantern", :fell_through)
     end
 
     def run
       prologue
+      return if ENV["STOP_AT"] == "0"
       fit(14)
       beat("arrive in Targos", :arrived_targos)
       travel(2002); HL.frames(20); HL.settle(3000)
@@ -1150,8 +1158,9 @@ module Story
 end
 
 # (Run directly to play the story; required by a focused test, only Story is loaded.)
-if __FILE__ == $0
+if __FILE__ == $0 || ENV["STAGE_TRACE"]
   HL.start_up
+  $after_start_up&.call
   HL.quiet = !ENV["HL_VERBOSE"]
   mode = ENV["HL_MODE"] || "journey"
   HL.answers = [[/Which adventure/, 1], [/How would you like to play/, mode == "journey" ? 0 : 1],

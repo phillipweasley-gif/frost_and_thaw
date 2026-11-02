@@ -14,14 +14,46 @@ module FrostThaw
 
   module_function
 
+  # Each "NAME: line" gets a speech bubble pointing at that character, found by
+  # name on the map (WRITING_GUIDE §9a: speakers are on screen). A speaker who
+  # isn't on the map, or is outside the camera, is noted once per map in the
+  # log so the staging sweep can find them.
   def say(lines, event_id = nil)
     Array(lines).flatten.compact.each do |line|
       begin
-        pbCallBub(2, event_id) if event_id && event_id > 0 && line =~ /\A[A-Z][A-Z' ]+:/
+        tag = line[/\A([A-Z][A-Z'\- ]*[A-Z]):/, 1]
+        if tag
+          ev = Stage.speaker(tag, event_id)
+          if !ev && event_id && event_id > 0
+            e = $game_map.events[event_id]
+            ev = e if e && !e.character_name.to_s.empty?
+          end
+          if ev
+            pbCallBub(2, ev.id)
+            note_offstage(tag, :off_camera) if !Stage.on_screen?(ev)
+          else
+            note_offstage(tag, :absent)
+          end
+        end
       rescue StandardError
       end
       pbMessage(_INTL(line))
     end
+  end
+
+  # Speakers who talked without being seen (for the staging sweep). The player
+  # speaking as their own Herald is on screen by definition.
+  def note_offstage(tag, why)
+    return if ($Trainer.name.to_s.upcase == tag rescue false)
+    @offstage ||= {}
+    key = [($game_map.map_id rescue 0), tag, why]
+    return if @offstage[key]
+    @offstage[key] = true
+    log("Off-stage speaker: #{tag} (#{why}) on map #{key[0]}")
+  end
+
+  def offstage_speakers
+    (@offstage || {}).keys
   end
 
   # A Herald's line, shown now. When you are playing that Herald and a quieter
@@ -410,22 +442,31 @@ end
 
 class PokemonPauseMenu_Scene
   alias ft_orig_pbShowCommands pbShowCommands unless method_defined?(:ft_orig_pbShowCommands)
+  # Two entries of ours after the player's: "Goal" (where the story goes next,
+  # whenever there is one) and "Heralds" (party chat, once anyone travels with you).
   def pbShowCommands(commands)
-    return ft_orig_pbShowCommands(commands) if !FrostThaw.party_chat_available?
+    extras = []
+    goal = (FrostThaw.active? && FrostThaw.state[:goal]) rescue nil
+    extras << [:goal, "  <icon=menuIcons/PLAYER>  " + _INTL("Goal")] if goal.is_a?(String) && !goal.empty?
+    extras << [:heralds, "  <icon=menuIcons/PLAYER>  " + _INTL("Heralds")] if FrostThaw.party_chat_available?
+    return ft_orig_pbShowCommands(commands) if extras.empty?
     player_entry = commands.index { |c| c.to_s.include?("menuIcons/PLAYER") } || (commands.length - 1)
     ours = player_entry + 1
     with_ours = commands.dup
-    with_ours.insert(ours, "  <icon=menuIcons/PLAYER>  " + _INTL("Heralds"))
+    with_ours.insert(ours, *extras.map { |e| e[1] })
     loop do
       ret = ft_orig_pbShowCommands(with_ours)
-      if ret == ours
+      if ret >= ours && ret < ours + extras.size
         pbPlayDecisionSE rescue nil
         pbHideMenu
-        FrostThaw.party_chat
+        case extras[ret - ours][0]
+        when :goal    then pbMessage(_INTL("Goal: {1}", FrostThaw.state[:goal]))
+        when :heralds then FrostThaw.party_chat
+        end
         pbShowMenu
         next
       end
-      return (ret > ours) ? ret - 1 : ret
+      return (ret >= ours + extras.size) ? ret - extras.size : ret
     end
   end
 end

@@ -458,12 +458,23 @@ check("Reptin doesn't talk to himself") { !FT.companions.include?(:reptin) && FT
 ok = true
 FT::PARTY_CHAT.each { |c, areas| areas.each_value { |v| r = FT.resolve(v); ok &&= r.is_a?(Array) && r.all? { |s| s.is_a?(String) } } }
 check("all party chat resolves") { ok }
+saved_goal = FT.state[:goal]
+FT.state[:goal] = nil
 $menu_ret = [3, 4]
 cmds = ["  <icon=menuIcons/POKEMON>  Pokémon", "  <icon=menuIcons/BAG>  Bag", "  <icon=menuIcons/PLAYER>  Name", "Save", "Options"]
 $next_choice = 99
 r = PokemonPauseMenu_Scene.new.pbShowCommands(cmds)
 check("pause menu gains Heralds after the trainer entry") { $shown[3].include?("Heralds") }
 check("choosing Heralds opens chat, then later choices map back correctly") { r == 3 }
+FT.state[:goal] = "Get to the College at the top of the tree."
+$menu_ret = [3, 4, 5]
+$messages.clear
+r = PokemonPauseMenu_Scene.new.pbShowCommands(cmds)
+check("with a goal, the pause menu shows Goal, then Heralds, after the trainer entry") {
+  $shown[3].include?("Goal") && $shown[4].include?("Heralds") }
+check("choosing Goal shows it; later choices still map back correctly") {
+  r == 3 && $messages.any? { |m| m.to_s.include?("Get to the College") } }
+FT.state[:goal] = saved_goal
 
 # bag
 bag = PokemonBag.new

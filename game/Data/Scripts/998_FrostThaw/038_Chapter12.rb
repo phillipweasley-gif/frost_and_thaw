@@ -72,10 +72,10 @@ module FrostThaw
   end
 
   def tamsin_final
-    sayc(["TAMSIN: (blocking the way, her Rootwarden cloak on crooked) Hold it. HOLD it.",
+    sayc(["TAMSIN: (blocking the way, their Rootwarden cloak on crooked) Hold it. HOLD it.",
           "TAMSIN: You're going to fight a GOD. With THAT team? Not without one more battle first.",
-          cl(:alberica, "Look at her. All grown up and threatening people. I could cry."),
-          cl(:reptin, "She means she'll miss us. That's how Tamsin says it."),
+          cl(:alberica, "Look at them. All grown up and threatening people. I could cry."),
+          cl(:reptin, "They mean they'll miss us. That's how Tamsin says it."),
           "TAMSIN: I mean I'll WIN."])
     if journey?
       say(["TAMSIN: Also. That's you. On Hellen's wall. The sixth figure.",

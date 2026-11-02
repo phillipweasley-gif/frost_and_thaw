@@ -334,8 +334,11 @@ module HL
     def talk_to(ev)
       r = walk_to(ev.x, ev.y, adjacent: true)
       if r == :blocked
-        DIRS.each do |d, (dx, dy)|
-          cx, cy = ev.x - dx * 2, ev.y - dy * 2          # stand two tiles away, facing it
+        # stand two tiles away, facing it; across a counter first (shop counters,
+        # the Poké Ball table), since that's where the game lets you talk over
+        order = DIRS.sort_by { |_d, (dx, dy)| ($game_map.counter?(ev.x - dx, ev.y - dy) rescue false) ? 0 : 1 }
+        order.each do |d, (dx, dy)|
+          cx, cy = ev.x - dx * 2, ev.y - dy * 2
           next if route(cx, cy).nil?
           next if walk_to(cx, cy) != :ok
           face(d); frames(2); press_c

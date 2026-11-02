@@ -513,3 +513,265 @@ end
 if defined?(Events) && Events.respond_to?(:onMapChange)
   Events.onMapChange += proc { |_sender, _e| FrostThaw::Stage.forget }
 end
+
+#===============================================================================
+# The Pokémon storytelling toolkit (WRITING_GUIDE §9a). The things every
+# Pokémon game does on the map, so nobody talks from off screen:
+#
+#   Stage.emote(ev, :exclaim)       "!" / "?" / angry bubble over a character
+#   Stage.cry(species)              a Pokémon's cry
+#   Stage.theme(:tamsin)            a character's theme; Stage.theme(nil) = map BGM
+#   Stage.jingle(:pokemon)          Pokémon get / item get / healing / badge
+#   Stage.hop(ev)                   a little jump on the spot (surprise, joy)
+#   Stage.turn_to(ev, other)        face someone (the player by default)
+#   Stage.walk_to(ev, x, y)         walk there by the shortest clear path
+#   Stage.approach(ev)              walk up to the player and face them
+#   Stage.leave(ev, x, y)           walk off (to a door or the screen edge) and go
+#   Stage.escort(leader, x, y)      "Follow me!": the leader walks, you follow
+#   Stage.pan_to(x, y) / pan_back   slide the camera to show something, and back
+#   Stage.on_screen?(ev)            is that character inside the camera?
+#===============================================================================
+module FrostThaw
+  module Stage
+    module_function
+
+    EMOTES = { exclaim: :EXCLAMATION_ANIMATION_ID, question: :QUESTION_MARK_ANIMATION_ID,
+               angry: :ANGRY_ANIMATION_ID }
+    # Characters' themes (Audio/BGM). The rival's music starts when Tamsin
+    # shows up to battle; the professor has his own.
+    THEMES = { tamsin: "Pokémon_The_Origins_-_Rival_Encounter_Music_mp3", wynsnow: "oak_theme",
+               college: "oak_lab" }
+    JINGLES = { pokemon: "Pkmn get", item: "Item get", key_item: "Key item get", heal: "Pokemon Healing",
+                badge: "Badge get" }
+    MOVE = { 2 => 1, 4 => 2, 6 => 3, 8 => 4 }          # direction -> PBMoveRoute code
+    TURN = { 2 => 16, 4 => 17, 6 => 18, 8 => 19 }
+    STEP = { 2 => [0, 1], 4 => [-1, 0], 6 => [1, 0], 8 => [0, -1] }
+
+    def emote(ev, kind = :exclaim)
+      return if !map? || !ev
+      const = EMOTES[kind] || kind
+      id = const.is_a?(Symbol) ? Settings.const_get(const) : const.to_i
+      sprite = $scene.spriteset.addUserAnimation(id, ev.x, ev.y, false, 2) rescue nil
+      guard = 0
+      while sprite && !sprite.disposed? && guard < 90
+        wait(1)
+        guard += 1
+      end
+    rescue StandardError => e
+      log("emote: #{e.message}")
+    end
+
+    def cry(species)
+      pbPlayCrySpecies(species)
+    rescue StandardError => e
+      log("cry #{species}: #{e.message}")
+    end
+
+    def theme(key)
+      return $game_map.autoplay if key.nil?
+      pbBGMPlay(THEMES[key] || key.to_s)
+    rescue StandardError => e
+      log("theme #{key}: #{e.message}")
+    end
+
+    def jingle(key)
+      pbMEPlay(JINGLES[key] || key.to_s)
+    rescue StandardError => e
+      log("jingle #{key}: #{e.message}")
+    end
+
+    def hop(ev, times = 1)
+      return if !ev
+      walk(ev, [14, 0, 0] * times)
+    end
+
+    def turn_to(ev, other = $game_player)
+      return if !ev || !other
+      pbTurnTowardEvent(ev, other)
+    rescue StandardError => e
+      log("turn_to: #{e.message}")
+    end
+
+    # Can ev step from (x,y) in direction d, ignoring its own through flag
+    # (stand-ins are through, but should still walk round people and walls)?
+    def step_ok?(ev, x, y, d, goal)
+      nx, ny = x + STEP[d][0], y + STEP[d][1]
+      return false unless $game_map.valid?(nx, ny)
+      return false unless $game_map.passable?(x, y, d, ev) && $game_map.passable?(nx, ny, 10 - d, ev)
+      return true if [nx, ny] == goal                    # the goal may be a door or a step-on event
+      return false if !ev.equal?($game_player) && $game_player.x == nx && $game_player.y == ny
+      $game_map.events.each_value do |o|
+        next if o.equal?(ev) || o.through || o.x != nx || o.y != ny
+        next if ev.equal?($game_player) && o.character_name.to_s.empty?
+        return false
+      end
+      true
+    end
+
+    # Shortest clear path (direction list) from where ev stands to (tx, ty).
+    # adjacent: stop beside the target instead of on it.
+    def path_for(ev, tx, ty, adjacent: false)
+      start = [ev.x, ev.y]
+      done = adjacent ? ->(p) { (p[0] - tx).abs + (p[1] - ty).abs == 1 } : ->(p) { p == [tx, ty] }
+      return [] if done.(start)
+      prev = { start => nil }
+      queue = [start]
+      until queue.empty?
+        cur = queue.shift
+        [2, 4, 6, 8].each do |d|
+          nxt = [cur[0] + STEP[d][0], cur[1] + STEP[d][1]]
+          next if prev.key?(nxt)
+          next unless step_ok?(ev, cur[0], cur[1], d, adjacent ? nil : [tx, ty])
+          prev[nxt] = [cur, d]
+          if done.(nxt)
+            dirs = []
+            p = nxt
+            while prev[p]
+              dirs.unshift(prev[p][1])
+              p = prev[p][0]
+            end
+            return dirs
+          end
+          queue << nxt
+        end
+      end
+      nil
+    end
+
+    def walk_to(ev, x, y, face: nil, adjacent: false, wait_for: true)
+      return false if !ev
+      dirs = path_for(ev, x, y, adjacent: adjacent)
+      if !dirs
+        log("walk_to: no path for #{ev.respond_to?(:name) ? ev.name : 'player'} to (#{x},#{y})")
+        return false
+      end
+      route = dirs.map { |d| MOVE[d] }
+      route << TURN[face] if face
+      walk(ev, route, wait_for: wait_for) if !route.empty?
+      true
+    end
+
+    # Walk up to the player (or another character) and face them.
+    def approach(ev, target = $game_player)
+      return if !ev || !target
+      walk_to(ev, target.x, target.y, adjacent: true)
+      turn_to(ev, target)
+      turn_to(target, ev) if target.equal?($game_player)
+    end
+
+    # Walk off to (x, y), then vanish (a stand-in is removed, a map event erased
+    # for this visit; its page decides whether it's back next time).
+    def leave(ev, x, y)
+      return if !ev
+      dirs = path_for(ev, x, y)
+      moves = dirs ? dirs.map { |d| MOVE[d] } : path_straight(ev, x, y)
+      walk(ev, [37] + moves + [38])                  # through at the end: the goal may be a door
+      if @actors.key?(ev.id)
+        remove_actor(ev)
+      else
+        ev.erase rescue (ev.transparent = true)
+      end
+    end
+
+    # A fallback for leave(): straight lines, through anything.
+    def path_straight(ev, x, y)
+      dx, dy = x - ev.x, y - ev.y
+      ([dx > 0 ? 3 : 2] * dx.abs) + ([dy > 0 ? 1 : 4] * dy.abs)
+    end
+
+    # "Follow me!" The leader walks to (x, y); the player walks one step behind.
+    def escort(leader, x, y, facing: nil)
+      return false if !leader
+      dirs = path_for(leader, x, y)
+      return false if !dirs || dirs.empty?
+      lead = dirs.map { |d| MOVE[d] }
+      beside = lambda do
+        STEP.find { |_d, (sx, sy)| [$game_player.x + sx, $game_player.y + sy] == [leader.x, leader.y] }&.first
+      end
+      walk_to($game_player, leader.x, leader.y, adjacent: true) if !beside.call
+      first = beside.call
+      # the player steps onto the tile the leader just left, one step behind
+      follow = (first ? [MOVE[first]] : []) + lead[0...-1]
+      pbMoveRoute($game_player, [37] + follow + [38])
+      walk(leader, lead)
+      guard = 0
+      while $game_player.move_route_forcing && guard < 600
+        wait(1)
+        guard += 1
+      end
+      face(leader, facing) if facing
+      turn_to($game_player, leader)
+      true
+    rescue StandardError => e
+      log("escort: #{e.message}")
+      false
+    end
+
+    # The camera: centre the screen on (x, y), clamped to the map, over frames.
+    def display_for(x, y)
+      cx = (Graphics.width / 2 - Game_Map::TILE_WIDTH / 2) * Game_Map::X_SUBPIXELS
+      cy = (Graphics.height / 2 - Game_Map::TILE_HEIGHT / 2) * Game_Map::Y_SUBPIXELS
+      max_x = [($game_map.width - Graphics.width * 1.0 / Game_Map::TILE_WIDTH) * Game_Map::REAL_RES_X, 0].max
+      max_y = [($game_map.height - Graphics.height * 1.0 / Game_Map::TILE_HEIGHT) * Game_Map::REAL_RES_Y, 0].max
+      [[[x * Game_Map::REAL_RES_X - cx, 0].max, max_x].min, [[y * Game_Map::REAL_RES_Y - cy, 0].max, max_y].min]
+    end
+
+    def pan_to(x, y, frames: 30)
+      return if !map?
+      sx, sy = $game_map.display_x, $game_map.display_y
+      tx, ty = display_for(x, y)
+      frames.times do |i|
+        t = (i + 1).to_f / frames
+        t = t * t * (3 - 2 * t)                          # ease in and out
+        $game_map.display_x = (sx + (tx - sx) * t).round
+        $game_map.display_y = (sy + (ty - sy) * t).round
+        wait(1)
+      end
+      @panned = true
+    rescue StandardError => e
+      log("pan_to: #{e.message}")
+    end
+
+    def pan_back(frames: 30)
+      return if !@panned
+      pan_to($game_player.x, $game_player.y, frames: frames)
+      $game_player.center($game_player.x, $game_player.y) rescue nil
+      @panned = false
+    end
+
+    def panned?
+      @panned ? true : false
+    end
+
+    def on_screen?(ev)
+      return false if !ev
+      sx = ev.screen_x
+      sy = ev.screen_y
+      sx >= 0 && sx <= Graphics.width && sy >= 16 && sy <= Graphics.height + 16
+    rescue StandardError
+      true
+    end
+
+    # The character a line's speaker tag names ("TAMSIN: ..."), if one is on
+    # the map and visible: the event that started the scene first, then any
+    # character whose event name contains the speaker's name.
+    def speaker(name, event_id = nil)
+      return nil if !map? || !name
+      want = name.to_s.downcase.strip
+      seen = lambda do |e|
+        e && !e.character_name.to_s.empty? && !e.transparent && !e.instance_variable_get(:@erased)
+      end
+      label = lambda do |e|
+        e.name.to_s.sub(/\Astage_/, "").tr("_", " ").downcase
+      end
+      first = event_id && event_id > 0 ? $game_map.events[event_id] : nil
+      return first if seen.(first) && label.(first).split(/[^a-z']+/).include?(want.split.first)
+      $game_map.events.values.select(&seen).find do |e|
+        words = label.(e).split(/[^a-z'\-]+/)
+        want.split.all? { |w| words.include?(w) }
+      end
+    rescue StandardError
+      nil
+    end
+  end
+end
