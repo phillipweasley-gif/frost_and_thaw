@@ -64,18 +64,18 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 135 | Rumours table d6 | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:488-502 | - |
 | 136 | Hellen insists the PCs stay as guests | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:320, 345-352 | - |
 | 137 | T3 Council Hall of Seasons (four obelisks, debate) | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:148-149, 507-554 | - |
-| 138 | Forged decree ordering a Heartroot dig (Avarice's sigil in the wax) / "The Frozen Edict" | Compressed | Full | 048_Rootspire_C_Folk.rb:482; 048_Rootspire_D_Quests.rb:908 | sweep |
+| 138 | Forged decree ordering a Heartroot dig (Avarice's sigil in the wax) / "The Frozen Edict" | Compressed | Full | 048_Rootspire_C_Folk.rb:482; 048_Rootspire_D_Quests.rb:916 | sweep |
 | 139 | T4 Spire Armory (Rootwarden training scene) | Missing | Full | tools/build_rootspire_life.rb:10; map 2183; 048_Rootspire_F_Downtime.rb:64 | city: Arvik's Days 2-7 |
 | 140 | "The Still Beast" side quest (Avarice-sigiled bone-and-ice construct, CR 7) | Missing | Full | 048_Rootspire_D_Quests.rb:185; 048_Rootspire_D_Quests.rb:203; tools/build_ch6b.rb:98; map 2060 | city: the Still Beast hunt is set; sweep |
 | 141 | District hook: bazaar mirrors spread Avarice's mind | Compressed | Full | 048_Rootspire_E_Nights.rb:589; 048_Rootspire_C_Folk.rb:660; 048_Rootspire_B_People.rb:507 | sweep |
 | 142 | District hook: Winter Matron covertly funds the Halo | Full | Full (already; unchanged) | as audited: 033_Chapter7B.rb:361-362; 025_Chapter7.rb:103 | - |
-| 143 | Cycle Day festival; cult plans to ignite the "Frost Saint" effigy | Changed | Full | 048_Rootspire_F_Downtime.rb:644; 024_Chapter6.rb:423 | sweep |
+| 143 | Cycle Day festival; cult plans to ignite the "Frost Saint" effigy | Changed | Full | 048_Rootspire_F_Downtime.rb:644; 024_Chapter6.rb:423 | quests: the festival's last night (:effigy_saved) |
 | 144 | Canopy-Tier atmosphere | Compressed | Full | 048_Rootspire_E_Nights.rb:477 | sweep |
 | 145 | C1 Shrine of the Twinned Dragons (twin spires, orb glows when wyrms stir, dream visions) | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:849-918; 029_Glimmer.rb:24-34 | - |
 | 146 | C1 hook: Halo splinter corrupting the orb to channel Auril into Frostina | Missing (dead content) | Full | 048_Rootspire_D_Quests.rb:46; tools/build_ch6b.rb:121; map 2061 | city: the Halo splinter kneels at the orb; they're driven off the orb first |
 | 147 | C2 Wind-Glass Library (leaves record speech; Eirwen; Naerth's ledger; Alberica's handwriting) | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:340-369; map 2062 | - |
 | 148 | C3 Celestial Rift (aurora column, Glimmer's site) | Changed (approved) | Changed (approved) | as audited: 026_Rootspire.rb:326-337; 029_Glimmer.rb:59-139 | - |
-| 149 | C3: portals to the Frostfell; ice-winged angels with Avarice's mark | Missing | Full | 048_Rootspire_E_Nights.rb:414; tools/build_ch6b.rb:125; map 2061 | sweep |
+| 149 | C3: portals to the Frostfell; ice-winged angels with Avarice's mark | Missing | Full | 048_Rootspire_E_Nights.rb:414; tools/build_ch6b.rb:125; map 2061 | quests: the Frostfell portal and the ice-winged angel |
 | 150 | C4 Aerie Markets (air-fruit, sky-sailor duels, Aarakocra Seer, Auroral Motes) | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:120-121, 284-297; MARTS[:aerie] 026:80; 027_Relics.rb:59 | - |
 | 151 | Upper hook: Library prophecy "Frost Saint will climb the Spire when the roots bleed" | Missing | Full | 048_Rootspire_G_Hooks.rb:14; tools/build_ch6b.rb:154; map 2062 | sweep |
 | 152 | Upper hook: Winter Matron wants the Canopy under martial law | Missing | Full | 024_Chapter6.rb:567 | sweep |
@@ -98,41 +98,41 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 174 | Hook "A Season Too Long" (cycle stalled on Summer) | Changed | Full (the Rite of the Long Gold: a Rootwarden ritual, turned by Ash, feeding Avarice's engine) | 048_Rootspire_D_Quests.rb:282; 048_Rootspire_D_Quests.rb:321 | city: Kethan names the infiltrator |
 | 175 | Political Favour Track (standing with one seasonal faction) | Changed | Full (faction favour tracked; standing-board in the Halls; state[:favour] for W4's Vote) | 048_Rootspire_E_Nights.rb:446; 048_Rootspire_E_Nights.rb:453; map 2180 | sweep |
 | 176 | Rootwardens: symbol (wolf paw over a leaf), creed | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:202-203, 387 | - |
-| 177 | Rootwardens: ~200 members, Claw/Bough/Seed circles | Compressed | Full | 048_Rootspire_A_City.rb:163; 048_Rootspire_A_City.rb:164; 048_Rootspire_A_City.rb:161 | sweep |
+| 177 | Rootwardens: ~200 members, Claw/Bough/Seed circles | Compressed | Full | 048_Rootspire_A_City.rb:161; 048_Rootspire_A_City.rb:162; 048_Rootspire_A_City.rb:159 | sweep |
 | 178 | Rootwardens' crisis: Bough members missing at the Wall; frozen bodies reanimated by Avarice constructs | Compressed | Full | 048_Rootspire_D_Quests.rb:203 | sweep |
 | 179 | Rheven suspects an infiltrator feeding the Halo | Missing | Full | 048_Rootspire_D_Quests.rb:282; 048_Rootspire_D_Quests.rb:321; tools/build_ch6.rb:120 | city: Kethan names the infiltrator |
 | 180 | Hook "Oath of Roots" (initiation trial: mercy vs fury) | Changed | Full | 048_Rootspire_D_Quests.rb:239 | city: the Oath of Roots |
 | 181 | Fractured Halo: symbol, goal, Eline, Still Sky Shrine hideout, beliefs, mirror-glass prayer tokens, fallen Rootwardens | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:52-69, 167-168, 571-615; 026_Rootspire.rb:1075 | - |
-| 182 | Halo hideout: Frozen Cellar beneath an abandoned brewery | Missing | Full | tools/build_rootspire_life.rb:12; map 2188; 048_Rootspire_D_Quests.rb:991; 048_Rootspire_D_Quests.rb:980 | sweep |
+| 182 | Halo hideout: Frozen Cellar beneath an abandoned brewery | Missing | Full | tools/build_rootspire_life.rb:12; map 2188; 048_Rootspire_D_Quests.rb:999; 048_Rootspire_D_Quests.rb:988 | quests: down into the Frozen Cellar; Eira Voss and the Frozen Flame |
 | 183 | Hook "Echo of Saint Kaltro" (recover fragments of Sephek's heart) | Changed | Outside W5: W4 (Ch10-13, White Vault, Sephek) | as audited: 024_Chapter6.rb:590-596; 037_Chapter11.rb:93-106 | - |
 | 184 | Hook "The Rite of Stillness" | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:582-615 | - |
 | 185 | Hook "Selrae's Secret" | Full | Full (already; unchanged) | as audited: 033_Chapter7B.rb:356-389; 025_Chapter7.rb:102-104; 036 (trial) | - |
 | 186 | Auroral Corsairs: identity, Mira captain, Boreal Requiem, alliance/naval support | Compressed | Full | 048_Rootspire_C_Folk.rb:683; 048_Rootspire_D_Quests.rb:34 | sweep |
-| 187 | Corsairs: relic vault aboard with a dormant wyrmling scale core | Missing | Full | 048_Rootspire_D_Quests.rb:481; tools/build_ch6.rb:228; map 2055 | sweep |
+| 187 | Corsairs: relic vault aboard with a dormant wyrmling scale core | Missing | Full | 048_Rootspire_D_Quests.rb:481; tools/build_ch6.rb:228; map 2055 | quests: the Requiem's relic vault |
 | 188 | Hook "The Frozen Run" (escort through the frozen half; revenant sailors) | Missing | Full | 048_Rootspire_D_Quests.rb:498; 048_Rootspire_D_Quests.rb:523; tools/build_rootspire_life.rb:17; map 2199 | city: Ivran's sledge-ship; across the still half to the far shore |
 | 189 | Guild of Roots and Stone (Hew, infrastructure, mines touch the Heartroot, workers vanish, semi-sentient sap fuel) | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:218-225; 028_Heartroot.rb:7-13, 91-94; 033_Chapter7B.rb:84-219 | - |
-| 190 | Hook "The Amber Experiment" (fuel that whispers when burned) | Compressed | Full | 048_Rootspire_D_Quests.rb:654; tools/build_ch6.rb:131; map 2050 | sweep |
+| 190 | Hook "The Amber Experiment" (fuel that whispers when burned) | Compressed | Full | 048_Rootspire_D_Quests.rb:654; tools/build_ch6.rb:131; map 2050 | quests: the Amber Experiment |
 | 191 | Hook "Sabotage at the Mine" (Halo ignite sap caches) | Full | Full (already; unchanged) | as audited: 033_Chapter7B.rb:127-152 | - |
 | 192 | College of Auroral Arts (Dean Aldric Wynsnow, temporal anomalies, PCs as "chronal anomalies") | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:786-842; 030_Prologue.rb | - |
 | 193 | Hook "Lecture in Blue Fire" | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:821-842 | - |
-| 194 | Hook "Chronal Debt" (glimpse the missing centuries, at a cost) | Missing | Full | 048_Rootspire_D_Quests.rb:448; 026_Rootspire.rb:789 | sweep |
-| 195 | Intrigue Web overview / summary | Compressed | Full | 048_Rootspire_F_Downtime.rb:555; 048_Rootspire_G_Hooks.rb:86 | sweep |
+| 194 | Hook "Chronal Debt" (glimpse the missing centuries, at a cost) | Missing | Full | 048_Rootspire_D_Quests.rb:448; 026_Rootspire.rb:789 | quests: Wynsnow's Chronal Debt |
+| 195 | Intrigue Web overview / summary | Compressed | Full | 048_Rootspire_F_Downtime.rb:555; 048_Rootspire_G_Hooks.rb:86 | quests: the Lorn Scribe; Council Petitions |
 | 201 | High Speaker Kelyn of Spring: public face; Wardens Emeritus sanction | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:508-554 (`wardens_emeritus`) | - |
-| 202 | Kelyn's secret communion with Razzilith's dreams; mural of Reptin & Glimmer; verdant-surge betrayal | Missing | Full | 048_Rootspire_D_Quests.rb:72; 048_Rootspire_D_Quests.rb:115; 048_Rootspire_D_Quests.rb:28; tools/build_ch6.rb:175 | sweep |
+| 202 | Kelyn's secret communion with Razzilith's dreams; mural of Reptin & Glimmer; verdant-surge betrayal | Missing | Full | 048_Rootspire_D_Quests.rb:72; 048_Rootspire_D_Quests.rb:115; 048_Rootspire_D_Quests.rb:28; tools/build_ch6.rb:175 | quests: Kelyn is at the orb by night; Kelyn's secret, and Autumn's plot named |
 | 203 | Summer Marshal Var Rime-Breaker (brash veteran, Naerth-ancestry guilt, wants to test Alerion, Corsair arms deal, mirror-shard glaive) | Changed | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: 024_Chapter6.rb:524-525; 034_Chapter8.rb:333-438; 035_Chapter9.rb:420 | - |
 | 204 | Autumn Warden Darrus Fell (tiefling, clove bark, silver tongue) | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:139-142, 523 | - |
-| 205 | Darrus: relic dealing, Avarice blackmail, reliquary job for Meat Meat (Mirror Mother's heart), flees to the Corsairs, redemption by financing the White Vault | Changed | Full in the city (relic job, blackmail, flight to the Corsairs, the offer to finance the voyage); W3's Forge Darrus to reconcile | 048_Rootspire_D_Quests.rb:804; 048_Rootspire_D_Quests.rb:908; 048_Rootspire_D_Quests.rb:954 | city: Darrus offers Meat Meat the reliquary job |
+| 205 | Darrus: relic dealing, Avarice blackmail, reliquary job for Meat Meat (Mirror Mother's heart), flees to the Corsairs, redemption by financing the White Vault | Changed | Full in the city (relic job, blackmail, flight to the Corsairs, the offer to finance the voyage); W3's Forge Darrus to reconcile | 048_Rootspire_D_Quests.rb:804; 048_Rootspire_D_Quests.rb:916; 048_Rootspire_D_Quests.rb:962 | city: Darrus offers Meat Meat the reliquary job |
 | 206 | Winter Matron Selrae Vorn: ex-Auril priestess, Halo patron, villain-or-ally | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:143-147; 033_Chapter7B.rb:356-389; 034_Chapter8.rb:223-235; 036_Chapter10.rb (Gym 8) | - |
-| 207 | Selrae courts Glimmer as Auril's vessel; black-ice dagger that prays to Auril | Missing | Full | 048_Rootspire_D_Quests.rb:400; 024_Chapter6.rb:572 | sweep |
-| 208 | Selrae calls the Vault "the White Womb" | Changed | Full | 048_Rootspire_D_Quests.rb:414 | sweep |
+| 207 | Selrae courts Glimmer as Auril's vessel; black-ice dagger that prays to Auril | Missing | Full | 048_Rootspire_D_Quests.rb:400; 024_Chapter6.rb:572 | quests: Selrae courts the Sparkbearer with the black-ice dagger |
+| 208 | Selrae calls the Vault "the White Womb" | Changed | Full | 048_Rootspire_D_Quests.rb:414 | quests: ...and names the White Womb |
 | 209 | Captain Rheven Stormbranch: public face, creed, direwolf (offspring of the old ally), tree-screams dreams | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:190-217; 024_Chapter6.rb:425-428 (`fed_pack`) | - |
 | 210 | Rheven: believes the Heartroot is sentient and hungry, would destroy it; seeks Reptin's counsel on violence; leads the expedition to the Avarice machinery | Missing | Full | 048_Rootspire_D_Quests.rb:139 | city: Rheven asks Reptin about violence and the hungry root |
 | 211 | Archivist Eirwen Solglass: they/them, barefoot, frost-dust; Naerth ledger; wants to publish it | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:340-353; 036_Chapter10.rb:53 ("The truth, published") | - |
-| 212 | Eirwen: custodian of a Frostshard Sigil; ritual to relive a day of the past (flashback side quests) | Missing | Full | 048_Rootspire_D_Quests.rb:558; 048_Rootspire_D_Quests.rb:579; tools/build_ch6b.rb:147 | sweep |
-| 213 | Professor Wynsnow: plan to tie the heroes' life-threads to Rootspire; offer to Glimmer and Alberica | Missing | Full | 048_Rootspire_D_Quests.rb:448 | sweep |
+| 212 | Eirwen: custodian of a Frostshard Sigil; ritual to relive a day of the past (flashback side quests) | Missing | Full | 048_Rootspire_D_Quests.rb:558; 048_Rootspire_D_Quests.rb:579; tools/build_ch6b.rb:147 | quests: Eirwen's Frostshard Sigil; Eirwen's ritual |
+| 213 | Professor Wynsnow: plan to tie the heroes' life-threads to Rootspire; offer to Glimmer and Alberica | Missing | Full | 048_Rootspire_D_Quests.rb:448 | quests: Wynsnow's Chronal Debt offered (and refused) |
 | 214 | Hellen Brightrun: matron, pine-mead, shrine to the PCs in her cellar, family prophecy, instant recognition, quest-giver | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:310-353; 026_Rootspire.rb:260-269, 756-781 | - |
 | 215 | Matron Eline: Manifest Rite on Cycle Day with sap + Sephek's heart | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:583-615; 037_Chapter11.rb:83-133 | - |
-| 216 | Eline: tries to convert Glimmer and Selrae; speaks in reversed prayer when captured; final foe or tragic martyr | Missing | Full for the conversions (Ch6); the reversed prayer on capture is W4's Ch11 | 048_Rootspire_D_Quests.rb:426; 024_Chapter6.rb:619 | sweep |
+| 216 | Eline: tries to convert Glimmer and Selrae; speaks in reversed prayer when captured; final foe or tragic martyr | Missing | Full for the conversions (Ch6); the reversed prayer on capture is W4's Ch11 | 048_Rootspire_D_Quests.rb:426; 024_Chapter6.rb:619 | quests: Eline tries to bring the Sparkbearer in, and names the Winter Matron |
 | 217 | Sephek Kaltro, Frost Saint Shard (mirror-ice statue, hooded pilgrim in visions) | Changed | Outside W5: W4 (Ch10-13, White Vault, Sephek) | as audited: 024_Chapter6.rb:586-596; 032_Chapter7A.rb:304-315; 037_Chapter11.rb:93-133; 039_Chapter13.rb:285-330 | - |
 | 218 | Sephek seeks Meat Meat's blood ("Prototype Verdant"); Alerion as the rival frost aspect; drops a Frostshard Sigil | Missing | Outside W5: W4 (Ch10-13, White Vault, Sephek) | as audited: — | - |
 | 219 | Sephek redemption: "Auril's silence, not her return, honors her" | Full | Full (already; unchanged) | as audited: 039_Chapter13.rb:303 | - |
@@ -140,9 +140,9 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 221 | Avarice Reforged: "variables that refused to die", archvillain | Changed | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: 034_Chapter8.rb:59, 331-440 | - |
 | 222 | Avarice: Seraph-Draco plan (Razzy's scale core + Meat Meat's blood); body like the Mirror Mother's; whispers each PC's birth-cry | Compressed | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: 034_Chapter8.rb:91-96, 342-344 (RAZ-MK cocoons, "took Razzy's voice") | - |
 | 223 | The Lorn Scribe: blind dwarf, riddles unlocking each hero's side quest, writes backwards | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:355-361; tools/build_ch6b.rb:130 | - |
-| 224 | Lorn Scribe: works for the World Tree; can't die (turns to script); keeps pages of Alberica's journal | Missing | Full | 048_Rootspire_F_Downtime.rb:555 | sweep |
-| 225 | Eren Frostborn: young ranger of Alerion's line | Compressed | Full | 048_Rootspire_D_Quests.rb:347; tools/build_rootspire_life.rb:172; map 2183 | sweep |
-| 226 | Eren: Auril's "gift of memory" dreams (Alerion's soul would fragment); Frostina-scale bow; pupil or mirror | Missing | Full | 048_Rootspire_D_Quests.rb:347 | sweep |
+| 224 | Lorn Scribe: works for the World Tree; can't die (turns to script); keeps pages of Alberica's journal | Missing | Full | 048_Rootspire_F_Downtime.rb:555 | quests: the Lorn Scribe keeps Alberica's pages |
+| 225 | Eren Frostborn: young ranger of Alerion's line | Compressed | Full | 048_Rootspire_D_Quests.rb:347; tools/build_rootspire_life.rb:172; map 2183 | quests: Eren refuses the gift of memory |
+| 226 | Eren: Auril's "gift of memory" dreams (Alerion's soul would fragment); Frostina-scale bow; pupil or mirror | Missing | Full | 048_Rootspire_D_Quests.rb:347 | quests: Eren refuses the gift of memory and becomes Alerion's pupil |
 | 227 | Master Hew Talmire: siphons sap; prototype prays to the tree as "Father" | Full | Full (already; unchanged) | as audited: 033_Chapter7B.rb:154-177, 182-219 | - |
 | 228 | The Still Ones (Faith, Hope, Love, Balance; finish dying; shift the tree's alignment) | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:1160-1194 | - |
 | 234 | Labyrinth read-aloud intro | Full | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: 025_Chapter7.rb:129-133 | - |
@@ -181,24 +181,24 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 272 | Alerion: Mantle of Returning Winter (Boundary Hunt, double frozen at the Wall, "Finish the step", bring a predator down alive, Boundary Stone Y192) | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:253-255, 1196-1240 | - |
 | 273 | Alberica: Key of Whispering Memory (sub-vault, her old handwriting, lock of notes, Cycle Canticle alone before dawn in the Hall, spectral bards on failure, voices of those who knew you) | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:366-369, 923-982 | - |
 | 274 | Glimmer: Lumen Shard (Celestial Rift, mirror-shadow, "Will you bear hope...", Rift inscription) | Changed (approved) | Changed (approved) | as audited: 026_Rootspire.rb:326-337; 029_Glimmer.rb:59-139 | - |
-| 275 | Downtime: Research the Sigils (Wynsnow translates the map) | Missing | Full | 048_Rootspire_D_Quests.rb:611 | sweep |
-| 276 | Downtime: Council Petitions | Changed | Full (Council Petitions after the Forge); W4's Ch10 witness-gathering kept | 048_Rootspire_G_Hooks.rb:96; tools/build_ch6.rb:176 | sweep |
+| 275 | Downtime: Research the Sigils (Wynsnow translates the map) | Missing | Full | 048_Rootspire_D_Quests.rb:611 | quests: the two sigils point to Ithryn Athis |
+| 276 | Downtime: Council Petitions | Changed | Full (Council Petitions after the Forge); W4's Ch10 witness-gathering kept | 048_Rootspire_G_Hooks.rb:96; tools/build_ch6.rb:176 | quests: Council Petitions win the Council's support |
 | 277 | Downtime: Tree Communion (cleanse the Heartroot) | Missing | Full | 048_Rootspire_D_Quests.rb:627; tools/build_ch6.rb:132 | sweep |
-| 278 | Downtime: Festival of Balance (Heralds celebrated; Rootspire as safe haven) | Changed | Full | 048_Rootspire_G_Hooks.rb:134 | sweep |
+| 278 | Downtime: Festival of Balance (Heralds celebrated; Rootspire as safe haven) | Changed | Full | 048_Rootspire_G_Hooks.rb:134 | quests: the Festival of Balance |
 | 279 | Transition to the White Vault read-aloud (three sigils merge) | Missing | Outside W5: W4 (Ch10-13, White Vault, Sephek) | as audited: — | - |
 | 280 | Blessings & Relics table: Blessing of Still Sky | Full | Full (already; unchanged) | as audited: 026_Rootspire.rb:1192; 027_Relics.rb:314-323 | - |
 | 281 | Blessings & Relics table: Verdant Fire Charm, Cycle of Roots, Verdant Seed, Mirror Lens, Blessing of Verdant Fire | Missing | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: — | - |
 | 282 | Campaign notes: Rootspire as base of operations | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:350-352 | - |
 | 283 | Campaign notes: relics as keys to White Vault puzzles; surviving factions pick who goes north; wyrmlings' awakening mirrors the heroes | Changed | Outside W5: W4 (Ch10-13, White Vault, Sephek) | as audited: 037_Chapter11.rb:192-219 | - |
 | 289 | Master economy rules (50% DMG, stock limits) | n/a | n/a (Pokémon marts) | as audited: — | - |
-| 290 | 1. Run & Bloom Apothecary (Bryn of Spring; rumour: stolen rebirth sap) | Changed | Full | 048_Rootspire_B_People.rb:92; 048_Rootspire_B_People.rb:120; 048_Rootspire_A_City.rb:51; map 2181 | sweep; smoke: every item in shops exists |
-| 291 | 2. The Sap-Smith (Gorran Ashforged; "voices in the flame") | Changed | Full | 048_Rootspire_B_People.rb:130; 048_Rootspire_A_City.rb:115; tools/build_ch6.rb:149; map 2052 | sweep |
-| 292 | 3. Auroral Atelier (Lumea Keth; escaped illusion) | Missing | Full | 048_Rootspire_B_People.rb:161; 048_Rootspire_B_People.rb:186; 048_Rootspire_A_City.rb:53; map 2190 | sweep |
-| 293 | 4. Glasswater Outfitter (Tirena Loch-Vine; maps change with the aurora) | Missing | Full | 048_Rootspire_B_People.rb:198; 048_Rootspire_A_City.rb:51; map 2182 | sweep |
-| 294 | 5. Wind-Glass Library shop (Solvaran; forbidden codex) | Compressed | Full | 048_Rootspire_B_People.rb:217; 048_Rootspire_A_City.rb:121; tools/build_ch6b.rb:149; map 2062 | sweep |
-| 295 | 6. Shrine of Balance (Ysera Dorn; dragon of light trapped below) | Missing | Full | 048_Rootspire_B_People.rb:233; 048_Rootspire_A_City.rb:123; map 2191 | sweep |
+| 290 | 1. Run & Bloom Apothecary (Bryn of Spring; rumour: stolen rebirth sap) | Changed | Full | 048_Rootspire_B_People.rb:92; 048_Rootspire_B_People.rb:120; 048_Rootspire_A_City.rb:49; map 2181 | sweep; smoke: every item in shops exists |
+| 291 | 2. The Sap-Smith (Gorran Ashforged; "voices in the flame") | Changed | Full | 048_Rootspire_B_People.rb:130; 048_Rootspire_A_City.rb:113; tools/build_ch6.rb:149; map 2052 | sweep |
+| 292 | 3. Auroral Atelier (Lumea Keth; escaped illusion) | Missing | Full | 048_Rootspire_B_People.rb:161; 048_Rootspire_B_People.rb:186; 048_Rootspire_A_City.rb:51; map 2190 | sweep |
+| 293 | 4. Glasswater Outfitter (Tirena Loch-Vine; maps change with the aurora) | Missing | Full | 048_Rootspire_B_People.rb:198; 048_Rootspire_A_City.rb:49; map 2182 | sweep |
+| 294 | 5. Wind-Glass Library shop (Solvaran; forbidden codex) | Compressed | Full | 048_Rootspire_B_People.rb:217; 048_Rootspire_A_City.rb:119; tools/build_ch6b.rb:149; map 2062 | sweep |
+| 295 | 6. Shrine of Balance (Ysera Dorn; dragon of light trapped below) | Missing | Full | 048_Rootspire_B_People.rb:233; 048_Rootspire_A_City.rb:121; map 2191 | sweep |
 | 296 | 7. Still Sky Shrine black market (Eira Voss; sacrifices for "The Perfect Season") | Changed | Full | 048_Rootspire_B_People.rb:267; 048_Rootspire_B_People.rb:284; tools/build_ch6.rb:287; map 2056 | sweep |
-| 297 | 8. Rootwarden Hall (Captain Kethan Vale; hammering under the Heartroot) | Missing | Full | 048_Rootspire_B_People.rb:310; 048_Rootspire_D_Quests.rb:282; 048_Rootspire_A_City.rb:51; map 2183 | sweep |
+| 297 | 8. Rootwarden Hall (Captain Kethan Vale; hammering under the Heartroot) | Missing | Full | 048_Rootspire_B_People.rb:310; 048_Rootspire_D_Quests.rb:282; 048_Rootspire_A_City.rb:49; map 2183 | sweep |
 | 298 | 9. Ink & Ember Bookhouse (Mirna Cowl; Avarice's mirror-glass letters) | Missing | Full | 048_Rootspire_B_People.rb:332; 048_Rootspire_B_People.rb:344; map 2192 | sweep |
 | 299 | 10. Crystal Quill Scrollworks (Filgen Rootfoot; scrolls whisper names) | Missing | Full | 048_Rootspire_B_People.rb:367; 048_Rootspire_B_People.rb:379; map 2193 | sweep |
 | 300 | 11. Gem & Thorn Exchange (Arvoss Ember-Scale; gem vibrates near the vault) | Missing | Full | 048_Rootspire_B_People.rb:392; 048_Rootspire_B_People.rb:404; map 2184 | sweep |
@@ -227,12 +227,12 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 328 | Gorran Ashal-Forge (infernal ore from the Heartroot to Avarice) | Missing | Full | 048_Rootspire_B_People.rb:130; 048_Rootspire_E_Nights.rb:649 | sweep |
 | 329 | Helion Vael (missing Summer archmage; would-be Herald of Eternal Summer) | Missing | Full | 048_Rootspire_B_People.rb:612; 048_Rootspire_B_People.rb:639 | sweep |
 | 330 | Summer events (Warm Window, Scorched Mark, Ember Footprint) | Missing | Full | 048_Rootspire_E_Nights.rb:506; 048_Rootspire_E_Nights.rb:544; 048_Rootspire_E_Nights.rb:548 | sweep |
-| 331 | Fractured Halo as the "Frozen Flame" (Auril + Avarice heresy) | Compressed | Full | 048_Rootspire_D_Quests.rb:973; 048_Rootspire_D_Quests.rb:991 | sweep |
-| 332 | Eira Voss (Reghed warlock; delivers souls to Avarice's forge) | Missing | Full | 048_Rootspire_B_People.rb:267; 048_Rootspire_D_Quests.rb:991 | sweep |
+| 331 | Fractured Halo as the "Frozen Flame" (Auril + Avarice heresy) | Compressed | Full | 048_Rootspire_D_Quests.rb:981; 048_Rootspire_D_Quests.rb:999 | quests: Eira Voss and the Frozen Flame |
+| 332 | Eira Voss (Reghed warlock; delivers souls to Avarice's forge) | Missing | Full | 048_Rootspire_B_People.rb:267; 048_Rootspire_D_Quests.rb:999 | quests: Eira Voss and the Frozen Flame; sweep (black market) |
 | 333 | Jast Penumbran (collects mirror shards for Avarice) | Missing | Full | 048_Rootspire_B_People.rb:477 | sweep |
 | 334 | Fractured Halo events (Flicker of Faith; Pocket Shard; Perfect Stillness) | Missing | Full | 048_Rootspire_E_Nights.rb:511; 048_Rootspire_E_Nights.rb:530; 048_Rootspire_E_Nights.rb:535 | sweep |
 | 335 | Solo ambient events d12 ("All factions watching") | Missing | Full (the eleven solo events, plus "the Summer Throne knows" at the Hearth: twelve) | 048_Rootspire_E_Nights.rb:570; 048_Rootspire_E_Nights.rb:552 | smoke: ...11 ambient events; sweep |
-| 336 | Overall tone: observed, admired, stalked, courted by danger | Compressed | Full | 048_Rootspire_E_Nights.rb:595; 048_Rootspire_D_Quests.rb:1016 | sweep |
+| 336 | Overall tone: observed, admired, stalked, courted by danger | Compressed | Full | 048_Rootspire_E_Nights.rb:595; 048_Rootspire_D_Quests.rb:1024 | sweep |
 | 342 | 1. Talwyn Frostrill (initiate who thinks the PCs are Frostina's chosen) | Missing | Full | 048_Rootspire_C_Folk.rb:13 | sweep |
 | 343 | 2. Jorik Pinebellow (smuggles infernal ore for Gorran) | Missing | Full | 048_Rootspire_C_Folk.rb:55 | sweep |
 | 344 | 3. Serelle of the Still Veil (visions of "a god of light made wrong") | Missing | Full | 048_Rootspire_C_Folk.rb:93 | sweep |
@@ -253,16 +253,16 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 359 | 18. Shivven Pearlbite (Auril's avatar in the frozen deep) | Missing | Full | 048_Rootspire_C_Folk.rb:535 | sweep |
 | 360 | 19. Professor Halden Vex (wants to "reset" the PCs) | Missing | Full | 048_Rootspire_C_Folk.rb:560 | sweep |
 | 361 | 20. Rilka Dawnshard (sent by Glimmer's future church) | Missing | Full | 048_Rootspire_C_Folk.rb:606 | sweep |
-| 367 | 1. Root-Hollow Stalker (Spring → Bryn) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | city: Spring's Root-Hollow Stalker found |
-| 368 | 2. Frost-Veil Shade (Winter → Ysera) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 369 | 3. Auroral Moth-Swarm (Autumn → Lumea) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 370 | 4. Infernal Ember-Rat (Summer → Gorran) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 371 | 5. Mirror-Shard Homunculus (Halo → Jast) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 372 | 6. Garden-Whisper Weasel (Autumn → Maera) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 373 | 7. Soul-Thread Wraithling (Winter + Rootwardens) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 374 | 8. Echo-Rune Beetle (Autumn → Lumea) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 375 | 9. Snow-Still Raven (Halo → Eira Voss) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
-| 376 | 10. Shadow-Heat Lurker (Avarice herself) | Missing | Full | 048_Rootspire_D_Quests.rb:1016; 048_Rootspire_A_City.rb:214 | sweep |
+| 367 | 1. Root-Hollow Stalker (Spring → Bryn) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | city: Spring's Root-Hollow Stalker found |
+| 368 | 2. Frost-Veil Shade (Winter → Ysera) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 369 | 3. Auroral Moth-Swarm (Autumn → Lumea) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 370 | 4. Infernal Ember-Rat (Summer → Gorran) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 371 | 5. Mirror-Shard Homunculus (Halo → Jast) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 372 | 6. Garden-Whisper Weasel (Autumn → Maera) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 373 | 7. Soul-Thread Wraithling (Winter + Rootwardens) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 374 | 8. Echo-Rune Beetle (Autumn → Lumea) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 375 | 9. Snow-Still Raven (Halo → Eira Voss) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
+| 376 | 10. Shadow-Heat Lurker (Avarice herself) | Missing | Full | 048_Rootspire_D_Quests.rb:1024; 048_Rootspire_A_City.rb:212 | sweep |
 
 ## C_rootspire_tab2_forge.md
 
@@ -281,20 +281,20 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 62 | Day 6 ambush reflex trials; Reptin teaches Arvik spell concentration | Missing | Full | 048_Rootspire_F_Downtime.rb:146 | city |
 | 63 | Day 7 Silent Circuit; "The tree has begun to trust your weight."; passed despite falling petals; Reptin teaches wild-shape healing | Missing | Full | 048_Rootspire_F_Downtime.rb:160 | city |
 | 64 | The Rootwarden's Loop-Band gift and the legacy speech | Missing | Full | 048_Rootspire_F_Downtime.rb:177; 048_Rootspire_F_Downtime.rb:815 | city: ...and the Loop-Band |
-| 66 | Day 2 early history: Dougan's Hole consumed by Year 57 VR, scaffolding, the "heartbeats of spring"; Twenty Stones not mentioned | Missing | Full | 048_Rootspire_F_Downtime.rb:211 | sweep |
-| 67 | Day 3: hag mirrors fractured the timeline, the sapling burst from it, events "echoed backward"; Rootspire remembers him before birth and after death | Compressed | Full | 048_Rootspire_F_Downtime.rb:224 | sweep |
-| 68 | Day 4: Razzilith and Frostina shaped the seasons; their breath grew the tree; wyrmlings as reincarnated seasonal spirits | Compressed | Full | 048_Rootspire_F_Downtime.rb:236 | sweep |
+| 66 | Day 2 early history: Dougan's Hole consumed by Year 57 VR, scaffolding, the "heartbeats of spring"; Twenty Stones not mentioned | Missing | Full | 048_Rootspire_F_Downtime.rb:211 | quests: Alerion's Days 2-7 |
+| 67 | Day 3: hag mirrors fractured the timeline, the sapling burst from it, events "echoed backward"; Rootspire remembers him before birth and after death | Compressed | Full | 048_Rootspire_F_Downtime.rb:224 | quests: Alerion's Days 2-7 |
+| 68 | Day 4: Razzilith and Frostina shaped the seasons; their breath grew the tree; wyrmlings as reincarnated seasonal spirits | Compressed | Full | 048_Rootspire_F_Downtime.rb:236 | quests: Alerion's Days 2-7 |
 | 69 | Day 4: wyrmlings can't change the seasons alone but can with a guide; Wennen "Dragon Warriors", partners not masters | Full | Full (already; unchanged) | 048_Rootspire_F_Downtime.rb:236 | sweep |
-| 70 | Day 5 six-potion purchase from Nivva Sunwick at Run & Bloom | Compressed | Full | 048_Rootspire_F_Downtime.rb:250; 026_Rootspire.rb:183 | sweep |
-| 71 | Day 6 the Dale before Auril: Reghed balance rites, druids foretelling a frost goddess, golden-age summers | Missing | Full | 048_Rootspire_F_Downtime.rb:273 | sweep |
-| 72 | Day 7 nonlinear visions: Alerion cloaked in Winter's power (the council member displaced), golden key and frost-sealed door, a Heralds' council, frost creeping up the tree; "Winter returns through those who do not fear the cold." | Missing | Full | 048_Rootspire_F_Downtime.rb:288 | sweep |
-| 73 | Golden key: old tunnels under Dugan's Hole | Missing | Full | 048_Rootspire_F_Downtime.rb:300 | sweep |
-| 74 | Nat-1: Alerion falsely believes the Reversal once had all four seasons | Missing | Full | 048_Rootspire_F_Downtime.rb:283 | sweep |
-| 76 | Razzilith's warning: no one has seen Summer for many cycles; Autumn hides it ("says Summer sleeps. Lies."); Summer is a female tiefling no one sees the face of; chills; "Summer missing… wrong things grow" | Changed | Full | 048_Rootspire_F_Downtime.rb:456 | sweep |
-| 77 | First flight: Meat Meat is the first rider Razzilith allows; ground runs, a short leap, wyrmling laughter | Missing | Full | 048_Rootspire_F_Downtime.rb:471 | sweep |
+| 70 | Day 5 six-potion purchase from Nivva Sunwick at Run & Bloom | Compressed | Full | 048_Rootspire_F_Downtime.rb:250; 026_Rootspire.rb:183 | quests: ...with Day 5's six potions |
+| 71 | Day 6 the Dale before Auril: Reghed balance rites, druids foretelling a frost goddess, golden-age summers | Missing | Full | 048_Rootspire_F_Downtime.rb:273 | quests: Alerion's Days 2-7 |
+| 72 | Day 7 nonlinear visions: Alerion cloaked in Winter's power (the council member displaced), golden key and frost-sealed door, a Heralds' council, frost creeping up the tree; "Winter returns through those who do not fear the cold." | Missing | Full | 048_Rootspire_F_Downtime.rb:288 | quests: Alerion's Days 2-7 |
+| 73 | Golden key: old tunnels under Dugan's Hole | Missing | Full | 048_Rootspire_F_Downtime.rb:300 | quests: ...and the golden key's tunnels |
+| 74 | Nat-1: Alerion falsely believes the Reversal once had all four seasons | Missing | Full | 048_Rootspire_F_Downtime.rb:283 | quests: Alerion's Days 2-7 |
+| 76 | Razzilith's warning: no one has seen Summer for many cycles; Autumn hides it ("says Summer sleeps. Lies."); Summer is a female tiefling no one sees the face of; chills; "Summer missing… wrong things grow" | Changed | Full | 048_Rootspire_F_Downtime.rb:456 | quests: Meat Meat's days: Razzilith's warning |
+| 77 | First flight: Meat Meat is the first rider Razzilith allows; ground runs, a short leap, wyrmling laughter | Missing | Full | 048_Rootspire_F_Downtime.rb:471 | quests: ...and the first flight |
 | 78 | Undercity: the Echo Gate wind whispering "Don't… turn… back…", frost patterns like eyes | Compressed | Full | 048_Rootspire_F_Downtime.rb:487 | sweep |
 | 79 | Warm floorboards and sap veins pulsing like fever | Compressed | Full | 048_Rootspire_F_Downtime.rb:487 | sweep |
-| 80 | Root-Hollow Stalker moving inside the bark; "Spring's watchers" | Missing | Full | 048_Rootspire_F_Downtime.rb:487; 048_Rootspire_D_Quests.rb:1016 | sweep |
+| 80 | Root-Hollow Stalker moving inside the bark; "Spring's watchers" | Missing | Full | 048_Rootspire_F_Downtime.rb:487; 048_Rootspire_D_Quests.rb:1024 | sweep |
 | 81 | Infernal ore residue on the Split Dock; a lying dockworker (Jorik Pinebellow's smuggling) | Missing | Full | 048_Rootspire_F_Downtime.rb:487; 048_Rootspire_C_Folk.rb:55 | sweep |
 | 82 | A shadow detaching from its owner | Missing | Full | 048_Rootspire_F_Downtime.rb:487 | sweep |
 | 83 | Still Sky Shrine, "Closed for Veil Observance", too-purposeful silence | Changed | Full | 048_Rootspire_F_Downtime.rb:487 | sweep |
@@ -305,10 +305,10 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 88 | Forged Council decree ordering excavation beneath the Heartroot; the seal slightly wrong | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:139–142, 524–528; 025_Chapter7.rb:97 | - |
 | 89 | Summer–growth imbalance: gold dawn that lingers, heat-curled leaves, heavy air, warm sap, wrong-season animals, wilting blossoms, "summer's holding its breath", a Rootwarden's pulse "out of sync" | Compressed | Full | 048_Rootspire_F_Downtime.rb:533 | sweep |
 | 91 | Waking in the Rooted Hearth to whispers of "Remember… remember…" | Missing | Full | 048_Rootspire_F_Downtime.rb:50 | sweep |
-| 92 | Codex fragment 1: Alberica's own hand on the sprout, *anchoring* the Reversal | Compressed | Full | 048_Rootspire_F_Downtime.rb:582 | sweep |
-| 93 | Codex fragment 2: a figure in pale flame across the centuries, hunting her memories and a timeline | Missing | Full | 048_Rootspire_F_Downtime.rb:587 | sweep |
-| 94 | Codex fragment 3: the Council's missing pages, three names crossed out and a fourth blank | Missing | Full | 048_Rootspire_F_Downtime.rb:593 | sweep |
-| 95 | Codex fragment 4: older Alberica under the Celestial Rift with a World-Tree staff | Compressed | Full | 048_Rootspire_F_Downtime.rb:597 | sweep |
+| 92 | Codex fragment 1: Alberica's own hand on the sprout, *anchoring* the Reversal | Compressed | Full | 048_Rootspire_F_Downtime.rb:582 | quests: the Codex's four fragments |
+| 93 | Codex fragment 2: a figure in pale flame across the centuries, hunting her memories and a timeline | Missing | Full | 048_Rootspire_F_Downtime.rb:587 | quests: the Codex's four fragments |
+| 94 | Codex fragment 3: the Council's missing pages, three names crossed out and a fourth blank | Missing | Full | 048_Rootspire_F_Downtime.rb:593 | quests: the Codex's four fragments |
+| 95 | Codex fragment 4: older Alberica under the Celestial Rift with a World-Tree staff | Compressed | Full | 048_Rootspire_F_Downtime.rb:597 | quests: the Codex's four fragments |
 | 96 | Rumour: frost-glass mirrors that "watch back"; the possessed-child incident | Full | Full (already; unchanged) | 048_Rootspire_E_Nights.rb:252 | sweep |
 | 97 | Rumour: secrets "flow" through the market | Missing | Full | 048_Rootspire_E_Nights.rb:253 | smoke: all seven of Alberica's rumours |
 | 98 | Rumour: Bryn of Spring stressed, hiding something spreading near the Heartroot | Missing | Full | 048_Rootspire_E_Nights.rb:254 | smoke |
@@ -321,12 +321,12 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 106 | Duergar tunnelled in; Avarice slaughtered their leadership; the dragon bound to the 20 Stones circle; a "holy wound" | Compressed | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: 034_Chapter8.rb:303–304; 53–56 (enthralled duergar) | - |
 | 107 | Level 3 reinterpretation: lava becomes burning sap, the forge is the hag's still-beating altar, Avarice anchors sigils into the tree's memory channels | Compressed | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: tools/build_ch8.rb:92 (bridge over boiling sap); 032_Chapter7A.rb:281 (roots "carved into a machine") | - |
 | 109 | Festival read-aloud: frost-glass lanterns, rootwood pipes, children with blossoms, Rootwarden honour guard | Compressed | Full | 048_Rootspire_F_Downtime.rb:628 | sweep |
-| 110 | A mural of the party's deeds in living bark, figures shifting | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:127–133; 026_Rootspire.rb:184–189, 271–280 | - |
+| 110 | A mural of the party's deeds in living bark, figures shifting | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:127–133; 026_Rootspire.rb:184–189, 271–280 | quests: the festival's last night |
 | 111 | Children carry effigies of the twin wyrmlings | Compressed | Full | 048_Rootspire_F_Downtime.rb:631 | sweep |
 | 112 | Kelyn: "Heralds of Dawn and Dusk… tonight, Rootspire remembers." | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:413 | - |
 | 113 | Kelyn's chalice toast: "Four hundred years have cracked like ice… Spring has awakened…" | Compressed | Full | 048_Rootspire_F_Downtime.rb:635 | sweep |
-| 114 | The empty Summer Throne: dry, cracking vines; one charred strand; warm sap dripping | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:412, 518 | - |
-| 115 | Archivist Solglass watches the warm sap drip, troubled | Missing | Full | 048_Rootspire_F_Downtime.rb:639 | sweep |
+| 114 | The empty Summer Throne: dry, cracking vines; one charred strand; warm sap dripping | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:412, 518 | quests: the festival's last night |
+| 115 | Archivist Solglass watches the warm sap drip, troubled | Missing | Full | 048_Rootspire_F_Downtime.rb:639 | quests: the festival's last night |
 | 116 | Glimmer's shard flares or flashes | Compressed | Full | 048_Rootspire_F_Downtime.rb:657 | sweep |
 | 117 | Razzy stiffens and growls toward the roots | Missing | Full | 048_Rootspire_F_Downtime.rb:658 | sweep |
 | 118 | Eirwen: "Something burns beneath us. The Summer Marshal ventured to inspect it… she has not returned." | Changed | Full | 048_Rootspire_F_Downtime.rb:663 | sweep |
@@ -337,10 +337,10 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 | 123 | Meat Meat (and Razzy) recognise the vibration of "the forge they once knew" | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:422–424 | - |
 | 124 | The aurora flickers like a mechanical pulse, "more designed"; then the crowd resumes | Full | Full (already; unchanged) | as audited: 024_Chapter6.rb:419–420 | - |
 | 126 | Rootwardens come to the party's door; a patrol missing near the Echo Gate | Changed | Full | 048_Rootspire_E_Nights.rb:177 | sweep |
-| 127 | Warm scorch marks with a metallic, infernal scent | Missing | Full | 048_Rootspire_E_Nights.rb:198; tools/build_ch6.rb:133 | sweep |
-| 128 | A chardalyn fragment corrupted by infernal sigils is found | Missing | Full | 048_Rootspire_E_Nights.rb:198 | sweep |
-| 129 | Eirwen's private audience: early maps, the 20 Stones beneath Rootspire, a sealed passage that has begun humming | Compressed | Full | 048_Rootspire_F_Downtime.rb:674 | sweep |
-| 130 | Razzilith refuses to sleep and claws the floor; senses the dragon, a tortured draconic heart, and "the woman who hurt him" | Missing | Full | 048_Rootspire_E_Nights.rb:188 | sweep |
+| 127 | Warm scorch marks with a metallic, infernal scent | Missing | Full | 048_Rootspire_E_Nights.rb:198; tools/build_ch6.rb:133 | quests: the scorch marks and the chardalyn fragment |
+| 128 | A chardalyn fragment corrupted by infernal sigils is found | Missing | Full | 048_Rootspire_E_Nights.rb:198 | quests: the scorch marks and the chardalyn fragment |
+| 129 | Eirwen's private audience: early maps, the 20 Stones beneath Rootspire, a sealed passage that has begun humming | Compressed | Full | 048_Rootspire_F_Downtime.rb:674 | quests: Eirwen's private audience |
+| 130 | Razzilith refuses to sleep and claws the floor; senses the dragon, a tortured draconic heart, and "the woman who hurt him" | Missing | Full | 048_Rootspire_E_Nights.rb:188 | quests: the Rootwardens at the door (Meat Meat in party) |
 | 131 | Verdant Council summons: "Heralds… something awakens below."; the mission (descend, the hag lair, find the Marshal, stop the burning) | Full | Full (already; unchanged) | 048_Rootspire_F_Downtime.rb:689 | sweep |
 | 132 | Avarice's chapter goal: burn the seasons, consume Ten-Towns, devour souls, supplant the Frostmaiden, merge the Dale with the Nine Hells | Changed | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: 034_Chapter8.rb:338–340 | - |
 | 133 | Avarice calls herself "Xardorok" to keep the duergar obedient, yet shows her own face | Changed | Outside W5: W3 (Heartroot Labyrinth / Forge) | as audited: 034_Chapter8.rb:53, 333–337 | - |
@@ -383,9 +383,9 @@ Totals: Changed 4, City half Full 1, Foreshadowed 1, Full 264, Full for the conv
 
 | Audit line | Item | Audit said | Status now | Where | Test |
 |---|---|---|---|---|---|
-| 191 | A1 Echoes at the Auroral Wall (Alerion): the Echo Gate whispers "The lake remembers"; his reflection steps away; a mirror maze with Mirror Wraiths; reabsorbing a lost soul-fragment | Changed | Full (the Echo Gate whisper, then the maze and the reflection: Alerion's A1) | 048_Rootspire_D_Quests.rb:750; 026_Rootspire.rb:1183 | sweep |
-| 193 | M1 The Verdant Heist (Meat Meat): Darrus Fell asks her to steal a Guild reliquary ("part of the Mirror Mother's heart"); deliver it to him, expose him, or destroy it to free a soul | Missing | Full | 048_Rootspire_D_Quests.rb:804; 048_Rootspire_D_Quests.rb:855; 048_Rootspire_D_Quests.rb:877; 048_Rootspire_D_Quests.rb:908 | city: the Verdant Heist checks; smoke: four wards and three endings |
+| 191 | A1 Echoes at the Auroral Wall (Alerion): the Echo Gate whispers "The lake remembers"; his reflection steps away; a mirror maze with Mirror Wraiths; reabsorbing a lost soul-fragment | Changed | Full (the Echo Gate whisper, then the maze and the reflection: Alerion's A1) | 048_Rootspire_D_Quests.rb:750; 026_Rootspire.rb:1183 | quests: Alerion's Echoes at the Wall |
+| 193 | M1 The Verdant Heist (Meat Meat): Darrus Fell asks her to steal a Guild reliquary ("part of the Mirror Mother's heart"); deliver it to him, expose him, or destroy it to free a soul | Missing | Full | 048_Rootspire_D_Quests.rb:804; 048_Rootspire_D_Quests.rb:858; 048_Rootspire_D_Quests.rb:885; 048_Rootspire_D_Quests.rb:916 | city: the Verdant Heist checks; smoke: four wards and three endings |
 | 197 | R1 Verdant Sickness (Reptin): black sap; Rheven asks him to cleanse it; ritual to soothe the root spirit; spore blight | Changed | City half Full (Rheven's counsel; the blight itself is W4's Ch7A) | 048_Rootspire_D_Quests.rb:139 | city: Rheven asks Reptin |
 | 198 | R2 Pulse of the Blooming Fields (Reptin): summer and winter spirits who are Razzilith and Frostina; social challenge; reward is calling on them for resistance | Missing | Full | 048_Rootspire_D_Quests.rb:684; tools/build_ch6b.rb:99 | city: the pulse brokered, and the berries |
-| 283 | Q4 Brother from Beyond: Talion, thought dead, appears in the Blooming Fields; older; vacant; repeats phrases like a mirror echo | Changed | Foreshadowed (Echo Gate and the Frozen Hunter, :talion_foreshadowed); Ch10 is W4's | 026_Rootspire.rb:1179; 048_Rootspire_C_Folk.rb:390 | sweep |
+| 283 | Q4 Brother from Beyond: Talion, thought dead, appears in the Blooming Fields; older; vacant; repeats phrases like a mirror echo | Changed | Foreshadowed (Echo Gate and the Frozen Hunter, :talion_foreshadowed); Ch10 is W4's | 026_Rootspire.rb:1179; 048_Rootspire_C_Folk.rb:390 | quests: the Echo Gate whispers, and Talion is foreshadowed |
 

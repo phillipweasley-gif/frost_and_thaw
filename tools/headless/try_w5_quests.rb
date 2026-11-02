@@ -114,8 +114,14 @@ ok("Eirwen's private audience: the Twenty Stones under the city", T.flag?(:eirwe
 T.set_flag(:cellar_hint); T.apply_rootspire_life_switches
 at(2180, 33, 46); HL.face(8); HL.step(8); HL.settle(2000)
 ok("down into the Frozen Cellar under the old brewery", $game_map.map_id == 2188, "on #{$game_map.map_id}")
+HL.settle(3000)
+$game_map.events.values.select { |e| e.name.start_with?("Trainer") }.each do |e|
+  next if $game_self_switches[[2188, e.id, "A"]]
+  HL.talk_to(e); HL.settle(5000); heal
+end
 talk("Frozen Flame altar"); talk("Eira Voss"); heal
-ok("Eira Voss and the Frozen Flame", T.flag?(:cellar_cleared) && T.flag?(:souls_ledger_seen))
+ok("Eira Voss and the Frozen Flame", T.flag?(:cellar_cleared) && T.flag?(:souls_ledger_seen),
+   "cleared #{T.flag?(:cellar_cleared)} ledger #{T.flag?(:souls_ledger_seen)} on #{$game_map.map_id} at #{HL.pos}; #{HL.problems.last(3).inspect}")
 
 # the Requiem's vault; a Frostfell portal after an auroral storm
 T.set_flag(:mira_freed)
