@@ -654,6 +654,7 @@ module FrostThaw
       say(["A boy with pins in his mouth is minding the shop. The dress form in the back stands empty.",
            "APPRENTICE: Mistress Vell took the gold robes down herself. When Warden Fell ran, she said Autumn needed a hand that wouldn't shake.",
            "APPRENTICE: She didn't come back up. ...The scarves are still half price. She'd want them sold."], event_id)
+      set_flag(:maera_apprentice_heard)        # (a witness at the trial: 036 WITNESSES)
       return mart(:frost_thread, event_id)
     end
     if first_time?(:met_maera)

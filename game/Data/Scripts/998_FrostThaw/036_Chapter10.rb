@@ -45,7 +45,7 @@ module FrostThaw
   SW_APPEAL     = 4150   # the appeal to Hyphora, in the Heartroot
   SW_CRIERS     = 4151   # the town criers, the morning after the Tribunal opens
   SW_WYN_HEARING = 4152  # Wyn's hearing, in the Council Hall
-  SW_PELL       = 4153   # Pell, the junior Rootwarden, at the Underdark door
+  SW_PELL       = 4153   # Ivo, the junior Rootwarden, at the tunnel mouth
 
   MAPS.merge!(underdark_door: 2077, glasswater: 2078, attunement_way: 2165, crystal_dream: 2166)
   MAP_NAMES.merge!(2077 => "The Underdark Door", 2078 => "Glasswater Lake",
@@ -106,7 +106,7 @@ module FrostThaw
   WITNESSES = [
     [[:hew_confessed], "Hew Talmire", "His ledgers: ten years of sap, sold to Summer's people.", :summer],
     [[:yarro_witness], "Yarro", "The roots ran hot from below. The Heralds put the fire out. Gently.", :summer],
-    [[:mira_witness], "Mira of the North Wind", "Darrus shipped crates to the Forge every week for ten years.", :autumn],
+    [[:mira_witness], "Mira of the North Wind", "Darrus shipped crates to the Forge every week for ten years.{MAERA_KEPT}", :autumn],
     [[:anduin_reconciled, :anduin_doubtful], "Anduin", "Reptin stood between a fire and a sapling.", :reptin],
     [[:eirwen_restraint], "Eirwen Solglass", "I watched Reptin at the Mycolith. He used his gift to shield, never to rule.", :reptin],
     [[:cedar_charm_shown], "The cedar charm", "Anduin's own gift, carried through four hundred years.", :reptin],
@@ -114,22 +114,22 @@ module FrostThaw
     [[:mm_atoned], "Phildendrin", "My daughter was made to be a weapon. She chose to save a child.", :autumn],
     [[:mm_reconciled], "Phildendrin, again", "She said she was sorry. I've waited her whole life to say it back.", :autumn],
     [[:child_parents], "The rescued child's parents", "She saved our girl.", :autumn],
-    [[:rheven_testimony], "Captain Rheven Stormbranch", "Autumn meant to turn the refugees into sacrifices. I saw his lists.", :autumn],
+    [[:rheven_testimony], "Captain Rheven Stormbranch", "Autumn meant to turn the refugees into sacrifices. I saw the Warden's lists.{MAERA_CARRIED}", :autumn],
     [[:rheven_saw_pens], "Rheven's wardens", "We found the pens when the Forge fell. Children's sizes.", :autumn],
     [[:autumn_labs_seen], "Autumn's laboratories", "Blood vials, ritual knives, Mirror Wraith samples, all under Autumn's sigil.", :autumn],
-    [[:mira_mirror_testimony], "Mira, about the mirror", "Autumn commissioned the cursed mirror. He watched Ten-Towns through it.", :autumn],
+    [[:mira_mirror_testimony], "Mira, about the mirror", "Darrus commissioned the cursed mirror for Autumn. Autumn watched Ten-Towns through it.", :autumn],
     [[:refugees_testify], "Refugees from the Dale", "Autumn's followers took our food and worked us in the cold.", :autumn],
     [[:ritual_runes], "The ritual runes", "Auril's snowflake under a crown, cut at the Underdark door.", :wyn],
-    [[:pell_testifies], "Pell, junior Rootwarden", "Cultists dressed as wardens walked past me. Wyn was nowhere near.", :wyn],
+    [[:pell_testifies], "Ivo, junior Rootwarden", "Cultists dressed as wardens walked past me. Wyn was nowhere near.", :wyn],
     [[:wraith_witness_door], "A Mirror Wraith's vision", "Cultists chanting over the seal. Wyn far away, in the dark.", :wyn],
-    [[:wyn_cleared], "Hyphora", "Shadow answered my call.", :wyn],
+    [[:hyphora_alibi], "Hyphora", "Shadow answered my call.", :wyn],
     [[:blessed_leaf_shown], "Luminara's blessed leaf", "Her spores, breathed into a fallen leaf: greener, not rotten.", :spores],
     [[:tincture_shown], "Yarro's frostbite tincture", "The spores mend frostbite. They don't cause blight.", :spores],
     [[:history_shown], "The Leaf of Old Alliances", "Three world-trees before Hyphora, each sheltered by myconids.", :spores],
     [[:ally_wyn_spores], "Wyn", "I kept the door under those spores for three years. They kept me.", :spores],
     [[:ally_reptin_spores], "Reptin", "I carried the seed. The mushrooms were here first. They've been very polite about it.", :spores],
-    [[:talion_released, :talion_chased, :talion_restored, :talion_haunted], "Talion, through the lake", "The tall gold man had no reflection. None. For years.", :summer],
-    [[:colony_recognised], "Luminara's memory bubble", "Var's body, alone in the roots, fusing Mirror Wraith essence into myconid spores. Then peeling back its face.", :summer],
+    [[:talion_released, :talion_chased, :talion_restored], "Talion, through the lake", "The tall gold man had no reflection. None. For years.", :summer],
+    [[:memory_bubble], "Luminara's memory bubble", "Var's body, alone in the roots, fusing Mirror Wraith essence into myconid spores. Then peeling back its face.", :summer],
     [[:slaudi_testifies], "Slaudi, a fisherman", "The food caravans went south to Summer's stockpiles. Caer-Konig starved.", :summer],
     [[:wraith_echo_avarice], "A Mirror Wraith's echo", "She ordered us to watch Ten-Towns, and choose who would be sacrificed.", :summer],
     [[:ledger_found], "The Ledger of Corruption", "Payments from the Frostmaiden's cult. Lists of names. \"Project Rime: reforge the Everlasting Summer.\"", :summer],
@@ -137,6 +137,10 @@ module FrostThaw
     [[:naerth_ledger], "Naerth's last ledger", "Avarice was bleeding Targos white long before the Rime.", :summer],
     [[:var_story_known], "Var Rime-Breaker's own story", "A good man, worn like a coat for thirty years.", :summer],
     [[:heist_exposed], "The Guild reliquary", "Darrus wanted a piece of the Mirror Mother's heart. Meat Meat brought it to the Council instead.", :autumn],
+    [[:robes_seen], "Autumn's crowning robes", "Gold robes for a horned queen nobody had met, commissioned by Autumn, carried below to the Forge.", :autumn],
+    [[:maera_apprentice_heard], "Maera Vell's apprentice", "She took the gold robes down herself. She said Autumn needed a hand that wouldn't shake.", :autumn],
+    [[:watcher_weasel], "Maera Vell's garden-whisper weasel", "It stole the details of the Heralds, every night, and carried them to Autumn's clothier.", :autumn],
+    [[:frostfire_flask], "A flask of frostfire", "Frost and fire in one flask: the engine's fuel, off Summer's own Forge shelves.", :summer],
     [[:oath_of_roots], "The Rootwardens' Oath of Roots", "Sworn with Rheven, in the old way.", :summer],
     [[:selrae_witness], "Selrae Vorn", "Her word, for whatever an old Halo-sheltering fool's word is worth.", :summer],
     [[:wardens_sworn], "Kelyn of Spring", "They swore the Wardens' oath the day they came home.", :summer]
@@ -180,7 +184,7 @@ module FrostThaw
     glasswater_still: ["The lake is so still it could be a second sky.", "The constellations in it don't match the ones overhead."],
     phildendrin_after: -> { flag?(:mm_atoned) ? ["PHILDENDRIN: The faces in that mirror were people. You let them go.",
                                                  "PHILDENDRIN: Now let the court do the same for her."] :
-                                                ["PHILDENDRIN: Autumn's spying mirror. In the Heartroot's wells, where Darrus kept his secrets.",
+                                                ["PHILDENDRIN: Autumn's spying mirror. In the Heartroot's wells, where Autumn kept its secrets.",
                                                  "PHILDENDRIN: Break it, and the court will listen."] },
     refugee_camp: ["REFUGEE: The tree people gave us blankets. Blankets! In autumn!",
                    "REFUGEE: We've had snow in our boots for two years."],
@@ -215,6 +219,14 @@ module FrostThaw
     WITNESSES.select { |flags, _, _, c| (charge.nil? || c == charge) && flags.any? { |f| flag?(f) } }
   end
 
+  # Autumn's hand at the Forge was Darrus, or (if he was exposed in the heist
+  # and fled) Maera Vell (034 autumn_hand): a witness line follows whichever.
+  def witness_line(text)
+    maera = flag?(:heist_exposed)
+    text.gsub("{MAERA_KEPT}", maera ? " When he ran, Maera Vell kept them going." : "")
+        .gsub("{MAERA_CARRIED}", maera ? " When Darrus ran, Maera Vell carried them below." : "")
+  end
+
   def trials_done
     %i[anduin_reconciled anduin_doubtful phildendrin_found wyn_cleared talion_released talion_chased talion_restored
        talion_haunted colony_recognised colony_exiled].count { |f| flag?(f) }
@@ -227,7 +239,7 @@ module FrostThaw
     end
     pbMessage(_INTL("Witnesses and evidence ({1}). Day {2} of 7. Public opinion: {3}.", list.size, trial[:day],
                     opinion_word))
-    list.each { |_, who, what, _| pbMessage(_INTL("{1}: \"{2}\"", who, what)) }
+    list.each { |_, who, what, _| pbMessage(_INTL("{1}: \"{2}\"", who, witness_line(what))) }
   end
 
   def opinion_word
@@ -505,16 +517,26 @@ module FrostThaw
     end
     signed[[who, k]] = true
     trial[:signatures][k] = (trial[:signatures][k] || 0) + n
+    return if check_nomination(k)
     need = SIGNATURES_NEEDED[k]
     have = trial[:signatures][k]
-    if have >= need && (k != :anduin || (flag?(:rootwardens_accept_anduin) && flag?(:reptin_endorsed)))
-      set_flag(:"nominated_#{k}")
-      say(["(#{CANDIDATES[k][0]} has #{have} signatures. The name goes forward to the Council!)"])
-      add_support(k, 1)
-    else
-      extra = k == :anduin ? " Anduin also needs the Rootwardens to accept him, and Reptin to stand up for him in public." : ""
-      say(["(#{have} of #{need} signatures for #{CANDIDATES[k][0]}.#{extra})"])
-    end
+    extra = k == :anduin ? " Anduin also needs the Rootwardens to accept him, and Reptin to stand up for him in public." : ""
+    say(["(#{have} of #{need} signatures for #{CANDIDATES[k][0]}.#{extra})"])
+  end
+
+  # A petition goes forward the moment everything it needs is in place, in
+  # whatever order the week brought them: signatures, the Rootwardens' leave,
+  # Reptin's word in the Bazaar. Called from each of those.
+  def check_nomination(k)
+    return false if !flag?(:"petition_#{k}") || nominated?(k)
+    need = SIGNATURES_NEEDED[k] || 0
+    have = (trial[:signatures][k] || 0)
+    return false if have < need
+    return false if k == :anduin && !(flag?(:rootwardens_accept_anduin) && flag?(:reptin_endorsed))
+    set_flag(:"nominated_#{k}")
+    say(["(#{CANDIDATES[k][0]} has #{have} signatures#{k == :anduin ? ', the Rootwardens\' leave, and Reptin\'s word' : ''}. The name goes forward to the Council!)"])
+    add_support(k, 1)
+    true
   end
 
   #-----------------------------------------------------------------------------
@@ -625,7 +647,9 @@ module FrostThaw
     if ok
       give_key(:FT_HYPHORALEAF)
       st[:ok] += 1
-      say(["It comes away in your fingers like it was waiting. The root doesn't flinch."])
+      say(["It comes away in your fingers like it was waiting. The root doesn't flinch.",
+           "ANDUIN: (very quietly) ...She let you. Show them that. Show the court."])
+      set_flag(:leaf_presented)
     else
       st[:bad] += 1
       say(["The root flinches. Sap wells up where the leaf was, golden, like a cut finger."])
@@ -679,6 +703,9 @@ module FrostThaw
   end
 
   def anduin_after(event_id = nil)
+    if flag?(:anduin_doubtful) && !flag?(:anduin_won_back) && (flag?(:eirwen_restraint) || flag?(:leaf_presented) || flag?(:cedar_charm_shown))
+      return anduin_win_back(event_id)
+    end
     if flag?(:anduin_leaving)
       return say(["ANDUIN: (a pack on his shoulder) I'll write. I won't know what to say. I'll write anyway."], event_id)
     end
@@ -691,11 +718,43 @@ module FrostThaw
         set_flag(:reptin_endorsed)
         add_support(:anduin, 2)
         start_petition(:anduin)
+        check_nomination(:anduin)
       end
       return
     end
     say([flag?(:anduin_reconciled) ? "ANDUIN: Stewards of the Heartroot. Him and me. I like the sound of it." :
                                      "ANDUIN: I want to believe it. I'm trying. Give me time."], event_id)
+  end
+
+  # Q1's evidence was gathered "to reassure Anduin": Eirwen's word that Reptin
+  # used his gift only as a wall, Hyphora's own leaf, the cedar charm. Brought
+  # to him after the Test, it can still change his mind (once).
+  def anduin_win_back(event_id = nil)
+    set_flag(:anduin_won_back)
+    say([flag?(:anduin_leaving) ? "ANDUIN: (a pack on his shoulder, not quite leaving yet) ...You came to see me off?" :
+                                  "ANDUIN: (by the fountain, turning the iron ring) You're still here. So am I. Mostly."], event_id)
+    proofs = []
+    proofs << "Eirwen's leaf, in the Shrine's own hand: \"The god of the wild raised his gift only as a wall. Never as a crown.\"" if flag?(:eirwen_restraint)
+    proofs << "Hyphora's golden leaf, plucked without a scratch on her. She let him." if flag?(:leaf_presented)
+    proofs << "The cedar charm, worn smooth, four hundred years in his pocket." if flag?(:cedar_charm_shown)
+    say(["#{herald?(:reptin) ? 'You lay' : 'Reptin lays'} it all out on the fountain's rim:"] + proofs)
+    if proofs.size >= 2 || challenge("Anduin is listening. Really listening, this time.",
+                                     ["\"I'm not asking you to trust a god. I'm asking you to trust me, slowly.\"",
+                                      "\"See? I told you so.\"", "\"You can't leave now.\""], 0)
+      say(["ANDUIN: (setting the pack down) ...A wall. Not a crown.",
+           "ANDUIN: Stewards of the Heartroot, the wardens said. Both of us. Ask me again.",
+           herald?(:reptin) ? "(You ask him again.)" : "(Reptin asks him again.)",
+           "ANDUIN: Yes. Obviously yes. Don't make a speech about it."])
+      state[:flags].delete(:anduin_doubtful) if state[:flags]
+      state[:flags].delete(:anduin_leaving) if state[:flags]
+      set_flag(:anduin_reconciled)
+      add_support(:anduin, 2)
+      add_support(:eirwen, 1)
+      add_counter(:story_beats)
+    else
+      say(["ANDUIN: (gently) It's good evidence. I believe the evidence. I'm still learning how to believe you.",
+           "ANDUIN: Give me time. Real time. Not a trial week."])
+    end
   end
 
   # Witness to restraint (Q1 evidence): Eirwen, at the Still Sky Shrine.
@@ -793,7 +852,7 @@ module FrostThaw
          as(:meat_meat, "(very small) ...Mama?"),
          "PHILDENDRIN: (both hands through the bars, on her daughter's face) Phildendrin. My name is Phildendrin.",
          "PHILDENDRIN: I'm your mama. And I am not losing you to another cell.",
-         "PHILDENDRIN: (turning on the Council) Autumn was a tyrant. He had children in pens. Hang me next to her, or let her go.",
+         "PHILDENDRIN: (turning on the Council) Autumn was a tyranny. #{autumn_hand[:full]} had children in pens. Hang me next to my daughter, or let her go.",
          cl(:reptin, "(quietly, to the guard) Give them a minute. Please. I'll owe you one.")].compact)
     set_flag(:phildendrin_found)
     # Reconcile through heartfelt apology (Q2.2)
@@ -817,7 +876,7 @@ module FrostThaw
       set_flag(:child_parents)
     end
     say(["PHILDENDRIN: The Council's offered something other than the roots. A mission, to earn mercy.",
-         "PHILDENDRIN: There's a mirror in the Heartroot's wells. Autumn's spying mirror. Darrus watched the whole city through it.",
+         "PHILDENDRIN: There's a mirror in the Heartroot's wells. Autumn's spying mirror. Autumn watched the whole city through it.",
          "She looks at Razzilith, and then back at her daughter.",
          "PHILDENDRIN: Break it. Free the faces trapped inside.",
          "PHILDENDRIN: Then the court can't say she only knows how to hurt.",
@@ -829,7 +888,7 @@ module FrostThaw
   end
 
   def phildendrin_after(event_id = nil)
-    if flag?(:mm_reconciled) && !flag?(:petition_phildendrin) && !flag?(:mm_atoned)
+    if flag?(:mm_reconciled) && !flag?(:petition_phildendrin) && !nominated?(:phildendrin)
       say(["PHILDENDRIN: My daughter wants me in a chair. A Council one. ...Is she always this bossy?"], event_id)
       return start_petition(:phildendrin) if pbConfirmMessage(_INTL("Encourage her to stand?"))
     end
@@ -840,7 +899,7 @@ module FrostThaw
     return say(["Shards of a tall mirror. The faces are gone. Only yours, in pieces."], event_id) if flag?(:mm_atoned)
     return say(["A tall mirror, its glass dark and greasy. Something moves behind it."], event_id) if !flag?(:phildendrin_found)
     say(["A tall mirror in a frame of red-lacquered root.",
-         "Faces press against the glass from the inside: dozens. People Darrus watched. People he kept.",
+         "Faces press against the glass from the inside: dozens. People Autumn watched. People it kept.",
          "For one moment, at the very back, a woman with white hair turns and looks out at you. Then she's gone.",
          as(:meat_meat, "No more deals with mirrors."),
          cl(:wyn, "(barely a whisper) ...They're so tired. Let them out.")].compact, event_id)
@@ -875,7 +934,8 @@ module FrostThaw
     when :autumn
       if flag?(:wall_helped) || challenge("Rheven looks at you a long time.", ["\"You saw the pens. You know.\"", "\"Tell us or we'll find out.\"", "\"Never mind.\""], 0)
         say(["RHEVEN: (lowering his voice) Autumn kept lists. Refugees, by name and by weight.",
-             "RHEVEN: He meant to turn them into sacrifices. For the Frostmaiden, or for Summer, I never learned which.",
+             flag?(:heist_exposed) ? "RHEVEN: Darrus drew them up. When he ran, Maera Vell carried them below. For the Frostmaiden, or for Summer, I never learned which." :
+                                     "RHEVEN: Darrus meant to turn them into sacrifices. For the Frostmaiden, or for Summer, I never learned which.",
              "RHEVEN: I'll say it at the trial. I should have said it thirty years ago."])
         set_flag(:rheven_testimony)
       else
@@ -897,6 +957,7 @@ module FrostThaw
         say(["RHEVEN: Fewer god-sparks. ...Hm. A man who'd say that out loud in the Bazaar has nerve.",
              "RHEVEN: The wardens won't stand in his way."])
         set_flag(:rootwardens_accept_anduin)
+        check_nomination(:anduin)
       else
         say(["RHEVEN: An outsider who married a god. No."])
       end
@@ -1012,8 +1073,8 @@ module FrostThaw
 
   def underdark_door(event_id = nil)
     return say(lines_for(:underdark_circle), event_id) if flag?(:wyn_cleared)
-    speak(:wyn, "(at the broken door) This is where I stood. Every night. Until the one night.",
-                "(at the broken door) ...I stood here.", event_id)
+    speak(:wyn, "(at the broken door) My post at the Sap Gate was set to guard this. Every night. Until the one night.",
+                "(at the broken door) ...This is what I was guarding.", event_id)
     say(lines_for(:underdark_circle))
     if !flag?(:ritual_runes)
       if challenge("Search the circle.", ["Look for what's scorched and what's carved", "Touch the centre", "Step round it"], 0)
@@ -1031,24 +1092,24 @@ module FrostThaw
     set_flag(:underdark_door_seen)
   end
 
-  # Pell, the junior Rootwarden left at the door. (The notes name Darrus Fell
-  # here, but Darrus is the Autumn Warden, dead at the Forge: this is the
-  # junior warden who was left in his place.)
+  # Ivo, the junior Rootwarden left at the door. (The notes name Darrus Fell
+  # here, but Darrus is the Autumn Warden: this is the junior warden who was
+  # left in his place. The function keeps its old name for old saves.)
   def pell(event_id = nil)
-    return say(["PELL: I'll say it to the crystals. I'll say it twice if they want."], event_id) if flag?(:pell_testifies)
-    return say(["PELL: (not meeting anyone's eye) I've got nothing to say."], event_id) if flag?(:pell_refused)
+    return say(["IVO: I'll say it to the crystals. I'll say it twice if they want."], event_id) if flag?(:pell_testifies)
+    return say(["IVO: (not meeting anyone's eye) I've got nothing to say."], event_id) if flag?(:pell_refused)
     say(["A young Rootwarden, barely shaving, guards the tunnel mouth with a spear he holds like a broom.",
-         "PELL: I was on the door that night. After Wyn went. They left me there alone."], event_id)
-    if pbConfirmMessage(_INTL("Ask Pell: \"What did you see when the breach occurred?\""))
-      ok = challenge("Pell is frightened.", ["Promise Wyn will clear his name too", "Tell him it's his fault if he lies", "Offer him money"], 0)
+         "IVO: I was on the door that night. After Wyn went. They left me there alone."], event_id)
+    if pbConfirmMessage(_INTL("Ask Ivo: \"What did you see when the breach occurred?\""))
+      ok = challenge("Ivo is frightened.", ["Promise Wyn will clear his name too", "Tell him it's his fault if he lies", "Offer him money"], 0)
       if ok
         speak(:wyn, "I'll tell them you held. Alone. That's more than I did.", "...You held. Alone.")
-        say(["PELL: (in a rush) Rootwardens came. Our cloaks, our spears. But wrong. Their breath didn't fog.",
-             "PELL: They walked past the wards like the wards were nothing, and I let them, because they were us.",
-             "PELL: I'll testify. If Wyn clears my name."])
+        say(["IVO: (in a rush) Rootwardens came. Our cloaks, our spears. But wrong. Their breath didn't fog.",
+             "IVO: They walked past the wards like the wards were nothing, and I let them, because they were us.",
+             "IVO: I'll testify. If Wyn clears my name."])
         set_flag(:pell_testifies)
       else
-        say(["PELL: (going red) It was Wyn's door. Ask Wyn. I've nothing to say."])
+        say(["IVO: (going red) It was Wyn's door. Ask Wyn. I've nothing to say."])
         set_flag(:pell_refused)
         trial[:mud] += 1
       end
@@ -1063,7 +1124,7 @@ module FrostThaw
          "KETHAN: Evidence first. What did you find?"])
     lines = []
     lines << "(The ritual runes: the Halo's own snowflake, carved at the door.)" if flag?(:ritual_runes)
-    lines << "(Pell's account: wardens whose breath didn't fog.)" if flag?(:pell_testifies)
+    lines << "(Ivo's account: wardens whose breath didn't fog.)" if flag?(:pell_testifies)
     lines << "(The wraith's vision, in its vial: cultists chanting, Wyn far away.)" if flag?(:wraith_witness_door)
     say(lines) if !lines.empty?
     boost = flag?(:fungal_liaison) && with_or_is?(:alberica)
@@ -1073,6 +1134,7 @@ module FrostThaw
         say(["KETHAN: And you came back with a god's spark. Rootwardens have been promoted for less."])
       end
       say(["KETHAN: Reprimanded. The post is yours, Rootwarden, if you want it."])
+      set_flag(:hyphora_alibi)
       set_flag(:wyn_cleared)
     else
       say(["The crystals stay dark. Nobody asked them the right way.",
@@ -1248,6 +1310,7 @@ module FrostThaw
     opts << [:glass, _INTL("Buy an untainted frost-glass mirror ($1000)")] if !($PokemonBag.pbHasItem?(:FT_FROSTGLASS) rescue false) && flag?(:talion_met)
     opts << [:soul, _INTL("\"How do I free a soul trapped in a reflection?\"")] if flag?(:talion_met) && !flag?(:mira_ritual_advice)
     opts << [:vial, _INTL("Buy a memory vial ($1500)")] if !($PokemonBag.pbHasItem?(:FT_MEMORYVIAL) rescue false)
+    opts << [:return, _INTL("Give back the cursed mirror")] if flag?(:mira_mirror_taken) && !flag?(:mira_mirror_returned)
     opts << [:bye, _INTL("Nothing")]
     c = pbMessage(_INTL("Ask Mira..."), opts.map(&:last), opts.size - 1)
     case opts[[c, 0].max][0]
@@ -1274,6 +1337,8 @@ module FrostThaw
       say(["MIRA: (not laughing) Do it on a clear night. A mirror with no crack in it.",
            "MIRA: And blood: his and yours. A soul in a reflection needs an anchor on both sides of the glass."])
       set_flag(:mira_ritual_advice)
+    when :return
+      mira_mirror_return
     when :vial
       if $Trainer.money >= 1500
         $Trainer.money -= 1500
@@ -1437,10 +1502,10 @@ module FrostThaw
   end
 
   # The memory bubble (Q6): the day Avarice tried to fuse Mirror Wraith essence with spores.
-  def memory_bubble_offer
+  def memory_bubble_offer(asked = false)
     return if flag?(:memory_bubble)
-    say(["LUMINARA: And you want to know about the summer. The one who wore the Marshal."])
-    if challenge("Ask Luminara for the memory.", ["Ask for the day she came into the roots", "Demand it as evidence", "Leave it"], 0)
+    say(["LUMINARA: And you want to know about the summer. The one who wore the Marshal."]) if !asked
+    if asked || challenge("Ask Luminara for the memory.", ["Ask for the day she came into the roots", "Demand it as evidence", "Leave it"], 0)
       say(["LUMINARA: We do not show our young what we saw. But you have earned it.",
            "She lifts a glowing memory bubble."])
       Stage.overlay("O-03", fade: 20)
@@ -1452,6 +1517,29 @@ module FrostThaw
       add_support(:eirwen, 1)
     else
       say(["LUMINARA: Then keep your peace, and we keep ours."])
+      set_flag(:bubble_declined)
+    end
+  end
+
+  # Q6's evidence lead is its own audience with the Sovereign: if the bubble
+  # wasn't asked for on the councillors' visit, ask for it now.
+  def luminara_bubble(event_id = nil)
+    return say(["LUMINARA: The memory is yours to carry. Carry it gently."], event_id) if flag?(:memory_bubble)
+    if flag?(:colony_exiled)
+      return say(["LUMINARA: (packing spore-lanterns into a basket) We are leaving, surface-friend. We take our memories with us."], event_id)
+    end
+    if flag?(:bubble_declined_twice)
+      return say(["LUMINARA: We have said no. Our young must not see it. Not even for you."], event_id)
+    end
+    say(["You ask for an audience. The spore-guard lets you through to the Fane's throne-cap.",
+         "LUMINARA: (wind through reeds) You come asking, asking, again. For the summer's memory."], event_id)
+    if challenge("Ask Luminara for the day Avarice came into the roots.",
+                 ["Promise it will be shown only to the Council, and never to children", "Tell her the court demands it", "Beg"], 0)
+      memory_bubble_offer(true)
+    else
+      say(["LUMINARA: We protect our young. That memory screams. No."])
+      set_flag(:bubble_declined_twice) if flag?(:bubble_declined)
+      set_flag(:bubble_declined)
     end
   end
 
@@ -1648,7 +1736,6 @@ module FrostThaw
     return say(["KELYN: Four chairs. Four seasons. All of them filled."], event_id) if flag?(:ch10_done)
     n = witnesses.size
     say(["KELYN: Witnesses and evidence so far: #{n}. Day #{trial[:day]} of seven. The crystals hear them on the seventh day."], event_id)
-    mira_mirror_return if flag?(:mira_mirror_taken) && !flag?(:mira_mirror_returned)
     wyn_alibi if flag?(:underdark_door_seen) && !flag?(:wyn_cleared)
     if !flag?(:badge_selrae)
       return say(["KELYN: Selrae has put her bid for the Canopy before the Council. The crystals will judge it first.",
@@ -1702,7 +1789,7 @@ module FrostThaw
     autumn = witnesses(:autumn).size + (flag?(:mm_atoned) ? 2 : 0) + (flag?(:mm_cooperated) ? 1 : 0) - (flag?(:mm_broke_out) ? 3 : 0)
     say(["KELYN: The death of the Autumn Warden, by Meat Meat's hand..."])
     if autumn >= 4
-      say(["KELYN: ...was the death of a man feeding children to a fire. The sentence is commuted. She's free.",
+      say(["KELYN: ...was the death of #{autumn_hand[:he] == 'she' ? 'a woman' : 'a man'} feeding children to a fire. The sentence is commuted. She's free.",
            as(:meat_meat, "(very quietly) ...Mama. Mama, did you hear?")])
       set_flag(:mm_commuted)
     elsif autumn >= 1

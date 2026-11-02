@@ -468,7 +468,7 @@ resave(ch, 2054)
 # down to the Smuggler's Run; Mira's trial-week page; the dockers sign.
 rt = reopen(2055)
 rt.map.events.delete_if { |_id, e| e.name == "To the Glasswater" }      # (the Glasswater is past the Wall now)
-person_when(rt, 12, 19, "Pell", "BW029", "FT.pell(@event_id)", SW_PELL, dir: 4)
+person_when(rt, 12, 19, "Ivo", "BW029", "FT.pell(@event_id)", SW_PELL, dir: 4)
 rt.npc(24, 9, "BW (38)", :smuggler_dockworker, dir: 2, name: "Dockworker")
 # (The way down to the Undercity is the crack at the far end of the Smuggler's Run, 2198, below.)
 mira = find_event(rt, "Mira of the North Wind")

@@ -247,6 +247,7 @@ module FrostThaw
       return if !flag?(:amulets_returned)
     else
       talk(:faria, event_id)
+      faria_wand if respond_to?(:faria_wand)      # (the Wand of Spores: 047d)
     end
     mart(:faria, event_id) if respond_to?(:mart)
   end

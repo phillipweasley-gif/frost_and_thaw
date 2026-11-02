@@ -246,6 +246,12 @@ module FrostThaw
   def leader_luminara(event_id = nil)
     if flag?(:badge_undercanopy)
       return luminara_blessing(event_id) if flag?(:spores_debated) && !flag?(:colony_recognised) && !flag?(:colony_exiled)
+      # Q6's lead: the summer's memory, asked for in its own audience during the trial week
+      if flag?(:trials_open) && !flag?(:ch10_done) && !flag?(:memory_bubble) && !flag?(:colony_exiled) &&
+         pbConfirmMessage(_INTL("Ask Luminara for the memory of the summer's work in the roots?"))
+        return luminara_bubble(event_id)
+      end
+      return if respond_to?(:luminara_gifts) && luminara_gifts
       if flag?(:mycolith_down)
         return say(["LUMINARA: The lake is clean. The god is still. Now we help you, surface-friend. Ask."], event_id)
       end

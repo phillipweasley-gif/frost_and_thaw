@@ -670,7 +670,7 @@ module Story
         talk(/Broken door/)
       end
       beat("  the Underdark Door (the ritual runes)", :underdark_door_seen)
-      travel(2055); talk(/^Pell$/)
+      travel(2055); talk(/^Ivo$/)
       travel(2054); talk(/Kethan Vale \(hearing\)/)
       beat("SC 10.04 absent watcher (Wyn #{FrostThaw.flag?(:wyn_barred) ? 'sentenced' : 'cleared'})", :wyn_cleared)
       # Q4: Talion in the Fields
