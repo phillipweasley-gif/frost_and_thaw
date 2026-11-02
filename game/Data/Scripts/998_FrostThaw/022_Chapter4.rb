@@ -821,9 +821,10 @@ module FrostThaw
                "THREDRA: She wants a new coat to wear, you see. I'm only her seamstress."]
       lines << "THREDRA: (squinting at you) And this one isn't anywhere at all. Interesting. Very interesting." if journey? || herald?(:wyn)
       lines << cl(:reptin, "(aside) Seamstress. Lovely. Let's not let her take our measurements.")
-      lines << "THREDRA: Let's dance upon the glass, and see who shatters first."
-      lines << "THREDRA: Break my mirrors, dearies. If you can bear to look in them."
       say(lines.compact, event_id)
+      hag_bargain_offer(event_id)       # the module's "A Hag's Bargain" (044_ChasmFaithful.rb)
+      say(["THREDRA: Now. Let's dance upon the glass, and see who shatters first.",
+           "THREDRA: Break my mirrors, dearies. If you can bear to look in them."], event_id)
       set_flag(:thredra_sent_relics)
       return
     end
@@ -870,7 +871,7 @@ module FrostThaw
     add_counter(:story_beats)
     pbSEPlay("Ice2") rescue nil
     say(["THREDRA: Clever. Clever, clever. You broke them. Do you know how long it takes to grow a mirror?",
-         "THREDRA: Come and find me in the chasm, dearies. Bring your wolf.",
+         "THREDRA: Come and find me in the chasm, dearies. Bring your wolf. Granny keeps her bargains.",
          "She splits into shards and blows away south.",
          "Out on the lake, the frozen figures breathe. One by one they sag, gasp, and fall to their knees."])
     sayc([cl(:reptin, "(hand closing over the bite) ...Bring your wolf. She means me."),

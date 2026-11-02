@@ -535,6 +535,7 @@ module FrostThaw
       st.fx("E-04", seph, frames: 10, hold: true, wait: false)
       st.pose(seph, "P-SEP-02", 0, frames: [2, 3], per: 12)
     end
+    sephek_true_nature                 # what he really is (Rime of the Frostmaiden; 044_ChasmFaithful.rb)
     say(["Ice closes over him where he kneels.",
          "In his chest, a sliver of blue light still beats. Slow as a sleeper."])
     speak(:alerion, "He's not dead. He's waiting.", "...He's waiting.")
