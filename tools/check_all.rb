@@ -159,7 +159,7 @@ maps.each do |id, m|
       c = pg.condition
       [[c.switch1_valid, c.switch1_id], [c.switch2_valid, c.switch2_id]].each do |valid, sid|
         next unless valid
-        problems << "#{id}: #{e.name} waits for switch #{sid}, which the game would never see as on" unless (3900..3999).include?(sid)
+        problems << "#{id}: #{e.name} waits for switch #{sid}, which the game would never see as on" unless (3900..4199).include?(sid)
       end
     end
   end
