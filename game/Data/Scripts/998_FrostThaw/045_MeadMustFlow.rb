@@ -526,6 +526,7 @@ module FrostThaw
     case c
     when 3
       return gahg_hide_and_seek
+    when 1
       say(["You step into her path. Gahg's smile falls. Then her face twists.",
            "GAHG: What did you do to Duhg? WHAT DID YOU DO?", "She drops the basket and attacks."])
       if boss_battle(named_mon(:B68H297, 26, "Gahg"))
