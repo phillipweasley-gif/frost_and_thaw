@@ -557,16 +557,18 @@ module FrostThaw
   # player (the team, the bag and what's in it, the save), not the story.
   LOOP_KEEP_STATE = %i[flags counters companions goal loop_snap bargain_memory mode herald version active starter
                        bag_limit bank pip_upgrades pip_yes chwinga_charges grass_line_v2 locket_day]
+  # Counters that are the player's, not the story's: the wheel, the beats and
+  # the loops themselves, and how many trainers you've beaten.
+  LOOP_KEEP_COUNTERS = %i[wheel story_beats loop_count trainers_beaten]
 
   def start_loop
     n = (counter(:loop_count) rescue 0).to_i + 1
-    keep_counters = { wheel: counter(:wheel), story_beats: counter(:story_beats) } rescue {}
     flags = state[:flags] || {}
     flags.keys.each { |k| flags.delete(k) unless LOOP_KEEP.include?(k) }
     state[:flags] = flags
     state[:counters] ||= {}
+    state[:counters].keys.each { |k| state[:counters].delete(k) unless LOOP_KEEP_COUNTERS.include?(k) }   # omens, watchers... replay
     state[:counters][:loop_count] = n
-    keep_counters.each { |k, v| state[:counters][k] = v if v }
     state[:companions] = []
     state[:goal] = nil
     state.keys.each { |k| state.delete(k) unless LOOP_KEEP_STATE.include?(k) }

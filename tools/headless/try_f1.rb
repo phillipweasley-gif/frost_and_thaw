@@ -127,6 +127,8 @@ FT.state[:gm_election_day] = 7; FT.state[:track_sets] = 3; FT.state[:baskets] = 
 FT.state[:chwinga_charges] = 2
 $game_self_switches[[2133, 27, "A"]] = true; $game_self_switches[[2101, 5, "A"]] = true; $game_self_switches[[2050, 9, "A"]] = true
 $game_switches[4076] = true
+FT.state[:counters][:omens_seen] = 3; FT.state[:counters][:trainers_beaten] = 9; wheel0 = FT.counter(:wheel)
+FT.loop_snapshot(:act1)
 FT.start_loop rescue nil
 HL.frames(30); HL.settle(800)
 ok(!FT.state.key?(:gm_election_day) && !FT.state.key?(:track_sets) && !FT.state.key?(:baskets), "E2: the loop drops Act I quest state (election clock, tracks, baskets)")
@@ -134,6 +136,12 @@ ok(FT.state[:bargain_memory] == 1 && FT.state[:chwinga_charges] == 2, "E2: ...bu
 ok(!$game_self_switches[[2133, 27, "A"]] && !$game_self_switches[[2101, 5, "A"]] && !$game_self_switches[[2050, 9, "A"]],
    "E2: ...and clears self switches on every story map (21xx side quests too)")
 ok(!$game_switches[4076], "E2: ...and the 4000+ story switches")
+ok(FT.counter(:omens_seen).to_i == 0 && FT.counter(:trainers_beaten) == 9 && FT.counter(:wheel) == wheel0,
+   "E2: ...and the story's counters (the wheel, the beats and your record stay)")
+FT.loop_skip_state(:act1)
+ok(FT.state[:gm_election_day] == 7 && FT.state[:baskets] == 2 && FT.counter(:omens_seen) == 3,
+   "E2: skipping the act puts your own quest state and counters back, like its flags")
+%i[gm_election_day track_sets baskets].each { |k| FT.state.delete(k) }; FT.state[:counters].delete(:omens_seen)
 FT.state[:companions] = %i[alberica reptin alerion shade meat_meat]
 %i[met_party badge_targos badge_bryn].each { |f| FT.set_flag(f) }
 strong_party
