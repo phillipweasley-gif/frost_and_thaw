@@ -319,6 +319,8 @@ module FrostThaw
     sayc(["Heat slams into you like a living wall.",
           "A cathedral-sized cavern: a hollow womb carved into the fused roots of the World Tree, where molten sap rivers churn like liquid gold.",
           "Great mechanical arms churn and turn. Twenty standing stones ring the floor: the old Stones of Thruun.",
+          "This was the hag's first lair, under Dougan's Hole, where the Reversal began. The Stones were her altar, and the altar is still beating:",
+          "a holy wound in the World Tree's roots. Avarice's sigils run from it into the tree's memory, like nails into a living thing.",
           "Chained among them, on a cradle of iron and root: a dragon of black crystal and mirror glass.", "Its eyes are dark.",
           "Above it hangs the engine, a cage of chardalyn and roots.",
           "In its heart burns a sliver of blue frost-light, wrapped in Hyphora's gold sap.", "Blue at the edges. Red at the core.",
@@ -387,7 +389,8 @@ module FrostThaw
       say(["AVARICE: The duergar call me Xardorok. Names are coats too. So is summer.",
            "AVARICE: A season that never ends has a god's worth of power in it. Mine. And when my dragon flies,",
            "AVARICE: Ten-Towns melts, and every soul in the Dale is harvested warm, and I sit where the Frostmaiden sits.",
-           "AVARICE: My patron gets the rest. He likes his meals warm."])
+           "AVARICE: My patron gets the rest. The whole Dale, stitched to the Nine Hells like a new pocket on an old coat.",
+           "AVARICE: He likes his meals warm. I'll be the one who serves them."])
       if flag?(:avarice_shard_lodged)
         say(["AVARICE: (to you, almost fond) I watched you come down through my garden. You've been carrying my eye since the Shattered Bed."])
       end
