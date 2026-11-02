@@ -505,6 +505,7 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Rest until sundown? (${1}, or on credit)", SCRAMSAX_ROOM))
     $Trainer.money -= SCRAMSAX_ROOM if !northlook_rest_on_credit?
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    long_rest_taken
     # the draw is in the square: go out to it (the square's autorun plays lottery_night)
     set_switch(SW_LOTTERY_NIGHT, true)
     transfer(*LOTTERY_SPOT)

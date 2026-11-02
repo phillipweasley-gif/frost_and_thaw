@@ -164,6 +164,7 @@ module FrostThaw
            "OWENN: ...Two years since I've had good news to pass on. I'd forgotten how it sits."], event_id)
       if pbConfirmMessage(_INTL("Rest at the Luskan Arms?"))
         pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+        long_rest_taken
         say(["The rats keep you company all night. They mean well."])
       end
       return

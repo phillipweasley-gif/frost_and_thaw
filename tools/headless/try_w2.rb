@@ -229,10 +229,29 @@ begin
     answer([/What do you say/, pick], [/What do you do/, BRANCH == "letgo" ? 1 : 0])
     go(2033, 9, 10, 8); talk(/Olivessa/)
     check(flag(:election_asked), "Olivessa asks")
-    if BRANCH != "decline"
-      check(sw(4077) && sw(4078), "Shandar storms off to Targos")
-      go(2031, 15, 11, 8); walk(15, 10); HL.settle(3000)
-      check(sw(4079), "the thugs storm the mead hall, and the town votes")
+    night = -> { FrostThaw.set_rest_at(FrostThaw::GOOD_MEAD_REST); HL.settle(4000) }
+    if BRANCH == "decline"
+      go(2012, 22, 30)                           # away in Bryn Shander: the town votes without you
+      FrostThaw::ELECTION_DAYS.times { night.() }
+      check(sw(4079) && flag(:shandar_speaker), "a week on, Shandar is elected unopposed (word comes by rider)")
+    elsif BRANCH == "away"
+      check(sw(4077) && !sw(4078), "Shandar storms off to Targos; nothing happens at once")
+      go(2012, 22, 30)
+      2.times { night.() }
+      check(flag(:gm_thugs_missed), "away from town, the staged rescue happens without you")
+      (FrostThaw::ELECTION_DAYS - 2).times { night.() }
+      check(sw(4079) && flag(:shandar_speaker), "and Shandar the hero wins the vote")
+    else
+      check(sw(4077) && !sw(4078), "Shandar storms off to Targos; nothing happens at once")
+      go(2032, 5, 11, 8)
+      night.()
+      check(!sw(4077), "the next day Shandar's back from Targos")
+      night.()
+      check(flag(:gm_thugs_done) && !sw(4079), "a day later the thugs storm the mead hall; the vote is still to come")
+      (FrostThaw::ELECTION_DAYS - 3).times { night.() }
+      check(!sw(4079), "no vote before the week is out")
+      night.()
+      check(sw(4079), "a week on, Good Mead votes")
       if BRANCH == "letgo" then check(flag(:shandar_speaker), "let the thug go: Shandar wins, and Naerth has his speaker")
       else
         check(flag(:shandar_exposed), "the thug talks: Naerth hired them")

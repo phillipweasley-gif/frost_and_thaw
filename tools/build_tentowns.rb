@@ -1046,9 +1046,9 @@ gm.map.events.each_value do |ev|
 end
 resave(gm, GOOD_MEAD)
 
-# the mead hall: the thugs' "rescue"
+# the mead hall: the thugs' "rescue", and later the vote
 mh2 = reopen(2032)
-has_event?(mh2, "Cutscene gm_thugs") || mh2.event(1, 1, "Cutscene gm_thugs", [{}, { switch: SW_GM_THUGS, trigger: 3, script: "FT.scene(:gm_thugs, @event_id)" }, { self_switch: "A" }])
+has_event?(mh2, "Cutscene mead hall news") || mh2.event(1, 1, "Cutscene mead hall news", [{}, { switch: SW_GM_THUGS, trigger: 3, script: "FT.gm_mead_hall_news(@event_id)" }])   # the thugs, then the vote
 resave(mh2, 2032)
 # the cooperage: Olivessa asks
 co2 = reopen(2033)

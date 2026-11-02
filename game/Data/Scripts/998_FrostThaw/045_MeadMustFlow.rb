@@ -487,7 +487,24 @@ module FrostThaw
 
   def self.set_rest_at(point)
     set_rest_at_uncursed(point)
+    long_rest_taken
+  end
+
+  # Nimsy's attic (015) keeps its own rest point: a night there is a night too.
+  class << self
+    alias_method :set_rest_point_plain, :set_rest_point if method_defined?(:set_rest_point) && !method_defined?(:set_rest_point_plain)
+  end
+
+  def self.set_rest_point
+    set_rest_point_plain
+    long_rest_taken
+  end
+
+  # Every night's sleep anywhere in the Dale (inns, attics, the mead hall): the
+  # chieftain's nightmares, and another day gone by in Good Mead.
+  def long_rest_taken
     chieftain_nightmare if flag?(:chieftain_curse)
+    election_day_passes
   end
 
   def chieftain_nightmare
@@ -624,7 +641,9 @@ module FrostThaw
       say(["OLIVESSA: (a long breath) ...All right. All right. If you'll stand behind me. Somebody has to."])
     else
       set_flag(:no_challenger)
-      say(["OLIVESSA: No. No, I suppose it isn't. (She wraps her scarf back up.) Then it'll be Shandar."])
+      say(["OLIVESSA: No. No, I suppose it isn't. (She wraps her scarf back up.) Then it'll be Shandar.",
+           "OLIVESSA: The vote's in a week or so. Nobody'll stand against him now."])
+      start_election_clock
       return
     end
     sayc(["Word gets round fast. Within the hour, Shandar Froth is shouldering through the crowd outside the cooperage.",
@@ -633,9 +652,9 @@ module FrostThaw
           cl(:shade, "Fetching your mead back, mostly."),
           "Shandar stamps off. By evening, someone says he's taken the road west. Toward Targos."])
     set_switch(SW_GM_SHANDAR_AWAY, true)
-    set_switch(SW_GM_THUGS, true)
+    start_election_clock
     state[:goal_prev_election] ||= state[:goal]
-    state[:goal] = "Good Mead's election: Shandar Froth has walked off toward Targos. Stay in town and see what happens."
+    state[:goal] = "Good Mead votes for a new speaker in about a week. Shandar Froth has walked off toward Targos."
   end
 
   # Ask around about the candidates (an hour of inquiries).
@@ -650,7 +669,8 @@ module FrostThaw
   # A day later: eight thugs storm the mead hall, and Shandar saves the day.
   def scene_gm_thugs
     set_switch(SW_GM_THUGS, false)
-    sayc(["The next evening, the mead hall doors bang open. Eight hard men in cold-weather clothing shoulder in,",
+    set_flag(:gm_thugs_done)
+    sayc(["That evening, the mead hall doors bang open. Eight hard men in cold-weather clothing shoulder in,",
           "kicking over benches. THUG: Nice town. Shame if somebody burned it down. Where's your SPEAKER?",
           "Before you can get up, the doors bang again: Shandar Froth and five big loggers, axes on their shoulders.",
           "SHANDAR: Not in MY town!",
@@ -662,7 +682,7 @@ module FrostThaw
     c = pbMessage(_INTL("What do you do?"), [_INTL("Run after the thug."), _INTL("Let it go.")], 0)
     if c == 1
       say(["The cheering goes on late into the night. Shandar buys everyone a drink. With whose money, nobody asks."])
-      return election_result
+      return election_days_left_note
     end
     say(["You catch him on the edge of the woods. He turns, swearing, and whistles up his Pokémon."])
     if pbTrainerBattle(:FT_ZHENTARIM, "Varro", nil, false, 0)
@@ -674,13 +694,69 @@ module FrostThaw
     else
       say(["The thug gets away into the trees. By the time you're back, the hall is cheering for Shandar."])
     end
+    if flag?(:shandar_exposed)
+      say(["You lock the thug in Olivessa's cooperage, among the staves. He'll keep until the vote. He'll talk again, too."])
+    end
+    election_days_left_note
+  end
+
+  #-----------------------------------------------------------------------------
+  # The election clock (RotF p. 72: "a week or two for the town to plan an
+  # election"; p. 78: Shandar makes the eight-hour hike to Targos and promptly
+  # returns; "a day later, eight human thugs storm the mead hall"). Each night's
+  # rest anywhere is a day.
+  #-----------------------------------------------------------------------------
+  ELECTION_DAYS = 8          # the vote: a week and a day after Olivessa asks
+  GOOD_MEAD_MAPS = [2031, 2032, 2033]
+
+  def start_election_clock
+    state[:gm_election_day] = 0
+  end
+
+  def election_days_left_note
+    left = ELECTION_DAYS - state[:gm_election_day].to_i
+    say(["(Good Mead votes in #{left > 1 ? "about #{left} days" : 'a day'}: rest, and come back to the mead hall for it.)"]) if left > 0
+  end
+
+  def election_day_passes
+    return if state[:gm_election_day].nil? || ($game_switches && $game_switches[SW_GM_ELECTED])
+    day = state[:gm_election_day] = state[:gm_election_day].to_i + 1
+    here = GOOD_MEAD_MAPS.include?($game_map.map_id) rescue false
+    contested = !flag?(:no_challenger)
+    if contested && day == 1 && !flag?(:shandar_exposed)
+      set_switch(SW_GM_SHANDAR_AWAY, false)          # back from Targos, overnight, very pleased with himself
+    end
+    if contested && day >= 2 && !flag?(:gm_thugs_done)
+      if here
+        set_switch(SW_GM_THUGS, true)                 # it happens in the mead hall, tonight
+      else
+        set_flag(:gm_thugs_done)
+        set_flag(:gm_thugs_missed)
+        say(["(Word reaches you from Good Mead: eight thugs stormed the mead hall, and Shandar Froth and his loggers",
+             "drove them out with their tails between their legs. They're calling him a hero.)"])
+      end
+    end
+    return if day < ELECTION_DAYS || (contested && !flag?(:gm_thugs_done))
+    if here
+      set_switch(SW_GM_THUGS, true)                   # the vote, in the shrine, when you're next in the mead hall
+    else
+      say(["(A rider from Good Mead finds you on the road. The town has voted.)"])
+      election_result
+    end
+  end
+
+  # The mead hall's evening news: the thugs, or the vote, whichever is due.
+  def gm_mead_hall_news(event_id = nil)
+    return if !$game_switches[SW_GM_THUGS]
+    return scene_gm_thugs if !flag?(:gm_thugs_done) && !flag?(:no_challenger)
+    set_switch(SW_GM_THUGS, false)
     election_result
   end
 
   def election_result
-    say(["A tenday later, Good Mead votes in the Shrine of the Flaming Sword, under Kendrick's chipped painted Tempus."])
+    say(["Good Mead votes in the Shrine of the Flaming Sword, under Kendrick's chipped painted Tempus."])
     if flag?(:shandar_exposed)
-      sayc(["You drag the thug into the shrine and let him say it all again, to everyone.",
+      sayc(["Olivessa brings the thug out of her cooperage, and he says it all again, to everyone.",
             "Shandar goes white, then red, and then he's gone out the back door. By morning his loggers are looking for him too."])
       if flag?(:pc_candidate)
         say(["The vote's not close. Good Mead has a new speaker: you. Olivessa claps loudest.",
@@ -692,6 +768,11 @@ module FrostThaw
         set_flag(:olivessa_speaker)
       end
       set_switch(SW_GM_SHANDAR_AWAY, true)
+    elsif flag?(:no_challenger)
+      sayc(["Nobody stands against him. Shandar Froth is speaker of Good Mead by a show of hands.",
+            cl(:shade, "And now Naerth has a speaker in Good Mead. Somebody should write that down. Somewhere he can't read it.")])
+      set_flag(:shandar_speaker)
+      set_flag(:zhentarim_good_mead)
     else
       sayc(["Shandar Froth, hero of the mead hall, wins easily.",
             cl(:shade, "And now Naerth has a speaker in Good Mead. Somebody should write that down. Somewhere he can't read it.")])

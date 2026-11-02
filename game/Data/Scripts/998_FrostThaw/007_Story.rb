@@ -279,6 +279,7 @@ module FrostThaw
          "MA YARBROUL: One more night by the fire?"], event_id)
     return if !pbConfirmMessage(_INTL("Rest at Three Flags Sailing?"))
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    long_rest_taken if respond_to?(:long_rest_taken)
     say(["Late. The fire's down to coals.",
          as(:alberica, "(stretched out along a bench) Night, pretty boy. Dream of me."),
          as(:alerion, "I don't dream."),

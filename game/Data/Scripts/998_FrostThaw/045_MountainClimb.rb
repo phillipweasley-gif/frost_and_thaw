@@ -218,6 +218,7 @@ module FrostThaw
     say(lines_for(:dwarf_sentry), event_id)
     return if !pbConfirmMessage(_INTL("Rest a while with the dwarves?"))
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    long_rest_taken
     say([flag?(:mugs_done) ? "They give you the warm end of the hall, and a song you don't know the words to." :
                              "They give you a corner of a tunnel out of the wind, and want you gone by morning."])
   end
