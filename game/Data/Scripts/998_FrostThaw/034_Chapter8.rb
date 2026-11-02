@@ -150,6 +150,30 @@ module FrostThaw
           cl(:meat_meat, "Failures. Meat Meat has been called worse. By better."),
           cl(:reptin, "That's the spirit.")])
     state[:goal] = "Get through the Barricade. The duergar have words they say at the gate."
+    hew_compass_wakes if flag?(:hew_gift) && !flag?(:hew_compass_woke)
+  end
+
+  # The comic-to-horror turn (rootspire.md 1177): at the siege of the Barricade,
+  # the dormant fragment in Hew's compass hears its maker's sigils, and wakes.
+  def hew_compass_wakes
+    set_flag(:hew_compass_woke)
+    say(["In your pack, Hew's compass starts ticking faster. Then it chirps.",
+         "COMPASS: (a tinny little voice, very pleased with itself) Hello! Hello! Warm! So warm! Father, is that you?",
+         herald?(:reptin) ? "(It's talking. Of course it's talking.)" : cl(:reptin, "(staring at the pack) It's talking. Of course it's talking."),
+         "COMPASS: Warm warm warm warm warm warm warm warm",
+         "The ticking stops.",
+         "COMPASS: (in a different voice now: level, cool, and patient) Prototype accepted. Hello, little failures.",
+         "COMPASS: Variables. Always variables. Let me tell the gate you're here."].compact)
+    $game_screen.start_shake(3, 6, 16) rescue nil
+    say(["The brass splits along seams nobody put there. Thin legs of root unfold out of it, and it climbs out of your pack on its own."])
+    won = boss_battle(named_mon(:B208H82, 44, "Root-Compass Thing"))
+    say([won ? "It falls over, legs still twitching, and goes quiet. The sap-bead in its middle cracks and turns black." :
+               "It skitters off toward the gate on its root-legs. You catch it with a boot before it gets there, and it cracks."])
+    take_key(:FT_ROOTCOMPASS) rescue nil
+    give_key(:FT_DEADCOMPASS)
+    sayc([cl(:alberica, "Hew didn't know. Look at his face when we tell him, and you'll see he didn't know."),
+          cl(:meat_meat, "Hew builds things. She gets inside things. Meat Meat is going to check every pocket now. Every one."),
+          cl(:alerion, "Then she knows we're here."), cl(:wyn, "(very quietly) She always knew.")])
   end
 
   def barricade_gate(event_id = nil)

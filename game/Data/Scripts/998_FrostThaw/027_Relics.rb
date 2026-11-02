@@ -312,12 +312,15 @@ Events.onStepTaken += proc { |_sender, _e|
 end
 
 #-------------------------------------------------------------------------------
-# The Blessing of Still Sky: you keep your footing on ice and slick sap
+# The Blessing of Still Sky: you keep your footing on ice and snow (rootspire.md
+# 1861: "ignore difficult terrain of ice/snow"). Not on the Heartroot's slick
+# sap (H7, SAP_SLICK_MAPS): that isn't ice, and the channel still slides.
 #-------------------------------------------------------------------------------
 if defined?(pbSlideOnIce)
   alias ft_relic_pbSlideOnIce pbSlideOnIce unless defined?(ft_relic_pbSlideOnIce)
   def pbSlideOnIce
-    return if FrostThaw.active? && FrostThaw.blessing?(:still_sky)
+    on_sap = (defined?(FrostThaw::SAP_SLICK_MAPS) && $game_map && FrostThaw::SAP_SLICK_MAPS.include?($game_map.map_id)) rescue false
+    return if FrostThaw.active? && FrostThaw.blessing?(:still_sky) && !on_sap
     ft_relic_pbSlideOnIce
   end
 end

@@ -641,6 +641,10 @@ module FrostThaw
            "MIRA: Frost-glass, straight from the permafrost. Look into one at midnight. We- I find it's best at midnight."], event_id)
     end
     talk(:mira_north_wind)
+    if !flag?(:mirror_child_free)
+      say(["MIRA: (smiling at nothing) My daughter's at home. We- I put her to bed. She's... somewhere wet. She likes the water.",
+           "MIRA: She'll be up soon. She always looks in my mirrors when she thinks I'm not watching."])
+    end
     if flag?(:met_mirror_child) && !flag?(:mirror_twin_known)
       say(["MIRA: The child? The boy with the mirror? I... I swear it's just a scrying shard. Just a shard. We swear."])
     end
@@ -670,6 +674,8 @@ module FrostThaw
          "The reflection's mouth moves. The boy's doesn't. The voice is a woman's, pleasant and precise:",
          "\"Hello again, variables. You broke my house. I'm cold. My other half is down in the roots.\"",
          "\"Bring it here and I'll let the boy go. Or don't, and I'll keep him. Children are very good at looking.\"",
+         "\"There's a girl in my other half already. Mira's girl. She looked too long.\"",
+         "Behind the boy's reflection, for a blink, another face: a woman with hollow eyes and a crown of ice.",
          "CHILD: She says that a lot. Can you make her stop?"])
     if first
       sayc([cl(:meat_meat, "(very still) That voice. Meat Meat knows that voice. From the cold table."),
@@ -677,11 +683,64 @@ module FrostThaw
             cl(:alerion, "The twin. In the Heartroot. Somewhere wet, where it can watch the sap.")].compact)
       state[:goal] = state[:goal] if state[:goal]
     end
+    boy_mirror_exorcism if !has_key?(:FT_BOYSMIRROR) && !flag?(:twin_broken)
+  end
+
+  # Quest M2 (rootspire.md 8317-8331): Meat Meat's. Know the reflection for a
+  # trapped spirit, calm the boy, and take the mirror off him without hurting
+  # him; then carry it down to its twin in the Heartroot.
+  def boy_mirror_exorcism
+    if !with_or_is?(:meat_meat)
+      return say(["(The reflection keeps looking past you, for someone smaller. Meat Meat should be here for this.)"])
+    end
+    mm = herald?(:meat_meat)
+    return if !pbConfirmMessage(_INTL(mm ? "Try to take the mirror off him?" : "Let Meat Meat try to take the mirror off him?"))
+    c = pbMessage(_INTL("The reflection smirks. What is it?"),
+                  [_INTL("A trapped spirit, wearing his face"), _INTL("A trick of the frost-glass"), _INTL("The boy himself, lying")], 0)
+    if c != 0
+      mirror_lash("The reflection laughs at you. \"Wrong, variable.\" The glass flexes like a muscle.")
+      return
+    end
+    say([mm ? "(Not his face. Hers, wearing his. A spirit, caught in glass, with its fingers in him.)" :
+              "MEAT MEAT: (low) Not the boy. Something in the glass, wearing the boy's face. Meat Meat knows how that feels."])
+    c = pbMessage(_INTL(mm ? "What do you say to him?" : "What does Meat Meat say to him?"),
+                  [_INTL(""Meat Meat had a mirror lady too. Meat Meat got away. You will.""),
+                   _INTL(""Hold still and don't cry.""), _INTL("Just grab it")], 0)
+    if c != 0
+      mirror_lash("The boy screams and clutches the mirror tighter. Frost bites up his fingers, and the reflection lashes out.")
+      return
+    end
+    say(["The boy sniffs. He looks at the goblin, and the goggles, and the hair, and decides.",
+         mm ? "He lets you take it. The glass is cold enough to burn. You don't let go." :
+              "He lets Meat Meat take it. The glass is cold enough to burn. She doesn't let go.",
+         "In the mirror, the smirk goes flat.",
+         "\"Clever. Now you're carrying me. Down you go, V-7. Down to my other half.\"",
+         "CHILD: (flexing his fingers) It's quieter. She's... she's in your hands now. Is that bad?",
+         mm ? "(Very.)" : "MEAT MEAT: Very. But Meat Meat has strong hands."])
+    give_key(:FT_BOYSMIRROR)
+    set_flag(:boy_mirror_taken)
+    state[:goal] = "Carry the boy's mirror down to its twin: in the Heartroot's Overflow Channel, where Mira's girl is trapped."
+  end
+
+  # Failure: the spirit lashes out (the source's disadvantage on the next attack:
+  # here, the lead Pokémon's nerve).
+  def mirror_lash(line)
+    say([line])
+    lead = $Trainer.first_able_pokemon rescue nil
+    if lead
+      lead.hp = [lead.hp - [lead.totalhp / 8, 1].max, 1].max
+      say(["Something cold whips out of the glass. #{lead.name} flinches back, rattled."])
+    end
+    say(["(The boy won't let go of it now. Try again once he's calmer.)"])
   end
 
   # The Corsair sailor on the Root-Tier (his lines were written in Ch6).
   def corsair_sailor(event_id = nil)
     talk(:corsair_sailor, event_id)
+    if flag?(:mira_left_possessed)
+      return say(["CORSAIR: (not looking at you) Captain says \"we\" all the time now. The girl sleeps in the hold, by the humming thing.",
+                  "CORSAIR: You were down there. You could've broken it. ...Move along."], event_id)
+    end
     if flag?(:mira_freed) && first_time?(:corsair_symbol)
       say(["He shows you the tattoo on his wrist: a ship's wheel inside a spiral of aurora.",
            "CORSAIR: Captain's back. Proper back. One voice. We'd sail into the frozen half for you now."])

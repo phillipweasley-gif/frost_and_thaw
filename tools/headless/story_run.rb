@@ -887,6 +887,11 @@ module Story
       talk(/Whispering attendant/)
       travel(2058); talk(/Selrae Vorn/)
       beat("SC 7B.07 Selrae, below (the Root-Key)", :root_key)
+      # M2 is Meat Meat's: take the boy's mirror off him in the Bazaar first.
+      if !($PokemonBag.pbHasItem?(:FT_BOYSMIRROR) rescue false) && !FrostThaw.flag?(:mirror_child_free)
+        travel(2050); talk(/Boy with a mirror/)
+        beat("  M2: Meat Meat takes the boy's mirror", :boy_mirror_taken)
+      end
       travel(2067); HL.frames(20); HL.settle(3000)
       # (the slide puzzle is checked by its builder; the test walks onto the mirror's ledge)
       $game_player.moveto(8, 24); HL.settle(1000)

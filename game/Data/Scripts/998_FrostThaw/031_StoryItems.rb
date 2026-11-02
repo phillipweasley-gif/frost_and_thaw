@@ -45,6 +45,10 @@ module FrostThaw
     log("give_key(#{item}) failed: #{e.message}")
   end
 
+  def has_key?(item)
+    ($PokemonBag.pbHasItem?(item) rescue false) ? true : false
+  end
+
   def take_key(item)
     $PokemonBag.pbDeleteItem(item) if ($PokemonBag.pbHasItem?(item) rescue false)
   rescue StandardError => e

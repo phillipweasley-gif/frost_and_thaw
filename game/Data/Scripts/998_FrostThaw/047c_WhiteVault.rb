@@ -332,8 +332,16 @@ module FrostThaw
   def scene_vault_cradle
     return if flag?(:avarice_body_broken)
     mm = herald?(:meat_meat)
-    sayc(["A cradle of brass and mirror at the heart of the glacier.",
-          "In it, a woman made of crystal sits up. Her body mirrors the Mirror Mother's, framed in machinery.",
+    if flag?(:mira_left_possessed)
+      # rootspire.md 1079: left possessed, Mira becomes Avarice's new body.
+      sayc(["A cradle of brass and mirror at the heart of the glacier.",
+            "In it, Mira of the North Wind sits up. Her silver hair has gone white. Her skin is turning to crystal from the fingertips in.",
+            "AVARICE: (in Mira's voice, only one voice now) You left her to me. On her own ship. With her daughter watching.",
+            herald?(:meat_meat) ? "(You remember. You said you would.)" : cl(:meat_meat, "(white to the lips) Meat Meat said. Meat Meat SAID she would remember.")])
+    end
+    sayc([flag?(:mira_left_possessed) ? nil : "A cradle of brass and mirror at the heart of the glacier.",
+          flag?(:mira_left_possessed) ? "Mira's body stands. Machinery unfolds around it like a dress being fitted." :
+                                        "In it, a woman made of crystal sits up. Her body mirrors the Mirror Mother's, framed in machinery.",
           "Behind her, in a case of ice, a crystal grown round one green scale: RAZ-MKIII.",
           "AVARICE: (stretching, with a sound like a chandelier) There you are. Right on time."])
     if with_or_is?(:meat_meat)
@@ -353,6 +361,13 @@ module FrostThaw
     return if !won
     say(["Her crystal body cracks across, from the crown down.",
          "Something pours out of it that isn't light: her, a smear of mirror, fleeing into the glass."])
+    if flag?(:mira_left_possessed)
+      sayc(["What's left in the cradle is Mira, or most of her: crystal to the elbows, breathing.",
+            "MIRA: (one voice, very small) ...Is my girl warm? Somebody tell me she's warm.",
+            cl(:alberica, "(kneeling, taking her crystal hands) She's warm, darling. She's on the ship. She's waiting."),
+            "Mira never sails again. But she lives."])
+      set_flag(:mira_freed_late)
+    end
     soul = named_mon(AVARICE_SOUL, 64, "Avarice's Reflection")
     soul.hp = [(soul.totalhp * (1.0 - 0.2 * circuits)).floor, 1].max
     caught = boss_battle(soul)
@@ -399,7 +414,8 @@ module FrostThaw
       sayc(["Behind the throne the ice wall goes silver, then clear, then it's a mirror, and she steps out of it.",
             "A woman of crystal, framed in machinery, white hair, infernal sigils, a smile like arithmetic.",
             cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
-            "AVARICE: You watched a coat burn. I had another in a glacier. You never came to look.",
+            flag?(:mira_left_possessed) ? "AVARICE: (in Mira's voice) You watched a coat burn. I had another. You left her for me, on her own ship." :
+                                          "AVARICE: You watched a coat burn. I had another in a glacier. You never came to look.",
             "AVARICE: A god in a gem. The last variable. Thank you for weighing her out for me."])
       type, name = TRAINERS[:avarice_reforged]
       $ft_avarice_circuits = 0

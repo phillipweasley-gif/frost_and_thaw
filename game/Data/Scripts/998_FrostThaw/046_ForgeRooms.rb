@@ -1116,6 +1116,14 @@ module FrostThaw
       "The Summer Marshal's glaive, its blade of melted mirror-shard. It hums when Sephek is near.", 0, 0, 6],
     FT_CORRUPTLEDGER: ["Ledger of Corruption", "Ledgers of Corruption", 8, 0,
       "Halo payments, lists of Ten-Towners marked for the lottery, and \"Project Rime: reforge the Everlasting Summer.\"", 0, 0, 6],
+    FT_BOYSMIRROR: ["Boy's Mirror", "Boy's Mirrors", 8, 0,
+      "A frost-glass hand-mirror from Mira's stall. Something in it is watching you carry it. Its twin is in the Heartroot.", 0, 0, 6],
+    FT_MIRRORLATTICE: ["Mirror Lattice", "Mirror Lattices", 8, 0,
+      "Two mirrors fused by a lattice of frost-crystal, with a fragment of Avarice caught inside. Very quiet. Very angry.", 0, 0, 6],
+    FT_ROOTCOMPASS: ["Guild Root-Compass", "Guild Root-Compasses", 8, 0,
+      "Hew's gift: a brass compass with a sap-bead for a needle, built from Prototype 3's spare parts. It points to whatever's warmest below. It ticks.", 0, 0, 6],
+    FT_DEADCOMPASS: ["Burnt-Out Compass", "Burnt-Out Compasses", 8, 0,
+      "Hew's compass, its sap-bead cracked and black. Something in it spoke in a woman's voice. Now it doesn't.", 0, 0, 6],
     FT_FROSTFIREFLASK: ["Frostfire Flask", "Frostfire Flasks", 8, 0,
       "Heart-fuel from the Forge: blue at the edges, red at the core. Distilled from a saint's heart.", 0, 0, 6],
     FT_BROKENFROSTMIRROR: ["Broken Frost-Mirror", "Broken Frost-Mirrors", 8, 0,
@@ -1146,6 +1154,14 @@ module FrostThaw
 end
 
 if defined?(ItemHandlers)
+  # Hew's mechanical assistance: the compass points at the warmest thing below,
+  # which is usually where the story goes next.
+  ItemHandlers::UseFromBag.add(:FT_ROOTCOMPASS, proc { |item|
+    goal = (FrostThaw.state[:goal] rescue nil)
+    pbMessage(_INTL("The sap-bead swings, settles, and ticks. Tick. Tick. It points down, and a little to the left."))
+    pbMessage(_INTL("(Where it's warm: {1})", goal)) if goal
+    next 1
+  }) rescue nil
   ItemHandlers::UseFromBag.add(:FT_CYCLEOFROOTS, proc { |item|
     $Trainer.heal_party
     pbMessage(_INTL("You read the Cycle of Roots aloud. The words grow as you say them, and your whole party is made whole."))

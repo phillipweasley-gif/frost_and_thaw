@@ -211,6 +211,14 @@ module FrostThaw
           "HEW: I'll say it again at any trial you like. I'll say it to the tree.",
           "HEW: My last ladder runs past the south cache, to a door I was told never to open.",
           "HEW: Iron and glass. Summer's people again."])
+    # Hew's gift (rootspire.md 1174): mechanical assistance, and, though he
+    # doesn't know it, a dormant fragment of Avarice's code in the works.
+    sayc(["HEW: Here. You'll want this down there. Built it from Prototype 3's spare parts, the batch Summer's people paid for.",
+          "HEW: Root-compass. Points at the warmest thing below you. Ticks a bit. Ignore the ticking.",
+          cl(:alberica, "Darling, I never ignore ticking."),
+          cl(:meat_meat, "(holding it to her ear) It is ticking in a pattern. Meat Meat does not like the pattern.")])
+    give_key(:FT_ROOTCOMPASS)
+    set_flag(:hew_gift)
     if flag?(:beat_digger_gant) && flag?(:beat_digger_hobb) && !flag?(:hew_thanked)
       set_flag(:hew_thanked)
       say(["HEW: And Gant. And Hobb. You brought two of them back to me.",
@@ -234,29 +242,62 @@ module FrostThaw
           "A girl is pressed against the glass from the inside, half of her through on this side.",
           "MIRROR CHILD: It pulled me. Mama's mirror. I was looking at my hair, and it pulled."], event_id)
     mirror = stage_event(event_id)
-    if with_or_is?(:alberica)
-      dx, dy = mirror ? [mirror.x - $game_player.x, mirror.y - $game_player.y + 1] : [0, -1]
-      stage_act(:alberica, :reach, dx: dx, dy: dy, dir: 8, per: 6)   # a hand on the glass, to the girl
-    end
-    sayc([cl(:alberica, "Hey. Look at me. Big breath, all the way in. We're getting you out.")])
-    Stage.cleanup rescue nil
     mx, my = stage_spot(mirror)
-    return if !pbConfirmMessage(_INTL("Break the mirror?"))
-    say(["You grip the frame. The glass shrieks.",
-         "Something pulls itself out of it, all edges and reflections!"])
-    return if !boss_battle(named_mon(:B122H429, 43, "Mirror Echo"))
+    # Quest M2 is Meat Meat's (rootspire.md 8323): she carries the boy's mirror down.
+    if !with_or_is?(:meat_meat)
+      return say(["The glass is cold and flat as ice under your hand. It won't break. It's waiting for something.",
+                  "(Meat Meat should be here. This one is hers.)"])
+    end
+    if !flag?(:mirror_sentinel_down)
+      say(["Between you and the ledge, the slick sap heaves. A shape climbs out of it: a suit of armour made of mirror-glass, empty inside, its visor full of frost.",
+           "It turns to face Meat Meat, and only Meat Meat."])
+      return if !boss_battle(named_mon(:B208H227, 44, "Mirror Sentinel"))
+      set_flag(:mirror_sentinel_down)
+      say(["The Sentinel comes apart in plates of glass and slides into the sap."])
+    end
+    if !has_key?(:FT_BOYSMIRROR)
+      return say(["Meat Meat puts her palm on the glass. It won't break. It won't even crack.",
+                  "In it, behind the girl, a woman's face with hollow eyes smiles. \"Not without my other half, V-7.\"",
+                  "(The boy's mirror. In the Verdant Bazaar. It's the other half.)"])
+    end
+    mm = herald?(:meat_meat)
+    dx, dy = mirror ? [mirror.x - $game_player.x, mirror.y - $game_player.y + 1] : [0, -1]
+    stage_act(:meat_meat, :reach, dx: dx, dy: dy, dir: 8, per: 6)   # the boy's mirror, against the twin
+    sayc([mm ? "You press the boy's mirror flat against the tall one. Glass to glass." :
+               "Meat Meat presses the boy's mirror flat against the tall one. Glass to glass.",
+          "Both mirrors scream. Something pours from one into the other and back, looking for a way out, and there's a girl in the way.",
+          cl(:alberica, "Hold it, sweetheart! Hold it there!")])
+    c = pbMessage(_INTL(mm ? "The mirrors buck in your hands..." : "The mirrors buck in Meat Meat's hands..."),
+                  [_INTL("Brace, and hold them together"), _INTL("Pull the girl through first"), _INTL("Let go")], 0)
+    Stage.cleanup rescue nil
+    if c != 0
+      say(["The mirrors slip. The spirit tears loose between them: a wraith of glass and ice, screaming in a pleasant, precise voice."])
+      boss_battle(named_mon(:B122H429, 44, "Mirror Wraith"))
+      say(["The wraith breaks up and slides back into the glass. The two mirrors are still waiting.",
+           "(Try again: brace, and hold them together.)"])
+      return
+    end
     set_flag(:mirror_child_free)
     set_flag(:twin_broken)
+    set_flag(:avarice_fragment_kept)
     ($game_switches[SW_CHILD_FREE] = true; $game_switches[SW_TWIN_BROKEN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    Stage.fx("E-06", [mx, my], frames: 10, oy: 24)      # the mirror cracks and falls in pieces
-    sayc(["The echo shatters, and the mirror with it. The girl falls free, into your arms, and sneezes.",
+    wheel(1)
+    Stage.fx("E-06", [mx, my], frames: 10, oy: 24)      # the mirrors crack, and the spirit sets
+    sayc([mm ? "You hold on. Your arms shake. Your teeth hurt. You hold on." : "Meat Meat holds on. Her arms shake. She bares her teeth. She holds on.",
+          "Between the two mirrors, frost grows inward, a lattice of crystal like a snowflake drawn by someone very patient.",
+          "The voice in it gets smaller, and smaller, and stops. Caught.",
+          "The girl falls free, into Alberica's arms, and sneezes.",
           cl(:alberica, "Bless you! There she is. Brave girl."),
+          mm ? "(The crystal lattice is in your hands, cold and still. Something in it is very quiet, and very angry.)" :
+               "MEAT MEAT: (holding up the crystal lattice) Got her. Got a piece of her. Meat Meat is keeping this piece in a box.",
           "MIRROR CHILD: My mama's Mira. On the big ship.",
           "MIRROR CHILD: She's been talking funny. She says \"we\" now.",
           "She holds on to your sleeve, and won't let go until you've promised to take her home.",
           cl(:meat_meat, "Meat Meat will hold the small one's other sleeve.")])
-    state[:goal] = "Take the girl home: the Boreal Requiem, at the Split Dock in the Root-Tier."
+    take_key(:FT_BOYSMIRROR) rescue nil
+    give_key(:FT_MIRRORLATTICE)
+    state[:goal] = "Take the girl home: the Boreal Requiem, at the Split Dock in the Root-Tier. (And the boy in the Bazaar is free.)"
   end
 
   #-----------------------------------------------------------------------------
@@ -275,7 +316,14 @@ module FrostThaw
                                   cl(:meat_meat, "(stopping dead) ...Meat Meat knows that voice. From the cold table."),
             cl(:reptin, "(stepping between the girl and her mother) Behind me, sweetheart. Now."),
             "MIRA: (the cold voice) You found my nest, didn't you? Come down and see it. We'll be waiting.",
-            "Below, in the hold, something hums: a mirror-core, wired into the ship's ribs."])
+            "Below, in the hold, something hums: a mirror-core, wired into the ship's ribs.",
+            "MIRA: (both voices, sweetly) Or leave it. Leave us be. You'll have your seal, and the girl, and no one has to break anything.",
+            "MIRA: The girl's mother stays with her. Isn't that what you came for?"])
+      c = pbMessage(_INTL("The mirror-core hums in the hold."), [_INTL("Go down and break it"), _INTL("Leave it be")], 0)
+      if c == 1
+        mira_left_possessed(true)
+        return
+      end
       return if !boss_battle(named_mon(:B122H429, 45, "Mirror-Core"))
       set_flag(:mira_core_broken)
       add_counter(:story_beats)
@@ -285,6 +333,8 @@ module FrostThaw
             "Her daughter climbs into her lap.",
             "MIRA: ...Gods. Thank you. Now fight me properly. I need to feel like myself.",
             cl(:alberica, "Oh, I like her.")])
+    elsif flag?(:mira_left_possessed)
+      return mira_left_possessed(false)
     else
       say(["MIRA: You came back. Good. Properly, this time. I need to feel like myself."])
     end
@@ -301,6 +351,35 @@ module FrostThaw
     give(:TM29)
     say(["MIRA: Psychic. Clean thinking. I could use some.",
          "MIRA: And the Requiem is yours if you ever need a ship. I don't care where."])
+  end
+
+  # If left possessed (rootspire.md 1079): she keeps her ship and her daughter
+  # and her "we", and she still gives you a gym battle and the seal; but no
+  # naval aid, no testimony, and later, when Avarice needs a new body, she has one.
+  def mira_left_possessed(first = true)
+    if first
+      set_flag(:mira_left_possessed)
+      set_flag(:mira_core_broken)        # (the gangplank's gate: the matter is settled, one way)
+      sayc(["You don't go down. The humming in the hold settles, content.",
+            "MIRA: (the warm voice, and the cold one, together, smiling) Good. Good. We knew you were reasonable.",
+            "Her daughter holds her hand and looks up at her, and frowns, and doesn't say anything.",
+            cl(:reptin, "(very quietly) I don't like this. I don't like this at all."),
+            cl(:meat_meat, "(staring at the hold) Meat Meat is going to remember this. Meat Meat is going to remember we LEFT her.")])
+    else
+      say(["MIRA: (two voices) Back for the seal, little failures? We kept it warm."])
+    end
+    return if !scaled_leader_battle(:mira)
+    $Trainer.badges[5] = true
+    set_flag(:badge_mira)
+    set_flag(:mira_freed)              # (Gym 6 is settled; :mira_left_possessed says how)
+    ($game_switches[SW_MIRA_FREED] = true; $game_map.need_refresh = true if $game_map) if $game_switches
+    add_counter(:story_beats)
+    wheel(-1)
+    say(["MIRA: (two voices) Tide Seal."])
+    pbMessage(_INTL("\\me[Badge get]{1} received the Tide Seal!", $Trainer.name))
+    give(:TM29)
+    say(["MIRA: Psychic. We think very clearly, now. We'll see you again, little failures. North of here, probably.",
+         "(No offer of a ship. The crew won't meet your eyes.)"])
   end
 
   #-----------------------------------------------------------------------------
