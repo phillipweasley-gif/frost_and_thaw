@@ -195,4 +195,6 @@ Rows 1–48 and 53–73 (Glimmer's conversion, Reptin's training, the downtime w
 
 - `tools/build_all.sh`: all map checks passed (105 maps).
 - `ruby tests/smoke_test.rb`: 168/173. The 5 failures are build assets missing from the worktree (gitignored): "and those pictures are shipped" and the four cup-game pictures. They pass on a full checkout.
-- `story_run.rb` (full run, PIF_DIR=/home/claude/pifrun_W3): see the final report.
+- `story_run.rb`, full run to the ending (run 5): reaches SC 13.10 (`:game_complete`, the third-way ending). Every W3 beat passed except H35 and A23. Both failed because a battle was lost and the driver didn't retry; the driver now retries them.
+- `story_run.rb` with STOP_AT=9, after the last fixes (run 7): 181 OK. Every W3 beat passed: H35, H3–H30, A2–A37, H22–H26 and H32, the Shard, the coat, the launch, and SC 9.01–9.07. The frostfire, shatter and death-burst lines appear in the transcript.
+- The one MISS left in that run is "side: the Echo Gate's Mirror Wraiths". That is W5's Rootspire side quest, run after Ch9 by the driver's side sweep. It is not in W3's slice.
