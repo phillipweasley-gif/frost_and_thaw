@@ -190,6 +190,7 @@ module Story
     # Try a beat; if a battle is lost, train up (like a player would) and retry.
     def until_flag(flag, tries = 4)
       tries.times do |i|
+        return true if FrostThaw.flag?(flag)     # (already done, e.g. inside an earlier talk)
         yield
         return true if FrostThaw.flag?(flag)
         lv = ($Trainer.party.map(&:level).max || 10) + 3
@@ -544,7 +545,7 @@ module Story
       talk(/Balcony rail/); clear_trainers; talk(/Bolt-slits/); talk(/Ritual circle/)
       beat("  A24/A25 the vantage towers cleared", :vantage_cleared)
       beat("  A29 the mind-flayer corpse", :saw_mindflayer)
-      travel(2150); clear_trainers; talk(/Root-keep gate/)
+      until_flag(:rootkeep_gate_open, 3) { travel(2150); clear_trainers; talk(/Root-keep gate/) }
       beat("  A23 the root-keep gate", :rootkeep_gate_open)
       travel(2075); HL.frames(20); HL.settle(3000)
       HL.walk_to(16, 14) rescue nil; HL.frames(30); HL.settle(5000)
@@ -737,7 +738,10 @@ module Story
       FrostThaw.rune_answer.each { |season| talk(/Rune of #{season.to_s.capitalize}/) }
       beat("SC 7B.05 the aurora seal", :seal_open)
       # H35 sits on the Root Gate's lower landing, past the thralls and Captain Hesk.
-      clear_trainers; talk(/Captain's root-desk/)
+      until_flag(:labyrinth_mapped, 3) do
+        (travel(2050); talk(/Root-Gate/); HL.frames(30); HL.settle(3000)) if $game_map.map_id != 2057
+        clear_trainers; talk(/Captain's root-desk/)
+      end
       beat("H35 the Captain's Alcove", :labyrinth_mapped)
       travel(2058); HL.frames(20); HL.settle(3000)
       talk(/Sap well 1/); talk(/Sap well 2/); talk(/Sap well 3/)
