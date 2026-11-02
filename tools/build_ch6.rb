@@ -230,6 +230,14 @@ rt.event(26, 10, "Jorik Pinebellow", [{ graphic: "BW (75)", direction: 4, script
 rt.event(27, 12, "Split crate", [{ graphic: "BARREL", script: "FT.dock_ore(@event_id)" }])
 rt.event(31, 9, "Shivven Pearlbite", [{ graphic: "BW (38)", direction: 2, script: "FT.shivven(@event_id)" }])
 rt.event(23, 6, "Viessa Arialune", [{ graphic: "BW (107)", direction: 2, script: "FT.viessa(@event_id)" }])
+# Hellen's old passage comes out under a barrel on the Split Dock (048_H; switch 4180)
+rt.event(34, 9, "Barrel on the dock", [
+  { graphic: "BARREL", script: "FT.talk(:dock_barrel_shut, @event_id)" },
+  { switch: 4180, graphic: "BARREL", commands: [
+    rt.send(:command, 355, ["FT.hearth_passage_up(@event_id)"]),
+    rt.send(:command, 223, [Tone.new(-255, -255, -255, 0), 6]), rt.send(:command, 106, [8]),
+    rt.send(:command, 201, [0, 2059, 4, 23, 6, 1]), rt.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])] }
+])
 watcher(rt, 20, 23, :homunculus, "Followers/PORYGON")
 watcher(rt, 15, 6, :raven, "Followers/MURKROW")
 save(rt, :root_tier)

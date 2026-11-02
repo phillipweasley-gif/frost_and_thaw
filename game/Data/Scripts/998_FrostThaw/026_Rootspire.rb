@@ -1303,7 +1303,10 @@ module FrostThaw
   # The Still Sky Shrine: cleansing it (the Blessing of Warmth)
   #-----------------------------------------------------------------------------
   def shrine_cleanse(event_id = nil)
-    return talk(:frost_saint_runes, event_id) if !flag?(:rite_stopped)
+    # Eline's ritual circle, cut into the floor before the runes: its channel runs
+    # down to the Heartroot (rootspire.md 1022).
+    talk(:eline_circle, event_id)
+    return talk(:frost_saint_runes) if !flag?(:rite_stopped)
     return say(["The marble is warm now. The new runes are only scratches. The old prayers are just prayers."], event_id) if blessing?(:warmth)
     say(["The new runes, cut over the old prayers: THE FROST SAINT WALKS AGAIN.",
          "Frost still lives in the grooves, cold enough to burn."], event_id)

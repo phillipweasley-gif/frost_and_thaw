@@ -44,7 +44,15 @@ hc.trainer(7, 15, nil, :hearth_dunstan, :WORKER, dir: 6, sight: 3)
 hc.trainer(11, 12, nil, :hearth_mellow, :BEAUTY, dir: 2, sight: 3)
 hc.trainer(14, 15, nil, :hearth_corrie, :FISHERMAN, dir: 4, sight: 2)
 hc.trainer(12, 20, nil, :hearth_tallis, :GENTLEMAN, dir: 6, sight: 3)
-hc.sign(3, 22, :herald_shrine)
+hc.event(3, 22, "Sign herald_shrine", [{ graphic: "", script: "FT.herald_shrine_event(@event_id)" }])   # Hellen's errand (048_H)
+# Hellen's old passage down to the Root-Tier docks, behind the sun-chalked cask (048_H; switch 4180)
+hc.event(3, 23, "Sun-chalked cask", [
+  { graphic: "BARREL", script: "FT.talk(:old_cask, @event_id)" },
+  { switch: 4180, graphic: "BARREL", commands: [
+    hc.send(:command, 355, ["FT.hearth_passage_down(@event_id)"]),
+    hc.send(:command, 223, [Tone.new(-255, -255, -255, 0), 6]), hc.send(:command, 106, [8]),
+    hc.send(:command, 201, [0, 2055, 34, 8, 4, 1]), hc.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])] }
+])
 hc.sign(14, 22, :cellar_sign)
 save(hc, :hearth_cellar)
 
@@ -93,7 +101,8 @@ fl.sign(33, 13, :boundary_stone)
   fl.event(x, y, "Still One #{key}", [{ graphic: "BW (40)", direction: 6, opacity: 150, step_anime: false, walk_anime: false, script: "FT.still_one(:#{key}, @event_id)" }])
 end
 fl.event(45, 13, "Frozen hunter", [{ graphic: "BW029", direction: 6, opacity: 170, step_anime: false, walk_anime: false, script: "FT.frozen_hunter(@event_id)" }])
-[9, 17].each { |y| fl.sign(FW - 2, y, :auroral_wall) }
+# the edge of the light: where the Heartwarden's Staff is bonded (048_H auroral_wall_edge)
+[9, 17].each { |y| fl.event(FW - 2, y, "Sign auroral_wall", [{ graphic: "", script: "FT.auroral_wall_edge(@event_id)" }]) }
 shown_on(fl, 24, 14, "Talwyn, guarding", SW_TALWYN_FIELDS, "BW (28)", "FT.talwyn_fields(@event_id)", dir: 4)
 shown_on(fl, 40, 18, "The Still Beast", SW_STILL_BEAST, "Followers/PILOSWINE", "FT.still_beast(@event_id)", dir: 4, opacity: 210)
 shown_on(fl, 34, 6, "Two spirits", SW_SPIRITS, "Followers/VULPIX", "FT.fields_spirits(@event_id)", opacity: 180)

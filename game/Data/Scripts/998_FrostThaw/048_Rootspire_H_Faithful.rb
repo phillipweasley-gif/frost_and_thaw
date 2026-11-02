@@ -50,9 +50,7 @@ module FrostThaw
                     "You put your ear to the crack. Far below, the Heartroot's slow pulse. The Halo has been pouring their prayers straight into it."]],
     old_cask: ["A cask by the cellar wall, heavier than a cask has any business being. It doesn't budge.",
                "Someone's chalked a small sun on the lid, and rubbed it nearly out."],
-    dock_barrel_shut: ["A barrel on the dockside, nailed down. Warm air sighs out between its staves, smelling faintly of ale and old bread."],
-    auroral_wall: ["The Auroral Wall: a curtain of light from the snow to the sky.",
-                   "Through it, faintly, the Dale: snow hanging in the air, unfallen, the way it has for four hundred years."]
+    dock_barrel_shut: ["A barrel on the dockside, nailed down. Warm air sighs out between its staves, smelling faintly of ale and old bread."]
   )
 
   module_function
