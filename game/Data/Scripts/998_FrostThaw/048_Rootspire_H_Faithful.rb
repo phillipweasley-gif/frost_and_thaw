@@ -279,7 +279,7 @@ module FrostThaw
   # Eirwen: the Canticle's lost verses, and Naerth's ledger
   #-----------------------------------------------------------------------------
   def canticle_research_due?
-    flag?(:key_found) && !flag?(:key_attuned) && !flag?(:canticle_researched) && !flag?(:canticle_partial)
+    flag?(:key_found) && !flag?(:key_attuned) && !flag?(:canticle_learned) && !flag?(:canticle_researched) && !flag?(:canticle_partial)
   end
 
   # The Library check (rootspire.md: DC 14 History or Religion): pick the way in,
