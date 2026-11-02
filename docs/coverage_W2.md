@@ -15,7 +15,10 @@ to older maps), plus small edits in `build_act1.rb`, `build_ch2.rb`, `build_ch4.
 
 Tests:
 - **check_all**: `ruby tools/check_all.rb` (every built map: walkable arrivals, reachability,
-  edges, switch range, invisible signs; 107 maps, all pass).
+  edges, switch range, invisible signs; 107 maps, all pass). W2 widened it: script arrivals
+  on 21xx maps are now read (the regex only knew 20xx), a gate a story switch opens no longer
+  counts as a wall, and two doors on one tile to different maps is now an error (it caught
+  build_ch3's old Bryn-to-Lonelywood warps lying under the new Termalaine ones).
 - **smoke**: `ruby tests/smoke_test.rb /home/claude/pifrun_W2` (174/174). The Ten-Towns
   checks are: "every FT method a map event calls exists", "the Ten-Towns quests' switches are
   all 4040-4079, and distinct", "the Ten-Towns maps are built and named", "every Pokémon the
