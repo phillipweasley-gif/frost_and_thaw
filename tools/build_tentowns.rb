@@ -15,21 +15,21 @@ ID = {
   termalaine: 2120, termalaine_path: 2121, blue_clam: 2122, eastside: 2123, velryn: 2124,
   open_tundra: 2125, cairn: 2126, cairn_heights: 2127, yeti_cave: 2128,
   lonely_woods: 2129, elven_tomb: 2130, elven_barrow: 2131, gm_woods: 2132, verbeeg_lair: 2133,
-  gem_mine: 2135, gem_mine_deep: 2136, termalaine_hall: 2137
+  gem_mine: 2135, gem_mine_deep: 2136, ramshackle: 2137
 }
 NAMES = {
   termalaine: "Termalaine", termalaine_path: "Termalaine Path", blue_clam: "The Blue Clam", eastside: "The Eastside",
   velryn: "Velryn House", open_tundra: "Open Tundra", cairn: "Kelvin's Cairn", cairn_heights: "Kelvin's Cairn Heights",
   yeti_cave: "Yeti Cave", lonely_woods: "Lonelywood Forest", elven_tomb: "The Elven Tomb", elven_barrow: "The Elven Barrow",
   gm_woods: "Good Mead Woods", verbeeg_lair: "Verbeeg Lair", gem_mine: "Termalaine Gem Mine",
-  gem_mine_deep: "Termalaine Gem Mine (Deep)", termalaine_hall: "Termalaine Speaker's House"
+  gem_mine_deep: "Termalaine Gem Mine (Deep)", ramshackle: "Ramshackle"
 }
 MUSIC = {
   termalaine: "lake of rage", termalaine_path: "route38_39", blue_clam: "Lostlorn Forest", eastside: "mom_theme",
   velryn: "mom_theme", open_tundra: "strongWind", cairn: "Reversal Mountain (White 2)", cairn_heights: "strongWind",
   yeti_cave: "Seafoam Islands Music", lonely_woods: "Lostlorn Forest", elven_tomb: "sinjoh", elven_barrow: "newmoonIsland",
   gm_woods: "Lostlorn Forest", verbeeg_lair: "Seafoam Islands Music", gem_mine: "Seafoam Islands Music",
-  gem_mine_deep: "Seafoam Islands Music", termalaine_hall: "mom_theme"
+  gem_mine_deep: "Seafoam Islands Music", ramshackle: "Lavender Town"
 }
 TARGOS = 2001
 BRYN = 2012
@@ -682,13 +682,13 @@ gd.event(13, 26, "Grell", [
 CAVE_ROCKS.each_with_index { |row, j| row.each_with_index { |tl, i| gd.set(9 + i, 27 + j - 1, 1, tl) } }
 gd.event(10, 27, "Tourmaline seam", [{ graphic: "", script: "FT.mine_wall(:gem, @event_id)" }])
 # M10: the bucket shuttle on its rope across the shaft
-gd.event(24, 5, "Bucket shuttle", [{ graphic: "", script: "FT.mine_shuttle(@event_id)" }])
-gd.event(21, 5, "Bucket shuttle", [{ graphic: "", script: "FT.mine_shuttle(@event_id)" }])
+cave_bridge_h(gd, 21, 24, 5)             # the suspension rope and its bucket, across the shaft
+[21, 24].each { |x| [5, 6].each { |y| gd.event(x, y, "Bucket shuttle", [{ trigger: 1, through: true, script: "FT.mine_shuttle(@event_id)" }]) } }
 gd.sign(23, 4, :mine_shuttle)
 # M11: Trex and his bodyguards
-[[8, 5, "Trex"], [7, 4, "Vott"], [7, 6, "Zurk"]].each do |x, y, n|
+[[11, 4, "Trex"], [10, 4, "Vott"], [12, 4, "Zurk"]].each do |x, y, n|      # (lurking along the tunnel's north wall)
   gd.event(x, y, n, [
-    { graphic: KOBOLD_TM, direction: 6, script: "FT.trex(@event_id)" },
+    { graphic: KOBOLD_TM, direction: 2, script: "FT.trex(@event_id)" },
     { switch: SW_TM_TREX, graphic: "", through: true }
   ])
 end
@@ -716,6 +716,208 @@ lr.map.events.each_value do |e|
   end
 end
 resave(lr, LONELY_ROAD)
+
+# ===========================================================================
+# "The White Moose" (RotF pp. 79-84): the Lonelywood forest east of town (the
+# loggers' camps, the tracks, and the way on to the Glade), the elven tomb
+# (map 1.15: E1-E5 outside, E6-E9 under the hill), and Ramshackle.
+SW_WM_TOMB_FOUND = 4068; SW_WM_MOOSE_DEAD = 4069; SW_WM_RAVISIN = 4070; SW_WM_BARROW_OPEN = 4071
+SW_WM_HALF_OPEN = 4072; SW_WM_SAHNAR = 4073; SW_WM_AWAKENED = 4074; SW_WM_RAMSHACKLE = 4075
+LONELYWOOD = 2021
+GLADE = 2026
+STATUE = "BW (107)"          # (art request: a white marble elf statue)
+CRYSTAL = "FT_frostina_crystal"
+MOOSE = "Followers/STANTLER"
+
+def statue_event(b, x, y, dir)
+  b.event(x, y, "Elf statue", [
+    { graphic: STATUE, direction: dir, opacity: 210, walk_anime: false, script: "FT.elf_statue(@event_id)" },
+    { self_switch: "A", graphic: "", through: true }
+  ])
+end
+
+# A thing lying on a rock (the rock is solid, so the player reaches it from beside).
+def on_boulder(b, x, y, name, script)
+  b.stamp(BOULDER, x, y)
+  b.event(x, y + 1, name, [{ graphic: "", script: script }])
+end
+
+# --- 2129: the Lonelywood forest. In from Lonelywood's logging road (west);
+# the loggers' camp; the path north to the Glade; the deep woods east, where
+# the tracks are, and past them the elven ward and the way to the tomb.
+FW, FH = 48, 36
+f = Builder.new(FW, FH)
+f.fill(0, SNOW)
+fopen = {}
+carve_into(fopen, 0, 15, 16, 5)           # the logging road, from town
+carve_into(fopen, 12, 9, 17, 16)          # the loggers' camp
+carve_into(fopen, 22, 0, 6, 10)           # north, to the Glade
+carve_into(fopen, 28, 5, 16, 26)          # the deep woods
+carve_into(fopen, 43, 14, 5, 6)           # east, where the ward turns you round
+forest_except(f, FW, FH, fopen)
+grass(f, 30, 7, 6, 5); grass(f, 36, 22, 6, 6); grass(f, 31, 25, 4, 4); grass(f, 39, 9, 4, 4)
+[[17, 12], [24, 21]].each { |x, y| f.stamp(HAY, x, y) }                         # stacked logs
+[[15, 21], [16, 21], [20, 12], [21, 12], [26, 15]].each { |x, y| f.set(x, y, 2, CRATE) }
+[[33, 16], [40, 18], [30, 27]].each { |x, y| stamp_pine(f, x, y) }
+[0, 1].each { |i| f.warp(0, 17 + i, LONELYWOOD, 42, 11 + i, 4, name: "To Lonelywood") }
+[24, 25].each { |x| f.warp(x, 0, GLADE, x == 24 ? 14 : 15, 26, 8, name: "To the Glade") }
+[16, 17].each { |y| f.warp(FW - 1, y, ID[:elven_tomb], 1, y - 1, 6, name: "To the elven tomb") }
+f.npc(19, 16, "BW (77)", :lonely_forest_logger, dir: 2, name: "Logger")
+f.npc(23, 18, "BWHiker", :lonely_forest_hunter, dir: 4, name: "Hunter")
+f.sign(17, 12, :lonely_forest_logpile)
+f.set(10, 14, 2, CRATE); f.sign(10, 14, :sign_lonely_forest)
+f.trainer(25, 11, "BW (72)", :forest_hunter_brann, :FT_TRAPPER, dir: 2, sight: 3)
+f.trainer(36, 13, "BW (75)", :forest_logger_tova, :WORKER, dir: 4, sight: 4)
+f.event(21, 22, "Awakened bear", [
+  { graphic: "", through: true },
+  { switch: SW_WM_AWAKENED, graphic: "Followers/BEARTIC", direction: 4, step_anime: true, script: "FT.awakened_bear(@event_id)" },
+  { switch: SW_WM_RAVISIN, graphic: "", through: true }
+])
+# the tracks (an hour's search each), the fox and the hare
+[[31, 8], [39, 25], [41, 11], [29, 19]].each { |x, y| on_boulder(f, x, y, "Moose tracks", "FT.moose_tracks(@event_id)") }   # fresh tracks round a boulder
+f.event(34, 21, "Fox", [{ graphic: "Followers/VULPIX", direction: 6, script: "FT.fox_and_hare(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
+f.event(37, 21, "Hare", [{ graphic: "Followers/BUNEARY", direction: 6, script: "FT.fox_and_hare(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
+# the four things the brazier wants (three of them grow out here)
+on_boulder(f, 32, 28, "Pinecone", "FT.forest_pickup(:FT_PINECONE, @event_id)")
+on_boulder(f, 41, 6, "Owl feather", "FT.forest_pickup(:FT_OWLFEATHER, @event_id)")
+on_boulder(f, 13, 23, "Twig", "FT.forest_pickup(:FT_TWIG, @event_id)")
+# the elven ward: until you're following the white moose's tracks, it turns you round
+(14..19).each { |y| f.event(44, y, "Elven ward", [{ trigger: 1, through: true, script: "FT.tomb_ward(@event_id)" }, { switch: SW_WM_TOMB_FOUND, through: true }]) }
+seal_edges(f)
+save(f, :lonely_woods)
+
+# --- 2130: the elven tomb, outside (map 1.15). The circular depression and its
+# crystal gnomon (E5); the hole in its north-west wall, under the hill (E6);
+# the berm east with the sarcophagus and five crystal pillars (E4); the marble
+# gazebo north of the berm (E3); the statues south of it (E1); the barrow door
+# in the hillside to the south (E2).
+EW, EH = 36, 30
+e = Builder.new(EW, EH)
+e.fill(0, SNOW)
+eopen = {}
+carve_into(eopen, 0, 14, 6, 4)            # in from the forest, following the tracks
+carve_into(eopen, 3, 5, 31, 21)           # the slope
+forest_except(e, EW, EH, eopen)
+[[30, 9], [32, 12], [31, 17], [33, 20]].each { |x, y| stamp_pine(e, x, y) }       # evergreens on the berm
+e.stamp(ICE_BOULDER, 16, 13)              # the crystal gnomon (E5)
+e.event(16, 14, "Moon dial", [{ graphic: "", script: "FT.moon_dial(@event_id)" }])
+e.event(17, 14, "Moon dial", [{ graphic: "", script: "FT.moon_dial(@event_id)" }])
+e.stamp(CAVE, 9, 6)                       # the hole punched in the north-west wall: mouth (10, 8)
+e.door(10, 8, ID[:elven_barrow], 12, 3, 2, name: "Door barrow hole")
+# E4: the sarcophagus on the berm, five crystal pillars round it, a seventh statue on the north tip
+e.stamp(BOULDER, 27, 13)
+e.event(27, 14, "Sarcophagus", [{ graphic: "", script: "FT.tomb_sarcophagus(@event_id)" }])
+[[26, 11], [25, 13], [25, 15], [26, 17], [29, 16]].each_with_index do |(x, y), i|
+  e.event(x, y, "Crystal pillar #{i + 1}", [{ graphic: CRYSTAL, direction: 2, walk_anime: false, script: "FT.talk(:tomb_pillars, @event_id)" }])
+end
+statue_event(e, 28, 9, 2)
+# E3: the gazebo
+(23..27).each { |x| (4..7).each { |y| e.set(x, y, 1, PLANK[:c]) } }
+[[23, 3], [27, 3]].each { |x, y| e.stamp(LAMP, x, y) }
+e.set(25, 5, 2, CRATE)
+e.event(25, 5, "Brazier", [{ graphic: "", script: "FT.gazebo_brazier(@event_id)" }])
+# E1: six statues on their pillars, facing north
+[18, 20, 22, 24, 26, 28].each { |x| statue_event(e, x, 21, 8) }
+# E2: the barrow door in the hillside
+e.stamp(CAVE, 13, 21)                     # mouth (14, 23)
+e.event(14, 23, "Barrow door", [
+  { trigger: 1, script: "FT.talk(:tomb_e2, @event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward])" },
+  { switch: SW_WM_BARROW_OPEN, trigger: 1, commands: [e.send(:command, 201, [0, ID[:elven_barrow], 14, 23, 8, 1])] }
+])
+# a lookout in the trees, west
+on_boulder(e, 4, 8, "Lookout", "FT.tomb_lookout(@event_id)")
+[0, 1].each { |i| e.warp(0, 15 + i, ID[:lonely_woods], FW - 2, 16 + i, 4, name: "To the forest") }
+e.cutscene(5, 24, :elven_tomb_arrival)
+seal_edges(e)
+save(e, :elven_tomb)
+
+# --- 2131: under the hill. E6 the barrow (the animals, the moose, three more
+# statues facing the east wall); E7 the mirror, west, at the end of a narrowing
+# passage; E8 and E9, the tombs of the half-moon, north and south of the east hall.
+br = cave_map(34, 26)
+bfl = {}
+carve_into(bfl, 12, 1, 2, 7)              # the hole, down from the moon dial
+carve_into(bfl, 8, 8, 13, 11)             # E6
+carve_into(bfl, 14, 19, 2, 6)             # down to the south door (E2)
+bfl[[14, 25]] = true
+carve_into(bfl, 4, 12, 4, 2)              # E7: the passage narrows...
+carve_into(bfl, 2, 12, 2, 1)              #     ...to the mirror
+carve_into(bfl, 21, 12, 3, 2)             # east, to the half-moon hall
+carve_into(bfl, 24, 9, 3, 8)              # the half-moon hall
+carve_into(bfl, 22, 2, 7, 6)              # E8 (north)
+carve_into(bfl, 22, 18, 7, 6)             # E9 (south)
+bfl[[25, 8]] = true; bfl[[25, 17]] = true # their doors
+cave_paint(br, bfl)
+br.door(13, 1, ID[:elven_tomb], 10, 9, 2, name: "Up to the moon dial")
+br.event(14, 25, "South door", [
+  { trigger: 1, script: "FT.talk(:tomb_e2, @event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward])" },
+  { switch: SW_WM_BARROW_OPEN, trigger: 1, commands: [br.send(:command, 201, [0, ID[:elven_tomb], 14, 24, 2, 1])] }
+])
+br.event(16, 23, "Lever", [{ graphic: "", script: "FT.barrow_lever(@event_id)" }])
+# E6: the moose finds you as you come down; the sleeping animals; the bones; three statues
+[12, 13].each { |x| br.event(x, 8, "The white moose wakes", [{ trigger: 1, through: true, script: "FT.barrow_moose(@event_id)" }, { switch: SW_WM_MOOSE_DEAD, through: true }]) }
+br.event(16, 12, "White moose", [
+  { graphic: MOOSE, direction: 4, step_anime: false, script: "FT.barrow_moose(@event_id)" },
+  { switch: SW_WM_MOOSE_DEAD, graphic: "", through: true }
+])
+[["VULPIX", 14, 15], ["BUNEARY", 17, 16], ["HOOTHOOT", 19, 10], ["POOCHYENA", 18, 14], ["TEDDIURSA", 11, 16], ["DEERLING", 15, 17]].each do |sp, x, y|
+  br.event(x, y, "Sleeping #{sp.downcase}", [
+    { graphic: "Followers/#{sp}", direction: 2, walk_anime: false, script: "FT.talk(:barrow_animals, @event_id)" },
+    { switch: SW_WM_MOOSE_DEAD, graphic: "", through: true }
+  ])
+end
+CAVE_ROCKS.each_with_index { |row, j| row.each_with_index { |tl, i| br.set(18 + i, 16 + j, 1, tl) } }
+br.event(18, 17, "Bones", [{ graphic: "", script: "FT.barrow_bones(@event_id)" }])
+[10, 12, 14].each { |y| statue_event(br, 9, y, 6) }
+# E7: the mirror (on the end wall)
+br.event(1, 12, "Mirror of the Full Moon", [{ graphic: "", script: "FT.full_moon_mirror(@event_id)" }])
+# E8 / E9: the half-moon doors, and the tombs behind them
+[[8, :e8], [17, :e9]].each do |y, k|
+  br.event(25, y, "Half-moon door (#{k.upcase})", [
+    { tile_id: CAVE_ROCKS[0][0], script: "FT.half_moon_door(:#{k}, @event_id)" },
+    { switch: SW_WM_HALF_OPEN, through: true }
+  ])
+end
+CAVE_ROCKS.each_with_index { |row, j| row.each_with_index { |tl, i| br.set(24 + i, 3 + j, 1, tl) } }
+br.event(25, 4, "Sarcophagus (E8)", [{ graphic: "", script: "FT.half_tomb_one(@event_id)" }])
+CAVE_ROCKS.each_with_index { |row, j| row.each_with_index { |tl, i| br.set(24 + i, 21 + j, 1, tl) } }
+br.event(24, 21, "Sarcophagus (E9)", [{ graphic: "", script: "FT.vurnis(@event_id)" }])
+br.event(24, 20, "Ravisin", [
+  { graphic: "BW (40)", direction: 8, script: "FT.ravisin(@event_id)" },
+  { switch: SW_WM_RAVISIN, graphic: "", through: true }
+])
+br.event(27, 21, "Berry bush", [{ graphic: "Followers/SUDOWOODO", direction: 4, script: "FT.awakened_shrub(@event_id)" }])
+seal_edges(br)
+save(br, :elven_barrow)
+
+# --- 2137: Ramshackle, Lonelywood's closed inn (yours, once the moose is dead)
+rs, ex = Builder.from_existing(768)
+exits_to(rs, ex, LONELYWOOD, 15, 32)
+rs.event(4, 6, "The old bar", [{ graphic: "", script: "FT.ramshackle_rest(@event_id)" }])
+rs.event(11, 5, "Notice", [{ graphic: "", script: "FT.talk(:ramshackle_notice, @event_id)" }])
+save(rs, :ramshackle)
+
+# --- Lonelywood: the logging road east now runs into the forest (the Glade is
+# beyond it), and Ramshackle's door works once the inn is yours.
+lw = reopen(LONELYWOOD)
+lw.map.events.each_value do |ev|
+  if ev.name == "To the Glade"
+    ev.instance_variable_set(:@name, "To the Lonelywood forest")
+    ev.pages.each { |pg| pg.list.each { |c| c.parameters[1, 4] = [ID[:lonely_woods], 1, ev.y + 6, 6] if c.code == 201 } }
+  elsif ev.name == "Door ramshackle_closed"
+    ev.instance_variable_set(:@name, "Door Ramshackle")
+    pg = ev.pages[0]
+    pg.instance_variable_set(:@list, lw.send(:script_commands, "FT.ramshackle_door(@event_id)") + [lw.send(:command, 0, [])])
+  end
+end
+resave(lw, LONELYWOOD)
+gl2 = reopen(GLADE)
+gl2.map.events.each_value do |ev|
+  next unless ev.name == "To Lonelywood"
+  ev.instance_variable_set(:@name, "To the Lonelywood forest")
+  ev.pages.each { |pg| pg.list.each { |c| c.parameters[1, 4] = [ID[:lonely_woods], ev.x + 10, 1, 2] if c.code == 201 } }
+end
+resave(gl2, GLADE)
 
 # ===========================================================================
 merge_infos(ID.map { |k, v| [v, NAMES[k]] }.select { |id, _| File.exist?(File.join(OUT, format("Map%04d.rxdata", id))) })

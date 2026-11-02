@@ -47,7 +47,7 @@ extra = [[2001, 33, 21, "new game start"], [2001, 20, 23, "Meat Meat start"], [2
 extra.each { |id, x, y, why| arrivals[id] << [x, y, why] }
 # ...and every point the story scripts send you to (constants and transfer calls)
 Dir[File.join(__dir__, "../game/Data/Scripts/998_FrostThaw/*.rb")].each do |f|
-  File.read(f, encoding: "UTF-8").scan(/(?:([A-Z][A-Z0-9_]+)\s*=\s*\[|transfer\()\s*(20\d\d),\s*(\d+),\s*(\d+)/) do |name, id, x, y|
+  File.read(f, encoding: "UTF-8").scan(/(?:([A-Z][A-Z0-9_]+)\s*=\s*\[|transfer\()\s*(2\d\d\d),\s*(\d+),\s*(\d+)/) do |name, id, x, y|
     arrivals[id.to_i] << [x.to_i, y.to_i, "script #{name || 'transfer'} (#{File.basename(f)})"]
   end
 end
@@ -68,7 +68,11 @@ maps.each do |id, m|
   blocking = {}
   m.events.each_value do |e|
     pg = e.pages[0]
-    blocking[[e.x, e.y]] = true if !pg.through && !(pg.graphic.character_name.to_s.empty? && pg.graphic.tile_id == 0)
+    next unless !pg.through && !(pg.graphic.character_name.to_s.empty? && pg.graphic.tile_id == 0)
+    # a gate that a story switch opens (a later page on a game switch that's
+    # walkable) isn't a wall: what's behind it is reachable once it opens
+    opens = e.pages[1..].any? { |p2| p2.condition.switch1_valid && (p2.through || (p2.graphic.character_name.to_s.empty? && p2.graphic.tile_id == 0)) }
+    blocking[[e.x, e.y]] = true unless opens
   end
   seen = {}; q = starts.dup; q.each { |c| seen[c] = true }
   until q.empty?

@@ -406,17 +406,26 @@ module FrostThaw
     end
   end
 
-  # M10: the bucket shuttle across the shaft.
+  # M10: the bucket shuttle across the shaft. Step into the bucket at either
+  # end and you're hauled across, hand over hand, along the suspension rope.
   def mine_shuttle(event_id = nil)
-    say(lines_for(:mine_shuttle), event_id)
-    return if !pbConfirmMessage(_INTL("Haul yourselves across in the bucket, one or two at a time?"))
-    say(["Hand over hand along the suspension rope, one at a time, the dark breathing up at you.",
+    ev = $game_map.events[event_id] rescue nil
+    return if !ev
+    west = $game_player.direction == 4 && ev.x == MINE_SHUTTLE_EAST_X
+    east = $game_player.direction == 6 && ev.x == MINE_SHUTTLE_WEST_X
+    return if !west && !east
+    if !flag?(:shuttle_seen)
+      set_flag(:shuttle_seen)
+      say(lines_for(:mine_shuttle), event_id)
+    end
+    say(["Into the bucket, one or two at a time. Hand over hand along the rope, the dark breathing up at you.",
          "Nobody looks down. Everybody looks down."])
-    transfer(*($game_player.x > 22 ? MINE_SHUTTLE_FAR : MINE_SHUTTLE_NEAR))
+    step = west ? PBMoveRoute::Left : PBMoveRoute::Right
+    pbMoveRoute($game_player, [step] * 4) rescue nil
   end
 
-  MINE_SHUTTLE_FAR  = [2136, 20, 5, 4]
-  MINE_SHUTTLE_NEAR = [2136, 25, 5, 6]
+  MINE_SHUTTLE_EAST_X = 24
+  MINE_SHUTTLE_WEST_X = 21
 
   # M11: Trex, with his fake wings and his satchel, and the ghost inside him.
   def trex(event_id = nil)

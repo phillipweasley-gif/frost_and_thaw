@@ -63,6 +63,14 @@ module FrostThaw
   )
 
   TRAINER_TYPES.merge!(FT_FROSTDRUID: ["Frost Druid", :CHANNELER, 1, 120])
+  TRAINER_INTROS.merge!(
+    forest_hunter_brann: "BRANN: You're after MY moose? Over my dead Pokémon.",
+    forest_logger_tova:  "TOVA: Can't cut, can't haul, can't go home without wood. Might as well battle."
+  )
+  TRAINERS.merge!(
+    forest_hunter_brann: [:FT_TRAPPER, "Brann", [[:NOCTOWL, 18], [:B58H216, 18]], "Fine. You find it, then. I've been out here a month."],
+    forest_logger_tova:  [:WORKER, "Tova", [[:MACHOP, 17], [:B185H216, 18]], "Strong arms, weak bench. Story of my life."]
+  )
   TRAINER_INTROS[:ravisin] = "RAVISIN: Ten-Towns will be destroyed, if not by my hand, then by the Frostmaiden's!"
   TRAINERS[:ravisin] = [:FT_FROSTDRUID, "Ravisin", [[:SNORUNT, 19], [:B234H215, 20], [:FROSLASS, 21]],
                         "My beasts will avenge us!"]
@@ -116,7 +124,10 @@ module FrostThaw
     ramshackle_notice: ["A notice nailed to the bar, in a cramped hand: \"Closed. - D.\"",
                         "Under it, in a different hand, in pencil: \"He didn't do it himself.\""],
     sahnar_after: ["The sarcophagus is empty and smells, inexplicably, of pumpkin spice."],
-    tomb_bones: ["Bones, mostly animal. A few aren't."]
+    tomb_bones: ["Bones, mostly animal. A few aren't."],
+    forest_hunter_brann_after: ["BRANN: A month. Not one clean look at it. It's like it KNOWS where I'll be."],
+    forest_logger_tova_after: [{ if: { flag: :white_moose_done }, lines: ["TOVA: Back to work. Thanks. I mean it."] },
+                               ["TOVA: If you find that moose, tell it I said something rude."]]
   )
 
   PARTY_CHAT[:alberica].merge!(lonely_forest: ["Every tree in this forest looks like every other tree. Including the white ones. Especially the white ones."],
@@ -296,7 +307,8 @@ module FrostThaw
     return if $game_switches[SW_WM_TOMB_FOUND]
     say(["You walk on into the old trees, and walk, and walk...",
          "...and somehow you're back where you started, facing the logging camp. Nobody remembers turning round."], event_id)
-    pbMoveRoute($game_player, [PBMoveRoute::TurnLeft, PBMoveRoute::Forward, PBMoveRoute::Forward]) rescue nil
+    pbMoveRoute($game_player, [PBMoveRoute::TurnLeft, PBMoveRoute::TurnLeft, PBMoveRoute::Forward,
+                               PBMoveRoute::Forward, PBMoveRoute::Forward]) rescue nil
   end
 
   # The fox and the hare.
@@ -695,11 +707,12 @@ module FrostThaw
     set_flag(:vurnis_opened)
   end
 
+  # The tombs' doors stand in the way until a half-moon on the dial is lit; then
+  # they swing open (and push open easily from inside ever after).
   def half_moon_door(which, event_id = nil)
     dial_lit
-    if $game_switches[SW_WM_HALF_OPEN] || flag?(:"#{which}_opened_door")
-      set_flag(:"#{which}_opened_door")
-      return transfer(*(which == :e8 ? E8_INSIDE : E9_INSIDE))
+    if $game_switches[SW_WM_HALF_OPEN]
+      return say(["Moonlight from somewhere far above runs along the half-moon's edge. The door swings open."], event_id)
     end
     say(lines_for(which == :e8 ? :tomb_e8_closed : :tomb_e9_closed), event_id)
     if with_or_is?(:shade) && pbConfirmMessage(_INTL("Let Shade try the door?"))
@@ -707,6 +720,4 @@ module FrostThaw
     end
   end
 
-  E8_INSIDE = [2131, 25, 7, 8]
-  E9_INSIDE = [2131, 25, 17, 8]
 end
