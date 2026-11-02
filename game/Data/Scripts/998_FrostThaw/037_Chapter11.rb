@@ -82,6 +82,24 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # SC 11.02 - The Frost Saint walks; 11.03 - Three hearts
   #-----------------------------------------------------------------------------
+  # What Eline carries up to the Shrine depends on what the Heralds did with the
+  # Frost Saint Shard in the Heart Chamber (034 scene_heart_choice).
+  def saint_heart_lines
+    if flag?(:shard_purified)
+      ["Eline holds a heart in her hands. It's beating, but there's no light in it at all: only a man's heart, cold and clean.",
+       "ELINE: You burned her out of it. We felt it in every shrine in the Dale.",
+       "ELINE: It doesn't matter. He kept faith four hundred years with no light to see by. He'll keep it again."]
+    elsif flag?(:shard_destroyed)
+      ["Eline holds a fistful of ice splinters, threaded together on Halo prayer-wire. They're beating, out of step with each other.",
+       "ELINE: You broke her heart. We went down into the roots on our knees and gathered every piece that crawled away.",
+       "ELINE: We are very patient."]
+    else
+      ["Eline holds a blue light in her hands. It's beating: the frost-light heart.",
+       "ELINE: When your engine died, the heart fell free. We were waiting.",
+       "ELINE: We are very patient."]
+    end
+  end
+
   def scene_frost_saint_walks
     set_switch(SW_CH11_SHRINE, false)
     return if flag?(:frostina_taken)
@@ -91,9 +109,7 @@ module FrostThaw
     frostina = Stage.actor(:frostina, px + 3, py - 3, 4)
     say(["The Shrine is full of Halo robes.",
          "On the dragons' altar lies Sephek's frozen body. The Halo carried it up while the city voted.",
-         "Eline holds a blue light in her hands. It's beating: the frost-light heart.",
-         "ELINE: When your engine died, the heart fell free. We were waiting.",
-         "ELINE: We are very patient.",
+         *saint_heart_lines,
          "She presses it into the hollow in Sephek's chest."])
     Stage.stop_fx(heart)
     if sephek
@@ -102,7 +118,8 @@ module FrostThaw
     end
     say(["The ice cracks. Sephek breathes in, four hundred years late.",
          "His eyes open, blue as a frozen lake.",
-         "SEPHEK: (very quietly) ...It's cold. Why is it still so cold?",
+         flag?(:shard_destroyed) ? "SEPHEK: (his voice coming in pieces) ...It's cold. It's so loud in here. Why is it so loud?" :
+                                   "SEPHEK: (very quietly) ...It's cold. Why is it still so cold?",
          "ELINE: (kneeling) The Frost Saint walks again.",
          herald?(:alerion) ? "You got here first. You always hear her first." :
                              "Alerion got here first. He always hears her first.",

@@ -462,7 +462,7 @@ module FrostThaw
          "Rootwardens close in with spears lowered. Rheven leads them. He looks unhappy.",
          "RHEVEN: (not meeting your eyes) In the name of the Verdant Council.",
          "RHEVEN: The Heralds of Dawn and Dusk. For the deaths of Summer Marshal Var Rime-Breaker...",
-         "RHEVEN: ...and Autumn Warden Darrus Fell.",
+         "RHEVEN: ...and #{autumn_hand[:title]}.",
          as(:meat_meat, "Var was a coat! A coat!"),
          cl(:reptin, "(hands up, smiling) Let's all be very reasonable. Especially the people with spears."),
          cl(:alerion, "She's right. He was a coat."),

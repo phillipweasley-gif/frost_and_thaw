@@ -95,7 +95,7 @@ module FrostThaw
                               "CAPTAIN RHEVEN: Look at it with me. You can hear the pulse; I can't."] :
                              ["CAPTAIN RHEVEN: (kneeling by the black caps) The sap's gone black in the Root-Tier.",
                               "CAPTAIN RHEVEN: I'd hoped your warden would come. Reptin. He can hear the tree."] },
-    run_hatch_shut: ["A hatch of black planks under the docks, bolted from this side. Cold, wet air breathes up through the cracks.",
+    run_hatch_shut: ["At the Run's far end, a crack in the rock breathes cold spore-mist. It's too dark to see how deep it goes.",
                      "Something down there is whispering. (It wants someone who speaks spore.)"],
     attunement_way: ["Roots older than the city, breathing. Carved in one: WALK BESIDE, NOT ABOVE."],
     dream_stumps: ["A stump, cut flat. The rings in it are counting down."]

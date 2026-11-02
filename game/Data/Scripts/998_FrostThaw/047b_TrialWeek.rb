@@ -22,8 +22,8 @@ module FrostThaw
   SW_LEAF_SHELF = 4141   # the chronal leaf is missing from the Library
   SW_FIELD_SPIRITS = 4146 # the summer and winter spirits, in the Blooming Fields
 
-  MAPS.merge!(smugglers_run: 2160, mirror_maze: 2161, beyond_wall: 2163, drowned_hall: 2164)
-  MAP_NAMES.merge!(2160 => "The Smuggler's Run", 2161 => "The Mirror Maze", 2163 => "Beyond the Auroral Wall",
+  MAPS.merge!(undercity: 2160, mirror_maze: 2161, beyond_wall: 2163, drowned_hall: 2164)
+  MAP_NAMES.merge!(2160 => "The Undercity", 2161 => "The Mirror Maze", 2163 => "Beyond the Auroral Wall",
                    2164 => "The Drowned Hall")
   MAP_METADATA.merge!(
     2160 => { announce_location: true, battle_environment: :Cave },
@@ -306,7 +306,7 @@ module FrostThaw
   def scene_smugglers_run
     return if flag?(:run_entered)
     set_flag(:run_entered)
-    sayc(["Beneath the Root-Tier docks the Smuggler's Run twists through dripping caverns.",
+    sayc(["Below the Smuggler's Run, the crack opens into the Undercity: older tunnels, twisting through dripping caverns.",
           "Moss-steam rises like breath from the dark water. Glow-worm lanterns sway from root arches, sickly green.",
           cl(:wyn, "(sniffing) ...Spores. Old ones. Hungry ones. This way.")])
   end
@@ -674,6 +674,8 @@ module FrostThaw
   def apply_trial_week_switches
     return if !active? || !$game_switches
     $game_switches[SW_SMUGGLERS] = (flag?(:wyn_joined) || herald?(:wyn)) && !flag?(:undercity_done)
+    # Wyn knows the Rootwardens' way down: the dock hatch into the Smuggler's Run (048) opens with her.
+    $game_switches[SW_RUN_OPEN] = true if $game_switches[SW_SMUGGLERS]
     $game_switches[SW_ECHO_POCKET] = flag?(:ch7_started)
     $game_switches[SW_GLASSWATER] = flag?(:summer_ended)
     $game_switches[SW_BEYOND_WALL] = flag?(:summer_ended)

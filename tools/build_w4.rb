@@ -4,7 +4,7 @@
 #
 #   2077 The Underdark Door (rebuilt: the old guard tunnels, Q3.2's crawl)
 #   2078 Glasswater Lake (rebuilt: outdoors, past the thinned Wall, east of the Fields)
-#   2160 The Smuggler's Run          (W1: Shadows in the Undercity)
+#   2160 The Undercity, below the Smuggler's Run (W1: Shadows in the Undercity)
 #   2161 The Mirror Maze             (A1; the wraiths' testimony; the Echo sigil)
 #   2163 Beyond the Auroral Wall     (B2; GQ4: Dougan's Hole, frozen time)
 #   2164 The Drowned Hall            (GQ4: the Temporal Guardian)
@@ -26,7 +26,7 @@ ICE_CRYSTAL = 8518         # an ice crystal (the Outdoor tileset: the Ice Mounta
 GLOWCAP = 792              # a glowing cap, on a cave's rocks
 
 NAMES = {
-  2077 => "The Underdark Door", 2078 => "Glasswater Lake", 2160 => "The Smuggler's Run", 2161 => "The Mirror Maze",
+  2077 => "The Underdark Door", 2078 => "Glasswater Lake", 2160 => "The Undercity", 2161 => "The Mirror Maze",
   2163 => "Beyond the Auroral Wall", 2164 => "The Drowned Hall", 2165 => "The Attunement Way", 2166 => "The Crystals' Dream",
   2168 => "The White Vault", 2169 => "The Mirror Circuits", 2170 => "The Seraph Cradle", 2171 => "A Sporeling's Dream",
   2172 => "The Disused Root"
@@ -207,7 +207,7 @@ channel = cells([7, 14, 12, 3])
 channel.each { |x, y| sr.set(x, y, 0, CAVE_FLOOR) }
 sr.autotile(1, MURKY, channel)
 [[2, 2], [7, 2], [26, 6], [31, 13], [20, 6]].each { |x, y| sr.set(x, y, 2, GLOWCAP) }
-sr.event(4, 1, "Up to the docks", [{ trigger: 1, through: true, commands: [sr.command(201, [0, 2055, 26, 14, 8, 0])] }])
+sr.event(4, 1, "Up into the Smuggler's Run", [{ trigger: 1, through: true, commands: [sr.command(201, [0, 2198, 31, 22, 8, 0])] }])
 sr.cutscene(4, 3, :smugglers_run)
 sr.sign(3, 6, :run_glowworms)
 once_trigger(sr, 10, 13, "Spore fork 1", "FT.spore_trail(1, @event_id)")
@@ -221,6 +221,13 @@ save_map(sr, 2160, "Lavender Town")
 sr2 = reopen(2160)
 sr2.set(4, 1, 0, CAVE_FLOOR)
 resave(sr2, 2160)
+# The Undercity is the Smuggler's Run's deepest part (one place, as in the notes):
+# a spore-choked crack at the Run's far end (2198, W5's map) leads down to it.
+run = reopen(2198)
+run.event(31, 23, "Spore-choked crack", [{ tile_id: 582, through: false, script: "FT.talk(:run_hatch_shut, @event_id)" },
+                                          { switch: SW_SMUGGLERS, tile_id: 582, through: true, trigger: 1,
+                                            commands: [run.command(201, [0, 2160, 4, 3, 2, 0])] }])
+resave(run, 2198)
 
 # ==============================================================================
 # 2161: the Mirror Maze, the pocket of mirror-ice behind the Echo Gate's frost:
@@ -463,10 +470,7 @@ rt = reopen(2055)
 rt.map.events.delete_if { |_id, e| e.name == "To the Glasswater" }      # (the Glasswater is past the Wall now)
 person_when(rt, 12, 19, "Pell", "BW029", "FT.pell(@event_id)", SW_PELL, dir: 4)
 rt.npc(24, 9, "BW (38)", :smuggler_dockworker, dir: 2, name: "Dockworker")
-in_wall(rt, 26, 15, "Hatch to the Smuggler's Run", "FT.talk(:guild_vault_sealed, @event_id)")
-hatch = find_event(rt, "Hatch to the Smuggler's Run")
-hatch.pages = [rt.build_page(hatch.pages[0], { tile_id: 582, script: "FT.talk(:run_hatch_shut, @event_id)" }),
-               rt.build_page(hatch.pages[0], { switch: SW_SMUGGLERS, tile_id: 582, commands: [rt.command(201, [0, 2160, 4, 3, 2, 0])] })]
+# (The way down to the Undercity is the crack at the far end of the Smuggler's Run, 2198, below.)
 mira = find_event(rt, "Mira of the North Wind")
 mira.pages << rt.build_page(mira.pages[0], { switch: SW_MIRA_FREED, switch2: SW_TRIALS, graphic: "BW (33)", direction: 2, script: "FT.mira_trials(@event_id)" })
 person_when(rt, 20, 21, "Signer dockers", "BW (38)", "FT.petition_signer(:dockers, @event_id)", SW_PETITIONS)

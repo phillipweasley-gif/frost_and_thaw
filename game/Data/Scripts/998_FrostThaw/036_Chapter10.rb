@@ -741,11 +741,11 @@ module FrostThaw
     say(["The root-cells, carved into the Council Hall's foundations. Light through the bars, in four colours.",
          mm ? "You sit in a root-cell, holding Razzilith's nose through the bars." :
               "Meat Meat sits in a root-cell, holding Razzilith's nose through the bars."], event_id)
-    speak(:meat_meat, "Meat Meat could have caught his hand. Meat Meat didn't. Meat Meat would not catch it again.",
+    speak(:meat_meat, "Meat Meat could have caught #{autumn_hand[:his]} hand. Meat Meat didn't. Meat Meat would not catch it again.",
                       "...Meat Meat would not catch it again.")
     say([as(:meat_meat, "That is the truth. The crystals can judge the truth.")])
     if mm
-      say([flag?(:mm_reached) ? "(The court has it written down: you reached for him. His hand slid out of yours.)" :
+      say([flag?(:mm_reached) ? "(The court has it written down: you reached for #{autumn_hand[:him]}. #{autumn_hand[:His]} hand slid out of yours.)" :
                                 "(The court has it written down: you took the child. You didn't reach.)",
            "(They read it back to you twice.)"])
     end

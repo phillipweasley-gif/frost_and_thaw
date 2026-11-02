@@ -306,6 +306,7 @@ module FrostThaw
     opts = []
     opts << [:rose, _INTL("Show him the Undying Rose")] if flag?(:rose_cutting)
     opts << [:shade, _INTL("Let Alerion speak")]
+    opts << [:clean, _INTL("Tell him the heart is clean")] if flag?(:shard_purified)
     opts << [:fight, _INTL("Fight him")]
     c = pbMessage(_INTL("Sephek..."), opts.map(&:last), opts.size - 1)
     pick = opts[[c, 0].max][0]
@@ -314,6 +315,17 @@ module FrostThaw
     elsif pick == :shade
       speak(:alerion, "She told you there was a third way. You heard her.", "...You heard her. You still do.")
       say([as(:alerion, "You've been hearing her for four hundred years.")])
+    elsif pick == :clean
+      say(["You tell him what you did in the silver pool, under the dead engine. Green fire and gold. The light going out of it like breath.",
+           "SEPHEK: (a hand flat on his chest, listening) ...There's no one in here but me.",
+           "SEPHEK: Since the Forge. I've been choosing her all by myself since the Forge."])
+    end
+    # A heart broken into splinters and wired back together is too loud to hear
+    # anyone through, unless it's the rose, which he grew from.
+    if flag?(:shard_destroyed) && pick == :shade
+      say(["The splinters in his chest grind against each other. He can't hear a word of it.",
+           "SEPHEK: (hands over his ears) Too loud. She's too loud. Make it stop."])
+      pick = :fight
     end
     if pick != :fight && flag?(:shade_curse_broken)
       say(["SEPHEK: (looking at Frostina) Her silence honours her. Not her return.",
@@ -323,10 +335,13 @@ module FrostThaw
       say(["Sephek puts his hand on his own chest."])
       sev = stage_event("Sephek")
       heart = sev ? Stage.fx("E-14", sev, oy: 36, loop_from: 0) : nil     # the heart, beating in his hand
-      say(["SEPHEK: And this. She doesn't get this."])
+      say([flag?(:shard_purified) ? "SEPHEK: And this. It was never hers. It's just been cold for a long time." :
+                                    "SEPHEK: And this. She doesn't get this."])
       Stage.stop_fx(heart)
       $game_screen.start_flash(Color.new(180, 230, 255, 200), 10) rescue nil
-      sayc(["He pulls out the frost-light heart and crushes it. He doesn't fall.",
+      sayc([flag?(:shard_purified) ? "He presses both hands over the clean heart until it warms. He doesn't fall." :
+            flag?(:shard_destroyed) ? "He pulls out the wired splinters and crushes them to powder. He doesn't fall." :
+                                      "He pulls out the frost-light heart and crushes it. He doesn't fall.",
             "He only looks, for the first time, cold.",
             "SEPHEK: (shivering, almost laughing) Oh. So that's what it feels like.",
             cl(:alberica, "Welcome to being a person, sweetheart. It's awful. You'll love it.")])

@@ -261,40 +261,54 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # SC 8.04 - Autumn falls
   #-----------------------------------------------------------------------------
+  # Who carries Autumn's mantle at the Forge. If the Heralds exposed Darrus in
+  # the Verdant Heist, he ran to the Corsairs (048_Rootspire_D_Quests.rb), and
+  # Maera Vell of the Frost-Thread Clothier, Autumn's robe-maker, took his place.
+  def autumn_hand
+    if flag?(:heist_exposed)
+      { full: "Maera Vell", tag: "MAERA", he: "she", him: "her", his: "her", He: "She", His: "Her",
+        dress: "her crowning robes scorched", title: "Autumn's Maera Vell" }
+    else
+      { full: "Darrus Fell", tag: "DARRUS", he: "he", him: "him", his: "his", He: "He", His: "His",
+        dress: "his velvet scorched", title: "Autumn Warden Darrus Fell" }
+    end
+  end
+
   def scene_autumn_falls
     return if flag?(:autumn_fell)
-    say(["Darrus Fell, his velvet scorched, drags a cocoon toward the forge. Inside it, a child's face.",
-         "DARRUS: Stand aside! The engine needs one more. One more, and it never stops.",
-         "DARRUS: Eternal summer! No famine years, no winters, ever.",
-         "DARRUS: Do you know what Autumn's ledgers could do with that?"])
+    a = autumn_hand
+    say(["#{a[:full]}, #{a[:dress]}, drags a cocoon toward the forge. Inside it, a child's face.",
+         "#{a[:tag]}: Stand aside! The engine needs one more. One more, and it never stops.",
+         "#{a[:tag]}: Eternal summer! No famine years, no winters, ever.",
+         "#{a[:tag]}: Do you know what Autumn's ledgers could do with that?"])
     if with_or_is?(:meat_meat)
       speak(:meat_meat, "That is a child.", "...Put the child down.")
     end
-    say(["DARRUS: It's fuel."])
+    say(["#{a[:tag]}: It's fuel."])
     if herald?(:meat_meat)
       say(["You move faster than anyone has ever seen you move.", "A blade of pure thought flashes in your hand.",
-           "Darrus stumbles back, lets go of the cocoon, and goes over the rail.",
-           "He catches the edge. Below him, the sap boils.",
-           "DARRUS: (clinging) Help me. Goblin. Help me."])
-      c = pbMessage(_INTL("Darrus is hanging from the edge. The child's cocoon is rolling toward the pit."),
-                    [_INTL("Take the child"), _INTL("Reach for Darrus")], 0)
+           "#{a[:full].split.first} stumbles back, lets go of the cocoon, and goes over the rail.",
+           "#{a[:He]} catches the edge. Below #{a[:him]}, the sap boils.",
+           "#{a[:tag]}: (clinging) Help me. Goblin. Help me."])
+      c = pbMessage(_INTL("#{a[:full].split.first} is hanging from the edge. The child's cocoon is rolling toward the pit."),
+                    [_INTL("Take the child"), _INTL("Reach for #{a[:full].split.first}")], 0)
       if c == 1
-        say(["You reach for him. His hand finds yours.",
-             "Then the bridge shakes, and his hand slides out of yours like water.",
-             "He falls."])
+        say(["You reach for #{a[:him]}. #{a[:His]} hand finds yours.",
+             "Then the bridge shakes, and #{a[:his]} hand slides out of yours like water.",
+             "#{a[:He]} falls."])
         set_flag(:mm_reached)
       else
-        say(["You look at him for a long moment. Then you pick up the cocoon instead.",
-             "He falls."])
+        say(["You look at #{a[:him]} for a long moment. Then you pick up the cocoon instead.",
+             "#{a[:He]} falls."])
         set_flag(:mm_turned)
       end
     else
       say(["Meat Meat moves faster than anyone has ever seen her move.", "A blade of pure thought flashes in her hand.",
-           "Darrus stumbles back, lets go of the cocoon, and goes over the rail.",
-           "He catches the edge. Below him, the sap boils.",
-           "DARRUS: (clinging) Help me. Goblin. Help me.",
-           "Meat Meat looks at him for a long moment. Then she picks up the cocoon instead.",
-           "He falls."])
+           "#{a[:full].split.first} stumbles back, lets go of the cocoon, and goes over the rail.",
+           "#{a[:He]} catches the edge. Below #{a[:him]}, the sap boils.",
+           "#{a[:tag]}: (clinging) Help me. Goblin. Help me.",
+           "Meat Meat looks at #{a[:him]} for a long moment. Then she picks up the cocoon instead.",
+           "#{a[:He]} falls."])
       set_flag(:mm_turned)
     end
     sayc([cl(:alerion, "(after a beat) ...We'll talk about that later."),

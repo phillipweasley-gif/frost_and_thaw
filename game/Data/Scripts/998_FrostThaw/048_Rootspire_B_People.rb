@@ -649,6 +649,13 @@ module FrostThaw
   # 18. Frost-Thread Clothier: Maera Vell (Autumn) and the crowning robes
   #-----------------------------------------------------------------------------
   def maera(event_id = nil)
+    if flag?(:autumn_fell) && flag?(:heist_exposed)
+      # With Darrus fled, Maera carried the robes below herself, and fell at the Forge (034 autumn_hand).
+      say(["A boy with pins in his mouth is minding the shop. The dress form in the back stands empty.",
+           "APPRENTICE: Mistress Vell took the gold robes down herself. When Warden Fell ran, she said Autumn needed a hand that wouldn't shake.",
+           "APPRENTICE: She didn't come back up. ...The scarves are still half price. She'd want them sold."], event_id)
+      return mart(:frost_thread, event_id)
+    end
     if first_time?(:met_maera)
       say(["Cloth changes colour as you pass: winter blue, spring green, autumn gold.",
            "A tailor with ruddy cheeks and dye-stained fingertips hums as she works. The tune changes with her mood.",

@@ -717,7 +717,7 @@ module Story
       beat("side: the Mirror Maze (Alerion's reflection; the wraiths' testimony)", :reflection_claimed)
       beat("  the Echo sigil (from the maze, or the Echo Gate's wraiths)", nil) if FrostThaw.flag?(:sigil_echo) || FrostThaw.flag?(:echo_wraiths_down)
       # W1: the Smuggler's Run
-      travel(2055); talk(/Dockworker/); talk(/Hatch to the Smuggler's Run/); HL.settle(3000)
+      travel(2055); talk(/Dockworker/); travel(2198); talk(/Spore-choked crack/); HL.settle(3000)
       if $game_map.map_id == 2160
         HL.frames(20); HL.settle(3000)
         step_on(/Spore fork 1/); step_on(/Spore fork 2/); step_on(/Spore fork 3/)
