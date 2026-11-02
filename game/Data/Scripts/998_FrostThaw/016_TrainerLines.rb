@@ -27,9 +27,9 @@ module FrostThaw
     aurilite_three:   "ORLA: You followed the little one down here? Then you can share his fate.",
     bryn_zhent_a:     "KELL: The Black Network has questions about you, stranger. Answer them in battle.",
     northlook_zhent:  "DORN: You're sitting too close to the back table. Move, or I move you.",
-    bhall_clerk_1:    "FENN: Your account with Bryn Shander is overdrawn. Let's settle it.",
-    bhall_clerk_2:    "CORVIN: My family's sat on this council six generations. I still know how to fight.",
-    bhall_clerk_3:    "ISOLDE: The Speaker's time is expensive. Let's see if you can afford it.",
+    bhall_militia_1:  "PELL: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.",
+    bhall_clerk_2:    "CORVIN: My family's kept the Council's papers six generations. I still know how to fight.",
+    bhall_militia_2:  "RHOSK: Last gap before the Speaker. Last chance to turn round.",
     # --- Chapter 3: Lonelywood ---------------------------------------------------------
     bug_catcher_pell: "PELL: I've found a bug nobody's ever named! Want to see it? It bites!",
     lady_maren:       "MAREN: A battle in the snow! How dreadfully exciting.",

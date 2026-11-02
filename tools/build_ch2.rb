@@ -9,13 +9,15 @@ Dir.mkdir(OUT) unless Dir.exist?(OUT)
 
 ID = {
   north_road: 2010, chasm: 2011, bryn: 2012, bryn_center: 2013, bryn_mart: 2014, bryn_gym: 2015,
-  northlook: 2016, bryn_house_a: 2017, bryn_house_b: 2018, morninglord: 2019
+  northlook: 2016, bryn_house_a: 2017, bryn_house_b: 2018, morninglord: 2019, council_hall: 2134
 }
+OPEN_TUNDRA = 2125         # "Mountain Climb" / "Foaming Mugs" (build_tentowns.rb)
+TERMALAINE_PATH = 2121     # the snowy path from Bryn Shander's north gate to Termalaine (build_tentowns.rb)
 NAMES = {
   north_road: "Bryn Shander Road", chasm: "Frost-Light Chasm", bryn: "Bryn Shander",
   bryn_center: "Bryn Shander Pokémon Center", bryn_mart: "Blackiron Blades", bryn_gym: "Bryn Shander Town Hall",
   northlook: "The Northlook", bryn_house_a: "Weaver's House", bryn_house_b: "Lottery House",
-  morninglord: "House of the Morninglord"
+  morninglord: "House of the Morninglord", council_hall: "Council Hall"
 }
 TARGOS = 2001
 SW_ROAD_OPEN = 3910       # on once Naerth's seal is won: the Targos guards step aside
@@ -23,7 +25,7 @@ SW_ROAD_OPEN = 3910       # on once Naerth's seal is won: the Targos guards step
 MUSIC = {
   north_road: "Reversal Mountain (White 2)", chasm: "Seafoam Islands Music", bryn: "Opelucid City (White)",
   bryn_center: "pokecenter", bryn_mart: "Ecruteak City", bryn_gym: "gym_kanto", northlook: "Lostlorn Forest",
-  bryn_house_a: "Lavender Town", bryn_house_b: "Lavender Town", morninglord: "sinjoh"
+  bryn_house_a: "Lavender Town", bryn_house_b: "Lavender Town", morninglord: "sinjoh", council_hall: "Ecruteak City"
 }
 
 def save(b, key)
@@ -135,6 +137,7 @@ carve.(10, 34, 20, 8)         # east bend towards the chasm
 carve.(24, 25, 8, 11)         # chasm clearing
 carve.(10, 20, 8, 15)
 carve.(8, 8, 18, 13)          # second field
+carve.(26, 14, 8, 2)          # a trail east onto the open tundra, toward Kelvin's Cairn
 carve.(14, 0, 6, 9)           # the top: Bryn Shander
 forest_except(r, W, H, open)
 # a tree row's canopy overhangs the tile above it: put the canopies back along carved bottoms
@@ -169,6 +172,8 @@ r.npc(20, 18, "BWPoliceman", :road_caravan_guard, dir: 2)
 r.sign(17, 64, :sign_north_road)
 r.sign(27, 33, :sign_chasm)
 r.sign(13, 4, :sign_bryn_ahead)
+[14, 15].each { |y| r.warp(W - 1, y, OPEN_TUNDRA, 1, y == 14 ? 20 : 21, 6, name: "To the Open Tundra") }
+r.sign(27, 13, :sign_tundra_east)
 seal_edges(r)
 save(r, :north_road)
 
@@ -242,9 +247,10 @@ t.door(17, 10, ID[:northlook], 5, 11, 8, name: "Door Northlook")
 t.door(34, 31, ID[:bryn_house_a], 9, 11, 8, name: "Door Weaver")
 t.door(39, 29, ID[:bryn_house_b], 9, 11, 8, name: "Door Lottery House")
 t.door(33, 10, ID[:morninglord], 9, 11, 8, name: "Door Morninglord")
-t.event(24, 38, "Door bryn_council_hall", [{ trigger: 1, script: "FT.talk(:bryn_council_hall, @event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward])" }])   # a locked door: walk into it
+t.door(24, 38, ID[:council_hall], 10, 13, 8, name: "Door Council Hall")
+t.sign(22, 39, :bryn_council_hall)
 (8..11).each { |x| t.warp(x, BH_ - 1, ID[:north_road], x < 10 ? 16 : 17, 1, 2, name: "To Bryn Shander Road") }
-[22, 23].each { |x| t.warp(x, 0, 2020, x == 22 ? 14 : 15, 58, 8, name: "To Lonelywood Road") }
+[22, 23].each { |x| t.warp(x, 0, TERMALAINE_PATH, x == 22 ? 14 : 15, 46, 8, name: "To the Termalaine Path") }
 # the gates
 t.npc(12, 36, "BWPoliceman", :bryn_south_guard, dir: 4)
 # the north gate: guards across every way up to it, until Duvessa's seal (switch 3913)
@@ -271,6 +277,17 @@ t.npc(29, 24, "BW (61)", :bryn_trade_talk, dir: 2)
 t.sign(27, 20, :bryn_sign_hall)
 t.sign(19, 19, :bryn_sign_square)
 t.trainer(16, 23, "BW (57)", :bryn_zhent_a, :FT_ZHENTARIM, dir: 6, sight: 3)
+t.event(31, 23, "Sheriff Southwell", [{ graphic: "BWPoliceman", direction: 2, script: "FT.sheriff_southwell(@event_id)" }])
+t.npc(19, 6, "BWPoliceman", :southwell_militia, dir: 2, name: "Militia")
+t.sign(8, 40, :bryn_heraldry)
+t.sign(22, 18, :bryn_lanterns)
+# "Foaming Mugs": Hruna, Korux and Storn, frostbitten, in the street by the Northlook
+[[10, 12, "Hruna"], [11, 12, "Korux"], [12, 12, "Storn"]].each do |x, y, n|
+  t.event(x, y, n, [
+    { graphic: "BW (72)", direction: 2, script: "FT.foaming_mugs_dwarves(@event_id)" },
+    { switch: 4049, graphic: "", through: true }
+  ])
+end
 # lottery night (SC 2.06): resting at the Northlook brings you out to the square at sundown
 t.event(25, 24, "Lottery night", [{ graphic: "", through: true }, { switch: 3955, trigger: 3, script: "FT.lottery_night" }])
 seal_edges(t)
@@ -281,6 +298,7 @@ ml, ex = Builder.from_existing(644)
 exits_to(ml, ex, ID[:bryn], 33, 11)
 ml.event(13, 7, "Mishann", [{ graphic: "BW (98)", direction: 4, script: "FT.morninglord(@event_id)" }])
 ml.npc(7, 6, "BW (62)", :morninglord_acolyte, dir: 2)
+ml.event(11, 8, "Copper Knobberknocker", [{ graphic: "BW (24)", direction: 4, script: "FT.copper_knobberknocker(@event_id)" }])
 save(ml, :morninglord)
 
 # 2013: Pokémon Center
@@ -292,14 +310,17 @@ save(pc, :bryn_center)
 # 2014: market
 m, ex = Builder.from_existing(81)
 exits_to(m, ex, ID[:bryn], 17, 16)
-m.event(6, 6, "Clerk", [{ graphic: "BW (85)", direction: 2, script: "FT.mart(:bryn, @event_id)" }])
+m.event(6, 6, "Elza", [{ graphic: "BW (56)", direction: 2, script: "FT.elza_shop(@event_id)" }])
+m.event(5, 8, "Garn the Hammer", [{ graphic: "BW (72)", direction: 6, script: "FT.garn_hammer(@event_id)" }])
 m.npc(10, 9, "BW (62)", :bryn_market_customer, dir: 6)
 save(m, :bryn_mart)
 
 # 2016: the Northlook (tavern; the Zhentarim keep a back table here)
 n, ex = Builder.from_existing(768)
 exits_to(n, ex, ID[:bryn], 17, 11)
-n.event(3, 6, "Innkeeper", [{ graphic: "BW (53)", direction: 6, script: "FT.northlook_keeper(@event_id)" }])   # rest until the lottery (SC 2.06)
+n.event(3, 6, "Scramsax", [{ graphic: "BW (72)", direction: 6, script: "FT.scramsax(@event_id)" }])   # rest until the lottery (SC 2.06)
+n.event(9, 4, "Ol' Bitey", [{ graphic: "", script: "FT.ol_bitey(@event_id)" }])
+n.event(6, 8, "Regular (rumours)", [{ graphic: "BW (77)", direction: 6, script: "FT.ten_towns_rumor(\"REGULAR\", @event_id)" }])
 n.npc(13, 5, "BW (92)", :zhent_broker, dir: 4, name: "Broker")
 n.trainer(10, 8, "BW (63)", :northlook_zhent, :FT_ZHENTARIM, dir: 2, sight: 2)
 n.npc(10, 10, "BWBackpacker_male", :northlook_traveler, dir: 8)
@@ -318,9 +339,9 @@ h.npc(7, 6, "BW (16)", :bryn_lottery_child, dir: 2)
 save(h, :bryn_house_b)
 
 # ---------------------------------------------------------------------------
-# 2015: Hall of Speakers (Gym 2). Bryn Shander's council hall, rebuilt with
-# Zhentarim coin: strongboxes and crates stacked into walls, a clerk at every
-# gap, and the Speaker at the long table at the back.
+# 2015: the Town Hall (Gym 2). The town's winter stores stacked into walls of
+# crates, one of Sheriff Southwell's militia at every gap, and the Speaker at
+# the long table at the back.
 module Hall
   VOID, FLOOR, WALL, BASE = 48, 692, 950, 958
   TABLE = [[1264, 1265], [[1272, 1273], [1280, 1281]]]
@@ -378,11 +399,31 @@ hall_line(g, 12, 19, 7, [Hall::CRATE, Hall::CANS, Hall::CRATE])   # gap at x 9-1
 [[6, 18], [14, 18], [5, 14], [15, 14], [4, 10], [12, 10], [6, 6], [15, 6]].each { |x, y| g.set(x, y, 1, Hall::STOOL) }
 [9, 10, 11].each { |x| g.door(x, 20, ID[:bryn], 31, 20, 2, name: "Exit") }
 g.event(10, 3, "Duvessa", [{ graphic: "BW_Jasmine", direction: 2, script: "FT.gym_leader(:duvessa, @event_id)" }])
-g.trainer(2, 13, "BW (57)", :bhall_clerk_1, :FT_ZHENTARIM, dir: 2, sight: 2)
+g.trainer(2, 13, "BWPoliceman", :bhall_militia_1, :FT_MILITIA, dir: 2, sight: 2)
 g.trainer(17, 9, "BWGentleman", :bhall_clerk_2, :GENTLEMAN, dir: 2, sight: 2)
-g.trainer(10, 6, "BW (63)", :bhall_clerk_3, :FT_ZHENTARIM_F, dir: 2, sight: 1)
+g.trainer(10, 6, "BWPoliceman", :bhall_militia_2, :FT_MILITIA, dir: 2, sight: 1)
 g.npc(13, 18, "BW (80)", :bhall_guide, dir: 4)
 save(g, :bryn_gym)
+
+# ---------------------------------------------------------------------------
+# 2134: the Council Hall. Ten chairs round a long table, a plaque on each: the
+# Council of Speakers of Ten-Towns meets here, when there's call to (RotF p. 21).
+ch = Builder.new(21, 16, tileset_id: 25)
+ch.fill(0, Hall::VOID)
+ch.fill(0, Hall::FLOOR, 1, 2, 19, 12)
+ch.fill(0, Hall::WALL, 1, 0, 19, 1)
+ch.fill(0, Hall::BASE, 1, 1, 19, 1)
+ch.fill(0, Hall::FLOOR, 9, 14, 3, 1)
+[[2, 0], [17, 0]].each { |x, y| Hall::SHELF.each_with_index { |row, j| row.each_with_index { |tl, i| ch.set(x + i, y + j, 2, tl) } } }
+[[5, 6], [7, 6], [9, 6], [11, 6], [13, 6]].each { |x, y| hall_obj(ch, Hall::TABLE, x, y) }   # the long table
+[[5, 5], [7, 5], [9, 5], [11, 5], [13, 5], [5, 9], [7, 9], [9, 9], [11, 9], [13, 9]].each { |x, y| ch.set(x + 1, y, 1, Hall::STOOL) }
+[9, 10, 11].each { |x| ch.door(x, 15, ID[:bryn], 24, 39, 2, name: "Exit") }
+ch.npc(16, 11, "BW (55)", :council_clerk, dir: 4, name: "Council clerk")
+ch.sign(10, 1, :council_charter)
+ch.sign(12, 6, :council_plaques)
+# the morning after lottery night, the speakers are sitting: step in and the session starts
+[9, 10, 11].each { |x| ch.event(x, 12, "Council session", [{ trigger: 1, through: true, script: "FT.council_enter(@event_id)" }]) }
+save(ch, :council_hall)
 
 # ---------------------------------------------------------------------------
 # Targos: the guards at the south-west gate step aside once you hold Naerth's

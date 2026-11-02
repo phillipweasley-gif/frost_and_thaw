@@ -22,12 +22,12 @@ module FrostThaw
          "GUARD: Ask him nicely. He likes nicely."]
       end
     },
-    targos_cold_talk: ["Two years of night. The sun crawls over the mountains for a few minutes a day.",
-                       "Then it gives up. Can't say I blame it.",
+    targos_cold_talk: ["Two years of night. The sun hasn't cleared the mountains since the Rime set in.",
+                       "Some days the sky goes grey for an hour, like it's thinking about it. Then it gives up.",
                        "The Frostmaiden's angry with us. Nobody knows why. Everybody's got a guess."],
-    targos_sacrifice_talk: ["Every new moon, each of the Ten-Towns draws a name. Whoever's drawn walks out onto the ice.",
-                            "For Auril. Targos skipped it once.",
-                            "The storm that came after... We don't skip it anymore."],
+    targos_sacrifice_talk: ["Every new moon, Targos draws a name. Bryn Shander and Easthaven too. Whoever's drawn goes out onto the ice.",
+                            "The little towns give their food, or their fires, instead. They can't spare people.",
+                            "For Auril. Targos skipped it once. The storm that came after... We don't skip it anymore."],
     targos_lake_talk: ["Fishing's the only trade left on Maer Dualdon. Knucklehead trout, if you're lucky.",
                        "Magikarp, if you're not. Mostly you're not."],
     targos_child_talk: ["Grandma says if you hear laughing on the south wind, you go inside and don't look out.",
@@ -56,10 +56,12 @@ module FrostThaw
     # --- The Three Flags Sailing -----------------------------------------------------
     barkeep: -> {
       if T.flag?(:met_party)
-        ["BARKEEP: Warmest room in Targos. Which isn't saying much.",
-         "BARKEEP: Speaker's seal? Town Hall, up the main street. Bring coin, or bring Pokémon."]
+        ["MA YARBROUL: Warmest room in Targos, ducks. Which isn't saying much.",
+         "MA YARBROUL: Speaker's seal? Town Hall, up the main street. Bring coin, or bring Pokémon. And eat something first."]
       else
-        ["BARKEEP: Five strangers in one night. In winter.", "BARKEEP: Auril must be bored."]
+        ["A plump, grey-haired widow fusses along the benches, refilling stew bowls whether anybody asked or not.",
+         "MA YARBROUL: Ethen Yarbroul. Ma, to this lot. Five strangers in one night, in winter? Sit. Eat.",
+         "MA YARBROUL: Auril must be bored."]
       end
     },
     npc_alberica: ["ALBERICA: Well, hello, sweetheart. Pull up a stool. The fire's terrible, but the company's improving.",

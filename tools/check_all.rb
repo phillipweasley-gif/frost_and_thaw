@@ -152,14 +152,19 @@ maps.each do |id, m|
 end
 # every switch an event page waits for must be one the game will actually read:
 # Infinite Fusion ignores unnamed switches, so ours must sit in the range
-# 019_Switches.rb reads directly (3900-3999)
+# 019_Switches.rb reads directly (STORY_SWITCHES there)
+STORY_RANGE = begin
+  src = File.read(File.join(__dir__, "../game/Data/Scripts/998_FrostThaw/019_Switches.rb"), encoding: "UTF-8")
+  m_ = src.match(/STORY_SWITCHES\s*=\s*\((\d+)\.\.(\d+)\)/)
+  m_ ? (m_[1].to_i..m_[2].to_i) : (3900..3999)
+end
 maps.each do |id, m|
   m.events.each_value do |e|
     e.pages.each do |pg|
       c = pg.condition
       [[c.switch1_valid, c.switch1_id], [c.switch2_valid, c.switch2_id]].each do |valid, sid|
         next unless valid
-        problems << "#{id}: #{e.name} waits for switch #{sid}, which the game would never see as on" unless (3900..3999).include?(sid)
+        problems << "#{id}: #{e.name} waits for switch #{sid}, which the game would never see as on" unless STORY_RANGE.include?(sid)
       end
     end
   end

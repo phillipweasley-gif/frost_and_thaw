@@ -137,7 +137,7 @@ module FrostThaw
     outsider = journey? || herald?(:wyn)
     say(["A fire that barely warms. Five strangers at five tables."])
     stage_frost_furs_enters
-    say(["BARKEEP: Drinks are on the house. Please leave tomorrow.",
+    say(["MA YARBROUL: Drinks are on the house, ducks. Please leave tomorrow.",
          as(:alberica, "Free drinks. See? The night's turning around already."),
          as(:reptin, "(to the barkeep) That's very generous, thank you. We'll be gone by noon."),
          as(:reptin, "Probably. Ask me again after the drinks.")])
@@ -273,10 +273,10 @@ module FrostThaw
       return say(lines_for(:barkeep), event_id)
     end
     if flag?(:heard_of_glimmer)
-      return say(["BARKEEP: Leaving tomorrow, I hope. For your sakes, not mine."], event_id)
+      return say(["MA YARBROUL: Leaving tomorrow, I hope. For your sakes, not mine. Eat first."], event_id)
     end
-    say(["BARKEEP: You've the Speaker's seal and the look of people leaving at first light.",
-         "BARKEEP: One more night by the fire?"], event_id)
+    say(["MA YARBROUL: You've the Speaker's seal and the look of people leaving at first light.",
+         "MA YARBROUL: One more night by the fire?"], event_id)
     return if !pbConfirmMessage(_INTL("Rest at Three Flags Sailing?"))
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     say(["Late. The fire's down to coals.",
@@ -365,7 +365,7 @@ module FrostThaw
            "NAERTH: Pale. Books and bones. If you meet her, you never met me.",
            as(:alerion, "We never met you. That part's easy.")], event_id)
       naerth_splicers(event_id)
-      state[:goal] = "The south gate is open. Bryn Shander is north along the road, and Dougan's Hole beyond it."
+      state[:goal] = "The south gate is open. Bryn Shander is south-east along the road, and Dougan's Hole beyond it."
     end
   end
 

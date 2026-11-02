@@ -2,8 +2,9 @@
 # Frost & Thaw - Act I, Chapter 2: Razzy
 #
 # The North Road out of Targos, the Frost-Light Chasm where Razzy falls and his
-# chrysalis becomes an egg, and Bryn Shander, where Speaker Duvessa Shane holds
-# the Hall of Speakers (Gym 2, Steel / Normal) with Zhentarim money.
+# chrysalis becomes an egg, and Bryn Shander (map 1.2 of the book), where
+# Speaker Duvessa Shane, young, honest and head of the Council of Speakers,
+# holds the Town Hall (Gym 2, Steel / Normal) and draws the lottery she hates.
 #
 # Story beats follow the campaign record in the Story Bible: Razzy, voiceless
 # (Avarice took it), falls into a chasm of frost-light; his body turns into a
@@ -80,17 +81,13 @@ module FrostThaw
     aurilite_three: [:FT_AURILITE,     "Orla",    [[:GASTLY, 13], [:SNEASEL, 13]],
                      "Go on, then. See what the cold makes of your little friend."],
     bryn_zhent_a:   [:FT_ZHENTARIM,    "Kell",    [[:MEOWTH, 13], [:B19H81, 13]],
-                     "Speaker Duvessa won't be happy. Or maybe she will. Hard to say with her."],
+                     "The Speaker won't take our coin. Everyone takes it eventually."],
     northlook_zhent: [:FT_ZHENTARIM,   "Dorn",    [[:KOFFING, 13], [:B52H109, 14]],
                      "The Black Network doesn't forget. Neither do I."],
-    bhall_clerk_1:  [:FT_ZHENTARIM,    "Fenn",    [[:MAGNEMITE, 14], [:SENTRET, 14]],
-                     "Your account is... settled. For now."],
     bhall_clerk_2:  [:GENTLEMAN,       "Corvin",  [[:B161H81, 15]],
-                     "Old money loses to new money. How refreshing."],
-    bhall_clerk_3:  [:FT_ZHENTARIM_F,  "Isolde",  [[:MEOWTH, 14], [:B216H208, 14]],
-                     "The Speaker will see you. She's seen your purse already."],
+                     "Six generations on the Council staff, and beaten by a stranger. How refreshing."],
     duvessa:        [:FT_SPEAKER_F,    "Duvessa", [[:B161H81, 15], [:B216H208, 15], [:B52H227, 17]],
-                     "Bryn Shander pays its debts. Even to strangers.", [:SUPERPOTION]]
+                     "Bryn Shander keeps its word. Even to strangers.", [:SUPERPOTION]]
   )
 
   #-----------------------------------------------------------------------------
@@ -107,7 +104,7 @@ module FrostThaw
          "GUARD: Want the road? Win his seal at the Town Hall."]
       end
     },
-    targos_gate_guard_open: ["GUARD: Bryn Shander's north. A day's walk in good weather.",
+    targos_gate_guard_open: ["GUARD: Bryn Shander's south-east, up on its hill. Two hours' walk, in good weather.",
                              "GUARD: We haven't had good weather in two years."],
 
     # --- North Road --------------------------------------------------------------
@@ -126,14 +123,15 @@ module FrostThaw
     },
     road_caravan_guard: ["GUARD: Bryn Shander's caravan. Stuck till the drifts settle. We wait. We always wait.",
                          "GUARD: You'll want the Speaker, Duvessa Shane. Young. Sharp.",
-                         "GUARD: In deeper with the Zhentarim than she'd like."],
+                         "GUARD: Heads the Council of Speakers, too. Honest. Which round here makes her unusual."],
     hiker_tor_after: ["Hiking's the only way to stay warm out here. That, and losing to strangers."],
     backpacker_wen_after: ["When the wind turns, I hear laughing from the south. It's just the wind. Right?"],
     ranger_aldo_after: ["Rangers keep this road open. We try. The snow doesn't care how hard we try."],
     aurilite_one_after: ["Every new moon, a town gives her one of its own. One life buys a month.",
                          "You think that's cruel. She thinks it's cheap."],
     ranger_lune_after: ["A man walks this road at night in his shirtsleeves. I don't go out after dark any more."],
-    hiker_bram_after: ["Bryn Shander's new walls are Zhentarim logs. Everyone knows. Nobody says."],
+    hiker_bram_after: ["Bryn Shander's walls are the only real ones in the Dale. Two rings of logs, rubble packed between.",
+                       "Thirty feet high. Built for orcs. Useless against weather."],
     razzy_wait: -> {
       who = T.companion_or_you(:reptin)
       [who ? "#{who}: We can't leave him down there. Not in that light." :
@@ -147,31 +145,31 @@ module FrostThaw
     chasm_after: ["The crack is dark now. Only frost, and the shape of a small body pressed into it."],
 
     # --- Bryn Shander -------------------------------------------------------------
-    bryn_south_guard: ["GUARD: Welcome to Bryn Shander. Mind the lottery board and the Zhentarim. In that order."],
-    bryn_east_guard_open: ["GUARD: The Eastway's open to Easthaven. Past that, Dougan's Hole.",
+    bryn_south_guard: ["GUARD: Welcome to Bryn Shander. Mind the lottery board, and your purse. In that order.",
+                       "GUARD: Gates shut when it's dark. Which is to say, more often than not."],
+    bryn_east_guard_open: ["GUARD: The Eastway's open. Good Mead's off it to the south, and Dougan's Hole past that.",
                            "GUARD: Nobody's come back from the Hole in a month. Your funeral. Mind the wolves."],
-    bryn_council_hall: ["COUNCIL HALL", "Where the Council of Speakers of the Ten-Towns meets, when it meets.",
-                        "The doors are chained. It hasn't met since the Rime began."],
+    bryn_council_hall: ["COUNCIL HALL", "Where the Council of Speakers of the Ten-Towns meets, when there's call to."],
     morninglord_acolyte: ["ACOLYTE: The Morninglord's fire never goes out in this house. Two years of night. Not once.",
                           "ACOLYTE: Some days it's the only proof the sun's still out there."],
-    bryn_south_guard_open: ["GUARD: Welcome to Bryn Shander. Mind the lottery board and the Zhentarim. In that order."],
+    bryn_south_guard_open: ["GUARD: Welcome to Bryn Shander. Mind the lottery board, and your purse. In that order."],
     bryn_north_guard: -> {
       if T.flag?(:seen_sephek_bryn)
         ["GUARD: Follow Sephek Kaltro into the snow? Not on my say-so.",
          "GUARD: Bring the Speaker's seal. Then it's your funeral, not mine."]
       else
-        ["GUARD: North gate's closed. The Lonelywood road's under ten feet of drift.",
+        ["GUARD: North gate's closed. The Termalaine path's under ten feet of drift, and Lonelywood's past that.",
          "GUARD: Come back when the Speaker says otherwise."]
       end
     },
-    bryn_east_guard: ["GUARD: East road runs to Easthaven and the lakes. Past that, Dougan's Hole.",
+    bryn_east_guard: ["GUARD: The Eastway runs to Easthaven. Off it to the south, Good Mead and Dougan's Hole.",
                       "GUARD: Nobody's been back from the Hole in a month. The gate stays shut."],
     bryn_square_talk: ["Biggest of the Ten-Towns. Every road in the Dale comes through this square.",
                        "Every rumour too. Heard about the man who doesn't feel the cold?"],
     bryn_lottery_talk: ["The lottery board. Every new moon, a name. Last month it was the cooper's boy.",
                         "Duvessa tried to stop it once. The storm that came after took three roofs."],
-    bryn_kid_talk: ["My dad says the new walls cost more than the old town. He says the Black Network paid.",
-                    "What's a Black Network?"],
+    bryn_kid_talk: ["I counted the lanterns over the streets. Forty-one. Somebody climbs up every night to light them.",
+                    "When I'm big I'm going to be the one who climbs up."],
     bryn_sephek_talk: -> {
       if T.flag?(:seen_sephek_bryn)
         ["He looked right at me. He didn't blink. The snow didn't melt on his skin."]
@@ -197,12 +195,12 @@ module FrostThaw
     bryn_lottery_mother: ["Duvessa came herself to tell us. First Speaker who ever did.",
                           "It doesn't bring my husband back. But she came."],
     bryn_lottery_child: ["Mama says the Frostmaiden is just very lonely. Is that true?"],
-    northlook_keeper: ["KEEPER: The Northlook. Warmest beds in Bryn Shander. Coldest company.",
-                       "KEEPER: Back table's spoken for. Always is. Don't sit there."],
+    northlook_keeper: ["SCRAMSAX: The Northlook. Warmest beds in Bryn Shander. Coldest company.",
+                       "SCRAMSAX: Back table's spoken for. Always is. Don't sit there."],
     zhent_broker: -> {
-      lines = ["BROKER: Naerth's seal. So you're the strangers he writes about.",
-               "BROKER: The walls, the grain, the Speaker. The Black Network paid for all of it.",
-               "BROKER: Duvessa thinks she can pay it back. Sweet girl."]
+      lines = ["BROKER: Naerth's seal. So you're the strangers he writes about. His snakes fly faster than you walk.",
+               "BROKER: The Black Network has a dozen friends in Ten-Towns. Bryn Shander's the one that won't buy.",
+               "BROKER: The Speaker sends our coin back unopened. Sweet girl. Everyone takes it eventually."]
       if T.flag?(:razzy_egg)
         lines << "BROKER: A goblin egg. There's a woman in Luskan who'd pay a fortune for that."
         lines << "BROKER: Avarice, she calls herself. Think it over."
@@ -215,12 +213,12 @@ module FrostThaw
                          "Rabbits the size of people, with lanterns. My cousin swears it."],
     northlook_old_hand: ["Easthaven, Lonelywood, Dougan's Hole, Bremen. I've hauled for all the Ten-Towns.",
                          "The Hole's the one I won't go back to. You can hear her laughing out on the ice."],
-    bhall_guide: ["The Town Hall. The Speaker sits here. These days, so do the Zhentarim's clerks.",
-                  "Speaker Duvessa trains Steel and Normal fusions. Bought, not raised, the old-timers say.",
-                  "Bought or not, they hit hard."],
-    bhall_clerk_1_after: ["Every crate in this hall is a debt. You walked past most of them."],
-    bhall_clerk_2_after: ["Six generations my family sat on this council. Now I count someone else's coins."],
-    bhall_clerk_3_after: ["Go on. She's expecting you. She expects everyone."]
+    bhall_guide: ["The Town Hall. The Speaker sits here, and the town's winter stores are stacked to the rafters.",
+                  "Sheriff Southwell's militia stand at every gap. They'll want a go at you first.",
+                  "Speaker Duvessa trains Steel and Normal fusions. Walls and watchmen. Like the town."],
+    bhall_militia_1_after: ["Every crate in this hall is grain for the winter. We count it twice a day."],
+    bhall_clerk_2_after: ["Six generations my family has kept the Council's papers. Now I mostly keep the stove lit."],
+    bhall_militia_2_after: ["Go on. She's expecting you. She expects everyone."]
   )
 
   PARTY_CHAT[:alberica].merge!(
@@ -231,9 +229,10 @@ module FrostThaw
             ["The light down here hums. Like a note somebody's held too long."]],
     bryn: [{ if: { flag: :razzy_egg }, lines: ["The egg's warm. I sang to it last night and it got warmer.",
                                                "Finally. Somebody with taste."] },
-           ["A town held together with somebody else's money. I grew up in one of those.",
-            "The parties were wonderful. The mornings weren't."]],
-    bryn_hall: ["Every strongbox in here has a name on it. I wonder whose name's on the Speaker."],
+           ["Lanterns over every street, and not a soul under them. A town holding its breath.",
+            "Somebody should sing in that square. Somebody will."]],
+    bryn_hall: ["She keeps the whole town's winter in this room, and she still draws a name every month.",
+                "I'd go grey too, darling."],
     northlook: ["Nobody's at the back table, and everybody's watching it.",
                 "Darling, that's the most popular chair in town."]
   )
@@ -245,7 +244,7 @@ module FrostThaw
              "Lovely people. Terrible theology."]],
     bryn: ["A whole town, cold to the bone. The Flame would call it a punishment.",
            "I think it's just a winter that forgot to leave."],
-    bryn_hall: ["She wears her debts better than Naerth wears his. That isn't the same as being free."],
+    bryn_hall: ["Naerth bought his chair. She was elected to hers. I'd like to see the difference hold."],
     northlook: ["Someone in here smells of the Brotherhood. Ink and cold iron.",
                 "(under his breath) Keep smiling. They're counting us."]
   )
@@ -264,8 +263,8 @@ module FrostThaw
                  "I don't like what it wants. I like it less that I want it too."],
     chasm: [{ if: { flag: :razzy_egg }, lines: ["Carried that horn three years and never knew why.", "Now I know. I hate knowing."] },
             ["Little footprints. Goblin. Running, not walking."]],
-    bryn: ["Zhentarim money on every wall. Naerth's friends get around."],
-    bryn_hall: ["Count the crates. Count the guards. She's got more of both than she can pay for."],
+    bryn: ["Naerth's people are here too. Back table at the Northlook. They get around."],
+    bryn_hall: ["Count the crates. Count the guards. She's ready for a siege. The siege is the sky."],
     northlook: ["The back table's the Black Network's. I've sat at tables like that.",
                 "They always cost more than the drinks."]
   )
@@ -477,7 +476,8 @@ module FrostThaw
 
   # SC 2.05 - The board in the square
   def scene_bryn_arrival
-    say(["New walls of raw log. Zhentarim gold, everyone says. Nobody says it loudly.",
+    say(["Bryn Shander sits on its hill inside two rings of logs, thirty feet high, rubble packed between them.",
+         "Bright lanterns twist over the narrow streets. Under them, nobody.",
          "In the square, a board lists every name in town. Tomorrow is the new moon.",
          "GUARD: Draw's at sundown. Speaker says nobody leaves on a draw night. Nobody.",
          as(:shimmer, "They've added travellers."),
@@ -500,9 +500,10 @@ module FrostThaw
     if !flag?(:bryn_arrived) || flag?(:lottery_stand)
       return say(lines_for(:northlook_keeper), event_id)
     end
-    say(["KEEPER: The Northlook. Warmest beds in Bryn Shander. Coldest company.",
-         "KEEPER: You'll want to be off the street before the draw. Or on it. Some folk watch."], event_id)
-    return if !pbConfirmMessage(_INTL("Rest until sundown?"))
+    say(["SCRAMSAX: The Northlook. Warmest beds in Bryn Shander. Coldest company.",
+         "SCRAMSAX: You'll want to be off the street before the draw. Or on it. Some folk watch."], event_id)
+    return if !pbConfirmMessage(_INTL("Rest until sundown? (${1}, or on credit)", SCRAMSAX_ROOM))
+    $Trainer.money -= SCRAMSAX_ROOM if !northlook_rest_on_credit?
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     # the draw is in the square: go out to it (the square's autorun plays lottery_night)
     set_switch(SW_LOTTERY_NIGHT, true)
@@ -669,7 +670,7 @@ module FrostThaw
            "DUVESSA: Come back after. If you still want to."], event_id)
       return
     end
-    say(["DUVESSA: I made a bad bargain to keep this town alive.",
+    say(["DUVESSA: Ten speakers signed a bargain with the cold. I signed it first. A necessary evil, we called it.",
          "DUVESSA: Last night you made me break it. Show me it was worth it.",
          cl(:reptin, "(under his breath) That was a compliment. Probably.")].compact, event_id)
     won = pbTrainerBattle(:FT_SPEAKER_F, "Duvessa", nil, false, 0)
@@ -682,7 +683,7 @@ module FrostThaw
            "DUVESSA: And if you can end this, I'll owe you every name on that board."], event_id)
       pbMessage(_INTL("\\me[Badge get]{1} received the Palisade Seal!", $Trainer.name))
       pbReceiveItem(:TM118) rescue nil
-      say(["DUVESSA: That TM teaches Steel Wing. Fitting for a town that's all walls and debts."], event_id)
+      say(["DUVESSA: That TM teaches Steel Wing. Fitting for a town that's all walls and watchmen."], event_id)
       state[:goal] = "Sephek is in Lonelywood. North gate. (Mishann at the House of the Morninglord wanted a word with Reptin.)"
     end
   end
