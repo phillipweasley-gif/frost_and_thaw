@@ -7,10 +7,10 @@ Vault and sigil rows the brief added. Branch `worktree-agent-a3bc497bfb971910e`.
 
 - **S**: `tests/smoke_test.rb`, 175/175.
 - **T7A**: `tools/headless/try_w4_7a.rb`, 24/24 beats. It covers the Undercanopy, the rifts and the Mycolith.
-- **T10**: `tools/headless/try_w4.rb`, 49/49 beats. It runs from the end of Ch9 through the trial week, Ch11, the Vault, Ch12–13 and an ending.
+- **T10**: `tools/headless/try_w4.rb`, 51/51 beats. It runs from the end of Ch9 through the trial week, Ch11, the Vault, Ch12–13 and an ending.
 - **TP**: `tools/headless/try_w4_paths.rb`, all paths ok. It covers the other branches.
 - **M**: `tools/check_all.rb` on the rebuilt maps, all map checks passed (100 maps).
-- **SR**: `tools/headless/story_run.rb`, the full play-through, which now plays the new trial week, Ch11's sigils and relics, and the Vault.
+- **SR**: `tools/headless/story_run.rb`, the full play-through under the heavy lock: 182/182 beats, from a new game to an ending. It now plays the new trial week, Ch11's sigils and relics, and the Vault. Its remaining notes aren't from W4's slice: the prologue's 2001→2091 route, Thredra moving away, and a retry after the ending.
 - **L**: `tools/headless/try_loop.rb`, all ok.
 
 The code is in `game/Data/Scripts/998_FrostThaw/` and the maps are in `tools/build_w4.rb`. The file abbreviations in the tables are:
