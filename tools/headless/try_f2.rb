@@ -155,6 +155,11 @@ answer(/\.\.\.$/, ->(t, c) { c.size == 3 && t !~ /sing/ ? 2 : 0 })
 T.cycle_day_conspiracy; heal
 unanswer(/\.\.\.$/)
 ok("GQ3 lost: Auril's Icy Avatar at the Still Sky Shrine, and the festival's dead", T.flag?(:icy_avatar_fought) && T.flag?(:festival_casualties) && !T.flag?(:effigy_saved))
+rest
+ok("...and the Hearth mourns them", T.flag?(:hellen_mourned))
+clear(:ch7_started, :council_summoned)
+T.council_summons
+ok("...and so does the Hall (Kelyn's summons names the dead)", T.flag?(:council_summoned) && HL.instance_variable_get(:@log).last(12).any? { |l| l.include?("We buried eleven") })
 
 puts "\n#{$ok}/#{$ok + $bad} F2 checks passed"
 probs = HL.instance_variable_get(:@problems) || []

@@ -352,6 +352,14 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Called from Hellen's ordinary rest (024). Each piece once.
   def hellen_business(event_id = nil)
+    if flag?(:festival_casualties) && !flag?(:hellen_mourned)     # GQ3 lost: the avatar's dead (rootspire.md 8494-8513)
+      set_flag(:hellen_mourned)
+      say(["The Hearth's common room is full and nobody's talking. There are candles on the bar, eleven of them, one for each name.",
+           "HELLEN: (setting a bowl down in front of you, gently) Eat. You fought it. Half this room saw you fight it.",
+           "HELLEN: The Moss-Hatter's girl was one. She used to bring me the morning bread.",
+           cl(:alberica, "(very quietly) Tell me their names, Hellen. All eleven. I'll keep them.")].compact)
+      return
+    end
     if flag?(:badge_hearth) && !flag?(:hellen_passages)
       set_flag(:hellen_passages)
       say(["HELLEN: (lowering her voice, wiping a glass that's already clean) You beat me in my own cellar. So you get the family secret.",
