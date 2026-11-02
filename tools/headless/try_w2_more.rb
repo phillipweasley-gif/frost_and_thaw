@@ -9,8 +9,9 @@ when "targos"
   check(HL.log.count { |l| l =~ /^\[msg\] FISHER:/ } >= 2, "the Three Flags fisher passes on a rumour")
 
 when "bryn"
-  go(2012, 22, 2)
+  go(2012, 31, 25, 8)
   talk(/Sheriff Southwell/)
+  answer([/Rest until sundown/, 1])
   go(2016, 5, 11, 8); talk(/Scramsax/); check(flag(:met_scramsax), "Scramsax offers credit at interest")
   talk(/Ol' Bitey/); talk(/Ol' Bitey/); talk(/Ol' Bitey/)
   check(HL.log.any? { |l| l =~ /Bitey/i }, "Ol' Bitey in his barrel")
@@ -91,11 +92,12 @@ when "holed"
   walk(19, 15); HL.settle(3000); check(flag(:lodge_wolves_seen), "at the lodge the wolves nudge you to the middle door and wait")
   walk(18, 15); HL.settle(3000); check($game_map.map_id == 2040, "inside the lodge (#{$game_map.map_id})")
   walk(32, 14); HL.settle(3000); check(flag(:corridor_crossed), "the icicle corridor")
-  check(flag(:norsu_met), "Norsu, the master behind it all")
   talk(/Ice throne/); check(flag(:throne_blizzard), "the ice throne's blizzard")
+  check(flag(:norsu_met), "Norsu, the master behind it all")
   talk(/Whale oil/); check(flag(:whale_oil), "whale oil")
-  talk(/^Finn$/); check(flag(:kids_freed), "Silja and Finn out of the cage")
+  talk(/Cage gate/); check(flag(:kids_freed), "Silja and Finn out of the cage")
   FrostThaw.wolves_ambush(nil); check(flag(:wolves_beaten), "the wolves' ambush on the way home")
+  go(2035, 40, 2, 2); HL.settle(4000)          # back into Dougan's Hole: the homecoming
   go(2037, 9, 10, 8); talk(/Hilda/)
   check(flag(:kids_home), "the Dejarrs home; Hilda's boots")
   check(($PokemonBag.pbHasItem?(:FT_WINTERBOOTS) rescue false), "the boots of the winterlands")
