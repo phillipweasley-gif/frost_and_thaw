@@ -528,7 +528,7 @@ module FrostThaw
     state[:companions] = []
     state[:goal] = nil
     state.delete(:auril_stage); state.delete(:seams); state.delete(:attendant_asked)
-    (3900..3999).each { |i| $game_switches[i] = false } if $game_switches
+    STORY_SWITCHES.each { |i| $game_switches[i] = false } if $game_switches
     $game_self_switches.instance_variable_get(:@data)&.delete_if { |(m, _e, _c), _| m >= 2001 && m < 2100 } rescue nil
     set_flag(:in_loop)
     pbMessage(_INTL("(Loop {1}. You keep your team, your items and your Pokédex. The story starts again.)", n)) rescue nil

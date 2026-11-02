@@ -9,7 +9,7 @@
 # NPC - was ignored. Here those switches are read directly.
 #===============================================================================
 module FrostThaw
-  STORY_SWITCHES = (3900..3999)
+  STORY_SWITCHES = (3900..4199)   # 4000-4199: added for the faithful build-out (Nov 2026)
 end
 
 if defined?(Game_Event)
