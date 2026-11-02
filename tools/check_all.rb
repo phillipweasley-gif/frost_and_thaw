@@ -216,6 +216,19 @@ maps.each do |id, m|
     problems << "#{id}: the map is split - from one way in you can't walk to the others (ledges, fences or people in the way): #{sizes.join('  |  ')}"
   end
 end
+# two doors on one tile: which one fires is up to event order, so the tile
+# means two different places (an old builder's warp left under a new one)
+maps.each do |id, m|
+  by_cell = Hash.new { |h, k| h[k] = [] }
+  m.events.each_value do |e|
+    c = e.pages[0].list.find { |x| x.code == 201 } or next
+    by_cell[[e.x, e.y]] << [c.parameters[1], e.name]
+  end
+  by_cell.each do |(x, y), list|
+    next if list.map(&:first).uniq.size < 2
+    problems << "#{id}: (#{x},#{y}) has #{list.size} doors to different maps: #{list.map { |d, n| "#{n} -> #{d}" }.join(', ')}"
+  end
+end
 # a sign you can't see on open ground can only be read by standing on it
 maps.each do |id, m|
   m.events.each_value do |e|

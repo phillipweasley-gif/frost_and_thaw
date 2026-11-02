@@ -1072,6 +1072,13 @@ resave(ll2, 2024)
   resave(b, id)
 end
 
+# Bryn Shander's north gate goes to the Termalaine Path (build_ch2.rb). build_ch3.rb
+# still adds its older warps straight to the Lonelywood Road, and a second "open"
+# guard: take them out again so each tile means one thing.
+by = reopen(BRYN)
+by.map.events.delete_if { |_k, e| e.name == "To Lonelywood Road" || (e.name == "NPC bryn_north_guard_open" && e.y == 4) }
+resave(by, BRYN)
+
 # ===========================================================================
 merge_infos(ID.map { |k, v| [v, NAMES[k]] }.select { |id, _| File.exist?(File.join(OUT, format("Map%04d.rxdata", id))) })
 puts "built Ten-Towns maps into #{OUT}"

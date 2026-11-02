@@ -135,7 +135,7 @@ b.door(34, 34, ID[:hut_b], 9, 11, 8, name: "Door Fisher's Cottage")
 b.door(16, 37, ID[:hut_c], 9, 11, 8, name: "Door Lantern House")
 b.door(41, 34, 2124, 9, 11, 8, name: "Door Velryn")
 # "Mountain Climb": Boy, Garret Velryn's sled dog, runs loose in the streets with a broken harness
-b.event(29, 32, "Boy", [
+b.event(18, 30, "Boy", [
   { graphic: "Followers/MIGHTYENA", direction: 4, move_type: 1, move_frequency: 5, move_speed: 4, step_anime: true,
     script: "FT.boy_sled_dog(@event_id)" },
   { switch: 4043, graphic: "", through: true }
