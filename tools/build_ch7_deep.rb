@@ -98,7 +98,7 @@ cave_bridge_h(hu, 9, 20, 5)             # H13: the Upper Root Bridge
 [3, 4].each { |x| hu.warp(x, 3, ID[:mirror_garden], x == 3 ? 35 : 36, 24, 8, name: "Up to the Mirror Garden") }
 hu.cutscene(5, 6, :hollow_core_enter)
 hu.trainer(7, 7, nil, :sapwarden_tamsk, :FT_ROOTWARDEN, dir: 6, sight: 4)
-hu.trainer(22, 6, nil, :sapwarden_irrel, :FT_ROOTWARDEN, dir: 4, sight: 5)
+hu.trainer(22, 6, nil, :sapwarden_irrel, :FT_ROOTWARDEN, dir: 4, sight: 1)   # sight stops short of the bridge
 [[24, 4], [30, 5], [27, 10]].each { |x, y| step_trigger(hu, x, y, "Sap burst", "FT.sap_burst(@event_id)") }
 [[25, 11], [31, 9]].each { |x, y| step_trigger(hu, x, y, "Frost vines", "FT.frost_vines(@event_id)") }
 hu.trainer(29, 8, nil, :sapwarden_vesk, :FT_ROOTWARDEN, dir: 4, sight: 3)

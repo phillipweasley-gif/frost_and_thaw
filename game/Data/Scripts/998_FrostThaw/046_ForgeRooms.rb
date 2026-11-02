@@ -37,7 +37,7 @@ module FrostThaw
   SW_GOLEMS    = 4100   # the training hall's sap golems are down
 
   MAPS.merge!(forge_inner: 2146, deep_shaft: 2147, rootwatch: 2148, umbound: 2149, forge_upper: 2150, vantage: 2151,
-              sanctum: 2152, antechapel: 2153, sloughing: 2154, echo_vault: 2155)
+              forge_sanctum: 2152, antechapel: 2153, sloughing: 2154, echo_vault: 2155)
   MAP_NAMES.merge!(
     2146 => "The Barricade: the inner rooms", 2147 => "The Hag's Domain: the Deep Root Shaft", 2148 => "The Hag's Domain: the Rootwatch",
     2149 => "The Hag's Domain: the Umbound Chasm", 2150 => "The Dragonforge: the Root-Throne", 2151 => "The Dragonforge: the vantage towers",
@@ -52,13 +52,13 @@ module FrostThaw
   VEINS_ARRIVAL = [2154, 3, 12, 6]
 
   ENCOUNTERS[2147] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :HAUNTER, 46, 48], [25, :BANETTE, 46, 48], [20, :B42H93, 46, 48], [15, :DUSCLOPS, 47, 49], [10, :SABLEYE, 47, 49]] }
+                       Cave: [[30, :HAUNTER, 46, 48], [25, :BANETTE, 46, 48], [20, :CROBAT, 46, 48], [15, :DUSCLOPS, 47, 49], [10, :SABLEYE, 47, 49]] }
   ENCOUNTERS[2148] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :MAGCARGO, 46, 48], [25, :TORKOAL, 46, 48], [20, :B369H185, 46, 48], [15, :HOUNDOOM, 47, 49], [10, :SKARMORY, 47, 49]] }
+                       Cave: [[30, :MAGCARGO, 46, 48], [25, :TORKOAL, 46, 48], [20, :GOLURK, 46, 48], [15, :HOUNDOOM, 47, 49], [10, :SKARMORY, 47, 49]] }
   ENCOUNTERS[2149] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :GRAVELER, 46, 48], [25, :B356H421, 46, 48], [20, :MAGCARGO, 47, 49], [15, :B208H51, 47, 49], [10, :TORKOAL, 47, 49]] }
+                       Cave: [[30, :GRAVELER, 46, 48], [25, :ONIX, 46, 48], [20, :MAGCARGO, 47, 49], [15, :STEELIX, 47, 49], [10, :TORKOAL, 47, 49]] }
   ENCOUNTERS[2150] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :MAGCARGO, 47, 49], [25, :HOUNDOOM, 47, 49], [20, :TORKOAL, 47, 49], [15, :B229H126, 48, 50], [10, :SKARMORY, 48, 50]] }
+                       Cave: [[30, :MAGCARGO, 47, 49], [25, :HOUNDOOM, 47, 49], [20, :TORKOAL, 47, 49], [15, :MAGMAR, 48, 50], [10, :SKARMORY, 48, 50]] }
 
   #-----------------------------------------------------------------------------
   # Trainers
@@ -969,8 +969,8 @@ module FrostThaw
          "The tree's whisper is faint here, and very tired."])
     if flag?(:attendant_promise) && attendant_promise_kept?
       say(["Somewhere in the walls, the many voices of the whispering attendant, very small:",
-           "ATTENDANT: You kept it. The promise. The sap is less nervous now. Take the scroll; it's for you."])
-      give(:FT_CYCLEOFROOTS)
+           "ATTENDANT: You kept it. The promise. The sap is less nervous now. Take the seed; it's for you."])
+      give(:FT_GREATVERDANTSEED)
       set_flag(:attendant_paid)
     end
   end
@@ -1005,12 +1005,27 @@ module FrostThaw
       say(["You reach for the shelf and a lash of sap whips out of the wall at the greedy hand!"])
       hurt_lead(0.1, "{1} takes the lash.")
     end
-    say(["Chardalyn fragments, set like jewels in the wood. And among them, two things made for you:",
-         "a charm of verdant fire, warm in the hand; and a scroll of living bark, written in roots: the Cycle of Roots."], event_id)
+    say(["Chardalyn fragments, set like jewels in the wood. And among them, three things made for you:",
+         "a charm of verdant fire, warm in the hand; a scroll of living bark, written in roots: the Cycle of Roots;",
+         "and a lens of clear mirror-glass in a ring of root. Through it, the air of the vault is full of drifting shapes you couldn't see before."], event_id)
     set_flag(:echo_items_taken)
     give(:FT_VERDANTFIRECHARM)
     give(:FT_CYCLEOFROOTS)
+    give_key(:FT_MIRRORLENS)
+    set_flag(:mirror_lens)
+    sayc([cl(:alberica, "(peering through it) Oh, they're everywhere. Little ghosts. Shy ones."),
+          cl(:meat_meat, "Meat Meat sees them. Meat Meat does not like being watched by soup.")])
   end
+
+  # What each Herald sees when the tree's echo touches them: the vision that
+  # points at their own secret quest (rootspire.md, Treasure & Aftermath).
+  ATTENDANT_VISIONS = {
+    alberica:  "Alberica sees a door in the Library with her own handwriting on it, and a lock made of notes.",
+    reptin:    "Reptin sees petrified druids standing in sap under the Root-Tier, and one with his totem in its hands.",
+    alerion:   "Alerion sees himself at the Auroral Wall, frozen mid-step, and hears: \"Finish the step.\"",
+    meat_meat: "Meat Meat sees a driftwood chest on a beach, with a scorched \"A\" on the lid.",
+    wyn:       "Wyn sees a mushroom ring in the dark that sings when she stands in the middle of it."
+  }
 
   # H26: the World Tree's prophecy about the wyrmlings and the seasons.
   def world_tree_echo(event_id = nil)
@@ -1026,6 +1041,12 @@ module FrostThaw
     sayc([cl(:alberica, "(her hand on her rune) ...Well. That's not ominous at all."),
           cl(:alerion, "A rider who isn't afraid of falling."),
           cl(:meat_meat, "Meat Meat is afraid of falling. Meat Meat will do it anyway. That counts.")])
+    lines = ATTENDANT_VISIONS.select { |k, _| with_or_is?(k) }
+                             .map { |k, v| herald?(k) ? "(#{v.sub(/\A\w+(?: \w+)? sees/, 'You see')})" : v }
+    if !lines.empty?
+      say(["Then the tree's voice goes quiet, and one by one, each of you sees something meant only for you."] + lines)
+      set_flag(:personal_visions)
+    end
   end
 
   # H36: the Aurora Treasury, more heavily trapped.
@@ -1101,7 +1122,9 @@ module FrostThaw
     FT_CYCLEOFROOTS: ["Cycle of Roots", "Cycles of Roots", 1, 0,
       "A scroll of living bark, written in roots. Read once, it restores your whole party completely.", 2, 0, 0],
     FT_SAINTSECHO: ["Saint's Echo", "Saint's Echoes", 8, 0,
-      "A sliver of clean frost-light from the Frost Saint's cleansed heart. It hums Shimmer's four notes.", 0, 0, 6]
+      "A sliver of clean frost-light from the Frost Saint's cleansed heart. It hums Shimmer's four notes.", 0, 0, 6],
+    FT_MIRRORLENS: ["Mirror Lens", "Mirror Lenses", 8, 0,
+      "A lens of clear mirror-glass in a ring of root, from the Echo Vault. Through it you see what's ethereal: your Pokémon's Normal and Fighting moves can touch Ghosts.", 0, 0, 6]
   )
 
   LOOP_ACT2_FLAGS.concat(%i[heartwall_open ring_done barracks_done amber_vault_entered glass_sigil lift_node_run
@@ -1133,6 +1156,25 @@ if defined?(PokeBattle_Move) && PokeBattle_Move.method_defined?(:pbCalcDamageMul
         end
       rescue StandardError
       end
+    end
+  end
+end
+
+# The Mirror Lens (Echo Vault): with it in the bag, your Pokémon see what's
+# ethereal, so Normal and Fighting moves touch Ghosts (as Foresight does).
+if defined?(PokeBattle_Move) && PokeBattle_Move.method_defined?(:pbCalcTypeModSingle)
+  class PokeBattle_Move
+    alias ft_lens_pbCalcTypeModSingle pbCalcTypeModSingle unless method_defined?(:ft_lens_pbCalcTypeModSingle)
+    def pbCalcTypeModSingle(moveType, defType, user, target)
+      ret = ft_lens_pbCalcTypeModSingle(moveType, defType, user, target)
+      begin
+        if defType == :GHOST && Effectiveness.ineffective_type?(moveType, defType) &&
+           FrostThaw.active? && FrostThaw.ft_player_side?(user) && FrostThaw.flag?(:mirror_lens)
+          ret = Effectiveness::NORMAL_EFFECTIVE_ONE
+        end
+      rescue StandardError
+      end
+      ret
     end
   end
 end

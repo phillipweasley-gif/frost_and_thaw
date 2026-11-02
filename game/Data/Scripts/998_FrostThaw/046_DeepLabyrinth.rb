@@ -48,20 +48,20 @@ module FrostThaw
   LIFT_NODE_TOP     = [2144, 21, 20, 2]
 
   ENCOUNTERS[2140] = { step_chances: { Cave: 7 },
-                       Cave: [[25, :MISDREAVUS, 42, 44], [20, :SABLEYE, 42, 44], [20, :B122H182, 42, 44],
-                              [15, :BANETTE, 43, 45], [10, :B429H122, 43, 45], [10, :B352H200, 43, 45]] }
+                       Cave: [[25, :MISDREAVUS, 42, 44], [20, :SABLEYE, 42, 44], [20, :MRMIME, 42, 44],
+                              [15, :BANETTE, 43, 45], [10, :FROSLASS, 43, 45], [10, :JYNX, 43, 45]] }
   ENCOUNTERS[2141] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :GOLBAT, 42, 44], [25, :TANGELA, 42, 44], [20, :B439H47, 43, 45],
-                              [15, :SKARMORY, 43, 45], [10, :B266H185, 43, 45]] }
+                       Cave: [[30, :GOLBAT, 42, 44], [25, :TANGELA, 42, 44], [20, :PARASECT, 43, 45],
+                              [15, :SKARMORY, 43, 45], [10, :SUDOWOODO, 43, 45]] }
   ENCOUNTERS[2142] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :GOLBAT, 43, 45], [25, :B428H42, 43, 45], [20, :PILOSWINE, 43, 45],
-                              [15, :B278H297, 44, 46], [10, :GLALIE, 44, 46]] }
+                       Cave: [[30, :GOLBAT, 43, 45], [25, :SNEASEL, 43, 45], [20, :PILOSWINE, 43, 45],
+                              [15, :SWINUB, 44, 46], [10, :GLALIE, 44, 46]] }
   ENCOUNTERS[2143] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :HAUNTER, 44, 46], [25, :B416H213, 44, 46], [20, :BANETTE, 44, 46],
-                              [15, :B337H97, 45, 47], [10, :DUSCLOPS, 45, 47]] }
+                       Cave: [[30, :HAUNTER, 44, 46], [25, :GOLETT, 44, 46], [20, :BANETTE, 44, 46],
+                              [15, :HYPNO, 45, 47], [10, :DUSCLOPS, 45, 47]] }
   ENCOUNTERS[2144] = { step_chances: { Cave: 6 },
-                       Cave: [[30, :HAUNTER, 44, 46], [25, :MISDREAVUS, 44, 46], [20, :B94H122, 45, 47],
-                              [15, :HOUNDOOM, 45, 47], [10, :B229H352, 45, 47]] }
+                       Cave: [[30, :HAUNTER, 44, 46], [25, :MISDREAVUS, 44, 46], [20, :GENGAR, 45, 47],
+                              [15, :HOUNDOOM, 45, 47], [10, :KECLEON, 45, 47]] }
 
   #-----------------------------------------------------------------------------
   # Trainers

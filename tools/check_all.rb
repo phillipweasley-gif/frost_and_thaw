@@ -150,6 +150,25 @@ maps.each do |id, m|
     end
   end
 end
+# a trainer who spots you walks up to you and then stays there after the battle:
+# if that spot is on a plank bridge, the bridge is blocked for good
+BRIDGE_TILES = [637, 638, 639, 645, 646, 647]
+maps.each do |id, m|
+  m.events.each_value do |e|
+    next unless e.name =~ /\ATrainer\((\d+)\)/
+    sight = $1.to_i
+    pg = e.pages[0] or next
+    dx, dy = { 2 => [0, 1], 4 => [-1, 0], 6 => [1, 0], 8 => [0, -1] }[pg.graphic.direction] || [0, 1]
+    (1...sight).each do |n|                       # where it stops: one short of where it saw you
+      x, y = e.x + dx * n, e.y + dy * n
+      break unless passable?(m, x, y)
+      if BRIDGE_TILES.include?(m.data[x, y, 1])
+        problems << "#{id}: #{e.name} at (#{e.x},#{e.y}) can walk onto the bridge at (#{x},#{y}) and block it after the battle"
+        break
+      end
+    end
+  end
+end
 # every switch an event page waits for must be one the game will actually read:
 # Infinite Fusion ignores unnamed switches, so ours must sit in the range
 # 019_Switches.rb reads directly (3900-4199)

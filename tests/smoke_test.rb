@@ -134,6 +134,19 @@ check("the Heartroot's lower zones and the Forge's rooms are named, with their s
   (2140..2155).all? { |id| FT::MAP_NAMES[id] } &&
     [FT::SW_HEARTWALL, FT::SW_RING_DONE, FT::SW_BARRACKS_DONE, FT::SW_LIFT_NODE, FT::SW_AMBER_PODS, FT::SW_SAPLIFT,
      FT::SW_ROOTWATCH, FT::SW_L3_GATE, FT::SW_MECHS, FT::SW_ANTECHAPEL, FT::SW_CIRCLE_PHASE, FT::SW_GOLEMS].all? { |s| (4080..4119).include?(s) } }
+check("no wild encounter table lists a fusion (the game fuses wild Pokémon itself, and a fusion of a fusion crashes)") {
+  bad = FT::ENCOUNTERS.flat_map { |m, t| t.reject { |k, _| k == :step_chances }.values.flatten(1).map { |e| [m, e[1]] } }
+                      .select { |_, sp| sp.to_s =~ /\AB\d+H\d+\z/ }
+  bad.empty? || (puts bad.inspect; false) }
+check("no two chapters register the same map name key (MAPS[:sanctum] once sent Act I into the Forge)") {
+  keys = Dir[File.join(FT_DIR, "*.rb")].flat_map { |f|
+    File.read(f, encoding: "UTF-8").scan(/MAPS\.merge!\((.*?)\)/m).flatten.flat_map { |b| b.scan(/(\w+):\s*\d{4}/).flatten } }
+  dup = keys.group_by(&:itself).select { |_, v| v.size > 1 }.keys
+  dup.empty? || (puts dup.inspect; false) }
+check("the Chardalyn Dragon breathes frostfire and shatters with sound") {
+  src = File.read(File.join(FT_DIR, "035_Chapter9.rb"), encoding: "UTF-8")
+  (%i[ICEBEAM FLAMETHROWER HYPERVOICE] - FT::DRAGON_MOVES).empty? && FT::DRAGON_MOVES.all? { |m| GameData::Move::DATA[m] } &&
+    src.scan("chardalyn_dragon(").size >= 3 && !src.include?("named_mon(CHARDALYN, 55") }
 check("Chapter 4's story switches are 3918-3926") { (FT::SW_DH_WEST_OPEN..FT::SW_WOLVES_GONE).to_a == (3918..3926).to_a }
 check("Chapter 4's maps are named") { (2030..2040).all? { |id| FT::MAP_NAMES[id] } }
 check("every trainer class exists") { FT::TRAINERS.values.all? { |(type)| GameData::TrainerType.try_get(type) } }

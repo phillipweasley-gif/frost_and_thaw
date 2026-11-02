@@ -165,8 +165,8 @@ um.cutscene(4, 6, :umbound_enter)
 (3..10).each { |y| step_trigger(um, 15, y, "Soft earth", "FT.umber_hulk(@event_id)") }
 being(um, 25, 9, "Rust-feasters", "Followers/NINJASK_fly", "FT.rust_feasters(@event_id)", dir: 2, step: true)
 thing(um, 15, 20, "Gnawed struts", "FT.talk(:gnawed_struts, @event_id)", tile: 792)
-um.trainer(43, 22, nil, :duergar_keep_hrem, :FT_DUERGAR, dir: 4, sight: 8)
-um.trainer(43, 23, nil, :duergar_keep_vosh, :FT_DUERGAR, dir: 4, sight: 8)
+um.trainer(43, 22, nil, :duergar_keep_hrem, :FT_DUERGAR, dir: 4, sight: 2)   # short sight: a trainer who walks onto the bridge would block it
+um.trainer(43, 23, nil, :duergar_keep_vosh, :FT_DUERGAR, dir: 4, sight: 2)
 um.trainer(42, 19, nil, :duergar_keep_dagna, :FT_DUERGAR, dir: 2, sight: 3)
 um.trainer(42, 26, nil, :duergar_keep_turl, :FT_DUERGAR, dir: 8, sight: 3)
 [41, 42, 43].each { |x| um.warp(x, 27, PENS, 3, 3, 2, name: "Down to the cocoon pens") }
@@ -195,8 +195,8 @@ being(fu, 30, 7, "Hiding duergar", "BW054", "FT.broken_works(@event_id)", dir: 2
 thing(fu, 38, 5, "Shelves of flasks", "FT.heart_fuel(@event_id)", tile: 809)
 being(fu, 31, 17, "Infernal Rootbreaker", "Followers/METAGROSS", "FT.rootbreaker(:elevator, @event_id)", dir: 2)
 thing(fu, 34, 15, "Iron console", "FT.sap_lift(:forge, @event_id)", tile: 581)
-fu.trainer(12, 25, nil, :duergar_gate_kell, :FT_DUERGAR, dir: 6, sight: 15)
-fu.trainer(12, 26, nil, :duergar_gate_morn, :FT_DUERGAR, dir: 6, sight: 15)
+fu.trainer(12, 25, nil, :duergar_gate_kell, :FT_DUERGAR, dir: 6, sight: 3)   # stays on the bank (see 2149)
+fu.trainer(12, 26, nil, :duergar_gate_morn, :FT_DUERGAR, dir: 6, sight: 3)
 fu.trainer(13, 23, nil, :duergar_gate_sharl, :FT_DUERGAR, dir: 2, sight: 4)
 fu.trainer(15, 23, nil, :duergar_gate_ulf, :FT_DUERGAR, dir: 2, sight: 3)
 [12, 13, 14, 15].each { |x| barrier(fu, x, 28, "Root-keep gate", "FT.rootkeep_gate(@event_id)", SW_L3_GATE) }
