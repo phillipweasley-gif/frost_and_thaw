@@ -173,6 +173,7 @@ ch.event(14, 13, "Kelyn of Spring", [
 ch.event(8, 13, "Darrus Fell", [{ graphic: "BW (55)", direction: 2, script: "FT.darrus(@event_id)" }])
 ch.event(17, 12, "Selrae Vorn", [{ graphic: "BWOldWoman", direction: 4, script: "FT.selrae_hall(@event_id)" }])
 ch.event(14, 11, "Kelyn's alcove", [{ graphic: "", script: "FT.talk(:kelyn_mural, @event_id)" }])
+ch.event(9, 16, "Petitioners' bench", [{ graphic: "", script: "FT.petition_bench(@event_id)" }])
 # the Heralds' statues along the side aisles (each with their partner Pokémon carved at their feet)
 { [5, 6] => [:statue_alberica, "Followers/CHINGLING"], [5, 9] => [:statue_reptin, "Followers/BULBASAUR"],
   [18, 6] => [:statue_alerion, "Followers/ZORUA"], [18, 9] => [:statue_meat_meat, "Followers/NOIBAT_fly"] }.each do |(x, y), (key, g)|
