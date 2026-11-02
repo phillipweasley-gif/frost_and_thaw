@@ -622,6 +622,7 @@ module FrostThaw
     lines << "(The ghost in the Antechapel: cleanse me, leave me whole, or break me. None of them clean.)" if flag?(:shard_echo_heard)
     lines << "(The whispering attendant's price, still owing: #{state[:attendant_promise] == :free ? 'free the heart' : 'burn the forge'}.)" if state[:attendant_promise]
     say(lines) if !lines.empty?
+    shard_battle if !flag?(:shard_fought)
     sayc([cl(:wyn, "(kneeling at the pool's edge) It's... it's frightened. Both of them in there are."),
           cl(:alberica, "Darling, whatever we do, we do it together."),
           cl(:meat_meat, "Meat Meat votes stab. Meat Meat always votes stab. ...Meat Meat will listen, this once.")])
@@ -656,6 +657,42 @@ module FrostThaw
       set_flag(:attendant_promise_broken)
       say(["(Somewhere in the roots, many small voices go quiet. You promised to free the heart.)"])
     end
+  end
+
+  # H23's boss (rootspire.md: "a fragment of Auril, part ritual object, part
+  # angel-of-winter"): with the engine dead, the Shard defends itself. Every
+  # spire you restored in the Breaking Circle let Auril speak through it less
+  # angrily (it starts weaker); every one you broke left it nothing to hold.
+  def shard_battle
+    set_flag(:shard_fought)
+    say(["The Shard rises out of the pool. Ice gathers on it, plate by plate, into a shape: tall, winged, faceless, a spear of rime in its hand.",
+         "The air round it goes so cold your breath falls as snow.",
+         "SHARD: (in a voice like a frozen lake cracking) You killed the fire that fed me. Now feed me yourselves."])
+    restored = state[:circle_restored] || 0
+    broken = state[:circle_broken] || 0
+    shard = named_mon(:B448H429, 52, "Frost Saint Shard")
+    cut = [0.06 * restored + 0.04 * broken, 0.5].min
+    if cut > 0
+      shard.hp = [(shard.totalhp * (1.0 - cut)).floor, 1].max
+      say([restored > 0 ? "(Where you scoured the spires, Auril's frost-sigils hum. The Shard flinches from them.)" :
+                          "(The broken spires are silent. The Shard has less to draw on.)"])
+    end
+    if !flag?(:gallery_boon_used) && !flag?(:grotto_boon_used) && (flag?(:gallery_boon) || flag?(:grotto_boon))
+      say(["(Auril's Echo presses on your mind, but the blessing you carry from the Labyrinth holds it off.)"])
+    else
+      $Trainer.party.each { |pk| pk.hp = [pk.hp - [pk.totalhp / 16, 1].max, 1].max if pk.hp > 0 } rescue nil
+      say(["(Frozen Sanctity: the chill bites your whole team before the fight even starts.)"])
+    end
+    setBattleRule("canLose") rescue nil
+    if boss_battle(shard)
+      set_flag(:shard_beaten)
+      say(["The ice-shape shatters. The Shard falls back into the pool, small again, and the whispering stops for a breath."])
+    else
+      set_flag(:shard_overcame)
+      say(["The Shard's spear drives you back to the edge of the pool, and then, spent, the ice-shape slumps and falls apart on its own.",
+           "It sinks back into the silver, still whispering. It has nothing left to fight with. Neither do you."])
+    end
+    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
   end
 
   # Avarice fakes her death (the owner's canon): Hell's Veil takes her, and what's

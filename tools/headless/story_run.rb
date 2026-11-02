@@ -582,6 +582,7 @@ module Story
       until_flag(:engine_dead, 3) { travel(2076); HL.frames(30); HL.settle(8000) }
       beat("SC 8.06 Avarice", :engine_dead)
       beat("SC 8.07 a better fire (Glimmer is gone)", :glimmer_gone)
+      beat("  H23 the Frost Saint Shard rises (#{FrostThaw.flag?(:shard_beaten) ? 'beaten' : 'outlasted'})", :shard_fought)
       beat("  H23 the Frost Saint Shard (#{%i[shard_purified shard_preserved shard_destroyed].find { |f| FrostThaw.flag?(f) }})", :heart_choice_made)
       beat("SC 8.08 the coat falls off (she burns)", :avarice_faked_death)
       beat("SC 8.09 launch", :dragon_launched)
