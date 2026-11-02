@@ -22,7 +22,9 @@ module FrostThaw
   module_function
 
   def dt_done(h) = (state[:dt] ||= {})[h] || 0
-  def dt_ready?(h) = with_or_is?(h) && ((state[:dt_day] ||= {})[h] || 0) < rs_day
+  # The downtime week belongs before the descent (rootspire.md 3809-5386): once
+  # the Heralds go down to the Forge, the days are over.
+  def dt_ready?(h) = with_or_is?(h) && !flag?(:barricade_entered) && ((state[:dt_day] ||= {})[h] || 0) < rs_day
   def dt_step!(h)
     (state[:dt] ||= {})[h] = dt_done(h) + 1
     (state[:dt_day] ||= {})[h] = rs_day
@@ -258,15 +260,33 @@ module FrostThaw
          "NIVVA: I told you the muddled ones are a surprise. Here's the surprise: it's the best thing I make. Once a day, mind.",
          "NIVVA: And the red with the green tint. Emberleaf Courage Capsule. Heartfire and verdant threads.",
          "NIVVA: Steadies the feelings. Rootwardens and diplomats swear by it. Your eyes'll shimmer when you mean something."], event_id)
+    # Day 5 is the asking, not the buying (rootspire.md: the purchase is the
+    # day's flavour); the day counts whether or not the potions are bought.
     cost = 2 * 900 + 2 * 800 + 1400 + 1200
-    if ($Trainer.money rescue 0) < cost
-      return say(["NIVVA: That's #{cost} all told. ...Come back with it. I'll hold them."]) && false
+    if ($Trainer.money rescue 0) >= cost && pbConfirmMessage(_INTL("Buy all six for ${1}?", cost))
+      $Trainer.money -= cost
+      give(:FT_SANGUINETONIC, 2); give(:FT_VITALITYPHIAL, 2); give(:FT_RENEWALDRAUGHT); give(:FT_EMBERLEAF)
+      say(["NIVVA: (wrapping them in leaf-paper) Pleasure. Come back when you've drunk them. Tell me which one surprised you."])
+      set_flag(:alerion_potions_bought)
+    else
+      say(["NIVVA: That's #{cost} all told. No? Then take the names with you, at least. And a sniff of the muddled one, on the house.",
+           "She uncorks it under #{herald?(:alerion) ? 'your' : "Alerion's"} nose. Red and green, and for a breath you can smell a summer you've never had.",
+           "NIVVA: I'll hold them for you. They keep. Most things in Rootspire keep."])
+      set_flag(:alerion_potions_held)
     end
-    return false if !pbConfirmMessage(_INTL("Buy all six for ${1}?", cost))
+    dt_step!(:alerion)
+    true
+  end
+
+  # The potions Nivva holds, if Alerion couldn't buy them on Day 5.
+  def alerion_held_potions
+    return false if !flag?(:alerion_potions_held) || flag?(:alerion_potions_bought)
+    cost = 2 * 900 + 2 * 800 + 1400 + 1200
+    return false if ($Trainer.money rescue 0) < cost
+    return false if !pbConfirmMessage(_INTL("NIVVA: Your six potions are still here. ${1}?", cost))
     $Trainer.money -= cost
     give(:FT_SANGUINETONIC, 2); give(:FT_VITALITYPHIAL, 2); give(:FT_RENEWALDRAUGHT); give(:FT_EMBERLEAF)
-    say(["NIVVA: (wrapping them in leaf-paper) Pleasure. Come back when you've drunk them. Tell me which one surprised you."])
-    dt_step!(:alerion)
+    set_flag(:alerion_potions_bought)
     true
   end
 
@@ -430,7 +450,7 @@ module FrostThaw
     Stage.overlay_off("O-01", fade: 10) rescue nil
     set_flag(:brightmane_answered)
     set_flag(:chardalyn_vision)
-    sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. She said I'd know the fire when I saw it."),
+    sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. Brightmane said I'd know the fire when I saw it."),
           cl(:alerion, "Chardalyn. Demon-crystal. If it's under the tree, so is she.")].compact)
     true
   end
@@ -544,7 +564,15 @@ module FrostThaw
                                 cl(:meat_meat, "Rootspire is acting weird again. Growing slow. Heat too strong. Meat Meat is filing it."),
           cl(:reptin, "(quietly) The pulse is wrong. She's right.")].compact)
     set_flag(:summer_imbalance_seen)
+    # Heightened Summer-Sense (rootspire.md 5150-5156): for the next day, the
+    # first thing that moves with heat doesn't get past her (048_H uses it).
+    state[:summer_sense_day] = rs_day
+    say(["(#{herald?(:meat_meat) ? 'Your' : "Meat Meat's"} skin prickles every time the heat moves. Heightened Summer-Sense: for the next day, the first warm thing that moves won't get past #{herald?(:meat_meat) ? 'you' : 'her'}.)"])
     dt_step!(:meat_meat)
+  end
+
+  def summer_sense?
+    with_or_is?(:meat_meat) && state[:summer_sense_day] && rs_day <= state[:summer_sense_day] + 1 && !flag?(:summer_sense_used)
   end
 
   #-----------------------------------------------------------------------------
@@ -627,30 +655,29 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def festival_opening
     say(["The seventh night breaks warm. A softer warmth settles over the terraces, like breath drawn before a long-awaited song.",
-         "Lanterns of frost-glass buds sway from the branch-beams. Rootwood pipes play from every tier.",
+         "The Festival Circle at the market's heart, round the Council Hall's steps, is strung with lanterns of frost-glass buds. Rootwood pipes play from every tier.",
          "Children run ahead scattering blossoms, and lift carved effigies of the twin wyrmlings: one pale as moonlit frost, one green as sap-fed flame.",
-         "The Rootwardens form an honour guard along the root-walk, spears garlanded."])
+         "The Rootwardens form an honour guard along the root-walk, spears garlanded.",
+         "Round the Circle's rim, a mural is carved into the living bark: the Heralds' deeds, four hundred years of them, told and retold.",
+         "The bridge in the chasm. The hag's mirrors. A dwarf singing in a frightened square.",
+         "Nobody ever sees the figures move. But every time you look back, they're standing a little differently."])
   end
 
   def festival_toast
     say(["KELYN: (raising a chalice of glowing sap) Four hundred years have cracked like ice behind us.",
-         "KELYN: The cycles turn again. Spring has awakened. Our Heralds stand among us, alive and returned."])
+         "KELYN: We are the children of the Reversal, every one of us. The cycles turn again. Spring has awakened.",
+         "KELYN: And our Heralds stand among us, alive and returned."])
     say(["Beside the empty Summer Throne, the golden vines are dry and brittle, cracking. One strand is charred black.",
          "Warm sap drips beneath the chair. Archivist Eirwen Solglass watches it drip, and frowns, and doesn't stop watching."])
     festival_effigy
   end
 
-  # The Cycle Day attempt: the Halo means to ignite the Frost Saint effigy with real divine power.
+  # The Cycle Day Conspiracy (rootspire.md 8494-8513, GQ3): the Frost Saint
+  # cult's lanterns, the effigy and Auril's Icy Avatar. Played out in full by
+  # cycle_day_conspiracy (048_H).
   def festival_effigy
-    return if flag?(:effigy_saved)
-    say(["Among the festival's effigies there's one nobody remembers carrying out: a robed Frost Saint, tall as two men, carved in pale wood.",
-         "Two figures in grey kneel at its feet with their hands on the wood. The wood is going white."])
-    sayc([cl(:alerion, "That's not carving. That's frost. They're calling something into it."),
-          cl(:alberica, "Oh, darlings, not at a party.")].compact)
-    trainer(:effigy_kneeler)
-    set_flag(:effigy_saved)
-    say(["The cultists scatter into the crowd. The effigy's frost runs off it like rain, and it's only wood again.",
-         "Rheven's wardens drag it off before anyone else notices. Mostly nobody notices. That's the point."])
+    return if flag?(:effigy_saved) || flag?(:cycle_day_done)
+    cycle_day_conspiracy
   end
 
   def festival_shudder_extras
@@ -669,7 +696,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Eirwen's private audience (after the chardalyn fragment)
   #-----------------------------------------------------------------------------
-  def eirwen_audience_due? = flag?(:chardalyn_found) && !flag?(:eirwen_audience)
+  def eirwen_audience_due? = flag?(:chardalyn_found) && !flag?(:eirwen_audience) && !flag?(:barricade_entered)
 
   def eirwen_audience(event_id = nil)
     set_flag(:eirwen_audience)
@@ -686,8 +713,9 @@ module FrostThaw
     sayc([cl(:alerion, "Then that's where we go."),
           cl(:reptin, "Down. It's always down.")].compact)
     say(["A runner at the doors: the Verdant Council issues a formal summons.",
-         "RUNNER: \"Heralds. Something awakens below.\""])
+         "RUNNER: \"Heralds. Something awakens below. The Speaker asks for you in the Hall. Now.\""])
     add_counter(:story_beats)
+    council_summons if respond_to?(:council_summons)     # Kelyn gives the mission; the roads down open (024)
     true
   end
 

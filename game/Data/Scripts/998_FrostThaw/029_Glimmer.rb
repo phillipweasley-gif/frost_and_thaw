@@ -100,7 +100,13 @@ module FrostThaw
           "Stars move on the other side. For one breath, nothing at all.",
           "Then the glass bulges. A tall cat-man steps out, and for a moment stars come with him, caught in his fur.",
           "A midnight-blue coat. The cursed dagger at his hip. In his hand, a unicorn's horn.",
-          "He closes his other hand on the Lumen Shard. It sinks into his chest like a coal into snow, and beats.",
+          "He reaches for the Lumen Shard. As his hand closes, a shadow of him forms in the aurora beside him: his own shape, eyes black as void.",
+          "SHADOW: Will you bear hope when even the sun freezes?",
+          "He doesn't look away from it.",
+          "???: ...Yes. Somebody has to.",
+          "The shadow steps back into him. The Shard sinks into his chest like a coal into snow, and beats.",
+          "Round the Rift's inner ring, letters light up that weren't there a moment ago:",
+          "FROM THE SPARK WAS BORN THE LUMEN SHARD, HOPE CRYSTALLIZED. MAY ITS BEARER LIGHT PATHS THAT NEVER KNEW DAWN.",
           "???: ...That took longer than Brightmane promised. Unicorns are terrible at time.",
           cl(:alberica, "...Shade?"),
           "GLIMMER: Glimmer, now. Brightmane says a name should fit what you carry.",
@@ -117,6 +123,20 @@ module FrostThaw
     if flag?(:sanctum_dream)
       say(["GLIMMER: ...And you. You knocked on the Moon Temple door. I heard you, from the other side.",
            "GLIMMER: Time's strange over there."])
+    end
+    # The dead Glimmer's journal from the Cackling Chasm (044): the ghost said
+    # "You'll see. Not yet." This is the seeing.
+    if ($PokemonBag.pbHasItem?(:FT_GLIMMERJOURNAL) rescue false) || flag?(:glimmer_journal_read)
+      sayc([cl(:alberica, "(very slowly, taking the journal out of the pack) Darling. ...Read this. The chasm. The skeleton with claws.") ||
+              "You take the bloodstained journal from the Chasm out of the pack, and hold it out to him.",
+            "He reads it standing very still. \"...desperate to save Alberica... Tomorrow, I venture into the chasm.\" Signed: Glimmer.",
+            "He turns to the last page. Then back to the first. Then he holds his own hand out beside the writing.",
+            "GLIMMER: (hoarse) That's my hand. That's how I make my G. I've never written this. ...I haven't written it yet. Or I wrote it last time.",
+            "GLIMMER: Brightmane said the wheel turns. She didn't say it turns with me on it. Every time.",
+            "GLIMMER: (to #{herald?(:alberica) ? 'you' : 'Alberica'}, very quietly) I went into that chasm for you once. I died in it.",
+            "GLIMMER: ...I'm still trying. Apparently I always am.",
+            cl(:alberica, "(not quite managing her voice) Then this time, sweetheart, you're going to try alive.")].compact)
+      set_flag(:glimmer_knows_journal)
     end
     sayc(["Frostina hums four notes at him. He hums them back, off-key, the way Shade always did.",
           "GLIMMER: Brightmane said Shimmer gave the ice of her heart so others could live.",

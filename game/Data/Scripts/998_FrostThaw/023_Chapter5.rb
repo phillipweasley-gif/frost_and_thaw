@@ -390,7 +390,7 @@ module FrostThaw
   end
 
   def chasm_backpack(event_id = nil)
-    say(["Beside a half-chewed human skeleton: a tattered backpack. Inside, a healing draught, still intact,",
+    say(["Beside a half-chewed skeleton, too long in the arm to be human, with claws on its fingers: a tattered backpack. Inside, a healing draught, still intact,",
          "and a waterlogged journal, most of its pages ruined with blood. A few lines are left:",
          "\"...met an old woman on the trail. She called herself Granny Thredra. She knew things about me... offered a deal.\"",
          "\"I don't trust her, but I'm desperate to save Alberica... Tomorrow, I venture into the chasm.\"",

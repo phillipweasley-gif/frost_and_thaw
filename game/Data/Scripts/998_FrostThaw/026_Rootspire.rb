@@ -349,7 +349,10 @@ module FrostThaw
          "EIRWEN: It says Avarice was bleeding Targos white long before the Rime.",
          "EIRWEN: I've never known who to show it to. And there's a sub-vault. Alberica's.",
          "EIRWEN: Her students wrote it into the founding charter: a case only she may open.",
-         "EIRWEN: A lovely, safe, symbolic thing to write. Until about an hour ago."]
+         "EIRWEN: A lovely, safe, symbolic thing to write. Until about an hour ago.",
+         T.with_or_is?(:alberica) ? "EIRWEN: (to #{T.herald?(:alberica) ? 'you' : 'Alberica'}, suddenly shy) I've read every verse you ever wrote. Here they're scripture. We sing them at the turning of the year." : nil,
+         T.with_or_is?(:alberica) ? "EIRWEN: I never thought I'd have to stand in front of the author and be sensible about it." : nil,
+         "EIRWEN: And the chronal leaves are yours to read, all of you, whenever you like. The ones that remember days. Ask me."].compact
       end
     },
     lorn_scribe: [{ if: { flag: :key_found }, lines: ["LORN SCRIBE: (writing backwards) .ti dah syawla uoY .yek eht dnuof uoy taht nwod etorw I"] },
@@ -453,8 +456,9 @@ module FrostThaw
     library: ["My handwriting. On a leaf. Four hundred years old.",
               "I don't know whether to cry or correct the spelling. I'll do both. Later. With a drink."],
     college: [{ if: { with: :reptin }, lines: ["Copies of our things in a case. Reptin's already charmed the curator.",
-                                               "I'm checking my neck for the pendant anyway. ...Still there. Shame."] },
-              ["Copies of our things, in a case. I'm sure the pendant's a copy.", "I'm checking my neck anyway."]],
+                                               "I'm checking my neck for the pendant anyway. ...Still gone. Of course it is."] },
+              ["Copies of our things, in a case. The pendant's a copy, of course. The real one cracked in Lonelywood.",
+               "I'm checking my neck anyway. Habit."]],
     crypt: ["Sap like glass. They're not dead, are they. They're waiting.",
             "...Hush. I just don't like being the loudest thing in a room. Is all."],
     undercanopy: [{ if: { with: :wyn }, lines: ["Wyn's home. Look at them, sweetheart, they're glowing. Literally. Spores.",
@@ -852,7 +856,8 @@ module FrostThaw
     if !flag?(:twins_met)
       return sayc(["Two spires twist together above you, one jade, one white crystal.",
                    "Two dragons, carved circling one another. Between them hangs an orb of shifting light.",
-                   "It pulses like a heartbeat.",
+                   "It pulses like a heartbeat. Each time it brightens, the worshippers kneeling round it sing a line of the Cycle Canticle,",
+                   "softly, the way you'd sing to something sleeping: winter, spring, summer, autumn, and round.",
                    "LUMIN: Lumin Weavemoss, priest of the Circle. The orb's been green-white since you arrived.",
                    "LUMIN: It glows when either wyrm stirs. Tonight it hasn't stopped.",
                    "LUMIN: They know you're here. They're deciding."], event_id)
@@ -860,6 +865,7 @@ module FrostThaw
     if flag?(:orb_visions)
       return say(["The orb between the spires pulses green, then white, then green.",
                   "Two heartbeats, out of step. Then in step.",
+                  "The worshippers at its foot sing the Canticle with it, a verse to each pulse.",
                   "High above, two shapes circle the crown of the World Tree."], event_id)
     end
     return if respond_to?(:orb_halo_scene) && !orb_halo_scene   # the Halo splinter at the orb first (048)
@@ -885,6 +891,7 @@ module FrostThaw
   def lumin(event_id = nil)
     return twin_orb(event_id) if !flag?(:orb_visions)
     return if respond_to?(:lumin_rite) && lumin_rite(event_id)      # Glimmer's seven-day rite (048)
+    return if respond_to?(:glimmer_envoy) && glimmer_envoy(event_id) # Glimmer's Trial: the celestial envoy (048_H)
     talk(:wennen_scholar, event_id)
   end
 
@@ -898,12 +905,13 @@ module FrostThaw
       sayc([me ? "(A black forest under a sky that never knew dawn. Between the trunks, two pale moons: Frostina's eyes.)" :
                  "Alerion stands in a black forest under a sky that never knew dawn. Between the trunks, two pale moons: Frostina's eyes.",
             "\"Guardian of the Dark Half. Keeper of stillness, and of the endings that prepare the wheel to turn.\"",
-            "Then another age. A unicorn of white fire walking through snow, and beside her, a man with a shield. Him.",
+            "Then another age. Shimmer, her breath silver in the night, her eyes locked on a man with a shield. Him.",
             me ? "(You know her. You were her shield, once, a whole life ago. You know her eyes. They're Frostina's.)" :
                  "He was Shimmer's shield, a whole life ago. And Frostina carries her eyes, and the echo of her soul.",
             "Two roads open through the black trees.",
             "On one: a sentinel at the ruins of the north, a sword in the snow, keeping watch over a silence that keeps the world.",
-            "On the other: a shape buried beneath great white wings. Snow over it. A name, forgotten."])
+            "On the other: a shape buried beneath great white wings, and Frostina's cry echoing across the void. Snow over it. A name, forgotten.",
+            "Both roads are his."])
     end
     if with_or_is?(:meat_meat)
       me = herald?(:meat_meat)
@@ -918,26 +926,29 @@ module FrostThaw
     end
     if with_or_is?(:alberica)
       me = herald?(:alberica)
-      sayc(["A vault, half buried in rime, half bathed in gold. Faces press against the inside of it, crying to be remembered.",
-            "\"Keeper of Memory. Your key is the life you have carried. Without memory, the wheel does not turn.\"",
+      sayc(["The Vault of the North, half buried in rime, half bathed in gold. Faces press against the inside of it, crying to be remembered.",
+            "\"Keeper of Memory. Your key is the life you have carried. The laughter, the sorrow, the betrayals, the bonds. Hold them all.\"",
+            "\"Without memory, the wheel does not turn.\"",
             me ? "(On your chest, a rune you've never seen burns cold. Where your pendant used to hang, something pulses, brightest when you face the vault.)" :
                  "On her chest, a rune burns cold. Where her pendant used to hang, something pulses, brightest when she faces the vault.",
             me ? "(And you're in Bryn Shander's square again, pouring warmth and memory out of the pendant into a frightened crowd.)" :
                  "And she's in Bryn Shander's square again, pouring warmth and memory out of the pendant into a frightened crowd.",
             "Two paths, and the snow falls on both.",
             "On one: she bears the white rune, and her hand turns a key, and the whole Dale is locked in winter forever. Safe. Still.",
-            "On the other: she sings, and the vault shatters, and every face inside it remembers its name."])
+            "On the other: she sings the tender and the terrible both, and the vault shatters, and every face inside it remembers its name."])
     end
     if with_or_is?(:glimmer) || with_or_is?(:shade)
       me = herald?(:glimmer) || herald?(:shade)
       sayc(["A plain of stars like embers. A unicorn strides out of it, mane aflame, horn burning like dawn: Brightmane.",
             "Where her hooves fall, the frost shatters, and flowers spring up through the cracks.",
             "\"Sparkbearer. My light is yours.\"",
-            "\"Shimmer gave the ice of her heart so that others might live. Her torch is yours to carry.\"",
-            me ? "(Something in your chest is grief, and it burns. It's been burning since the mirror.)" :
-                 "In #{with_or_is?(:glimmer) ? "Glimmer's" : "Shade's"} chest something burns, and it's grief, and it's been burning since the mirror.",
+            "\"Shimmer gave the ice of her heart so that others might live. Her torch is yours to carry into the dark, for her spark alone is not enough.\"",
+            me ? "(Shimmer's last breath. The rose. The heart of ice that went down into the root the acorn woke, and became the Reversal's seed.)" :
+                 "Shimmer's last breath. The rose. The heart of ice that went down into the root the acorn woke, and became the Reversal's seed.",
+            me ? "(You weep. In the tears you see fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.)" :
+                 "#{with_or_is?(:glimmer) ? 'Glimmer' : 'Shade'} weeps, and in the tears there is fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.",
             "Two flames.",
-            "In one: the spark leaps from the torch into two small sleeping shapes, and the wyrmlings wake, burning with life.",
+            "In one: the spark leaps from the torch to the two dragons circling the crown, and they blaze with life.",
             "In the other: despair closes over the torch like a hand, and grief burns brighter than love, and the flame gutters down to ash."])
     end
     if with_or_is?(:reptin)
@@ -945,12 +956,13 @@ module FrostThaw
       sayc(["A graveyard, where roots tear through the soil and flowers bloom blood-red against frost.",
             "Wolves pace at its edge, neither cruel nor kind.",
             "\"Warden of Life and Death. Without either, there is only stillness. And stillness is the true enemy of the wheel.\"",
-            me ? "(The old wolf-bite in your arm sears anew: fire beneath snow. You remember the rations you threw to the starving pack.)" :
-                 "Reptin's old wolf-bite sears anew, fire beneath snow. He remembers the rations he threw to the starving pack.",
-            "Mercy bound him then. It binds him still.",
+            me ? "(The old wolf-bite in your hand sears anew: fire beneath snow. You remember the rations you threw to the starving pack.)" :
+                 "Reptin's old wolf-bite, in his hand, sears anew, fire beneath snow. He remembers the rations he threw to the starving pack.",
+            "Mercy bound him then, as the curse bound him to hunger. Both bind him still.",
             "Two visions, one on each side of the graveyard wall.",
             "In one: he walks between the living and the dying with a lantern, guiding both, and neither is afraid.",
-            "In the other: the beast tears free of him, and somewhere in the dark two wyrmlings tremble."])
+            "In the other: the beast tears free of him, and somewhere in the dark two dragons cower.",
+            "Even so, the wheel turns. Even ruin is motion. His charge isn't to choose one. It's to keep both moving."])
     end
     set_flag(:bloom_guard_dreamed)
   end
@@ -979,44 +991,142 @@ module FrostThaw
          "(The note filed under A said: sing the Cycle Canticle alone, before dawn, in the hall of the four lights.)"])
   end
 
-  CANTICLE_VERSES = { winter: "Winter: the year asleep under snow", spring: "Spring: the first green breath",
-                      summer: "Summer: the long gold day", autumn: "Autumn: the turning, the letting go" }
+  # Quest B1, Canticle of Seasons (rootspire.md 8336-8350): Eirwen invites
+  # Alberica to sing the Cycle Canticle anew, to weave severed memories back into
+  # the chronicle. Three verses, one for each hard season: spring (hope), autumn
+  # (loss), winter (endurance). Two of three complete the song; the Key may ring
+  # one verse instead of her voice. Fewer, and the choir who failed centuries
+  # ago comes for her. The lost verses can be recovered first in the Library.
+  CANTICLE_VERSES = [
+    [:spring, "Spring, the verse of hope",
+     ["\"Under the snow the seed keeps count, and it is counting toward you.\"",
+      "\"The green comes back because it was never really gone.\"",
+      "\"Sing louder, and the thaw will come faster.\""], [0, 1],
+     "\"The green comes back...\" (the leaf's ink runs; you're guessing)"],
+    [:autumn, "Autumn, the verse of loss",
+     ["\"Let go of the leaf, and the tree remembers it all winter.\"",
+      "\"Hold on to the leaf, and it will never fall.\"",
+      "\"Nothing is lost that was loved.\""], [0, 2],
+     "\"...the tree remembers...\" (half the line is gone)"],
+    [:winter, "Winter, the verse of endurance",
+     ["\"Stand still, and the cold will pass you by.\"",
+      "\"Keep the fire small and keep it going, and morning is a promise kept.\"",
+      "\"Endure, and the year turns round to find you still singing.\""], [1, 2],
+     "\"...keep it going...\" (the rest is frost)"]
+  ]
 
   # At the living pillar in the Hall of Seasons.
   def council_pillar(event_id = nil)
     if !flag?(:key_found) || flag?(:key_attuned)
       return talk(:council_heart, event_id)
     end
-    say(["The four crystal veins pulse in the living pillar: green, red, white and gold.",
-         "The Key of Whispering Memory hums in answer."], event_id)
-    return if !pbConfirmMessage(_INTL("Sing the Cycle Canticle?"))
-    order = []
-    names = CANTICLE_VERSES.keys
-    4.times do |i|
-      left = names - order
-      c = pbMessage(_INTL("Verse {1}:", i + 1), left.map { |k| _INTL(CANTICLE_VERSES[k]) }, -1)
-      return say(["The song trails off. The Key goes quiet."]) if c.nil? || c < 0
-      order << left[c]
+    me = herald?(:alberica)
+    say(["The Council Hall of Seasons is lit by four pulsing crystals: green, red, white and gold.",
+         "As you come in, the colours shift in a slow dance: spring to winter to autumn to summer. The air hums like a heartbeat.",
+         "Archivist Eirwen Solglass is waiting, barefoot on the polished root floor.",
+         "EIRWEN: (whispering) To heal the fracture in our history, we must sing the Cycle Canticle anew.",
+         "EIRWEN: The ritual has to finish before dawn. Will you lend your voice?"], event_id)
+    if !with_or_is?(:alberica)
+      return say(["EIRWEN: ...Ah. Not yours. Hers. The Key won't wake for anyone but the Dwarf of Song. Bring her back."])
     end
-    if order == %i[winter spring summer autumn]
-      set_flag(:key_attuned)
-      set_flag(:canticle_learned)
-      add_counter(:story_beats)
-      sayc(["Winter, and the year asleep. Spring, and the first breath. Summer, gold.",
-            "Autumn, and letting go. And round again.",
-            "The crystal veins light one after another, in time. The Key rings like a struck bell.",
-            "For a moment the hall is full of voices: everyone who ever knew you, singing back."])
-      if with_or_is?(:alberica)
-        speak(:alberica, "...Oh. Oh, there you all are. Hello, darlings. I missed you. Every one.",
-              "...Oh. There you all are.")
+    if state[:canticle_night] == rs_day
+      return say(["EIRWEN: The crystals are spent for tonight. Even the choir has to sleep. Tomorrow, before dawn."])
+    end
+    if !flag?(:canticle_researched) && !flag?(:canticle_partial)
+      say(["EIRWEN: Half the old verses were lost in the Reversal. The Library's crystal leaves keep what's left of them.",
+           "EIRWEN: You could find them first. Or you could sing now, and make up what's missing as you go."])
+      c = pbMessage(_INTL("The lost verses..."), [_INTL("Research them in the Library first"), _INTL("Sing now, and improvise")], 0)
+      if c == 0
+        say(["EIRWEN: Wise. Come to the Library. I'll leave the oldest case unlocked."])
+        state[:goal] = "Find the Canticle's lost verses with Eirwen in the Wind-Glass Library, then sing it at the Council Hall's pillar."
+        return
       end
-      give(:FT_WHISPERKEY)
-      say(["(The Key of Whispering Memory: held by a Pokémon, it makes sound-based moves 30% stronger.)"])
-    else
-      say(["The verses tangle. Spectral voices answer from the crystals:",
-           "other bards, long ago, who tried this and stumbled in the same place.",
-           "The Key goes quiet. The note said to begin where the year sleeps."])
     end
+    return if !pbConfirmMessage(_INTL("Sing the Cycle Canticle now?"))
+    state[:canticle_night] = rs_day
+    known = flag?(:canticle_researched)
+    say(["#{me ? 'You stand' : 'Alberica stands'} at the living pillar with the Key of Whispering Memory in #{me ? 'your' : 'her'} hand.",
+         "Around the hall, very faint, the crystals show other singers: the choir who tried this before, and failed, centuries ago. They're watching."])
+    key_used = false
+    hits = 0
+    misses = 0
+    CANTICLE_VERSES.each_with_index do |(season, title, lines, right, garbled), i|
+      break if misses >= 3
+      lost = !known && (season == :autumn || (flag?(:canticle_partial) ? false : season == :winter))
+      say(["The #{%w[green red white][i]} crystal brightens. #{title}."])
+      say(["(You never found this verse. #{garbled})"]) if lost
+      opts = lines.map { |l| _INTL(l) }
+      opts << _INTL("Let the Key ring this verse instead") if !key_used
+      c = pbMessage(_INTL("{1} sings...", me ? "You" : "Alberica"), opts, -1)
+      if !key_used && c == lines.size
+        key_used = true
+        hits += 1
+        say(["The Key rings: one long note, and the crystal answers it like an echo answering a bell. Magic, not voice. It counts."])
+        next
+      end
+      good = right.include?(c)
+      good = false if lost && c == right[1]        # improvising: only the truest line of the two will hold
+      if good
+        hits += 1
+        say(["The verse holds. The crystal stays lit, and somewhere in the hall a name you'd forgotten comes back to you."])
+      else
+        misses += 1
+        say(["The verse slips. The crystal flickers, and in it the old choir leans closer."])
+      end
+    end
+    if hits >= 2
+      canticle_success(known)
+    else
+      canticle_failure
+    end
+  end
+
+  def canticle_success(known)
+    set_flag(:key_attuned)
+    set_flag(:canticle_learned)
+    add_counter(:story_beats)
+    sayc(["Hope, and loss, and enduring. And round again.",
+          "The crystal veins light one after another, in time. The Key rings like a struck bell.",
+          "The old choir in the crystals is singing with you now. Then they bow, all together, and go out like candles at dawn.",
+          "For a moment the hall is full of voices: everyone who ever knew you, singing back."])
+    if with_or_is?(:alberica)
+      speak(:alberica, "...Oh. Oh, there you all are. Hello, darlings. I missed you. Every one.",
+            "...Oh. There you all are.")
+    end
+    give(:FT_WHISPERKEY)
+    say(["(The Key of Whispering Memory: held by a Pokémon, it makes sound-based moves 30% stronger.)"])
+    # Eirwen's reward: a chronal leaf with a prophecy, and the lore of Verse XI.
+    sayc(["EIRWEN: (very quietly, wiping their eyes) The chronicle's mended. I felt it close, like a door.",
+          "EIRWEN: Take this. A chronal leaf from the oldest case. It's been waiting for the song.",
+          "On the leaf, in gold, a verse no one has sung yet:",
+          "\"The Frost Saint will climb the Spire when the roots bleed.\"",
+          "EIRWEN: The Library's been whispering that line for a month. Now it's written down, it'll have to come true or be prevented.",
+          "EIRWEN: And the line we carve over the Library door, so you know it's yours:",
+          "\"The Dwarf of Song taught memory to sing so the world would not forget it had once been warm.\" Verse Eleven. The Ballads of the Verdant Reversal."])
+    give_key(:FT_PROPHECYLEAF)
+    set_flag(:verse_xi_known)
+    wheel(2)
+  end
+
+  # Fewer than two verses hold: the vengeful chorus (spectral bards, a swarm
+  # dealing psychic harm). Escaping or beating them still gives a turn of the
+  # wheel, a few secrets, and a melody stuck in her head; she may try again on
+  # another night, before dawn.
+  def canticle_failure
+    me = herald?(:alberica)
+    say(["The song breaks. All four crystals go dark at once.",
+         "Out of them pour the choir who failed here before you: bards of light with hollow faces, singing a wrong note, together, louder and louder."])
+    won = boss_battle(named_mon(:WOOBAT, 42, "Spectral Bard"), named_mon(:WOOBAT, 42, "Spectral Bard"))
+    sayc([won ? "The spectral bards scatter like moths, and the wrong note goes with them." :
+                "You get out of the hall with your hands over your ears. Behind you the chorus sings to an empty room.",
+          "The ritual's broken. But some of the chronicle came back anyway, through the cracks:",
+          "a founding charter with one name scratched out; a Summer seal on a decree nobody signed; a goblin's name in a breeding ledger.",
+          me ? "(And one melody won't leave your head. The choir's wrong note. You'll be humming it for days.)" :
+               "Alberica hums under her breath all the way back. The choir's wrong note. She can't stop.",
+          "EIRWEN: (shaken) Not tonight, then. The crystals will hold the song one more night. Tomorrow, before dawn, if you'll try again."].compact)
+    set_flag(:canticle_haunted)
+    wheel(1) if !flag?(:canticle_failed_once)
+    set_flag(:canticle_failed_once)
   end
 
   #-----------------------------------------------------------------------------
@@ -1087,8 +1197,13 @@ module FrostThaw
           "The gem flickers between emerald and pearl, in time with the tree's heartbeat."].compact)
     set_flag(:staff_found)
     add_counter(:story_beats)
-    give(:FT_HEARTWARDENSTAFF)
-    say(["(The Heartwarden's Staff: held by a Pokémon, it halves Fire and Ice damage, and once a battle heals a quarter of its HP when badly hurt.)"])
+    # The staff must be bonded at the edge of the Auroral Wall, through a whole
+    # cycle of seasons (rootspire.md 1681-1683): auroral_wall_edge (048_H).
+    give_key(:FT_UNBONDEDSTAFF)
+    say(["The staff hums, but a beat out of time with #{herald?(:reptin) ? 'you' : 'Reptin'}, like a song in the wrong key.",
+         "Carved under the wolf's head, very small: REST AT THE EDGE OF THE LIGHT, AND LET THE YEAR GO ROUND YOU.",
+         cl(:wyn, "(softly) The Wall. The old wardens bonded their staves at the Auroral Wall. One whole night.")].compact)
+    state[:goal] = "Bond the Heartwarden's Staff: a night's rest at the edge of the Auroral Wall (the Blooming Fields)." if with_or_is?(:reptin)
   end
 
   def crypt_door(event_id = nil)
@@ -1223,21 +1338,47 @@ module FrostThaw
       return say(["Where the frozen figure stood, the snow has melted into a ring of small, stubborn flowers."], event_id)
     end
     say([text, "Up close you can hear it: the faintest whisper, over and over. \"Finish... finish...\""], event_id)
-    c = pbMessage(_INTL("What do you do?"), [_INTL("Help it finish"), _INTL("Leave it be")], 1)
-    return if c != 0
-    say(["You touch the frost. It cracks.",
-         "Something that's waited four hundred years to move pours out of it, half-panicked, all cold!"])
-    return if !boss_battle(named_mon(species, 38, name))
-    set_flag(:"still_#{key}")
-    add_counter(:story_beats)
-    say(["The frozen figure sighs. The frost runs off it like water, and there's nobody inside at all.",
-         "Just snow, settling. Finished. Something is left behind in the slush."])
-    give(reward)
+    # The notes (rootspire.md 1185-1192): each embodies a lost virtue; destroying
+    # or redeeming them shifts the Tree's alignment toward Frost or Verdant.
+    c = pbMessage(_INTL("What do you do?"), [_INTL("Help it finish"), _INTL("Shatter it"), _INTL("Leave it be")], 2)
+    return if c != 0 && c != 1
+    if c == 1
+      say(["You strike the frost hard. It doesn't crack: it bursts, like a dropped lantern.",
+           "For one moment you hear it scream. Then the virtue it held goes out, and the shards ring as they fall.",
+           "Along the Wall the snow thickens, as if something cold just took a deep breath."])
+      set_flag(:"still_#{key}")
+      set_flag(:"still_#{key}_shattered")
+      add_counter(:tree_frost)
+      add_counter(:story_beats)
+      wheel(-1)
+      give(:FT_STILLSHARD)
+    else
+      say(["You touch the frost. It cracks.",
+           "Something that's waited four hundred years to move pours out of it, half-panicked, all cold!"])
+      return if !boss_battle(named_mon(species, 38, name))
+      set_flag(:"still_#{key}")
+      add_counter(:tree_verdant)
+      add_counter(:story_beats)
+      say(["The frozen figure sighs. The frost runs off it like water, and there's nobody inside at all.",
+           "Just snow, settling. Finished. Something is left behind in the slush."])
+      give(reward)
+    end
     if STILL_ONES.keys.all? { |k| flag?(:"still_#{k}") }
-      sayc(["All four Still Ones are gone.", "Along the Wall, the snow-flowers lean the same way, like a field after wind.",
-            cl(:reptin, "Faith, hope, love, balance. All finished. The tree felt that."),
-            cl(:reptin, "And I felt it feel it. Which is a sentence I never expected to say."),
-            cl(:wyn, "...They're resting now. Properly. Thank you for helping them.")].compact)
+      frost = (counter(:tree_frost) rescue 0).to_i
+      verdant = (counter(:tree_verdant) rescue 0).to_i
+      if verdant >= frost
+        sayc(["All four Still Ones are gone.", "Along the Wall, the snow-flowers lean the same way, like a field after wind.",
+              cl(:reptin, "#{frost == 0 ? 'Faith, hope, love, balance. All finished.' : 'Finished, most of them. The rest...'} The tree felt that."),
+              cl(:reptin, "And I felt it feel it. Which is a sentence I never expected to say."),
+              cl(:wyn, "...They're resting now. Properly. Thank you for helping them.")].compact)
+        set_flag(:tree_leans_verdant)
+      else
+        sayc(["All four Still Ones are gone. Along the Wall the flowers have closed, and the snow lies smooth and hard.",
+              "Somewhere very deep, something pleased turns over in its sleep.",
+              cl(:reptin, "(very quiet) We broke them. The tree felt that too. It's leaning toward the cold now. I can feel it lean."),
+              cl(:wyn, "...They wanted to finish. Not to end. Those aren't the same.")].compact)
+        set_flag(:tree_leans_frost)
+      end
       grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and slick sap: no more sliding.")
     end
   end

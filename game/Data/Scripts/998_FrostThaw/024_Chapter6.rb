@@ -87,11 +87,12 @@ module FrostThaw
                         "WOODCARVER: The Wardens' stair to the Root-Tier. Council business only, I'm afraid."],
     split_dock_fisher: ["FISHER: Water's warm as breath down here. Always has been.",
                         "FISHER: Then last month it froze round two Corsair boats in a single night.",
-                        "FISHER: Crews still at the oars. Glass all through.",
+                        "FISHER: Crews still at the oars. Glass all through. Mirror-glass, not lake ice: the Frost Saint's kind, my gran would've said.",
                         "FISHER: Somebody's been praying for cold. And somebody's been answered."],
-    corsair_sailor: ["CORSAIR: Auroral Corsairs. We run the outer lakes when nobody else will.",
+    corsair_sailor: ["CORSAIR: Auroral Corsairs. We run the outer lakes when nobody else will. And the tunnels under the Split Dock, when the Council isn't looking.",
                      "CORSAIR: Those were our people out there. Whoever froze them did it from the shore.",
-                     "CORSAIR: The ice came off the land."],
+                     "CORSAIR: The ice came off the land. Mirror-ice. You could see your own face in a dead man's cheek.",
+                     "CORSAIR: Old Ivran swears he saw a barefoot man on the shingle that night, walking away north. No coat. Breath like smoke off a lake."],
     halo_vigil_after: ["The Matron is at the Still Sky Shrine. Tonight she makes the sky hold still.",
                        "You'll see. Everyone will see."],
     halo_ascetic_after: ["Go on, then. Go and stop her. I hope you can. I hope you can't.", "I don't know anymore."],
@@ -351,6 +352,13 @@ module FrostThaw
       if !flag?(:badge_hearth)
         say(["HELLEN: And when you want to know the city? Fight the people who feed it.", "HELLEN: Cellar's behind the bar."])
       end
+      if (g = festival_wait_goal)
+        n = festival_nights_left
+        say(["HELLEN: The festival's last night is the seventh. #{n == 1 ? 'Tomorrow' : "#{n} more nights"}, love. Nobody rushes the seventh night.",
+             "HELLEN: Spend the days. The city's been waiting four hundred years to show you round."])
+        state[:goal] = g
+      end
+      hellen_business(event_id) if respond_to?(:hellen_business)     # her own errands and the old passages (048_H)
     end
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     set_rest_at(HEARTH_REST)
@@ -358,8 +366,31 @@ module FrostThaw
     hearth_night(event_id) if respond_to?(:hearth_night)   # a night in Rootspire (048)
   end
 
+  # The festival's last night is the seventh night in the city (rootspire.md
+  # 5545-5560, 5784-5792): the downtime week comes first.
+  FESTIVAL_NIGHT = 7
+
   def festival_ready?
-    flag?(:rite_stopped) && flag?(:glimmer_joined) && flag?(:badge_hearth) && !flag?(:festival_night)
+    festival_business_done? && rs_day >= FESTIVAL_NIGHT && !flag?(:festival_night)
+  end
+
+  def festival_business_done?
+    flag?(:rite_stopped) && flag?(:glimmer_joined) && flag?(:badge_hearth)
+  end
+
+  # Days until the festival's last night, for Hellen and the goal line.
+  def festival_nights_left = [FESTIVAL_NIGHT - rs_day, 0].max
+
+  def festival_wait_goal
+    return nil if !festival_business_done? || flag?(:festival_night) || rs_day >= FESTIVAL_NIGHT
+    n = festival_nights_left
+    who = []
+    who << "Arvik at the Rootwarden Hall" if with_or_is?(:reptin)
+    who << "Alerion's desk in the Wind-Glass Library" if with_or_is?(:alerion)
+    who << "Lumin at the twin orb" if with_or_is?(:glimmer)
+    who << "Razzilith" if with_or_is?(:meat_meat)
+    who << "the Lorn Scribe" if with_or_is?(:alberica)
+    "The festival's last night is in #{n} night#{n == 1 ? '' : 's'}. Rest at the Hearth; spend the days with #{who.empty? ? 'the city' : who.join(', ')}."
   end
 
   # Rest banter (the Voices tab, Sample 2): the first morning at the Hearth
@@ -447,9 +478,12 @@ module FrostThaw
            "WYN: Captain... the Sap Gate spores went silent. Hyphora's... afraid.",
            "WYN: Sorry. Sorry. I'm interrupting."])
     end
-    say(["KELYN: (setting down her glass) Heralds. Something is waking below. Find our Summer Marshal.",
-         "KELYN: And stop whatever is burning the roots.",
-         "HEW: (shoving through) And find my diggers while you're at it! Twelve gone in the Guild Dig!"])
+    # The mission itself comes with the Council's summons, after the
+    # Rootwardens' night, the scorch marks and Eirwen (GM outline steps 1-6,
+    # rootspire.md 5643-5684): council_summons, below.
+    say(["KELYN: (setting down her glass, very quietly) Something is waking below. I don't know what yet.",
+         "KELYN: Stay in the city tonight, Heralds. When we know, the Council will send for you.",
+         "HEW: (shoving through) And when it does, find my diggers! Twelve gone in the Guild Dig!"])
     if herald?(:wyn)
       speak(:wyn, "The roots have another way down. Through the myconids. I can take you.",
             "...I know another way down. The myconids'.")
@@ -464,10 +498,26 @@ module FrostThaw
       set_flag(:wyn_joined)
       pbMessage(_INTL("Wyn joined the party."))
     end
-    set_flag(:ch7_started)
     restore_sky
+    state[:goal] = "The festival's over. Rest at the Hearth: the Council will send for you."
+  end
+
+  # GM outline step 6 (rootspire.md 5675-5684): the Council's formal summons,
+  # after Eirwen's audience. Kelyn gives the mission, and the roads down open.
+  def council_summons
+    return if flag?(:ch7_started)
+    sayc(["The runner takes you straight to the Council Hall of Seasons. All four crystals are lit, and nobody is sitting down.",
+          "KELYN: Heralds. Something is waking below, and now we know where. Eirwen's maps. The scorch at the Echo Gate. Three wardens' cloaks.",
+          flag?(:festival_casualties) ? "KELYN: (very tired) We buried eleven from the Festival Circle this morning. The avatar's cold took them where they stood. I won't bury more." : nil,
+          "KELYN: Find our Summer Marshal. And stop whatever is burning the roots.",
+          "SELRAE: Two ways down. The Sap Gate, through the myconids. Or Hew's dig, and the Split Dock.",
+          "DARRUS: (not looking up from his ledger) Bring back the Guild's diggers, if there's anything to bring back.",
+          "KELYN: (to you, very low) Come back up. All of you. Please."].compact)
+    set_flag(:ch7_started)
+    set_flag(:council_summoned)
     aurora_hue if respond_to?(:aurora_hue)
     ($game_switches[3937] = true; $game_map.need_refresh = true if $game_map) if $game_switches
+    add_counter(:story_beats)
     state[:goal] = "Two ways down: the Sap Gate in the Root-Tier (the myconids), or Hew's Guild Dig and the Split Dock."
   end
 
@@ -540,6 +590,10 @@ module FrostThaw
          "SELRAE: The hag has been dead four hundred years.",
          cl(:meat_meat, "Mirrors remember. She said so. Meat Meat remembers too."),
          "KELYN: Rootspire has been stuck in this summer for thirty years. I need people the tree trusts.",
+         "KELYN: (very quietly, and only to you) And if the cold comes back... the old cold. Hers.",
+         "Her hand has gone white on the arm of her seat. She doesn't seem to notice.",
+         "KELYN: We have stories about what she does to cities that forget her. I grew up on them. I still can't sleep in a cold room.",
+         "KELYN: Swear to defend Rootspire from the old cold gods, and the Council will name you Wardens Emeritus. Officially. With seals.",
          "KELYN: Will you swear the Wardens' oath?"].compact, event_id)
     c = pbMessage(_INTL("Swear the Wardens' oath?"), [_INTL("\"We'll guard the pulse.\""), _INTL("\"We just got here.\"")], 0)
     if c == 1
@@ -550,7 +604,7 @@ module FrostThaw
     else
       set_flag(:wardens_sworn)
       say(["You put your hands on the living pillar. It's warm, and it beats.",
-           "KELYN: Then welcome home, Wardens of Rootspire.",
+           "KELYN: Then welcome home, Wardens Emeritus of Rootspire. Sworn against the old cold gods.",
            "KELYN: Take this: sap from the Heart of Spring's first root.",
            "KELYN: It heals what it touches. Slowly and stubbornly, like the tree.",
            cl(:alberica, "Slow and stubborn. Story of my love life. ...Thank you, Speaker.")].compact)
@@ -567,6 +621,11 @@ module FrostThaw
          "SELRAE: If the Halo moves tonight, Kelyn, I'll want the Canopy under martial law. My wardens. To protect the Rift.",
          "KELYN: No.",
          "SELRAE: (to you, mildly) She always says no. Then something burns, and she says yes.",
+         "DARRUS: And while we're saying no to things: the Guild wants the lower terraces. More roots cut, more halls, more trade.",
+         "KELYN: Every terrace we cut is a root that can't feel the seasons. Grow too fast and the tree forgets what balance is.",
+         "SELRAE: Grow too slowly and the cold remembers us. Expansion is a wall, Kelyn. Walls keep winter out.",
+         "KELYN: Walls keep winter in, too. ...We'll vote on it after the festival. As we have for six years.",
+         cl(:alberica, "(behind her hand) They've been having this argument since before the coffee was invented, haven't they."),
          "SELRAE: There's a rite at the Still Sky Shrine tonight that I'd like you to watch. Closely.",
          "KELYN: The Wardens' stair down to the Root-Tier is in the woodcarver's workshop, by the old gate."])
     selrae_court if respond_to?(:selrae_court)
