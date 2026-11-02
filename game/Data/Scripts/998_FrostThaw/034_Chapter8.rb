@@ -682,7 +682,9 @@ module FrostThaw
   #           only a man's heart is left (:shard_purified).
   #   Preserve: leave it whole; it re-forms as an echo, "The goddess still waits
   #           in the ice" (:shard_preserved).
-  #   Destroy: Dawnfang through it; the Blessing of Verdant Fire (:shard_destroyed).
+  #   Destroy: Dawnfang through it; no blessing, and Sephek can never come back
+  #           whole from it (:shard_destroyed). Sanctify (Purify) earns the
+  #           Blessing of Verdant Fire, as GQ2 (rootspire.md 8489) has it.
   def scene_heart_choice
     return if flag?(:heart_choice_made)
     say(["In the silver pool beneath the dead engine, something floats free, gathering ice and auroral light: the Frost Saint Shard.",
@@ -696,18 +698,38 @@ module FrostThaw
     sayc([cl(:wyn, "(kneeling at the pool's edge) It's... it's frightened. Both of them in there are."),
           cl(:alberica, "Darling, whatever we do, we do it together."),
           cl(:meat_meat, "Meat Meat votes stab. Meat Meat always votes stab. ...Meat Meat will listen, this once.")])
-    c = pbMessage(_INTL("The Frost Saint Shard..."), [_INTL("Purify it"), _INTL("Leave it whole"), _INTL("Destroy it")], 0)
+    c = pbMessage(_INTL("The Frost Saint Shard..."), [_INTL("Sanctify it"), _INTL("Leave it whole"), _INTL("Destroy it")], 0)
     case c
     when 0
       set_flag(:shard_purified)
       say(["You lift it out of the pool. It's so cold your hands go white.",
-           with_or_is?(:wyn) ? "Wyn pours Hyphora's gold sap over it, and you lay the warm golden dagger against it." :
-                               "You pour gold sap from the engine's cage over it, and lay the warm golden dagger against it.",
-           "Green fire and gold. The frost-light screams, and thins, and goes out of it like breath out of a lung.",
-           "What's left beats once, slowly. Only a man's heart. Cold. Clean.",
-           "A sliver of the light breaks off, and doesn't go out: it hums four notes. Shimmer's notes."])
-      give_key(:FT_SAINTSECHO)
-      wheel(1)
+           "Inside it, under the goddess's frost-light, something else is listening: an echo of Sephek, the drowned man, curled small."])
+      # GQ2 (rootspire.md 8489): tend it (Medicine), then talk the echo into
+      # accepting Verdant Fire (Persuasion). Both, and the blessing is yours.
+      tend = pbMessage(_INTL("The heart is cracked with frost. How do you hold it?"),
+                       [_INTL("Warm it slowly, against your chest"), _INTL("Plunge it into the hot sap"), _INTL("Chip the frost off")], 0)
+      persuade = pbMessage(_INTL("The echo of Sephek flinches from the gold. What do you tell it?"),
+                           [_INTL("\"She burned you to keep you. This fire is only to warm you.\""),
+                            _INTL("\"Take it, or we break you.\""), _INTL("\"Auril is gone. Let go.\"")], 0)
+      say([with_or_is?(:wyn) ? "Wyn pours Hyphora's gold sap over it, and you lay the warm golden dagger against it." :
+                               "You pour gold sap from the engine's cage over it, and lay the warm golden dagger against it."])
+      if tend == 0 && persuade == 0
+        say(["The echo uncurls. It lets the green fire in.",
+             "Green fire and gold. The frost-light screams, and thins, and goes out of it like breath out of a lung.",
+             "What's left beats once, slowly. Only a man's heart. Cold. Clean.",
+             "The green fire doesn't go out. It runs up the dagger, into your arms, into your Pokémon.",
+             "A sliver of the light breaks off, and doesn't go out either: it hums four notes. Shimmer's notes."])
+        grant_blessing(:verdant_fire, "Blessing of Verdant Fire", "Your Pokémon's Fire- and Grass-type moves are a little stronger.")
+        give_key(:FT_SAINTSECHO)
+        set_flag(:shard_sanctified)
+        wheel(1)
+      else
+        say(["The echo shies from the fire and the frost-light floods back into the space it left.",
+             "The Shard wrenches out of your hands. Something rises off it: a wraith of rime with a drowned man's face. The Frost Saint's Echo."])
+        boss_battle(named_mon(:B92H215, 50, "Frost Saint Echo"))
+        say(["The Echo comes apart in sleet. What's left in your hands beats once, slowly. Only a man's heart. Cold. Clean.",
+             "No blessing comes of it. But the corruption's out of it."])
+      end
     when 1
       set_flag(:shard_preserved)
       say(["You leave it in the pool. The ice gathers round it again, patient as frost on a window.",
@@ -716,10 +738,9 @@ module FrostThaw
       sayc([cl(:alerion, "Someone will come for it."), cl(:reptin, "Then we'll know where they'll be going.")])
     else
       set_flag(:shard_destroyed)
-      say(["You drive Dawnfang through it.", "The Shard bursts like a frozen lake in spring, and the light that comes out of it is green and gold.",
-           "It runs up the golden dagger, into your arms, into your Pokémon.",
-           "Most of the shards melt. A few skitter away into the roots, where the light can't follow."])
-      grant_blessing(:verdant_fire, "Blessing of Verdant Fire", "Your Pokémon's Fire- and Grass-type moves are a little stronger.")
+      say(["You drive Dawnfang through it.", "The Shard bursts like a frozen lake in spring, and the light that comes out of it is cold and white, and goes out.",
+           "Most of the shards melt. A few skitter away into the roots, where the light can't follow.",
+           "(Whatever comes back from this, it won't come back whole.)"])
     end
     set_flag(:heart_choice_made)
     add_counter(:story_beats)

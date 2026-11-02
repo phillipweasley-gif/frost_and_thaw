@@ -677,7 +677,8 @@ module FrostThaw
          "In a room of crystal leaves that nobody else is allowed into, they unroll the earliest maps: Dougan's Hole, before the tree.",
          "EIRWEN: Look. The Twenty Stones of Thruun. The old circle. Here.",
          "EIRWEN: And here's Rootspire, drawn over it. The Stones lie exactly beneath us. Beneath the Heartroot.",
-         "EIRWEN: There's a passage. Sealed since the Reversal. Under the Root-Gate.",
+         "EIRWEN: There's a passage. Sealed since the Reversal. It runs from under the Root-Gate down past the Guild Dig.",
+         "EIRWEN: The old maps end it at a door. Iron and glass.",
          "EIRWEN: It's begun humming. Two nights ago. The leaves that line it are writing down a sound like hammers."], event_id)
     if ($PokemonBag.pbHasItem?(:FT_CHARDALYN) rescue false)
       say(["Eirwen looks at the chardalyn fragment for a long time without touching it.",

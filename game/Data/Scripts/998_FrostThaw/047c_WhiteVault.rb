@@ -166,6 +166,12 @@ module FrostThaw
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     av = named_mon(SEPHEK_MINOR, 61, "Sephek, Minor Avatar")
     av.hp = [(av.totalhp * (fought >= 3 ? 0.5 : 1.0)).floor, 1].max   # alone, he can't heal above half
+    # GQ2 (rootspire.md 8492): destroying the Shard means he can't truly return
+    # from it. Wired back together from splinters, he comes back less than whole.
+    if flag?(:shard_destroyed)
+      av.hp = [(av.hp * 0.6).floor, 1].max
+      say(["The splinters in his chest grind against each other. He comes at you a beat slow, like something put together from memory."])
+    end
     setBattleRule("canLose") rescue nil       # (he can't die here: win or lose, he shatters and reforms)
     won = boss_battle(av)
     if won
