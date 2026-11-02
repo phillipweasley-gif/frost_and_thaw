@@ -173,7 +173,7 @@ Rows 1–48 and 53–73 (Glimmer's conversion, Reptin's training, the downtime w
 | 25 H31 Devil's Bloom (social test) | Changed | Built in place | 2144; :886 `devils_bloom` (bargain, refuse or break; the Nine Hells patron) | SR "H29/H31 …" |
 | 26 H33 Hammer-Heart Workshop | Changed | Built in place | 2153; 046_ForgeRooms.rb:883 `hammer_heart` | SR "H22/H33/H37 the Antechapel" |
 | 27 H22 Auroral Antechapel | Missing | Built | 2153 | SR "H22 the ghost of the Shard" |
-| 28 H32 Thorn-Run Hall | Missing | Built | 2153 thorn triggers at x29 and x34; :877 `thorn_run` | SR "H22/H33/H37 …" (the walk to the golems crosses it) |
+| 28 H32 Thorn-Run Hall | Missing | Built | 2153 thorn triggers across the hall at x29 and x34 (y13–15), on the only way to the Heart; :877 `thorn_run` (`:thorn_run_crossed`) | SR "H32 the Thorn-Run Hall" |
 | 29 H23 Heart Chamber: the Shard boss, Auril's whispers, purify/preserve/destroy | Changed | Built (see B H23) | 034_Chapter8.rb:619, :669 | SR "H23 …" (both beats) |
 | 30 H24 Breaking Circle | Missing | Built | 034_Chapter8.rb:450–537 | SR "H24 the Breaking Circle" |
 | 31 H25 Sloughing Veins | Missing | Built | 2154 | SR "H25" |

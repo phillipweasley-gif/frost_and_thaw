@@ -575,6 +575,7 @@ module Story
       fit(53)
       travel(2076); HL.frames(30); HL.settle(8000)
       until_flag(:circle_phase, 3) { travel(2076); HL.frames(30); HL.settle(8000) } if !FrostThaw.flag?(:circle_done)
+      beat("  H32 the Thorn-Run Hall", :thorn_run_crossed)
       beat("SC 8.06 Summer (Avarice): her opening and her mechs", :heart_mechs_won)
       # H24: work the spires (the sixth action wakes her); then the fight itself
       (1..12).each { |n| break if FrostThaw.flag?(:circle_done); talk(/^Root-spire #{n}$/) }

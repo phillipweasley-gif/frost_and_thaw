@@ -877,6 +877,7 @@ module FrostThaw
   def thorn_run(event_id = nil)
     say(["Thorned roots thrust from the walls, and a pulse of time-lapse light makes everything happen a beat early!"])
     hurt_lead(0.08, "A thorn catches {1}.")
+    set_flag(:thorn_run_crossed)
   end
 
   # H33: the Hammer-Heart workshop.
