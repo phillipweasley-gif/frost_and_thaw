@@ -792,6 +792,36 @@ check("...and if you took her cub, she isn't shown curled round it") { !FT.lines
 check("every chasm whisper speaks once") {
   $messages.clear; FT.chasm_whisper(1); n = $messages.size; FT.chasm_whisper(1); n > 0 && $messages.size == n }
 $next_choice = nil
+# W4 (the faithful build-out): every story function a map event calls exists,
+# and the White Vault's sigils behave
+calls = []
+Dir[File.expand_path("../build/maps/Map*.rxdata", __dir__)].each do |f|
+  Marshal.load(File.binread(f)).events.each_value do |e|
+    e.pages.each do |pg|
+      src = pg.list.select { |c| [355, 655].include?(c.code) }.map { |c| c.parameters[0] }.join("\n")
+      src.scan(/FT\.(\w+[?!]?)/) { |(fn)| calls << [fn, File.basename(f), e.name] }
+    end
+  end
+end
+missing_fns = calls.reject { |fn, _, _| FT.respond_to?(fn) }.uniq
+check("every story function a map event calls exists (#{calls.size} calls)") { missing_fns.empty? || (puts missing_fns.inspect; false) }
+check("W4's switches are ones the game reads (4120-4159)") {
+  FT.constants.select { |c| c.to_s.start_with?("SW_") }.map { |c| FT.const_get(c) }.select { |v| v.is_a?(Integer) && v >= 4120 && v < 4160 }.all? { |v| FT::STORY_SWITCHES.include?(v) } }
+check("no wild table holds a fusion (the game's wild-fusion roll breaks on one)") {
+  bad = FT::ENCOUNTERS.select { |_id, t| t.any? { |k, list| k != :step_chances && list.any? { |e| e[1].to_s =~ /^B\d+H\d+$/ } } }.keys
+  bad.empty? || (puts bad.inspect; false) }
+check("W4's maps are named and in the 2160-2179 range") { [2077, 2078, 2160, 2161, 2163, 2164, 2165, 2166, *2168..2172].all? { |i| FT::MAP_NAMES[i] } }
+def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? 0 : 0; end
+def pbConfirmMessage(t); $messages << t; true; end
+%i[sigils_merged sigil_echo sigil_eirwen sigil_sephek echo_wraiths_down].each { |f| FT.state[:flags]&.delete(f) }
+FT.set_flag(:sigil_echo); FT.set_flag(:sigil_eirwen)
+two = FT.try_merge_sigils
+FT.set_flag(:sigil_sephek); $messages.clear
+three = FT.try_merge_sigils
+check("two sigils don't merge; three do, with the read-aloud") { !two && three && FT.flag?(:sigils_merged) && $messages.any? { |m| m.to_s.include?("wings spread over a frozen eye") } }
+check("the trial counts Rheven's testimony and Naerth's ledger") {
+  %i[rheven_testimony naerth_ledger].all? { |f| FT::WITNESSES.any? { |flags, *_| flags.include?(f) } } }
+check("Anduin's outcome isn't keyed on the always-set oath") { !File.read(File.expand_path("../game/Data/Scripts/998_FrostThaw/036_Chapter10.rb", __dir__)).include?("hyphora_sworn") }
 
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

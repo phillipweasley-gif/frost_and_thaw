@@ -464,7 +464,8 @@ module Story
       beat("SC 6.09 festival night (both roads open)", :ch7_started)
       beat("  Wyn joins", :wyn_joined) unless FrostThaw.herald?(:wyn)
       puts "  party now: #{FrostThaw.companions.inspect}"
-      chapter7 unless ENV["STOP_AT"] == "6"
+      # (before Chapter 7: chapter7 plays on to the ending, and after Ch9 the
+      # thinned Wall lets you through the Echo Gate)
       2.times do
         travel(2050)
         HL.walk_to(8, 22) rescue nil; HL.step(4) rescue nil; HL.frames(20)
@@ -473,6 +474,7 @@ module Story
       beat("side: the Echo Gate's Mirror Wraiths (a Frostshard Sigil)", :echo_wraiths_down) unless ENV["NO_SIDE"]
       puts "ECHO GATE (the Wall holds until Ch9): #{$game_map.map_id == 2050 ? 'ok' : "FAILED (map #{$game_map.map_id} #{HL.pos})"}"
       sweep("Rootspire") if ENV["SWEEP"]
+      chapter7 unless ENV["STOP_AT"] == "6"
     end
 
     # Act II, Chapter 7: the Heartroot's Root Gate and Sap Wells, and Selrae.
@@ -630,27 +632,124 @@ module Story
       HL.frames(30); HL.settle(5000)
       beat("SC 10.01 the Tribunal opens", :trials_open)
       fit(56)
-      travel(2050); talk(/^Anduin$/)
-      beat("SC 10.02 roots of love (#{FrostThaw.flag?(:anduin_reconciled) ? 'reconciled' : 'doubtful'})", nil)
+      travel(2050); HL.frames(30); HL.settle(5000)
+      beat("  the town criers; a carpenter wants arms on the wall", :criers_heard)
+      # the civic layer: a day on the wall, the camp's blankets, the wolves
+      travel(2060)
+      talk(/Wall foreman/)
+      talk(/Refugee camp/)
+      talk(/Captain Rheven \(wall\)/)
+      rest_a_day
+      travel(2060); talk(/Wall foreman/)
+      until_flag(:wolves_driven_off, 2) { travel(2060); talk(/Winter wolves/) }
+      beat("  the wall, the camp and the winter wolves (#{FrostThaw.trial[:helped]} days' help)", :wolves_driven_off)
+      talk(/Refugee from Easthaven/); talk(/Refugee from Termalaine/)
+      beat("  the refugees will testify", :refugees_testify)
+      # Q1: Reptin and Anduin; the Heartroot's Test on the Attunement Way
+      travel(2050); talk(/^Anduin$/); HL.settle(3000)
+      if $game_map.map_id == 2165
+        step_on(/The passages split/); step_on(/The spore-drift/); step_on(/The whispering roots/)
+        talk(/The golden leaf/); HL.settle(3000)
+      end
+      beat("SC 10.02 roots of love: the Heartroot's Test (#{FrostThaw.flag?(:anduin_reconciled) ? 'reconciled' : 'doubtful'})", :attunement_done)
+      travel(2056); talk(/Eirwen at the shrine/)
+      beat("  Eirwen: witness to restraint, and Naerth's last ledger", :naerth_ledger)
+      # Q2: Meat Meat, Phildendrin, Autumn's mirror
       travel(2054); talk(/Root-cells/)
       beat("SC 10.03 assassin's reckoning (Phildendrin)", :phildendrin_found)
       until_flag(:mm_atoned, 3) { travel(2058); talk(/Autumn's mirror/) }
       beat("  Autumn's spying mirror broken", :mm_atoned)
-      travel(2055); talk(/Captain Kethan Vale/); HL.settle(3000)
-      talk(/Broken door/)
-      beat("SC 10.04 absent watcher (Wyn cleared)", :wyn_cleared)
-      travel(2055); travel(2078); talk(/^Talion$/)
-      beat("SC 10.05 brother from beyond (Talion released)", :talion_released)
+      # Q3: Wyn's summons, the hearing, the Underdark Door, Pell, Hyphora's alibi
+      travel(2050); talk(/^Sorrel$/)
+      beat("  Sorrel's citation", :wyn_summoned)
+      travel(2054); talk(/Kethan Vale \(hearing\)/); HL.settle(3000)
+      if $game_map.map_id == 2077
+        HL.frames(20); HL.settle(3000)
+        fit(58)
+        step_on(/Ambush pool/); step_on(/Ambush weeds/); step_on(/Ambush stalker/)
+        talk(/Broken door/)
+      end
+      beat("  the Underdark Door (the ritual runes)", :underdark_door_seen)
+      travel(2055); talk(/^Pell$/)
+      travel(2054); talk(/Kethan Vale \(hearing\)/)
+      beat("SC 10.04 absent watcher (Wyn #{FrostThaw.flag?(:wyn_barred) ? 'sentenced' : 'cleared'})", :wyn_cleared)
+      # Q4: Talion in the Fields
+      travel(2060); 3.times { talk(/^Talion$/) unless FrostThaw.talion_resolved? }
+      beat("SC 10.05 brother from beyond (#{%i[talion_released talion_restored talion_chased talion_haunted].find { |f| FrostThaw.flag?(f) }})", :talion_met)
+      # Q5: Alberica's spores
+      travel(2054); talk(/Spring and Winter/)
       travel(2068); talk(/Kelyn and Selrae/)
-      beat("SC 10.06 spores of contention (the memory bubble)", :colony_recognised)
+      beat("SC 10.06 spores of contention (#{FrostThaw.flag?(:colony_recognised) ? 'recognised' : 'exiled'})", :spores_debated)
+      trial_week_side unless ENV["NO_SIDE"]
+      # Gym 8: Selrae's bid, and the crystals' dream
       fit(58)
-      until_flag(:badge_selrae) { travel(2056); talk(/Selrae Vorn/) }
-      beat("SC 10.07 GYM 8: Selrae's Winter's Seal", :badge_selrae)
-      puts "  witnesses: #{FrostThaw.witnesses.size}"
-      travel(2054); talk(/Kelyn/)
-      beat("SC 10.08 the verdict (#{%i[verdict_acquitted verdict_service verdict_geas].find { |f| FrostThaw.flag?(f) }})", :verdict_acquitted)
+      until_flag(:badge_selrae) do
+        travel(2054); talk(/Selrae Vorn/); HL.settle(3000)
+        if $game_map.map_id == 2166
+          %w[Spring Summer Autumn Winter].each { |s| talk(/^#{s}$/) }
+          HL.settle(5000)
+        end
+      end
+      beat("SC 10.07 GYM 8: the Four Seasons (#{%i[canopy_free canopy_watched canopy_martial_law].find { |f| FrostThaw.flag?(f) }})", :badge_selrae)
+      puts "  witnesses: #{FrostThaw.witnesses.size} (summer #{FrostThaw.witnesses(:summer).size}, autumn #{FrostThaw.witnesses(:autumn).size}); opinion #{FrostThaw.opinion_word}"
+      travel(2054); talk(/^Kelyn/)
+      beat("SC 10.08 the verdict (#{%i[verdict_acquitted verdict_service verdict_fine verdict_geas].find { |f| FrostThaw.flag?(f) }}; Meat Meat #{%i[mm_commuted mm_outlaw].find { |f| FrostThaw.flag?(f) } || 'serves'})", :verdict_heard)
       beat("SC 10.09 the vote: end of Act II (#{%i[rheven mira eirwen phildendrin anduin].select { |k| FrostThaw.flag?(:"council_#{k}") }.join(', ')})", :ch10_done)
       chapter11 if FrostThaw.respond_to?(:act3_start) && FrostThaw.flag?(:ch10_done) && ENV["STOP_AT"] != "10"
+    end
+
+    # A night at the Rooted Hearth: the trial week's next day.
+    def rest_a_day
+      travel(2053); talk(/Hellen/); HL.settle(3000)
+    end
+
+    # The trial week's side stories (rootspire.md Tab 4 and Tab 6).
+    def trial_week_side
+      # the Mirror Maze, behind the Echo Gate's frost (A1; the wraiths' testimony; the Echo sigil)
+      travel(2050); talk(/Echo Gate frost/); HL.settle(3000)
+      if $game_map.map_id == 2161
+        HL.frames(20); HL.settle(3000)
+        talk(/Junction: wraiths/); talk(/Junction: three ways/); talk(/Junction: the shadow/)
+        talk(/Alerion's reflection/)
+        6.times { talk(/The ring of wraiths/) unless FrostThaw.flag?(:sigil_echo) || (FrostThaw.flag?(:echo_wraiths_down) && FrostThaw.flag?(:wraith_echo_avarice)) }
+        travel(2050)
+      end
+      beat("side: the Mirror Maze (Alerion's reflection; the wraiths' testimony)", :reflection_claimed)
+      beat("  the Echo sigil (from the maze, or the Echo Gate's wraiths)", nil) if FrostThaw.flag?(:sigil_echo) || FrostThaw.flag?(:echo_wraiths_down)
+      # W1: the Smuggler's Run
+      travel(2055); talk(/Dockworker/); talk(/Hatch to the Smuggler's Run/); HL.settle(3000)
+      if $game_map.map_id == 2160
+        HL.frames(20); HL.settle(3000)
+        step_on(/Spore fork 1/); step_on(/Spore fork 2/); step_on(/Spore fork 3/)
+        talk(/The eyed colony/)
+      end
+      beat("side W1: shadows in the Undercity (#{FrostThaw.flag?(:undercity_bargain) ? 'a bargain' : 'burned'})", :undercity_done)
+      # the Library's missing leaf; out through the thinned Wall to the Glasswater
+      lift_up; travel(2062); talk(/Chronal shelf/); talk(/The oldest shelf/)
+      beat("side B2: the stolen leaf (Eirwen's request)", :leaf_quest)
+      travel(2061); lift_down
+      travel(2060); talk(/Two spirits/)
+      beat("side R2: the Fields' two spirits", :field_spirits_done)
+      travel(2078); talk(/The lake's edge/)
+      beat("side W2: the Mirror Lake ghost", :lake_ghost_done)
+      fit(60)
+      talk(/^Old boat$/); HL.settle(3000)
+      if $game_map.map_id == 2163
+        HL.frames(20); HL.settle(3000)
+        step_on(/Frozen time 1/)
+        talk(/Frozen Rootwarden/)
+        step_on(/Frozen time 2/)
+        talk(/Mead hall door/); HL.settle(3000)
+        talk(/Temporal Guardian/) if $game_map.map_id == 2164
+        travel(2163)
+        beat("side GQ4: beyond the Wall (the third map fragment)", :vault_map_3)
+        ev = find_event(/The Wall, closing/)
+        HL.walk_to(ev.x + 1, ev.y) if ev; HL.step(4) if ev; HL.settle(3000)
+      end
+      beat("side B2: the chronal leaf, from the frozen warden", :rootwarden_freed)
+      lift_up; travel(2062); talk(/Chronal shelf/)
+      beat("  the leaf restored", :leaf_restored)
+      travel(2061); lift_down
     end
 
     # Act III, Chapter 11: The Frost Saint Walks (SC 11.01-11.04).
@@ -660,10 +759,35 @@ module Story
       fit(60)
       HL.frames(30); HL.settle(8000)
       beat("SC 11.02 the Frost Saint walks (Frostina taken)", :frostina_taken)
-      beat("SC 11.03 three hearts", :knows_rewritten)
+      beat("  Sephek's Minor Avatar (a Frostshard Sigil falls)", :sigil_sephek)
+      beat("SC 11.03 three hearts (Auril's relics)", :knows_rewritten)
       travel(2054); HL.frames(30); HL.settle(5000)
       beat("SC 11.04 four chairs (route: #{FrostThaw.voyage_route})", :ch11_done)
+      beat("  Eirwen's sigil; the three sigils merge", :sigils_merged)
+      act3_side unless ENV["NO_SIDE"]
       chapter12
+    end
+
+    # Before sailing: Auril's relics in the Heartroot, and the White Vault.
+    def act3_side
+      fit(64)
+      until_flag(:relic_seal, 2) { travel(2057); talk(/Auril's relic \(seal\)/) }
+      until_flag(:relic_wells, 2) { travel(2058); talk(/Auril's relic \(relic_wells\)/) }
+      until_flag(:relic_overflow, 2) { travel(2067); talk(/Auril's relic \(relic_overflow\)/) }
+      beat("side: Auril's three relics smashed (no Divine Rejuvenation)", :auril_relics_destroyed)
+      return if !FrostThaw.flag?(:sigils_merged)
+      travel(2078); talk(/^Old boat$/); HL.settle(3000)
+      travel(2163); travel(2168); HL.frames(20); HL.settle(3000)
+      beat("side: the White Vault", :vault_entered)
+      until_flag(:vault_door_open, 2) { travel(2168); talk(/Door of wings/) }
+      travel(2169); HL.frames(20); HL.settle(3000)
+      %w[west east north].each { |k| until_flag(:"circuit_#{k}", 2) { travel(2169); talk(/Circuit #{k}/) } }
+      fit(66)
+      until_flag(:avarice_body_broken, 3) { travel(2170); talk(/Avarice's cradle/) }
+      beat("side: Avarice Reforged, in the Seraph Cradle (#{FrostThaw.flag?(:avarice_soul_shattered) ? 'shattered' : 'fled north'})", :avarice_revealed)
+      travel(2163); ev = find_event(/The Wall, closing/)
+      if ev then HL.walk_to(ev.x + 1, ev.y); HL.step(4); HL.settle(3000) end
+      travel(2050)
     end
 
     # Act III, Chapter 12: The Sea of Moving Ice (SC 12.01-12.06).
@@ -709,11 +833,12 @@ module Story
       travel(2088); HL.frames(20); HL.settle(3000)
       talk(/^Iskra$/)
       beat("SC 13.06 the roe's nest", :iskra_passed)
-      talk(/^Sephek$/)
+      until_flag(:frostina_freed, 3) { travel(2088); talk(/^Sephek$/) }
       beat("SC 13.07 the Frost Saint (#{FrostThaw.flag?(:sephek_turned) ? 'turned' : 'beaten'})", :frostina_freed)
       fit(70)
       until_flag(:auril_down, 3) { travel(2089); HL.frames(30); HL.settle(10000) }
       beat("SC 13.08-13.09 the Frostmaiden and the Rewritten Auril", :auril_down)
+      beat("  Avarice's last splinter, at the throne", :avarice_ended)
       beat("SC 13.10 an ending (#{%i[ending_shatter ending_third_way ending_still_keeper].find { |f| FrostThaw.flag?(f) }})", :game_complete)
     end
 
@@ -932,27 +1057,32 @@ module Story
   end
 end
 
-HL.start_up
-HL.quiet = !ENV["HL_VERBOSE"]
-mode = ENV["HL_MODE"] || "journey"
-HL.answers = [[/Which adventure/, 1], [/How would you like to play/, mode == "journey" ? 0 : 1],
-              [/Choose a difficulty/, 1], [/Another round/, 1], [/Spar with/, 1], [/How much are you putting down/, 3],
-              [/rest your Pokémon/, 0], [/What do you say/, 1], [/save your game/, 1],
-              [/scythe and child/, /Bone dust|silence/],
-              [/Verse \d/, ->(t, c) { %w[Winter Spring Summer Autumn].each { |w| i = c.index { |x| x.to_s.start_with?(w) }; return i if i }; 0 }],
-              [/Weapon, or seed/, 0], [/What do you do about Selrae/, 0], [/Swear the Wardens/, 0], [/endorse first|And second/, 0], [/What do we do with a god/, 1], [/Iskra lowers/, 0], [/^Sephek\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Rose/ } || c.index { |x| x.to_s =~ /Alerion/ } || 0 }]]
-HL.answers << [/Which Pokémon/, ENV["HL_STARTER"].to_i] if ENV["HL_STARTER"]
-HL.answers << [/Which Herald|Who will you be|Which of the Heralds/, ->(t, c) { c.index { |x| x.to_s =~ /#{ENV['HL_HERALD']}/i } || 0 }] if ENV["HL_HERALD"]
-HL.new_game
-HL.frames(200)
-$PokemonGlobal.repel = 999999 if ENV["REPEL"]
-t = Time.now
-begin
-  $headless_watchdog = Graphics.frame_count + 2_000_000
-  Story.run
-rescue HeadlessStuck => e
-  HL.problem("STUCK: #{e.backtrace.reject { |l| l =~ /internal/ }.first(6).join(' <- ')}")
+# (Run directly to play the story; required by a focused test, only Story is loaded.)
+if __FILE__ == $0
+  HL.start_up
+  HL.quiet = !ENV["HL_VERBOSE"]
+  mode = ENV["HL_MODE"] || "journey"
+  HL.answers = [[/Which adventure/, 1], [/How would you like to play/, mode == "journey" ? 0 : 1],
+                [/Choose a difficulty/, 1], [/Another round/, 1], [/Spar with/, 1], [/How much are you putting down/, 3],
+                [/rest your Pokémon/, 0], [/What do you say/, 1], [/save your game/, 1],
+                [/scythe and child/, /Bone dust|silence/],
+                [/Verse \d/, ->(t, c) { %w[Winter Spring Summer Autumn].each { |w| i = c.index { |x| x.to_s.start_with?(w) }; return i if i }; 0 }],
+                [/Weapon, or seed/, 0], [/What do you do about Selrae/, 0], [/Swear the Wardens/, 0], [/endorse first|And second/, 0], [/What do we do with a god/, 1], [/Iskra lowers/, 0],
+                [/^Talion\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Decide what to do|Accept he's a reflection/ } || 0 }],
+                [/Escape\?/, 0], [/Who speaks for the Heralds/, 0], [/Help with\.\.\./, 0], [/^Sephek\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Rose/ } || c.index { |x| x.to_s =~ /Alerion/ } || 0 }]]
+  HL.answers << [/Which Pokémon/, ENV["HL_STARTER"].to_i] if ENV["HL_STARTER"]
+  HL.answers << [/Which Herald|Who will you be|Which of the Heralds/, ->(t, c) { c.index { |x| x.to_s =~ /#{ENV['HL_HERALD']}/i } || 0 }] if ENV["HL_HERALD"]
+  HL.new_game
+  HL.frames(200)
+  $PokemonGlobal.repel = 999999 if ENV["REPEL"]
+  t = Time.now
+  begin
+    $headless_watchdog = Graphics.frame_count + 2_000_000
+    Story.run
+  rescue HeadlessStuck => e
+    HL.problem("STUCK: #{e.backtrace.reject { |l| l =~ /internal/ }.first(6).join(' <- ')}")
+  end
+  puts "\n#{Story.beats.count { |_l, ok| ok }}/#{Story.beats.size} story beats in #{(Time.now - t).round}s (#{Story.instance_variable_get(:@retries) || 0} retries after lost battles)"
+  puts "problems:"; puts HL.problems.uniq
+  File.write(ENV["HL_OUT"] || "/tmp/claude-0/-home-claude/afa09e9e-912d-533c-960b-db337877363e/scratchpad/story.txt", HL.log.map { |l| l.dup.force_encoding("UTF-8") }.join("\n"))
 end
-puts "\n#{Story.beats.count { |_l, ok| ok }}/#{Story.beats.size} story beats in #{(Time.now - t).round}s (#{Story.instance_variable_get(:@retries) || 0} retries after lost battles)"
-puts "problems:"; puts HL.problems.uniq
-File.write(ENV["HL_OUT"] || "/tmp/claude-0/-home-claude/afa09e9e-912d-533c-960b-db337877363e/scratchpad/story.txt", HL.log.map { |l| l.dup.force_encoding("UTF-8") }.join("\n"))

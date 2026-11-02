@@ -201,8 +201,22 @@ module FrostThaw
          "THE TIGER QUEEN'S SHADE: Solitude unlocks everything. Stay.",
          "THE TIGER QUEEN'S SHADE: Alone, nothing can be taken from you again.",
          tl(:alerion, "(a hand on the door) ...It would be quiet.")], event_id)
-    say([flag?(:talion_released) ? "A boy's voice from nowhere, warm this time: \"Go back to them. You came back for me.\"" :
-                                   "Frostina's four notes, very faint, from somewhere above the fortress."])
+    if flag?(:talion_haunted) || flag?(:talion_chased)
+      # "If he tries to control Talion... he may face a vengeful specter later" (Ch X, Quest 4)
+      say(["The door swings open by itself. On the threshold stands a youth with mirror-glass for skin.",
+           "TALION: (in a voice like ice cracking) You kept me. You KEPT me. Stay in the house, you said.",
+           "TALION: Stay with me. Stay in the house. Forever."])
+      boss_battle(named_mon(:B92H122, 63, "Talion's Echo"))
+      say(["The echo cracks down the middle. Through the crack, for one breath, a boy's face, not angry any more.",
+           "TALION: (very small) ...Go back to them. It's all right. Go back."])
+      set_flag(:talion_laid)
+    elsif flag?(:talion_restored)
+      say(["A voice from the hall behind you, alive and annoyed: \"Alerion! You said you'd be back for supper!\"",
+           "(Talion, at home in Rootspire, waiting. Somebody's waiting for you to come back.)"])
+    else
+      say([flag?(:talion_released) ? "A boy's voice from nowhere, warm this time: \"Go back to them. You came back for me.\"" :
+                                     "Frostina's four notes, very faint, from somewhere above the fortress."])
+    end
     if flag?(:dragoons_bound)
       say(["Behind #{al ? 'your' : 'his'} ribs, very faint and very far, a second heartbeat."])
     end
@@ -318,12 +332,20 @@ module FrostThaw
             cl(:alberica, "Welcome to being a person, sweetheart. It's awful. You'll love it.")])
       set_flag(:sephek_turned)
     else
-      say(["SEPHEK: Then let's see whose cold is colder."]) if pick != :fight
-      return if !trainer(:sephek_saint, nil)
-      say(["SEPHEK: (beaten, breaking the crystal himself) ...She was never mine to take.",
+      # The Major Avatar (rootspire.md Tab 4, 1.2): his followers, the
+      # transformation, winter wolves and a coldlight walker; Divine
+      # Rejuvenation while any of Auril's Heartroot relics stands.
+      return if !sephek_major_fight
+      say(["The crystal horror comes apart. What's left on the ice is a man, and he's shivering.",
+           "SEPHEK: (beaten, breaking the crystal himself) ...She was never mine to take.",
            "Frostina tumbles out and shakes herself like a dog."])
       frostina_heartbeat
       set_flag(:sephek_beaten)
+    end
+    if !flag?(:sigil_sephek)                       # (if the Shrine never got its sigil out of him)
+      say(["Something rings on the ice where he fell: a Frostshard Sigil, shaken out of the Frost Saint."])
+      give(:FT_FROSTSIGIL)
+      set_flag(:sigil_sephek)
     end
     sayc([cl(:meat_meat, "Frosty! Meat Meat missed you. Razzy missed you more. Razzy is very loud about it.")])
     set_flag(:frostina_freed)
@@ -425,6 +447,7 @@ module FrostThaw
          "It's Auril. All that's left of her.",
          "AURIL: (tiny, from the diamond) Everything I loved, I kept. Everything you love, you lose."])
     speak(:alberica, "(kneeling beside it) Yes. That's how you know you loved it.", "(kneeling beside it) ...I know.")
+    avarice_at_the_throne          # what's left of Avarice comes for what's left of Auril
     set_flag(:auril_down)
     ($game_switches[SW_AURIL_DOWN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)

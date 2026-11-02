@@ -111,13 +111,9 @@ module FrostThaw
          as(:alerion, "You don't get her twice."),
          herald?(:meat_meat) ? "(Both arms around Razzilith's neck. He wants to go through them. So do you.)" :
                                "MEAT MEAT: (both arms around Razzilith's neck, holding him back) Not yet, Razzy. Not yet."])
-    trainer(:halo_vigilant, nil)
-    able = $Trainer.party.count { |pk| !pk.egg? && pk.hp > 0 }
-    say(["ELINE and SEPHEK: (together, as if one were the other's echo) Stand back from the Saint."])
-    won = pbTrainerBattle(:FT_HALO_MATRON, "Matron Eline", nil, able >= 2, 0, true) ? true : false
-    say([won ? "Eline goes down on one knee. Sephek doesn't move at all. He doesn't need to." :
-               "The cold comes off Sephek in a wave and puts every Pokémon on the Shrine on the ground."])
-    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    # The Minor Avatar (rootspire.md Tab 4, 1.1): his followers first; he can't
+    # be killed in Rootspire, and he drops a Frostshard Sigil when he breaks.
+    sephek_minor_avatar
     say(["The sky above the Canopy tears open.",
          "Through the thinned Wall, a vast white roe comes down out of the night, antlers trailing aurora.",
          "Iskra."])
@@ -173,9 +169,16 @@ module FrostThaw
     if flag?(:knows_three_hearts)
       say([cl(:reptin, "Luna Carver told us that. Four hundred years ago. Last month.")].compact)
     end
+    # Divine Rejuvenation: the Halo seeded the Heartroot with Auril's relics.
+    sayc(["SELRAE: (very low) And you saw him get up again. In the snow, after you broke him.",
+          "SELRAE: The Halo carried her relics into the Heartroot while I was their prisoner. Three of them. Black ice.",
+          "SELRAE: While one of them stands, the Saint stands back up. Every time.",
+          cl(:alerion, "Then we break them first."),
+          cl(:reptin, "The Root Gate's seal, the Sap Wells, the Overflow Channel. We know those roots. Pleasantly, even.")])
+    set_flag(:knows_auril_relics)
     set_flag(:knows_rewritten)
     set_switch(SW_CH11_COUNCIL, true)
-    state[:goal] = "Morning. The Council Hall: four chairs, all filled."
+    state[:goal] = "Morning. The Council Hall: four chairs, all filled. (Auril's relics wait in the Heartroot: smash them, and Sephek stays down.)"
   end
 
   #-----------------------------------------------------------------------------
@@ -203,6 +206,15 @@ module FrostThaw
     speak(:alberica, "And I'm going. If she wants me, she can ask me to my face.",
                      "...I'm going. She doesn't get to wait for me.")
     say([cl(:reptin, "(sighing) Then I'd better pack something nice. I'm not meeting a god in travel clothes.")].compact)
+    # The White Vault thread: Eirwen keeps the second sigil; Sephek dropped the third.
+    say(["As the Council rises, Eirwen Solglass pads over, barefoot on the cold floor."])
+    eirwen_sigil
+    if !try_merge_sigils && !flag?(:sigils_merged)
+      say(["EIRWEN: Three sigils point to the White Vault. I've given you mine.",
+           "EIRWEN: The Echo Gate's mirror-wraiths keep another. Linger in the Gate, and listen, and they'll come.",
+           "(Hold all three Frostshard Sigils together, and they'll show you the way beyond the Auroral Wall.)"])
+      set_switch(SW_ECHO_POCKET, true) rescue nil
+    end
     set_flag(:ch11_done)
     add_counter(:story_beats)
     state[:goal] = case voyage_route
@@ -210,6 +222,7 @@ module FrostThaw
                    when :griffons then "The griffon roost, on the Canopy-Tier."
                    else "The Wennen bell pier, in the Root-Tier."
                    end
+    state[:goal] += " (The sigils point beyond the Auroral Wall: the White Vault, past the Glasswater.)" if flag?(:sigils_merged)
   end
 
   # How you get to Solstice: Mira's ship, Rheven's griffons, Anduin's whale, or Lumin's bell.

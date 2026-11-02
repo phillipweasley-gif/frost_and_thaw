@@ -161,6 +161,9 @@ module FrostThaw
   end
 
   def eira(event_id = nil)
+    if flag?(:blight_cleared) && flag?(:badge_undercanopy) && !(flag?(:eira_lore) && flag?(:eira_patrols) && (flag?(:spore_guard) || !with_or_is?(:wyn)))
+      return eira_development(event_id)
+    end
     if flag?(:hyphora_leave)
       return say(["EIRA: The tree breathes. The spore-guard owes you. We don't forget a debt."], event_id)
     end
@@ -174,6 +177,11 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def yarro_blight(event_id = nil)
     if flag?(:blight_cleared)
+      return yarro_tincture(event_id) if flag?(:spores_debated) && !flag?(:colony_recognised) && !flag?(:colony_exiled)
+      return yarro_errand(event_id) if flag?(:hyphora_named) && flag?(:badge_undercanopy) && !flag?(:yarro_errand_done)
+      if flag?(:blight_cleansed)
+        return say(["Where the black-red caps were, the beds glow a healthy amber. The sap under them beats steady."], event_id)
+      end
       return say(["Where the black-red caps were, new vermilion ones are pushing up through the ash.", "They're tiny, and bright."], event_id)
     end
     sayc(["Glowing fungal beds, and in the middle of them a spreading patch of black-red caps.",
@@ -183,6 +191,28 @@ module FrostThaw
           cl(:reptin, "Her? Forgive me. Who's 'her'?"),
           "YARRO: We don't say her name to people we've just met.",
           cl(:alberica, "Then buy us a drink first, sugar. That's how it works upstairs.")], event_id)
+    # R1, Verdant Sickness: Rheven comes down, and asks Reptin to cleanse it or cut it out.
+    if with_or_is?(:reptin)
+      r = verdant_sickness_ritual
+      return if r == false
+      if r == true
+        set_flag(:blight_cleared)
+        set_flag(:blight_cleansed)
+        set_flag(:yarro_witness)
+        set_flag(:verdant_sickness)
+        add_counter(:story_beats)
+        set_switch(SW_RHEVEN_BLIGHT, false)
+        sayc([cl(:wyn, "(to the root, very softly) There. You can breathe now."),
+              "RHEVEN: I owe you a drink, Reptin. Several. Come up to the Root-Tier when this is done.",
+              "YARRO: Mended, not burned. The gardens will remember you. So will I, if anyone asks.",
+              "YARRO: Take a lantern-puff. Squeeze it and it glows. Carry it and the dark leaves you be."])
+        give(:FT_SPORELANTERN)
+        say(["(The Luminescent Lantern: while you carry it, half as many wild Pokémon find you in caves.)"])
+        state[:goal] = "The Fane, east past the water: Sovereign Luminara."
+        return
+      end
+      say(["RHEVEN: Cut it, then. Cleanly. I'll hold the lamp."])
+    end
     fire = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && pk.moves.any? { |m| m && (GameData::Move.get(m.id).type == :FIRE rescue false) } }
     if fire
       return if !pbConfirmMessage(_INTL("Have {1} burn the blight, and nothing else?", fire.name))
@@ -201,6 +231,7 @@ module FrostThaw
     set_flag(:blight_burned)
     set_flag(:yarro_witness)
     add_counter(:story_beats)
+    set_switch(SW_RHEVEN_BLIGHT, false) rescue nil
     sayc([cl(:wyn, "(to the ash, very softly) There. You can grow back now."),
           "YARRO: Gently done. The gardens will remember you. So will I, if anyone asks.",
           "YARRO: Take a lantern-puff. Squeeze it and it glows. Carry it and the dark leaves you be."])
@@ -214,6 +245,14 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def leader_luminara(event_id = nil)
     if flag?(:badge_undercanopy)
+      return luminara_blessing(event_id) if flag?(:spores_debated) && !flag?(:colony_recognised) && !flag?(:colony_exiled)
+      if flag?(:mycolith_down)
+        return say(["LUMINARA: The lake is clean. The god is still. Now we help you, surface-friend. Ask."], event_id)
+      end
+      if flag?(:hyphora_named)
+        return say(["LUMINARA: Tasted. Honest. But the lake still stinks of him.",
+                    "LUMINARA: Clean the water, and the Undercanopy will stand with you. Not before."], event_id)
+      end
       return say(["LUMINARA: Tasted. Honest. Go to the Mnemosyne, if you haven't.",
                   "LUMINARA: She decides who may hear the name."], event_id)
     end
@@ -241,6 +280,7 @@ module FrostThaw
     set_flag(:badge_luminara)
     ($game_switches[SW_UNDER_BADGE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     set_switch(SW_LAKE_OPEN, true) if flag?(:hyphora_named)
+    (apply_undercanopy_switches; $game_map.need_refresh = true if $game_map) if respond_to?(:apply_undercanopy_switches)
     add_counter(:story_beats)
     say(["LUMINARA: Tasted. Honest. The Rapport Seal."])
     pbMessage(_INTL("\\me[Badge get]{1} received the Rapport Seal!", $Trainer.name))
@@ -256,6 +296,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def myr(event_id = nil)
     if flag?(:hyphora_named)
+      return myr_after(event_id) if respond_to?(:myr_after)
       return say(["MYR: (many voices at once, slow as roots) Hyphora is afraid. Go down to the water. Go carefully."], event_id)
     end
     sayc(["An ancient myconid, layered like old bark, sits in a ring of stone tablets.",
@@ -283,6 +324,7 @@ module FrostThaw
     set_flag(:hyphora_named)
     add_counter(:story_beats)
     set_switch(SW_LAKE_OPEN, true) if flag?(:badge_undercanopy)
+    (apply_undercanopy_switches; $game_map.need_refresh = true if $game_map) if respond_to?(:apply_undercanopy_switches)
     state[:goal] = flag?(:badge_undercanopy) ? "The water past the Fane: the lake remembers." : "The Fane: Sovereign Luminara. Then the water beyond."
   end
 
@@ -406,10 +448,18 @@ module FrostThaw
           as(:wyn, "A god that died, and wouldn't let go."),
           cl(:alerion, "(very quietly) I know how that goes."),
           "SHADOW MYCOLITH: (roots of sound) STILL. STAY. STILL."], event_id)
+    if !flag?(:mycolith_minions_1)
+      return if !mycolith_minions(1)
+      set_flag(:mycolith_minions_1)
+    end
     return if !boss_battle(named_mon(:B47H439, 46, "Shadow Mycolith"))
     say(["The monolith splits along its crack.",
          "Something darker pours out of the gap, and stands up.",
          "SHADOW MYCOLITH: STILL! STAY! STILL!"])
+    if !flag?(:mycolith_minions_2)
+      return if !mycolith_minions(2)
+      set_flag(:mycolith_minions_2)
+    end
     return if !boss_battle(named_mon(:B439H47, 48, "Mycolith, Enraged"))
     set_flag(:mycolith_down)
     ($game_switches[SW_MYCOLITH] = true; $game_map.need_refresh = true if $game_map) if $game_switches
@@ -427,6 +477,7 @@ module FrostThaw
             as(:wyn, "...Thank you. For both of those.")])
     end
     Stage.cleanup rescue nil
+    mycolith_hoard
     set_flag(:godspark_shadow)
     if (sp = $Trainer.party.find { |pk| pk.species == :SPOREYE && pk.level >= 36 })
       say(["#{sp.name} looks up at the spark, and its gems flicker.",
