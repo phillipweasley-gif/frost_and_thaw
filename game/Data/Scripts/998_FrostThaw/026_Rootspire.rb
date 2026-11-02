@@ -1057,7 +1057,7 @@ module FrostThaw
       say(["(You never found this verse. #{garbled})"]) if lost
       opts = lines.map { |l| _INTL(l) }
       opts << _INTL("Let the Key ring this verse instead") if !key_used
-      c = pbMessage(_INTL("{1} sings...", me ? "You" : "Alberica"), opts, -1)
+      c = pbMessage(me ? _INTL("You sing...") : _INTL("Alberica sings..."), opts, -1)
       if !key_used && c == lines.size
         key_used = true
         hits += 1

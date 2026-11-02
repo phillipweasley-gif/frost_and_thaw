@@ -460,8 +460,20 @@ module Story
         talk(/Frost Saint runes/)
         beat("side: scour the Still Sky Shrine (Blessing of Warmth)", :blessing_warmth)
       end
+      # The festival's last night is the seventh: the downtime week comes first
+      # (one rest at the Hearth a night; a plain loop, so the team isn't levelled).
+      10.times do
+        break if FrostThaw.flag?(:festival_night)
+        travel(2053); talk(/Hellen/); HL.frames(40); HL.settle(5000)
+      end
+      puts "  festival on night #{FrostThaw.rs_day}"
+      beat("SC 6.09 festival night (the seventh night)", :festival_night)
       travel(2053); talk(/Hellen/); HL.frames(40); HL.settle(5000)
-      beat("SC 6.09 festival night (both roads open)", :ch7_started)
+      beat("  the Rootwardens at the door", :rootwardens_at_door)
+      travel(2050); talk(/Scorch marks/)
+      beat("  the scorch marks at the Echo Gate (chardalyn)", :chardalyn_found)
+      travel(2061) if $game_map.map_id != 2062; travel(2062); talk(/Eirwen/)
+      beat("  Eirwen's audience, then the Council's summons (both roads open)", :ch7_started)
       beat("  Wyn joins", :wyn_joined) unless FrostThaw.herald?(:wyn)
       puts "  party now: #{FrostThaw.companions.inspect}"
       # (before Chapter 7: chapter7 plays on to the ending, and after Ch9 the
@@ -987,9 +999,11 @@ module Story
       beat("side: the Lecture in Blue Fire (Lucky Egg)", :lecture_done)
       travel(2061); travel(2062); talk(/Eirwen/); talk(/Lorn Scribe/); talk(/Sub-vault/)
       beat("side: Alberica's sub-vault (the Key)", :key_found)
+      talk(/Eirwen/)
+      beat("side: the Canticle's lost verses (Eirwen's crystal leaves)", :canticle_researched)
       travel(2061); lift_down
       travel(2054); talk(/Living pillar/)
-      beat("side: the Cycle Canticle (Whisper Key)", :canticle_learned)
+      beat("side: the Cycle Canticle (Whisper Key, Verse XI)", :canticle_learned)
       talk(/Statue statue_meat_meat/)
       travel(2060)
       beat("out to the Blooming Fields", nil) if $game_map.map_id == 2060
@@ -1008,7 +1022,9 @@ module Story
       talk(/Driftwood chest/)
       beat("side: Meat Meat's driftwood chest (Verdant Blade)", :blade_found)
       until_flag(:staff_found) { travel(2065); talk(/The first Warden/) }
-      beat("side: the Rootwarden Crypt (Heartwarden's Staff)", :staff_found)
+      beat("side: the Rootwarden Crypt (the unbonded staff)", :staff_found)
+      travel(2060); talk(/Sign auroral_wall/)
+      beat("side: the staff bonded at the Auroral Wall (Heartwarden's Staff)", :staff_attuned)
     end
 
     # Act II, Chapter 7, Road A: the Heartroot through the myconids (SC 7A.01-7A.07).
@@ -1077,7 +1093,7 @@ if __FILE__ == $0
                 [/Choose a difficulty/, 1], [/Another round/, 1], [/Spar with/, 1], [/How much are you putting down/, 3],
                 [/rest your Pokémon/, 0], [/What do you say/, 1], [/save your game/, 1],
                 [/scythe and child/, /Bone dust|silence/],
-                [/Verse \d/, ->(t, c) { %w[Winter Spring Summer Autumn].each { |w| i = c.index { |x| x.to_s.start_with?(w) }; return i if i }; 0 }],
+                [/And which one, for loss/, 1], [/(sings|You sing)\.\.\.$/, ->(t, c) { c.first.to_s =~ /Stand still/ ? 1 : 0 }],
                 [/Weapon, or seed/, 0], [/What do you do about Selrae/, 0], [/Swear the Wardens/, 0], [/endorse first|And second/, 0], [/What do we do with a god/, 1], [/Iskra lowers/, 0],
                 [/^Talion\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Decide what to do|Accept he's a reflection/ } || 0 }],
                 [/Escape\?/, 0], [/Who speaks for the Heralds/, 0], [/Help with\.\.\./, 0], [/^Sephek\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Rose/ } || c.index { |x| x.to_s =~ /Alerion/ } || 0 }]]

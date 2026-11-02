@@ -236,9 +236,16 @@ check("festival night needs the rite, Glimmer and Hellen's seal") {
   %i[rite_stopped glimmer_joined badge_hearth festival_night].each { |f| (FT.state[:flags] || {}).delete(f) rescue nil }
   a = !FT.festival_ready?
   FT.set_flag(:rite_stopped); FT.set_flag(:glimmer_joined); FT.set_flag(:badge_hearth)
+  d = FT.state[:rs_day]; FT.state[:rs_day] = 2
+  early = !FT.festival_ready?                 # ...and the seventh night: the downtime week comes first
+  FT.state[:rs_day] = FT::FESTIVAL_NIGHT
   b = FT.festival_ready?
   FT.scene_festival_night
-  a && b && FT.flag?(:ch7_started) && (FT.herald?(:wyn) || FT.companions.include?(:wyn)) && !FT.festival_ready? }
+  # the roads open only with the Council's summons, after the Rootwardens' night, the scorch and Eirwen
+  c = !FT.flag?(:ch7_started); FT.council_summons
+  FT.state[:rs_day] = d
+  a && early && b && c && FT.flag?(:ch7_started) && FT.flag?(:council_summoned) &&
+    (FT.herald?(:wyn) || FT.companions.include?(:wyn)) && !FT.festival_ready? }
 check("the Heart takes you to Rootspire only after the Reversal") {
   FT.define_singleton_method(:transfer) { |*a| $ft_transfer = a }
   FT.clear_flag(:reversal) rescue (FT.state[:flags] || {}).delete(:reversal)
@@ -882,8 +889,8 @@ FT.state[:companions] = [:alerion]; FT.state[:omens] = {}
 check("...and never without her") { !FT.omen_check }
 check("the ten night events and a Verdant Storm are all written") {
   FT::NIGHT_ORDER.size == 11 && FT::NIGHT_ORDER.all? { |k| FT.respond_to?(:"night_#{k}") } }
-check("the dossier's faction events (10 by map, 4 at the Hearth) and 11 ambient events are all there") {
-  FT::FACTION_EVENTS.size == 10 && FT::HEARTH_VIGNETTES.size == 4 && FT::AMBIENT.size == 11 }
+check("the dossier's faction events (9 by map, 5 at the Hearth: Autumn's leaf is on your pillow) and 11 ambient events are all there") {
+  FT::FACTION_EVENTS.size == 9 && FT::HEARTH_VIGNETTES.size == 5 && FT::HEARTH_VIGNETTES.any? { |k, *_| k == :autumn_pillow } && FT::AMBIENT.size == 11 }
 check("all seven of Alberica's rumours are in the tavern") { FT::TAVERN_RUMOURS.size == 7 }
 check("each Herald's downtime days are written (Arvik 2-7, Alerion 2-7, Glimmer 2-7, Meat Meat 2-5)") {
   (2..7).all? { |d| FT.respond_to?(:"arvik_day#{d}") && FT.respond_to?(:"glimmer_day#{d}") } &&
