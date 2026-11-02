@@ -141,6 +141,7 @@ module FrostThaw
     sayc(["Sephek lifts one hand. Two of the Halo step out of the ranks and throw back their hoods:",
           "frost druids, their beards white with rime. The snow at the altar's foot boils, and ice mephits climb out of it, giggling.",
           "SEPHEK: (gently) Mine, while they stand. Let's see how long they stand."])
+    glaive_resonates
     # rootspire.md Tab 1 (Sephek): Meat Meat's blood, "Prototype Verdant"; Alerion the rival aspect of frost.
     if with_or_is?(:meat_meat)
       sayc(["SEPHEK: (his blue eyes finding Meat Meat, and staying) ...Prototype Verdant. You're smaller than the notes said.",
@@ -172,6 +173,7 @@ module FrostThaw
     say(["ELINE and SEPHEK: (together, as if one were the other's echo) Stand back from the Saint."])
     won_eline = pbTrainerBattle(:FT_HALO_MATRON, "Matron Eline", nil, able >= 2, 0, true) ? true : false
     say([won_eline ? "Eline goes down on one knee." : "Eline doesn't even look at you. She's looking at him."])
+    eline_mercy(won_eline)
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     av = named_mon(SEPHEK_MINOR, 61, "Sephek, Minor Avatar")
     av.hp = [(av.totalhp * (fought >= 3 ? 0.5 : 1.0)).floor, 1].max   # alone, he can't heal above half
@@ -334,6 +336,7 @@ module FrostThaw
   def vault_circuit(key, event_id = nil)
     return say(lines_for(:vault_circuit_dead), event_id) if flag?(key)
     say(["A ring of mirror-glass turning inside a ring of brass. In every pane, her face, smiling."], event_id)
+    return if relic_stops_circuit(key)
     return if !pbConfirmMessage(_INTL("Break the circuit?"))
     say(["The panes turn toward you. Ink runs out of them and stands up: a Mirror-Ink Wraith."])
     return if !boss_battle(named_mon(:B429H200, 61, "Mirror-Ink Wraith"))
@@ -368,7 +371,7 @@ module FrostThaw
     sayc([cl(:reptin, "(stepping in front of her, as he did at the Forge) No. Not her. Not ever."),
           cl(:alerion, "You faked your death to hide in an icebox. Come out."),
           "AVARICE: Oh, I'll come out."])
-    circuits = VAULT_CIRCUITS.count { |k| flag?(k) }
+    circuits = VAULT_CIRCUITS.count { |k| flag?(k) } + verdant_blade_cuts_ward
     type, name = TRAINERS[:avarice_reforged]
     $ft_avarice_circuits = circuits
     won = pbTrainerBattle(type, name, nil, false, 0) ? true : false
@@ -482,6 +485,127 @@ if Events.respond_to?(:onTrainerPartyLoad)
       FrostThaw.log("Avarice's circuits failed: #{err.message}")
     end
   }
+
+
+end
+
+module FrostThaw
+  module_function
+  #-----------------------------------------------------------------------------
+  # The Relics of the Future Past as keys and resonant foci in the White Vault
+  # (rootspire.md 1869-1871): each circuit answers to one Herald's relic, if
+  # it's in the bag or held by a Pokémon. A relic stills its ring without the
+  # wraith; the Verdant Blade, at the cradle, cuts one of her mirror-wards.
+  #-----------------------------------------------------------------------------
+  CIRCUIT_RELICS = {
+    circuit_west:  [:FT_HEARTWARDENSTAFF, :reptin,
+                    "The Heartwarden's Staff wakes in your hands. Its roots reach for the brass, find it, and close.",
+                    "The ring grinds, strains, and stops, held fast in living wood. Somewhere a tree four hundred years away leans, very slightly, toward you."],
+    circuit_east:  [:FT_RIMEMANTLE, :alerion,
+                    "The Rime Mantle's frost answers the mirror-frost. Cold to cold: the panes fog over, white, blind.",
+                    "Her face goes out of every pane at once. A ring of mirrors that can't see itself doesn't know which way to turn."],
+    circuit_north: [:FT_WHISPERKEY, :alberica,
+                    "The Whisper Key hums in its tuning, then fits the ring's empty heart as if it was cut for it.",
+                    "A turn. A note like a held breath. The ring remembers it was only brass and glass once, and stops."]
+  }
+
+  def relic_owned?(item)
+    return true if ($PokemonBag.pbHasItem?(item) rescue false)
+    ($Trainer.party.any? { |pk| pk.item_id == item rescue false }) ? true : false
+  end
+
+  def relic_stops_circuit(key)
+    item, who, line1, line2 = CIRCUIT_RELICS[key]
+    return false if !item || !relic_owned?(item)
+    name = (GameData::Item.get(item).name rescue item.to_s)
+    say(["#{name} stirs. It knows this ring."])
+    return false if !pbConfirmMessage(_INTL("Hold the {1} to the circuit?", name))
+    say([line1, line2])
+    sayc([cl(who, who == :reptin ? "(very quietly) Steady. Hold. That's all a root ever does." :
+                  who == :alerion ? "Let her look for herself in the fog." :
+                                    "(turning the key) Some things should stay locked. She taught me that.")].compact)
+    set_flag(key)
+    set_flag(:"#{key}_by_relic")
+    left = VAULT_CIRCUITS.count { |k| !flag?(k) }
+    say([left == 0 ? "(All three circuits are dark. Far off, something in a cradle stops humming.)" :
+                     "(#{left} circuit#{left == 1 ? '' : 's'} still turning.)"])
+    true
+  end
+
+  # The Verdant Blade at the cradle: Meat Meat's relic cuts one ward.
+  def verdant_blade_cuts_ward
+    return 0 if !relic_owned?(:FT_VERDANTBLADE)
+    sayc(["The Verdant Blade is warm in #{herald?(:meat_meat) ? 'your' : "Meat Meat's"} hand. Its mirrored steel shows no face at all, not even hers.",
+          "#{herald?(:meat_meat) ? 'You cut' : 'Meat Meat cuts'} one of the mirror-wards round the cradle. It falls like a sheet of water and doesn't get up.",
+          cl(:meat_meat, "Meat Meat's blade. Meat Meat's rules. No mirrors.")].compact)
+    set_flag(:blade_cut_ward)
+    1
+  end
+
+  #-----------------------------------------------------------------------------
+  # Var's mirror-shard glaive "resonates if Sephek appears" (rootspire.md 833).
+  #-----------------------------------------------------------------------------
+  def glaive_resonates
+    return if !flag?(:var_glaive) && !relic_owned?(:FT_VARGLAIVE)
+    key = flag?(:frostina_taken) ? :glaive_hummed_crown : :glaive_hummed_shrine
+    return if flag?(key)
+    set_flag(key)
+    say(["In your pack, Var's mirror-shard glaive begins to hum: one long note, the same note as the frost in Sephek's chest.",
+         flag?(:var_story_known) ? "Var forged it to cut a frost-touched thing. Thirty years in a dead man's rooms, and it still remembers what for." :
+                                   "Whoever forged it meant it for something like him."])
+    sayc([cl(:alerion, "(very quietly) It knows him. So do I.")].compact)
+  end
+
+  #-----------------------------------------------------------------------------
+  # Eline (rootspire.md 1020-1024): "if captured she speaks only in reversed
+  # prayer"; "final foe or tragic martyr depending on mercy".
+  #-----------------------------------------------------------------------------
+  def eline_mercy(won)
+    if !won
+      set_flag(:eline_unbeaten)          # she rides north with him, and stands with him at the end
+      return
+    end
+    c = pbMessage(_INTL("Eline kneels in the snow, her hands open."),
+                  [_INTL("Show her mercy"), _INTL("Bind her for the Rootwardens")], 0)
+    if c == 0
+      set_flag(:eline_spared)
+      say(["You step back. Eline looks up, and for a moment she doesn't understand.",
+           "ELINE: (slowly) ...Silence is mercy. That's what I taught them. I never thought anyone would teach it back to me.",
+           "She gets up, and goes to stand beside him again. But she doesn't raise her hands."])
+    else
+      set_flag(:eline_captured)
+      say(["Rootwardens come up the steps with cords of woven root. Eline doesn't fight them.",
+           "She speaks the whole way down. It takes you a long time to understand that she's praying, and that every word of it runs backwards.",
+           "ELINE: ...hcaer ruoy dnoyeb ylno si ecnelis. ...ecnelis, ecnelis, ecnelis."])
+      sayc([cl(:wyn, "(very quietly) She's saying it backwards so the goddess can't hear her asking. I think."),
+            cl(:alberica, "Or so we can't. Either way, darling, somebody should sit with her.")].compact)
+    end
+  end
+
+  # At the Crown: Eline's end, depending on mercy. Unbeaten, she is the last of
+  # his followers (a final foe). Spared, she dies for him (a tragic martyr).
+  def eline_at_the_crown(stage)
+    return if flag?(:eline_captured) || flag?(:eline_fate)
+    if stage == :before && flag?(:eline_unbeaten)
+      say(["ELINE: (stepping between you and him) No further. I carried his heart up a mountain. I'll carry it up this one.",
+           "ELINE: Silence is mercy, and I've been merciful long enough."])
+      type, name = TRAINERS[:eline_sephek]
+      if pbTrainerBattle(type, name, nil, false, 0, true)
+        say(["Eline falls back against the crystal. The frost on her hands goes out like a candle.",
+             "ELINE: (to Sephek, very softly) I'm sorry. I was so sure."])
+        set_flag(:eline_fate)
+        set_flag(:eline_final_foe)
+      end
+    elsif stage == :after && flag?(:eline_spared)
+      say(["The cold comes off Auril's throne behind you in one last wave, at all of you, at him.",
+           "Eline steps into it. She doesn't say anything at all.",
+           "When it passes, she's kneeling where she stood, frosted white from her hair to her open hands, and she doesn't get up.",
+           "SEPHEK: (on his knees beside her) ...Eline. Eline, you didn't have to. You never had to.",
+           cl(:wyn, "(very quietly) She chose. That's what you gave her, when you let her go. A choice.")].compact)
+      set_flag(:eline_fate)
+      set_flag(:eline_martyred)
+    end
+  end
 end
 
 Events.onMapSceneChange += proc { |_sender, _e|

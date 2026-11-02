@@ -920,5 +920,24 @@ check("the Verdant Heist has four wards and three endings") {
     w5_src.include?(":heist_exposed") && w5_src.include?(":heist_destroyed") }
 FT.state[:mode] = nil; FT.state[:herald] = nil
 
+# --- final fixes: Eline's mercy, the Echo Vault's forward-looking visions ----------
+%i[eline_spared eline_captured eline_unbeaten eline_fate].each { |f| FT.state[:flags]&.delete(f) }
+$next_choice = 0; FT.eline_mercy(true)
+check("Eline spared at the Shrine (rootspire.md 1020-1024)") { FT.flag?(:eline_spared) && !FT.flag?(:eline_captured) }
+FT.state[:flags].delete(:eline_spared); $messages.clear
+def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? 1 : 0; end      # pick "Bind her"
+FT.eline_mercy(true)
+def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? 0 : 0; end
+check("...or bound, praying backwards") { FT.flag?(:eline_captured) && $messages.any? { |m| m.include?("ecnelis") } }
+FT.state[:flags].delete(:eline_captured); FT.eline_mercy(false)
+check("...and unbeaten, she rides north to stand with him") { FT.flag?(:eline_unbeaten) }
+FT.state[:flags].delete(:eline_unbeaten); $next_choice = nil
+%i[mantle_found reflection_claimed].each { |f| FT.state[:flags]&.delete(f) }
+v1 = FT.attendant_vision(:alerion); FT.set_flag(:mantle_found); v2 = FT.attendant_vision(:alerion)
+FT.set_flag(:reflection_claimed); v3 = FT.attendant_vision(:alerion)
+check("the Echo Vault's visions point at the quest still open") { v1.include?("Finish the step") && v2.include?("maze of mirror-ice") && v3.include?("walk back") }
+%i[mantle_found reflection_claimed].each { |f| FT.state[:flags]&.delete(f) }
+check("each White Vault circuit answers to a Herald's relic") { FT::CIRCUIT_RELICS.keys.sort == FT::VAULT_CIRCUITS.sort }
+
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

@@ -319,6 +319,8 @@ module FrostThaw
     say(["SEPHEK: (standing between you and the crystal) I held the knife.",
          "SEPHEK: I've held a lot of knives for her. Four hundred years in the ice.",
          "SEPHEK: The only thing I remembered was a woman laughing on an altar."], event_id)
+    eline_at_the_crown(:before)                   # (unbeaten at the Shrine, she's his last follower)
+    glaive_resonates                              # (Var's glaive knows him: rootspire.md 833)
     # rootspire.md Tab 1: he wants Meat Meat's altered blood, and Alerion is the rival he must break.
     sephek_motive_lines
     opts = []
@@ -381,6 +383,7 @@ module FrostThaw
       set_flag(:sigil_sephek)
     end
     sayc([cl(:meat_meat, "Frosty! Meat Meat missed you. Razzy missed you more. Razzy is very loud about it.")])
+    eline_at_the_crown(:after)                    # (spared at the Shrine, she dies for him)
     set_flag(:frostina_freed)
     ($game_switches[SW_FROSTINA_FREE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
@@ -627,6 +630,12 @@ module FrostThaw
       lines << [al ? "At the Shrine, Frostina sleeps with her head in your lap, humming in her sleep." :
                      "At the Shrine, Frostina sleeps with her head in Alerion's lap, humming in her sleep.",
                 al ? "You hum back, off-key, the way Shade used to." : "Alerion hums back, off-key, the way Shade used to."]
+    end
+    if flag?(:eline_captured)
+      lines << ["Down in the root-cells, a woman in threadbare blue still prays every morning.",
+                "Backwards, for most of the year. Some mornings now, the warden on duty says, she gets a line or two the right way round."]
+    elsif flag?(:eline_martyred)
+      lines << "On the Shrine steps, someone has carved a small figure in blue with her hands open. Nobody will say who. Sephek leaves snowdrops there."
     end
     if flag?(:phildendrin_found)
       lines << ["Razzilith lands in the market with Meat Meat and Phildendrin on his back.",

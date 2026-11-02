@@ -149,7 +149,8 @@ module FrostThaw
          "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home.",
          "SEPHEK: She was always going home.",
          as(:alerion, "(very quietly) She's not hers."),
-         "Iskra lifts the crystal in her antlers. Sephek and Eline climb onto her back.",
+         flag?(:eline_captured) ? "Iskra lifts the crystal in her antlers. Sephek climbs onto her back alone. Below, in the root-cords, Eline is still praying backwards." :
+                                  "Iskra lifts the crystal in her antlers. Sephek and Eline climb onto her back.",
          "The roe turns north, toward the Sea of Moving Ice, and is gone."])
     Stage.cleanup rescue nil
     down = stage_act(:alerion, :down, dx: 1, dy: 0, dir: 2, per: 6)   # in the snow on the steps

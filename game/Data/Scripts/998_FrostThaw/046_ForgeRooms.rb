@@ -1027,15 +1027,33 @@ module FrostThaw
           cl(:meat_meat, "Meat Meat sees them. Meat Meat does not like being watched by soup.")])
   end
 
-  # What each Herald sees when the tree's echo touches them: the vision that
-  # points at their own secret quest (rootspire.md, Treasure & Aftermath).
+  # What each Herald sees when the tree's echo touches them: "a vision leading
+  # to their personal secret quest" (rootspire.md 1617). A quest already done is
+  # confirmed; one still open is pointed at, as the notes intend.
   ATTENDANT_VISIONS = {
-    alberica:  "Alberica sees a door in the Library with her own handwriting on it, and a lock made of notes.",
-    reptin:    "Reptin sees petrified druids standing in sap under the Root-Tier, and one with his totem in its hands.",
-    alerion:   "Alerion sees himself at the Auroral Wall, frozen mid-step, and hears: \"Finish the step.\"",
-    meat_meat: "Meat Meat sees a driftwood chest on a beach, with a scorched \"A\" on the lid.",
-    wyn:       "Wyn sees a mushroom ring in the dark that sings when she stands in the middle of it."
+    alberica:  [:key_found, "Alberica sees a door in the Library with her own handwriting on it, and a lock made of notes.",
+                :canticle_learned, "Alberica sees the Still Sky Shrine at night, and a verse she hasn't sung yet waiting in the rafters.",
+                "Alberica sees her own hand on the Library door, and the lock of notes falling open. Done, then. Kept."],
+    reptin:    [:staff_found, "Reptin sees petrified druids standing in sap under the Root-Tier, and one with his totem in its hands.",
+                :fields_pulse, "Reptin sees the Blooming Fields, flowers and snow, and two small whirlwinds who won't stop arguing.",
+                "Reptin sees the totem warm in his hand, and the petrified druids nodding, one by one. Done. Carried."],
+    alerion:   [:mantle_found, "Alerion sees himself at the Auroral Wall, frozen mid-step, and hears: \"Finish the step.\"",
+                :reflection_claimed, "Alerion sees a maze of mirror-ice, and his own reflection walking away from him, deeper in.",
+                "Alerion sees his reflection turn round in the ice and walk back to him. The step is finished."],
+    meat_meat: [:blade_found, "Meat Meat sees a driftwood chest on a beach, with a scorched \"A\" on the lid.",
+                :mirror_child_free, "Meat Meat sees a boy holding a mirror, and a girl inside it, waving.",
+                "Meat Meat sees the driftwood chest open and empty, and her own small footprints walking away from it. Good."],
+    wyn:       [:spy_unmasked, "Wyn sees a mushroom ring in the dark that sings when she stands in the middle of it.",
+                :undercity_done, "Wyn sees black water under the docks, and a colony with eyes, whispering her name.",
+                "Wyn sees the mushroom ring again, quiet now, and herself sitting in it, not afraid."]
   }
+
+  def attendant_vision(who)
+    first_flag, first, second_flag, second, done = ATTENDANT_VISIONS[who]
+    return first if !flag?(first_flag)
+    return second if !flag?(second_flag)
+    done
+  end
 
   # H26: the World Tree's prophecy about the wyrmlings and the seasons.
   def world_tree_echo(event_id = nil)
@@ -1051,8 +1069,8 @@ module FrostThaw
     sayc([cl(:alberica, "(her hand on her rune) ...Well. That's not ominous at all."),
           cl(:alerion, "A rider who isn't afraid of falling."),
           cl(:meat_meat, "Meat Meat is afraid of falling. Meat Meat will do it anyway. That counts.")])
-    lines = ATTENDANT_VISIONS.select { |k, _| with_or_is?(k) }
-                             .map { |k, v| herald?(k) ? "(#{v.sub(/\A\w+(?: \w+)? sees/, 'You see')})" : v }
+    lines = ATTENDANT_VISIONS.keys.select { |k| with_or_is?(k) }
+                             .map { |k| v = attendant_vision(k); herald?(k) ? "(#{v.sub(/\A\w+(?: \w+)? sees/, 'You see')})" : v }
     if !lines.empty?
       say(["Then the tree's voice goes quiet, and one by one, each of you sees something meant only for you."] + lines)
       set_flag(:personal_visions)
