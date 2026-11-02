@@ -21,7 +21,14 @@ module FrostThaw
 
   TRAINERS.merge!(
     halo_silencer: [:FT_HALO, "Silencer Mott", [[:MRMIME, 42], [:B124H122, 42], [:B200H215, 43]], "..."],
-    yeti_hunter:   [:HIKER, "Bounty-Hunter Grell", [[:PILOSWINE, 42], [:B217H59, 42], [:B232H217, 43]], "A yeti pelt's worth more than your whole team."]
+    yeti_hunter:   [:HIKER, "Bounty-Hunter Grell", [[:PILOSWINE, 42], [:B217H59, 42], [:B232H217, 43]], "A yeti pelt's worth more than your whole team."],
+    effigy_kneeler: [:FT_HALO, "Effigy Kneeler", [[:SNEASEL, 41], [:B124H215, 42]], "The Saint would have stood up. You've made him wait."]
+  )
+  TRAINER_INTROS.merge!(
+    halo_silencer:  "...(The Silencer mouths something. No sound comes out.)",
+    yeti_hunter:    "GRELL: Hand over the cub, Heralds. Furs don't pay for themselves.",
+    effigy_kneeler: "KNEELER: (hands still on the white wood) A little longer. He's nearly awake.",
+    eira_voss:      "EIRA VOSS: (in a whisper that fills the cellar) Be still."
   )
 
   #-----------------------------------------------------------------------------
@@ -334,7 +341,7 @@ module FrostThaw
   def night_halo_ambush
     sayc(["Walking back to the Hearth after dark. The lanterns along the root-walk go out one after another.",
           "The cold arrives before they do."])
-    pbTrainerBattle(:FT_HALO, "Halo Knife", nil, false, 0, true)
+    trainer(:halo_ambusher)
     sayc(["The cultist breaks and runs. On the boards, a token of mirror-glass, still freezing: a snowflake inside a cracked halo.",
           cl(:alerion, "They knew our route home.")].compact)
     set_flag(:halo_ambushed)
@@ -367,7 +374,7 @@ module FrostThaw
     end
     say(["You kneel. The cub stops crying, and climbs into your arms, and bites your sleeve very hard.",
          "BOUNTY-HUNTER GRELL: That's my pelt you're cuddling."])
-    pbTrainerBattle(:HIKER, "Bounty-Hunter Grell", nil, false, 0, true)
+    trainer(:yeti_hunter)
     sayc(["You carry the cub out to the Blooming Fields, along the Wall, to where the snow begins.",
           "Out of the hanging snow, something huge and white is waiting. She doesn't move. She watches you.",
           "You set the cub down. It runs to her. She sniffs it all over, very carefully.",
@@ -383,7 +390,7 @@ module FrostThaw
           "Then, between one step and the next, sound stops. No boots. No breath. No wind in the leaves.",
           "You try to call out. Nothing comes out. Nothing at all."])
     say(["Shapes in the stalls, moving. A Mr. Mime of the Halo, palms flat against an invisible wall it's built around you."])
-    pbTrainerBattle(:FT_HALO, "Silencer Mott", nil, false, 0, true)
+    trainer(:halo_silencer)
     sayc(["The wall shatters like a dropped plate. Sound comes back all at once: a dog barking, the tree's creak, your own heartbeat.",
           "The Silencer is gone. Nailed to a stall: a strip of frost-silk, embroidered with the words PERFECT STILLNESS."])
     set_flag(:silent_market_broken)

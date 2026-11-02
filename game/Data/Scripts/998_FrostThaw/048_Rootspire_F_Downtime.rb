@@ -109,7 +109,7 @@ module FrostThaw
     say([c == 0 ? "Four beats. The plate swings back, and #{herald?(:reptin) ? 'you step' : 'Reptin steps'} off it onto the dock like stepping off a stair." :
                   "The jump almost works. The lake is very warm. Arvik fishes #{you_or(:reptin, 'Reptin')} out by the collar."])
     say(["ARVIK: (wringing out a sleeve) Spar. Before you get cocky. Or cockier."])
-    pbTrainerBattle(:FT_ARVIK, "Arvik", nil, false, 0, true)
+    trainer(:arvik_spar)
     dt_step!(:reptin)
     say(["ARVIK: You're finding your footing. After two days of taking a pummelling.",
          "Something's changed in the way Arvik looks at #{you_or(:reptin, 'him')}. Not reverence. Better: renewed faith."])
@@ -147,7 +147,7 @@ module FrostThaw
     say(["ARVIK: Today I'm going to ambush you. All day. You won't know when.",
          "ARVIK: Root-weights. Vine-triggers. Bark plates. Don't resist the force. Redirect it.",
          "He walks away. Nothing happens for a long time. Then a root-weight comes out of nowhere."], event_id)
-    pbTrainerBattle(:FT_ARVIK2, "Arvik", nil, false, 0, true)
+    trainer(:arvik_ambush)
     say(["By sundown #{herald?(:reptin) ? 'your body moves before you think' : "Reptin's body moves before he thinks"}. Guided by the tree.",
          "ARVIK: (sitting down hard) You dodge like a wolf. But you lose your magic when you dodge. Every time."])
     speak(:reptin, "Then let me teach you something back. Hold a spell like you'd hold a breath. Move round it, not with it.",
@@ -647,7 +647,7 @@ module FrostThaw
          "Two figures in grey kneel at its feet with their hands on the wood. The wood is going white."])
     sayc([cl(:alerion, "That's not carving. That's frost. They're calling something into it."),
           cl(:alberica, "Oh, darlings, not at a party.")].compact)
-    pbTrainerBattle(:FT_HALO, "Halo Knife", nil, false, 0, true)
+    trainer(:effigy_kneeler)
     set_flag(:effigy_saved)
     say(["The cultists scatter into the crowd. The effigy's frost runs off it like rain, and it's only wood again.",
          "Rheven's wardens drag it off before anyone else notices. Mostly nobody notices. That's the point."])

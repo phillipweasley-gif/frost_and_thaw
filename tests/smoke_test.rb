@@ -735,5 +735,47 @@ FT.state[:herald] = :alerion; $messages.clear; $next_choice = 0
 check("a stage direction on your own line reads as narration") { FT.as(:alerion, "(a hand on her neck) Mine.") == "A hand on her neck. (Mine.)" }
 $next_choice = nil
 
+# --- Rootspire as a living city (W5) -----------------------------------------
+w5_src = Dir[File.join(FT_DIR, "*.rb")].map { |f| File.read(f, encoding: "UTF-8") }.join("\n")
+w5_mons = w5_src.scan(/named_mon\(:(\w+)/).flatten.uniq + FT::WATCHERS.map { |w| w[3].to_s }
+check("every wild boss and watcher in Rootspire is a real species or fusion (#{w5_mons.size})") {
+  bad = w5_mons.reject { |sp| (GameData::Species.get(sp.to_sym) rescue nil) }
+  bad.empty? || (puts bad.inspect; false) }
+check("every Rootspire watcher has a spot on a map") { FT::WATCHERS.all? { |w| FT::WATCHER_SPOTS[w[0]] } }
+check("each Herald has five omens' worth of lines, three tiers each") {
+  FT::OMENS.size == 5 && FT::OMENS.values.all? { |_h, trig, tiers| trig.size == 3 && tiers.size == 3 } }
+check("an omen reads as Alberica, or as you when you're her") {
+  line = "{A} [[touches|touch]] the hollow of {her} throat. {She} [[pulls|pull]] back."
+  FT.omen_text(line, false) == "Alberica touches the hollow of her throat. She pulls back." &&
+    FT.omen_text(line, true) == "You touch the hollow of your throat. You pull back." }
+FT.state[:mode] = :herald; FT.state[:herald] = :reptin; FT.state[:companions] = [:alberica, :alerion]
+FT.state.delete(:rs_day)
+FT.set_flag(:met_hellen)
+FT.define_singleton_method(:investigation_night) { false }
+FT.define_singleton_method(:downtime_morning) { nil }
+$messages.clear
+FT.hearth_night
+d1 = FT.state[:rs_day]
+FT.hearth_night
+check("the night you arrive is Day 1, and each rest at the Hearth is another day") { d1 == 1 && FT.state[:rs_day] == 2 }
+check("...and the night brings something: an omen, a vignette or a night event") { $messages.size > 1 }
+FT.state[:omens] = {}; FT.set_flag(:twins_met); $messages.clear
+check("Auril's omens come only to Alberica, and count themselves") {
+  n = FT.counter(:omens_seen); FT.omen_check && FT.counter(:omens_seen) == n + 1 && $messages.first.include?("Alberica") }
+FT.state[:companions] = [:alerion]; FT.state[:omens] = {}
+check("...and never without her") { !FT.omen_check }
+check("the ten night events and a Verdant Storm are all written") {
+  FT::NIGHT_ORDER.size == 11 && FT::NIGHT_ORDER.all? { |k| FT.respond_to?(:"night_#{k}") } }
+check("the dossier's faction events (10 by map, 4 at the Hearth) and 11 ambient events are all there") {
+  FT::FACTION_EVENTS.size == 10 && FT::HEARTH_VIGNETTES.size == 4 && FT::AMBIENT.size == 11 }
+check("all seven of Alberica's rumours are in the tavern") { FT::TAVERN_RUMOURS.size == 7 }
+check("each Herald's downtime days are written (Arvik 2-7, Alerion 2-7, Glimmer 2-7, Meat Meat 2-5)") {
+  (2..7).all? { |d| FT.respond_to?(:"arvik_day#{d}") && FT.respond_to?(:"glimmer_day#{d}") } &&
+    [2, 3, 4, 6, 7].all? { |d| FT.respond_to?(:"alerion_day#{d}") } && (2..5).all? { |d| FT.respond_to?(:"meat_meat_day#{d}") } }
+check("the Verdant Heist has four wards and three endings") {
+  FT::HEIST_WARDS.size == 4 && FT.method(:heist_delivery) && w5_src.include?(":heist_delivered") &&
+    w5_src.include?(":heist_exposed") && w5_src.include?(":heist_destroyed") }
+FT.state[:mode] = nil; FT.state[:herald] = nil
+
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)
