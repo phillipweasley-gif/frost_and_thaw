@@ -379,6 +379,11 @@ module FrostThaw
          "It staggers."])
     dragon.hp = [(dragon.hp * 0.85).floor, 1].max
     return if !boss_battle(dragon)
+    $game_screen.start_flash(Color.new(200, 230, 255, 255), 20) rescue nil
+    say(["As it dies, everything inside it bursts at once: frost essence and infernal fire, in a ring that races out across the square.",
+         "#{mount_name} throws its wings wide over the crowd. The ring breaks on them like a wave on a sea-wall.",
+         "Where it touched the ground, the cobbles are frozen and scorched in the same stroke."])
+    $Trainer.party.each { |p| next if p.fainted?; p.hp = [p.hp - (p.totalhp / 8), 1].max } rescue nil
     say(["The dragon shatters into a thousand pieces of black crystal.",
          "One shard skitters to your feet. In it, a pale face, smiling.",
          "AVARICE: (from the shard) Pick me up.",
