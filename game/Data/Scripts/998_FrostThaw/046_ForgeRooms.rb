@@ -242,6 +242,11 @@ module FrostThaw
 
   # A6: the traitor.
   def traitor_duergar(event_id = nil)
+    if flag?(:traitor_met) && flag?(:engine_dead)
+      return say(["The sooty duergar is sitting on an upturned crate, scrubbing at the cold sigils on his arms with a fistful of snow.",
+                  "BRAM: You asked my name. Before. It's Bram. Bram Coalhand. Of Thane Ostra's hold, when there was a hold.",
+                  "BRAM: (looking at his hands) It came back when the fire went out. Funny, what comes back."], event_id)
+    end
     if flag?(:traitor_met)
       return say([flag?(:barricade_passed) ? "SOOTY DUERGAR: You're through. Good. Go and do it. Kill her." :
                                              "SOOTY DUERGAR: The lever. By the machinery. Pull it, and the Rootgate's yours."], event_id)
@@ -313,7 +318,8 @@ module FrostThaw
          "Your reflection leans close to the glass and whispers:",
          "\"Don't let her take the heart...\"",
          "Then it's only you, a half-second late."])
-    sayc([cl(:alerion, "The same words. Carved on the overlook."), cl(:glimmer, "Everybody down here keeps warning us about a heart."),
+    sayc([flag?(:read_overlook) ? cl(:alerion, "Nearly the same words as the overlook. \"She will take the heart if we don't.\"") :
+                                  cl(:alerion, "Whoever you are in there, you sound tired."), cl(:glimmer, "Everybody down here keeps warning us about a heart."),
           cl(:alberica, "Then we keep it, kitten. Whatever it costs.")])
   end
 
@@ -433,7 +439,9 @@ module FrostThaw
     return if !boss_battle(named_mon(:B208H51, 48, "Umber hulk"))
     set_flag(:umber_hulk_done)
     add_counter(:story_beats)
-    sayc([cl(:alerion, "Those were the claw-marks at the Underdark mouth."), cl(:reptin, "Then it came all this way to meet us. Rude not to.")])
+    sayc([flag?(:saw_claw_marks) ? cl(:alerion, "Those were its claw-marks, by the Underdark mouth. Going up.") :
+                                   cl(:alerion, "Something that big has been digging up through the roots for weeks."),
+          cl(:reptin, "Then it came all this way to meet us. Rude not to.")])
   end
 
   # A17: the rust-feast tunnels.
@@ -441,6 +449,8 @@ module FrostThaw
     return say(["The rust-feasters are gone. The struts round here are gnawed to lace."], event_id) if flag?(:rust_feasters_done)
     say(["Metallic crunching. A faint acrid smell.", "Three rust-feasters look up from an iron strut, antennae twitching, and notice your Pokémon."], event_id)
     return if !boss_battle(named_mon(:B356H421, 47, "Rust-feaster"), named_mon(:B421H356, 47, "Rust-feaster"))
+    say(["The third rust-feaster skitters out of the dark for the iron on your belts."])
+    return if !boss_battle(named_mon(:B356H421, 46, "Rust-feaster"))
     set_flag(:rust_feasters_done)
   end
 

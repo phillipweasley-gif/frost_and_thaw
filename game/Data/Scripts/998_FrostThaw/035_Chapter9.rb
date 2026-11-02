@@ -249,6 +249,11 @@ module FrostThaw
     say([cl(:reptin, "(shouting back) Lovely to be home, isn't it? Never again!"),
          "Ahead, a black dragon with burning gold eyes dives on a town of beehives and honey-halls.",
          "Good Mead. Its breath is a line of light. Roofs go up like paper."].compact)
+    if flag?(:flight_path_seen)
+      # A4's root model: the Heralds know its path.
+      sayc([cl(:alerion, "(over the wind) The model at the Barricade. Good Mead first, then Bryn Shander. Same order."),
+            cl(:meat_meat, "Then Meat Meat knows where it goes next. Meat Meat will be there first.")])
+    end
     air_battle(:seams, 50)
     say(["You land in the burning square.",
          "Someone is pounding on the inside of the mead hall door."])
