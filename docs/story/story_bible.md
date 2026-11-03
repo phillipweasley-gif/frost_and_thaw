@@ -730,7 +730,7 @@ The concept sheets are pixel-style references, not game-resolution sprites, so e
 | Shade | Nothing new (companion only) | P2 | FT\_shade (OW) | Sprite in game |
 | Shimmer | Grey ice-statue variant of her OW (Ch12) | P3 | FT\_shimmer (OW) | Sprite in game |
 | Glimmer | OW from your Tabaxi sheet | P1 | FT\_glimmer unused; provisional sheet | Concept sheet done |
-| Tamsin Brightrun | OW, TR (rival) | P1 | BW (23) picnicker | Not started |
+| Tamsin Brightrun | OW, TR (rival) | P1 | OW: BW (90) recoloured; TR: CAMPER recoloured (tools/art/recolor_tamsin_hellen.py) | Done (palette swaps of base sprites) |
 | Ghost Alberica and Old Alberica | OW: the green-robed ghost (Ch5, the loop) and Alberica grown old (epilogue) | P1 | none | Not started |
 
 ### Dragons, gods and story creatures
@@ -775,7 +775,7 @@ The concept sheets are pixel-style references, not game-resolution sprites, so e
 | Anduin | Put the OW on maps | P1 | FT\_anduin, unused | Sprite drawn, not used |
 | Phildendrin | Put the OW on maps (rename the file from "philodendra"); hooded variant | P1 | FT\_philodendra, unused | Sprite drawn, not used |
 | Speaker Edgra Durmoot | OW; TR | P2 | BWOldWoman | Not started |
-| Hellen Brightrun | OW; TR | P2 | BW (59); BEAUTY | Not started |
+| Hellen Brightrun | OW; TR | P2 | OW: BW (73) recoloured; TR: POKEMONBREEDER recoloured (FT_HEARTH_LEADER) | Done (palette swaps of base sprites) |
 | Master Hew Talmire (gnome) and Prototype 3 | OW; TR; construct OW | P2 | BW (75); Golett | Not started |
 | Mira of the North Wind | OW; TR (with a possessed variant) | P2 | BW (33) | Not started |
 | Mira's daughter | OW; a half-in-the-mirror variant (Ch7B, postgame) | P3 | BW (17) mirror child | Not started |
