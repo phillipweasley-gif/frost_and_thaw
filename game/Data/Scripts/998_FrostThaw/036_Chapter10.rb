@@ -339,6 +339,7 @@ module FrostThaw
     t[:done_today] = false
     t[:day] = [t[:day] + 1, 7].min
     pbMessage(_INTL("(Day {1} of the trial week.)", t[:day])) rescue nil
+    trial_week_goal
   end
 
   #-----------------------------------------------------------------------------
@@ -1928,7 +1929,7 @@ module FrostThaw
   # Each trial's own step is a side line under it, gone when the trial is.
   TRIAL_STEPS = [
     [%i[anduin_reconciled anduin_doubtful], "Reptin: Anduin, by the Bazaar fountain"],
-    [%i[mm_atoned], "Meat Meat: the root-cells"],
+    [%i[mm_atoned], -> { FrostThaw.flag?(:phildendrin_found) ? "Meat Meat: Autumn's spying mirror, in the Sap Wells" : "Meat Meat: the root-cells" }],
     [%i[wyn_cleared], "Wyn: the summons at the Echo Gate"],
     [%i[talion_released talion_chased talion_restored talion_haunted], "Alerion: Talion, in the Blooming Fields"],
     [%i[colony_recognised colony_exiled], "Alberica: her hearing, in the Council Hall"],
@@ -1942,7 +1943,7 @@ module FrostThaw
     state[:goal] = if left.empty?
                      "When you're ready, tell Kelyn in the Council Hall. The crystals will hear the verdict."
                    else
-                     "Trial week, day #{day} of 7: #{left.size} left. Next: #{left.first[1]}."
+                     "Trial week, day #{day} of 7: #{left.size} left. Next: #{left.first[1].respond_to?(:call) ? left.first[1].call : left.first[1]}."
                    end
   end
 

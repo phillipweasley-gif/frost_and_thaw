@@ -202,7 +202,8 @@ module FrostThaw
     set_flag(:knows_auril_relics)
     set_flag(:knows_rewritten)
     set_switch(SW_CH11_COUNCIL, true)
-    state[:goal] = "Morning. The Council Hall: four chairs, all filled. (Auril's relics wait in the Heartroot: smash them, and Sephek stays down.)"
+    state[:goal] = "Morning. The Council Hall: four chairs, all filled."
+    relic_goal
   end
 
   #-----------------------------------------------------------------------------
@@ -247,7 +248,18 @@ module FrostThaw
                    when :griffons then "The griffon roost, on the Canopy-Tier."
                    else "The Wennen bell pier, in the Root-Tier."
                    end
-    state[:goal] += " (The sigils point beyond the Auroral Wall: the White Vault, past the Glasswater.)" if flag?(:sigils_merged)
+    relic_goal
+    side_goal(:vault, "Optional: the sigils point beyond the Auroral Wall, to the White Vault past the Glasswater.",
+              done: %i[avarice_body_broken avarice_ended]) if flag?(:sigils_merged)
+  end
+
+  # Auril's relics keep their own line under the Goal, with the count, until
+  # all three are smashed (review Ch11 E4: the chapter's last goal dropped them).
+  def relic_goal
+    return if !flag?(:knows_auril_relics) || flag?(:auril_relics_destroyed)
+    n = relics_left rescue 3
+    side_goal(:auril_relics, "Before you fly: Auril's relics in the Heartroot, #{n} of 3 left. Smash them, and Sephek stays down.",
+              done: :auril_relics_destroyed)
   end
 
   # How you get to Solstice: Mira's ship, Rheven's griffons, Anduin's whale, or Lumin's bell.

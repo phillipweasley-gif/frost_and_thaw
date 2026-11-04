@@ -233,6 +233,7 @@ module FrostThaw
       set_flag(:auril_relics_destroyed)
     else
       say(["(#{left == 1 ? 'One relic is' : "#{left} relics are"} still somewhere in the Heartroot.)"])
+      relic_goal
     end
   end
 
