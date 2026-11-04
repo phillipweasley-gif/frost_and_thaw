@@ -202,8 +202,7 @@ module FrostThaw
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
-    state[:climb_goal_prev] = state[:goal]
-    state[:goal] = "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn."
+    side_goal(:climb, "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn.")
   end
 
   # You found Garret on the mountain before anyone asked you to. Keegan already
@@ -234,8 +233,7 @@ module FrostThaw
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
-    state[:climb_goal_prev] = state[:goal]
-    state[:goal] = "Kelvin's Cairn, again: find Perilou, Astrix and Mokingo."
+    side_goal(:climb, "Kelvin's Cairn, again: find Perilou, Astrix and Mokingo.")
   end
 
   #-----------------------------------------------------------------------------
@@ -375,7 +373,7 @@ module FrostThaw
       say(["GARRET: (getting up, swaying) Good. I know the route. What's left of it."])
       set_flag(:garret_with_you)
     end
-    state[:goal] = "Up the mountain: a cave above, where the yeti came from. Find Mokingo, Perilou and Astrix."
+    side_goal(:climb, "Up the mountain: a cave above, where the yeti came from. Find Mokingo, Perilou and Astrix.")
   end
 
   # The perilous climb: three pitches of ledge and ice. Get each one wrong and
@@ -480,7 +478,7 @@ module FrostThaw
     pbReceiveItem(:FULLHEAL) rescue nil
     set_flag(:perilou_saved)
     set_switch(SW_MC_PERILOU, true)
-    state[:goal] = "Astrix fled up the mountain. Find her, then get Perilou home to Targos."
+    side_goal(:climb, "Astrix fled up the mountain. Find her, then get Perilou home to Targos.")
   end
 
   # Leaving the cave: the father comes home with a goat under one arm.
@@ -576,7 +574,7 @@ module FrostThaw
     set_switch(SW_MC_DONE, true)
     set_switch(SW_MC_GARRET_HOME, true)
     set_switch(SW_MC_PERILOU_HOME, true) if flag?(:perilou_saved)
-    state[:goal] = state[:climb_goal_prev] if state[:climb_goal_prev]
+    side_goal_done(:climb)
     add_counter(:story_beats)
   end
 end

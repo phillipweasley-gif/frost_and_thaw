@@ -13,7 +13,7 @@ module FrostThaw
     fork_talked found_swaddling frost_egg frostina_hatched garagai_vow gate_open ghost_blessing
     golden_acorn good_mead_arrived good_mead_met got_pokedex got_snowshoes got_splicers
     got_starter got_yeti_cub got_yetot hag_defeated hag_fled hag_mirror_1 hag_mirror_2
-    hag_mirror_3 hag_named hag_parley heart_of_ice husband_thawed icefall_fell intro_done
+    hag_mirror_3 hag_named hag_parley heart_entered heart_of_ice husband_thawed icefall_fell intro_done
     intro_started kids_freed kids_home knows_three_hearts kobolds_freed lodge_entered
     lonelywood_arrived lottery_stand meat_meat_joined mephits_done met_durmoot met_kids
     met_nimsy met_party met_razzy met_wolves minions_down naerth_terms norsu_calmed norsu_met
@@ -38,13 +38,13 @@ module FrostThaw
     domain_mask domain_paw domain_shadow domains_open dragon_down dragon_launched
     eastway_started eline_spoke engine_dead engine_dead_heart fed_pack fell_through
     festival_night followed_koran forge_reached forge_seen fork_talked found_swaddling frost_egg
-    frostina_hatched frostina_taken fungal_liaison garagai_axe garagai_vow gate_open
+    forge_camp_met frostina_hatched frostina_taken fungal_liaison garagai_axe garagai_vow gate_open
     ghost_blessing glimmer_gone glimmer_has_rimefang glimmer_joined godspark_shadow golden_acorn
     good_mead_arrived good_mead_met good_mead_saved got_pokedex got_snowshoes got_splicers
     got_starter got_yeti_cub got_yetot grafting grafting_licence guild_dig_entered
     guild_ladder_down hag_defeated hag_fled hag_mirror_1 hag_mirror_2 hag_mirror_3
     hag_mirror_done hag_named hag_parley halo_orb_cleared heard_wall_rule heart_given_summer
-    heart_of_ice heartroot_entered heralds_arrested hew_confessed hew_down hew_thanked
+    heart_entered heart_of_ice heartroot_entered heralds_arrested hew_confessed hew_down hew_thanked
     hollow_entered hunter_seen husband_thawed hyphora_leave hyphora_named hyphora_sworn
     icefall_fell intro_done intro_started key_attuned key_found kids_freed kids_home
     knows_rewritten knows_summer_coat knows_three_hearts kobolds_freed lake_clean lake_cleansed

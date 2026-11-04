@@ -240,7 +240,7 @@ module FrostThaw
     say(["The sled: three hundred iron ingots wrapped in thick burlap, strapped down with leather.",
          "Each ingot is stamped with a foaming mug. The Battlehammer clan's mark.",
          "Getting it back to Bryn Shander takes the rest of the day, and everyone's back."])
-    state[:goal] = "Bring the Battlehammer iron to Hruna, in Bryn Shander."
+    side_goal(:mugs, "Bring the Battlehammer iron to Hruna, in Bryn Shander.", done: :mugs_done)
     add_counter(:story_beats)
   end
 

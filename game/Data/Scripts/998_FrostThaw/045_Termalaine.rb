@@ -235,8 +235,7 @@ module FrostThaw
       say(["OARUS: Good. Good. North-east, the trail into the woods. Bring a light. Bring two."])
       set_flag(:mine_taken)
       set_switch(SW_TM_MINE_OPEN, true)
-      state[:mine_goal_prev] = state[:goal]
-      state[:goal] = "Termalaine's gem mine, north-east of town: kobolds. (Speaker Masthew pays fifty gold.)"
+      side_goal(:mine, "Termalaine's gem mine, north-east of town: kobolds. (Speaker Masthew pays fifty gold.)")
     else
       say(["OARUS: Then enjoy Termalaine. It's very pretty. Until you have to live in it."])
     end
@@ -601,7 +600,7 @@ module FrostThaw
   end
 
   def mine_finish
-    state[:goal] = state[:mine_goal_prev] if state[:mine_goal_prev]
+    side_goal_done(:mine)
     add_counter(:story_beats)
   end
 end

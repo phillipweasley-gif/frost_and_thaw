@@ -681,7 +681,6 @@ module FrostThaw
       sayc([cl(:meat_meat, "(very still) That voice. Meat Meat knows that voice. From the cold table."),
             cl(:alberica, "Shh, sweetheart. Look at me, not the glass. Big breath. We're going to find the other half and break it."),
             cl(:alerion, "The twin. In the Heartroot. Somewhere wet, where it can watch the sap.")].compact)
-      state[:goal] = state[:goal] if state[:goal]
     end
     boy_mirror_exorcism if !has_key?(:FT_BOYSMIRROR) && !flag?(:twin_broken)
   end
@@ -719,7 +718,7 @@ module FrostThaw
          mm ? "(Very.)" : "MEAT MEAT: Very. But Meat Meat has strong hands."])
     give_key(:FT_BOYSMIRROR)
     set_flag(:boy_mirror_taken)
-    state[:goal] = "Carry the boy's mirror down to its twin: in the Heartroot's Overflow Channel, where Mira's girl is trapped."
+    side_goal(:mirror_boy, "Carry the boy's mirror down to its twin: in the Heartroot's Overflow Channel, where Mira's girl is trapped.", done: :twin_broken)
   end
 
   # Failure: the spirit lashes out (the source's disadvantage on the next attack:

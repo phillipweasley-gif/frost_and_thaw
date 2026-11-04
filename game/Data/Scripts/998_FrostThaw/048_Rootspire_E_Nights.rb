@@ -215,7 +215,7 @@ module FrostThaw
                                                    cl(:alerion, "(a hand to his chest) Frostina's awake. She can hear them too. Hammers.")) : nil,
           with_or_is?(:glimmer) ? (herald?(:glimmer) ? "(And you can hear it now, under everything. Hammers. Deep in the roots, keeping time.)" :
                                                        "GLIMMER: (very quietly, a hand on his chest) Hammers. Deep in the roots. They're keeping time.") : nil].compact)
-    state[:goal] = "The Rootwardens' missing patrol: scorch marks at the Echo Gate, on the west road."
+    side_goal(:patrol, "The Rootwardens' missing patrol: scorch marks at the Echo Gate, on the west road.", done: :chardalyn_found)
     true
   end
 
@@ -232,7 +232,7 @@ module FrostThaw
     set_switch(SW_SCORCH, false)
     say(["Beyond the scorch, three Rootwarden cloaks lie neatly folded in the dust, as if left for you to find.",
          "No bodies. No footprints. Only a drag mark, going down."])
-    state[:goal] = "Archivist Eirwen wants a private word at the Wind-Glass Library."
+    side_goal(:patrol, "Archivist Eirwen wants a private word at the Wind-Glass Library.", done: [:eirwen_audience, :barricade_entered])
     add_counter(:story_beats)
   end
 

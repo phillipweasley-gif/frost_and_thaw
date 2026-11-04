@@ -302,7 +302,7 @@ module FrostThaw
       say(["Most of it comes back. The autumn verse doesn't: that leaf's been pressed too long, and the ink's run.",
            "EIRWEN: Then you'll improvise that one. Alberica's improvised worse in front of tougher crowds, I'm told."])
     end
-    state[:goal] = "Sing the Cycle Canticle at the living pillar in the Council Hall of Seasons, before dawn."
+    side_goal(:canticle, "Sing the Cycle Canticle at the living pillar in the Council Hall of Seasons, before dawn.", done: [:canticle_learned, :canticle_haunted])
     true
   end
 
@@ -375,7 +375,7 @@ module FrostThaw
            "HELLEN: A note for Captain Ivran, on the Split Dock. The Corsairs owe the Brightruns a debt from my great-grandmother's day.",
            "HELLEN: This calls it in. A berth north, if the Heralds ever need one. Don't let the Halo see you carry it: they read everything they can steal."])
       give_key(:FT_HELLENNOTE)
-      state[:goal] = "Hellen's sealed note, for Captain Ivran on the Split Dock. Quietly."
+      side_goal(:hellen, "Hellen's sealed note, for Captain Ivran on the Split Dock. Quietly.")
       return
     end
     if flag?(:hellen_note_delivered) && !flag?(:hellen_note_thanked)
@@ -391,7 +391,7 @@ module FrostThaw
       say(["HELLEN: (not smiling for once) Someone's been in my cellar. At night.",
            "HELLEN: Every morning, frost on my family's shrine to you. Frost. In a city that hasn't seen it in thirty years.",
            "HELLEN: I don't want anyone hurt. I want to know who. Would you sit up with the shrine one night?"])
-      state[:goal] = "Sit up with the Heralds' shrine in Hellen's cellar, and find out who's been leaving frost on it."
+      side_goal(:hellen, "Sit up with the Heralds' shrine in Hellen's cellar, and find out who's been leaving frost on it.", done: :shrine_frost_solved)
       return
     end
     if flag?(:shrine_frost_solved) && !flag?(:shrine_frost_thanked)
@@ -424,7 +424,7 @@ module FrostThaw
     $PokemonBag.pbDeleteItem(:FT_HELLENNOTE) rescue nil
     set_flag(:hellen_note_delivered)
     set_flag(:corsair_berth)
-    state[:goal] = "Back to Hellen at the Rooted Hearth."
+    side_goal(:hellen, "Back to Hellen at the Rooted Hearth.", done: :hellen_note_thanked)
     true
   end
 
@@ -460,7 +460,7 @@ module FrostThaw
       set_flag(:tobin_arrested)
     end
     set_flag(:shrine_frost_solved)
-    state[:goal] = "Tell Hellen what you found at her shrine."
+    side_goal(:hellen, "Tell Hellen what you found at her shrine.", done: :shrine_frost_thanked)
   end
 
   # The passage: the sun-chalked cask in the cellar (2059), and its far end

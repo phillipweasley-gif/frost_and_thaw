@@ -194,7 +194,7 @@ module FrostThaw
            "RHEVEN: We found them frozen. And then they were gone again. Something wants them to get back up.",
            "RHEVEN: Bring me the beast alive, if you can. I want to see whose sigil it carries with my own eyes.",
            "He hands you a coil of barbed net, Rootwarden-woven. (A Poké Ball would do just as well, he admits.)"], event_id)
-      state[:goal] ||= "The Still Beast prowls the Blooming Fields by the Wall."
+      side_goal(:still_beast, "The Still Beast prowls the Blooming Fields by the Wall. Rheven wants it alive.", done: :still_beast_done)
     else
       say(["RHEVEN: The Fields, by the Wall. Alive, if you can. A Poké Ball counts as alive."], event_id)
     end
@@ -302,7 +302,7 @@ module FrostThaw
            "KETHAN: Then the season never ended. A ritual gone wrong, they said. Wrong, or turned.",
            "KETHAN: And now somebody inside my Hall is feeding the Halo and Summer both. Patrol routes. Sap-lines. Names.",
            "KETHAN: I want them found quietly. Bring me proof, not shouting."])
-      state[:goal] ||= "Kethan wants the infiltrator in the Rootwardens found: proof, not shouting."
+      side_goal(:infiltrator, "Kethan wants the infiltrator in the Rootwardens found: proof, not shouting.", done: :ash_named)
       return
     end
     clues = [:warden_map_seen, :jorik_confessed, :autumn_note, :gem_vibrates].count { |f| flag?(f) }
@@ -807,7 +807,7 @@ module FrostThaw
       sayc([herald?(:meat_meat) ? "(Mirror Mother. You know that name. From under the table. From the dark.)" :
                                   cl(:meat_meat, "(very still) Mirror Mother. Meat Meat knows that name. From under the cold table."),
             cl(:alberica, "Sweetheart, if he's offering you a job, he's already decided what you are. Let's decide differently.")].compact)
-      state[:goal] ||= "Darrus wants the Guild's sealed reliquary from the vault in the Smuggler's Run, under the Split Dock."
+      side_goal(:reliquary, "Darrus wants the Guild's sealed reliquary from the vault in the Smuggler's Run, under the Split Dock.", done: [:darrus_paid, :darrus_chartered, :darrus_redeemed, :summer_ended])
       return
     end
     if ($PokemonBag.pbHasItem?(:FT_RELIQUARY) rescue false)

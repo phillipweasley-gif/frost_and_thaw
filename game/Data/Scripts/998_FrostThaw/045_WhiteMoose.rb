@@ -191,7 +191,7 @@ module FrostThaw
     say(["NIMSY: The loggers work the woods east of town, on the logging road. Look for tracks.",
          "NIMSY: Most of them will be ordinary moose. You'll know the white one's. Or you won't, and that's the trouble."])
     set_flag(:white_moose_taken)
-    state[:moose_goal_prev] ||= state[:goal]
+    side_goal(:moose, "The white moose: in the woods east of Lonelywood, on the logging road.", done: :white_moose_done)
   end
 
   def white_moose_reward(event_id = nil)
@@ -224,7 +224,7 @@ module FrostThaw
       set_switch(SW_WM_RAMSHACKLE, true)
     end
     set_flag(:white_moose_done)
-    state[:goal] = state[:moose_goal_prev] if state[:moose_goal_prev]
+    side_goal_done(:moose)
     add_counter(:story_beats)
   end
 
@@ -599,7 +599,7 @@ module FrostThaw
             "You take its head, for Speaker Huddle."])
       give_key(:FT_MOOSEHEAD)
       set_switch(SW_WM_MOOSE_DEAD, true)
-      state[:goal] = "Take the white moose's head to Speaker Huddle in Lonelywood." if !flag?(:white_moose_done)
+      side_goal(:moose, "Take the white moose's head to Speaker Huddle in Lonelywood.", done: :white_moose_done)
     end
   end
 

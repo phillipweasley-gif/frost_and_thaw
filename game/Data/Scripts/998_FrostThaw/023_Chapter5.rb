@@ -230,7 +230,7 @@ module FrostThaw
   # SC 5.02 - An old woman's home (its own scene key: the Frost-Light Chasm's is scene_frostlight_enter)
   def scene_cackling_enter
     return if flag?(:chasm_entered)
-    set_flag(:chasm_entered)
+    set_flag(:chasm_entered); chasm_goal
     set_flag(:cackling_entered)
     sayc(["Jagged icicles hang from the cave mouth like fangs. A blast of frigid air rolls out, carrying the stench of decay.",
           "The chasm laughs. Not echoing: laughing, out of the rock itself.",
@@ -341,7 +341,7 @@ module FrostThaw
         say(["The mother stops, shaking. She looks at the swaddling.",
              "Then she points, deeper into the chasm, to where her cub was taken."])
         set_flag(:yeti_calmed)
-        set_flag(:yeti_faced)
+        set_flag(:yeti_faced); chasm_goal
         $game_switches[SW_YETI_DOWN] = true if $game_switches
         add_counter(:story_beats)
         yeti_after_echo
@@ -356,7 +356,7 @@ module FrostThaw
       sayc([cl(:alberica, "(whispering) That poor thing."),
             cl(:reptin, "She'll still be there when we come back with her baby. That's the deal I'm making. With myself.")])
       set_flag(:yeti_avoided)
-      set_flag(:yeti_faced)
+      set_flag(:yeti_faced); chasm_goal
       $game_switches[SW_YETI_DOWN] = true if $game_switches
       add_counter(:story_beats)
       yeti_after_echo
@@ -373,7 +373,7 @@ module FrostThaw
           cl(:meat_meat, "Meat Meat is sorry, fluffy mama. Meat Meat will find your baby. Meat Meat promises.")])
     set_flag(:yeti_fought)
     set_flag(:yeti_mother_dead)
-    set_flag(:yeti_faced)
+    set_flag(:yeti_faced); chasm_goal
     $game_switches[SW_YETI_DOWN] = true if $game_switches
     $game_switches[SW_MOTHER_DEAD] = true if $game_switches
     $game_map.need_refresh = true if $game_map
@@ -411,7 +411,7 @@ module FrostThaw
   # SC 5.05 - The split path
   def scene_illusion_fork
     return if flag?(:seen_illusion_fork)       # it sits on a three-tile row: play it once, not per tile or per visit
-    set_flag(:seen_illusion_fork)
+    set_flag(:seen_illusion_fork); chasm_goal
     say(["The passage curves down into a corridor of ice melted smooth and frozen again, glassy as a mirror.",
          "Your reflections slide and warp along the walls beside you.",
          "One of them lingers a moment after you've moved on. It's grinning. Then it's only you again.",
@@ -535,7 +535,7 @@ module FrostThaw
   # The frozen rift and the Guardian's Gate
   #-----------------------------------------------------------------------------
   def scene_rift_arrive
-    set_flag(:rift_arrived)
+    set_flag(:rift_arrived); chasm_goal
     sayc(["The passage ends at a ledge over nothing. A chasm cuts down so deep your light gives up.",
           "Across it runs a long, narrow bridge, slick with ice, its old rope railing limp and frayed.",
           "The wind howls up out of the dark, and the cackling is louder here, rising, fading to a moan.",
@@ -571,7 +571,7 @@ module FrostThaw
 
   def bridge_gust(event_id = nil)
     return if flag?(:bridge_gusted)
-    set_flag(:bridge_gusted)
+    set_flag(:bridge_gusted); chasm_goal
     say(["A gust tears up out of the abyss. You drop to your knees on the ice, gripping the stone."])
     ghost = begin
       d = { 2 => [0, 1], 4 => [-1, 0], 6 => [1, 0], 8 => [0, -1] }[$game_player.direction] || [0, -1]
@@ -635,7 +635,7 @@ module FrostThaw
             "The vision fades. Off to one side of the passage, a hairline seam has opened in the ice wall.",
             cl(:reptin, "Wolves. Standing with her. Not chained."),
             cl(:alerion, "Noted.")])
-      set_flag(:gate_open)
+      set_flag(:gate_open); chasm_goal
       $game_switches[SW_GATE_OPEN] = true if $game_switches
       add_counter(:story_beats)
     else
@@ -784,7 +784,7 @@ module FrostThaw
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     pbMessage(_INTL("A soft silver light settles over you and your Pokémon. (It will be there again when you need it most.)"))
     set_flag(:reptin_charge)
-    set_flag(:ghost_blessing)
+    set_flag(:ghost_blessing); chasm_goal
     $game_switches[SW_GHOST_REST] = true if $game_switches
     add_counter(:story_beats)
   end
@@ -832,6 +832,7 @@ module FrostThaw
          "Between them, a yeti cub hangs in black iron chains, gagged, white fur matted with tears.",
          "Beside the dais an iron cauldron bubbles over blue flames. White vapour rolls round the dais like a caul.",
          "All around the cavern stand tall mirrors of frost-rimmed ice. In every one, a crone is smiling."])
+    set_flag(:heart_entered); chasm_goal
   end
 
   # SC 5.08 - The Heart of the Chasm
@@ -1134,7 +1135,24 @@ module FrostThaw
     set_flag(:cub_is_yetot)
   end
 
+  # The Chasm's Goal, one step at a time (review Ch5 E6: it never changed from
+  # the Waste to the end of the act).
+  def chasm_goal
+    return if !flag?(:chasm_entered) || flag?(:reversal)
+    state[:goal] =
+      if flag?(:heart_entered)          then "The hag, at the Heart. The cub is in chains by the dais."
+      elsif flag?(:ghost_blessing)      then "Stop the hag at the Heart. Break her staff; fire for the troll."
+      elsif flag?(:gate_open)           then "On through the Guardian's Gate, to the Heart. A seam in the ice beside it hides something."
+      elsif flag?(:bridge_gusted)       then "Open the Guardian's Gate: a gift of life, a gift of death."
+      elsif flag?(:rift_arrived)        then "Cross the bridge over the rift."
+      elsif flag?(:seen_illusion_fork)  then "The tunnel forks. Find the true way down."
+      elsif flag?(:yeti_faced)          then "Find the yeti's cub. The drag marks go north, deeper in."
+      else                                   "Down through the Cackling Chasm, to the hag's lair."
+      end
+  end
+
   def apply_chapter5_switches
+    chasm_goal rescue nil
     return if !active? || !$game_switches
     sync_switch(SW_ICEFALL, flag?(:mephits_done))
     sync_switch(SW_YETI_DOWN, flag?(:yeti_faced))

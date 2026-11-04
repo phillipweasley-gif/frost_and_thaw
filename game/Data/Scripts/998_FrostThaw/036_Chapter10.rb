@@ -308,8 +308,7 @@ module FrostThaw
     trial
     add_counter(:story_beats)
     pbMessage(_INTL("(The Heralds menu now keeps a list of your witnesses and evidence.)")) rescue nil
-    state[:goal] = "Seven days. Anduin by the Bazaar fountain; Meat Meat in the root-cells; Wyn's summons at the Echo Gate; " \
-                   "Talion in the Blooming Fields; the councillors in the Undercanopy; Selrae's bid in this Hall. And the city: the wall, the camp, the debates."
+    trial_week_goal
   end
 
   # Q6: "The morning after their return... town criers ring bells... Moments
@@ -892,7 +891,8 @@ module FrostThaw
          "PHILDENDRIN: And bring me proof. What Autumn did. Ask Rheven, and Mira, and the camp. They know."])
     set_switch(SW_PHIL_MIRROR, true)
     add_counter(:story_beats)
-    state[:goal] = "Autumn's spying mirror, in the Sap Wells under the Root Gate. And proof: Rheven, Mira, the refugees."
+    side_goal(:mm_mirror, "Meat Meat's trial: Autumn's spying mirror, in the Sap Wells under the Root Gate. And proof: Rheven, Mira, the refugees.", done: :mm_atoned)
+    trial_week_goal
   end
 
   def phildendrin_after(event_id = nil)
@@ -990,7 +990,8 @@ module FrostThaw
     speak(:wyn, "...I'll come. I'll tell them everything.", "...I'll come.")
     set_flag(:wyn_summoned)
     set_switch(SW_WYN_HEARING, true)
-    state[:goal] = "Wyn's hearing, in the Council Hall."
+    side_goal(:wyn_hearing, "Wyn's hearing, in the Council Hall.", done: :wyn_cleared)
+    trial_week_goal
   end
 
   def wyn_hearing(event_id = nil)
@@ -1247,7 +1248,7 @@ module FrostThaw
            "You'll want a memento of him, a mirror without a crack in it, and to know what you're doing."])
       set_flag(:talion_ritual_chosen)
       set_switch(SW_TALION, true)
-      state[:goal] = "Talion's ritual: the Glasswater, past the Blooming Fields, at night. A memento; an untainted frost-glass mirror (Mira); Mira's advice."
+      side_goal(:talion, "Talion's ritual: the Glasswater, past the Blooming Fields, at night. A memento; an untainted frost-glass mirror (Mira); Mira's advice.", done: %i[talion_released talion_chased talion_restored talion_haunted])
     when 2
       say([al ? "You reach for the necromancy." : "Alerion reaches for the necromancy.",
            "Talion's face goes hungry and grey. The flowers round his feet frost over.",
@@ -1458,7 +1459,8 @@ module FrostThaw
       set_flag(:spores_mistrust)
     end
     set_flag(:spores_debated)
-    state[:goal] = "Kelyn and Selrae wait at the Sap Gate, to be taken down to Luminara."
+    side_goal(:fane, "Alberica's trial: Kelyn and Selrae wait at the Sap Gate, to be taken down to Luminara.", done: %i[colony_recognised colony_exiled])
+    trial_week_goal
   end
 
   def councillors_undercanopy(event_id = nil)
@@ -1921,7 +1923,31 @@ module FrostThaw
     act3_start if respond_to?(:act3_start)
   end
 
+  # The trial week's Goal: a short hub line, kept current (review Ch10 E4: the
+  # first goal was 254 characters, and each trial's goal outlived its trial).
+  # Each trial's own step is a side line under it, gone when the trial is.
+  TRIAL_STEPS = [
+    [%i[anduin_reconciled anduin_doubtful], "Reptin: Anduin, by the Bazaar fountain"],
+    [%i[mm_atoned], "Meat Meat: the root-cells"],
+    [%i[wyn_cleared], "Wyn: the summons at the Echo Gate"],
+    [%i[talion_released talion_chased talion_restored talion_haunted], "Alerion: Talion, in the Blooming Fields"],
+    [%i[colony_recognised colony_exiled], "Alberica: her hearing, in the Council Hall"],
+    [%i[badge_selrae], "Selrae's bid for the Winter seat, in the Council Hall"]
+  ]
+
+  def trial_week_goal
+    return if !flag?(:trials_open) || flag?(:ch10_done) || flag?(:verdict_heard)
+    left = TRIAL_STEPS.reject { |flags, _| flags.any? { |f| flag?(f) } }
+    day = (trial[:day] rescue 1)
+    state[:goal] = if left.empty?
+                     "When you're ready, tell Kelyn in the Council Hall. The crystals will hear the verdict."
+                   else
+                     "Trial week, day #{day} of 7: #{left.size} left. Next: #{left.first[1]}."
+                   end
+  end
+
   def apply_chapter10_switches
+    trial_week_goal rescue nil
     return if !active? || !$game_switches
     week = flag?(:trials_open) && !flag?(:ch10_done)
     $game_switches[SW_TRIALS] = week

@@ -24,9 +24,14 @@ module FrostThaw
         tag = line[/\A([A-Z][A-Z'\- ]*[A-Z]):/, 1]
         if tag
           ev = Stage.speaker(tag, event_id)
-          if !ev && event_id && event_id > 0
+          mate = COMPANION_NAMES.key(tag)
+          if !ev && mate && companions.include?(mate)
+            ev = Stage.summon(mate)           # a companion walks in beside you to speak
+          elsif !ev && !mate && event_id && event_id > 0
+            # someone without a name of their own on the map (a townsperson whose
+            # line says FISHER:): the person you're talking to. Never a companion.
             e = $game_map.events[event_id]
-            ev = e if e && !e.character_name.to_s.empty?
+            ev = e if e && !e.character_name.to_s.empty? && e.name.to_s !~ Stage::NOT_SPEAKERS
           end
           if ev && Stage.on_screen?(ev)
             pbCallBub(2, ev.id)
@@ -442,6 +447,26 @@ module FrostThaw
   end
 end
 
+module FrostThaw
+  module_function
+
+  # Side quests keep their own lines under the story's Goal (fix plan step 3):
+  # a side quest never overwrites where the story goes next, and nothing has to
+  # "restore" it afterwards. done: a flag (or flags); once any is set, the line
+  # is gone by itself.
+  def side_goal(key, text, done: nil)
+    (state[:side_goals] ||= {})[key] = [text, Array(done)]
+  end
+
+  def side_goal_done(key)
+    (state[:side_goals] ||= {}).delete(key)
+  end
+
+  def side_goals
+    (state[:side_goals] || {}).values.reject { |_t, done| done.any? { |f| flag?(f) } }.map(&:first)
+  end
+end
+
 class PokemonPauseMenu_Scene
   alias ft_orig_pbShowCommands pbShowCommands unless method_defined?(:ft_orig_pbShowCommands)
   # Two entries of ours after the player's: "Goal" (where the story goes next,
@@ -449,7 +474,8 @@ class PokemonPauseMenu_Scene
   def pbShowCommands(commands)
     extras = []
     goal = (FrostThaw.active? && FrostThaw.state[:goal]) rescue nil
-    extras << [:goal, "  <icon=menuIcons/PLAYER>  " + _INTL("Goal")] if goal.is_a?(String) && !goal.empty?
+    sides = (FrostThaw.active? && FrostThaw.side_goals) rescue []
+    extras << [:goal, "  <icon=menuIcons/PLAYER>  " + _INTL("Goal")] if (goal.is_a?(String) && !goal.empty?) || !sides.empty?
     extras << [:heralds, "  <icon=menuIcons/PLAYER>  " + _INTL("Heralds")] if FrostThaw.party_chat_available?
     return ft_orig_pbShowCommands(commands) if extras.empty?
     player_entry = commands.index { |c| c.to_s.include?("menuIcons/PLAYER") } || (commands.length - 1)
@@ -462,7 +488,10 @@ class PokemonPauseMenu_Scene
         pbPlayDecisionSE rescue nil
         pbHideMenu
         case extras[ret - ours][0]
-        when :goal    then pbMessage(_INTL("Goal: {1}", FrostThaw.state[:goal]))
+        when :goal
+          g = FrostThaw.state[:goal]
+          pbMessage(_INTL("Goal: {1}", g)) if g.is_a?(String) && !g.empty?
+          FrostThaw.side_goals.each { |t| pbMessage(_INTL("Also: {1}", t)) }
         when :heralds then FrostThaw.party_chat
         end
         pbShowMenu

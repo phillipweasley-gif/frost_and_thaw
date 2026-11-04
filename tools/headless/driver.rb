@@ -203,7 +203,10 @@ class Scene_Map
     @spritesets[map] = HLNull.new($MapFactory.maps[map])
     $MapFactory.setSceneStarted(self)
   end
-  def updateSpritesets(*); @spritesets ||= {}; $MapFactory.maps.each { |m| @spritesets[m.map_id] ||= HLNull.new(m) }; end
+  def updateSpritesets(*)
+    @spritesets ||= {}; $MapFactory.maps.each { |m| @spritesets[m.map_id] ||= HLNull.new(m) }
+    FrostThaw::Stage.update_summoned rescue nil     # (the game's own per-frame staging that isn't drawing)
+  end
 end
 
 # --- moving around like a player ------------------------------------------------------

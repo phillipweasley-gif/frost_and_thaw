@@ -164,8 +164,7 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Go after the verbeeg and bring back Good Mead's casks?"))
     say(["\"It went west! Into the woods! Fef the trapper went that way this morning, checking his lines...\""])
     set_flag(:mead_taken)
-    state[:mead_goal_prev] ||= state[:goal]
-    state[:goal] = "Track the verbeeg west into the woods from Good Mead, and bring back the stolen casks of mead."
+    side_goal(:mead, "Track the verbeeg west into the woods from Good Mead, and bring back the stolen casks of mead.")
   end
 
   # Fef Moryn, lurching out of the woods with his traps.
@@ -371,7 +370,7 @@ module FrostThaw
     end
     give_key(:FT_MEADCASK)
     set_flag(:mead_casks)
-    state[:goal] = "Take the two casks of mead home to Good Mead."
+    side_goal(:mead, "Take the two casks of mead home to Good Mead.")
   end
 
   # V7: Yogobor, asleep in the dark.
@@ -610,7 +609,7 @@ module FrostThaw
     say(["The town keeps its word: lodging and drink for a tenday. The brewmistress presses three flasks into your hands",
          "(honey mead, stoppered tight: they restore like Berry Juice)."])
     pbReceiveItem(:BERRYJUICE, 3) rescue nil
-    state[:goal] = state[:mead_goal_prev] if state[:mead_goal_prev]
+    side_goal_done(:mead)
     add_counter(:story_beats)
   end
 
@@ -649,8 +648,7 @@ module FrostThaw
           "Shandar stamps off. By evening, someone says he's taken the road west. Toward Targos."])
     set_switch(SW_GM_SHANDAR_AWAY, true)
     start_election_clock
-    state[:goal_prev_election] ||= state[:goal]
-    state[:goal] = "Good Mead votes for a new speaker in about a week. Shandar Froth has walked off toward Targos."
+    side_goal(:election, "Good Mead votes for a new speaker in about a week. Shandar Froth has walked off toward Targos.")
   end
 
   # Ask around about the candidates (an hour of inquiries).
@@ -776,7 +774,7 @@ module FrostThaw
       set_flag(:zhentarim_good_mead)
     end
     set_switch(SW_GM_ELECTED, true)
-    state[:goal] = state[:goal_prev_election] if state[:goal_prev_election]
+    side_goal_done(:election)
     add_counter(:story_beats)
   end
 

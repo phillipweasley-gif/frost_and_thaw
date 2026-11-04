@@ -508,7 +508,7 @@ module FrostThaw
            "EIRWEN: I felt a ripple when a Rootwarden went missing beyond the Auroral Wall. Could the leaf be with them?",
            cl(:alberica, "(a hand on the shelf, very pale) ...Somebody's walking round with a piece of my life in their pocket. I'd like it back.")])
       set_flag(:leaf_quest)
-      state[:goal] = "The chronal leaf: across the Glasswater, through the Auroral Wall."
+      side_goal(:leaf, "The chronal leaf: across the Glasswater, through the Auroral Wall.", done: :leaf_restored)
       return
     end
     if ($PokemonBag.pbHasItem?(:FT_CHRONALLEAF) rescue false)

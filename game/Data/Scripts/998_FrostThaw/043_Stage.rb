@@ -257,6 +257,7 @@ module FrostThaw
     end
 
     def update
+      update_summoned if !@summoned.empty? || !@leaving.empty?
       update_overlays if @overlays && !@overlays.empty?
       return if @fx.empty? && !@panel
       @fx.dup.each do |f|
@@ -471,6 +472,8 @@ module FrostThaw
       @posed.clear
       @actors.values.dup.each { |ge| remove_actor(ge) }
       @actors.clear
+      @summoned.clear
+      @leaving.clear
       if @hid_player
         $game_player.transparent = false rescue nil
         @hid_player = false
@@ -487,6 +490,8 @@ module FrostThaw
       @fx.clear
       @posed.clear
       @actors.clear
+      @summoned.clear
+      @leaving.clear
       if @hid_player
         $game_player.transparent = false rescue nil
         @hid_player = false
@@ -752,6 +757,97 @@ module FrostThaw
       true
     end
 
+    # Things that share a name with a character but never talk: Shimmer's
+    # statue, Hellen's carving, a sign about Naerth (review: "the statue says
+    # ...Shimmer.").
+    NOT_SPEAKERS = /statue|carving|mural|\bsign\b|portrait|painting|grave|tablet|plaque|effigy|banner|poster/i
+
+    #---------------------------------------------------------------------------
+    # Companions on screen (fix plan step 1, WRITING_GUIDE §9a). When a
+    # companion travelling with you speaks and isn't on the map, they walk in
+    # beside you for the line, and stay for the rest of the scene. When you get
+    # control back, they step back out. (Followers aren't drawn in this game, so
+    # this is how the party is seen.)
+    #---------------------------------------------------------------------------
+    @summoned = {}      # companion key => [Game_Event, the tile they came from]
+    @leaving = []       # [Game_Event, frames left]
+
+    def summoned?(ev)
+      @summoned.values.any? { |g, _| g.equal?(ev) }
+    end
+
+    # A free standing tile near the player, beside them first, then behind:
+    # [x, y, from_x, from_y], where from is one tile further out (where they
+    # walk in from) when that tile is free too.
+    def free_slot
+      px, py, d = $game_player.x, $game_player.y, $game_player.direction
+      fx, fy = STEP[d]
+      side = [[-fy, fx], [fy, -fx]]                 # left and right of the facing
+      back = [-fx, -fy]
+      offs = side + [back, [back[0] + side[0][0], back[1] + side[0][1]], [back[0] + side[1][0], back[1] + side[1][1]],
+                     [side[0][0] * 2, side[0][1] * 2], [side[1][0] * 2, side[1][1] * 2]]
+      taken = @summoned.values.map { |g, _| [g.x, g.y] }
+      free = lambda do |x, y|
+        next false if !$game_map.valid?(x, y) || [x, y] == [px, py] || taken.include?([x, y])
+        next false if !($game_map.passable?(x, y, 0) rescue false)
+        $game_map.events.values.none? { |e| e.x == x && e.y == y && !e.through && !e.character_name.to_s.empty? }
+      end
+      offs.each do |ox, oy|
+        x, y = px + ox, py + oy
+        next if !free.(x, y)
+        sx = ox == 0 ? 0 : (ox > 0 ? 1 : -1)
+        sy = oy == 0 ? 0 : (oy > 0 ? 1 : -1)
+        from = free.(x + sx, y + sy) ? [x + sx, y + sy] : [x, y]
+        return [x, y, *from]
+      end
+      nil
+    end
+
+    # Bring a travelling companion on screen for their line.
+    def summon(key)
+      return nil if !map? || FrostThaw.herald?(key)
+      g = @summoned[key]
+      return g[0] if g && $game_map.events[g[0].id].equal?(g[0])
+      slot = free_slot or return nil
+      x, y, fx, fy = slot
+      ge = actor(key, fx, fy, $game_player.direction)
+      return nil if !ge
+      @summoned[key] = [ge, [fx, fy]]
+      walk_to(ge, x, y, face: $game_player.direction) if [fx, fy] != [x, y]
+      ge.through = true             # a stand-in never blocks you, even after a walk
+      ge
+    rescue StandardError => e
+      log("summon #{key}: #{e.message}")
+      nil
+    end
+
+    # Called every frame: once the player has control again, the companions who
+    # walked in step back out and go.
+    def update_summoned
+      return if @summoned.empty? && @leaving.empty?
+      @leaving.dup.each do |pair|
+        pair[1] -= 1
+        next if pair[1] > 0
+        remove_actor(pair[0])
+        @leaving.delete(pair)
+      end
+      return if @summoned.empty?
+      busy = ($game_system.map_interpreter.running? rescue false) || ($game_temp.message_window_showing rescue false)
+      return if busy
+      @summoned.each_value do |ge, from|
+        dx, dy = from[0] - ge.x, from[1] - ge.y
+        if dx != 0 || dy != 0
+          d = dx > 0 ? 6 : dx < 0 ? 4 : dy > 0 ? 2 : 8
+          pbMoveRoute(ge, [37, MOVE[d]]) rescue nil
+        end
+        @leaving << [ge, 18]
+      end
+      @summoned.clear
+    rescue StandardError => e
+      log("update_summoned: #{e.message}")
+      @summoned.clear
+    end
+
     # The character a line's speaker tag names ("TAMSIN: ..."), if one is on
     # the map and visible: the event that started the scene first, then any
     # character whose event name contains the speaker's name.
@@ -759,7 +855,8 @@ module FrostThaw
       return nil if !map? || !name
       want = name.to_s.downcase.strip
       seen = lambda do |e|
-        e && !e.character_name.to_s.empty? && !e.transparent && !e.instance_variable_get(:@erased)
+        e && !e.character_name.to_s.empty? && !e.transparent && !e.instance_variable_get(:@erased) &&
+          e.name.to_s !~ NOT_SPEAKERS
       end
       label = lambda do |e|
         e.name.to_s.sub(/\Astage_/, "").tr("_", " ").downcase
