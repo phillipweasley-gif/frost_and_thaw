@@ -994,7 +994,7 @@ module FrostThaw
       else
         say(["Wrong. Every shard in the vault turns to look at you.",
              "Some of them fly together, edge to edge, into a shape like an empty suit of armour made of knives: a Mirror Sentinel!"])
-        if !boss_battle(named_mon(:B478H122, 46, "Mirror Sentinel"))
+        if !boss_battle(named_mon(:B429H122, 46, "Mirror Sentinel"))
           state[:ward_successes] = done
           return
         end

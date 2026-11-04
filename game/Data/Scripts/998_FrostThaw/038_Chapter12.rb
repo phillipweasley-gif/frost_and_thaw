@@ -36,7 +36,7 @@ module FrostThaw
 
   TRAINER_TYPES.merge!(FT_MEPHIT: ["Ice Mephit", :CHANNELER, 0, 100])
   TRAINERS.merge!(
-    sopo: [:FT_MEPHIT, "Sopo", [[:SNORUNT, 56], [:GLALIE, 57], [:B361H215, 57], [:B362H124, 59]],
+    sopo: [:FT_MEPHIT, "Sopo", [[:SNORUNT, 56], [:GLALIE, 57], [:B427H215, 57], [:B428H124, 59]],
            "No, no, no! You were supposed to fall into a hole!"]
   )
   TRAINER_INTROS.merge!(sopo: "SOPO: Visitors! I'm a guide. I guide people into holes, mostly!")
@@ -225,7 +225,7 @@ module FrostThaw
       say(["A Corsair sloop slides out of the fog and grinds against the dock.",
            "Mira's people pile off, shouting, and fall on Sopo's pack.",
            "CORSAIR: Captain's compliments! The little ones are ours. The giggly one's yours."])
-      return if !boss_battle(named_mon(:B362H124, 59, "Sopo"))
+      return if !boss_battle(named_mon(:B428H124, 59, "Sopo"))
     else
       return if !pbTrainerBattle(:FT_MEPHIT, "Sopo", nil, false, 0)
     end

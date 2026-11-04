@@ -56,7 +56,9 @@ module FrostThaw
     barkeep: -> {
       if T.flag?(:met_party)
         ["MA YARBROUL: Warmest room in Targos, ducks. Which isn't saying much.",
-         "MA YARBROUL: Speaker's seal? Town Hall, up the main street. Bring coin, or bring Pokémon. And eat something first."]
+         T.flag?(:naerth_terms) ? "MA YARBROUL: Speaker's seal? Town Hall, up the main street. Bring Pokémon." :
+                                  "MA YARBROUL: Speaker's seal? Naerth's at the Luskan Arms. Bring coin, or Pokémon.",
+         "MA YARBROUL: And eat something first."]
       else
         ["A plump, grey-haired widow fusses along the benches, refilling stew bowls whether anybody asked or not.",
          "MA YARBROUL: Ethen Yarbroul. Ma, to this lot. Five strangers in one night, in winter? Sit. Eat.",

@@ -411,7 +411,7 @@ module FrostThaw
          "FOREMAN: WOLVES! Get behind the timber!"], event_id)
     sayc([cl(:reptin, "(eyes going gold) Winter wolves. I know what they want. Behind me, everyone."),
           cl(:meat_meat, "Meat Meat will bite the wolves. The wolves will be very surprised.")])
-    return if !boss_battle(named_mon(:B59H471, 56, "Winter Wolf"), named_mon(:B59H471, 56, "Winter Wolf"))
+    return if !boss_battle(named_mon(:B59H272, 56, "Winter Wolf"), named_mon(:B59H272, 56, "Winter Wolf"))
     say(["The pack breaks and runs back into the white. The crew comes out from behind the timber, cheering."])
     set_flag(:wolves_driven_off)
     set_switch(SW_WOLF_RAID, false)
@@ -1369,7 +1369,7 @@ module FrostThaw
     return say(["An empty frame of red root."], event_id) if flag?(:mira_mirror_taken)
     say(["A hand-mirror in a frame of red root, propped on a ledge. The frame is stamped: MIRA, NORTH WIND.",
          "In the glass: a Mirror Sentinel, helmed and hollow, standing right behind you."], event_id)
-    return if !boss_battle(named_mon(:B437H227, 55, "Mirror Sentinel"))
+    return if !boss_battle(named_mon(:B449H227, 55, "Mirror Sentinel"))
     say(["The sentinel falls in plates. The mirror goes quiet in your hand."])
     set_flag(:mira_mirror_taken)
     set_switch(SW_MIRA_MIRROR, false)

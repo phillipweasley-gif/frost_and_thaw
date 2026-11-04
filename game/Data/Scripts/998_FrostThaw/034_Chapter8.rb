@@ -47,6 +47,7 @@ module FrostThaw
   AREAS.merge!(2072 => :forge, 2073 => :hag_domain, 2074 => :hag_domain, 2075 => :forge, 2076 => :forge)
   FORGE_ARRIVAL = [2072, 4, 14, 6]
   FORGE_REST    = [2072, 5, 14, 6]
+  FORGE_CAMP    = [2150, 12, 6, 2]   # Level 3, by the Root-Throne
 
   ENCOUNTERS[2072] = { step_chances: { Cave: 6 },
                        Cave: [[30, :MAGCARGO, 45, 47], [25, :GRAVELER, 45, 47], [20, :TORKOAL, 45, 47],
@@ -857,6 +858,18 @@ module FrostThaw
          cl(:reptin, "That's our way out. GO!")].compact)
     state[:goal] = "Out through the Sloughing Veins, before the Heart Chamber comes down."
     transfer(*VEINS_ARRIVAL)
+  end
+
+  # Level 3's rest: one of the woken diggers followed you down (review Ch8 E10).
+  def forge_camp(event_id = nil)
+    if !flag?(:forge_camp_met)
+      set_flag(:forge_camp_met)
+      say(["DIGGER: Followed you down. Somebody has to keep the flask warm.",
+           "DIGGER: Get knocked flat down there, you wake up here. Not at the gate."], event_id)
+    end
+    say(["The digger pours warm sap for you and your Pokémon.", "Everyone feels better."], event_id)
+    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    set_rest_at(FORGE_CAMP) rescue nil
   end
 
   # The Rootsun Forge mends nothing, but the Barricade's diggers can rest you.

@@ -77,7 +77,8 @@ module FrostThaw
          "SHIMMER: Then that's where it is."].compact, event_id)
     set_flag(:relics_are_lures)
     state[:goal] = flag?(:badge_targos) ? "Find who's calling us. South-east, past Bryn Shander, to Dougan's Hole." :
-                                          "Find who's calling us. South-east. First, Naerth's seal to get out of Targos."
+                                          (flag?(:naerth_terms) ? "Win Speaker Naerth's seal at the Town Hall. It opens the south-west gate." :
+                                                                 "Get Speaker Naerth's seal to leave Targos. He does business at the Luskan Arms.")
     if flag?(:got_pokedex) || ($Trainer.has_pokedex rescue false)
       set_flag(:got_pokedex)
       return

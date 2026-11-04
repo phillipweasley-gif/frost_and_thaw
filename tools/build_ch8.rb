@@ -52,7 +52,7 @@ end
 # A2-A7: the inner rooms, up from the north alcove (build_ch8_deep.rb, 2146)
 [22, 23].each { |x| ba.warp(x, 8, 2146, 18, 21, 8, name: "Into the inner rooms") }
 # A13: the sap-lift's Root stop, once the Rootwatch is cleared
-ba.event(28, 15, "Sap-lift", [{ graphic: "", through: true },
+ba.event(28, 15, "Sap-lift", [{ tile_id: 582, script: "FT.sap_lift(:root, @event_id)" },
                               { switch: 4087, tile_id: 582, script: "FT.sap_lift(:root, @event_id)" }])
 save(ba, :barricade)
 

@@ -253,6 +253,21 @@ module MapKit
       g.instance_variable_set(:@blend_type, pd[:blend_type] || 0)
       pg.instance_variable_set(:@trigger, pd[:trigger] || 0)
       pg.instance_variable_set(:@move_type, pd[:move_type] || 0)
+      if pd[:move_route]
+        # A custom route: [[code, params], ...] (RMXP move-command codes), repeated.
+        mr = MapKit.deep_copy(pg.move_route)
+        cmds = (pd[:move_route] + [[0, []]]).map do |code, params|
+          mc = RPG::MoveCommand.allocate
+          mc.instance_variable_set(:@code, code)
+          mc.instance_variable_set(:@parameters, params || [])
+          mc
+        end
+        mr.instance_variable_set(:@list, cmds)
+        mr.instance_variable_set(:@repeat, true)
+        mr.instance_variable_set(:@skippable, true)
+        pg.instance_variable_set(:@move_route, mr)
+        pg.instance_variable_set(:@move_type, 3)
+      end
       pg.instance_variable_set(:@move_frequency, pd[:move_frequency] || 3)
       pg.instance_variable_set(:@move_speed, pd[:move_speed] || 3)
       pg.instance_variable_set(:@through, pd[:through] || false)
@@ -285,8 +300,13 @@ module MapKit
 
     # A talking NPC. `hide_switch`: when that game switch is on, the NPC is gone
     # (used to hide a Herald when the player is that Herald).
+    # Townsfolk who "wander" (move: 1) look about where they stand instead of
+    # walking off: a player (and the test) can always reach them to talk.
+    LOOK_ABOUT = [[24, []], [15, [90]], [24, []], [15, [140]]]   # turn random, wait
+
     def npc(x, y, graphic, key, dir: 2, move: 0, hide_switch: nil, name: nil)
-      pages = [{ graphic: graphic, direction: dir, move_type: move, script: "FT.talk(:#{key}, @event_id)" }]
+      pages = [{ graphic: graphic, direction: dir, move_type: move == 1 ? 0 : move, script: "FT.talk(:#{key}, @event_id)" }]
+      pages[0][:move_route] = LOOK_ABOUT if move == 1
       pages << { switch: hide_switch, graphic: "", through: true } if hide_switch
       event(x, y, name || "NPC #{key}", pages)
     end

@@ -136,7 +136,7 @@ b.door(16, 37, ID[:hut_c], 9, 11, 8, name: "Door Lantern House")
 b.door(41, 34, 2124, 9, 11, 8, name: "Door Velryn")
 # "Mountain Climb": Boy, Garret Velryn's sled dog, runs loose in the streets with a broken harness
 b.event(18, 30, "Boy", [
-  { graphic: "Followers/MIGHTYENA", direction: 4, move_type: 1, move_frequency: 5, move_speed: 4, step_anime: true,
+  { graphic: "Followers/MIGHTYENA", direction: 4, move_type: 1, move_frequency: 2, move_speed: 3, step_anime: true,
     script: "FT.boy_sled_dog(@event_id)" },
   { switch: 4043, graphic: "", through: true }
 ])
@@ -202,8 +202,10 @@ l.trainer(10, 8, "BW (57)", :zhent_thug_1, :ROUGHNECK, dir: 2, sight: 3)
 l.trainer(6, 8, "BWPunkGirl", :zhent_thug_2, :ROUGHNECK, dir: 2, sight: 3)
 l.npc(5, 8, "BW (26)", :skath, dir: 2)
 l.event(12, 8, "Owenn Tarsenel", [{ graphic: "BWOldMan", direction: 4, script: "FT.owenn_tarsenel(@event_id)" }])
-l.event(6, 9, "Rat", [{ graphic: "Followers/RATTATA", direction: 2, move_type: 1, move_frequency: 6, move_speed: 5,
-                        step_anime: true, through: true, script: "FT.talk(:luskan_rats, @event_id)" }])
+# The rat scurries along the skirting, inside the walls (review Ch1 sweep: it used to walk through them)
+l.event(6, 9, "Rat", [{ graphic: "Followers/RATTATA", direction: 2, step_anime: true, move_speed: 5,
+                        move_route: [[3, []], [3, []], [15, [40]], [2, []], [2, []], [15, [60]]],
+                        script: "FT.talk(:luskan_rats, @event_id)" }])
 l.sign(5, 5, :luskan_decor)
 l.sign(9, 5, :naerth_snakes)
 # Naerth does business here until he's set his terms (SC 1.05), then waits at the Town Hall.

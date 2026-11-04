@@ -100,6 +100,13 @@ module FrostThaw
   # Alerion is Frostina's Dragoon, and Meat Meat is Razzilith's.
   #-----------------------------------------------------------------------------
   def dragon_shrine(which, event_id = nil)
+    # Bound and saddled but you said "not yet": ask again (review Ch9 E1, the
+    # only soft-lock in the game). Once you've taken off this never fires.
+    if flag?(:mounted_up) && !flag?(:air_seams)
+      say(["#{mount_name} lowers #{flag?(:rides_frostina) ? 'her wing' : 'his neck'}. The black dragon is a speck in the south."], event_id)
+      return sky_chase if pbConfirmMessage(_INTL("Take off after the black dragon?"))
+      return
+    end
     if !flag?(:summer_ended) || flag?(:mounted_up)
       return talk(which == :frostina ? :frostina_shrine : :razzilith_shrine, event_id)
     end

@@ -581,7 +581,7 @@ module FrostThaw
              "It takes the others to drag them out of the loop."])
       else
         say(["The ice under your feet cracks, and grey hands come up through it: ice wights."], event_id)
-        skirmish(named_mon(:B92H478, 56, "Ice Wight"), named_mon(:B92H478, 56, "Ice Wight"))
+        skirmish(named_mon(:B92H429, 56, "Ice Wight"), named_mon(:B92H429, 56, "Ice Wight"))
       end
     end
   end
@@ -607,7 +607,7 @@ module FrostThaw
            "and the ice runs off the warden like rain off a roof. She drops into your arms, breathing."])
     end
     say(["And out of the ice behind her, something else steps free: a wight of frozen time, with a face like a stopped clock."])
-    if skirmish(named_mon(:B92H478, 58, "Time Wight"))
+    if skirmish(named_mon(:B92H429, 58, "Time Wight"))
       say(["The wight comes apart into seconds, and the seconds fall like snow.",
            "WARDEN BRISA: (coughing) ...How long? It was autumn. It was autumn a minute ago.",
            "She opens her fist. The chronal leaf, whole."])
@@ -653,10 +653,10 @@ module FrostThaw
       say(["TEMPORAL GUARDIAN: (after a long, long moment) ...Then keep it. It's heavier than it looks."])
     else
       say(["TEMPORAL GUARDIAN: Then I keep it."])
-      guard = named_mon(:B92H437, 60, "Temporal Guardian")
+      guard = named_mon(:B92H449, 60, "Temporal Guardian")
       return if !boss_battle(guard)
       say(["The guardian falls, and rewinds, and stands again, smaller.", "TEMPORAL GUARDIAN: ...Once. I can only do that once."])
-      return if !boss_battle(named_mon(:B92H437, 57, "Temporal Guardian"))
+      return if !boss_battle(named_mon(:B92H449, 57, "Temporal Guardian"))
     end
     say(["The chest opens. Inside, under frost: a scrap of hide painted with lines of frost that won't melt.",
          "A fragment of a map: the Draconic Vault. A glacier, north, and a door with wings on it."])
@@ -671,7 +671,7 @@ module FrostThaw
     say(["Behind you the aurora flickers. The Wall is closing."], event_id)
     if !challenge("Get back to the Wall!", ["Run together, holding hands", "Every one for themselves", "Wait for it to steady"], 0)
       say(["You're too slow. The world stops round you, and something stands up out of the stopped snow."])
-      skirmish(named_mon(:B92H478, 57, "Ice Wight"))
+      skirmish(named_mon(:B92H429, 57, "Ice Wight"))
       beyond_trapped
     end
     say(["You come through the Wall in a gasp of warm air, onto the Glasswater's far shore."])

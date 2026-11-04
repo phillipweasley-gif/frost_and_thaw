@@ -214,7 +214,7 @@ module FrostThaw
     was = $game_switches[sw]
     $game_switches[sw] = false
     setBattleRule("cannotRun")
-    decision = pbWildBattleCore(named_mon(:B225H361, 42, "Still Beast")) rescue 0
+    decision = pbWildBattleCore(named_mon(:B225H427, 42, "Still Beast")) rescue 0
     $game_switches[sw] = was
     set_flag(:still_beast_done)
     set_switch(SW_STILL_BEAST, false)

@@ -402,7 +402,7 @@ module FrostThaw
          "Its eyes are two blazing lamps of cold light. When it turns them on you, the light is like a blow."], event_id)
     hurt_party(0.05)
     return if !pbConfirmMessage(_INTL("Fight the coldlight walker?"))
-    return if !boss_battle(named_mon(:B200H361, 31, "Coldlight walker"))
+    return if !boss_battle(named_mon(:B200H427, 31, "Coldlight walker"))
     say(["The lamps in its eyes gutter out. The frozen wanderer folds slowly to its knees, and then to the ice.",
          "In its coat: a little pouch, and a note in a careful hand. \"If you find this, tell Bryn Shander I tried.\""])
     give(:FT_GEMSTONE, 3)

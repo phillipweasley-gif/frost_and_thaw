@@ -48,13 +48,13 @@ module FrostThaw
     FT_AVARICE_R: ["Avarice Reforged", :CHANNELER, 1, 250, :LEADER_Pryce]
   )
   TRAINERS.merge!(
-    frost_druid_ansel: [:FT_FROST_DRUID, "Brother Ansel", [[:B124H221, 56], [:WEAVILE, 57], [:B361H215, 57]],
+    frost_druid_ansel: [:FT_FROST_DRUID, "Brother Ansel", [[:B124H221, 56], [:WEAVILE, 57], [:B427H215, 57]],
                         "The Saint walks. You're too late, as you were always going to be."],
-    frost_druid_ilse:  [:FT_FROST_DRUID, "Sister Ilse", [[:B87H215, 56], [:B225H478, 57], [:MAMOSWINE, 58]],
+    frost_druid_ilse:  [:FT_FROST_DRUID, "Sister Ilse", [[:B87H215, 56], [:B225H429, 57], [:MAMOSWINE, 58]],
                         "She'll make you beautiful. She'll make you still."],
-    crown_druid_ansel: [:FT_FROST_DRUID, "Brother Ansel", [[:B124H221, 63], [:WEAVILE, 64], [:B361H215, 64], [:B473H221, 65]],
+    crown_druid_ansel: [:FT_FROST_DRUID, "Brother Ansel", [[:B124H221, 63], [:WEAVILE, 64], [:B427H215, 64], [:B274H221, 65]],
                         "You again. Always you again."],
-    crown_druid_ilse:  [:FT_FROST_DRUID, "Sister Ilse", [[:B87H215, 63], [:B225H478, 64], [:MAMOSWINE, 65], [:B478H87, 65]],
+    crown_druid_ilse:  [:FT_FROST_DRUID, "Sister Ilse", [[:B87H215, 63], [:B225H429, 64], [:MAMOSWINE, 65], [:B429H87, 65]],
                         "The Saint will rise. He always rises."]
   )
   TRAINER_INTROS.merge!(
@@ -66,10 +66,10 @@ module FrostThaw
   )
 
   # Sephek's stand-in bodies (Ice/Ghost fusions until he has his own species)
-  SEPHEK_MINOR = :B478H87   # the Minor Avatar: frost-pale, a man of hoarfrost
-  SEPHEK_MAJOR = :B144H478  # the Major Avatar: a towering crystalline horror
-  COLDLIGHT    = :B478H92   # a coldlight walker
-  AVARICE_BODY = :B437H124  # Avarice Reforged's crystal body (machinery and a mirror's face)
+  SEPHEK_MINOR = :B429H87   # the Minor Avatar: frost-pale, a man of hoarfrost
+  SEPHEK_MAJOR = :B144H429  # the Major Avatar: a towering crystalline horror
+  COLDLIGHT    = :B429H92   # a coldlight walker
+  AVARICE_BODY = :B449H124  # Avarice Reforged's crystal body (machinery and a mirror's face)
   AVARICE_SOUL = :B429H122  # her mirror-soul
 
   # Auril's three relics in the Heartroot: [flag, map, where]
@@ -161,7 +161,7 @@ module FrostThaw
     end
     say(["The mephits come at you in a cackling knot."])
     setBattleRule("canLose") rescue nil
-    fought += 1 if boss_battle(named_mon(:B361H215, 56, "Ice Mephit"), named_mon(:B361H215, 56, "Ice Mephit"))
+    fought += 1 if boss_battle(named_mon(:B427H215, 56, "Ice Mephit"), named_mon(:B427H215, 56, "Ice Mephit"))
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     if fought >= 3
       say(["The last mephit pops like a soap bubble full of snow.",
@@ -222,7 +222,7 @@ module FrostThaw
           cl(:wyn, "...It's taking from the tree. Just a little. Like a tick.")])
     return if !pbConfirmMessage(_INTL("Smash Auril's relic?"))
     say(["The runes flare. The cold stands up out of the shard and takes a shape: a woman of rime, faceless."])
-    return if !boss_battle(named_mon(:B478H215, 62, "Relic-Warden"))
+    return if !boss_battle(named_mon(:B429H215, 62, "Relic-Warden"))
     pbSEPlay("Ice8") rescue nil
     say(["The shard cracks, and cracks again, and goes to black water on the root."])
     set_flag(f)
@@ -254,7 +254,7 @@ module FrostThaw
           "The cold coming off him is a wall. Every follower who fell makes it colder.",
           "SEPHEK: (a voice like a glacier moving) STAND STILL."])
     say(["Two winter wolves lope out of the blizzard at his call."])
-    return false if !boss_battle(named_mon(:B59H471, 64, "Winter Wolf"), named_mon(:B59H471, 64, "Winter Wolf"))
+    return false if !boss_battle(named_mon(:B59H272, 64, "Winter Wolf"), named_mon(:B59H272, 64, "Winter Wolf"))
     major = named_mon(SEPHEK_MAJOR, 68, "Sephek, Major Avatar")
     walker = named_mon(COLDLIGHT, 64, "Coldlight Walker")
     return false if !boss_battle(major, walker)
@@ -292,7 +292,7 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Press the Seraph Sigil into the frozen eye?"))
     say(["The sigil sinks into the ice. The frozen eye opens.",
          "Behind the door, two things of mirror and iron stir: Mirror Sentinels, helmed and hollow."])
-    return if !boss_battle(named_mon(:B437H227, 62, "Mirror Sentinel"), named_mon(:B437H227, 62, "Mirror Sentinel"))
+    return if !boss_battle(named_mon(:B449H227, 62, "Mirror Sentinel"), named_mon(:B449H227, 62, "Mirror Sentinel"))
     say(["The sentinels come apart into plates of glass and lie still.", "The door of wings stands open."])
     set_flag(:vault_door_open)
     set_self_switch(event_id, "A") rescue nil
@@ -469,7 +469,7 @@ end
 
 # Avarice Reforged: her crystal body is weaker for every circuit you broke.
 module FrostThaw
-  TRAINERS[:avarice_reforged] = [:FT_AVARICE_R, "Avarice", [[:B437H124, 64], [:B474H429, 65], [:B227H437, 65], [:B92H122, 66], [AVARICE_BODY, 68]],
+  TRAINERS[:avarice_reforged] = [:FT_AVARICE_R, "Avarice", [[:B449H124, 64], [:B275H429, 65], [:B227H449, 65], [:B92H122, 66], [AVARICE_BODY, 68]],
                                  "Variables. Always variables. ...Recalculating."]
 end
 

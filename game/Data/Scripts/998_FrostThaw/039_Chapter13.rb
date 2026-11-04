@@ -41,15 +41,15 @@ module FrostThaw
     FT_FROST_SAINT: ["Frost Saint", :CHANNELER, 0, 220, :LEADER_Pryce]
   )
   TRAINERS.merge!(
-    gunvald:      [:FT_SHADE_KING, "Gunvald", [[:URSARING, 61], [:B217H460, 62], [:B216H217, 62], [:B217H473, 63]],
+    gunvald:      [:FT_SHADE_KING, "Gunvald", [[:URSARING, 61], [:B217H221, 62], [:B216H217, 62], [:B217H274, 63]],
                    "Compassion... feeds four mouths. Hm."],
-    jarund:       [:FT_SHADE_KING, "Jarund", [[:STANTLER, 61], [:B234H473, 62], [:B473H234, 62], [:MAMOSWINE, 63]],
+    jarund:       [:FT_SHADE_KING, "Jarund", [[:STANTLER, 61], [:B234H274, 62], [:B274H234, 62], [:MAMOSWINE, 63]],
                    "You carried them. I left them. Which of us outlasted?"],
-    tiger_queen:  [:FT_SHADE_KING, "The Tiger Queen", [[:B53H461, 62], [:B461H53, 63], [:B128H461, 63], [:B461H55, 64]],
+    tiger_queen:  [:FT_SHADE_KING, "The Tiger Queen", [[:B53H262, 62], [:B262H53, 63], [:B128H262, 63], [:B262H55, 64]],
                    "Then go back to them. Alone was only ever quiet."],
-    still_keeper: [:FT_STILL_KEEPER, "Still Keeper", [[:B124H429, 63], [:B429H478, 64], [:B478H124, 64], [:B429H124, 65]],
+    still_keeper: [:FT_STILL_KEEPER, "Still Keeper", [[:B124H429, 63], [:FROSLASS, 64], [:B87H429, 64], [:B429H124, 65]],
                    "Memory's for remembering. ...I'd forgotten."],
-    sephek_saint: [:FT_FROST_SAINT, "Sephek", [[:B87H461, 64], [:B144H215, 65], [:B473H87, 65], [:B215H478, 66]],
+    sephek_saint: [:FT_FROST_SAINT, "Sephek", [[:B87H262, 64], [:B144H215, 65], [:B274H87, 65], [:B215H429, 66]],
                    "She was never mine to take."]
   )
   TRAINER_INTROS.merge!(
@@ -59,8 +59,8 @@ module FrostThaw
 
   # The Frostmaiden's forms (stand-ins until they have their own species)
   AURIL_CRONE  = :AURIL_CRONE # the Cold Crone: Ice/Dark (owl, wolf and goat)
-  AURIL_MAIDEN = :B124H478    # the Brittle Maiden: a woman of ice (fragile to Fire)
-  AURIL_WOMB   = :B131H362    # Winter's Womb: a floating diamond
+  AURIL_MAIDEN = :B124H429    # the Brittle Maiden: a woman of ice (fragile to Fire)
+  AURIL_WOMB   = :B131H428    # Winter's Womb: a floating diamond
   AURIL_REWRITTEN = :AURIL_REWRITTEN # the Rewritten Auril: Ice/Ghost
 
   TEXT.merge!(
@@ -121,19 +121,48 @@ module FrostThaw
   end
 
   def test_door(key, event_id = nil)
-    return say(lines_for(:test_done), event_id) if flag?(:"test_#{key}_faced")
+    return say(lines_for(:test_done), event_id) if flag?(:"test_#{key}_broken")
+    if flag?(:"test_#{key}_faced")
+      # Lost once: the tablet is still whole, and you may try again (review Ch13 E9).
+      t = TESTS.find { |k, *| k == key }
+      say(["The tablet #{t[2]} is still whole. The vision is waiting behind it."], event_id)
+      return if !pbConfirmMessage(_INTL("Face the test again?"))
+    end
     send(:"test_#{key}", event_id)
   end
+
+  # A test's battle: you can lose it without blacking out (there's no Pokémon
+  # Center on Solstice), and your team is healed after either way.
+  def test_battle(key)
+    data = TRAINERS[key] or return false
+    trainer_intro(key) rescue nil
+    won = pbTrainerBattle(data[0], data[1], nil, false, 0, true) ? true : false
+    add_counter(:trainers_beaten) if won
+    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    won
+  end
+
+  # What the test's Herald says when the shade wins the fight but not the argument.
+  TEST_LOSS_LINES = {
+    cruelty:      "(wiping her nose) Meat Meat lost the fight. Not the food. The food counted.",
+    endurance:    "(setting the last child down) They're out. That's the part that counted.",
+    isolation:    "(not letting go) ...Lost. Not alone, though. That's new.",
+    preservation: "(to the tablet) You're still standing. So am I. We'll call it a draw, darling."
+  }
 
   def finish_test(key, won)
     set_flag(:"test_#{key}_faced")
     set_flag(:"test_#{key}_broken") if won
     add_counter(:story_beats)
     t = TESTS.find { |k, *| k == key }
-    say(won ? ["Somewhere in the hall, the tablet #{t[2]} cracks from top to bottom.",
-               "(#{t[4].sub(/^./, &:upcase)} will be weaker.)"] :
-              ["The vision fades. The tablet #{t[2]} stays whole.",
-               "(You'll face what it guards at full strength.)"])
+    if won
+      say(["Somewhere in the hall, the tablet #{t[2]} cracks from top to bottom.",
+           "(#{t[4].sub(/^./, &:upcase)} will be weaker.)"])
+    else
+      say(["The vision fades. The tablet #{t[2]} stays whole.",
+           tl(t[1], TEST_LOSS_LINES[key]),
+           "(If it stays whole, #{t[4]} will fight at full strength. You can face the test again.)"])
+    end
     if tests_faced >= 4
       ($game_switches[SW_CROWN_OPEN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
       state[:goal] = "Up the stair of ice, to the Crown."
@@ -158,7 +187,7 @@ module FrostThaw
          "One by one, to the old people.",
          tl(:meat_meat, "Eat. Meat Meat is not hungry. ...Meat Meat is a little hungry. Eat anyway.")])
     Stage.overlay_off("O-03", fade: 16)
-    finish_test(:cruelty, trainer(:gunvald, nil))
+    finish_test(:cruelty, test_battle(:gunvald))
   end
 
   # SC 13.03 - The Test of Endurance (Reptin)
@@ -187,7 +216,7 @@ module FrostThaw
     say(["(In this chamber the blizzard swallows anything that isn't a blow you can put your weight behind.)"])
     Stage.overlay_off("O-03", fade: 16)
     $ft_physical_only = true
-    won = trainer(:jarund, nil)
+    won = test_battle(:jarund)
     $ft_physical_only = false
     finish_test(:endurance, won)
   end
@@ -224,7 +253,7 @@ module FrostThaw
               "(stepping back from the door) ...No. Not alone.")
     say([al ? "You hold out your hand, to whoever's there." : "He holds out his hand to you."])
     Stage.overlay_off("O-03", fade: 16)
-    finish_test(:isolation, trainer(:tiger_queen, nil))
+    finish_test(:isolation, test_battle(:tiger_queen))
   end
 
   # SC 13.05 - The Test of Preservation (Alberica)
@@ -251,7 +280,7 @@ module FrostThaw
       $ft_keeper_halved = true
     end
     Stage.overlay_off("O-03", fade: 16)
-    won = trainer(:still_keeper, nil)
+    won = test_battle(:still_keeper)
     $ft_keeper_halved = false
     finish_test(:preservation, won)
   end

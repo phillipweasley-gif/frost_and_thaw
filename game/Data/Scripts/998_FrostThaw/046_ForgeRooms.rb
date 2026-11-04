@@ -398,7 +398,7 @@ module FrostThaw
       set_flag(:rootwatch_cleared)
       ($game_switches[SW_ROOTWATCH] = true; $game_switches[SW_SAPLIFT] = true; $game_map.need_refresh = true if $game_map) if $game_switches
       add_counter(:story_beats)
-      say(["With the Rootbreaker down, the levers are free. Somewhere, a sap-lift wakes up and starts to hum."])
+      say(["With the Rootbreaker down, the levers are free.", "Far above, the sap-lift by the Barricade gate hums awake. Root, Deep, Forge: quick as you like."])
     else
       set_flag(:forge_upper_reached)
     end

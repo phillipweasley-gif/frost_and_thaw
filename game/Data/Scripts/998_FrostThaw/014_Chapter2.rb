@@ -101,7 +101,8 @@ module FrostThaw
       else
         ["GUARD: Nobody leaves Targos without Speaker Naerth's say-so.",
          "GUARD: Not in this weather. Not strangers.",
-         "GUARD: Want the road? Win his seal at the Town Hall."]
+         T.flag?(:naerth_terms) ? "GUARD: Want the road? Win his seal at the Town Hall." :
+                                  "GUARD: Want the road? Ask the Speaker. He's at the Luskan Arms, on the south shore."]
       end
     },
     targos_gate_guard_open: ["GUARD: Bryn Shander's south-east, up on its hill. Two hours' walk, in good weather.",

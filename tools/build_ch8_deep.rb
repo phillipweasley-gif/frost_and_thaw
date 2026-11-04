@@ -195,6 +195,8 @@ being(fu, 30, 7, "Hiding duergar", "BW054", "FT.broken_works(@event_id)", dir: 2
 thing(fu, 38, 5, "Shelves of flasks", "FT.heart_fuel(@event_id)", tile: 809)
 being(fu, 31, 17, "Infernal Rootbreaker", "Followers/METAGROSS", "FT.rootbreaker(:elevator, @event_id)", dir: 2)
 thing(fu, 34, 15, "Iron console", "FT.sap_lift(:forge, @event_id)", tile: 581)
+# A rest on Level 3, so a loss at the root-keep costs one walk, not six maps (review Ch8 E10)
+being(fu, 12, 5, "Woken digger", "BW (75)", "FT.forge_camp(@event_id)", dir: 2)
 fu.trainer(12, 25, nil, :duergar_gate_kell, :FT_DUERGAR, dir: 6, sight: 3)   # stays on the bank (see 2149)
 fu.trainer(12, 26, nil, :duergar_gate_morn, :FT_DUERGAR, dir: 6, sight: 3)
 fu.trainer(13, 23, nil, :duergar_gate_sharl, :FT_DUERGAR, dir: 2, sight: 4)

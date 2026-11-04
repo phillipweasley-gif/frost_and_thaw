@@ -346,7 +346,8 @@ module FrostThaw
          "NAERTH: My seal says you aren't running. Earn it. Town Hall. I'll be waiting.",
          as(:alberica, "Men like him are always waiting. It's the only exercise they get.")], event_id)
     set_flag(:naerth_terms)
-    state[:goal] = "Win Speaker Naerth's seal at the Town Hall, so the south gate opens." if flag?(:relics_are_lures)
+    state[:goal] = flag?(:relics_are_lures) ? "Win Speaker Naerth's seal at the Town Hall. It opens the south-west gate." :
+                                              "Ask Epheris what the relics are, then win Naerth's seal at the Town Hall."
     set_switch(SW_NAERTH_TERMS, true)
   end
 
@@ -400,7 +401,7 @@ module FrostThaw
            "NAERTH: Pale. Books and bones. If you meet her, you never met me.",
            as(:alerion, "We never met you. That part's easy.")], event_id)
       naerth_splicers(event_id)
-      state[:goal] = "The south gate is open. Bryn Shander is south-east along the road, and Dougan's Hole beyond it."
+      state[:goal] = "The south-west gate is open. Bryn Shander is south-east along the road, and Dougan's Hole beyond it."
     end
   end
 
