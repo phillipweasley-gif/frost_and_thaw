@@ -7,6 +7,12 @@ owner's Voices tab and Story Bible with three craft books the owner supplied:
 - *Professional Techniques for Video Game Writing* (ed. Despain): detail in docs/craft/pro_techniques_guide.md
 - *Comics Creator Prep* (Nordling): detail in docs/craft/comics_guide.md
 
+It also takes the story-level standard from the owner's game-narrative skill (eight craft books, distilled in
+`/root/.claude/skills/.../game-narrative-writing/references/`): Linda Seger, *Making a Good Script Great*; Ross
+Berger, *Dramatic Storytelling & Narrative Design*; DiAnn Mills, *The Dance of Character and Plot*; William C.
+Martell, *Dialogue Secrets*; and the Ricki Writes *Character Workbook*. §3a is that standard; the story review
+(docs/review/story/story_review.md) is the game measured against it.
+
 Page references below are to those books. Where this guide and the Voices tab disagree, the Voices tab wins on how a
 character sounds; this guide wins on mechanics (length, Herald mode, flags, staging).
 
@@ -62,6 +68,61 @@ character sounds; this guide wins on mechanics (length, Herald mode, flags, stag
   (Voices rule 3). In a major scene, every Herald who can be present gets a beat.
 - **Rest points, arrivals and big battles** get a short banter (3-6 boxes) from whoever is in the party (Voices
   rule 4).
+
+## 3a. Story structure (the craft standard)
+
+The story review found one problem under most of the others: the big moments happen *to* the player. These rules
+come from the skill's books and apply to every chapter, quest and scene rewrite.
+
+**The spine**
+- **Five fixed story moments** (Berger pp. 81–87, 134–136): inciting incident (the fall), point of no return,
+  midpoint/low point (the Forge), ticking clock (Frostina taken), climax (Auril). Each must be *played*, with the
+  player's input on the beat that matters. A change to one is checked against the other four.
+- **Every chapter asks one question and the game says it aloud**, in a person's line in a scene that needs it, and
+  answers it by the chapter's end. The answer raises the next chapter's question (Seger p. 43).
+- **Turning points force a decision and raise the stakes**; a dark moment and its new stimulus come within a scene
+  of each other, never three maps apart (Seger pp. 45–48).
+- **Every big beat gets a sequel**: one quiet beat of reaction, dilemma and decision that matches its intensity, before
+  the next action (Mills pp. 108–109). Big beats also have consequences later (Berger pp. 112–113).
+- **A clock threatens something.** If time passes, something gets worse; if nothing gets worse, it isn't a clock
+  (Mills p. 192).
+- **Momentum is cause and effect**: each scene ends holding the seed of the next. Don't fix a sag with more
+  corridors or fights (Seger pp. 79–80, 94).
+
+**The player**
+- **The player has a goal of their own** and makes one real choice per act on the spine (Berger pp. 81–82, 94).
+- **The player acts at every turn**: at minimum one input on the decisive beat (press A on the lantern, break the
+  mirror, take Glimmer's hand), even when it doesn't change the outcome. A choice that changes nothing must at
+  least be read back later (Seger pp. 232, 251; Berger p. 111).
+- **At the climax, strip the supports**: the hero wins with what the journey taught, not with every bonus cashed in
+  (Mills p. 132).
+
+**Scenes**
+- **The four questions** (Mills pp. 108, 110): whose goal, what's learned, what backstory comes out, how the stakes
+  rise. Score the scene 1–10; under 8, rework, merge or cut it (Mills pp. 189–191).
+- **Every scene has an emotional shift** (Seger p. 144): it starts in one state and ends in another.
+- **Design from the end**: decide what the player must know or feel leaving the scene, enter late, leave early
+  (Seger pp. 142–143).
+
+**Setups and payoffs**
+- **Every payoff is set up on the golden path, earlier, in another scene; every setup pays off** (Seger
+  pp. 148–150). A rule or object never arrives in the scene that uses it. Before an act's rewrite, do a setup pass:
+  list its payoffs, find each setup, and plant the missing ones inside scenes that already exist.
+- **Critical beats never live in optional content** (Berger p. 44; DeMarle in IGDA). If the climax needs it, it's on
+  the spine.
+- **A twist is a path the player was invited down, not told** (Seger pp. 86–88). Give a reveal one ambiguous clue
+  per route, not six statements. Repetition past three becomes noise (Seger p. 83).
+- **Motifs recur at least three times on the shortest path**, and change as they recur (Seger pp. 155–156).
+
+**Characters**
+- **Motivation is an action in the present**, not a backstory speech (Seger pp. 224–231).
+- **An arc needs five to seven visible beats** across the acts (Seger pp. 255–258). Each Herald's beats are listed
+  in the story review; each is on screen and on the path.
+- **Bond before loss**: a companion who will die gets quiet time with the player first, so the loss costs something
+  (Berger pp. 103–104, 118).
+- **No two characters share a function** (Seger pp. 261–262). Ten seers giving one warning is one seer.
+- **Antagonists' goals directly oppose the heroes'** and are said once, plainly (Seger p. 227; Berger p. 69).
+- **A Trial or Test tries something the player watched that character do.**
 
 ## 4. Voice
 
@@ -251,6 +312,13 @@ Rules that come with them:
 43. Characters are introduced (seen, then named with their role) before they matter.
 44. Reactions use the bubbles, hops, themes, jingles and cries before narration.
 45. The next step is in `state[:goal]`, in someone's last line, and, if the way isn't obvious, someone leads you.
+
+**Story (§3a)**
+46. The scene passes Mills's four questions and scores 8 or more out of 10.
+47. The scene has an emotional shift, and its end holds the seed of the next scene.
+48. The player gives an input on the scene's decisive beat.
+49. Every payoff in the scene was set up earlier on the path; every setup it plants is listed with where it pays.
+50. A big beat is followed by a sequel beat (reaction, dilemma, decision) before the next action.
 
 ## 12. Known problems to fix (from the three books' scene reviews)
 
