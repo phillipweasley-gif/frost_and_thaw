@@ -38,7 +38,7 @@ module FrostThaw
                      "Three tall openings on its east face. Easily three times the height of anything in Ten-Towns."],
     wolves_wait: ["KORAN: We'll stand guard out here. Garagai isn't home. Go on in.",
                   "KANAN: (not looking at you) Take the corridor in the middle. It's quickest."],
-    ice_corridor: ["The passage is choked with ice. Icicles hang overhead in clusters, points sharp as daggers."]
+    ice_corridor: ["The passage is choked with ice.", "Icicles hang overhead in clusters, points sharp as daggers."]
   )
 
   module_function
@@ -135,7 +135,8 @@ module FrostThaw
     say(["A white wolf the size of a pony limps out of the snow on one back leg, whimpering like a kicked dog.",
          "KORAN: Please. Please, travellers. I'm Koran. My master did this. Garagai. A frost giant.",
          "KORAN: Mean old Garagai. He kicks me. He kicks me every day.",
-         "KORAN: He took two of the little townsfolk. He keeps them in his lodge, west, more than half a day.",
+         "KORAN: He took two of the little townsfolk.",
+         "KORAN: He keeps them in his lodge, west, more than half a day.",
          "KORAN: Help me free them. Let him feel what it's like, to lose something."], event_id)
     choice = pbMessage(_INTL("What do you do?"),
                        [_INTL("\"Show us.\""), _INTL("\"Which leg was it, again?\""), _INTL("\"No.\"")], 0)
@@ -335,10 +336,12 @@ module FrostThaw
     end
     say(["An oval chamber with high walls of glittering ice, like a sepulchre.",
          "The frozen, hacked-up corpse of a frost giant lies on the floor, entombed in clear ice.",
-         "Standing over it: a woolly mammoth. It turns, and it stares down at you with hate in its eyes.",
+         "Standing over it: a woolly mammoth.",
+         "It turns, and it stares down at you with hate in its eyes.",
          "Something long ago taught this beast to think, and to grieve out loud.",
          "NORSU: You are to blame for all of this!",
-         "NORSU: Small ones killed him. Small ones took his axe, his breath. Small ones will pay for it.",
+         "NORSU: Small ones killed him. Small ones took his axe, his breath.",
+         "NORSU: Small ones will pay for it.",
          "NORSU: The wolves bring me the town's food and gold. Soon they'll bring me the town."])
     choice = pbMessage(_INTL("What do you say?"),
                        [_INTL("\"We were his friends.\""), _INTL("\"We'll find who took the axe.\""), _INTL("Stand your ground")], -1)
@@ -475,10 +478,12 @@ module FrostThaw
     if !flag?(:met_kids)
       set_flag(:met_kids)
       say(["A huge slatted animal cage stands against the wall. Garagai built it for Norsu, when the mammoth was young.",
-           "Its gate hangs on rusty hinges as big as your head. Inside, two shivering teenagers look out at you.",
+           "Its gate hangs on rusty hinges as big as your head.",
+           "Inside, two shivering teenagers look out at you.",
            "SILJA: Are you real? Are you from town? Did Mama send you?",
            "Silja is spindly, with pointy teeth and snow in her long braids.",
-           "Her brother works at the brackets that hold the slats, with frostbitten hands. His teeth won't stop chattering.",
+           "Her brother works at the brackets that hold the slats, with frostbitten hands.",
+           "His teeth won't stop chattering.",
            "FINN: The slats won't b-bend. Too cold. And the gate screams if you open it.",
            "FINN: The hinges scream. Then HE comes."], event_id)
       sayc([cl(:alberica, "Hey. Look at me. Big breath, all the way in. There you go. We're getting you out."),
@@ -510,7 +515,7 @@ module FrostThaw
         return say(["You haul on the hot slats. They give a little, then stiffen as they cool.",
                     "(Someone stronger is needed, while they're hot. A Pokémon with real strength.)"])
       end
-      say(["Your strongest Pokémon braces against the frame and hauls. The slats bend apart with a groan of metal.",
+      say(["Your strongest Pokémon braces against the frame and hauls.", "The slats bend apart with a groan of metal.",
            "Slender Silja wriggles through, then pulls her brother after. The gate never moves. The hinges never make a sound."])
       return free_kids
     when :gate

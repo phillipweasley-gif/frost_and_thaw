@@ -201,7 +201,7 @@ module FrostThaw
     # --- the Moon Temple -------------------------------------------------------------
     nova_keeper: -> {
       if T.flag?(:sephek_defeated)
-        ["NOVA KEEPER: He sleeps in the ice now. Not dead. The cold doesn't let its chosen die so easily.",
+        ["NOVA KEEPER: He sleeps in the ice now. Not dead.", "NOVA KEEPER: The cold doesn't let its chosen die so easily.",
          "NOVA KEEPER: We'll watch him. Go below. Zenith is waiting at the Rose."]
       else
         ["NOVA KEEPER: Warden of the Glade. These stones are ours to keep.",
@@ -459,7 +459,7 @@ module FrostThaw
     speak(:alerion, "Stone circle. Birches. Someone in this town knows where.", "...Stone circle. Birches. Someone here knows where.")
     say([cl(:reptin, "(very quietly) She said no to a god. Twice."),
          cl(:alberica, "Shade. Look at me. We go together. Nobody goes alone."),
-         journey? && flag?(:shimmer_first) ? as(:shade, "(to you) You could have gone south. You came for her.") : nil,
+         outsider? && flag?(:shimmer_first) ? as(:shade, "(to you) You could have gone south. You came for her.") : nil,
          "Outside, under the window, a tall figure with long ears and a lantern waits in the snow."].compact)
     state[:goal] = "Outside. Someone's waiting under the window."
     jet_under_the_window
@@ -468,7 +468,7 @@ module FrostThaw
   # The vision (SC 3.04): it takes you on the way out after her.
   def shimmer_vision(me = herald?(:alberica))
     say([me ? "Your pendant flares and cracks." : "Alberica's pendant flares and cracks.",
-         journey? ? "In your pocket, the lantern glass goes cold, as if it's watching too." : nil,
+         outsider? ? "In your pocket, the #{my_glass} goes cold, as if it's watching too." : nil,
          me ? "(It's showing me her. It's showing me now.)" :
               "ALBERICA: (the pendant burning in her fist) That's her. That's now.",
          "The room goes white. Then you're all somewhere else, and none of you can move."].compact)
@@ -711,7 +711,8 @@ module FrostThaw
   def scene_moon_grounds_arrival
     say(["The path climbs to a shrine of old stone arches, half buried in snow.",
          "Spirals glow faintly on every post.",
-         "Below the arches, a timber lodge with a root-grown door breathes out warm air. Mint, and earth.",
+         "Below the arches, a timber lodge with a root-grown door breathes out warm air.",
+         "Mint, and earth.",
          cl(:meat_meat, "Rabbit Lords live here. Meat Meat will be very polite. Very."),
          cl(:reptin, "Leave the talking to me. Rabbits love me. Everybody does, eventually."),
          cl(:shade, flag?(:heart_of_ice) ? "Talk later. He's here. I can feel it." :
@@ -857,8 +858,9 @@ module FrostThaw
     luna = st.find("Luna Carver")
     st.approach(luna) if luna
     say(["LUNA CARVER: (walking over) I dream for the Circle. I dreamed this egg.",
-         "LUNA CARVER: The night the Rime began, the Frostmaiden's great white bird flew over us.",
-         "LUNA CARVER: Something fell. An egg, cold all through. It never woke. We kept it anyway.",
+         "LUNA CARVER: The night the Rime began, the Frostmaiden's roc flew over us.",
+         "LUNA CARVER: Iskra. A white bird, wide as a sail. Something fell from her.",
+         "LUNA CARVER: An egg, cold all through. It never woke. We kept it anyway.",
          "Two Wennen carry the ice egg up from the nursery and set it beneath the Rose.",
          "LUNA CARVER: It needed a heart. Now one has come."])
     if st.map?
@@ -912,7 +914,7 @@ module FrostThaw
          "LUNA CARVER: Shimmer's is the first. The cold man's still beats in his chest.",
          "LUNA CARVER: Bring a third to the other two, and the Frostmaiden gets a body to walk in.",
          cl(:reptin, "Then we make very sure nobody brings a third."),
-         journey? ? "LUNA CARVER: (to you) You I can't see at all. Like you're not on her wheel yet." : nil,
+         outsider? ? "LUNA CARVER: (to you) You I can't see at all. Like you're not on her wheel yet." : nil,
          "LUNA CARVER: (turning to Shade) And you. Your house has a spark in it that isn't out.",
          "LUNA CARVER: I can see it on you. It's waiting somewhere bright.",
          as(:shade, "My house is one smuggler and a carved cat. But thanks."),
@@ -941,12 +943,12 @@ module FrostThaw
          "ZENITH: a crone laughs low, and the laughing is the calling.",
          "JET SENTRY: Plain words: a hag lives in a chasm south of Dougan's Hole.",
          "JET SENTRY: The fishers hear her laughing on the ice. So do your trinkets.",
-         journey? ? "JET SENTRY: (to you) She keeps mirrors. Cold glass. Like the shard you carry." : nil,
+         outsider? ? "JET SENTRY: (to you) She keeps mirrors. Cold glass. Like the shard you carry." : nil,
          cl(:alberica, "A laughing hag who wants our jewellery. I've dated worse."),
          cl(:alerion, "You have.")].compact, jet ? jet.id : nil)
     set_flag(:hag_named)
     sledge_south(jet)
-    state[:goal] = journey? ? "South-east to Dougan's Hole: who's calling them, and the hag's mirrors." :
+    state[:goal] = outsider? ? "South-east to Dougan's Hole: who's calling them, and the hag's mirrors." :
                               "South-east to Dougan's Hole. Find who's calling us."
   end
 

@@ -449,9 +449,10 @@ module FrostThaw
     set_flag(:good_mead_arrived)
     set_flag(:good_mead_met)
     sayc(["A day's walk east, and the snow smells of honey.",
-          "Good Mead: squat houses carved with dinosaurs and serpents, and a two-storey mead hall with eaves painted like wyverns.",
-          "Its founders came from Chult and the Vilhon Reach, and it shows: the beasts on the lintels have never seen snow.",
-          "Bees hum somewhere in a heated hall. The whole town smells of honey.",
+          "Good Mead: squat houses carved with dinosaurs and serpents.",
+          "Over them, a two-storey mead hall, its eaves painted like wyverns.",
+          "Its founders came from the hot south. The beasts on its lintels have never seen snow.",
+          "Bees hum somewhere in a heated hall.",
           "OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
           cl(:alberica, "A woman who feeds strangers on sight. I think I'm in love."),
           cl(:meat_meat, "Meat Meat smells honey. Meat Meat does not smell coffee. Suspicious town.")])
@@ -465,7 +466,8 @@ module FrostThaw
     add_counter(:story_beats)
     Stage.pan_to(30, 30)
     say(["Dougan's Hole huddles on the shore of Redwaters.",
-         "Out on the frozen lake, dark figures stand over fishing holes. Snow has drifted against their legs.",
+         "Out on the frozen lake, dark figures stand over fishing holes.",
+         "Snow has drifted against their legs.",
          "Between them, panes of ice stand upright, like mirrors."])
     Stage.pan_back
     say(["In your pocket the #{my_glass} goes cold. Colder than the snow. Close, now."]) if outsider?

@@ -278,7 +278,7 @@ module FrostThaw
     if journey?
       say(["TAMSIN: (screaming, then grabbing you) WHERE DID YOU GO. You were gone an HOUR.",
            "TAMSIN: Who are... (she sees the others) ...who are THEY?",
-           cl(:alberica, "(dusting snow off Tamsin's head) Hello, gorgeous. We fell out of a lamp. Don't try it at home.")].compact)
+           cl(:alberica, "(dusting snow off Tamsin's head) Hello, gorgeous."), cl(:alberica, "We fell out of a lamp. Don't try it at home.")].compact)
     end
     say([cl(:alberica, "(looking at her empty hands) I was holding it. In the Chasm. It was a seed."),
          cl(:reptin, "(looking up, and up, and up) It isn't a seed any more.")].compact)
@@ -286,7 +286,7 @@ module FrostThaw
     say([cl(:alberica, "(a hand on #{herald?(:meat_meat) ? 'your' : "Meat Meat's"} shoulder) We'll find him, sweetheart. He can't hide forever."),
          "LANTERN SELLER: ...Refunds are at the other stall.",
          cl(:shade, "Noted."),
-         "Down the street, the Rooted Hearth's windows are lit. The crowd is already parting toward it."].compact)
+         "Down the street, the Rooted Hearth's windows are lit.", "The crowd is already parting toward it."].compact)
     Stage.cleanup rescue nil
     state[:goal] = "The Rooted Hearth. Hellen will know what happened."
     loop_skip(:act2) if respond_to?(:loop_skip)

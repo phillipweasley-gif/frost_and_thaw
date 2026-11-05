@@ -95,7 +95,7 @@ module FrostThaw
     sign_termalaine: ["TERMALAINE", "Speaker: Oarus Masthew.", "The heraldry: a fish's open jaws swallowing a rose-pink tourmaline, on sky blue."],
     sign_termalaine_path: ["TERMALAINE PATH", "North to Termalaine (six hours, on foot). Mind the wind off the lake."],
     tm_carvings: ["The houses are carved with wizards and homunculi, tigers and smiling djinn. Calishite work, old and fine.",
-                  "Termalaine is the most picturesque town in Icewind Dale. Then the north wind gets through your coat."],
+                  "Termalaine is the most picturesque town in Icewind Dale.", "Then the north wind gets through your coat."],
     tm_wind: ["The wind comes straight down off the lake and through every layer you own.",
               "Termalaine was built right in its path. Nobody remembers why. Somebody probably thought it was pretty."],
     tm_fisher: ["We fish till dark, then the Blue Clam. Feet to the hearth, chowder, and Vernon's lies about the old days.",

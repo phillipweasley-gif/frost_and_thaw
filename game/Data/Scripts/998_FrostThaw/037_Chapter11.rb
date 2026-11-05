@@ -143,7 +143,8 @@ module FrostThaw
     iskra.instance_variable_set(:@step_anime, true) if iskra rescue nil
     say(["The sky above the Canopy tears open."])
     Stage.walk(iskra, [PBMoveRoute::ChangeSpeed, 5] + [PBMoveRoute::Down] * 4) if iskra
-    say(["Through the thinned Wall, a vast white roc drops out of the night, aurora trailing from her wingtips.",
+    say(["Through the thinned Wall, a vast white roc drops out of the night.",
+         "Aurora trails from her wingtips.",
          "Iskra.",
          as(:alerion, "(barely breathing) That's the roc. The bird that dropped her egg.")].compact)
     if frostina
@@ -155,8 +156,9 @@ module FrostThaw
          "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home.",
          "SEPHEK: She was always going home.",
          as(:alerion, "(very quietly) She's not hers."),
-         flag?(:eline_captured) ? "Iskra takes the crystal in her talons. Sephek climbs onto her back alone. Below, in the root-cords, Eline is still praying backwards." :
-                                  "Iskra takes the crystal in her talons. Sephek and Eline climb onto her back."])
+         "Iskra takes the crystal in her talons.",
+         flag?(:eline_captured) ? "Sephek climbs onto her back alone. Below, in the root-cords, Eline is still praying backwards." :
+                                  "Sephek and Eline climb onto her back."])
     if iskra
       [frostina, sephek].each { |e| e.opacity = 0 if e rescue nil }   # they go with her
       Stage.walk(iskra, [PBMoveRoute::Up] * 9)

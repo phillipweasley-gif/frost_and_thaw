@@ -230,7 +230,7 @@ module FrostThaw
     say(["A fire that barely warms. Five strangers at five tables."])
     # Meat Meat is in the room before the woman comes in (context/01.md HB3).
     if herald?(:meat_meat)
-      say(["You slip in behind them and find a shadow by the wall. Nobody notices a goblin in a shadow.",
+      say(["You slip in behind them and find a shadow by the wall.", "Nobody notices a goblin in a shadow.",
            "SHADE: ...Except me. Hands where I can see them, little one.",
            "SHADE: Sit. You're shaking worse than we are.",
            "(The smuggler smells like the sea. Meat Meat decides not to bite the smuggler. Yet.)"])
@@ -242,7 +242,7 @@ module FrostThaw
          as(:reptin, "(to the barkeep) That's very generous, thank you. We'll be gone by noon."),
          as(:reptin, "Probably. Ask me again after the drinks.")], ma && ma.id)
     Stage.pan_to(10, 8)              # the whole room in view: you by the door, Shimmer by the far wall
-    say(["SHADE: Well. That was a terrible omen. I'm Shade. This is my sister, Shimmer. We're in shipping.",
+    say(["SHADE: Well. That was a terrible omen. I'm Shade.", "SHADE: This is my sister, Shimmer. We're in shipping.",
          "SHIMMER: Smuggling.",
          "SHADE: Smuggling is a kind of shipping."])
     if herald?(:meat_meat)
@@ -278,7 +278,7 @@ module FrostThaw
          "SHIMMER: Don't.",
          "Old things, cold things. Relics, the Dale calls them."])
     stage_relics_hum
-    say(["Four relics on the table, and the stone under Shimmer's ribs makes five. They hum together, like a chord.",
+    say(["Four relics on the table, and the stone under Shimmer's ribs makes five.", "They hum together, like a chord.",
          as(:reptin, "They know each other. That's either very good news or the start of a ghost story."),
          as(:alerion, "Ghost story."),
          as(:alberica, "I don't need it to make sense. I need it to stop."),
@@ -369,7 +369,7 @@ module FrostThaw
       s.wait(30)
     end
     outsider = journey? || herald?(:wyn)
-    say(["Then she looks at you. She tilts her head, like you're a word in a language she almost knows."]) if outsider
+    say(["Then she looks at you.", "She tilts her head, like you're a word in a language she almost knows."]) if outsider
     say(["She looks at you last, and longest."]) if herald? && !herald?(:wyn)
     say(["She smiles. Not warm. Not kind."])
     if auril
@@ -521,7 +521,8 @@ module FrostThaw
            as(:reptin, "(quietly) Right up to the gate.")], event_id)
       pbReceiveItem(:TM46) rescue nil
       say(["NAERTH: That TM teaches Thief. Fitting, for this town.",
-           "NAERTH: One more thing, free. A lady in a tower pays very well for cold trinkets like yours.",
+           "NAERTH: One more thing, free.",
+           "NAERTH: A lady in a tower pays very well for cold trinkets like yours.",
            "NAERTH: Pale. Books and bones. If you meet her, you never met me.",
            as(:alerion, "We never met you. That part's easy.")], event_id)
       naerth_splicers(event_id)

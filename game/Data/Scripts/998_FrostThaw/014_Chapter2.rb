@@ -470,7 +470,8 @@ module FrostThaw
     shell = s.fx("E-03", [lx, ly], frames: 15, oy: 24, loop_from: 10)
     s.wait(10 * s.ticks)
     say(["He doesn't fall far. The light catches him and closes, like hands.",
-         "When it stops, a shell of frost sits in the crack. Inside it, slow and green, something beats.",
+         "When it stops, a shell of frost sits in the crack.",
+         "Inside it, slow and green, something beats.",
          as(:reptin, "He's alive. The light's... keeping him."),
          cl(:alberica, "Then we get him back. Tell me how, and I'll do it."),
          herald?(:reptin) ? "The medallion on your chest pulls toward the shell." : "The medallion on Reptin's chest pulls toward the shell."].compact)
@@ -732,9 +733,9 @@ module FrostThaw
     say([as(:shimmer, "Later. Not in front of the whole town.")])
     set_flag(:lottery_stand)
     set_flag(:seen_sephek_bryn)
-    if journey?
+    if outsider?
       # the player's own road pulls the other way, and the player chooses
-      say(["In your pocket, the lantern glass tugs south-east. Toward the Hole, not the north gate.",
+      say(["In your pocket, the #{my_glass} tugs south-east. Toward the Hole, not the north gate.",
            cl(:alerion, "(to you) Your road's south-east. Ours just walked north.")].compact)
       c = pbMessage(_INTL("What do you say?"), [_INTL("\"North, with them.\""), _INTL("\"How far is the Hole?\"")], -1)
       if c == 1

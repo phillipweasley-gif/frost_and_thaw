@@ -107,7 +107,8 @@ module FrostThaw
                  "a bone. Half gnawed. Too long and too bent to be a person's.",
                  "A gnoll's thighbone. Whatever lived in these caves before her, she's been feeding on it."],
     blood_runes: ["The walls are smeared with dried blood: sweeping handprints, long claw marks.",
-                  "Among them, painted over and over, crude runes in a demon's script. Two words, again and again:",
+                  "Among them, painted over and over, crude runes in a demon's script.",
+                  "Two words, again and again:",
                   "HUNGER. FEAST.",
                   "Over the top of everything, a sign like a hyena's head, cut deep into the stone:",
                   "the mark of Yeenoghu, the demon lord of gnolls, gouged across an older carving.",
@@ -163,7 +164,7 @@ module FrostThaw
   WHISPERS = {
     1 => ["Somewhere in the dark ahead, very faintly, someone whispers your name.",
           "When you stop to listen, there's only the wind, and the wind laughing."],
-    2 => ["Your torchlight shivers in the draught. The shadows on the walls reach like hands, and let go.",
+    2 => ["Your torchlight shivers in the draught.", "The shadows on the walls reach like hands, and let go.",
           "The floor here is glazed with ice. Somebody's feet go out from under them, and they land hard, and laugh too loudly getting up.",
           "Out of the corner of your eye, something watches. When you turn, it's your own reflection in the ice."],
     3 => ["A whiff of smoke and herbs drifts down from somewhere deep. Somebody is cooking.",
@@ -216,7 +217,8 @@ module FrostThaw
     set_flag(:feast_hall_seen)
     say(["The tunnel widens into a chamber of ice and dark. Your light finds a scene of carnage, frozen in place.",
          "Gnawed bones and carcasses everywhere: mountain goats, foxes, hares, gnolls.",
-         "A trapper's boot with the foot still in it. A dwarf's caravan harness. What looks like a human arm.",
+         "A trapper's boot with the foot still in it.",
+         "A dwarf's caravan harness. What looks like a human arm.",
          "The walls are smeared brown and red: handprints, claw marks, long frozen.",
          "The smell of old blood and rot is thick enough to taste."])
     if herald?(:reptin)
@@ -225,7 +227,8 @@ module FrostThaw
       speak(:reptin, "(through his teeth) I'm fine. Give me a moment. I'm fine.", "...A moment.")
     else
       sayc(["Reptin stops dead. His breath comes short. When he looks round, his eyes are flashing amber.",
-            "REPTIN: (baring his teeth, then catching it) This... this isn't right. She's been busy in here.",
+            "REPTIN: (baring his teeth, then catching it) This...",
+            "REPTIN: this isn't right. She's been busy in here.",
             "REPTIN: Give me a moment. I'm fine."])
     end
     sayc([cl(:alberica, "(a hand flat between his shoulder blades) Breathe, sugar. In through the nose. Actually, no. Through the mouth."),
@@ -304,7 +307,8 @@ module FrostThaw
     case bridge_plan
     when :rope
       say(["A foot goes. Somebody's over the side!",
-           "The rope snaps taut. They swing out over nothing, and back, and you haul them up hand over hand.",
+           "The rope snaps taut.",
+           "They swing out over nothing, and back, and you haul them up hand over hand.",
            "Nobody says anything for a long moment. Then everybody breathes."])
       sayc([cl(:alerion, "That's what the rope's for.")])
     when :slow
@@ -776,7 +780,8 @@ module FrostThaw
     return if !state[:chasm_nightmare]
     state[:chasm_nightmare] = nil
     say(["You dream of the Heart of the Chasm.",
-         "The hag sits on her dais, cackling, the Heart in her lap. Your own bodies lie frozen at her feet.",
+         "The hag sits on her dais, cackling, the Heart in her lap.",
+         "Your own bodies lie frozen at her feet.",
          "The sun rises over a Dale that belongs to her.",
          flag?(:camp_disturbed) ? "You wake by the warm fissure, gasping. It hasn't happened. Not yet." :
                                      "You wake with a gasp, a long way from the chasm. It hasn't happened. Not yet."])
@@ -822,13 +827,14 @@ module FrostThaw
       say(["The cub stays with its mother. She lifts it in one great arm and turns away, home, toward the peaks."])
     else
       say(["#{reptin_name == 'you' ? 'You set' : 'Reptin sets'} the cub down by the warm fissure and howls, once, low.",
-           "Far up at the chasm mouth, wolves answer. They'll come for it. The wardens look after their own."])
+           "Far up at the chasm mouth, wolves answer.", "They'll come for it. The wardens look after their own."])
     end
     set_flag(:cub_home)
     # the warden: the Heart knows its wolf
     say(["The Heart has gone quiet: pale now, faintly warm. Its light turns, slowly, toward #{reptin_name}.",
          herald?(:reptin) ? "The wolf in you lies down. Not gone. Still there, and still yours. But it's stopped pulling at the chain." :
-                            "Reptin breathes out like he's been holding that breath for a year. The wolf in him has lain down: still there, still his, no longer pulling at the chain.",
+                            "Reptin breathes out like he's been holding that breath for a year.",
+                            "The wolf in him has lain down: still there, still his, no longer pulling at the chain.",
          herald?(:reptin) ? "(A warden's bond. The rage was the curse. The rest of it is you.)" :
                             "REPTIN: (wondering) It's still there. It's just... quiet. It knows me now."])
     set_flag(:reptin_wolf_calm)
@@ -1088,7 +1094,8 @@ module FrostThaw
     end
     set_flag(:met_sephek_torgs)
     say(["A man in his thirties leans on Torrga's sled in a stylish vest and nothing warmer.",
-         "No coat, no hat, no gloves. Olive skin, dark hair in a tail. Snow lands on his shoulders and doesn't melt.",
+         "No coat, no hat, no gloves. Olive skin, dark hair in a tail.",
+         "Snow lands on his shoulders and doesn't melt.",
          "His eyes are as blue as a frozen lake.",
          "SEPHEK: (smiling, easy) Travellers! Good. It gets so quiet. Buying, or just looking at me?"], event_id)
     if with_or_is?(:shimmer)
@@ -1109,7 +1116,8 @@ module FrostThaw
       say(["SEPHEK: (still smiling) A careful one. Good."])
     end
     sayc([cl(:shade, "(hand on a knife) Then let's do this now."),
-          "SEPHEK: Here? With the Speaker's little ones playing two roads over? No. I'm not a monster.",
+          "SEPHEK: Here? With the Speaker's little ones playing two roads over?",
+          "SEPHEK: No. I'm not a monster.",
           with_or_is?(:shimmer) ? "SEPHEK: (to Shimmer, softly) Before the next moon. Come to me, or I pick someone else." : nil,
           with_or_is?(:shimmer) ? "SEPHEK: You always did come, in the end." : nil,
           "Frost swirls up round him like a breath, and he's standing on the far side of the sled, ten paces off.",

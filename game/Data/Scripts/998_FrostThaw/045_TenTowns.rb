@@ -334,10 +334,10 @@ module FrostThaw
     end
     if !flag?(:met_scramsax)
       set_flag(:met_scramsax)
-      say(["SCRAMSAX: Scramsax. I own the Northlook. Rowdiest house in Bryn Shander, and the best place in the Dale for a lead.",
+      say(["SCRAMSAX: Scramsax. I own the Northlook.", "SCRAMSAX: Rowdiest house in Bryn Shander, and the best place in the Dale for a lead.",
            "A grey old sellsword with more scar than face.",
            "SCRAMSAX: I know how an adventurer's life goes. Flush one week, eating snow the next.",
-           "SCRAMSAX: So I'll let you stay on credit, between jobs. You pay me when you're paid. With a little extra for my trouble."], event_id)
+           "SCRAMSAX: So I'll let you stay on credit, between jobs.", "SCRAMSAX: You pay me when you're paid. With a little extra for my trouble."], event_id)
     end
     northlook_keeper(event_id)
   end
