@@ -58,6 +58,8 @@ module FrostThaw
   RELIC_ITEMS.merge!(
     FT_LANTERNGLASS: ["Lantern Glass", "Lantern Glass", 8, 0,
       "A curved shard from the lantern Tamsin bought you. \"Real Reversal glass.\" It's colder than the snow, and now and then it hums.", 0, 0, 6],
+    FT_GATESHARD: ["Sap Gate Shard", "Sap Gate Shards", 8, 0,
+      "A sliver of the old mirror in the Sap Gate. Sableye wouldn't let go of it. It's colder than the snow, and it hums.", 0, 0, 6],
     FT_SCRIMSHAWBOX: ["Velryn Scrimshaw", "Velryn Scrimshaws", 8, 0,
       "Keegan's wooden box of four figurines: a spouting whale, a smiling fox, two dancing hares, and a walrus carved \"BIG LOVE\".", 0, 0, 6],
     FT_ASTRIXBOOK: ["Astrix's Spellbook", "Astrix's Spellbooks", 8, 0,
@@ -179,10 +181,11 @@ module FrostThaw
     say(["A handsome man in his thirties opens the door. The dog races past him inside.",
          "When he sees you instead of his husband, his smile fades.",
          "KEEGAN: ...Come in. Come in out of the cold. You'll want cider. Everyone wants cider. Sit.",
-         "He gives each of you a cup of warm cider. His hands aren't steady.",
-         "KEEGAN: Keegan Velryn. I was born in Ten-Towns. My husband came from a wealthy family in Neverwinter.",
+         companions.empty? ? "He pours you a cup of warm cider. His hands aren't steady." :
+                             "He gives each of you a cup of warm cider. His hands aren't steady.",
+         "KEEGAN: Keegan Velryn. My husband Garret's the climber in this house.",
+         "KEEGAN: You're not from Ten-Towns. Ten towns, three lakes, and one winter for all of us.",
          "KEEGAN: Garret didn't care for city life. When I met him he was working as a guide. He loves the outdoors.",
-         "KEEGAN: He lives to climb mountains.",
          "KEEGAN: A few days ago some adventurers hired him to lead them up the slopes of Kelvin's Cairn.",
          "KEEGAN: He took six dogs and a sled. Boy here was his favourite. Raised him from a pup.",
          "KEEGAN: Boy would never leave Garret's side. Not unless something terrible had happened."], event_id)
@@ -191,8 +194,7 @@ module FrostThaw
     say(["KEEGAN: It's a lot to ask. Could I persuade you to go up there and find Garret and his companions?",
          "KEEGAN: I don't have money. But the proprietor of the Luskan Arms is a friend of mine. I could get you free rooms there.",
          "KEEGAN: And I'm a scrimshander. Bring them home, and I'll carve you something that earns its keep.",
-         "KEEGAN: Frozenfar Expeditions in Caer-Konig would have been the last place anyone saw him. That's days away.",
-         "KEEGAN: Or you cut straight across the tundra: east, off the Bryn Shander road, through the Dwarven Valley."])
+         "KEEGAN: The quick way is straight across the tundra: east, off the Bryn Shander road."])
     if !pbConfirmMessage(_INTL("Go up Kelvin's Cairn to find Garret?"))
       return say(["KEEGAN: ...Of course. It's a mountain. I'm sorry I asked. (He sits down very carefully.)",
                   "Boy whines and looks at you."])

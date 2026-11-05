@@ -62,9 +62,10 @@ module FrostThaw
       return say(["EPHERIS: Relics from across the Dale. Old, odd, and occasionally cursed.",
                   "EPHERIS: No refunds on the cursed ones."], event_id)
     end
+    Stage.arrive(%i[reptin alberica alerion shimmer shade], 9, 11)   # all of you, through the door (context/01.md B6)
     say(["EPHERIS: Put those down. Not on the counter. On the floor.",
          as(:reptin, "(setting the medallion down very gently) Of course. So sorry. Is the floor also cursed?"),
-         "EPHERIS: Five people. Five cold trinkets. All found where you'd find them, right when you'd find them.",
+         "EPHERIS: Five cold trinkets. All found where you'd find them, right when you'd find them.",
          "EPHERIS: That's not luck. That's bait.",
          as(:alberica, "Bait for what?"),
          "EPHERIS: For you. Somebody wanted you here.",
@@ -74,23 +75,39 @@ module FrostThaw
          as(:alerion, "Someone went to a lot of trouble."),
          herald?(:alberica) ? "(Pretty boy's right. Nobody leaves me presents unless they want something.)" :
                               "ALBERICA: Pretty boy's right. Nobody leaves me presents unless they want something.",
-         "SHIMMER: Then that's where it is."].compact, event_id)
-    lantern_glass_reading(event_id) if journey?
+         "SHIMMER: Then that's where they collect."].compact, event_id)
+    # What Epheris sees in Alberica's pendant, the first time (context/01.md HB4).
+    if herald?(:alberica)
+      say(["EPHERIS: (to you) That pendant. Put it away, and don't take it out in this town again.",
+           "EPHERIS: Black ice that never melts. The Brotherhood would kill for it. I was one."], event_id)
+    end
+    # Six people, five trinkets: the one with no lure (context/01.md HB3).
+    if herald?(:meat_meat)
+      say(["EPHERIS: (to you) And you've nothing cold on you at all. You just followed them here."], event_id)
+      speak(:meat_meat, "Meat Meat follows cold things. And Razzy. Razzy went out the gate.",
+            "...Razzy went out the gate.", event_id)
+      say(["EPHERIS: Then you'll want the same gate they do. Good. Leave together."], event_id)
+    end
+    lantern_glass_reading(event_id) if journey? || herald?(:wyn)
     set_flag(:relics_are_lures)
-    state[:goal] = flag?(:badge_targos) ? "Find who's calling us. South-east, past Bryn Shander, to Dougan's Hole." :
+    state[:goal] = flag?(:badge_targos) ? "Someone baited the relics. Find them: south-east, past Bryn Shander, Dougan's Hole." :
                                           (flag?(:naerth_terms) ? "Win Speaker Naerth's seal at the Town Hall. It opens the south-west gate." :
                                                                  "Get Speaker Naerth's seal to leave Targos. He does business at the Luskan Arms.")
-    if flag?(:got_pokedex) || ($Trainer.has_pokedex rescue false)
-      set_flag(:got_pokedex)
-      return
+    if !flag?(:got_pokedex) && !($Trainer.has_pokedex rescue false)
+      say(["EPHERIS: Take this. I used to catalogue relics for men in towers.",
+           "EPHERIS: Catalogue something alive, for a change."], event_id)
+      $Trainer.has_pokedex = true
+      pbMEPlay("Key item get") rescue nil
+      pbMessage(_INTL("You received the Pokédex!"))
+      say(["EPHERIS: It records every Pokémon you meet. Open it from your menu."], event_id)
     end
-    say(["EPHERIS: Take this. I used to catalogue relics for men in towers.",
-         "EPHERIS: Catalogue something alive, for a change."], event_id)
-    $Trainer.has_pokedex = true
     set_flag(:got_pokedex)
-    pbMEPlay("Key item get") rescue nil
-    pbMessage(_INTL("You received the Pokédex!"))
-    say(["EPHERIS: It lives in your pack now. Open it from your menu whenever you like."], event_id)
+    # Who Naerth is, said by a person before the goal says it (context/01.md B5).
+    if !flag?(:naerth_terms) && !flag?(:badge_targos)
+      say(["He goes back to his ledger.",
+           "EPHERIS: South-east means out the gate, and the gate means Naerth's say-so.",
+           "EPHERIS: Speaker of Targos. Runs the town, and most of its debts. Try the Luskan Arms."], event_id)
+    end
   rescue StandardError => e
     log("epheris failed: #{e.message}")
   end
@@ -436,9 +453,18 @@ module FrostThaw
   def lantern_glass_reading(event_id = nil)
     return if flag?(:glass_read)
     set_flag(:glass_read)
-    say(["EPHERIS: (to you) And you. You've been holding something since you came in. Show me.",
-         "You open your hand. The shard of lantern glass hums, very low, and the compass needle swings to it.",
-         "EPHERIS: ...Hag-glass. Mirror-ice. Nobody makes it but one old woman in the Dale.",
+    if herald?(:wyn)
+      # Wyn's sliver of the Sap Gate's mirror, in Sableye's claws since the fall (context/01.md HB2).
+      say(["EPHERIS: (to you) And that one. Your Sableye's got something, like a dragon on a hoard."], event_id)
+      Stage.cry(:SABLEYE)
+      say(["Sableye opens its claws, very slowly. A sliver of mirror, cold as the lake."])
+      give_key(:FT_GATESHARD) rescue nil
+      say(["The compass needle swings to it."])
+    else
+      say(["EPHERIS: (to you) And you. You've been holding something since you came in. Show me.",
+           "You open your hand. The lantern glass hums, very low, and the compass needle swings to it."], event_id)
+    end
+    say(["EPHERIS: ...Hag-glass. Mirror-ice. Nobody makes it but one old woman in the Dale.",
          "EPHERIS: South-east. Dougan's Hole. Same as theirs."], event_id)
     c = pbMessage(_INTL("Ask Epheris..."), [_INTL("\"Can it send me home?\""), _INTL("\"Same as theirs?\"")], 0)
     if c == 0
@@ -453,4 +479,41 @@ module FrostThaw
     side_goal(:way_home, "Your own: the hag's mirrors at Dougan's Hole. The glass you fell through broke from one.",
               done: :reversal)
   end
+end
+
+#-------------------------------------------------------------------------------
+# The Commons: catching, shown in the first wild grass (context/01.md B7). The
+# first step into the Commons grass once the party has met (or the first step
+# after, if you were already in it): Shimmer walks in and says how it's done.
+#-------------------------------------------------------------------------------
+module FrostThaw
+  module_function
+
+  def commons_lesson_due?
+    return false if !active? || flag?(:commons_lesson) || !flag?(:met_party)
+    return false if !$game_map || $game_map.map_id != 2001 || !companions.include?(:shimmer)
+    tag = ($game_map.terrain_tag($game_player.x, $game_player.y) rescue nil)
+    tag && tag.respond_to?(:land_wild_encounters) && tag.land_wild_encounters
+  end
+
+  def commons_lesson
+    set_flag(:commons_lesson)
+    Stage.hold do
+      Stage.summon(:shimmer)
+      say(["SHIMMER: Something's moving in the drifts. Wear it down, then throw. Don't wait.",
+           "SHIMMER: A ball on a fresh one is a ball wasted. Ask Shade. They've wasted plenty."])
+    end
+  rescue StandardError => e
+    log("commons_lesson: #{e.message}")
+  end
+end
+
+if Events.respond_to?(:onStepTaken)
+  Events.onStepTaken += proc { |_sender, _e|
+    begin
+      FrostThaw.commons_lesson if FrostThaw.commons_lesson_due?
+    rescue StandardError => err
+      FrostThaw.log("Commons lesson failed: #{err.message}")
+    end
+  }
 end
