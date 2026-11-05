@@ -181,6 +181,22 @@ module FrostThaw
       sayc([cl(:shade, "Did everyone hear that, or is it just me?"),
             cl(:alerion, "Everyone."),
             cl(:meat_meat, "Meat Meat heard Meat Meat's name. Meat Meat said \"what\". Nobody answered. Rude.")])
+      heart_acorn_remembered
+    end
+  end
+
+  # On the way up to the Heart: the acorn from Chapter 2, and the egg, warm
+  # before they're needed (context 05 M5-2: "Plant it somewhere the sun can't reach").
+  def heart_acorn_remembered
+    return if flag?(:acorn_remembered)
+    set_flag(:acorn_remembered)
+    if flag?(:golden_acorn) && with_or_is?(:reptin)
+      say([herald?(:reptin) ? "In your pack, something is warm. You take out the golden acorn and look at it." :
+                              "In Reptin's pack, something is warm. He takes out the golden acorn and looks at it.",
+           as(:reptin, "\"Somewhere the sun can't reach.\" Well. We found it.")])
+    end
+    if flag?(:frost_egg) && with_or_is?(:shade)
+      say([herald?(:shade) ? "A hand on your coat. (The egg's warm too.)" : "SHADE: (a hand on their coat) The egg's warm too."])
     end
   end
 
@@ -222,7 +238,7 @@ module FrostThaw
     talk(:blood_runes, event_id)
     return if flag?(:read_blood_runes)
     set_flag(:read_blood_runes)
-    sayc([cl(:alerion, "Abyssal. Gnolls. Yeenoghu's pack. They broke in here and defiled whatever this was."),
+    sayc([cl(:alerion, "Gnolls. They pray to a hyena-headed demon. They broke in and defiled this place."),
           cl(:reptin, "That ring under the gouges. Leaf and bone. I've seen it before. In the dream.")])
   end
 
@@ -366,18 +382,23 @@ module FrostThaw
     return if flag?(:rift_voices)
     set_flag(:rift_voices)
     say(["The laughter on the wind changes. It isn't laughter any more. It's voices."])
-    lines = []
-    lines << (herald?(:alberica) ? "(A woman laughing the way your mother used to, at a joke you've forgotten.)" :
-                                   cl(:alberica, "...That's my mother laughing. She's been dead twenty years."))
-    lines << (herald?(:reptin) ? "(Wolves, singing, very far off. And under them a voice you'd know anywhere, calling your name to come home.)" :
-                                 cl(:reptin, "Wolves. And my name. Somebody's calling me home."))
-    lines << (herald?(:alerion) ? "(A boy's voice: \"You said you'd come back.\")" :
-                                  cl(:alerion, "(very quiet) A boy. \"You said you'd come back.\""))
-    lines << (herald?(:shade) ? "(Shimmer, laughing at you. The good laugh. The one you'd do anything to hear again.)" :
-                                cl(:shade, "...That's her. That's her laughing."))
-    lines << (herald?(:meat_meat) ? "(A small happy chirp. Razzy's chirp. It comes from nowhere.)" :
-                                    cl(:meat_meat, "Razzy? RAZZY? ...Not Razzy. Wind. Mean wind."))
-    sayc(lines.compact)
+    # one line each that names who they hear (context 05 M5-4): the only place in
+    # Act I that Anduin and Talion can be planted
+    sayc([herald?(:alberica) ? "(A woman laughing the way your mother used to, at a joke you've forgotten.)" :
+                               cl(:alberica, "...That's my mother laughing. She's been dead twenty years."),
+          herald?(:reptin) ? "(Wolves, singing. And under them Anduin, your husband, calling you home.)" :
+                             cl(:reptin, "Wolves. And Anduin, calling me home. My husband. He can't be here.")])
+    if herald?(:alerion)
+      say(["(A boy's voice: \"You said you'd come back.\" Talion. You didn't.)"])
+    elsif with_or_is?(:alerion)
+      sayc([cl(:alerion, "(very quiet) A boy. \"You said you'd come back.\"")])
+      speak(:alberica, "Who is he?", "...Who?") if with_or_is?(:alberica)
+      sayc([cl(:alerion, "My brother. Talion. I didn't.")])
+    end
+    sayc([herald?(:shade) ? "(Shimmer, laughing at you. The good laugh. The one you'd do anything to hear again.)" :
+                            cl(:shade, "...That's her. That's her laughing."),
+          herald?(:meat_meat) ? "(A small happy chirp. Razzy's chirp. It comes from nowhere.)" :
+                                cl(:meat_meat, "Razzy? RAZZY? ...Not Razzy. Wind. Mean wind.")])
     say(["Children giggling. Your own name, over and over.",
          "Then the wind drops, and it's only wind."])
     if flag?(:took_right) && !flag?(:took_left)
@@ -474,6 +495,7 @@ module FrostThaw
       a && a.lastMoveUsedType == :FIRE
     end
     if burned
+      set_flag(:troll_burned)                  # (the after-fight line plays only if fire was used: notes 05 E18)
       battle.pbDisplay(_INTL("The fire sears the troll's wounds shut. Its flesh can't knit!"))
     else
       battle.pbDisplay(_INTL("The ice troll's torn flesh knits itself back together!"))
@@ -739,7 +761,8 @@ module FrostThaw
     pbBGMFade(2.0) rescue nil
     say(["In the dark behind your eyes, an old dwarf woman in dark green robes shakes her head.",
          "GHOST: No. That isn't how it goes, dear. That's never how it goes.",
-         "GHOST: Time is a wheel. Go round again. Find the third way."])
+         "GHOST: Time is a wheel. Go round again. Find the third way.",
+         "GHOST: You'll remember a little. Use it."])
     pbMessage(_INTL("THE CRONE'S BARGAIN")) rescue nil
     if respond_to?(:start_loop)
       start_loop
@@ -824,7 +847,7 @@ module FrostThaw
            "If it's destroyed, the energies will be catastrophic.\"",
            "You lower your hand."])
     end
-    speak(:reptin, "Somebody has to watch it. If I could stay, I'd stay. I'll come back. I swear I'll come back.",
+    speak(:reptin, "Somebody has to watch it. Whatever happens next, I'll come back for it. I swear.",
                    "...I'll come back for it.")
     set_flag(:reptin_warden_vow)
     chasm_spoils
@@ -833,51 +856,41 @@ module FrostThaw
                             "Reptin tips his head back and answers them, once. REPTIN: (quietly) Keep the watch till I'm back."])
   end
 
-  # The loot, in the one quiet moment before the floor tips.
+  # The loot, in the one quiet moment before the floor tips: the staff and the
+  # pelt as their own beats, the rest in one box (notes 05 E8).
   def chasm_spoils
-    say(["There's a moment, just one, before anything else happens. You use it."])
     if flag?(:broke_hag_staff) || flag?(:thredra_beaten)
       say(["The two halves of the hag's black staff lie on the ice, still crackling faintly. You take them."])
       give(:FT_GRAYSTAFF)
     end
-    say([with_or_is?(:meat_meat) ? (herald?(:meat_meat) ? "You fish in the cooling cauldron with your sleeve rolled up." :
-                                                         "Meat Meat fishes in the cooling cauldron with her sleeve rolled up.") :
-                                   "You fish in the cooling cauldron with a sleeve rolled up.",
-         "Three opals come up out of the slush, steeped in the brew: components for the ritual."])
-    give(:FT_OPAL, 3)
-    say(["In the hag's dropped rags: a scroll stuffed into the skirt, her plan for anyone who tried to stop her,",
-         "a stoppered draught against the cold, and a ring of black ice."])
-    pbReceiveItem(:GUARDSPEC) rescue nil
-    say(["(The scroll is a counterspell. It works like a Guard Spec.)"])
-    pbReceiveItem(:ICEHEAL) rescue nil
-    give(:FT_BLACKICERING)
     if flag?(:minions_down)
       say(["The hank of white pelt Kanan left behind is thick and warm. It would make a fine cloak against the cold."])
       give(:FT_WOLFPELT)
     end
-    say(["At the edge of the cavern, a little chest of the Order's ritual tools: a silver sickle, incense, and a sealed restorative."])
-    pbReceiveItem(:FULLRESTORE) rescue nil
-    if pbConfirmMessage(_INTL("A sliver of red ice sheared off the Heart when the mirrors broke. Take it?"))
-      say(["You stopper it in a vial. It doesn't melt. It beats, once, very faintly, against your palm."])
-      give_key(:FT_HEARTSHARD)
-      set_flag(:heart_shard)
+    say(["In her rags and her cauldron: opals, a black ice ring, a counterspell. You take it all."])
+    quiet_add = lambda do |item, qty|
+      ok = ($PokemonBag.pbStoreItem(item, qty) rescue false)
+      ok = ($bag.add(item, qty) rescue false) if !ok
+      give(item, qty) if !ok
     end
+    [[:FT_OPAL, 3], [:FT_BLACKICERING, 1], [:GUARDSPEC, 1], [:ICEHEAL, 1], [:FULLRESTORE, 1]].each { |it, q| quiet_add.(it, q) }
+    pbMessage(_INTL("\\me[Item get]You put the hag's things in your bag.")) rescue nil
+    say(["A sliver of red ice skitters to your feet. It beats, once, against your palm."])
+    give_key(:FT_HEARTSHARD)
+    set_flag(:heart_shard)
   end
 
-  # SC 5.10, the glimpses after the first five: what the chasm leaves behind.
+  # SC 5.10, the first moments of the fall: what the chasm leaves behind, in
+  # order, before the panels run on to Rootspire (notes 05 E31).
   def chasm_falling_glimpses
-    say(["More moments fall past you, too fast to hold:",
-         "The chasm mouth at dawn. In a crack in the frost, a single tiny wildflower, blooming.",
-         "Wolves on the ridge above it at night, howling at nothing. Not hungry. Watchful.",
-         flag?(:order_wardens) ? "A ring of Reghed tents at the chasm mouth, and a carved post with a wolf and a scythe on it: a new Order, small and stubborn, keeping the watch you started." : nil,
-         "Dougan's Hole. Speaker Durmoot lifting a cup: \"To the ones who went down into the chasm.\" A pause. \"...Don't tell anyone I said that.\"",
-         "A smoky tavern in Bryn Shander, and a bard singing \"Glimmer in the Chasm\":",
-         "a small light of hope and an old spirit, guiding heroes through the dark."].compact)
+    say(["The chasm mouth at dawn. In a crack in the frost, a single wildflower.",
+         "Wolves on the ridge above it, howling at nothing. Not hungry. Watchful.",
+         flag?(:order_wardens) ? "A ring of Reghed tents at the chasm mouth, and a post carved with a wolf and a scythe." : nil,
+         "Dougan's Hole. Durmoot lifts a cup: \"To the ones who went down.\" A pause. \"...Don't tell.\"",
+         "In Bryn Shander a bard sings \"Glimmer in the Chasm\": a small light, and an old spirit."].compact)
     sayc([cl(:shade, "(somewhere in the fall) ...Glimmer. That name again.")])
-    say(["Years on, travellers in Dougan's Hole whisper about the Heroes of the Cackling Chasm.",
-         "On certain nights, faint laughter still comes out of it: a child's giggle, and the howl of a watchful wolf.",
-         "A silver-haired woman in dark green, and beside her a small child who glows. They smile at you.",
-         "\"Thank you,\" they whisper, both at once, like wind chimes. \"Balance is restored... for now.\""])
+    say(["The woman in dark green, and beside her a small light, like a lantern. They smile at you.",
+         "\"Thank you,\" they whisper, like wind chimes. \"Balance is restored... for now.\""])
   end
 
   # Landing: two things in your pack that weren't there before.
@@ -886,7 +899,7 @@ module FrostThaw
          "The Frostmaiden has seen what you did. She has marked you."])
     give_key(:FT_OWLFEATHER)
     say(["And in your pack, a small carving that wasn't there before: a wolf and a bloom, twined together, carved from ancient ice.",
-         "It's warm to the touch. Nobody saw who left it. All of you know where it came from."])
+         "Nobody saw who left it. It's warm, like the locket was. Like she was."])
     give_key(:FT_WOLFBLOOM)
   end
 
@@ -894,14 +907,15 @@ module FrostThaw
   def hag_bargain_offer(event_id = nil)
     set_flag(:hag_bargain_offered)
     rep = herald?(:reptin)
-    say(["THREDRA: (her ember eyes sliding to #{rep ? 'you' : 'Reptin'}) But that's business. Let's talk about something nicer.",
-         "THREDRA: This winter. Auril's Everlasting Rime. Two years of night, and the Speakers drawing lots for children.",
-         "THREDRA: Granny knows how to break it. Granny knows a place where life and death can be traded, and the scales come out even.",
-         rep ? "THREDRA: And you, poor cursed thing. The moon's been so cruel to you, hasn't it? All that rage and pain inside you." :
-               "THREDRA: And your poor cursed friend. The moon's been so cruel to him, hasn't it? All that rage and pain inside him.",
+    # (context 04 M4-6: the curse confirms the tundra's bite, it doesn't announce it)
+    say(["THREDRA: This winter. Auril's Rime. Two years of night, and children drawn by lot.",
+         "THREDRA: Granny knows a place where life and death can be traded, and come out even.",
+         rep ? "THREDRA: And you, poor bitten thing. Wait for the full moon. Then ask what bit you." :
+               "THREDRA: And your poor bitten friend. Wait for the full moon. Then ask what bit him.",
          rep ? "(She's looking right at you. The bite on your hand throbs.)" : "Reptin's hand closes over the bite on his hand.",
-         rep ? "THREDRA: Do a little task for Granny, dearies, and I'll end the winter. And I'll take the wolf out of you. Root and all." :
-               "THREDRA: Do a little task for Granny, dearies, and I'll end the winter. And I'll take the wolf out of him. Root and all."], event_id)
+         "THREDRA: Do a little task for Granny, and I'll end the winter.",
+         rep ? "THREDRA: And I'll take the wolf out of you. Root and all." :
+               "THREDRA: And I'll take the wolf out of him. Root and all."], event_id)
     c = pbMessage(_INTL("The hag waits for your answer."), [_INTL("\"What's the task?\""), _INTL("\"No deals.\"")], 1)
     if c == 0
       set_flag(:asked_hag_task)
@@ -943,7 +957,7 @@ module FrostThaw
 
   def read_wolfbloom
     pbMessage(_INTL("A wolf and a flower, carved round each other out of ice older than the Dale. It's warm in your hand."))
-    pbMessage(_INTL("Nobody saw who left it. All of you know where it came from: the Order of Life and Death. A sign of the bond you share."))
+    pbMessage(_INTL("Nobody saw who left it. It's warm, like the locket. A wolf and a bloom: the Order's sign."))
   end
 
   def read_owl_feather

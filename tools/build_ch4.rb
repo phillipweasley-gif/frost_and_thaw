@@ -30,6 +30,7 @@ SW_NORSU_CALM   = 3923    # Norsu was calmed (or beaten) and lets you be
 SW_PACK_GONE    = 3924    # the starving pack was fed (or driven off)
 SW_KOBOLDS_GONE = 3925    # the kobolds scurried out of the lodge
 SW_WOLVES_GONE  = 3926    # Koran and Kanan beaten on the way home
+SW_HAG_NIGHT    = 3933    # you've rested after the seal: that night the hag comes
 WOLF = "Followers/ABSOL"
 PUP = "Followers/POOCHYENA"
 GAUNT = "Followers/MIGHTYENA"
@@ -300,29 +301,30 @@ d.event(41, 4, "Cutscene kids_homecoming", [
   { switch: SW_WOLVES_GONE, trigger: 3, script: "FT.scene(:kids_homecoming, @event_id)" },
   { self_switch: "A" }
 ])
-# that night: the hag at the Stones
+# that night (after the rest at the smokehouse): the hag at the Stones
 d.event(10, 32, "The Hag", [
   { graphic: "", through: true },
-  { switch: SW_DH_BADGE, graphic: "FT_thredra", direction: 2, script: "FT.hag(@event_id)" },
+  { switch: SW_HAG_NIGHT, graphic: "FT_thredra", direction: 2, script: "FT.hag(@event_id)" },
   { switch: SW_HAG_DOWN, graphic: "", through: true }
 ])
 # her three ice mirrors between the stones (her reflection laughs in each)
 [[7, 35], [13, 35], [10, 29]].each_with_index do |(x, y), i|
   d.event(x, y, "Ice mirror #{i + 1}", [
     { graphic: "", through: true },
-    { switch: SW_DH_BADGE, graphic: "FT_thredra_echo", direction: 2, opacity: 200, step_anime: true, script: "FT.hag_mirror(#{i + 1}, @event_id)" },
-    { switch: SW_DH_BADGE, self_switch: "A", graphic: "", through: true },
+    { switch: SW_HAG_NIGHT, graphic: "FT_thredra_echo", direction: 2, opacity: 200, step_anime: true, script: "FT.hag_mirror(#{i + 1}, @event_id)" },
+    { switch: SW_HAG_NIGHT, self_switch: "A", graphic: "", through: true },
     { switch: SW_HAG_DOWN, graphic: "", through: true }
   ])
 end
 d.event(40, 4, "Cutscene dh_night", [
   {},
-  { switch: SW_DH_BADGE, trigger: 3, script: "FT.scene(:dh_night, @event_id)" },
+  { switch: SW_HAG_NIGHT, trigger: 3, script: "FT.scene(:dh_night, @event_id)" },
   { self_switch: "A" }
 ])
 # the shapes on the ice: the hag's frozen victims (they thaw when she's gone)
 # (each stands on the first row of ice, so once thawed they can be spoken to from the shore)
-[[22, "BWFisherman", :thawed_fisher_a], [27, "BWOldMan", :thawed_old_man], [30, "BW (54)", :thawed_husband],
+# (the old man, who drank tea with her, stands where the path south passes: context 04 §3)
+[[22, "BWOldMan", :thawed_old_man], [27, "BWFisherman", :thawed_fisher_a], [30, "BW (54)", :thawed_husband],
  [19, "BW (56)", :thawed_woman], [40, "BWFisherman", :thawed_fisher_b]].each do |x, gfx, key|
   shape(d, x, lake_y.(x).floor + 1, gfx, key, "Shape on the ice")
 end
@@ -336,6 +338,19 @@ d.npc(17, 13, "BW (56)", :dh_chorus_sister, dir: 6)
 d.npc(34, 30, "BWFisherman", :dh_pier_fisher, dir: 4)
 d.npc(36, 12, "BWOldWoman", :dh_shapes_talk, dir: 4)
 d.trainer(35, 35, "BW056", :fisher_rorik, :FISHERMAN, dir: 4, sight: 2)
+# coming out of the Speaker's lodge: Hilda is waiting (context 04 M4-2)
+d.event(16, 12, "Cutscene hilda_at_gate", [
+  {},
+  { switch: SW_DH_WEST_OPEN, trigger: 3, script: "FT.scene(:hilda_at_gate, @event_id)" },
+  { self_switch: "A" }
+])
+# panes of ice standing upright on the lake between the shapes, "like mirrors" (notes 04 E12)
+[[26, 35], [29, 33], [32, 30], [35, 28]].each do |x, y|
+  d.event(x, y, "Ice pane", [
+    { graphic: "", tile_id: 1336, script: "FT.talk(:dh_ice_pane, @event_id)" },
+    { switch: SW_HAG_DOWN, graphic: "", through: true }
+  ])
+end
 seal_edges(d)
 save(d, :dougans)
 

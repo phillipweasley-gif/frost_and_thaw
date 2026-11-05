@@ -176,12 +176,16 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The Laughing Waste
   #-----------------------------------------------------------------------------
-  # SC 5.01 - Full moon on the Laughing Waste
+  # SC 5.01 - Full moon on the Laughing Waste. Two days on from Dougan's Hole,
+  # the bite wakes under the full moon Thredra promised (context 05 M5-1).
   def scene_waste_start
     set_flag(:waste_started)
     add_counter(:story_beats)
-    say(["South of Dougan's Hole the land breaks into ice hills and black stone.",
-         "A full moon. The wind sounds like someone laughing."])
+    $game_screen.start_tone_change(Tone.new(-255, -255, -255, 0), 0) rescue nil
+    say(["..."])
+    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 30) rescue nil
+    say(["Two days south of Dougan's Hole, the land breaks into ice hills and black stone.",
+         "Tonight the moon is full. The wind sounds like someone laughing."])
     wolf = Stage.herald(:reptin, 0, -1, 2)
     if herald?(:reptin)
       say(["You stop walking. Your shoulders roll wrong."])
@@ -189,9 +193,11 @@ module FrostThaw
       say(["For one breath you are a wolf, grey and enormous. Then you're on your knees in the snow."])
       Stage.pose(wolf, "P-REP-04", 0, frames: [3], per: 4) if wolf
       say(["(The bite. It's the bite.)",
-           "(Every night since, you've dreamed of a chained wolf. And a crone: \"Abandon your bond, forsake your curse, and be free.\")"])
+           "(Last night you dreamed of a wolf in chains, on a ring of leaf and bone.)",
+           "(And a crone: \"Abandon your bond, forsake your curse, and be free.\")"])
       speak(:reptin, "I'm fine. Don't look at me. I'm fine.", "...I'm fine.")
-      sayc(["ALERION: Then don't listen to her.",
+      sayc([cl(:alerion, "Then don't listen to her."),
+            cl(:meat_meat, "Bite woke up. Meat Meat said. Meat Meat will still sit next to you."),
             cl(:alberica, "Up you get, sugar. Lean on me. I'm sturdier than I look. Which is very sturdy."),
             "(You stand up. You weren't planning to stay down.)"])
     else
@@ -200,18 +206,19 @@ module FrostThaw
       sayc(["For one breath there's a wolf where he stood, grey and enormous. Then Reptin again, on his knees."])
       Stage.pose(wolf, "P-REP-04", 0, frames: [3], per: 4) if wolf
       sayc(["REPTIN: The bite. It's the bite.",
-            "REPTIN: Every night since, I've dreamed of a chained wolf. And a crone: \"Abandon your bond, forsake your curse, and be free.\"",
-            as(:alerion, "Then don't listen to her."),
-            cl(:meat_meat, "Doggy Reptin. Meat Meat is not scared. Meat Meat will still sit next to him."),
-            "REPTIN: (standing) I wasn't planning to. I'm fine. Don't look at me."])
+            "REPTIN: Last night I dreamed of a wolf in chains, on a ring of leaf and bone.",
+            "REPTIN: And a crone: \"Abandon your bond, forsake your curse, and be free.\"",
+            cl(:alerion, "Then don't listen to her."),
+            cl(:meat_meat, "Bite woke up. Meat Meat said. Meat Meat will still sit next to him."),
+            "REPTIN: (standing) I'm fine. Don't look at me."])
     end
     # the dream's other half: the crone's voice, and her offer (the module's "Reptin's Vision")
     if herald?(:reptin)
-      say(["(And last night the crone had more to say. A cracked, kind voice, right in your ear:)",
+      say(["(She had more to say. A cracked, kind voice, right in your ear:)",
            "(\"Poor boy... all that rage and pain inside you. Give it to me. Let me take it away...\")",
            "(\"Come to Granny's chasm, and be free.\" When you woke, your feet were already pointing south.)"])
     else
-      sayc(["REPTIN: And last night she had more to say. \"Poor boy... all that rage and pain inside you.\"",
+      sayc(["REPTIN: She had more to say. \"Poor boy... all that rage and pain inside you.\"",
             "REPTIN: \"Give it to me. Let me take it away.\" (a breath) I woke up facing south.",
             cl(:shade, "Facing south's fine. Walking south alone isn't."),
             cl(:alberica, "Nobody's taking anything out of you, sugar. Not without asking me first.")])
@@ -265,12 +272,13 @@ module FrostThaw
            "Somewhere ahead, delighted, the crone: \"Oops! Mind your heads, dearies!\""])
       hurt_party(0.2)
     end
-    say(["Out of the crevices near the roof swoop small shapes made of ice, shrieking with laughter: ice mephits!"])
+    say(["Out of the crevices swoop ice mephits: small imps of living ice, shrieking with laughter!"])
     return if !boss_battle(named_mon(:SNORUNT, 28, "Ice mephit"), named_mon(:SNORUNT, 28, "Ice mephit"))
     sayc(["The last mephit cracks and bursts into a spray of shards. The tunnel goes quiet.",
           cl(:meat_meat, "Laughing ice. Meat Meat laughed last. Meat Meat wins.")])
     set_flag(:mephits_done)
     $game_switches[SW_ICEFALL] = true if $game_switches
+    $game_map.need_refresh = true if $game_map      # the locket and the femur show now, not on the next refresh (context 05 M5-3)
   end
 
   # SC 5.03 - The Order's locket
@@ -335,10 +343,10 @@ module FrostThaw
     opts = [me ? _INTL("Sing.") : _INTL("Ask Alberica to sing."), _INTL("Fight."), _INTL("Back away slowly.")]
     c = pbMessage(_INTL("What do you do?"), opts, 0)
     if c == 0
-      say([me ? "You sing the lullaby from Bryn Shander's square. No jokes in it. Not one." :
-                "Alberica sings the lullaby from Bryn Shander's square. No jokes in it. Not one."])
+      say([me ? "You sing, plain, the way you spoke to Bryn Shander's square. No jokes. Not one." :
+                "Alberica sings, plain, the way she spoke to Bryn Shander's square. No jokes. Not one."])
       if flag?(:stood_with_alberica)
-        say(["The mother stops, shaking. She looks at the swaddling.",
+        say(["The mother stops, shaking. She looks at her dead mate's hand, clenched round something.",
              "Then she points, deeper into the chasm, to where her cub was taken."])
         set_flag(:yeti_calmed)
         set_flag(:yeti_faced); chasm_goal
@@ -347,7 +355,8 @@ module FrostThaw
         yeti_after_echo
         return
       end
-      say(["The song catches. Nobody stood beside it that night in the square, and it hasn't learned to carry yet.",
+      say([me ? "The song catches. Nobody stood by you that night in the square. You can't find the note." :
+                "The song catches. Nobody stood by her that night in the square. She can't find the note.",
            "The yeti roars over it and charges."])
     elsif c == 2
       say(["You back away, slow, hands open, eyes down. Nobody runs.",
@@ -369,7 +378,7 @@ module FrostThaw
          "Then she's still. The snarl goes out of her face.",
          "A whole family, destroyed. Except for one, somewhere ahead."])
     sayc([cl(:alberica, "(after a long moment) ...I'm going to need a minute, darlings."),
-          cl(:alerion, "Something did this to them. Yetis don't die like this."),
+          cl(:alerion, "Those burns were on her before we came. Somebody hurt her first."),
           cl(:meat_meat, "Meat Meat is sorry, fluffy mama. Meat Meat will find your baby. Meat Meat promises.")])
     set_flag(:yeti_fought)
     set_flag(:yeti_mother_dead)
@@ -403,6 +412,7 @@ module FrostThaw
     set_flag(:read_glimmer_journal)
     speak(:alberica, "...To save Alberica. That's my name. Again. In a dead stranger's handwriting.", "...That's my name. Again.")
     sayc([cl(:shade, "Glimmer. Who calls themselves Glimmer?"),
+          cl(:alberica, "I've never met a Glimmer in my life. I'd remember. I'd have written a song."),
           cl(:reptin, "Somebody who came down here hoping. Like us."),
           cl(:alerion, "Then we keep our wits. Like they didn't.")])
     set_self_switch(event_id, "A")
@@ -447,7 +457,7 @@ module FrostThaw
         say(["You listen to the weeping on the right for a long minute.",
              "The same sobs, in the same order, the same catch in the same breath. Over, and over. A loop.",
              "Whoever she is, she isn't there either."])
-        sayc([cl(:reptin, "So both ways are tricks. Wonderful. My favourite kind of fork.")])
+        sayc([cl(:reptin, "So the weeping's a trick too. Then we pick the trick that goes somewhere.")])
       when :ask
         say(["CHILD'S VOICE: (sweet, wobbling) It's me... it's Shimmer... this way... hurry...",
              "CHILD'S VOICE: Please... it hurts... Mama...?",
@@ -635,6 +645,19 @@ module FrostThaw
             "The vision fades. Off to one side of the passage, a hairline seam has opened in the ice wall.",
             cl(:reptin, "Wolves. Standing with her. Not chained."),
             cl(:alerion, "Noted.")])
+      # her Chapter 4 hook, recognised; the ghost answers it (context 05 M5-5)
+      if with_or_is?(:reptin) && flag?(:hag_bargain_offered)
+        look = herald?(:reptin) ? "(looking at your hand)" : "(looking at his hand)"
+        if flag?(:asked_hag_task)
+          speak(:reptin, "#{look} \"A door only a wolf can open.\" She said that, at the Stones.",
+                         "#{look} ...\"A door only a wolf can open.\"")
+        else
+          speak(:reptin, "#{look} \"Bring the wolf,\" she said. My blood opened that door.",
+                         "#{look} ...\"Bring the wolf.\"")
+        end
+        sayc([cl(:alerion, "Then how is she on the other side?"),
+              cl(:shade, "Same way she left the Stones. In pieces.")])
+      end
       set_flag(:gate_open); chasm_goal
       $game_switches[SW_GATE_OPEN] = true if $game_switches
       add_counter(:story_beats)
@@ -672,31 +695,56 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The last guardian
   #-----------------------------------------------------------------------------
-  # SC 5.07 - The ghost with her face (Alberica's future self; never confirmed in Act I)
+  # The Heart's door, before the ghost: Reptin won't go on until you've looked
+  # in the seam (context 05 M5-8; WRITING_GUIDE §9a, people as gates).
+  def heart_door_held(event_id = nil)
+    set_flag(:heart_door_held)
+    chasm_goal
+    if with_or_is?(:reptin)
+      rep = Stage.herald(:reptin, 0, 1, 8)
+      Stage.turn_to($game_player, rep) if rep && !herald?(:reptin)
+      sayc([herald?(:reptin) ? "You stop dead. (Wait. That seam in the ice, by the gate.)" :
+                               "REPTIN: (stopping dead) Wait. That seam in the ice, by the gate.",
+            as(:reptin, "Something in there knows my name. We look first.")])
+    else
+      say(["Something in the seam beside the gate is pulling at you. You look first."])
+    end
+    Stage.cleanup rescue nil
+    Stage.walk($game_player, [1]) rescue nil         # one step back from the door
+  end
+
+  # The ghost's whereabouts while she waits for you at the bier (between her two beats).
+  def ghost_actor(bier)
+    g = ($game_map.events.values.find { |e| e.name == "stage_green_ghost" } rescue nil)
+    return g if g
+    g = (bier ? Stage.actor(:green_ghost, bier.x, bier.y + 1, 2, graphic: "FT_green_ghost") : nil) rescue nil
+    g.instance_variable_set(:@opacity, 190) if g
+    g
+  end
+
+  # SC 5.07 - The ghost with her face (Alberica's future self; never confirmed in
+  # Act I). On the path now (the Heart's door waits for her), and in two beats
+  # with an action between (context 05 M5-8): one, the Heart, the wolves, the
+  # hag's plan and Reptin's choice; then you take what she left on the bier;
+  # two, the blessing, the tips, the rule and the prophecy.
   def order_ghost(event_id = nil)
     return talk(:bier_after, event_id) if flag?(:ghost_blessing)
-    me = herald?(:alberica)
     bier = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
+    return order_ghost_blessing(bier) if flag?(:ghost_beat_one)
+    me = herald?(:alberica)
+    rep = herald?(:reptin)
     Stage.overlay("O-03", opacity: 200, fade: 20)
     say(["The air in here is still and reverent. Silver lichen on the ceiling gives a faint glow.",
-         "On a stone bier draped in tattered black cloth lies a dwarf woman, perfectly preserved by the cold:",
-         "dark green robes trimmed with fur, hands crossed on her chest, wisps of white hair round a stern, noble face.",
-         "Melted-down candles stand round the bier. Animal bones. Flowers, dead a long time. Someone kept a vigil here once.",
+         "On a stone bier lies a dwarf woman in dark green robes, kept whole by the cold.",
          "As you step closer, the air warms a few degrees. Your breath stops frosting."], event_id)
     say(["The corpse's eyes fly open, glowing a soft white.",
-         "She sits up without moving her limbs, as if lifted by hands you can't see,",
-         "and a translucent spirit steps out of the body onto the floor."])
-    ghost = begin
-      bier ? Stage.actor(:green_ghost, bier.x, bier.y + 1, 2, graphic: "FT_green_ghost") : nil
-    rescue StandardError
-      nil
-    end
-    ghost.instance_variable_set(:@opacity, 190) if ghost
+         "A translucent spirit rises out of the body, as if lifted, and steps down onto the floor."])
+    ghost_actor(bier)
     say(["GHOST: You have come at last.",
          "When she turns, she has Alberica's face, decades older.",
          me ? "(You have my face.)" : "ALBERICA: You have my face.",
          "GHOST: I borrowed it. I'll give it back when you're done.",
-         "GHOST: I am the last guardian of the Order of Life and Death. And you... you carry the fate of this cycle in your hands."])
+         "GHOST: I am the last guardian of the Order of Life and Death."])
     if counter(:loop_count) > 0
       say(["GHOST: (quieter) You held her still. I know. I'm the one who held her.",
            "GHOST: Holding isn't keeping. Find the song."])
@@ -704,77 +752,94 @@ module FrostThaw
     if (state[:bargain_memory] || 0) > 0
       say(["GHOST: (very quietly) And once, you let the hag have the little one. I remember. Don't. Please."])
     end
-    # her locket, recognised (or given, if you never found it)
     if flag?(:order_locket)
       say(["Her eyes go to the locket at your belt.",
            "GHOST: You found it. I dropped it the day the gnolls came. I wondered where it went."])
-    else
-      say(["GHOST: Here. You'll need this more than she does.",
-           "She lifts a silver locket from the corpse's neck, half sun, half moon, and lays it in your hand."])
-      give_key(:FT_ORDERLOCKET)
-      set_flag(:order_locket)
     end
-    # the Order's history
-    say(["GHOST: Listen, because I only get to say this once.",
-         "GHOST: The Order kept the balance in this land between life and death. We kept the Heart.",
-         "GHOST: Under this chasm is a root. The last living root of the World Tree the Frostmaiden cut down.",
-         "GHOST: It can drink life to stave off death. End a curse. End a winter, even. But the cost is terrible.",
-         "GHOST: We swore never to use it lightly. It was a last resort. More a promise than a weapon.",
-         "GHOST: Then gnolls came. Yeenoghu's. They found the sanctum and broke in, laughing.",
-         "GHOST: My companions died in the feast hall. I sealed the doors from the inside, with the same rite you used.",
-         "GHOST: Then I gave myself to the wards to make them hold. (She glances at the body on the bier.) They held.",
-         "GHOST: The gnolls' laughing is still down there, at the bottom of the rift. It's all that's left of them."])
-    say([herald?(:reptin) ? "GHOST: (to you) And you. Child of the wolf." : "GHOST: (to Reptin) And you. Child of the wolf.",
-         "GHOST: Wolves were the wardens of this place. The Children of the Wolf, bound by oath, generations ago.",
-         "GHOST: Their gift was long life and great strength to guard the Heart. Its price was the moon.",
-         "GHOST: That bite didn't find you by chance. It found the warden already in your blood.",
-         "GHOST: The curse in your blood is no curse at all. It's a sacred charge.",
-         "GHOST: Only a wolf bound by honour can stand watch over the Heart without falling to its temptation."])
-    # the hag's scheme, and what she isn't telling you
-    say(["GHOST: The hag has been unravelling the wards one by one. I couldn't stop her. I can't leave this room.",
-         "GHOST: She means to drain the root and become winter herself.",
-         me ? "(Why does that sound like something you already knew?)" : "ALBERICA: ...Why does that sound like something I already knew?",
-         "GHOST: Yes, she would end this winter. And in doing it she'd take the power for herself.",
-         "GHOST: She'd become something far worse than a winter: a blight on life and death both.",
-         "GHOST: Whatever she's promised you, it ends the Rime for a season at most. And it makes her strong.",
-         "GHOST: And the innocent she means to kill on that altar is a yeti child. A baby. Prevent this atrocity. Please."])
+    # the Order's history, and one name for the thing it kept
+    say(["GHOST: The Order kept the balance here, between life and death. We kept the Heart.",
+         "GHOST: The Heart is a root. The last living root of a World Tree.",
+         "GHOST: The Frostmaiden felled that tree long ago. This root is all of it that's left.",
+         journey? ? "You think of Rootspire's roots, the ones you climbed as a kid. This one feels the same." : nil,
+         cl(:reptin, "(quietly) I can feel it. Under the floor. Like a pulse."),
+         "GHOST: It can drink life to stave off death. End a curse, or a winter. The cost is dire.",
+         "GHOST: We swore never to use it lightly. More a promise than a weapon.",
+         "GHOST: Then the gnolls came, who pray to a hyena-headed demon. They broke in, laughing.",
+         cl(:shade, "(very quiet) The feast hall."),
+         "GHOST: My companions died there. I sealed the doors, and gave myself to the wards."].compact)
     ghost_questions
-    say([herald?(:reptin) ? "GHOST: (gently, to you) Curing you means cutting the bond. The chasm would lose its last warden." :
-                            "GHOST: (gently, to Reptin) Curing you means cutting the bond. The chasm would lose its last warden.",
-         "GHOST: I won't choose for you. The land needs its guardian. But it has to be your choice.",
-         "GHOST: You can put it down, or you can carry it."])
-    kneel = Stage.herald(:reptin, -1, 0, 8)
+    # the wolves, the charge, and the door she means
+    say([rep ? "GHOST: (to you) And you. Child of the wolf." : "GHOST: (to Reptin) And you. Child of the wolf.",
+         "GHOST: Wolves were the wardens here. The Children of the Wolf, bound by oath, long ago.",
+         "GHOST: Their gift was long life and great strength. Its price was the moon.",
+         cl(:reptin, "(very still) The bite."),
+         "GHOST: It didn't find you by chance. It found the warden already in your blood.",
+         "GHOST: The curse in your blood is no curse at all. It's a sacred charge.",
+         "GHOST: Only a wolf bound by honour can stand watch over the Heart and not fall to it.",
+         cl(:alerion, "And the hag knows it."),
+         "GHOST: She came up the rift with her troll, where my wards are thinnest.",
+         rep ? "GHOST: The gate was never the door she wanted, child. You are." :
+               "GHOST: (to Reptin) The gate was never the door she wanted, child. You are.",
+         "GHOST: Cut the wolf out of you, and the Heart has no warden. Then it's hers.",
+         cl(:reptin, "(very quietly) And she offered to.")].compact)
+    say(["GHOST: She means to drain the root and become winter herself.",
+         me ? "(Why does that sound like something I already knew?)" : "ALBERICA: ...Why does that sound like something I already knew?",
+         "GHOST: She'd end this winter, yes. Then she'd be a blight on life and death both.",
+         "GHOST: And the innocent she means to kill on that altar is a yeti child. A baby.",
+         cl(:meat_meat, "Nobody is killing baby yeti. Meat Meat has decided.")].compact)
+    say([rep ? "GHOST: (gently, to you) Curing you cuts the bond. The chasm would lose its last warden." :
+               "GHOST: (gently, to Reptin) Curing you cuts the bond. The chasm would lose its last warden.",
+         "GHOST: I won't choose for you. Put it down, or carry it. It has to be your choice."])
+    kneel = stand_in(:reptin, -1, 0, 8)
     Stage.pose(kneel, "P-REP-01", 3, per: 7) if kneel
     speak(:reptin, "I'll keep it. The wolf. The watch. All of it. Not because I can't put it down.",
                    "...I'll keep it.")
     sayc([as(:reptin, "Because somebody has to hold it."),
           "GHOST: (smiling) I know. I remember.",
-          "GHOST: Child of the wolf, I sense the turmoil in you. We asked so much of your forebears... I am sorry.",
-          "GHOST: But know that your nature, guided by a noble heart, is a gift to this world. Not a curse."])
-    # the boons
-    say(["GHOST: The locket. Give it here a moment.",
-         "She closes her ghostly hand over it, and it fills with a cold silver light.",
-         "GHOST: It will shine true in the face of illusion, and keep the worst of the cold off you.",
-         "GHOST: And take this. (A silver dagger, from beside the bier.) It was mine. Fey things don't like it. Hags are fey."])
-    set_flag(:locket_talisman)
+          "GHOST: We asked so much of your forebears, child of the wolf. I am sorry.",
+          "GHOST: (pointing to the bier) She left you something. Take it."])
+    # the kneeling stand-in goes; the ghost waits by the bier for you
+    if kneel
+      Stage.unpose(kneel)
+      Stage.remove_actor(kneel)
+      $game_player.transparent = false if rep
+    end
+    set_flag(:ghost_beat_one)
+    chasm_goal
+  end
+
+  # Beat two: what she left on the bier, her blessing, and her last words.
+  def order_ghost_blessing(bier)
+    me = herald?(:alberica)
+    Stage.overlay("O-03", opacity: 200, fade: 20) if !Stage.overlay?("O-03")
+    ghost = ghost_actor(bier)
+    say(["Beside the body lies a silver dagger. You take it. The hilt is warm."])
     give(:FT_ORDERDAGGER)
     set_flag(:order_dagger)
-    say(["GHOST: When you meet her: destroy her black staff. It focuses her power.",
+    if !flag?(:order_locket)
+      say(["Round the body's neck hangs a silver locket, half sun, half moon. You take that too."])
+      give_key(:FT_ORDERLOCKET)
+      set_flag(:order_locket)
+    end
+    say(["GHOST: The dagger was mine. Fey things don't like it. Hags are fey.",
+         "GHOST: Now the locket. Give it here a moment.",
+         "She closes her ghostly hand over it, and it fills with a cold silver light.",
+         "GHOST: It will shine true in the face of illusion, and keep the worst of the cold off you.",
+         cl(:alberica, "(very quietly) It's warm. Like a hand.")].compact)
+    set_flag(:locket_talisman)
+    say(["GHOST: When you meet her: break her black staff. It focuses her power.",
          "GHOST: And the troll she keeps. Only flame can quell the ice-eater.",
          "GHOST: If the Heart drinks innocent blood, it wakes all the way. Then nothing will stop it.",
-         "GHOST: But if it tastes a life freely given, or a life not yet begun, it may be satisfied without being corrupted.",
-         "GHOST: The Order needs wardens again. Children of the Wolf, and all who stand beside them. That's you, now. All of you."])
+         cl(:alerion, "And if it drinks nothing?"),
+         "GHOST: It will drink. But a life freely given, or a life not yet begun, may satisfy it.",
+         "GHOST: The Order needs wardens again. Children of the Wolf, and all who stand with them.",
+         "GHOST: When wolf's howl meets innocent's cry, in the crone's shadow, the Wheel turns.",
+         me ? "(Who are you?)" : "ALBERICA: Who are you?",
+         "GHOST: (her light thinning) Time is a wheel, dear. Go. She's started."].compact)
     set_flag(:tip_staff)
     set_flag(:tip_flame)
     set_flag(:order_wardens)
-    say(["GHOST: Confront the witch. Save the innocent. Don't let the balance be destroyed.",
-         "GHOST: I'll help as I can, but my strength is tied to this crypt.",
-         "GHOST: (her light thinning) My time here wanes. I can already feel the wheel stirring me to my rest.",
-         "GHOST: When the howl of the wolf meets the cry of the innocent under the crone's shadow,",
-         "GHOST: the Wheel of Life and Death turns anew.",
-         me ? "(Who are you?)" : "ALBERICA: Who are you?",
-         "GHOST: Time is a wheel, dear. Go. She's started."])
-    sayc([cl(:meat_meat, "Ghost lady is singing lady. Meat Meat says nothing. Meat Meat is very good at secrets.")])
+    sayc([cl(:meat_meat, "(to you, very quietly) Ghost lady is singing lady. Meat Meat says nothing.")])
     Stage.hide(ghost) if ghost
     say(["She lies back down into the body on the bier, and the body closes its eyes.",
          "Then it ages in a breath: skin to parchment, parchment to dust. The lichen light dims.",
@@ -786,6 +851,7 @@ module FrostThaw
     set_flag(:reptin_charge)
     set_flag(:ghost_blessing); chasm_goal
     $game_switches[SW_GHOST_REST] = true if $game_switches
+    $game_map.need_refresh = true if $game_map
     add_counter(:story_beats)
   end
 
@@ -807,9 +873,9 @@ module FrostThaw
              "GHOST: or the Heart darkens and demands more. And more. It never stops at one."])
       when :cure
         say(["GHOST: (her face hardening) Of course she did. That's the hook in it.",
-             herald?(:reptin) ? "GHOST: Cut the wolf out of you and you cut the last warden from the Heart. Then the door's wide open." :
-                                "GHOST: Cut the wolf out of him and you cut the last warden from the Heart. Then the door's wide open.",
-             "GHOST: Her cure is a ploy, child. It always was."])
+             herald?(:reptin) ? "GHOST: A cure for you is the warden gone. She wants the wolf out of the way, child." :
+                                "GHOST: A cure for him is the warden gone. She wants the wolf out of the way, child.",
+             "GHOST: Her cure is a ploy. It always was."])
       when :glimmer
         say(["GHOST: (a long look at you, then at the journal) Someone who wanted very badly to save someone.",
              "GHOST: You'll see. Not yet."])
@@ -824,14 +890,16 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The Heart of the Chasm
   #-----------------------------------------------------------------------------
+  # The Heart, seen: one object (the root of a World Tree, under red ice), the
+  # cub, the mirrors (context 05 M5-2). The acorn comes out on the whisper row.
   def scene_heart_enter
-    say(["The passage climbs into a great cavern. The ceiling is lost in shadow.",
-         "On a dais in its centre, four spires of ice cradle an orb of blood-red ice.",
-         "It pulses with a faint light, like a slow heartbeat. Veins of crimson and cobalt crackle through it.",
-         "Round the dais stand stone pillars carved with skulls and the glyphs of the four seasons.",
-         "Between them, a yeti cub hangs in black iron chains, gagged, white fur matted with tears.",
-         "Beside the dais an iron cauldron bubbles over blue flames. White vapour rolls round the dais like a caul.",
-         "All around the cavern stand tall mirrors of frost-rimmed ice. In every one, a crone is smiling."])
+    say(["The passage climbs into a great cavern. The ceiling is lost in shadow."])
+    Stage.pan_to(12, 8)
+    say(["On a dais, four spires of ice cradle an orb of blood-red ice. It beats, slow as a heart.",
+         "Through the red ice, something dark and branching: a root, thick as a man. Alive.",
+         "A yeti cub hangs in black chains between the pillars, gagged, white fur matted with tears.",
+         "All round the cavern stand tall mirrors of ice. In every one, a crone is smiling."])
+    Stage.pan_back
     set_flag(:heart_entered); chasm_goal
   end
 
@@ -860,11 +928,15 @@ module FrostThaw
       end
       say(["Kanan yelps and slinks behind a pillar, leaving a hank of white pelt on the ice.",
            "The troll crashes down and lies there, steaming."])
-      say(["(\"Only flame can quell the ice-eater.\" Where your fire caught it, the troll's flesh stays torn.)"]) if flag?(:tip_flame)
+      if flag?(:troll_burned)
+        say(["(\"Only flame can quell the ice-eater.\" Where your fire caught it, the troll's flesh stays torn.)"])
+      else
+        say(["The troll lies steaming. Already, its torn flesh is starting to knit."])
+      end
       set_flag(:minions_down)
     end
     if !flag?(:thredra_beaten)
-      say(["THREDRA: Useless, the both of them. Let's dance upon the glass, and see who shatters first."])
+      say(["THREDRA: Useless, the both of them. We danced on the glass at the Stones, dearies. Again!"])
       won = thredra_battle
       if !won
         state[:chasm_nightmare] = true
@@ -914,23 +986,30 @@ module FrostThaw
   # you let her have the cub.
   def thredra_parley
     rep = herald?(:reptin)
-    say(["Beside the Heart stands the hag, no longer hiding. Here, in her own lair, she looks entirely at home.",
-         "A tall, gaunt crone with skin the colour of a bruise and a mane of white hair whipping in a wind you can't feel.",
-         "A long hooked nose. Fingers that end in black talons. Eyes like pale blue embers, cold and full of malice.",
-         "A cloak of patchwork skins. Round her neck, a necklace of what look like frozen baby teeth.",
-         "In one claw, a tall black staff of twisted wood, crackling blue. Tiny frozen sprites and animals hang from it like ornaments.",
-         "At her right hand, a winter wolf, lips curled, icy vapour steaming from its mouth: Kanan.",
-         "At her left, an ice troll, jagged claws, chunks of its flesh replaced by cloudy crystal.",
-         "THREDRA: Ssooo, my dearies, you made it after all! I was beginning to worry.",
-         "THREDRA: You've caused me some trouble, yes... but no matter. You're just in time for the grand finale!",
+    alb_rune = herald?(:alberica) ? "your" : "Alberica's"
+    # the hag in full, on camera (notes 05 E2); Kanan recognised (M5-6); her two
+    # motives joined, Auril's seamstress and the new Winter (M5-7)
+    Stage.pan_to(11, 8)
+    say(["By the Heart stands the hag, bruise-coloured, white hair in a wind you can't feel.",
+         "A black staff hung with frozen things. At her heel, Kanan. At her side, an ice troll."])
+    if with_or_is?(:reptin)
+      speak(:reptin, "(very quietly) Kanan. So this is where you ran.", "(very quietly) ...Kanan.")
+      say(["KANAN: Granny feeds us better than the giant ever did."])
+    end
+    say(["THREDRA: Ssooo, my dearies, you made it after all! I was beginning to worry.",
+         "THREDRA: And you fetched me my wolf. Good dearies.",
          "She gestures with her staff. The chains hoist the cub up off the floor, and it yelps.",
-         "THREDRA: My little seamstress's samples, all in a row. Do you know what this is? (the root, pulsing under the ice)",
+         "THREDRA: (the root beats under the red ice) Do you know what this is?",
          "THREDRA: The last living piece of the old World Tree.",
-         cl(:shade, "She talks a lot for someone who's about to lose."),
-         "THREDRA: It remembers every winter there ever was. Feed it a life, and it gives me all of them.",
-         "THREDRA: Auril's curse will be broken this night, and with it I'll claim my reward.",
-         "THREDRA: Not her winter. Mine. I'll be the new Winter, dearies. Not so fickle as Auril.",
-         "THREDRA: Now. As promised..."].compact)
+         "THREDRA: It remembers every winter there ever was. Feed it a life, and they're all mine.",
+         "Under the red ice, the root beats faster.",
+         "THREDRA: Not her winter. Mine. I'll be the new Winter, dearies. Not so fickle as Auril."])
+    if with_or_is?(:alberica)
+      speak(:alberica, "You said you were her seamstress.", "...Her seamstress.")
+      say(["THREDRA: (a look at #{alb_rune} rune) And I've cut her a lovely coat. I'll hand it over.",
+           "THREDRA: Once I'm wearing the winter myself."])
+    end
+    say(["THREDRA: (to you) And Granny's last glass sends the lost one home. Everybody wins."]) if journey?
     say(["She points the staff at #{rep ? 'you' : 'Reptin'}. Magic pulses out of it."])
     if rep
       say(["Something takes hold of the wolf in you and pulls, like a rope tied round your heart.",
@@ -946,7 +1025,7 @@ module FrostThaw
          "THREDRA: (her eyes sliding to #{rep ? 'you' : 'Reptin'}) I always keep my end of a bargain.",
          "The Heart glows brighter, as if it knows what's coming. The whole cavern holds its breath.",
          "The cub sobs behind its gag.",
-         "THREDRA: Well, my dear wolves... will you honour our deal? Or do you seek to renegotiate?"])
+         "THREDRA: Well, dearies... shall we shake on it? Or would you rather haggle?"])
     if (state[:bargain_memory] || 0) > 0
       say(["THREDRA: (purring) You were so sensible, last time round. Weren't you? Heehee."])
     end
@@ -959,6 +1038,7 @@ module FrostThaw
     if choice == :agree
       if pbConfirmMessage(_INTL("Let her kill the cub? There is no taking this back."))
         say([cl(:alberica, "No. No, darling, you can't..."), cl(:reptin, "Don't. Don't do this for me.")].compact)
+        Stage.pan_back
         return :agreed
       end
       choice = :never
@@ -979,6 +1059,7 @@ module FrostThaw
                             "She lunges for the cub out of pure spite. Shade is already moving, and she snatches her claw back.",
           cl(:meat_meat, "(very quiet) Touch baby yeti and Meat Meat takes your face.")])
     say(["The frost on #{rep ? 'your' : "Reptin's"} legs cracks and falls away."])
+    Stage.pan_back
     nil
   end
 
@@ -1018,13 +1099,18 @@ module FrostThaw
     # the time flood (E-08): hourglass shards pour their light down into the root
     root_at = alb || $game_player
     Stage.fx("E-08", root_at, oy: 72, hold: true, wait: false) if root_at
-    say(["Out of the shards pours everything she stole: hours, nights, whole winters, frozen moments.",
+    say(["Out of the shards pours everything she stole: hours, nights, winters, frozen moments.",
+         "The month she took from the fishers on the ice. The years she took from everyone before.",
          "A flood of time, with nowhere to go but down into the root. Into the seed.",
          "The seed drinks it."])
     pbSEPlay("Saint7") rescue nil
-    px, py = ([$game_player.x, $game_player.y] rescue [0, 0])
-    green = Stage.actor(:egg_green, px - 1, py + 1, 2, graphic: "K-EGG-02")
-    white = Stage.actor(:egg_white, px + 1, py + 1, 4, graphic: "K-EGG-02")
+    # the eggs crack in the arms that carried them (notes 05 E24)
+    rep_ev = stand_in(:reptin, -1, 0, 2)
+    sh_ev = stand_in(:shade, 1, 0, 2)
+    gx, gy = rep_ev ? [rep_ev.x, rep_ev.y + 1] : [$game_player.x - 1, $game_player.y + 1]
+    wx, wy = sh_ev ? [sh_ev.x, sh_ev.y + 1] : [$game_player.x + 1, $game_player.y + 1]
+    green = Stage.actor(:egg_green, gx, gy, 2, graphic: "K-EGG-02")
+    white = Stage.actor(:egg_white, wx, wy, 4, graphic: "K-EGG-02")
     if green || white
       Stage.pose(green, "K-EGG-02", 0, frames: [0], per: 1)
       Stage.pose(white, "K-EGG-02", 1, frames: [0], per: 8)
@@ -1033,18 +1119,23 @@ module FrostThaw
         Stage.pose(white, "K-EGG-02", 1, frames: [f], per: 6)
       end
     end
-    say(["In Reptin's arms the Moon-Touched Egg cracks, and in Shade's the Frost Egg answers it.",
-         "Two wyrmlings tumble out together."])
+    say([herald?(:reptin) ? "In your arms the Moon-Touched Egg cracks, and in Shade's the Frost Egg answers it." :
+         herald?(:shade) ? "In Reptin's arms the Moon-Touched Egg cracks, and in yours the Frost Egg answers it." :
+                           "In Reptin's arms the Moon-Touched Egg cracks, and in Shade's the Frost Egg answers it."])
+    sayc([cl(:reptin, "\"It needs time, and the world hasn't got enough.\" Well. Now it has."),
+          "Two wyrmlings tumble out together."])
     Stage.panel("S-07")
     say([herald?(:meat_meat) ? "One is moss-green flecked with silver, gold-eyed. It grabs a fistful of your long white hair." :
                                "One is moss-green flecked with silver, gold-eyed. It grabs a fistful of Meat Meat's long white hair.",
          "The other is white as new frost, with wings like leaves of ice.",
-         "She looks at Shade, tilts her head the way someone used to, and hums four notes.",
-         "SHADE: (very quietly) ...Hi."])
+         herald?(:shade) ? "She looks at you, tilts her head the way someone used to, and hums four notes." :
+                           "She looks at Shade, tilts her head the way someone used to, and hums four notes.",
+         as(:shade, "(very quietly) ...Hi.")])
+    sayc([cl(:alerion, "(softly) Frostina.")])
     Stage.panel_off
-    Stage.balloon(white, "B-05") if white
+    Stage.balloon(green, "B-05") if green
     say(["RAZZILITH: (no voice; a picture in all your heads, of flying) ...Fly?"])
-    mm = Stage.herald(:meat_meat, -1, 0, 6)
+    mm = stand_in(:meat_meat, -2, 0, 6)
     Stage.balloon(mm, "B-07", frames: 80) if mm
     speak(:meat_meat, "(sobbing and laughing) RAZZY. Meat Meat is not crying. That is sap. RAZZY.", "(very quietly) ...Razzy.")
     take_key(:FT_MOONEGG)
@@ -1063,19 +1154,23 @@ module FrostThaw
     Stage.pose(alb, "P-ALB-03", 0, frames: [0, 1, 2], per: 6) if alb
     Stage.pose(mm, "P-MM-03", 0, frames: [0, 1, 2], per: 6) if mm
     Stage.overlay("O-06", fps: 5, fade: 0, wait: true)        # the screen cracks like a mirror
-    say(["Time comes loose. The floor of the world tips. You all fall into the shards."])
+    sayc(["Time comes loose. The floor of the world tips. You all fall into the shards.",
+          cl(:alberica, "(falling) The whole world just turned over.")])
     set_flag(:reversal)
     $game_switches[SW_REVERSAL] = true if $game_switches
     add_counter(:story_beats)
     scene_falling
   end
 
-  # SC 5.10 - Falling (Act I epilogue)
+  # SC 5.10 - Falling (Act I epilogue): the Verdant Reversal, named, and the fall
+  # forward in time to the player's home (context 05 M5-9). The glimpses come
+  # first, so the fall only ever runs forward.
   def scene_falling
     $game_screen.start_tone_change(Tone.new(120, 140, 80, 0), 30) rescue nil
     Stage.cleanup rescue nil
     Stage.overlay("O-07", scroll_y: 1, opacity: 220, above_panels: true, fade: 20)
     say(["You fall through moments."])
+    chasm_falling_glimpses
     Stage.panel("S-08a")
     say(["A sapling bursts from thawed soil above a frozen town."])
     Stage.panel("S-08b")
@@ -1084,15 +1179,26 @@ module FrostThaw
     Stage.panel("S-08c")
     say(["Two young dragons, one green and one white, circle a tree that pierces the aurora."])
     Stage.panel("S-08d")
-    say(["A tavern-keeper carves heroes into living wood. Her chisel hesitates over a small sixth figure."])
+    say([journey? ? "A tavern-keeper carves heroes into living wood. Her chisel stops at a small sixth figure." :
+                    "A tavern-keeper carves five heroes into living wood. One of them has your face.",
+         "Under them she cuts the year it began: YEAR 0 OF THE VERDANT REVERSAL."])
     if journey?
+      say(["Deep in the roots, a digger holds a shard of glass up to her lamp. \"Hag's glass!\""])
       Stage.panel("S-08e")
-      say(["A festival. A lantern. Your own face, looking in."])
+      say(["A festival. A lantern. Your own face, looking in.",
+           "Four hundred years, all at once. You know how this story ends. You fell asleep to it."])
     end
     Stage.panel_off
-    chasm_falling_glimpses
-    say([as(:alerion, "(somewhere close, in the fall) Hold on to something."),
-         cl(:alberica, "I'm holding on to you, pretty boy. Don't make it weird.")].compact)
+    sayc([cl(:alerion, "(somewhere close, in the fall) Hold on to something.")])
+    hold = herald?(:alberica) ? _INTL("Hold on to Alerion.") : _INTL("Hold on to Alberica.")
+    c = pbMessage(_INTL("You're falling..."), [hold, _INTL("Reach for the wyrmlings.")], 0)
+    if c == 1
+      set_flag(:fall_reached_wyrmlings)
+      say(["You catch a wing. It slips through your fingers like a tide going out."])
+    else
+      set_flag(:fall_held_on)
+      sayc([cl(:alberica, "I'm holding on to you, pretty boy. Don't make it weird.")])
+    end
     speak(:meat_meat, "Holding Razzy! Meat Meat is holding... Razzy? RAZZY!", "...Razzy?")
     say(["Both wyrmlings are pulled out of your arms, back toward the root.",
          "One picture comes from both of them, fading: Meat Meat's face, Shade's face, and the word WAIT."])
@@ -1146,7 +1252,9 @@ module FrostThaw
     state[:goal] =
       if flag?(:heart_entered)          then "The hag, at the Heart. The cub is in chains by the dais."
       elsif flag?(:ghost_blessing)      then "Stop the hag at the Heart. Break her staff; fire for the troll."
-      elsif flag?(:gate_open)           then "On through the Guardian's Gate, to the Heart. A seam in the ice beside it hides something."
+      elsif flag?(:ghost_beat_one)      then "Take what the ghost left you on the bier."
+      elsif flag?(:heart_door_held)     then "Reptin won't go on yet. The seam in the ice beside the gate."
+      elsif flag?(:gate_open)           then "On through the Guardian's Gate. A seam has opened in the ice beside it."
       elsif flag?(:bridge_gusted)       then "Open the Guardian's Gate: a gift of life, a gift of death."
       elsif flag?(:rift_arrived)        then "Cross the bridge over the rift."
       elsif flag?(:seen_illusion_fork)  then "The tunnel forks. Find the true way down."

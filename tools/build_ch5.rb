@@ -103,9 +103,9 @@ u.event(15, 31, "Fallen ice", [                                                 
   { graphic: "", through: true },
   { switch: SW_ICEFALL, graphic: "", tile_id: 792, script: "FT.chasm_fallen_ice(@event_id)" }
 ])
-u.event(17, 31, "Something gleaming", [
+u.event(17, 31, "Something gleaming", [                                            # (it gleams: an item ball, notes 05 E22)
   { graphic: "", through: true },
-  { switch: SW_ICEFALL, graphic: "", tile_id: 792, script: "FT.chasm_locket(@event_id)" },
+  { switch: SW_ICEFALL, graphic: "BWPokeball", direction: 2, script: "FT.chasm_locket(@event_id)" },
   { self_switch: "A", graphic: "", through: true }
 ])
 # the feast hall
@@ -198,7 +198,12 @@ r.event(35, 27, "Campfire", [{ graphic: "", tile_id: 582, script: "FT.chasm_camp
 end
 r.sign(29, 6, :gate_arch)
 r.event(34, 8, "Hollow wall", [{ graphic: "", through: false, script: "FT.hollow_wall(@event_id)" }])
-r.door(31, 1, ID[:heart], 12, 46, 8, name: "Door Heart")
+# the way on to the Heart: until the ghost has spoken, Reptin stops you here
+# (context 05 M5-8: the sanctum is on the path)
+hd = r.door(31, 1, ID[:heart], 12, 46, 8, name: "Door Heart")
+hd.pages[0].condition.instance_variable_set(:@switch1_valid, true)
+hd.pages[0].condition.instance_variable_set(:@switch1_id, SW_GHOST_REST)
+hd.pages.unshift(r.build_page(hd.pages[0], { trigger: 1, script: "FT.heart_door_held(@event_id)" }))
 save(r, :rift)
 
 # 2045: the hidden sanctum: a bier under silver lichen, and the last guardian
