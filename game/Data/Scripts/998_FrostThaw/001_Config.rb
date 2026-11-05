@@ -44,13 +44,14 @@ module FrostThaw
   HERALDS = {
     alberica:  { name: "Alberica",            gender: 1, starter: :LUTLING,       chapter_ready: true,
                  blurb: ["Dwarf bard, the Dwarf of Song. Her Pendant of Black Ice will not stay lost.",
-                         "\"I sing, I drink, and I'm told I'm a terrible influence.\""] },
+                         "\"Write it down. No, sing it. Paper burns.\""] },
     reptin:    { name: "Reptin",              gender: 0, starter: :BULBASAUR, chapter_ready: true,
                  blurb: ["Elf druid, exile of the Sacred Flame. His Medallion of Everfrost hums near frost magic.",
-                         "\"Leave the talking to me. Everybody loves me, eventually.\""] },
+                         "\"Winter has a place. Just not all of it.\""] },
     alerion:   { name: "Alerion Froststride", gender: 0, starter: :ZORUA,       chapter_ready: true,
-                 blurb: ["Eladrin ranger, once frozen outside of time. His Frostbound Ring knows this place.",
-                         "\"It's cold. That's all I know.\""] },
+                 blurb: ["Eladrin ranger, a fey elf, once frozen outside of time.",
+                         "His Frostbound Ring knows this place.",
+                         "\"No.\""] },
     meat_meat: { name: "Meat Meat",           gender: 1, starter: :NOIBAT,   chapter_ready: true,
                  start: [2001, 20, 23, 4],   # already in Targos, behind the hay bales
                  blurb: ["Goblin rogue. Long white hair, violet eyes, other people's pockets.",
