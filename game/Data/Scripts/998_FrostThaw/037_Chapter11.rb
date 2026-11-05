@@ -144,7 +144,8 @@ module FrostThaw
     say(["The sky above the Canopy tears open."])
     Stage.walk(iskra, [PBMoveRoute::ChangeSpeed, 5] + [PBMoveRoute::Down] * 4) if iskra
     say(["Through the thinned Wall, a vast white roc drops out of the night, aurora trailing from her wingtips.",
-         "Iskra."])
+         "Iskra.",
+         as(:alerion, "(barely breathing) That's the roc. The bird that dropped her egg.")].compact)
     if frostina
       Stage.fx("E-04", frostina, frames: 10, hold: true, wait: true, oy: 8)   # the crystal closes over her
       frostina.character_name = "FT_frostina_crystal" rescue nil
