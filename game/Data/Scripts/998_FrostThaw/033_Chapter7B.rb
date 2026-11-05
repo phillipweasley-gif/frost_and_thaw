@@ -148,7 +148,7 @@ module FrostThaw
     say(["The saboteur scrambles away up the tunnel."])
     if flag?(:cache_1_safe) && flag?(:cache_2_safe)
       sayc([cl(:alerion, "Fire to make winter. Summer's promises don't add up."),
-            cl(:alerion, "Somebody's counting on that."),
+            cl(:alerion, "Somebody's banking on that."),
             cl(:meat_meat, "Ice Prince did maths. Meat Meat is proud."),
             flag?(:hew_down) ? "HEW: (from the west tunnels) Caches safe? Then come and see me in the Annex." : nil,
             flag?(:hew_down) ? "HEW: We need to talk. Properly." : nil])
@@ -388,7 +388,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   WELL_VISIONS = {
     1 => ["A woman in white fur walks through a garden of glass trees,", "on an island shaped like a snowflake."],
-    2 => ["Thirty years ago: a hand of mirror glass reaches up from under the roots, and takes hold of one."],
+    2 => ["Long ago: a hand of mirror glass reaches up from under the roots, and takes hold."],
     3 => ["A vault of white ice under a glacier. In it, something with wings spread over a frozen eye."]
   }
 
@@ -449,7 +449,7 @@ module FrostThaw
     asked << key
     set_flag(:attendant_spoke)
     case key
-    when :summer then say(["ATTENDANT: Summer is a coat.", "ATTENDANT: Summer has been wearing a man for thirty years."]); set_flag(:knows_summer_coat)
+    when :summer then say(["ATTENDANT: Summer is a coat."]); set_flag(:knows_summer_coat)
     when :heart  then say(["ATTENDANT: The cold man's heart is in the engine.", "ATTENDANT: The engine is in the hag's old kitchen."])
     when :self   then say(["ATTENDANT: You aren't on her wheel. That's why the glass let you through."]); set_flag(:not_on_wheel)
     end
@@ -467,11 +467,11 @@ module FrostThaw
           "SELRAE: I thought a little winter would balance this endless summer. That's all I wanted.",
           cl(:reptin, "(gently) Go on, Matron. We're listening."),
           "SELRAE: They gave the Frost Saint's heart to Summer. I knew it was wrong.",
-          "SELRAE: I didn't know it was her.",
+          "SELRAE: The Halo had a friend down here too. White hair. Lovely manners.",
           herald?(:alberica) ? "(Avarice.)" : (with_or_is?(:alberica) ? "ALBERICA: (very plainly) Avarice." : "Avarice."),
           "SELRAE: (closing her eyes) I've read that name in the oldest ledgers. I hoped it was a story.",
           cl(:meat_meat, "Not a story. Meat Meat has the scars."),
-          "SELRAE: She has a vault. Far north, under the glacier, where the goddess keeps what she can't bear to look at.",
+          "SELRAE: She wants a vault. Far north, under the glacier, where the goddess keeps what she can't bear to look at.",
           "SELRAE: (softly, like a prayer) The White Womb. That's what the old priests called it. I never thought I'd say it aloud."], event_id)
     c = pbMessage(_INTL("What do you tell Selrae?"), [_INTL("\"Come home. Tell the Council.\""), _INTL("\"Come with us.\"")], 0)
     if c == 1

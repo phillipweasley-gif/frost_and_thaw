@@ -342,7 +342,7 @@ module FrostThaw
     sayc(["Kethan's hand closes on Ash's shoulder from behind. Neither of you heard him come. Neither did Ash.",
           "KETHAN: Rootwarden Ash. The Hall will hear you. Not me. The Hall.",
           "ASH: (as they lead him away) It's not the root that's hungry. It's whoever's holding the other end.",
-          cl(:alerion, "The Rite of the Long Gold. Avarice found a rope tied to the year and pulled."),
+          cl(:alerion, "The Rite of the Long Gold. Somebody's still holding the rope."),
           cl(:alberica, "Then we cut the rope, sweetheart. And pull her up with it.")].compact)
   end
 
@@ -921,7 +921,7 @@ module FrostThaw
             "KELYN: (reading the Guild seal) This came from the Guild's vault. Darrus. Darrus, what is this?",
             "DARRUS: (going grey) A construct came to me. Two years ago. One of hers. It had my ledgers. All of them.",
             "DARRUS: It wanted access to the Heartroot. And the box. I've been giving it... things. Little things.",
-            "SELRAE: Little things. Like a dig under the Heartroot, under Summer's seal.",
+            "SELRAE: Little things. Like a dig under the Heartroot, under a forged seal.",
             "Darrus runs. Out of the Hall, down the Wardens' stair, toward the water.",
             "KELYN: Let him go. He'll run to the Corsairs. They'll find him. ...Heralds. Thank you. I think.",
             cl(:meat_meat, "Meat Meat did the job right. Meat Meat feels fed.")].compact)
@@ -967,7 +967,7 @@ module FrostThaw
     sayc(["Frost on old brewing casks. Blue flame in cracked sconces. Cold that bites the lungs, in the middle of summer.",
           "Chanting from deeper in: \"Freeze it. Then burn what remains. Then nothing.\"",
           cl(:wyn, "(very quietly) The Frozen Flame. Stillness, and then fire. Not either. Both. Gods."),
-          cl(:alberica, "Auril and Avarice in one prayer. Somebody's been very creative with their heresy.")].compact)
+          cl(:alberica, "Frost and fire in one prayer. Somebody's been very creative with their heresy.")].compact)
   end
 
   def frozen_flame_altar(event_id = nil)
@@ -987,7 +987,7 @@ module FrostThaw
     end
     sayc(["EIRA VOSS: (her whisper echoing round the cellar as if it were a cathedral) You found our little church.",
           "She tilts her head too far, like a bird. Her eyes glitter. Her lips don't move.",
-          "EIRA VOSS: Eline wanted the cold. Avarice wants the fire. I want what comes after both. Silence.",
+          "EIRA VOSS: Eline wanted the cold. The forge wants fire. I want what comes after both. Silence.",
           "EIRA VOSS: Every soul I send down to the forge brings it closer. Yours would bring it very close."], event_id)
     return if !pbTrainerBattle(:FT_HALO, "Eira Voss", nil, false, 0)
     set_flag(:cellar_cleared)

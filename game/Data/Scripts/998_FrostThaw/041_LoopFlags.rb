@@ -38,7 +38,7 @@ module FrostThaw
     domain_mask domain_paw domain_shadow domains_open dragon_down dragon_launched
     eastway_started eline_spoke engine_dead engine_dead_heart fed_pack fell_through
     festival_night followed_koran forge_reached forge_seen fork_talked found_swaddling frost_egg
-    forge_camp_met frostina_hatched frostina_taken fungal_liaison garagai_axe garagai_vow gate_open
+    forge_camp_met summer_unmasked frostina_hatched frostina_taken fungal_liaison garagai_axe garagai_vow gate_open
     ghost_blessing glimmer_gone glimmer_has_rimefang glimmer_joined godspark_shadow golden_acorn
     good_mead_arrived good_mead_met good_mead_saved got_pokedex got_snowshoes got_splicers
     got_starter got_yeti_cub got_yetot grafting grafting_licence guild_dig_entered

@@ -121,7 +121,7 @@ module FrostThaw
     duergar_gate_morn_after: ["Below the gate's the Dragonforge. You'll hear it before you see it."],
     duergar_gate_sharl_after: ["Thank you. I didn't want to hold it any more."],
     duergar_gate_ulf_after: ["I'll stay up here. Somebody has to tell the others it's over. If it's over."],
-    duergar_tower_grik_after: ["You can see her from the rail. White hair. Red-gold eyes. I told you I don't look."],
+    duergar_tower_grik_after: ["You can see her from the rail. All that gold. Never blinks. I told you I don't look."],
     duergar_tower_nall_after: ["No more bolts. Whoever goes down there goes down without us shooting at them."],
     broken_duergar_after: ["...fire... replaces... ...", "(He goes back to chanting, softer now.)"],
     guardhold_pool: ["A pool of burning sap in a barracks of petrified root. Duergar sat around it until very recently.",
@@ -221,8 +221,8 @@ module FrostThaw
     say(["Under it, a hollow lined with oilcloth, the shape of a book. Empty.",
          "Caught in the fold, a scrap of paper in a neat white hand: \"Ledger to the tower. Nothing that matters stays below.\""])
     set_flag(:ledger_trail)
-    sayc([cl(:alberica, "The tower. Her rooms, at the top of the Council tower. Nobody's been up that stair in thirty years."),
-          cl(:reptin, "Then it's waiting for us up there. When the city lets us anywhere near a stair.")])
+    sayc([cl(:alberica, "\"The tower.\" Which one? This city's nothing but towers."),
+          cl(:reptin, "Then it's waiting up one of them. When the city lets us near a stair.")])
   end
 
   # A5's trap: the mirror-root effigy of Auril lashes out with psychic cold.
@@ -804,9 +804,9 @@ module FrostThaw
       end
     when :glaive
       if flag?(:var_story_known)
-        sayc([cl(:alerion, "Var's. The deal he made at the Split Dock. The night she took him.")])
+        sayc([cl(:alerion, "Var's. The deal he made at the Split Dock. ...Then where's Var?")])
       else
-        sayc([cl(:reptin, "The Marshal's badge. And an arms deal the Council never saw. Var had secrets before she ever wore him.")])
+        sayc([cl(:reptin, "The Marshal's badge. In her vault. ...Why does she have Var's badge?")])
       end
       set_flag(:corsair_arms_deal)
     end

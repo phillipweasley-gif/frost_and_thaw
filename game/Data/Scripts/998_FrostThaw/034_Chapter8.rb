@@ -437,13 +437,16 @@ module FrostThaw
            "Over the pool hangs the engine, beating slowly, unnaturally, like something refusing to die.",
            "Twelve root-spires ring the pool. On every one, two sets of runes: frost underneath, fire scarred on top.",
            "A big, scarred man in the Summer Marshal's gold stands at the engine's controls, his back to you.",
-           "KELYN: (over a sending-stone) Var? Var, thank the seasons...",
+           "KELYN: (over the sending-stone) Did you find him? Is Var down there?",
            "He turns. His face is Var's. His eyes are red-gold, and they don't blink.",
            "VAR: (a woman's voice, amused) Variables that refused to die. Hello again, my little failures.",
            "The face cracks like a mirror.", "Behind the cracks: white hair spilling like frostfire, infernal sigils burned into her arms, eyes burning red-gold with ambition.",
            "AVARICE: Thirty years I've worn this man. Thirty years of summer.",
            "AVARICE: You survived my early prototypes. You lived through the frost that should have hollowed you.",
-           "AVARICE: And now you've come home, to die in the womb that birthed you."])
+           "AVARICE: And now you've come home, to die in the womb that birthed you.",
+           "KELYN: (over the stone, very small) ...Var?",
+           "AVARICE: (to the stone) Gone thirty years, Speaker. Do keep up."])
+      set_flag(:summer_unmasked)
       if flag?(:var_story_known)
         say(["(Var, at the Split Dock, his glaive coming up: \"Who in the Nine Hells are you?\" Thirty years ago. He never got an answer.)"])
       end

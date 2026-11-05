@@ -678,7 +678,7 @@ module FrostThaw
     say(["Lab notes on a lectern of root, in a neat white hand, page after page:",
          "\"The dragon will be built on the soul-echo method: the draconic one (Raz) and the goblin (V-7) proved it.\"",
          "\"Its heart: the old wyrm's, taken from the ice long ago. Corrupted, but beating. Chardalyn for bones. Mirror-glass for skin.\"",
-         "\"The engine will burn the saint's heart for fuel. Summer without end; the Dale will love me for it, until it doesn't.\"",
+         "\"The engine will burn the saint's heart for fuel. Summer without end; the Dale will love it, until it doesn't.\"",
          "\"Then the dragon flies. Ten-Towns melts. Every soul in the Dale, harvested warm.\"",
          "\"Enough souls, and I sit where the Frostmaiden sits. And the Dale goes down to my patron's circle, all of it, still warm.\""], event_id)
     if !flag?(:stasis_notes_read)
@@ -850,7 +850,6 @@ module FrostThaw
   def scriptory_pages(event_id = nil)
     say(["Chardalyn pages, grown into the wall like shelf-fungus. Each one etched in Avarice's neat white hand.",
          "\"Xardorok: what the duergar call me. Their old king's name. Names are cheaper than chains, and hold better.\"",
-         "\"Summer Marshal Var Rime-Breaker: loud, scarred, beloved. The city trusts his face. Perfect.\"",
          "\"Selrae Vorn calls my vault the White Womb. Let her. Priests are happiest when they're frightened.\""], event_id)
     set_flag(:knows_xardorok)
   end
@@ -1023,6 +1022,9 @@ module FrostThaw
   # Avarice took Var Rime-Breaker, thirty years ago. His echo is still in the glass.
   def mirror_pit(event_id = nil)
     return say(["The liquid mirror shows only the vault now, and you in it, standing where Var stood."], event_id) if flag?(:var_story_known)
+    # (The Summer Marshal is Avarice: Chapter 8's twist, owner's call 2026-11-05.
+    # Before the Heart Chamber the vision stops short of who came out of the mirror.)
+    unmasked = flag?(:summer_unmasked)
     if !flag?(:mirror_wards_down)
       return say(["The pit mirrors the sky of a frozen world: not this one, or not this year.",
                   "Above it the shards turn to watch you. Not yet. Not while they're watching."], event_id)
@@ -1041,11 +1043,11 @@ module FrostThaw
          "VAR: My great-grandsire carried a spear for Naerth Maxildanarr. Gold-sick, the lot of them. Greed in the blood.",
          "VAR: Every bit of peace I keep pays a bit of it back. Never enough. Never enough.",
          "VAR: When the Heralds come home, and they will, I want the frost-one. The necromancer. I want to see if a man can hold winter in his hands and not let it eat him.",
-         "A mirror on a crate catches the lantern. A woman with white hair steps out of it as if out of a doorway.",
-         "AVARICE: Marshal. Loud, scarred, beloved. The city trusts your face.",
+         "A mirror on a crate catches the lantern. Something steps out of it as if out of a doorway.",
+         unmasked ? "AVARICE: Marshal. Loud, scarred, beloved. The city trusts your face." : nil,
          "VAR: (the glaive coming up) Who in the Nine Hells are you?",
-         "AVARICE: Close. I need a coat, Marshal. Yours will do.",
-         "The lantern goes out."])
+         unmasked ? "AVARICE: Close. I need a coat, Marshal. Yours will do." : nil,
+         "The lantern goes out."].compact)
     say(["In the dark, someone is still standing in the mirror: Var, as he was, glaive in his hands, looking straight out at you."])
     target = with_or_is?(:alerion) ? :alerion : nil
     if target == :alerion && herald?(:alerion)
@@ -1062,7 +1064,8 @@ module FrostThaw
     won = pbTrainerBattle(:FT_MARSHAL, "Var", nil, false, 0) ? true : false
     return if !won
     say(["VAR: (laughing, leaning on the glaive) Ha! There it is. Winter in a man's hands, and the man still standing.",
-         "VAR: She's wearing me, isn't she. Up there. Thirty years of my face, smiling at Kelyn.",
+         unmasked ? "VAR: She's wearing me, isn't she. Up there. Thirty years of my face, smiling at Kelyn." :
+                    "VAR: How long have I been in here? ...Don't tell me. Tell Kelyn I kept the peace.",
          "VAR: Tell Rootspire I'm sorry. Tell them Naerth's debt is paid; I paid it in summers.",
          "VAR: And take this. She left it here because it hums when Sephek's near, and she didn't like it humming at her."])
     give_key(:FT_VARGLAIVE)

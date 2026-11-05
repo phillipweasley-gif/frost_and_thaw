@@ -478,14 +478,14 @@ module FrostThaw
       say(["The glade where the Verdant Reversal began is warm today. Too warm, like a fever under the snow.",
            "Razzilith waits in the clearing, coiled round a stone warmed by the thawed earth. He chirrs, bright as a plucked string.",
            "But his eyes are troubled. He nudges #{mm_her} shoulder and speaks the way he does: broken words, and painted thoughts.",
-           "RAZZILITH: No one sees Summer... not for many cycles. Many, many.",
+           "RAZZILITH: (a painted thought: the scorched throne, empty) ...Summer?",
            "(A flicker of orange and warm rain. Then cold.)",
-           "RAZZILITH: She is... gone. No steps. No smell. No heat.",
-           "RAZZILITH: Autumn hides it. (A flash of red leaves, covering.) Says Summer sleeps. Lies.",
-           "RAZZILITH: Summer is a woman. A tiefling. (A silhouette: horns, a long coat, heat-shimmer. No face.)",
+           "RAZZILITH: Gone. No steps. No smell.",
+           "RAZZILITH: (red leaves, covering something) Autumn... hides.",
+           "RAZZILITH: Summer is... a shape. (Heat-shimmer, a long coat. No face.)",
            "RAZZILITH: No one ever sees Summer's face. All feel... chills. Like bad winter.",
            "His wings shiver. He presses his forehead to #{mm_her}s, scales warm.",
-           "RAZZILITH: Something wrong. Summer missing... wrong things grow."])
+           "RAZZILITH: Summer... wrong. Wrong things grow."])
       set_flag(:razzy_summer_warning)
       say(["Then he pulls back, chirping, tail thrashing like a cat's. He crouches, wings half-fanned.",
            "RAZZILITH: Fly?"])

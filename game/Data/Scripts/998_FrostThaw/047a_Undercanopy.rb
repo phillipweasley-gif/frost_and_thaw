@@ -496,7 +496,7 @@ module FrostThaw
     say(["MYR: (to #{COMPANION_NAMES[who].to_s.split.map(&:capitalize).join(' ')}) The first time you laughed after the cold came. Give it to me.",
          "It goes out of them like a breath. They look puzzled, for a second, about something they can't name.",
          "MYR: The Halo kneel at the Still Sky Shrine; they carry her relics in the dark; they want a third heart, and they'll take it from a songbird.",
-         "MYR: And they have friends in the Council. Mirror-friends."])
+         "MYR: And they have friends in the Council."])
     set_flag(:memory_traded)
     set_flag(:knows_halo_plan)
   end

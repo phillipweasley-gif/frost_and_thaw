@@ -344,7 +344,7 @@ module FrostThaw
   def night_autumn_visit
     sayc(["A knock, late. On the step: a fox-masked Wennen in red velvet, holding a lantern with a red leaf painted on the glass.",
           "EMISSARY: The Court of Splendor sends its regards. And a question, which it asks of everyone it admires.",
-          "EMISSARY: When Summer returns, and she will, to whom will the Heralds bow?"])
+          "EMISSARY: When Summer returns, and it will, to whom will the Heralds bow?"])
     c = pbMessage(_INTL("The Court of Splendor asks..."), [_INTL("\"To Summer, gladly.\""), _INTL("\"To nobody.\""), _INTL("\"Who sent you, really?\"")], 1)
     case c
     when 0

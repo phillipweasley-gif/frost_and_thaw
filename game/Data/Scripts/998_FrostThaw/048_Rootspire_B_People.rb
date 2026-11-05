@@ -672,11 +672,11 @@ module FrostThaw
       set_flag(:maera_confronted)
       say(["MAERA: You looked at the commission. That was private.",
            "MAERA: The Autumn Warden ordered them. Crowning robes. For a coronation that's going to happen.",
-           "MAERA: I don't ask who's wearing them. I measure what I'm sent. Tall. Slender. Horns.",
+           "MAERA: I don't ask who wears them. I measure. Tall. Slender. Odd at the collar.",
            "She stops humming.",
            "MAERA: I've never been sent a face."])
-      sayc([herald?(:meat_meat) ? "(Razzilith said that. 'No one ever sees Summer's face.')" :
-                                  cl(:meat_meat, "Razzy said that. Razzy said Summer has no face."),
+      sayc([herald?(:meat_meat) ? "(No face. Razzilith said a no-face thing too. You don't like it.)" :
+                                  cl(:meat_meat, "No face. Razzy said a no-face thing too. Meat Meat does not like it."),
             cl(:alberica, "A coronation for someone nobody's met. Darling, that's not fashion, that's a warrant.")].compact)
     else
       say(["MAERA: Try the scarves. Every one of them is cut to flatter a hero. I've had four hundred years of practice."], event_id)
@@ -690,8 +690,7 @@ module FrostThaw
     end
     say(["Under the sheet: robes of gold-leaf velvet, embroidered with flames that seem to move.",
          "A pinned card: AUTUMN WARDEN D. FELL. CROWNING ROBES. FOR THE RETURN. DELIVER BELOW.",
-         "They're cut for someone tall and slender. The collar has two slits in it, high at the back.",
-         "For horns."], event_id)
+         "They're cut for someone tall and slender. The collar's been let out, high at the back, for something."], event_id)
     set_flag(:robes_seen)
   end
 

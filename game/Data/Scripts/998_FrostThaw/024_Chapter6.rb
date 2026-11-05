@@ -169,7 +169,7 @@ module FrostThaw
     shrine: ["Mirror-glass prayer tokens. Avarice never throws anything away."],
     rootspire: ["My ring's warm. I didn't know it could be warm.", "...I don't hate it."],
     hearth: ["Hellen knows more about us than we do. Keep her talking. Gently."],
-    council: ["A forged decree. Avarice's mark in the wax.", "We broke her mirrors. Not her."]
+    council: ["A forged decree. Summer's seal. A mirror in the wax.", "Somebody kept a piece of the hag."]
   )
   PARTY_CHAT[:shade].merge!(
     root_tier: ["Smells like fish and secrets.", "My two least favourite smells. My two best customers."],

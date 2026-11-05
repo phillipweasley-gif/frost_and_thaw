@@ -327,7 +327,7 @@ module FrostThaw
           cl(:alberica, "(very still) We froze you. At her throne. We watched it hold."),
           al ? "AVARICE: You froze a mirror, songbird. Did you think I kept only one?" :
                "AVARICE: You froze a mirror, Alberica. Did you think I kept only one?",
-          "AVARICE: A little of me lived in the mirrors under the Heartroot. A little is all I've ever needed."])
+          "AVARICE: A little of me lived in every mirror I ever made. A little is all I've ever needed."])
     whispers = []
     whispers << (herald?(:meat_meat) ? "(She says your number. V-7. Then, softly, the sound you made the day you were born.)" :
                                        "AVARICE: (to Meat Meat) V-7. I still have the sound you made the day you were made.") if with_or_is?(:meat_meat)
@@ -336,7 +336,7 @@ module FrostThaw
     whispers << "AVARICE: (to Wyn) Little shadow. You'd make a lovely lens." if with_or_is?(:wyn)
     sayc(whispers)
     sayc(["AVARICE: Draconic essence, and divine. Razzy's scale core and V-7's blood, and a season I can wind like a clock.",
-          "AVARICE: The Seraph-Draco: a living god of ordered seasons. No more Rime. No more Summer. Just the schedule.",
+          "AVARICE: The Seraph-Draco: a living god of ordered seasons. No more wheel. Just the schedule.",
           "AVARICE: Come to the cradle. You were always going to.",
           cl(:meat_meat, "Meat Meat is coming. Meat Meat is bringing her teeth.")])
     if vault_map_pieces >= 3
@@ -428,7 +428,7 @@ module FrostThaw
     end
     sayc([
           cl(:alberica, "She isn't dead. She's never been dead. Why do the clever ones never stay dead?"),
-          cl(:wyn, "...She went north. To the island. To Auril.")])
+          cl(:wyn, "...It's quiet down here now. She's stopped counting.")])
     set_flag(:avarice_revealed)
     set_flag(:avarice_body_broken)
     set_flag(:avarice_soul_shattered) if caught

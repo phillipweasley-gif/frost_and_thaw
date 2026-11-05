@@ -519,7 +519,7 @@ module FrostThaw
     autumn: [["A velvet-coated Wennen bows at the Hearth's door and presents a purse. \"Autumn pays its friends, Heralds. Promptly.\""], [:NUGGET, 1],
              ["LUMEA: (in the doorway, all gold leaf) The Court of Splendor counts you as its own now. Try not to look surprised. It's unbecoming."], :AMULETCOIN],
     summer: [["Nobody at the door. Only a warm stone on the step, glowing faintly orange, and a note: SUMMER REMEMBERS ITS FRIENDS."], [:HEATROCK, 1],
-             ["A heat-shimmer on the stair, the shape of a woman with horns. It says nothing. It leaves something warm on the top step."], :FLAMEORB]
+             ["A heat-shimmer on the stair, the shape of someone tall. Gone before you're sure. It leaves something warm on the top step."], :FLAMEORB]
   }
 
   def favour_tick
