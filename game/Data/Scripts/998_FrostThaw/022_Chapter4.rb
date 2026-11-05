@@ -31,6 +31,7 @@ module FrostThaw
   SW_PACK_GONE    = 3924
   SW_KOBOLDS_GONE = 3925
   SW_WOLVES_GONE  = 3926
+  SW_HAG_NIGHT    = 3933    # you've rested after the seal: the hag's night at the Stones (context 04 M4-5)
 
   MAPS.merge!(eastway: 2030, good_mead: 2031, mead_hall: 2032, cooperage: 2033, redwaters: 2034,
               dougans: 2035, durmoot_lodge: 2036, hilda_house: 2037, smokehouse: 2038, tundra: 2039, ice_lodge: 2040)
@@ -211,7 +212,7 @@ module FrostThaw
                        ["Wolves say they ain't givin' 'em back till the town pays a king's ransom. Food an' gold.",
                         "This town can barely feed itself. An' there ain't no gold."]],
     dh_militia_block: ["MILITIA: Nobody leaves town. Them wolves swore they'd kill anyone who tries!",
-                       "MILITIA: Speaker's orders. Don't like it, go tell Edgra. Big lodge, up the hill."],
+                       "MILITIA: Speaker's orders. Don't like it, go tell Edgra. Big lodge, west end of town."],
     dh_militia_open: [{ if: { flag: :kids_freed, not_flag: :wolves_beaten }, lines: ["MILITIA: You found 'em? Then where are they?",
                                                                                      "MILITIA: Hid back in the giant's house while the wolves ran you off?",
                                                                                      "MILITIA: Then go back for 'em! The wolves'll be waitin' on the tundra."] },
@@ -221,12 +222,14 @@ module FrostThaw
                      ["Those shapes on the ice? Fisherfolk. Some of ours, some from other towns.",
                       "They walked out one by one, the night the laughing started.",
                       "Nobody's brave enough to fetch 'em."]],
+    dh_ice_pane: ["A pane of ice taller than you, standing on its edge in the lake. Nobody cut it.",
+                  "Your reflection in it doesn't blink when you do."],
     dh_shapes_talk: [{ if: { flag: :hag_defeated }, lines: ["The laughing's stopped. First quiet night in a month. I don't trust it."] },
                      ["Don't look at the shapes too long. My husband looked too long.",
                       "Now he's out there with 'em."]],
     fisher_rorik_after: ["Good Mead started the feud. Don't let 'em tell you different."],
     silja_home: ["SILJA: You came. Nobody ever comes to Dougan's Hole. You came anyway.",
-                 "SILJA: Finn says he could've got out himself. He couldn't."],
+                 "SILJA: Mama's fed us three times since. Finn's on his fourth."],
     finn_home: ["FINN: I almost had the slats bent. Almost.", "FINN: ...Thanks."],
     smoke_fisher: ["Knucklehead trout, smoked. It's what we eat, what we trade, and what we talk about."],
     smoke_trout_wife: ["We don't get many visitors. The ones we get mostly want something. What do you want?",
@@ -296,8 +299,8 @@ module FrostThaw
     good_mead: ["Bees in the Rime, kept alive in a hall full of fire.",
                 "That's faith, of a sort. Also very good honey. Mostly the honey."],
     redwaters: ["Something under the ice is wrong. Not dead. Stopped."],
-    dougans: [{ if: { flag: :hag_defeated }, lines: ["She called me \"wolf of seasons\". Said balance is a leash.",
-                                                      "...She's wrong. I'm fairly sure she's wrong."] },
+    dougans: [{ if: { flag: :hag_defeated }, lines: ["She called me \"wolf of seasons\". Said she'd take the wolf out of me. Root and all.",
+                                                      "...I'm fairly sure I don't want that. Fairly sure."] },
               ["These people have been hungry a long time. Hunger makes you hard.",
                "Leave the talking to me. And keep Meat Meat away from the trout."]],
     durmoot_lodge: ["She skins wolves. I keep thinking about the starving pack.",
@@ -347,6 +350,16 @@ module FrostThaw
 
   module_function
 
+  # A Herald on screen for a scene: the one who already walked in to speak, if
+  # they're here (so nobody is drawn twice), else Stage.herald's stand-in.
+  def stand_in(key, dx = 0, dy = -1, dir = 2)
+    if !herald?(key)
+      ev = ($game_map.events.values.find { |e| e.name == "stage_#{key}" && !e.transparent } rescue nil)
+      return ev if ev
+    end
+    Stage.herald(key, dx, dy, dir)
+  end
+
   #-----------------------------------------------------------------------------
   # Rest stops
   #-----------------------------------------------------------------------------
@@ -383,11 +396,39 @@ module FrostThaw
     end
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     set_rest_at(DOUGANS_REST)
+    smokehouse_night(event_id) if flag?(:badge_dougans) && !flag?(:hag_night_ready) && !flag?(:hag_defeated)
+  end
+
+  # SC 4.08b - The night's rest, after the seal (context 04 M4-5). Shimmer is
+  # missed out loud, the eggs and the acorn are remembered before the Heart
+  # needs them, and the night comes after a fade, not at the gym door.
+  def smokehouse_night(event_id = nil)
     sayc(["The racks drip. Everything in here smells of smoke and fish.",
           cl(:shade, "Shimmer liked smoked trout. Hated the smell. Ate it anyway."),
-          cl(:alberica, "(quietly) Then we'll eat it anyway too, sugar. For her."),
+          cl(:alberica, "(quietly) Then we'll eat it anyway too. For her."),
           cl(:meat_meat, "Meat Meat will eat two. One for Shimmer. One for Meat Meat."),
           cl(:alerion, "That's three you've eaten.")], event_id)
+    if flag?(:frost_egg) && flag?(:razzy_egg)
+      say([herald?(:shade) ? "You set the Frost Egg by the racks, where it's warm. Reptin sets the green one by it." :
+           herald?(:reptin) ? "Shade sets the Frost Egg by the racks, where it's warm. You set the green one by it." :
+                              "Shade sets the Frost Egg by the racks, where it's warm. Reptin sets the green one by it."])
+    elsif flag?(:frost_egg)
+      say([herald?(:shade) ? "You set the Frost Egg by the racks, where it's warm." :
+                             "Shade sets the Frost Egg by the racks, where it's warm."])
+    end
+    if flag?(:razzy_egg) && with_or_is?(:meat_meat)
+      speak(:meat_meat, "(to the green egg) Warm spot, Razzy. Best one. Meat Meat saved it.", "...Warm spot.", event_id)
+    end
+    if flag?(:golden_acorn)
+      sayc([cl(:reptin, "(turning the acorn) \"Somewhere the sun can't reach,\" she said. Take your pick.")], event_id)
+    end
+    set_flag(:hag_night_ready)
+    $game_switches[SW_HAG_NIGHT] = true if $game_switches
+    pbBGMFade(1.5) rescue nil
+    $game_screen.start_tone_change(Tone.new(-255, -255, -255, 0), 20) rescue nil
+    Stage.wait(24) rescue nil
+    say(["..."])
+    transfer(MAPS[:dougans], 26, 22, 2)          # out of the smokehouse door, into the night (scene_dh_night)
   end
 
   #-----------------------------------------------------------------------------
@@ -407,7 +448,8 @@ module FrostThaw
   def scene_good_mead_arrival
     set_flag(:good_mead_arrived)
     set_flag(:good_mead_met)
-    sayc(["Good Mead: squat houses carved with dinosaurs and serpents, and a two-storey mead hall with eaves painted like wyverns.",
+    sayc(["A day's walk east, and the snow smells of honey.",
+          "Good Mead: squat houses carved with dinosaurs and serpents, and a two-storey mead hall with eaves painted like wyverns.",
           "Its founders came from Chult and the Vilhon Reach, and it shows: the beasts on the lintels have never seen snow.",
           "Bees hum somewhere in a heated hall. The whole town smells of honey.",
           "OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
@@ -415,20 +457,29 @@ module FrostThaw
           cl(:meat_meat, "Meat Meat smells honey. Meat Meat does not smell coffee. Suspicious town.")])
   end
 
-  # SC 4.02 - The still ones on the ice
+  # SC 4.02 - The still ones on the ice. The player's goal (the hag's mirrors)
+  # reaches its town: the shapes and the panes are shown, the glass answers, and
+  # Alerion says three words about where he's been (context 04 M4-1).
   def scene_dougans_arrival
     set_flag(:dh_arrived)
     add_counter(:story_beats)
+    Stage.pan_to(30, 30)
     say(["Dougan's Hole huddles on the shore of Redwaters.",
          "Out on the frozen lake, dark figures stand over fishing holes. Snow has drifted against their legs.",
          "Between them, panes of ice stand upright, like mirrors."])
+    Stage.pan_back
+    say(["In your pocket the lantern glass goes cold. Colder than the snow. Close, now."]) if journey?
     speak(:reptin, "Those aren't fishers. Fishers fidget.", "...Those aren't fishers.")
-    sayc([as(:alerion, "They're people. Stopped."),
-          cl(:alberica, "Stopped how, pretty boy?"),
-          as(:alerion, "Like I was."),
-          "\"Don't go out there.\" \"Wolves took the Dejarr kids.\" \"Nobody leaves.\" \"Speaker's orders.\"",
-          "(Speaker Edgra Durmoot's lodge is up the hill.)"])
-    state[:goal] = "Speaker Durmoot's lodge, up the hill. Wolves took two children."
+    sayc([cl(:alerion, "They're people. Stopped.")])
+    if with_or_is?(:alberica) && with_or_is?(:alerion)
+      speak(:alberica, "Stopped how, pretty boy?", "...Stopped how?")
+      sayc([as(:alerion, "Like I was.")])
+      speak(:alberica, "You were stopped? When?", "...When?")
+      speak(:alerion, "Before your grandmother was born.", "...A long time.")
+    end
+    sayc(["\"Don't go out there.\" \"Wolves took the Dejarr kids.\" \"Nobody leaves.\" \"Speaker's orders.\"",
+          "(Speaker Edgra Durmoot's lodge is the big house at the west end of town.)"])
+    state[:goal] = "Speaker Durmoot's lodge, at the west end of town. Wolves took two children."
   end
 
   #-----------------------------------------------------------------------------
@@ -444,7 +495,7 @@ module FrostThaw
       set_flag(:met_durmoot)
       $game_switches[SW_DH_WEST_OPEN] = true if $game_switches
       say(["DURMOOT: Strangers. In Dougan's Hole. In winter. Either you're lost or you're stupid.",
-           "DURMOOT: Wolves took Hilda's kids. Silja and Finn. They're dead.",
+           "DURMOOT: Wolves took Hilda Dejarr's kids. Silja and Finn. They're dead.",
            "DURMOOT: Wolves don't keep prisoners. They keep dinner."], event_id)
       speak(:reptin, "Speaker, you're clearly a practical woman. So humour me. And if they aren't dead?",
                      "And if they aren't?", event_id)
@@ -473,8 +524,8 @@ module FrostThaw
     sayc(["DURMOOT: That TM's Frost Breath. Every hit's a deep one. Like a Dougan's Hole winter.",
           "DURMOOT: ...Stay in tonight.",
           cl(:alberica, "Was that concern? I think that was concern. She likes us."),
-          cl(:alerion, "She told the wolves to stay in too.")], event_id)
-    state[:goal] = "Rest for the night. (Durmoot said stay in. Durmoot tells everyone to stay in.)"
+          cl(:alerion, "She likes nobody. She said it anyway.")], event_id)
+    state[:goal] = "Rest at the smokehouse for the night. Durmoot said stay in."
   end
 
   # (Hilda, Koran and Kanan, the tundra and the starving pack: see 045_HoledUp.rb)
@@ -509,7 +560,7 @@ module FrostThaw
   NIGHT_TONE = [-90, -80, -30, 60]
 
   def night_on_ice?
-    flag?(:badge_dougans) && !flag?(:hag_defeated)
+    flag?(:hag_night_ready) && !flag?(:hag_defeated)
   end
 
   def apply_night_tone
@@ -523,15 +574,23 @@ module FrostThaw
     end
   end
 
-  # SC 4.09 - Night of the hag
+  # SC 4.09 - Night of the hag (after the rest: context 04 M4-5)
   def scene_dh_night
     return if !night_on_ice?
     $game_screen.start_tone_change(Tone.new(*NIGHT_TONE), 30) rescue nil
     state[:dh_night_tone] = true
+    say(["That night."])
     pbBGMPlay("scary_ambient") rescue nil
-    sayc([journey? ? "Laughter on the ice. It comes from everywhere at once. Their relics go so cold they burn." :
-                     "Laughter on the ice. It comes from everywhere at once. Your relics go so cold they burn.",
+    relics = if herald?(:alberica) then "Under your coat, the rune burns blue. The others' relics frost over."
+             elsif herald?(:meat_meat) then "The others' relics frost over. Under Alberica's coat, the rune glows blue."
+             elsif herald? then "Your relic frosts over. Under Alberica's coat, the rune glows blue."
+             else "Their relics frost over. Under Alberica's coat, the rune glows blue."
+             end
+    sayc(["Laughter on the ice. It comes from everywhere at once.",
+          relics,
           journey? ? "In your pocket, the lantern glass rings like a struck bell." : nil,
+          flag?(:frost_egg) ? (herald?(:shade) ? "In your coat, the Frost Egg goes cold." : "In Shade's coat, the Frost Egg goes cold.") : nil,
+          flag?(:frost_egg) ? cl(:shade, "She doesn't like it either.") : nil,
           "Among the Twenty Stones, south-west of town, stand three tall mirrors of ice.",
           "In each one, an old woman in a patchwork cloak is smiling.",
           as(:alberica, "Durmoot told us to stay in."),
@@ -544,20 +603,38 @@ module FrostThaw
     (1..3).count { |i| flag?(:"hag_mirror_#{i}") }
   end
 
+  # SC 4.09 - Granny Thredra at the Stones. She names herself, every epithet
+  # finds its owner, "she" is Auril and the coat is Alberica, the bite is
+  # confirmed as a curse, and the dare says what breaking a mirror does
+  # (context 04 M4-6). Then her three mirrors, each with its own truth (M4-7).
   def hag(event_id = nil)
     return if !night_on_ice?
     if !flag?(:hag_parley)
       set_flag(:hag_parley)
       pbSEPlay("Ice2") rescue nil
       say(["THREDRA: Come in, dearies. Mind the cold. Mind your step.",
-           "THREDRA: Did you like my little trinkets? A pendant for the daughter of song.",
-           "THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time.",
-           cl(:alerion, "...Boy."),
-           "THREDRA: A dagger for the one who hides in shadow.",
-           "THREDRA: And the one who'd been worn before needed no gift from me. She already carried a door."].compact, event_id)
+           "THREDRA: Granny Thredra. Everyone's granny, sooner or later.",
+           "THREDRA: Did you like my little trinkets? A pendant for the daughter of song."], event_id)
+      say(["Your hand goes to your throat. The pendant isn't there any more."]) if herald?(:alberica)
+      say(["THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time."], event_id)
+      say(["(The medallion fogs in your palm. \"It knows,\" the captain said.)"]) if herald?(:reptin)
+      sayc([cl(:alerion, "...Boy."),
+            "THREDRA: A dagger for the one who hides in shadow.",
+            "THREDRA: And the one who'd been worn before needed no gift. She already carried a door."], event_id)
+      if with_or_is?(:shade)
+        speak(:shade, "Her name was Shimmer.", "...Shimmer.", event_id)
+        say(["THREDRA: Names are for the living, dearie."], event_id)
+      end
       speak(:alberica, "You sent them. You sent me that pendant, you dried-up old...", "...You sent them.", event_id)
-      lines = ["THREDRA: I sent them. My watchers watched you aboard.",
-               "THREDRA: She wants a new coat to wear, you see. I'm only her seamstress."]
+      say(["THREDRA: Old, dearie. Not dried. My watchers watched you aboard."], event_id)
+      if herald?(:alberica)
+        say(["(The tall thing at the edge of the lamplight. On the ship. That was hers.)"])
+      else
+        sayc([cl(:alberica, "The tall thing on our deck, at the edge of the lamplight. That was yours.")], event_id)
+      end
+      say(["THREDRA: She wants a new coat to wear, you see. I'm only her seamstress."], event_id)
+      sayc([cl(:alberica, "(very plain) Auril. And the coat's me.")], event_id)
+      lines = []
       if journey?
         lines << "THREDRA: (squinting at you) And this one fell through my glass. Lost, dearie?"
         lines << "THREDRA: Granny could send you home. Granny's very good at sending."
@@ -567,10 +644,12 @@ module FrostThaw
       lines << cl(:reptin, "(aside) Seamstress. Lovely. Let's not let her take our measurements.")
       say(lines.compact, event_id)
       hag_bargain_offer(event_id)       # the module's "A Hag's Bargain" (044_ChasmFaithful.rb)
-      say(["THREDRA: Now. Let's dance upon the glass, and see who shatters first.",
-           journey? ? "THREDRA: Want your still ones back? Break my glass. Mind, lost one: it's the way you go home." :
-                     "THREDRA: Break my mirrors, dearies. If you can bear to look in them."], event_id)
+      say(["THREDRA: My still ones sleep in my glass, dearies. Every fisher on that ice.",
+           "THREDRA: Break a mirror and one goes free. If you can bear to look in it.",
+           journey? ? "THREDRA: (to you) Mind, lost one. One of Granny's mirrors is your way home. Choose well." : nil].compact, event_id)
       set_flag(:thredra_sent_relics)
+      state[:goal] = journey? ? "Break Thredra's three mirrors at the Stones. Is one of them yours?" :
+                                "Break Thredra's three ice mirrors among the Twenty Stones."
       return
     end
     if mirrors_broken < 3
@@ -578,10 +657,31 @@ module FrostThaw
       say(["THREDRA: Heh-heh. #{n == 0 ? 'Not one' : (n == 1 ? 'One' : 'Two')} of three. The wheel turns so slowly, doesn't it?"], event_id)
       return
     end
-    say(["The last mirror lies in pieces. The crone stops laughing."], event_id)
+    say(["The last mirror lies in pieces. The crone stops laughing.",
+         "THREDRA: Then let's dance upon the glass, dearies, and see who shatters first."], event_id)
     won = pbTrainerBattle(:FT_HAG_NIGHT, "Thredra", nil, false, 0)
     return if !won
-    scene_hag_defeated
+    scene_hag_defeated(event_id)
+  end
+
+  # What each mirror shows before something climbs out of it. Mirror 3 wears the
+  # Journey player's home, and the lantern glass says it isn't theirs (M4-7).
+  def hag_mirror_sight(i)
+    case i
+    when 1
+      [herald?(:reptin) ? "You look into the mirror. Your reflection has yellow eyes. You don't." :
+                          "You look into the mirror. Reptin's reflection has yellow eyes. Reptin doesn't."]
+    when 2
+      [herald?(:shade) ? "You look into the mirror. At your shoulder, Shimmer turns a carved cat. You look away." :
+                         "You look into the mirror. At your shoulder, Shimmer turns a carved cat. Shade looks away."]
+    else
+      if journey?
+        ["You look into the mirror. It shows Hellen's tavern, warm. Someone is saving your seat.",
+         "The shard in your pocket stays quiet. This glass is wearing your home. It isn't yours."]
+      else
+        ["You look into the mirror. You're warm in it, by a summer fire. Then it grins."]
+      end
+    end
   end
 
   def hag_mirror(i, event_id = nil)
@@ -591,9 +691,7 @@ module FrostThaw
            "Behind its shoulder, a crone is smiling. (She's waiting at the centre stone.)"], event_id)
       return
     end
-    say([journey? && i == 3 ? "You look into the mirror. It shows Hellen's tavern, warm. Someone is saving your seat. Then it grins." :
-                             "You look into the mirror. Your reflection grins back with someone else's teeth.",
-         "The glass bulges, and something climbs out of it!"], event_id)
+    say(hag_mirror_sight(i) + ["The glass bulges, and something climbs out of it!"], event_id)
     foe = [[:SNORUNT, 26], [:B429H427, 27], [:GLALIE, 27]][i - 1]
     return if !boss_battle(named_mon(foe[0], foe[1], "Mirror-wight"))
     pbSEPlay("Ice2") rescue nil
@@ -608,39 +706,74 @@ module FrostThaw
     Stage.cleanup rescue nil
     set_flag(:"hag_mirror_#{i}")
     set_self_switch(event_id, "A")
+    state[:goal] = "The mirrors are broken. Face Thredra at the centre stone." if mirrors_broken >= 3
   end
 
-  def scene_hag_defeated
+  # SC 4.10 - The thaw, shown, and a morning that's earned (context 04 M4-8):
+  # breaking her mirrors frees what they held, on screen; then a fade, and Durmoot.
+  def scene_hag_defeated(event_id = nil)
     set_flag(:hag_defeated)
     set_flag(:hag_fled)
-    $game_switches[SW_HAG_DOWN] = true if $game_switches
     add_counter(:story_beats)
     pbSEPlay("Ice2") rescue nil
-    say(["THREDRA: Clever. Clever, clever. You broke them. Do you know how long it takes to grow a mirror?",
-         "THREDRA: Come and find me in the chasm, dearies. Bring your wolf. Granny keeps her bargains.",
-         journey? ? "THREDRA: And you, lost one. My last glass is in the chasm. Yours too." : nil,
-         "She splits into shards and blows away south.",
-         "Out on the lake, the frozen figures breathe. One by one they sag, gasp, and fall to their knees."].compact)
-    sayc([cl(:reptin, "(hand closing over the bite) ...Bring your wolf. She means me."),
-          cl(:alerion, "She means all of us. She just said your name first.")])
-    set_flag(:husband_thawed)
-    say(["A fisherman with a Spheal-shaped float on his line looks up at you, shaking.",
-         "FISHERMAN: Targos. Tell my wife I'm coming home. Tell her not to give the Spheal away."])
-    if flag?(:widow_spheal)
-      say(["(You already have it. You let it out of its ball.)",
-           "He laughs until he cries."])
+    thr = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
+    say(["THREDRA: Clever. Clever, clever. Do you know how long it takes to grow a mirror?",
+         "THREDRA: Come and find me in the chasm, dearies. Bring your wolf.",
+         "THREDRA: Granny keeps her bargains."], event_id)
+    say(["THREDRA: And you, lost one. My last glass is in the chasm. Yours too."], event_id) if journey?
+    if thr
+      Stage.hide(thr)
+      Stage.fx("E-06", thr, oy: 40)
     end
-    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 40) rescue nil
+    pbBGMFade(1.0) rescue nil
+    say(["She splits into shards, and the wind takes them south."])
+    $game_switches[SW_HAG_DOWN] = true if $game_switches
+    $game_map.need_refresh = true if $game_map
+    Stage.pan_to(28, 34)
+    say(["Out on the lake, the frozen figures breathe. One by one they gasp and fall to their knees."])
+    Stage.pan_back
+    sayc([cl(:reptin, "(hand closing over the bite) ...Bring your wolf. She means me."),
+          cl(:alerion, "She means all of us. She just started with you.")])
+    set_flag(:husband_thawed)
+    fisher = begin
+      Stage.actor(:fisherman, $game_player.x + 4, $game_player.y, 4, graphic: "BW (54)")
+    rescue StandardError
+      nil
+    end
+    say(["A fisherman with a Spheal-shaped float on his line stumbles up the shore to you."])
+    Stage.approach(fisher) if fisher
+    say(["FISHERMAN: Targos. Tell my wife I'm coming home. Tell her to keep the lamp lit."])
+    if flag?(:widow_spheal)
+      say(["(You already have his Spheal. You let it out of its ball.)",
+           "He laughs until he cries."])
+    else
+      say(["(A widow in Targos is waiting on this man.)"])
+    end
+    Stage.cleanup rescue nil
+    # SC 4.10 - Don't tell anyone (morning)
+    begin
+      pbFadeOutIn { $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) }
+    rescue StandardError
+      $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
+    end
     state[:dh_night_tone] = false
     pbBGMPlay("Lavender Town") rescue nil
-    # SC 4.10 - Don't tell anyone (morning)
-    sayc(["Morning. Speaker Durmoot comes down the hill carrying a lantern she doesn't need any more.",
-          "DURMOOT: Thank you.",
+    say(["Morning."])
+    durmoot = begin
+      Stage.actor(:durmoot, $game_player.x + 3, $game_player.y - 2, 2, graphic: "BWOldWoman")
+    rescue StandardError
+      nil
+    end
+    say(["Speaker Durmoot comes down from her lodge with a lantern she doesn't need any more."])
+    Stage.approach(durmoot) if durmoot
+    sayc(["DURMOOT: Thank you.",
           "DURMOOT: ...Don't tell anyone I said that.",
           cl(:alberica, "Oh, sugar, I'm writing a song about it."),
           "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind.",
-          "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns. ...Don't tell anyone I said that either."])
+          "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns.",
+          "DURMOOT: ...Don't tell anyone I said that either."])
     pbReceiveItem(:TM95) rescue nil
+    Stage.cleanup rescue nil
     set_flag(:dh_morning)
     state[:goal] = journey? ? "The Cackling Chasm, south of Dougan's Hole. She's there, with the last of her mirrors." :
                               "The Cackling Chasm, south of Dougan's Hole. She's there."
@@ -653,6 +786,8 @@ module FrostThaw
     sync_switch(SW_KIDS_HOME, flag?(:kids_home))
     sync_switch(SW_DH_BADGE, flag?(:badge_dougans))
     sync_switch(SW_HAG_DOWN, flag?(:hag_defeated))
+    set_flag(:hag_night_ready) if flag?(:hag_parley) && !flag?(:hag_night_ready)   # (saves from before the rest)
+    sync_switch(SW_HAG_NIGHT, flag?(:hag_night_ready))
     sync_switch(SW_NORSU_CALM, flag?(:norsu_calmed) || flag?(:norsu_beaten))
     sync_switch(SW_PACK_GONE, flag?(:fed_pack) || flag?(:drove_pack))
     sync_switch(SW_KOBOLDS_GONE, flag?(:kobolds_freed))
