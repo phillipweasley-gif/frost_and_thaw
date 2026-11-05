@@ -291,3 +291,41 @@ A new banter at the Rooted Hearth, the first morning all five are in the party. 
 **ALBERICA** That's what I said.
 
 *Everyone drinks. Sableye snores on Wyn's boot (B-08).*
+
+## Yes, no, hello, goodbye (from the dialogue review, 2026-11-05)
+
+Martell's drill is to give every character their own yes, no, hello and goodbye, because that's where voices blur first (p. 36). The readers collected these from the lines that already work. They should go into `voices.md`:
+
+| Character | Yes | No | Hello | Goodbye |
+| --- | --- | --- | --- | --- |
+| Alberica | "Oh, I like her." | "No. Memory's for remembering." | "Welcome to being a person, sweetheart." | "Let's go home." |
+| Reptin | "That's a promise, not a pleasantry." | (a polite refusal with a sting) | "What my colleague means is: thank you, Pip." | "Rest now, friend." |
+| Alerion | "They were." / "It was." | "Break it." / "That's not how tests work." | "I'm here." | (he doesn't say goodbye; he leaves) |
+| Shade | (a bet: "Out here I'd bet yes.") | "Next time we run. That's not a suggestion." | | |
+| Tamsin | "...I KNEW it." | | "Up! UP!" / "THERE you are!" | "Come back and tell me everything. Every single thing. In order." |
+| Hellen | | | "Sit. All of you. Eat." | "And come back for supper. I'm not asking." |
+| Wynsnow | | "Not yet! A Pokémon first." | "Ah." | "Off you go, both of you. I have measuring to do." |
+| Durmoot | | | "Strangers. In Dougan's Hole. In winter. Either you're lost or you're stupid." | "...Stay in tonight." |
+| Thredra | | | "Come in, dearies. Mind the cold." | "Come and find me in the chasm, dearies." |
+| Kelyn | | "No." | "Four hundred years late. Or right on time." | "Come back up. All of you. Please." |
+| Avarice | "Done? Good." | | "Variables that refused to die." | "...Recalculating..." |
+| Auril | | | "Hear the wheel, and the ones who bind it." | "Everything I loved, I kept." |
+| Sephek | "Oh. So that's what it feels like." | | "I held the knife." | "Next solstice." |
+
+## Rationing the tics (from the dialogue review, 2026-11-05)
+
+A pet word should be rare, like a running gag. These have become constant:
+
+| Tic | How often | Rule |
+| --- | --- | --- |
+| Alberica's pet names (darling, sweetheart, sugar, pretty boy) | 35 of her 50 lines in the Rootspire side content; 18 of 42 in Ch7; 24 in the Ten-Towns quests; about 19 in Ch6; used over the dead and in grief | **One per scene at most, at the end of the line, never in grief.** "Pretty boy" stays hers for Alerion |
+| Reptin borrowing "darling" | Ch7, Ch8, Ch10, Ch12 | Never. His warmth is "dear" and polish |
+| Reptin's polite line plus "(under his breath)" sting | three times in Ch1 alone; again in every chapter | Once per chapter |
+| "Four hundred years" | 18 times in Ch6 | Twice per chapter. Use a detail instead ("before the coffee was invented") |
+| Meat Meat's "Fondly", "not crying", "smells like", "from the cold table" | Fondly ×5; "not crying" shared with Alberica; "smells like" ×4 in the side quests | Each once or twice in the whole game. "Not crying" is Meat Meat's alone |
+| Meat Meat's third person | shared by Izobai, Trex and Duhg | Hers alone. Give the monsters another speech pattern |
+| Alerion's "my ring's cold" | four times as a sense-the-dead prop | Once per act |
+| Gym leaders' "Fitting for a town..." and "keeps its word. Even..." | most Speakers | Each leader gets their own challenge line |
+| Tamsin saying your name | 7 boxes in the prologue | About 3: the wake-up, the gift, the last cut-off |
+| "Eat first" | Ma Yarbroul and Hellen | Hellen's alone, as a deliberate echo of the first warm room in each era, or cut it from Ma |
+| "Hello again" | Avarice and Old Alberica | Avarice's alone |
