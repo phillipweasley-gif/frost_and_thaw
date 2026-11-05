@@ -236,9 +236,8 @@ module FrostThaw
     say(["As the Council rises, Eirwen Solglass pads over, barefoot on the cold floor."])
     eirwen_sigil
     if !try_merge_sigils && !flag?(:sigils_merged)
-      say(["EIRWEN: Three sigils point to the White Vault. I've given you mine.",
-           "EIRWEN: The Echo Gate's mirror-wraiths keep another. Linger in the Gate, and listen, and they'll come.",
-           "(Hold all three Frostshard Sigils together, and they'll show you the way beyond the Auroral Wall.)"])
+      say(["EIRWEN: Three sigils, for a door I've never found. I've given you mine. Keep it for after.",
+           "EIRWEN: The Echo Gate's mirror-wraiths keep another. Linger in the Gate, and listen, and they'll come."])
       set_switch(SW_ECHO_POCKET, true) rescue nil
     end
     set_flag(:ch11_done)
@@ -249,8 +248,6 @@ module FrostThaw
                    else "The Wennen bell pier, in the Root-Tier."
                    end
     relic_goal
-    side_goal(:vault, "Optional: the sigils point beyond the Auroral Wall, to the White Vault past the Glasswater.",
-              done: %i[avarice_body_broken avarice_ended]) if flag?(:sigils_merged)
   end
 
   # Auril's relics keep their own line under the Goal, with the count, until

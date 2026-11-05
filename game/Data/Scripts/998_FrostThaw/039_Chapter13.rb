@@ -725,6 +725,7 @@ module FrostThaw
     add_counter(:story_beats)
     state[:goal] = "The end. (Rootspire is yours to wander.)"
     transfer(2050, 31, 28, 2)
+    postgame_vault_hook
   end
 
   %i[cruelty endurance isolation preservation].each do |k|
@@ -774,3 +775,22 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("Chapter 13 switches failed: #{err.message}")
   end
 }
+
+module FrostThaw
+  module_function
+
+  # Postgame: the White Vault (owner's call, 2026-11-05). After the credits, the
+  # three Frostshard Sigils wake; until you hold all three, a side line says where
+  # the missing ones are.
+  def postgame_vault_hook
+    return if !flag?(:game_complete) || flag?(:avarice_body_broken)
+    try_merge_sigils if sigils_held >= 3
+    if flag?(:sigils_merged)
+      side_goal(:vault, "Postgame: the path of glass beyond the Auroral Wall, past the Glasswater, to the White Vault.",
+                done: :avarice_body_broken)
+    else
+      side_goal(:vault, "Postgame: three Frostshard Sigils wake a door in the north. Eirwen keeps one; the Echo Gate's wraiths and Sephek the others.",
+                done: %i[sigils_merged avarice_body_broken])
+    end
+  end
+end

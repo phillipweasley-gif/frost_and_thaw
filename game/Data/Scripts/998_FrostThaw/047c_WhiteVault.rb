@@ -100,20 +100,33 @@ module FrostThaw
   end
 
   # Called whenever a sigil arrives: three together merge (the notes' read-aloud).
+  # The White Vault is postgame (owner's call, 2026-11-05; the bible's own plan):
+  # while Auril holds the north the sigils only hum. Once the story is over,
+  # three held together wake.
   def try_merge_sigils
     return false if flag?(:sigils_merged) || sigils_held < 3
+    if !flag?(:game_complete)
+      return false if flag?(:sigils_humming)
+      set_flag(:sigils_humming)
+      say(["The three Frostshard Sigils knock together in your bag and hum, very low.",
+           "Then they go quiet, as if something to the north is listening for them.",
+           "(They won't wake while Auril holds the north. Keep them.)"])
+      return false
+    end
     pbSEPlay("Saint7") rescue nil
     $game_screen.start_flash(Color.new(220, 240, 255, 180), 20) rescue nil
     say(["The aurora brightens, stretching northward like a path of glass.",
          "You hold the three Frostshard Sigils together, and they merge into a single symbol of draconic design:",
          "wings spread over a frozen eye.",
          "The World Tree shivers, and from its roots rises a wind that smells of ancient ice.",
-         "Somewhere beyond the Auroral Wall, a door has opened.",
-         "The White Vault awaits."])
+         "Somewhere beyond the Auroral Wall, in a glacier, something frozen at a throne has thawed. It's counting.",
+         "A door has opened. The White Vault awaits."])
     take_key(:FT_FROSTSIGIL) rescue nil
     give_key(:FT_SERAPHSIGIL)
     set_flag(:sigils_merged)
     set_switch(SW_SIGILS_MERGED, true)
+    side_goal(:vault, "Postgame: the path of glass beyond the Auroral Wall, past the Glasswater, to the White Vault.",
+              done: :avarice_body_broken)
     sayc([cl(:alberica, "(very quietly) Wings over a frozen eye. That's the vault I saw in the well."),
           cl(:alerion, "Then we know where it is."),
           vault_map_pieces >= 3 ? cl(:reptin, "And with all three pieces of the map, we know where its heart is. Lovely. I hate it.") : nil,
@@ -293,7 +306,7 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Press the Seraph Sigil into the frozen eye?"))
     say(["The sigil sinks into the ice. The frozen eye opens.",
          "Behind the door, two things of mirror and iron stir: Mirror Sentinels, helmed and hollow."])
-    return if !boss_battle(named_mon(:B449H227, 62, "Mirror Sentinel"), named_mon(:B449H227, 62, "Mirror Sentinel"))
+    return if !boss_battle(named_mon(:B449H227, 72, "Mirror Sentinel"), named_mon(:B449H227, 72, "Mirror Sentinel"))
     say(["The sentinels come apart into plates of glass and lie still.", "The door of wings stands open."])
     set_flag(:vault_door_open)
     set_self_switch(event_id, "A") rescue nil
@@ -311,9 +324,9 @@ module FrostThaw
           "Every mirror shows you. Then, one by one, every mirror shows her.",
           "White hair. Infernal sigils. A smile like arithmetic.",
           "AVARICE: (from every mirror at once) Variables that refused to die. Hello again.",
-          cl(:alberica, "(very still) You're dead. We watched you die."),
-          al ? "AVARICE: You watched a coat burn, songbird. Did you think I only had one?" :
-               "AVARICE: You watched a coat burn, Alberica. Did you think I only had one?",
+          cl(:alberica, "(very still) We froze you. At her throne. We watched it hold."),
+          al ? "AVARICE: You froze a mirror, songbird. Did you think I kept only one?" :
+               "AVARICE: You froze a mirror, Alberica. Did you think I kept only one?",
           "AVARICE: A little of me lived in the mirrors under the Heartroot. A little is all I've ever needed."])
     whispers = []
     whispers << (herald?(:meat_meat) ? "(She says your number. V-7. Then, softly, the sound you made the day you were born.)" :
@@ -340,7 +353,7 @@ module FrostThaw
     return if relic_stops_circuit(key)
     return if !pbConfirmMessage(_INTL("Break the circuit?"))
     say(["The panes turn toward you. Ink runs out of them and stands up: a Mirror-Ink Wraith."])
-    return if !boss_battle(named_mon(:B429H200, 61, "Mirror-Ink Wraith"))
+    return if !boss_battle(named_mon(:B429H200, 71, "Mirror-Ink Wraith"))
     say(["The wraith spatters across the ice. The ring grinds to a stop, and the mirrors go dark one by one."])
     set_flag(key)
     left = VAULT_CIRCUITS.count { |k| !flag?(k) }
@@ -373,7 +386,7 @@ module FrostThaw
           cl(:alerion, "You faked your death to hide in an icebox. Come out."),
           "AVARICE: Oh, I'll come out."])
     circuits = VAULT_CIRCUITS.count { |k| flag?(k) } + verdant_blade_cuts_ward
-    type, name = TRAINERS[:avarice_reforged]
+    type, name = TRAINERS[:avarice_vault]
     $ft_avarice_circuits = circuits
     won = pbTrainerBattle(type, name, nil, false, 0) ? true : false
     $ft_avarice_circuits = 0
@@ -387,7 +400,7 @@ module FrostThaw
             "Mira never sails again. But she lives."])
       set_flag(:mira_freed_late)
     end
-    soul = named_mon(AVARICE_SOUL, 64, "Avarice's Reflection")
+    soul = named_mon(AVARICE_SOUL, 76, "Avarice's Reflection")
     broken = circuits
     if flag?(:chapel_avarice)
       # (the Silent Chapel: you answered the fire, and a door you open stays open)
@@ -398,11 +411,11 @@ module FrostThaw
     soul.hp = [(soul.totalhp * (1.0 - 0.2 * broken)).floor, 1].max
     caught = boss_battle(soul)
     if caught
-      sayc(["Her reflection shatters. One splinter of it, no bigger than a fingernail, flies off north, toward Solstice.",
-            "AVARICE: (very small, very far) The Frostmaiden is a variable too, my failures. I'll see you at her throne."])
+      sayc(["Her reflection shatters, and every splinter of it goes dark.",
+            "AVARICE: (very small, from no mirror at all) ...Recalculating..."])
     else
-      sayc(["Her reflection slides into the ice and away, north, laughing, toward Solstice.",
-            "AVARICE: (from very far) I'll see you at her throne."])
+      sayc(["Her reflection slides deep into the glacier, laughing. Frostina breathes after it,",
+            "and the ice closes over it a mile thick. It doesn't thaw."])
     end
     if flag?(:scale_core_given)
       sayc(["The case of ice cracks open. Empty, except for a label in the neat white hand: RAZ-MKIII CORE. RECOVER FROM THE CORSAIRS.",
@@ -421,7 +434,7 @@ module FrostThaw
     set_flag(:avarice_soul_shattered) if caught
     set_switch(SW_VAULT_BROKEN, true)
     add_counter(:story_beats)
-    state[:goal] = flag?(:ch11_done) ? "Back to Rootspire, and north to Solstice. She went ahead of you." : state[:goal]
+    side_goal_done(:vault)
   end
 
   #-----------------------------------------------------------------------------
@@ -441,7 +454,7 @@ module FrostThaw
             "A woman of crystal, framed in machinery, white hair, infernal sigils, a smile like arithmetic.",
             cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
             flag?(:mira_left_possessed) ? "AVARICE: (in Mira's voice) You watched a coat burn. I had another. You left her for me, on her own ship." :
-                                          "AVARICE: You watched a coat burn. I had another in a glacier. You never came to look.",
+                                          "AVARICE: You watched a coat burn. Did you think I only had one?",
             "AVARICE: A god in a gem. The last variable. Thank you for weighing her out for me."])
       type, name = TRAINERS[:avarice_reforged]
       $ft_avarice_circuits = 0
@@ -472,6 +485,9 @@ end
 module FrostThaw
   TRAINERS[:avarice_reforged] = [:FT_AVARICE_R, "Avarice", [[:B449H124, 64], [:B275H429, 65], [:B227H449, 65], [:B92H122, 66], [AVARICE_BODY, 68]],
                                  "Variables. Always variables. ...Recalculating."]
+  # The postgame Vault: her last body, past the final battle's levels.
+  TRAINERS[:avarice_vault] = [:FT_AVARICE_R, "Avarice", [[:B449H124, 74], [:B275H429, 75], [:B227H449, 75], [:B92H122, 76], [AVARICE_BODY, 78]],
+                              "Variables. Always variables. ...Recalculating."]
 end
 
 if Events.respond_to?(:onTrainerPartyLoad)
