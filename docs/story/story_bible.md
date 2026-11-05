@@ -11,7 +11,7 @@ The audit read all 29 scripts and every event on the built maps. These are the p
 | What feels wrong now | Why | What the rewrite does |
 | --- | --- | --- |
 | Text with no context | About 40 names and terms appear before they're introduced (Wennen, the Broken One, Brightmane, Frost Saint, White Womb). Nine Wennen in the Warren exist only to recite lore. | Every term is introduced by a person in a scene that needs it. The Warren keeps four Wennen with jobs in the plot. Lore that pays off nowhere is cut. |
-| Events feel random | Razzy appears from nowhere and the rite is solved by two items nobody knew mattered. Frostina's egg has no origin. Good Mead, the white moose and Ramshackle lead nowhere. | Each chapter answers one part of the throughline. The unicorn horn and medallion are set up before they're used. Frostina's egg fell from Auril's roe the night the Rime began. Good Mead becomes the dragon's first target in Act II. |
+| Events feel random | Razzy appears from nowhere and the rite is solved by two items nobody knew mattered. Frostina's egg has no origin. Good Mead, the white moose and Ramshackle lead nowhere. | Each chapter answers one part of the throughline. The unicorn horn and medallion are set up before they're used. Frostina's egg fell from Auril's roc the night the Rime began. Good Mead becomes the dragon's first target in Act II. |
 | No reason to go anywhere | The Act I motive is "collect Speakers' seals to travel the Dale". | The Heralds' relics are lures that all point toward Dougan's Hole. The seals are permission to cross a Dale under lottery law. The party is also protecting Shimmer from Sephek. |
 | Memory or time travel? | New Journey calls Act I a memory where nobody sees you, yet everyone battles you. | Real time travel (your choice). A Reversal-glass lantern throws you back, and the Reversal carries you and the Heralds forward. |
 | The Chapter 5 hag plays in Chapter 2 | Two scenes share one function name, so the later one overwrites the earlier. | The script gives every scene a unique ID (see the scene scripts). |
@@ -123,7 +123,7 @@ People and Pokémon live side by side, as in any Pokémon region. The monsters o
 | --- | --- |
 | Long ago | Auril fells Balanus. One limb survives under what will become the Cackling Chasm. |
 | Some years before Act I | In Saltmarsh, Auril takes Shimmer as her first vessel for one night, the "white burn". Shade pulls her out, and something bright pulls back: in the morning there's a unicorn's horn in the snow, and Brightmane has noticed Shade. Shimmer escapes, but the Lodestone stays in her. |
-| Two years before Act I | Auril brings the Everlasting Rime. Her roe Iskra drops an egg over Lonelywood, and the Wennen keep it. |
+| Two years before Act I | Auril brings the Everlasting Rime. Her roc Iskra drops an egg over Lonelywood, and the Wennen keep it. |
 | Act I | The Convergence through the Cackling Chasm, over about a month. |
 | Year 0 VR | The Verdant Reversal. |
 | 57 VR | Settlers name the tree the Heart of Spring. |
@@ -245,7 +245,7 @@ The Heralds drive the plot. Every character below wants something specific, and 
 
 |  | Razzilith | Frostina |
 | --- | --- | --- |
-| Was | Razzy, a voiceless goblin with wyrm-blood from Avarice's lab (Raz-MKIII) | Shimmer's heart, sung into an egg Auril's roe dropped |
+| Was | Razzy, a voiceless goblin with wyrm-blood from Avarice's lab (Raz-MKIII) | Shimmer's heart, sung into an egg Auril's roc dropped |
 | Pronoun | he | she |
 | Type (proposed) | Dragon/Grass | Dragon/Ice |
 | Rider | Meat Meat | Alerion |
@@ -298,7 +298,7 @@ They waited 400 years inside the Wall for their riders. To Rootspire they are th
 | Anduin | Ten-Towns, then Rootspire | Reptin's husband; candidate | His husband back as he was | Fidgets with his iron ring |
 | Phildendrin | Ten-Towns, then Rootspire | Meat Meat's mother; candidate | Her daughter, and justice | Fierce, plain-spoken, hooded |
 | Talion | Glasswater Lake | Echo of Alerion's dead brother | To be remembered, then released | Recites memories |
-| Iskra | Solstice | Auril's roe | Its nest, and its egg's daughter | Animal; never speaks |
+| Iskra | Solstice | Auril's roc | Its nest, and its egg's daughter | Animal; never speaks |
 
 ### Relationship matrix
 
@@ -621,7 +621,7 @@ The five towns' quests stay, and each pays something a trainer will use. Finish 
 | --- | --- | --- | --- |
 | Nass Lantomir's Ghost | A frozen wizard's ghost on Solstice wants her orb back | She knows the safe route to the Crown | Professor Skant (talking orb); shortcut |
 | Ukuma's Rink | Grimskalle's guard walrus would rather skate | Win the race and he'll leave his post | Back door to the Hall of the Four Winds |
-| The Silver Egg | Iskra's nest holds a second egg | Frostina's sibling, if you're kind to the roe | Postgame dragon companion |
+| The Silver Egg | Iskra's nest holds a second egg | Frostina's sibling, if you're kind to the roc | Postgame dragon companion |
 
 ### Balance notes
 
@@ -759,7 +759,7 @@ The concept sheets are pixel-style references, not game-resolution sprites, so e
 | Hyphora | Scene art: glowing roots and face (not battled) | P2 | none | Concept sheet done |
 | Chardalyn Dragon | PK; BIG (launch, chase, Bryn Shander) | P1 | none | Concept sheet done |
 | Shadow Mycolith | PK, including the enraged form | P2 | Trevenant-Parasect fusion | Concept sheet done |
-| Iskra, Auril's roe | PK; BIG | P2 | none | Not started |
+| Iskra, Auril's roc | PK; BIG | P2 | none | Not started |
 | Brightmane | Mirror scene art (Ch6) | P2 | none | Not started |
 
 ### Villains

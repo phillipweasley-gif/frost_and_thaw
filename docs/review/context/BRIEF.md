@@ -37,6 +37,27 @@ The owner has decided (2026-11-05, already built): the player has their own goal
 mirrors leads to Dougan's Hole; at the last mirror they choose; then a second goal, to bring the Wall down); "Summer
 is Avarice" stays Chapter 8's twist; the White Vault is postgame; the Ten-Towns quests have rewards. Keep to these.
 
+### Added for Acts II and III (the skill's five newer books)
+
+The skill's SKILL.md now distils five more books (Bell, the *Game Narrative Toolbox*, Nicklin, the Conflict and
+Trope thesauri). Read its "Five newer sources" section, and `docs/WRITING_GUIDE.md` §3b, which turns them into
+rules for this pass. Apply these on top of the method below:
+
+- **Three questions per beat** (Toolbox p. 9): your §2 table gets a column "Can the player say what happened /
+  what next / why it matters?".
+- **The skip test** (Toolbox p. 229): mark every fact in your §2 that the player only gets from optional content
+  (party chat, the Heralds menu, side NPCs, signs, Ten-Towns favours). Those are High if the plot needs them.
+- **The adhesive** (Bell pp. 87–89): say, for your act, why the player stays and why the Heralds stay, and where
+  the game says so. Missing is High.
+- **Secrets** (Trope Thesaurus pp. 47–48; Bell pp. 106–113): for Summer/Avarice, Alberica's bargain and the White
+  Vault, and Selrae, add a §8 "who knows what, when" table for your chapters: each clue, where it plays, who sees
+  it, and whether it's on the spine.
+- **The outsider** (Toolbox p. 101): prefer fixes where someone explains something *to the player* because they
+  fell in from outside and need telling.
+- **Ten-Towns favours** (Toolbox pp. 130–132, 180–185): for the side-quest part, check each favour against the
+  quest-giving structure (hook in the middle of the problem, a real stance, a skip, "not now" doesn't lock it,
+  four or five steps, ties to the main stakes) and that its reward is said up front.
+
 ## What to write: `docs/review/context/NN.md` (one file per part you own)
 
 1. **What the player knows coming in** (both modes): a short bulleted list, from the log, not the bible.

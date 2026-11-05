@@ -137,8 +137,13 @@ module FrostThaw
     # The Minor Avatar (rootspire.md Tab 4, 1.1): his followers first; he can't
     # be killed in Rootspire, and he drops a Frostshard Sigil when he breaks.
     sephek_minor_avatar
-    say(["The sky above the Canopy tears open.",
-         "Through the thinned Wall, a vast white roe comes down out of the night, antlers trailing aurora.",
+    # Iskra, Auril's roc (story_bible "Characters"): she's on screen, not told.
+    # She drops from the top of the screen and lands over Frostina.
+    iskra = (Stage.actor(:iskra, px + 3, py - 8, 2, graphic: "Followers/ARTICUNO_fly") rescue nil)
+    iskra.instance_variable_set(:@step_anime, true) if iskra rescue nil
+    say(["The sky above the Canopy tears open."])
+    Stage.walk(iskra, [PBMoveRoute::ChangeSpeed, 5] + [PBMoveRoute::Down] * 4) if iskra
+    say(["Through the thinned Wall, a vast white roc drops out of the night, aurora trailing from her wingtips.",
          "Iskra."])
     if frostina
       Stage.fx("E-04", frostina, frames: 10, hold: true, wait: true, oy: 8)   # the crystal closes over her
@@ -149,9 +154,13 @@ module FrostThaw
          "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home.",
          "SEPHEK: She was always going home.",
          as(:alerion, "(very quietly) She's not hers."),
-         flag?(:eline_captured) ? "Iskra lifts the crystal in her antlers. Sephek climbs onto her back alone. Below, in the root-cords, Eline is still praying backwards." :
-                                  "Iskra lifts the crystal in her antlers. Sephek and Eline climb onto her back.",
-         "The roe turns north, toward the Sea of Moving Ice, and is gone."])
+         flag?(:eline_captured) ? "Iskra takes the crystal in her talons. Sephek climbs onto her back alone. Below, in the root-cords, Eline is still praying backwards." :
+                                  "Iskra takes the crystal in her talons. Sephek and Eline climb onto her back."])
+    if iskra
+      [frostina, sephek].each { |e| e.opacity = 0 if e rescue nil }   # they go with her
+      Stage.walk(iskra, [PBMoveRoute::Up] * 9)
+    end
+    say(["The roc turns north, toward the Sea of Moving Ice, and is gone."])
     Stage.cleanup rescue nil
     down = stage_act(:alerion, :down, dx: 1, dy: 0, dir: 2, per: 6)   # in the snow on the steps
     if herald?(:alerion)

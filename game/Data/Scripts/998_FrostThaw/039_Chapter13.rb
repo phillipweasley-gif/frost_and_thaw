@@ -286,32 +286,32 @@ module FrostThaw
   end
 
   #-----------------------------------------------------------------------------
-  # SC 13.06 - The roe's nest; 13.07 - The Frost Saint
+  # SC 13.06 - The roc's nest; 13.07 - The Frost Saint
   #-----------------------------------------------------------------------------
   def scene_the_crown
     return if flag?(:crown_reached)
     set_flag(:crown_reached)
     sayc(["On the roof of the world, inside the prongs of an ice crown,",
-          "a vast white roe stands over a nest.",
+          "a vast white roc stands over a nest.",
           "In the nest, a silver egg. Beside it, Frostina in her crystal, her eyes open.",
           cl(:alerion, "(very quietly) I'm here. I'm here."),
-          "Iskra lowers her antlers."])
+          "Iskra mantles over the nest, wings out, beak open."])
   end
 
   def iskra(event_id = nil)
     return say(["Iskra watches you over her nest. She doesn't move."], event_id) if flag?(:iskra_passed)
-    c = pbMessage(_INTL("Iskra lowers her antlers."), [_INTL("Hum Shimmer's four notes"), _INTL("Approach slowly"), _INTL("Fight")], 1)
+    c = pbMessage(_INTL("Iskra mantles over the nest, wings out."), [_INTL("Hum Shimmer's four notes"), _INTL("Approach slowly"), _INTL("Fight")], 1)
     if c == 0 && flag?(:hummed_song)
       Stage.balloon($game_player, "B-05", frames: 50)
       Stage.wait(20)
       Stage.balloon(stage_event("Frostina's crystal"), "B-05", frames: 60)
       say(["You hum four notes. Inside the crystal, Frostina's eyes move. She hums them back.",
-           "Iskra goes still. She listens. She steps aside."])
+           "Iskra goes still. She listens. She folds her wings and steps aside."])
       set_flag(:iskra_calm)
     elsif c == 0 || c == 1
       say(["You go forward one step at a time.", "Iskra watches every step. She doesn't charge."])
     else
-      return if !boss_battle(named_mon(:B234H144, 64, "Iskra"))
+      return if !boss_battle(named_mon(:B18H144, 64, "Iskra"))
       say(["Iskra stumbles back over her nest and stays there, guarding the egg.", "She lets you pass."])
     end
     set_flag(:iskra_passed)

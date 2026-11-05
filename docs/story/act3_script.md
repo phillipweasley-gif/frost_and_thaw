@@ -62,7 +62,7 @@ A dragon.
 
 ### SC 11.02 — The Frost Saint walks
 
-- **Map:** 2061 Canopy, the Shrine of the Twinned Dragons, night. **Trigger:** follows 11.01; run to the Shrine. **Present:** party (Alerion, Frostina's Dragoon; Meat Meat, Razzilith's); Frostina; Razzilith; Matron Eline; Halo; Sephek; Iskra (Auril's roe). **Music:** *Frostmaiden*, then boss.
+- **Map:** 2061 Canopy, the Shrine of the Twinned Dragons, night. **Trigger:** follows 11.01; run to the Shrine. **Present:** party (Alerion, Frostina's Dragoon; Meat Meat, Razzilith's); Frostina; Razzilith; Matron Eline; Halo; Sephek; Iskra (Auril's roc). **Music:** *Frostmaiden*, then boss.
 
 The Shrine is full of Halo robes.
 
@@ -104,7 +104,7 @@ He's standing between them and Frostina, his ring white with frost.
 
 The sky above the Canopy tears open.
 
-Through the thinned Wall, a vast white roe comes down out of the night, antlers trailing aurora.
+Through the thinned Wall, a vast white roc drops out of the night, aurora trailing from her wingtips.
 
 Iskra.
 
@@ -118,9 +118,9 @@ She goes still inside it, her eyes still open.
 
 **ALERION** *(very quietly)* She's not hers.
 
-Iskra lifts the crystal in her antlers. Sephek and Eline climb onto her back.
+Iskra takes the crystal in her talons. Sephek and Eline climb onto her back.
 
-The roe turns north, toward the Sea of Moving Ice, and is gone.
+The roc turns north, toward the Sea of Moving Ice, and is gone.
 
 Alerion is lying in the snow on the Shrine steps, a hand pressed to his chest.
 
@@ -611,19 +611,19 @@ The Still Keeper.
 - **Battle:** the Still Keeper (Ice/Ghost fusions; Lv 63–65). With `canticle_learned`, it starts at half health. Intro: "Stay. Exactly like this." On losing: "Memory's for remembering. ...I'd forgotten."
 - **Flow:** sets `test_preservation_faced`; win and PRESERVATION cracks (`test_preservation_broken`; the Rewritten Auril will be weaker).
 
-### SC 13.06 — The roe's nest
+### SC 13.06 — The roc's nest
 
 - **Map:** new The Crown (the skull's crown battlements). **Trigger:** all four tests faced. You can lose a test and move on; only a test you win sets its `test_*_broken` flag. **Present:** party; Iskra; Frostina in an ice crystal. **Music:** wind.
 
 On the roof of the world, inside the prongs of an ice crown,
 
-a vast white roe stands over a nest.
+a vast white roc stands over a nest.
 
 In the nest, a silver egg. Beside it, Frostina in her crystal, her eyes open.
 
 **ALERION** *(very quietly)* I'm here. I'm here.
 
-Iskra lowers her antlers.
+Iskra mantles over the nest, wings out, beak open.
 
 ▸ YOU:
 

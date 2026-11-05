@@ -124,6 +124,37 @@ come from the skill's books and apply to every chapter, quest and scene rewrite.
 - **Antagonists' goals directly oppose the heroes'** and are said once, plainly (Seger p. 227; Berger p. 69).
 - **A Trial or Test tries something the player watched that character do.**
 
+## 3b. Context: the player is given everything
+
+The owner's standard (2026-11-05): "approach this as though the person playing, Herald or not, is given
+everything for context." The player has never played Pokémon or D&D and hasn't read the bible. These rules come
+from the newer books in the skill (Bell, *The Game Narrative Toolbox*, Nicklin, the Trope and Conflict thesauri)
+and from what the Act I context pass found.
+
+- **Every beat answers three questions**: what happened, what do I do next, why does it matter (Toolbox p. 9).
+  "What happened" includes how we got here and how much time passed.
+- **The player is the outsider, so they are the reason things get explained** (Toolbox p. 101). They fell through
+  a glass into a world they don't know: people explain things *to them*, in their own voice and for their own
+  reasons. Nobody explains to someone who already knows.
+- **Say the adhesive**: why the player doesn't just go home and why the Heralds don't just leave, once at the start
+  of each act and again when it changes (Bell pp. 87–89). Act I: the lantern glass and the lures. After the last
+  mirror: the Wall.
+- **The walk-away test at each doorway** (Bell pp. 33–37): after the last mirror and after the Forge, could the
+  player go back to how things were? If yes, the doorway isn't built yet.
+- **The iceberg**: the player gets what serves their current goal, when it serves it; the rest is optional
+  (Toolbox pp. 65–80). But "act first, explain later" (Bell p. 231) only works if *later* comes: every opened
+  question is answered on the spine, and the context ledger lists where.
+- **Assume the player remembers only the last thing said, and plays over many sessions with no scroll-back**
+  (Toolbox p. 182; Nicklin pp. 95–101). The Goal menu carries both goals ("Also:" lines); each chapter's first
+  scene says where we are, why, and whose idea it was, in one line someone has a reason to say.
+- **The skip test** (Toolbox p. 229): the story still makes sense if the player skips every optional thing (party
+  chat, the Heralds menu, side NPCs, signs, the Ten-Towns favours). A fact the plot needs is on the spine.
+- **Secrets have a who-knows-what-when table** (Trope Thesaurus pp. 47–48): Summer is Avarice, Alberica's bargain
+  and the White Vault, Selrae. For each: who knows, from when, which clue the player sees where, and the reveal.
+  A twist is planted backward from its reveal (Bell pp. 106–113).
+- **Register by mode** (Nicklin pp. 102–103): goal lines and menus are plain and neutral; narration is short and
+  concrete; only characters get jokes. The Goal menu never jokes and never names a term it hasn't explained.
+
 ## 4. Voice
 
 - Write each character from the Voices tab: core, how they talk, running bits, under pressure, never. With the
@@ -169,9 +200,13 @@ come from the skill's books and apply to every chapter, quest and scene rewrite.
   next concrete step), and in one source the player can revisit (an NPC's repeat line, party chat, a sign)
   (Bateman p. 212).
 - **A quest-giver's reason — why us, why now — is in the same box as the request** (Bateman pp. 91-92).
-- **Optional content is optional:** removable without breaking a spine line; never placed right before a boss;
-  rewards are minor (Bateman pp. 44, 49, 66, 156). Each side quest's header comment names its thematic echo
+- **Optional content is optional:** removable without breaking a spine line; never placed right before a boss
+  (Bateman pp. 44, 49, 66, 156). Rewards are minor, except the Ten-Towns favours, which the owner decided pay
+  well: a decent reward each, a semi-substantial one per town, a substantial one for all ten (2026-11-05). Each side quest's header comment names its thematic echo
   ("debt", "what winter takes").
+- **Quest-giving dialogue** (Toolbox pp. 130–132, 180–185): open with the giver already mid-problem; the player's
+  first choice is a real stance (help, not now, what's in it for me), with a skip-to-the-task option; "not now"
+  never locks the quest away; four or five steps at most; the turn-in ties back to the main stakes.
 - **Order-independence:** in a hub (Ten-Towns, the Dale, Rootspire's week), every fact a side quest relies on must
   make sense whichever order the player does things in (Bateman p. 83; Despain pp. 31, 209).
 - **Adapting the book:** find the heart of each location first (Nordling) — the one feeling or choice it exists to
@@ -319,6 +354,15 @@ Rules that come with them:
 48. The player gives an input on the scene's decisive beat.
 49. Every payoff in the scene was set up earlier on the path; every setup it plants is listed with where it pays.
 50. A big beat is followed by a sequel beat (reaction, dilemma, decision) before the next action.
+
+**Context (§3b)**
+51. After the scene the player can say what happened, what to do next and why it matters, in Journey mode and as
+    each Herald.
+52. Every name, word and past event the scene uses was shown or explained earlier on the spine (check the ledger).
+53. The scene still makes sense if every optional line before it was skipped.
+54. Anything explained is explained to someone who doesn't know it, by someone with a reason to say it.
+55. The scene's start says where, when (if time passed) and whose decision brought us here.
+56. Any secret the scene touches matches its who-knows-what-when table.
 
 ## 12. Known problems to fix (from the three books' scene reviews)
 
