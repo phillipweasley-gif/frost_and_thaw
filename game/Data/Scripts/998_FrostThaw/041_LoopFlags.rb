@@ -75,3 +75,9 @@ module FrostThaw
   LOOP_ACT1_FLAGS.concat(%i[glass_read broke_last_mirror]).uniq!
   LOOP_ACT2_FLAGS.concat(%i[glass_read broke_last_mirror their_time_known promised_their_time]).uniq!
 end
+
+# Context pass, Chapter 1 (2026-11-05): Shimmer's catching lesson in the Commons
+module FrostThaw
+  LOOP_ACT1_FLAGS.concat(%i[commons_lesson]).uniq!
+  LOOP_ACT2_FLAGS.concat(%i[commons_lesson]).uniq!
+end

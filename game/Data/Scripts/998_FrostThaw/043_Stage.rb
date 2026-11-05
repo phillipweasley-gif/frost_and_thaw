@@ -545,7 +545,7 @@ module FrostThaw
     # Characters' themes (Audio/BGM). The rival's music starts when Tamsin
     # shows up to battle; the professor has his own.
     THEMES = { tamsin: "Pokémon_The_Origins_-_Rival_Encounter_Music_mp3", wynsnow: "oak_theme",
-               college: "oak_lab" }
+               college: "oak_lab", heralds: "tintower" }
     JINGLES = { pokemon: "Pkmn get", item: "Item get", key_item: "Key item get", heal: "Pokemon Healing",
                 badge: "Badge get" }
     MOVE = { 2 => 1, 4 => 2, 6 => 3, 8 => 4 }          # direction -> PBMoveRoute code
@@ -678,6 +678,32 @@ module FrostThaw
       end
     end
 
+    # Several people walk off to (x, y) at once, then vanish, like leave() for
+    # each of them (the five leaving a tavern together, strangers passing by).
+    def leave_all(evs, x, y)
+      evs = Array(evs).compact
+      return if evs.empty?
+      evs.each do |ev|
+        dirs = path_for(ev, x, y)
+        moves = dirs ? dirs.map { |d| MOVE[d] } : path_straight(ev, x, y)
+        walk(ev, [37] + moves + [38], wait_for: false)
+      end
+      guard = 0
+      while evs.any?(&:move_route_forcing) && guard < 900
+        wait(1)
+        guard += 1
+      end
+      evs.each do |ev|
+        if @actors.key?(ev.id)
+          remove_actor(ev)
+        else
+          ev.erase rescue (ev.transparent = true)
+        end
+      end
+    rescue StandardError => e
+      log("leave_all: #{e.message}")
+    end
+
     # A fallback for leave(): straight lines, through anything.
     def path_straight(ev, x, y)
       dx, dy = x - ev.x, y - ev.y
@@ -779,14 +805,14 @@ module FrostThaw
     # A free standing tile near the player, beside them first, then behind:
     # [x, y, from_x, from_y], where from is one tile further out (where they
     # walk in from) when that tile is free too.
-    def free_slot
+    def free_slot(reserved = [])
       px, py, d = $game_player.x, $game_player.y, $game_player.direction
       fx, fy = STEP[d]
       side = [[-fy, fx], [fy, -fx]]                 # left and right of the facing
       back = [-fx, -fy]
       offs = side + [back, [back[0] + side[0][0], back[1] + side[0][1]], [back[0] + side[1][0], back[1] + side[1][1]],
                      [side[0][0] * 2, side[0][1] * 2], [side[1][0] * 2, side[1][1] * 2]]
-      taken = @summoned.values.map { |g, _| [g.x, g.y] }
+      taken = @summoned.values.map { |g, _| [g.x, g.y] } + reserved
       free = lambda do |x, y|
         next false if !$game_map.valid?(x, y) || [x, y] == [px, py] || taken.include?([x, y])
         next false if !($game_map.passable?(x, y, 0) rescue false)
@@ -821,6 +847,79 @@ module FrostThaw
       nil
     end
 
+    # Several travelling companions walk in together through a door (x, y) at
+    # the start of a scene, so they're seen arriving instead of popping up one by
+    # one mid-scene (context/01.md B6). They then behave like summoned ones: say()
+    # finds them, and they step out when you get control back.
+    def arrive(keys, x, y)
+      return if !map?
+      reserved = []
+      walkers = []
+      Array(keys).each do |key|
+        next if FrostThaw.herald?(key) || !FrostThaw.companions.include?(key)
+        next if @summoned[key] && $game_map.events[@summoned[key][0].id].equal?(@summoned[key][0])
+        slot = free_slot(reserved) || near_slot(reserved) or next
+        reserved << [slot[0], slot[1]]
+        ge = actor(key, x, y, 8) or next
+        @summoned[key] = [ge, [x, y]]
+        dirs = path_for(ge, slot[0], slot[1])
+        if dirs && !dirs.empty?
+          # A long way round (a hall full of tables): they were a few steps
+          # behind you, and catch up over the last stretch.
+          if dirs.length > ARRIVE_STEPS
+            sx, sy = x, y
+            dirs[0...(dirs.length - ARRIVE_STEPS)].each { |dd| sx += STEP[dd][0]; sy += STEP[dd][1] }
+            ge.moveto(sx, sy)
+            dirs = dirs[(dirs.length - ARRIVE_STEPS)..]
+          end
+          walk(ge, dirs.map { |dd| MOVE[dd] } + [TURN[$game_player.direction] || 19], wait_for: false)
+        else
+          ge.moveto(slot[0], slot[1])
+        end
+        walkers << ge
+      end
+      guard = 0
+      while walkers.any?(&:move_route_forcing) && guard < 400
+        wait(1)
+        guard += 1
+      end
+      walkers.each { |ge| ge.through = true }
+    rescue StandardError => e
+      log("arrive: #{e.message}")
+    end
+
+    ARRIVE_STEPS = 9
+
+    # Any free tile within three steps of you, nearest first (a small shop with
+    # no room left beside you).
+    def near_slot(reserved = [])
+      px, py = $game_player.x, $game_player.y
+      taken = @summoned.values.map { |g, _| [g.x, g.y] } + reserved
+      cands = []
+      (-3..3).each do |dx|
+        (-3..3).each do |dy|
+          d = dx.abs + dy.abs
+          next if d < 2 || d > 3
+          x, y = px + dx, py + dy
+          next if !$game_map.valid?(x, y) || taken.include?([x, y])
+          next if !($game_map.passable?(x, y, 0) rescue false)
+          next if $game_map.events.values.any? { |e| e.x == x && e.y == y && !e.through && !e.character_name.to_s.empty? }
+          cands << [d, x, y]
+        end
+      end
+      c = cands.min_by(&:first) or return nil
+      [c[1], c[2], c[1], c[2]]
+    end
+
+    # Hold the companions who walked in on screen while a scene runs outside an
+    # event (a step trigger), where no interpreter marks the game as busy.
+    def hold
+      @hold = true
+      yield
+    ensure
+      @hold = false
+    end
+
     # Called every frame: once the player has control again, the companions who
     # walked in step back out and go.
     def update_summoned
@@ -832,7 +931,7 @@ module FrostThaw
         @leaving.delete(pair)
       end
       return if @summoned.empty?
-      busy = ($game_system.map_interpreter.running? rescue false) || ($game_temp.message_window_showing rescue false)
+      busy = @hold || ($game_system.map_interpreter.running? rescue false) || ($game_temp.message_window_showing rescue false)
       return if busy
       @summoned.each_value do |ge, from|
         dx, dy = from[0] - ge.x, from[1] - ge.y

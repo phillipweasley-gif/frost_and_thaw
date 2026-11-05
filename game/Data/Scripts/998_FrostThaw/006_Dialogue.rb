@@ -14,10 +14,10 @@ module FrostThaw
         ["GUARD: That's the Speaker's seal. On you go.",
          "GUARD: The east road's dug out as far as Bryn Shander. Past that, you're on your own."]
       elsif T.flag?(:naerth_terms)
-        ["GUARD: Lottery season. Nobody leaves Targos without the Speaker's seal.",
+        ["GUARD: Lottery season. Speaker Naerth runs Targos, and nobody leaves without his seal.",
          "GUARD: He's back at the Town Hall. Ask him nicely. He likes nicely."]
       else
-        ["GUARD: Lottery season. Nobody leaves Targos without the Speaker's seal.",
+        ["GUARD: Lottery season. Speaker Naerth runs Targos, and nobody leaves without his seal.",
          "GUARD: He's at the Luskan Arms most nights. Doing business.",
          "GUARD: Ask him nicely. He likes nicely."]
       end
@@ -58,7 +58,7 @@ module FrostThaw
         ["MA YARBROUL: Warmest room in Targos, ducks. Which isn't saying much.",
          T.flag?(:naerth_terms) ? "MA YARBROUL: Speaker's seal? Town Hall, up the main street. Bring Pokémon." :
                                   "MA YARBROUL: Speaker's seal? Naerth's at the Luskan Arms. Bring coin, or Pokémon.",
-         "MA YARBROUL: And eat something first."]
+         "MA YARBROUL: Pokémon hurt? The Center heals them for nothing. Only free thing in Targos."]
       else
         ["A plump, grey-haired widow fusses along the benches, refilling stew bowls whether anybody asked or not.",
          "MA YARBROUL: Ethen Yarbroul. Ma, to this lot. Five strangers in one night, in winter? Sit. Eat.",
@@ -83,22 +83,21 @@ module FrostThaw
     tavern_brawler_after: ["GORM: ...Fine. Keep the stool. It wobbles anyway."],
 
     # --- Pokémon Center, market, houses --------------------------------------
-    center_traveler: ["There's a killer loose in the Dale. Walks through blizzards in his shirtsleeves.",
-                      "Never shivers, they say. The Frostmaiden's chosen.",
-                      "If you meet a man who doesn't feel the cold... run."],
+    center_traveler: ["TRAPPER: There's a killer loose in the Dale. Walks through blizzards in his shirtsleeves.",
+                      "TRAPPER: Never shivers, they say. The Frostmaiden's chosen.",
+                      "TRAPPER: If you meet a man who doesn't feel the cold... run."],
     market_customer: ["Prices doubled since the Rime set in. Half of it goes to the Speaker, they say.",
                       "The other half goes to the Speaker too. They just don't say it."],
     epheris_thornweald: -> {
       if T.herald?(:alberica)
-        ["EPHERIS: ...That pendant. Put it away, and don't take it out again.",
-         "EPHERIS: Black ice that never melts. The Arcane Brotherhood would kill for it. I'd know. I was one.",
-         "EPHERIS: It's Netherese. A key to a city lost in the glacier. Keep it hidden. Keep walking."]
+        ["EPHERIS: Still carrying that pendant? It's Netherese. A key to a city lost in the glacier.",
+         "EPHERIS: Keep it hidden. Keep walking."]
       else
         ["EPHERIS: Relics from across the Dale. Old, odd, and occasionally cursed.",
          "EPHERIS: No refunds on the cursed ones. I used to be Brotherhood, you know. I got out. Mostly."]
       end
     },
-    fisher_widow: ["WIDOW: He went fishing near Dougan's Hole. They heard laughing out on the ice. Then nothing.",
+    fisher_widow: ["WIDOW: My husband fished near Dougan's Hole. Folk heard laughing on the ice. Then nothing.",
                    "WIDOW: Take his Spheal. It sits by the door every night. It shouldn't have to wait alone."],
     lantern_mother: ["We keep a lantern lit for my sister. She paid the clerk to leave her name off the board. Everyone does it, if they can.",
                      "They found her on the ice a week later, frozen, with a knife of ice in her. In her own coat.",
@@ -126,8 +125,8 @@ module FrostThaw
         ["The Speaker's not in. Try the Luskan Arms. He does his business there, most nights."]
       else
         ["Welcome to the Town Hall. Mind the tables, and the people at them.",
-         "The Speaker takes challenges from strangers who want his seal. He's at the back, behind the bar.",
-         "Win, and you travel the Dale on Targos's good name. Lose, and... well. You'll owe him."]
+         "Beat his three people at the tables first. Then the Speaker, at the back, behind the bar.",
+         "Win, and his seal opens any gate on the lake. Lose, and... well. You'll owe him."]
       end
     },
     hall_guide_old: ["Welcome to the Town Hall. Mind the tables, and the people at them.",
@@ -191,8 +190,10 @@ module FrostThaw
                 "I'd like to be on the page that goes missing."]
     },
     shimmer: {
-      targos:  ["My stone's colder near the shrines. There's one on every street.",
-                "Auril's shrines. They keep her close in Targos. Closer than I'd like."],
+      targos:  [{ if: { flag: :glass_read }, lines: ["My stone's colder near the shrines. There's one on every street.",
+                                                     "Your glass hums when my stone does. I don't like that either."] },
+                ["My stone's colder near the shrines. There's one on every street.",
+                 "Auril's shrines. They keep her close in Targos. Closer than I'd like."]],
       tavern:  ["Don't tell Shade, but I keep checking the door.", "If she comes back, I'd like to see her first."],
       luskan:  ["I used to work rooms like this. Smile, listen, count the exits.",
                 "Four exits. Two of them are windows. One of them is Shade."],

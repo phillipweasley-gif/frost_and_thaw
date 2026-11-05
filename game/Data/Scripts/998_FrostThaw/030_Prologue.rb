@@ -55,6 +55,7 @@ module FrostThaw
       end
     },
     pro_bard: ["BARD: \"...and the dwarf sang, and the wolf-man wept, and the cold came down like a closing door...\"",
+               "BARD: (singing) \"...the Shade and the Shimmer, who smuggled the last of the light...\"",
                "BARD: Third time this morning. They'll want it thirty more by tonight."],
     pro_drinker: ["The festival's the one day a year the whole city looks up at the same thing.",
                   "Four hundred years since the tree grew in a night. Four hundred! And the light's still gold."],
@@ -77,7 +78,8 @@ module FrostThaw
     pro_mural_kid: ["Are you going to the College? Everyone gets their first Pokémon at the festival.",
                     "I get mine in three years. Three! That's forever!"],
     pro_lantern_seller: -> {
-      flag?(:saw_sixth_figure) ? ["LANTERN SELLER: Real Reversal glass! Dug out of the deep roots, where the old hag's mirrors broke!"] :
+      flag?(:saw_sixth_figure) ? ["LANTERN SELLER: Real Reversal glass! Dug from the deep roots!",
+                                  "LANTERN SELLER: From right where the old hag's mirrors broke!"] :
         ["LANTERN SELLER: Lanterns tonight, little one! Come back when you've a Pokémon to show them to."]
     },
     pro_wynsnow: -> {
@@ -96,7 +98,7 @@ module FrostThaw
                        "STUDENT: That's what Wynsnow says, anyway. He also says that about lunch."],
     pro_student_hall: ["STUDENT: You're getting your first Pokémon today? I remember mine. It bit me.",
                        "STUDENT: We're friends now. It still bites me."],
-    pro_lift: ["LIFT-KEEPER: Up to the Canopy-Tier? The College is right at the top. Hold on to the rail."]
+    pro_lift: ["LIFT-KEEPER: Up to the College? Right at the top of the tree. Hold on to the rail."]
   )
 
   module_function
@@ -130,8 +132,11 @@ module FrostThaw
     say(["TAMSIN: Up! UP! #{pro_name}! Wynsnow said first light, and first light was an hour ago!"])
     Stage.approach(tamsin)
     Stage.hop(tamsin)
-    say(["Tamsin Brightrun: Hellen's kid, about your age, and set on being a Rootwarden since birth.",
-         "TAMSIN: Yes, it's always first light. That's not the point. The point is POKÉMON."])
+    say(["Tamsin Brightrun: Hellen's kid, about your age, and set on joining the tree's Rootwardens."])
+    Stage.face($game_player, 8)                      # you glance at the gold window
+    Stage.wait(16)
+    say(["TAMSIN: Don't look at the window. It's ALWAYS first light. The point is POKÉMON."])
+    Stage.turn_to($game_player, tamsin)
     # Tamsin tows you to the bar, where Hellen has breakfast waiting.
     Stage.escort(tamsin, 6, 6, facing: 4) || Stage.walk_to($game_player, 5, 6)
     Stage.walk_to($game_player, 5, 6, face: 4) if [$game_player.x, $game_player.y] != [5, 6]
@@ -147,7 +152,7 @@ module FrostThaw
     pbSEPlay("Exit Door") rescue nil
     say(["Tamsin's gone, toast in their teeth.",
          "(The College of Auroral Arts is at the top of the tree. Take the root-lift from the market.)"])
-    state[:goal] = "Get to the College at the top of the tree. Take the root-lift from the market."
+    state[:goal] = "Get to the College at the top of the tree. The root-lift's by the big stair, north."
     set_flag(:intro_started)
     Stage.cleanup
   end
@@ -155,6 +160,7 @@ module FrostThaw
   # The root-lift up to the College. Everything else in the market is shut for the festival.
   def pro_lift(event_id = nil)
     say(lines_for(:pro_lift), event_id)
+    say(["The root-lift creaks up through the branches, past nests and lanterns."])
     transfer(PRO_COLLEGE, 13, 18, 8)
   end
 
@@ -205,9 +211,9 @@ module FrostThaw
     Stage.emote(wyn, :exclaim) if wyn
     Stage.turn_to(wyn) if wyn
     say(["Professor Aldric Wynsnow, Dean of the College. You've run his errands for years.",
-         "WYNSNOW: Ah. The errand-runner and the future Rootwarden."])
+         "WYNSNOW: Ah. The future Rootwarden, and the errand-runner."])   # (to you first: wrong way round)
     Stage.hop(tamsin) if tamsin
-    say(["TAMSIN: I'm the future Rootwarden. #{pro_name}'s the errand-runner. For now."])
+    say(["TAMSIN: I'M the future Rootwarden. That one's the errand-runner. For now."])
     if (mine = pro_looped_starter)
       pro_take_ball(pro_ball_event(mine))
       say(["WYNSNOW: Three Pokémon, three futures. And... two balls. I counted three this morning.",
@@ -215,7 +221,9 @@ module FrostThaw
       set_flag(:got_starter)
       return pro_rival(mine)
     end
-    say(["WYNSNOW: Three Pokémon, three futures. Choose before I start measuring them."])
+    Stage.face(wyn, 2) if wyn                        # from the blackboard to the table
+    say(["WYNSNOW: A Pokémon in each. Raise it well and it'll fight beside you. Usually for you.",
+         "WYNSNOW: Three Pokémon, three futures. Choose before I start measuring them."])
     Stage.walk_to($game_player, 20, 6, face: 8)
     say(["WYNSNOW: Look in each Poké Ball first, then pick one. I'll be writing all of it down."])
     state[:goal] = "Look in the three Poké Balls on Wynsnow's table, and choose your first Pokémon."
@@ -318,35 +326,49 @@ module FrostThaw
     Stage.walk_to($game_player, 20, 9, face: 2)
     Stage.walk_to(wyn, 19, 8, face: 2) if wyn
     Stage.hop(tamsin) if tamsin
-    say(["TAMSIN: Rootwarden against errand-runner. Ready? Doesn't matter. GO!"])
+    say([pro_type_gloat(mine),
+         "TAMSIN: Rootwarden against errand-runner. Ready? Doesn't matter. GO!"])
     won = tamsin_prologue_battle(theirs)
     Stage.theme(:tamsin)
     if won
       set_flag(:pro_beat_tamsin)
-      say(["TAMSIN: ...Best of three. Later. That one didn't count, #{pro_name}. It was practice!"])
+      say(["TAMSIN: ...Best of three. Later. That one didn't count!"])
     else
       Stage.hop(tamsin, 2) if tamsin
       say(["TAMSIN: Ha! HA! Rootwarden material. I told you. I told everyone."])
     end
     Stage.approach(wyn) if wyn
+    say(["WYNSNOW: Lost? Good. Now you know what it hits like. Next time you'll pick your moment."]) if !won
     begin
       pbFadeOutIn { $Trainer.heal_party }
     rescue StandardError
       $Trainer.heal_party rescue nil
     end
     Stage.jingle(:heal)
-    say(["WYNSNOW: There. Patched up. Off you go, both of you. I have measuring to do."])
+    say(["WYNSNOW: There. Patched up. Off you go, both of you. I have measuring to do.",
+         "WYNSNOW: And these. Five Poké Balls, two Potions. The College's festival gift."])
+    pbReceiveItem(:POKEBALL, 5) rescue nil
+    pbReceiveItem(:POTION, 2) rescue nil
+    say(["WYNSNOW: Wild ones live in long grass. Tire one out, then throw a ball. Bring me notes."])
     Stage.walk_to(wyn, *PRO_WYNSNOW_DESK, face: 8, wait_for: false) if wyn
     Stage.turn_to(tamsin) if tamsin
-    say(["TAMSIN: Hearth! Hellen's got festival cake.",
-         "TAMSIN: And there's something on the wall I want to show you.",
-         "TAMSIN: Come ON, #{pro_name}!"])
+    say(["TAMSIN: Hearth! Festival cake! And the wall. If it moved this year, I'm telling EVERYONE.",
+         "TAMSIN: Come ON!"])
     Stage.leave(tamsin, 13, 19) if tamsin
     Stage.theme(nil)
     set_flag(:pro_battle_done)
     set_switch(SW_PRO_STARTER, true)
     state[:goal] = "Tamsin's run back to the Rooted Hearth. Take the root-lift down to the market."
     Stage.cleanup
+  end
+
+  # Tamsin takes the counter, and says why (the type rule, shown as a gloat).
+  def pro_type_gloat(mine)
+    case TAMSIN_COUNTER[mine]
+    when :B330H152 then "TAMSIN: Grass beats Water. Everybody knows that!"
+    when :WICKIT   then "TAMSIN: Fire beats Grass. Everybody knows that!"
+    when :B7H220   then "TAMSIN: Water beats Fire. Everybody knows that!"
+    end
   end
 
   def tamsin_prologue_battle(species)
@@ -368,6 +390,7 @@ module FrostThaw
   def scene_pro_market_lead
     return if flag?(:saw_sixth_figure)
     tamsin = Stage.find("Tamsin")
+    say(["The lift rattles down to the market. Tamsin's already off it."]) if tamsin
     if tamsin
       Stage.approach(tamsin) if (tamsin.x - $game_player.x).abs + (tamsin.y - $game_player.y).abs > 1
       Stage.emote(tamsin, :exclaim)
@@ -407,23 +430,44 @@ module FrostThaw
     end
     Stage.walk_to($game_player, 15, 8, face: 6)
     Stage.face(tamsin, 6) if tamsin
+    Stage.theme(:heralds)
     say(["TAMSIN: Look. Every festival I check if it moved.",
-         "Five heroes, carved in the living wood. One wreathed in snow, one in flame, one with a lute.",
-         "One with a wolf. One half in shadow, with a knife. Two dragons coil above them.",
-         "In the corner, half-hidden by a root, a small sixth figure. No face.",
+         "Five heroes in the living wood. One wreathed in snow, one in flame, one with a lute.",
+         "One with a wolf. One half in shadow, with a knife. Two dragons coil above them."])
+    # "Last night's stories": Tamsin recites the legend and gets it wrong; Hellen,
+    # who told it, puts it right (context/00.md M1).
+    Stage.hop(tamsin) if tamsin
+    say(["TAMSIN: The Heralds of Dawn and Dusk! That's Alberica, with the lute. Reptin, the wolf."])
+    Stage.turn_to(tamsin) if tamsin
+    say(["TAMSIN: They walked into the never-ending winter, fought a hag, and the dragons ate her."])
+    if hellen
+      Stage.pan_to(9, 7)                              # the bar and the wall, both in view
+      Stage.turn_to(hellen)
+    end
+    say(["HELLEN: (from the bar) Nobody ate anybody. They broke her mirrors, that's all.",
+         "HELLEN: Something in the glass let go. A seed took root, and the tree grew in one night."])
+    Stage.face(tamsin, 4) if tamsin
+    say(["TAMSIN: The Verdant Reversal. Year nought. Four hundred years ago today. I KNOW, Hellen.",
+         "HELLEN: Then you know who that is in the corner."])
+    Stage.pan_back
+    Stage.face(tamsin, 6) if tamsin
+    Stage.face($game_player, 6)
+    say(["In the corner, half-hidden by a root, a small sixth figure. No face.",
          counter(:loop_count) > 0 ? "And a seventh: a dwarf woman made of ice, hands over her heart." : nil,
          counter(:loop_count) > 0 ? "Nobody remembers carving it." : nil].compact)
     Stage.turn_to(tamsin) if tamsin
-    say(["TAMSIN: Hellen says nobody's ever known who that is. Not even the carver."])
+    say(["TAMSIN: ...Nobody knows who that is. Not even the carver."])
     if hellen
-      Stage.pan_to(hellen.x, hellen.y)
+      Stage.pan_to(9, 7)
       Stage.turn_to(hellen)
     end
     say(["HELLEN: (from the bar) The carver was my great-great-something. She said the wood grew it."])
     Stage.pan_back
+    Stage.turn_to(tamsin) if tamsin
     say(["TAMSIN: Lanterns! The stall's right outside. Come on, before they sell the good ones."])
     Stage.leave(tamsin, 6, 12) if tamsin
     pbSEPlay("Exit Door") rescue nil
+    Stage.theme(nil)
     set_flag(:saw_sixth_figure)
     set_switch(SW_PRO_MURAL, true)
     state[:goal] = "Tamsin's at the lantern stall, just outside the Hearth."
@@ -450,11 +494,17 @@ module FrostThaw
     tamsin = Stage.find("Tamsin")
     looped = counter(:loop_count) > 0
     Stage.turn_to(seller, tamsin) if seller && tamsin
-    say(["LANTERN SELLER: Real Reversal glass! Dug out of the deep roots, where the old hag's mirrors broke!"])
+    say(["LANTERN SELLER: Real Reversal glass! Dug from the deep roots!",
+         "LANTERN SELLER: From right where the old hag's mirrors broke!"])
     if tamsin
       Stage.turn_to(tamsin)
       say([looped ? "TAMSIN: Weird. I already bought you this. Didn't I?" :
                     "TAMSIN: It's not real. Everybody knows it's not real."])
+      # The world's first rule, from the one man with a reason to say it.
+      if seller && !looped
+        Stage.turn_to(seller, tamsin)
+        say(["LANTERN SELLER: Mirror-glass keeps what it sees, little one. That glass saw the Heralds."])
+      end
       Stage.turn_to(tamsin, seller) if seller
       pbSEPlay("Mart buy item") rescue nil
       Stage.wait(20)
@@ -462,34 +512,70 @@ module FrostThaw
       say([looped ? "TAMSIN: ...Here." : "TAMSIN: Here. For your first Pokémon day, #{pro_name}."])
     end
     pbMessage(_INTL("\\me[Item get]Tamsin gave you a lantern of Reversal glass!"))
+    Stage.cry(state[:starter]) if state[:starter]        # your partner is the first to sense it
     say(["The glass in the lantern is old, with a crack like frost."])
     pbSEPlay("Earth3") rescue nil
     $game_screen.start_shake(4, 6, 20) rescue nil
+    pbBGMFade(1.0) rescue nil                            # the festival music cuts dead
     Stage.wait(20)
-    say(["The ground shudders. Once. Every lantern in the market swings. Nobody else notices."])
+    say(["The ground shudders. Once. The lantern swings in your hand."])
+    if tamsin && !looped
+      Stage.turn_to(tamsin)
+      say(["TAMSIN: Did you feel that?"])
+    end
     Stage.panel("S-01", fade: 20)
     say(["The crack in the glass widens. Inside it, it's night.",
-         "A dock in a blizzard. Five figures coming down a gangplank."])
+         "A dock in a blizzard. Five figures on a gangplank. One has a lute on her back."])
     $game_screen.start_shake(2, 4, 16) rescue nil
     Stage.panel_off(fade: 12)
+    say(["The crack is bigger than the lantern now. Cold comes out of it, and the smell of the sea."])
+    pro_look_in
     Stage.emote(tamsin, :exclaim) if tamsin
     say(["TAMSIN: Hey... #{pro_name}? What are you..."])
     fall_through
   end
 
-  # Into the glass, and out of the air over the Targos pier, four hundred years earlier.
+  # The player's one input in the fall (story/00 §8 step 6): the lantern pulses
+  # until you look into it. No menu; press the button, or step toward the light.
+  def pro_look_in
+    return if !Stage.map?
+    frames = 0
+    loop do
+      $game_screen.start_flash(Color.new(200, 230, 255, 90), 20) rescue nil if frames % 40 == 0
+      Stage.wait(1)
+      frames += 1
+      break if (Input.trigger?(Input::USE) rescue false) || (Input.trigger?(Input::C) rescue false)
+      break if Input.dir4.to_i > 0 rescue false
+      break if frames > 1200                              # (never strand anyone: about half a minute)
+    end
+    $game_player.straighten rescue nil
+  end
+
+  # Into the glass, and out of the air over the Targos pier, four hundred years
+  # earlier. The white holds through the map change (the Targos side clears it).
   def fall_through
     begin
+      $game_screen.start_flash(Color.new(255, 255, 255, 255), 30) rescue nil
       $game_screen.start_tone_change(Tone.new(255, 255, 255, 0), 20)
       pbWait(24) rescue nil
     rescue StandardError
     end
+    say(["The glass pulls like a door in a gale. You fall into the Heralds' winter."])
+    pbMessage(_INTL("TAMSIN: (far away, over the white) {1}!", pro_name)) if counter(:loop_count).to_i == 0
     set_flag(:fell_through)
     state[:goal] = nil                     # the prologue's goals end here; Targos sets the next
+    state[:white_pending] = true
     [SW_PRO_STARTER, SW_PRO_MURAL, SW_PRO_LECTURE, SW_PRO_LED].each { |sw| set_switch(sw, false) }
-    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 20) rescue nil
     Stage.cleanup
     transfer(*TARGOS_START)
+  end
+
+  # The white from the fall clears once you're on the Targos pier.
+  def clear_fall_white
+    return if !state[:white_pending]
+    return if [PRO_HEARTH, PRO_MARKET, PRO_COLLEGE].include?($game_map.map_id)
+    state[:white_pending] = nil
+    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 30) rescue nil
   end
 
   # Turns a story switch on or off and makes the map's people re-check it.
@@ -511,6 +597,7 @@ end
 Events.onMapSceneChange += proc { |_sender, _e|
   begin
     FrostThaw.apply_prologue_switches
+    FrostThaw.clear_fall_white
   rescue StandardError => err
     FrostThaw.log("Prologue switches failed: #{err.message}")
   end

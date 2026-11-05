@@ -13,7 +13,7 @@ module FrostThaw
     tavern_brawler:   "GORM: That's my stool you're eyeing, stranger. Fight me for it.",
     zhent_thug_1:     "DASK: Strangers in the Luskan Arms. The Speaker likes to know what strangers are made of.",
     zhent_thug_2:     "VEY: Lost, are we? Let me show you how Targos treats people who wander.",
-    hall_enforcer_2:  "ILSA: Nobody sees the Speaker without getting past me first.",
+    hall_enforcer_2:  "ILSA: Zhentarim. Nobody sees the Speaker without getting past us first.",
     hall_enforcer_1:  "CORRIN: Naerth said to test anyone who came looking for his seal. This is the test.",
     hall_dealer:      "MARA: Care to play a hand? House rules: my Pokémon against yours. The house always wins.",
     # --- Chapter 2: the road to Bryn Shander ------------------------------------------
