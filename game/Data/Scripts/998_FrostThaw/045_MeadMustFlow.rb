@@ -609,7 +609,12 @@ module FrostThaw
     say(["The town keeps its word: lodging and drink for a tenday. The brewmistress presses three flasks into your hands",
          "(honey mead, stoppered tight: they restore like Berry Juice)."])
     pbReceiveItem(:BERRYJUICE, 3) rescue nil
+    say(["BREWMISTRESS: And a pot from the queen hive. Royal jelly. It's what turns a worker into a queen.",
+         "BREWMISTRESS: Kendrick swears a spoonful teaches any creature a new trick. Kendrick swears a lot."])
+    give(:ABILITYCAPSULE)
+    say(["(The royal jelly works like an Ability Capsule.)"])
     side_goal_done(:mead)
+    town_quest_finished
     add_counter(:story_beats)
   end
 

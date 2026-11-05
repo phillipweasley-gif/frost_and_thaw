@@ -223,8 +223,12 @@ module FrostThaw
       give_key(:FT_RAMSHACKLEDEED)
       set_switch(SW_WM_RAMSHACKLE, true)
     end
+    say(["NIMSY: And this. My mother's lucky coin. Pin it on a Pokémon and the purse comes home heavier.",
+         "NIMSY: Mine never did. But I never fought anything."])
+    give(:AMULETCOIN)
     set_flag(:white_moose_done)
     side_goal_done(:moose)
+    town_quest_finished
     add_counter(:story_beats)
   end
 

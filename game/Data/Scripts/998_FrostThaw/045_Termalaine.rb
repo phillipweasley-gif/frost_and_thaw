@@ -557,6 +557,7 @@ module FrostThaw
       set_flag(:oarus_dead)
       set_switch(SW_TM_OARUS_GONE, true)
       set_flag(:mine_done)
+      town_quest_finished
       return mine_finish
     end
     if ghost_loose
@@ -578,7 +579,9 @@ module FrostThaw
     end
     $Trainer.money += 5000
     pbMessage(_INTL("You got $5000!"))
+    favour_seam
     set_flag(:mine_done)
+    town_quest_finished
     mine_finish
   end
 

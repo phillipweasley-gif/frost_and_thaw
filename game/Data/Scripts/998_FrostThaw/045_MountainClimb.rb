@@ -188,7 +188,7 @@ module FrostThaw
           cl(:alerion, "Or unless he chose to go for help.")])
     say(["KEEGAN: It's a lot to ask. Could I persuade you to go up there and find Garret and his companions?",
          "KEEGAN: I don't have money. But the proprietor of the Luskan Arms is a friend of mine. I could get you free rooms there.",
-         "KEEGAN: And I'm a scrimshander by trade. I can give you some of my work. It's not worth much, I confess.",
+         "KEEGAN: And I'm a scrimshander. Bring them home, and I'll carve you something that earns its keep.",
          "KEEGAN: Frozenfar Expeditions in Caer-Konig would have been the last place anyone saw him. That's days away.",
          "KEEGAN: Or you cut straight across the tundra: east, off the Bryn Shander road, through the Dwarven Valley."])
     if !pbConfirmMessage(_INTL("Go up Kelvin's Cairn to find Garret?"))
@@ -223,7 +223,7 @@ module FrostThaw
       set_switch(SW_MC_GARRET_HOME, true)
     end
     set_flag(:keegan_told_garret)
-    say(["KEEGAN: I've no money. The Luskan Arms will give you rooms, I'll see to it, and my scrimshaw, what it's worth.",
+    say(["KEEGAN: I've no money. But the Luskan Arms will give you rooms, and I'll carve you something useful.",
          "KEEGAN: But his friends are still on that mountain. Would you go back up for them?"])
     if !pbConfirmMessage(_INTL("Go back up Kelvin's Cairn for the others?"))
       return say(["KEEGAN: ...Of course. You've done more than enough. (He looks at the window, at the mountain, for a long time.)"])
@@ -565,7 +565,9 @@ module FrostThaw
          "A spouting whale. A smiling fox. A pair of dancing hares. And a walrus, with \"BIG LOVE\" carved into its side.",
          "KEEGAN: And Owenn at the Luskan Arms knows. Your beds there are free, as long as he has beds."])
     give_key(:FT_SCRIMSHAWBOX)
-    pbReceiveItem(:RARECANDY) rescue nil
+    say(["KEEGAN: And this one's not for a shelf. Hang it on one of your Pokémon, and the rest learn by watching.",
+         "A walrus-bone charm on a cord, worn smooth from carving."])
+    give(:EXPSHARE)
     sayc([cl(:alberica, "(holding up the walrus) Big love. I'm putting this on my tombstone."),
           cl(:shade, "You're not getting a tombstone. You're getting a song. You'll write it yourself.")])
     set_flag(:climb_done)
@@ -573,6 +575,7 @@ module FrostThaw
     set_flag(:boy_with_you, false)
     set_switch(SW_MC_DONE, true)
     set_switch(SW_MC_GARRET_HOME, true)
+    town_quest_finished
     set_switch(SW_MC_PERILOU_HOME, true) if flag?(:perilou_saved)
     side_goal_done(:climb)
     add_counter(:story_beats)

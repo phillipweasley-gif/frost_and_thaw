@@ -80,7 +80,7 @@ module FrostThaw
          "HRUNA: We're what's left of a group bringing a sled of iron ingots to Bryn Shander. Battlehammer iron, from the mines under Kelvin's Cairn.",
          "HRUNA: A yeti surprised us. Killed Oobok. The rest of us ran while it tore him limb from limb.",
          "HRUNA: Now we need someone to go back and get the sled. A gemstone each for ye, fifty gold apiece.",
-         "HRUNA: And the friendship of the dwarves of Icewind Dale. That's a boon, in times like these.",
+         "HRUNA: And a piece from Garn's forge, made to fit. Dwarf work's a boon, in times like these.",
          "HRUNA: Ye'll need snowshoes to make the trip in good time."], event_id)
     if ($Trainer.has_running_shoes rescue false)
       say(["KORUX: (pointing at your feet, wordlessly, and nodding once.)"])
@@ -261,10 +261,12 @@ module FrostThaw
     end
     say(["HRUNA: A bloodstone each, as promised. And Garn's to knock a tenth off anything ye buy at Blackiron Blades. Forever."])
     pbReceiveItem(:FT_BLOODSTONE, 5) rescue nil
+    favour_forge
     sayc([cl(:alberica, "A tenth off swords nobody wants. Generous. I'm genuinely touched."),
           cl(:alerion, "They're cheap swords. A tenth off a cheap sword is nearly free.")])
     set_flag(:mugs_done)
     set_switch(SW_FM_DONE, true)
+    town_quest_finished
     add_counter(:story_beats)
   end
 end
