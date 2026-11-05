@@ -437,7 +437,7 @@ module FrostThaw
   def scene_eastway_start
     set_flag(:eastway_started)
     sayc(["Past Bryn Shander's east gate, the Eastway runs out across open snowfields.",
-          journey? ? "South-east, past Good Mead, is Dougan's Hole, and the hag's mirrors." :
+          outsider? ? "South-east, past Good Mead, is Dougan's Hole, and the hag's mirrors." :
                      "South-east, past Good Mead, is Dougan's Hole. Zenith said a hag laughs in a chasm there.",
           cl(:shade, "A laughing hag. In a chasm. Is anything in this Dale just a nice lake?"),
           as(:alerion, "Then let's go and find out what's so funny."),
@@ -468,7 +468,7 @@ module FrostThaw
          "Out on the frozen lake, dark figures stand over fishing holes. Snow has drifted against their legs.",
          "Between them, panes of ice stand upright, like mirrors."])
     Stage.pan_back
-    say(["In your pocket the lantern glass goes cold. Colder than the snow. Close, now."]) if journey?
+    say(["In your pocket the #{my_glass} goes cold. Colder than the snow. Close, now."]) if outsider?
     speak(:reptin, "Those aren't fishers. Fishers fidget.", "...Those aren't fishers.")
     sayc([cl(:alerion, "They're people. Stopped.")])
     if with_or_is?(:alberica) && with_or_is?(:alerion)
@@ -588,7 +588,7 @@ module FrostThaw
              end
     sayc(["Laughter on the ice. It comes from everywhere at once.",
           relics,
-          journey? ? "In your pocket, the lantern glass rings like a struck bell." : nil,
+          outsider? ? "In your pocket, the #{my_glass} rings like a struck bell." : nil,
           flag?(:frost_egg) ? (herald?(:shade) ? "In your coat, the Frost Egg goes cold." : "In Shade's coat, the Frost Egg goes cold.") : nil,
           flag?(:frost_egg) ? cl(:shade, "She doesn't like it either.") : nil,
           "Among the Twenty Stones, south-west of town, stand three tall mirrors of ice.",
@@ -596,7 +596,7 @@ module FrostThaw
           as(:alberica, "Durmoot told us to stay in."),
           as(:shade, "Durmoot tells everyone to stay in."),
           cl(:meat_meat, "Meat Meat never stays in. Meat Meat is already outside.")])
-    state[:goal] = journey? ? "The Twenty Stones: who's calling them, and the mirrors you came through." : "The Twenty Stones. Find who's calling."
+    state[:goal] = outsider? ? "The Twenty Stones: who's calling them, and the mirrors you came through." : "The Twenty Stones. Find who's calling."
   end
 
   def mirrors_broken
@@ -635,20 +635,18 @@ module FrostThaw
       say(["THREDRA: She wants a new coat to wear, you see. I'm only her seamstress."], event_id)
       sayc([cl(:alberica, "(very plain) Auril. And the coat's me.")], event_id)
       lines = []
-      if journey?
+      if outsider?
         lines << "THREDRA: (squinting at you) And this one fell through my glass. Lost, dearie?"
         lines << "THREDRA: Granny could send you home. Granny's very good at sending."
-      elsif herald?(:wyn)
-        lines << "THREDRA: (squinting at you) And this one isn't anywhere at all. Interesting. Very interesting."
       end
       lines << cl(:reptin, "(aside) Seamstress. Lovely. Let's not let her take our measurements.")
       say(lines.compact, event_id)
       hag_bargain_offer(event_id)       # the module's "A Hag's Bargain" (044_ChasmFaithful.rb)
       say(["THREDRA: My still ones sleep in my glass, dearies. Every fisher on that ice.",
            "THREDRA: Break a mirror and one goes free. If you can bear to look in it.",
-           journey? ? "THREDRA: (to you) Mind, lost one. One of Granny's mirrors is your way home. Choose well." : nil].compact, event_id)
+           outsider? ? "THREDRA: (to you) Mind, lost one. One of Granny's mirrors is your way home. Choose well." : nil].compact, event_id)
       set_flag(:thredra_sent_relics)
-      state[:goal] = journey? ? "Break Thredra's three mirrors at the Stones. Is one of them yours?" :
+      state[:goal] = outsider? ? "Break Thredra's three mirrors at the Stones. Is one of them yours?" :
                                 "Break Thredra's three ice mirrors among the Twenty Stones."
       return
     end
@@ -675,9 +673,12 @@ module FrostThaw
       [herald?(:shade) ? "You look into the mirror. At your shoulder, Shimmer turns a carved cat. You look away." :
                          "You look into the mirror. At your shoulder, Shimmer turns a carved cat. Shade looks away."]
     else
-      if journey?
-        ["You look into the mirror. It shows Hellen's tavern, warm. Someone is saving your seat.",
+      if herald?(:wyn)
+        ["You look into the mirror. It shows the Sap Gate at festival. Your post, a lamp still lit.",
          "The shard in your pocket stays quiet. This glass is wearing your home. It isn't yours."]
+      elsif journey?
+        ["You look into the mirror. It shows Hellen's tavern, warm. Someone is saving your seat.",
+         "The glass in your pocket stays quiet. This mirror is wearing your home. It isn't yours."]
       else
         ["You look into the mirror. You're warm in it, by a summer fire. Then it grins."]
       end
@@ -720,7 +721,7 @@ module FrostThaw
     say(["THREDRA: Clever. Clever, clever. Do you know how long it takes to grow a mirror?",
          "THREDRA: Come and find me in the chasm, dearies. Bring your wolf.",
          "THREDRA: Granny keeps her bargains."], event_id)
-    say(["THREDRA: And you, lost one. My last glass is in the chasm. Yours too."], event_id) if journey?
+    say(["THREDRA: And you, lost one. My last glass is in the chasm. Yours too."], event_id) if outsider?
     if thr
       Stage.hide(thr)
       Stage.fx("E-06", thr, oy: 40)
@@ -775,7 +776,7 @@ module FrostThaw
     pbReceiveItem(:TM95) rescue nil
     Stage.cleanup rescue nil
     set_flag(:dh_morning)
-    state[:goal] = journey? ? "The Cackling Chasm, south of Dougan's Hole. She's there, with the last of her mirrors." :
+    state[:goal] = outsider? ? "The Cackling Chasm, south of Dougan's Hole. She's there, with the last of her mirrors." :
                               "The Cackling Chasm, south of Dougan's Hole. She's there."
   end
 

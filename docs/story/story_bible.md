@@ -163,9 +163,9 @@ The Heralds drive the plot. Every character below wants something specific, and 
 
 ### You, and Tamsin
 
-**You (New Journey).** A Rootspire kid who runs errands for Professor Wynsnow's College and grew up on Herald stories in Hellen's tavern. You are silent, and your choices are your voice. Your arc is from fan to peer: you find out the legends were people who chose, and that one of the figures carved on Hellen's wall, the one nobody could ever name, is you. On that wall, Alberica is the figure with the lute and Reptin is the wolf (owner, 2026-11-05). Auril can't read you, because you aren't on her wheel.
+**You (New Journey).** A Rootspire kid who runs errands for Professor Wynsnow's College and grew up on Herald stories in Hellen's tavern. You are silent, and your choices are your voice. Your arc is from fan to peer: you find out the legends were people who chose, and that one of the figures carved on Hellen's wall, the one nobody could ever name, is you. On that wall, Alberica is the figure with the lute and Reptin is the wolf (owner, 2026-11-05). Auril can't read you, because you aren't on her wheel. That lasts until the last mirror in the Cackling Chasm: when you choose there (to stay, or to reach for home and have the glass break under you), Auril feels the choice, sees you for the first time, and marks you with the owl feather (owner, 2026-11-05). The Order's silver dagger, which the ghost gives you, is what breaks that mirror if you choose to break it (owner, 2026-11-05).
 
-**Wyn Mode.** Wyn takes your place. Wyn is a Rootwarden on festival watch, and the lantern pulls them back instead.
+**Wyn Mode.** Wyn takes your place. Wyn is a Rootwarden on festival watch, and the lantern pulls them back instead. Wyn has the player's own goal too (owner, 2026-11-05): their shard of the Sap Gate's mirror is hag-glass, Epheris reads it in Targos, and at the last mirror Wyn sees the Sap Gate and their Sableye waiting.
 
 **Tamsin Brightrun.** Hellen's kid, about your age, determined to become a Rootwarden. Tamsin sees you fall into the lantern and spends the hour you're gone in a panic. Their starter beats yours, and their rivalry is a friend's jealousy: you got the adventure they wanted. They join the Rootwardens in Act II and stand by you at the Trials. Pronouns: they. Voice: fast, warm, competitive; teases you by your full name.
 

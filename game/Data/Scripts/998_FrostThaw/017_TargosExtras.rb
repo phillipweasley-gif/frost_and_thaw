@@ -450,6 +450,11 @@ module FrostThaw
   # The player's own goal (owner's call, 2026-11-05): the lantern glass you fell
   # through is hag-glass, from the mirrors at Dougan's Hole. The Heralds' lures
   # and your way home point at the same place, for different reasons.
+  # The player who came from outside: New Journey, or Wyn (owner's call,
+  # 2026-11-05: Wyn has the player's own goal too, with the Sap Gate shard).
+  def outsider? = journey? || herald?(:wyn)
+  def my_glass = herald?(:wyn) ? "gate shard" : "lantern glass"
+
   def lantern_glass_reading(event_id = nil)
     return if flag?(:glass_read)
     set_flag(:glass_read)

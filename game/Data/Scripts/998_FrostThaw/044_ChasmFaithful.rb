@@ -895,8 +895,18 @@ module FrostThaw
 
   # Landing: two things in your pack that weren't there before.
   def chasm_keepsakes
-    say(["As the light slows, you feel something cold settle on your collar: a single black feather from a snowy owl, coated in rime.",
-         "The Frostmaiden has seen what you did. She has marked you."])
+    # Owner's call (2026-11-05): the outsider is unseen until a choice of their
+    # own; the last mirror is that choice, and then Auril marks them.
+    say(["As the light slows, something cold settles on your collar.",
+         "A single black feather from a snowy owl, coated in rime."])
+    if outsider?
+      say([flag?(:tried_to_leave) ? "You reached for the way home, and the glass broke in your hands." :
+                                    "You chose this side of the glass.",
+           "Far to the north, something felt you choose. Until now she couldn't see you.",
+           "Now she can. The Frostmaiden has marked you."])
+    else
+      say(["The Frostmaiden has seen what you did. She has marked you."])
+    end
     give_key(:FT_OWLFEATHER)
     say(["And in your pack, a small carving that wasn't there before: a wolf and a bloom, twined together, carved from ancient ice.",
          "Nobody saw who left it. It's warm, like the locket was. Like she was."])
@@ -962,7 +972,8 @@ module FrostThaw
 
   def read_owl_feather
     pbMessage(_INTL("A black feather from a snowy owl, coated in rime that won't thaw, even by a fire."))
-    pbMessage(_INTL("It drifted down out of nowhere and caught in your collar. The Frostmaiden has marked you."))
+    pbMessage(_INTL(outsider? ? "It caught in your collar the moment you chose. The Frostmaiden has marked you." :
+                                "It drifted down out of nowhere and caught in your collar. The Frostmaiden has marked you."))
   end
 
   def read_heart_shard

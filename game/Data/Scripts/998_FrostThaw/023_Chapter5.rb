@@ -760,7 +760,8 @@ module FrostThaw
     say(["GHOST: The Order kept the balance here, between life and death. We kept the Heart.",
          "GHOST: The Heart is a root. The last living root of a World Tree.",
          "GHOST: The Frostmaiden felled that tree long ago. This root is all of it that's left.",
-         journey? ? "You think of Rootspire's roots, the ones you climbed as a kid. This one feels the same." : nil,
+         journey? ? "You think of Rootspire's roots, the ones you climbed as a kid. This one feels the same." :
+         herald?(:wyn) ? "You think of Rootspire's roots, the ones you walk on watch. This one feels the same." : nil,
          cl(:reptin, "(quietly) I can feel it. Under the floor. Like a pulse."),
          "GHOST: It can drink life to stave off death. End a curse, or a winter. The cost is dire.",
          "GHOST: We swore never to use it lightly. More a promise than a weapon.",
@@ -821,7 +822,7 @@ module FrostThaw
       give_key(:FT_ORDERLOCKET)
       set_flag(:order_locket)
     end
-    say(["GHOST: The dagger was mine. Fey things don't like it. Hags are fey.",
+    say(["GHOST: The dagger was mine. Fey things hate silver. Hags are fey, and so is their glass.",
          "GHOST: Now the locket. Give it here a moment.",
          "She closes her ghostly hand over it, and it fills with a cold silver light.",
          "GHOST: It will shine true in the face of illusion, and keep the worst of the cold off you.",
@@ -1009,7 +1010,7 @@ module FrostThaw
       say(["THREDRA: (a look at #{alb_rune} rune) And I've cut her a lovely coat. I'll hand it over.",
            "THREDRA: Once I'm wearing the winter myself."])
     end
-    say(["THREDRA: (to you) And Granny's last glass sends the lost one home. Everybody wins."]) if journey?
+    say(["THREDRA: (to you) And Granny's last glass sends the lost one home. Everybody wins."]) if outsider?
     say(["She points the staff at #{rep ? 'you' : 'Reptin'}. Magic pulses out of it."])
     if rep
       say(["Something takes hold of the wolf in you and pulls, like a rope tied round your heart.",
@@ -1066,10 +1067,12 @@ module FrostThaw
   # SC 5.09 - The third way, again. Then SC 5.10 - Falling.
   def scene_third_way
     me_alb = herald?(:alberica)
-    if journey?
+    if outsider?
       last_mirror_choice
     else
-      say(["Thredra's Reflection cracks. The last mirror.", "You're the one who breaks it."])
+      say(["Thredra's Reflection cracks. The last mirror.",
+           flag?(:order_dagger) ? "You break it with the Order's silver dagger. Fey glass. It screams." :
+                                  "You're the one who breaks it."])
     end
     say([
          "The Heart pulses hard. It's still hungry. The root under the ice opens like a mouth.",
@@ -1179,14 +1182,19 @@ module FrostThaw
     Stage.panel("S-08c")
     say(["Two young dragons, one green and one white, circle a tree that pierces the aurora."])
     Stage.panel("S-08d")
-    say([journey? ? "A tavern-keeper carves heroes into living wood. Her chisel stops at a small sixth figure." :
+    say([outsider? ? "A tavern-keeper carves heroes into living wood. Her chisel stops at a small sixth figure." :
                     "A tavern-keeper carves five heroes into living wood. One of them has your face.",
          "Under them she cuts the year it began: YEAR 0 OF THE VERDANT REVERSAL."])
-    if journey?
+    if outsider?
       say(["Deep in the roots, a digger holds a shard of glass up to her lamp. \"Hag's glass!\""])
       Stage.panel("S-08e")
-      say(["A festival. A lantern. Your own face, looking in.",
-           "Four hundred years, all at once. You know how this story ends. You fell asleep to it."])
+      if herald?(:wyn)
+        say(["A festival. A lantern at the Sap Gate. Your own face, looking in.",
+             "Four hundred years, all at once. You know how this story ends. Every Rootwarden learns it."])
+      else
+        say(["A festival. A lantern. Your own face, looking in.",
+             "Four hundred years, all at once. You know how this story ends. You fell asleep to it."])
+      end
     end
     Stage.panel_off
     sayc([cl(:alerion, "(somewhere close, in the fall) Hold on to something.")])
@@ -1291,20 +1299,30 @@ module FrostThaw
   # home. Step through and leave them, or break it. Either way it breaks, and
   # the Reversal takes everyone; what you chose is remembered.
   def last_mirror_choice
-    say(["Thredra's Reflection cracks. One mirror is left standing, and the lantern glass in your pocket answers it.",
-         "In it: Rootspire's market, gold with festival lanterns. Hellen's door. Tamsin, holding a cracked lantern.",
-         "THREDRA: (from a thousand shards) Go on, lost one. Step through. Leave them to Granny. Home by supper."])
+    wyn = herald?(:wyn)
+    say(["Thredra's Reflection cracks. One mirror is left standing.",
+         "The #{my_glass} in your pocket answers it, one clear note.",
+         wyn ? "In it: the Sap Gate, gold with festival lanterns. Your post. Your lamp, still lit." :
+               "In it: Rootspire's market, gold with festival lanterns. Hellen's door.",
+         wyn ? "Your Sableye's reflection sits in the roots at the gate, waiting for you." :
+               "Tamsin, in the doorway, holding a cracked lantern.",
+         "THREDRA: (from a thousand shards) Go on, lost one. Step through. Leave them to Granny.",
+         "THREDRA: Home by supper."])
     c = pbMessage(_INTL("The last mirror..."), [_INTL("Step through."), _INTL("Break it.")], 1)
     if c == 0
       set_flag(:tried_to_leave)
       say(["You put your hand to the glass. It's warm. It gives, like water.",
            "Behind you, the cub cries out once in its chains.",
-           "In the mirror, Tamsin turns to look at you, and smiles with someone else's teeth."])
+           wyn ? "In the mirror, Sableye's reflection grins at you with someone else's teeth." :
+                 "In the mirror, Tamsin turns to look at you, and smiles with someone else's teeth."])
       sayc([cl(:alberica, "(catching your wrist) Not like that, darling. Not through her door."),
             "The glass cracks under both your hands."])
     else
       set_flag(:broke_last_mirror)
-      say(["You don't look at it for long. Home, warm, a saved seat.", "You break it."])
+      say([wyn ? "You don't look at it for long. Home, the gate, your lamp." : "You don't look at it for long. Home, warm, a saved seat.",
+           flag?(:order_dagger) ? "You draw the Order's silver dagger. The glass screams before the blade touches it." :
+                                  "You break it.",
+           flag?(:order_dagger) ? "Fey glass, the ghost said. It breaks like ice on a pond." : nil].compact)
     end
   end
 end
