@@ -34,7 +34,7 @@ module FrostThaw
     bug_catcher_pell: "NETTLE: I've found a bug nobody's ever named! Want to see it? It bites!",
     lady_maren:       "MAREN: A battle in the snow! How dreadfully exciting.",
     hiker_osk:        "OSK: Only fools walk the Lonelywood road. Takes one to know one!",
-    aurilite_four:    "WYST: The cold man walked this road at dawn. You walk it at your peril.",
+    aurilite_four:    "WYST: Her Chosen walked this road at dawn. Born at Midwinter. The cold can't touch him.",
     ranger_tamsa:     "TAMSA: Hold up! Nobody passes the north woods without a ranger's say-so.",
     fisher_garrow:    "GARROW: The trout aren't biting. Maybe you will.",
     logger_breck:     "BRECK: Strangers in Lonelywood? Let's see if you're as tough as our pines.",
