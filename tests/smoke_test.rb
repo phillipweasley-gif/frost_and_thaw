@@ -865,8 +865,12 @@ def pbConfirmMessage(t); $messages << t; true; end
 FT.set_flag(:sigil_echo); FT.set_flag(:sigil_eirwen)
 two = FT.try_merge_sigils
 FT.set_flag(:sigil_sephek); $messages.clear
+FT.state[:flags]&.delete(:game_complete)
+early = FT.try_merge_sigils     # (the Vault is postgame: three only hum before the credits)
+FT.set_flag(:game_complete)
 three = FT.try_merge_sigils
-check("two sigils don't merge; three do, with the read-aloud") { !two && three && FT.flag?(:sigils_merged) && $messages.any? { |m| m.to_s.include?("wings spread over a frozen eye") } }
+FT.state[:flags]&.delete(:game_complete)
+check("two sigils don't merge; three only hum in the story, and merge after the credits") { !two && !early && three && FT.flag?(:sigils_merged) && $messages.any? { |m| m.to_s.include?("wings spread over a frozen eye") } }
 check("the trial counts Rheven's testimony and Naerth's ledger") {
   %i[rheven_testimony naerth_ledger].all? { |f| FT::WITNESSES.any? { |flags, *_| flags.include?(f) } } }
 check("Anduin's outcome isn't keyed on the always-set oath") { !File.read(File.expand_path("../game/Data/Scripts/998_FrostThaw/036_Chapter10.rb", __dir__)).include?("hyphora_sworn") }

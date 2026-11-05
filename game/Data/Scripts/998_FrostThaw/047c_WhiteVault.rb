@@ -62,7 +62,8 @@ module FrostThaw
     frost_druid_ilse: "SISTER ILSE: Hush. Listen. That's her breathing.",
     crown_druid_ansel: "ANSEL: Kneel. This time you kneel.",
     crown_druid_ilse: "SISTER ILSE: On her island, the cold answers us.",
-    avarice_reforged: "AVARICE: Let's see what the variables are worth."
+    avarice_reforged: "AVARICE: Let's see what the variables are worth.",
+    avarice_vault: "AVARICE: Again? Fine. Let's see what the variables are worth now."
   )
 
   # Sephek's stand-in bodies (Ice/Ghost fusions until he has his own species)
