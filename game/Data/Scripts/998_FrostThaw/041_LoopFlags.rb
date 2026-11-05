@@ -75,3 +75,10 @@ module FrostThaw
   LOOP_ACT1_FLAGS.concat(%i[glass_read broke_last_mirror]).uniq!
   LOOP_ACT2_FLAGS.concat(%i[glass_read broke_last_mirror their_time_known promised_their_time]).uniq!
 end
+
+# Chapters 4-5 context fixes (2026-11-05): the night's rest, Hilda at the gate,
+# Kanan's name, the ghost's two beats, the acorn remembered, the fall
+module FrostThaw
+  LOOP_ACT1_FLAGS.concat(%i[hag_night_ready met_hilda kanan_named ghost_beat_one acorn_remembered fall_held_on]).uniq!
+  LOOP_ACT2_FLAGS.concat(%i[hag_night_ready met_hilda kanan_named ghost_beat_one acorn_remembered fall_held_on]).uniq!
+end

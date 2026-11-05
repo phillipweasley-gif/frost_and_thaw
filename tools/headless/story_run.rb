@@ -406,7 +406,9 @@ module Story
       fit(30)
       until_flag(:badge_dougans) { travel(2036); talk(/Durmoot/) }
       beat("Durmoot's seal", :badge_dougans)
-      travel(2035); HL.frames(30); HL.settle(3000)
+      travel(2038); talk(/Smoker/); HL.frames(30); HL.settle(3000)        # rest for the night (context 04 M4-5)
+      beat("the night's rest at the smokehouse", :hag_night_ready)
+      travel(2035) if $game_map.map_id != 2035; HL.frames(30); HL.settle(3000)
       talk(/The Hag/)
       beat("the hag at the Stones", :hag_parley)
       (1..3).each { |i| until_flag(:"hag_mirror_#{i}") { travel(2035); talk(/Ice mirror #{i}/) } }
@@ -447,6 +449,8 @@ module Story
       beat("the Guardian's Gate", :gate_open)
       talk(/Hollow wall/); HL.frames(20); HL.settle(3000)
       talk(/Bier/)
+      beat("the ghost's first beat (the Heart, the wolves, Reptin's choice)", :ghost_beat_one)
+      talk(/Bier/)                     # take what she left on the bier (context 05 M5-8)
       beat("the last guardian of the Order", :ghost_blessing)
       travel(2044)
       fit(34)
