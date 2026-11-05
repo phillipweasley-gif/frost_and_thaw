@@ -1110,10 +1110,15 @@ module FrostThaw
     end
     sayc([cl(:shade, "(hand on a knife) Then let's do this now."),
           "SEPHEK: Here? With the Speaker's little ones playing two roads over? No. I'm not a monster.",
-          "SEPHEK: (to Shimmer, softly) Tonight, or the next. You'll come to me yourself. You always did.",
+          with_or_is?(:shimmer) ? "SEPHEK: (to Shimmer, softly) Before the next moon. Come to me, or I pick someone else." : nil,
+          with_or_is?(:shimmer) ? "SEPHEK: You always did come, in the end." : nil,
           "Frost swirls up round him like a breath, and he's standing on the far side of the sled, ten paces off.",
           cl(:alerion, "Misty step. He's not running. He's showing us he can."),
           cl(:shimmer, "...I know.")])
+    if !flag?(:shimmer_taken)
+      sayc([cl(:shade, "He won't fight with children in the street. Neither will we. Not tonight.")])
+      state[:goal] = "Speaker Huddle's house, the green roof. Somewhere warm, with him out there."
+    end
   end
 
   def torgs_sack(event_id = nil)
@@ -1199,13 +1204,17 @@ module FrostThaw
   # At the Moon Temple, once Sephek is beaten: what he really is.
   def sephek_true_nature
     set_flag(:sephek_origin_known)
-    say(["His mouth keeps moving after the words stop. Then another voice comes out of it, older, and colder:",
+    # Two voices out of one mouth, tagged from the first box (context 03 M3-8)
+    say(["His mouth keeps moving. The voice is younger now, and frightened.",
          "SEPHEK: ...I wasn't born at Midwinter. I was born in the water. The day I drowned.",
-         "SEPHEK: A ship. Her island. We went down off the coast, and I swam, and I was dying in the snow.",
+         "SEPHEK: A ship. Her island. We went down off the coast.",
+         "Frost creeps up his arms as he talks. He doesn't seem to feel it.",
+         "SEPHEK: I swam, and I was dying in the snow.",
          "SEPHEK: And something cold came and climbed into me, and ate what I was, and stayed.",
+         "Then something older answers, out of the same mouth.",
          "SEPHEK: (the other voice) A druid of the old winter. Hers. I wear him. I cannot leave him.",
          "SEPHEK: (the other voice) If the vessel dies, so do I. So he does not die. So he waits."])
-    sayc([cl(:alerion, "Two of them. A dead sailor, and something wearing him."),
+    sayc([cl(:reptin, "A winter druid. We druids tell stories about them, to scare the young."),
           cl(:shade, "I don't care how many of him there are.")])
   end
 

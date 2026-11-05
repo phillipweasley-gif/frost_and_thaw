@@ -58,6 +58,7 @@ module FrostThaw
   VERSION_ENCOUNTERS[:thaw][2020]  = { Land: [[10, :HOPPIP, 15, 17]] }
 
   COMPANION_NAMES[:meat_meat] = "MEAT MEAT"
+  LOPUNNY_GFX = "Followers/LOPUNNY"        # the Wennen (as on the maps, tools/build_ch3.rb)
 
   #-----------------------------------------------------------------------------
   # Trainers
@@ -73,7 +74,7 @@ module FrostThaw
     hiker_osk:        [:HIKER,            "Osk",    [[:GRAVELER, 16], [:B220H95, 17]],
                        "Felled by a stranger. Like a pine."],
     aurilite_four:    [:FT_AURILITE,      "Wyst",   [[:SWINUB, 16], [:B215H200, 17]],
-                       "The cold man walked this road at dawn. He didn't leave tracks."],
+                       "He didn't leave tracks. Her Chosen never do."],
     ranger_tamsa:     [:POKEMONRANGER_F,  "Tamsa",  [[:HOOTHOOT, 16], [:B215H163, 17]],
                        "Mind the white moose past the town. It's smarter than it looks."],
     fisher_garrow:    [:FISHERMAN,        "Garrow", [[:POLIWHIRL, 17], [:B118H220, 17]],
@@ -131,7 +132,7 @@ module FrostThaw
   TEXT.merge!(WENNEN_LINES)
   TEXT.merge!(
     bryn_north_guard_open: ["GUARD: North path to Termalaine, and Lonelywood past it. Loggers, fishers, folk who'd rather not be found.",
-                            "GUARD: The man in the shirt went that way. We didn't follow."],
+                            "GUARD: Two days to Lonelywood, if the drifts are kind. The man in the shirt went that way."],
     # --- Lonelywood Road -----------------------------------------------------------
     sign_lonely_road: ["LONELYWOOD ROAD", "North to Lonelywood. Beware the white moose."],
     sign_stream: ["The stream is frozen solid. Someone has laid logs across it anyway, out of habit."],
@@ -173,13 +174,12 @@ module FrostThaw
                         "Folk leave offerings up there on full-moon nights. Nobody says to whom."],
     jet_sentry_town: -> {
       if T.flag?(:heart_of_ice)
-        ["JET SENTRY: Bring the heart north, past the Moon Temple, to our Warren.",
+        ["JET SENTRY: Bring the heart north, to the Moon Temple. Our Warren is under it.",
          "JET SENTRY: Zenith will know what to do.",
          "JET SENTRY: And hurry. The cold man follows its pulse."]
       else
-        ["JET SENTRY: I am Jet Sentry, of the Wennen. I watched the cold man carry her east.",
-         "JET SENTRY: Along the logging road, to the Glade of the Unmade. Past the standing stones.",
-         "JET SENTRY: I'm sorry. I was too slow."]
+        ["JET SENTRY: The logging road east, through the forest, to the Glade of the Unmade.",
+         "JET SENTRY: A stone circle in the birches. I'm sorry. I was too slow."]
       end
     },
     fisher_garrow_after: ["The lake's frozen ten feet down. I still fish. What else would I do?"],
@@ -305,14 +305,33 @@ module FrostThaw
     if !flag?(:met_nimsy)
       set_flag(:met_nimsy)
       say(["NIMSY: Oh! Visitors! Come in, come in, mind the little ones.",
-           "NIMSY: Cookie? They're shaped like halflings. That's the joke.",
+           "NIMSY: Cookie? They're shaped like halflings. Like me. That's the joke.",
            "NIMSY: I'm Nimsy Huddle. I speak for Lonelywood, for all the good it does us.",
            cl(:alberica, "Darling, you've just become my favourite Speaker in the Dale."),
            "NIMSY: The attic's yours. House rule in Lonelywood: nobody asks about anybody's past.",
            as(:shimmer, "Perfect."),
-           cl(:shade, "She means it. That's the first time I've heard her mean it.")].compact, event_id)
+           cl(:shade, "Shimmer means it. That's the first time I've heard her mean it.")].compact, event_id)
     end
-    if pbConfirmMessage(_INTL("Rest in Nimsy's attic?"))
+    last_night = !flag?(:shimmer_taken) && companions.include?(:shimmer)
+    # Sephek first (context 03 M3-2): the night needs his deadline under it
+    if last_night && !flag?(:met_sephek_torgs)
+      say([as(:shade, "Not yet. He's out by the sleds, past the fisher's house."),
+           as(:shade, "I want to see his face before any of us sleeps.")], event_id)
+      state[:goal] = "Find Sephek at the sleds in the clearing, past the fisher's house."
+      return
+    end
+    # The watch (context 03 M3-3): the night is a decision the party owns
+    if last_night && !flag?(:watch_shade) && !flag?(:watch_you) && !flag?(:watch_shimmer)
+      say([as(:shade, "We sleep in shifts. He's out there, and he knows which roof.")], event_id)
+      c = pbMessage(_INTL("Who keeps first watch?"), [_INTL("Shade."), _INTL("You."), _INTL("Shimmer.")], -1)
+      c = 0 if !c || c < 0
+      set_flag(%i[watch_shade watch_you watch_shimmer][c])
+      say([[as(:shade, "Me, then. I don't sleep anyway. Family trait."),
+            as(:shimmer, journey? ? "The stray. Good. You see what the rest of us walk past." :
+                                  "You, then. Good. You see what the rest of us walk past."),
+            as(:shimmer, "Me. I'm awake anyway. I'm counting.")][c]], event_id)
+    end
+    if pbConfirmMessage(last_night ? _INTL("Go up to the attic for the night?") : _INTL("Rest in Nimsy's attic?"))
       pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
       set_rest_point
       set_flag(:rested_lonelywood)
@@ -347,21 +366,114 @@ module FrostThaw
     $PokemonGlobal.pokecenterDirection = dir
   end
 
-  # SC 3.03 - The empty bedroll, then SC 3.04 - The third way (vision)
+  # SC 3.03 - The night, the empty bedroll, then SC 3.04 - The third way (vision),
+  # then Jet Sentry under the window. Purpose: Shimmer decides, lies and leaves
+  # on screen (the watch, the cat, her four notes); the party sees her choice
+  # and learns where she is and who saw it (context 03 M3-3, M3-4, M3-5).
+  ATTIC_NIGHT = Tone.new(-85, -75, -20, 40) rescue nil
+  ATTIC_DAWN  = Tone.new(-20, -30, -10, 20) rescue nil
+  NIMSY_DOOR  = [9, 11]                       # the ladder down and out (Speaker Huddle's House)
+  JET_ROAD    = [39, 11]                      # Jet leads you to the logging road, by its sign
+
   def scene_shimmer_taken
+    me = herald?(:alberica)
+    st = Stage
+    party = {}
+    pbFadeOutIn do
+      $game_screen.start_tone_change(ATTIC_NIGHT, 0) rescue nil
+      if st.map?
+        $game_map.events.each_value { |e| e.transparent = true if e.name =~ /Nimsy|Huddle kids/ }
+        $game_player.moveto(8, 8) rescue nil
+        $game_player.turn_up rescue nil
+        { alberica: [6, 8, 8], reptin: [7, 9, 8], alerion: [10, 8, 4], shade: [9, 9, 8],
+          meat_meat: [11, 9, 4], shimmer: [9, 6, 8] }.each do |k, (x, y, d)|
+          next if herald?(k) || !companions.include?(k)
+          party[k] = st.actor(k, x, y, d)
+        end
+      end
+    end
+    shim = party[:shimmer]
     say(["The attic is warm. Below, the fire ticks as it cools.",
-         "One by one, the party falls asleep.",
-         "...",
-         "Morning. Shimmer's bedroll is empty.",
+         "One by one, the party falls asleep."])
+    if flag?(:watch_shade)
+      say(["Past midnight, Shimmer takes the watch from Shade. Shade lets her."])
+    elsif flag?(:watch_you)
+      st.walk_to(shim, 9, 8, face: 4) if shim
+      say(["Past midnight, Shimmer sits down beside you. \"Go on. I'm awake anyway.\""])
+      st.walk_to(shim, 9, 6, face: 8) if shim
+    end
+    say(["By the window, Shimmer turns a little carved wooden cat over in her fingers."])
+    if !flag?(:heard_of_glimmer)
+      say([as(:shade, "(half asleep) You're doing the cat thing."),
+           as(:shimmer, "I'm not scared. I'm counting."),
+           as(:shimmer, "You carved it when we were kids. Terrible cats. They always wanted to be one."),
+           as(:shimmer, "Cats get nine lives. You've used about six. Go to sleep.")])
+    else
+      say([as(:shade, "(half asleep) Still counting?"),
+           as(:shimmer, "Still counting.")])
+    end
+    st.jingle("lullaby")
+    say(["Then she hums. Four notes, very low. The same four, over and over."])
+    speak(:alberica, "(mostly asleep) Louder, sweetheart. I'll learn it.", "(mostly asleep) ...Hm. Pretty.")
+    say([as(:shimmer, "It isn't a song. The stone hums. I just keep it in tune.")])
+    st.walk_to(shim, $game_player.x, $game_player.y, adjacent: true) if shim
+    st.turn_to(shim) if shim
+    c = pbMessage(_INTL("Shimmer laces her boots, and stops at your bedroll."),
+                  [_INTL("\"Shimmer?\""), _INTL("(Keep your eyes shut.)")], -1)
+    if c == 0
+      set_flag(:shimmer_lied)
+      say([as(:shimmer, "(a whisper) Privy. Go back to sleep.")])
+    else
+      set_flag(:shimmer_asked)
+      say([as(:shimmer, "(a whisper) Look after Shade. They'll pretend they don't need it.")])
+    end
+    if shim
+      st.leave(shim, *NIMSY_DOOR)
+      pbSEPlay("Exit Door") rescue nil
+    end
+    pbFadeOutIn do
+      $game_screen.start_tone_change(ATTIC_DAWN, 0) rescue nil
+      st.wait(40)
+    end
+    say(["Morning. Shimmer's bedroll is empty.",
          "On the pillow: a note, and the carved wooden cat.",
          as(:shade, "(reading) \"He said before the next moon, or he picks someone else.\""),
          as(:shade, "\"I'm not letting him pick. Don't follow. Keep the cat. S.\""),
-         as(:shade, "(very quiet) ...She always does this.")])
-    me = herald?(:alberica)
+         flag?(:shimmer_lied) ? as(:shade, "She told you the privy. She told me a storm.") : nil,
+         as(:shade, "(very quiet) ...She always does this.")].compact)
+    state[:goal] = "Go after her."
+    pbMessage(_INTL("What do you do?"), [_INTL("(Go after her.)")], -1)
+    st.walk_to($game_player, *NIMSY_DOOR) if st.map?
+    shimmer_vision(me)
+    st.cleanup
+    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 20) rescue nil
+    state[:companions] = (state[:companions] || []) - [:shimmer]
+    set_flag(:shimmer_taken)
+    $game_switches[SW_SHIMMER_TAKEN] = true if $game_switches
+    pbMessage(_INTL("\\me[lullaby]Shimmer left the party."))
+    say([me ? "You're back in the attic. The pendant is gone. The rune on your chest isn't." :
+              "You're back in the attic. Alberica's pendant is gone. The rune on her chest isn't.",
+         me ? "(It itches. Like a snowflake that won't melt.)" : nil,
+         as(:shade, "...No.")].compact)
+    speak(:alerion, "She's gone, Shade. She chose it.", "...She's gone, Shade.")
+    speak(:alerion, "Stone circle. Birches. Someone in this town knows where.", "...Stone circle. Birches. Someone here knows where.")
+    say([cl(:reptin, "(very quietly) She said no to a god. Twice."),
+         cl(:alberica, "Shade. Look at me. We go together. Nobody goes alone."),
+         journey? && flag?(:shimmer_first) ? as(:shade, "(to you) You could have gone south. You came for her.") : nil,
+         "Outside, under the window, a tall figure with long ears and a lantern waits in the snow."].compact)
+    state[:goal] = "Outside. Someone's waiting under the window."
+    jet_under_the_window
+  end
+
+  # The vision (SC 3.04): it takes you on the way out after her.
+  def shimmer_vision(me = herald?(:alberica))
     say([me ? "Your pendant flares and cracks." : "Alberica's pendant flares and cracks.",
-         "The room goes white. Then you're all somewhere else, and none of you can move."])
-    # The vision: S-04 covers the cut to the Glade, where it plays out on the
-    # slab itself under a frosted frame (O-03); S-05 covers the cut home.
+         journey? ? "In your pocket, the lantern glass goes cold, as if it's watching too." : nil,
+         me ? "(It's showing me her. It's showing me now.)" :
+              "ALBERICA: (the pendant burning in her fist) That's her. That's now.",
+         "The room goes white. Then you're all somewhere else, and none of you can move."].compact)
+    # S-04 covers the cut to the Glade, where it plays out on the slab itself
+    # under a frosted frame (O-03); S-05 covers the cut home.
     Stage.overlay("O-03", above_panels: true, fade: 20)
     Stage.panel("S-04", fade: 20)
     say(["A stone circle in the birches. Snow falling without a sound."])
@@ -372,43 +484,61 @@ module FrostThaw
       seph = st.actor(:sephek, 16, 10, 4)
       st.panel_off(fade: 24)
       say(["Shimmer lies on a slab older than names, bound in cords of living ice.",
-           "Above her floats a sphere of ice veined with black: the Heart of Winter.",
+           "Above her floats a sphere of black-veined ice: a piece of Auril, waiting for a way in.",
            "It beats to someone else's pulse."])
       st.face(seph, 4) if seph
       say(["SEPHEK: She forgives, Shimmer. Take her back into you. Let the Dale breathe.",
            "SEPHEK: You won't be a prison this time. You'll be a queen.",
            "SHIMMER: I've carried her once. I watched the world burn white because of it.",
            "SHIMMER: This isn't salvation. It's surrender.",
-           "SEPHEK: Then you leave her no choice.",
+           "SEPHEK: Then I go back to that square, and I choose. A child, this time.",
            "SHIMMER: You gave me two paths, Sephek. Damnation, or servitude.",
            "SHIMMER: You forgot. There's always a third way.",
            "She closes her eyes. In her chest, something cracks like ice on a lake: the stone.",
-           "Above her, the Heart of Winter screams."])
+           "SHIMMER: There. The door's shut. She can't come in."])
       $game_screen.start_shake(4, 6, 16) rescue nil
-      say(["SHIMMER: Do it. If she needs blood, let it be mine. But not for her.",
+      say(["Above her, the black ice screams.",
+           "SEPHEK: Then you leave her no choice.",
+           "SHIMMER: Do it. If she needs blood, let it be mine. But not for her.",
            "SHIMMER: For them."])
+      pbMessage(_INTL("You can't move."), [_INTL("(Shout her name.)")], -1)
+      say(["You open your mouth. No sound comes out."])
       st.walk(seph, [PBMoveRoute::ThroughOn, PBMoveRoute::Left]) if seph
       say(["The blade falls. White fire. When it fades, there is no body."])
       $game_screen.start_flash(Color.new(255, 255, 255, 220), 16) rescue nil
       st.panel("S-05", fade: 12)
     end
+    state[:companions] = (state[:companions] || []) - [:shimmer]   # (her last line comes from nowhere)
     say(["Only a rose, frozen in bloom, growing out of the stone.",
          "Beside it, a heart of ice beats once, and breathes out mist.",
+         "Sephek reaches for the heart. The frost bites his hand, and he snatches it back.",
          "Sephek falls to his knees. He's weeping.",
          "SHIMMER: (from nowhere, very softly) Not all fire dies. Some of it just learns to freeze."])
     Stage.overlay_off("O-03", fade: 20)
     Stage.panel_off(fade: 20)
-    Stage.cleanup
-    state[:companions] = (state[:companions] || []) - [:shimmer]
-    set_flag(:shimmer_taken)
-    $game_switches[SW_SHIMMER_TAKEN] = true if $game_switches
-    say([me ? "You're back in the attic. The pendant is gone. The rune on your chest isn't." :
-              "You're back in the attic. Alberica's pendant is gone. The rune on her chest isn't.",
-         as(:shade, "...No. No, no, no.")])
-    speak(:alerion, "East. The vision was east. The old logging road.", "...The logging road. East.")
-    say([cl(:alberica, "Shade. Look at me. We go together. Nobody goes alone."),
-         "Outside, under the window, a tall figure with long ears and a lantern waits in the snow."].compact)
-    state[:goal] = "The Glade of the Unmade, east of Lonelywood."
+  end
+
+  # Jet Sentry, outside Nimsy's door (context 03 M3-5): the one witness tells
+  # what happened between the attic and the Glade, and leads you to the road.
+  def jet_under_the_window
+    st = Stage
+    pbFadeOutIn { st.jump(MAPS[:lonelywood], 14, 24, 2) } if st.map?
+    jet = st.find("Jet Sentry")
+    if jet
+      st.turn_to(jet)
+      st.emote(jet, :exclaim)
+      st.approach(jet)
+    end
+    say(["Long ears, a lantern, snow thick on her shoulders. She's been out here all night.",
+         "JET SENTRY: Jet Sentry, of the Wennen. The moon-keepers, in the woods north of here.",
+         "JET SENTRY: Before dawn she walked to the cold man's sleds. Nobody made her.",
+         "JET SENTRY: He bound her in ice and carried her east.",
+         as(:shade, "You watched him take her."),
+         "JET SENTRY: I followed. I'm fast. He's faster, in the cold.",
+         "JET SENTRY: The logging road, to the Glade of the Unmade. A stone circle. I'll take you."])
+    set_flag(:jet_told)
+    st.escort(jet, *JET_ROAD, facing: 6) if jet
+    state[:goal] = "Follow the logging road east, through the forest, to the Glade of the Unmade."
   end
 
   # The Happy Scrimshander's keeper: a doughy spinster of few words, who never
@@ -441,22 +571,45 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Scenes
   #-----------------------------------------------------------------------------
-  # SC 3.01 - What she carried
+  # SC 3.01 - What she carried. Purpose: the player learns what happened in
+  # Saltmarsh (Auril wore Shimmer, the "vessel"), how Shimmer knows Sephek, and
+  # why he wants her, pulled out of her by the bare footprints (context 03 M3-1).
   def scene_lonely_road_start
-    say(["Bare footprints in the snow. They don't sink.",
-         as(:shimmer, "Those are his. Aren't they."),
-         as(:shimmer, "You should know why he wants me."),
-         as(:shimmer, "Saltmarsh. A job. A stone in a box. I opened the box, and she came in."),
-         as(:shimmer, "One night, she wore me like a coat. A ship froze solid around us."),
-         as(:shade, "(quietly) You told me it was a storm."),
-         as(:shimmer, "It was a storm. Hers. You came into it after me anyway. Dragged me out by the hair."),
+    st = Stage
+    pbBGMFade(1.0) rescue nil                       # the map music cuts; only the wind
+    st.pan_to(15, 52)
+    say(["Bare footprints in the snow, running north. They don't sink."])
+    st.pan_back
+    say([as(:shade, "A trapper. Barefoot. People out here do strange things."),
+         as(:shimmer, "Those are his. You know they are."),
+         "Shimmer stops, and turns to face the rest of you.",
+         as(:shimmer, "You should know why he wants me. Before he says it for me."),
+         as(:shimmer, "Saltmarsh. A port, a long way south. A job: a stone in a box."),
+         as(:shimmer, "I opened the box, and the Frostmaiden came in.")])
+    # the memory: a frozen harbour (O-03 means a vision or memory; S-03a is the art request)
+    st.overlay("O-03", fade: 16)
+    st.panel("S-03a", fade: 16)
+    say(["A harbour at night. A ship frozen solid in one breath, rigging and all.",
+         "On its deck stands a girl with white light where her eyes should be.",
+         as(:shimmer, "One night, she wore me like a coat. Her priests have a word for it. Vessel.")])
+    st.panel_off(fade: 16)
+    st.overlay_off("O-03", fade: 16)
+    say([as(:shade, "(quietly) You told me it was a storm."),
+         as(:shimmer, "It was a storm. Hers. You came into it after me anyway."),
+         as(:shimmer, "Dragged me out by the hair."),
+         as(:shade, "And in the morning there was a horn in the snow. I never knew whose."),
          as(:shimmer, "I got out. The stone didn't. It's still in here. A door she left open."),
+         herald?(:alerion) ? "(Your ring goes cold when she says \"a door\". You know that cold.)" : nil,
+         as(:shimmer, "She's sent him after me ever since. He always finds me. I always say no."),
          as(:shade, "Why didn't you tell me?"),
-         as(:shimmer, "You'd have tried to fix it."),
-         as(:alberica, "So she wants a coat again. And she's trying me on for size."),
-         cl(:reptin, "Then she'll find out what we all know. Nobody's ever made you fit anything.")].compact)
+         as(:shimmer, "You'd have tried to fix it.")].compact)
+    speak(:alberica, "(a hand over the rune) So she wants a coat again. She's trying me on for size.",
+          "(a hand over the rune) ...She's trying me on for size.")
+    say([cl(:reptin, "Then she'll find out what we all know. Nobody's ever made you fit anything.")].compact)
+    st.theme(nil)
+    st.cleanup
     set_flag(:shimmer_confessed)
-    state[:goal] = "Lonelywood. Sephek is waiting. (Auril wears people. She calls them vessels.)"
+    state[:goal] = "Lonelywood, north. Sephek wants Shimmer back as Auril's vessel."
   end
 
   def scene_lonelywood_arrival
@@ -468,6 +621,12 @@ module FrostThaw
          cl(:alerion, "No."),
          cl(:reptin, "He means congratulations."),
          cl(:shimmer, "He means no.")].compact)
+    # Sephek is here, on the spine (context 03 M3-2): the goal's "waiting" pays off
+    return if !with_or_is?(:shimmer) || flag?(:met_sephek_torgs) || flag?(:shimmer_taken)
+    Stage.pan_to(37, 20)
+    say(["Past the fisher's house, a man in shirtsleeves leans on a sled, watching the road."])
+    Stage.pan_back
+    state[:goal] = "Find Sephek at the sleds in the clearing, past the fisher's house."
   end
 
   # SC 3.05 - The Glade
@@ -491,20 +650,32 @@ module FrostThaw
     give_key(:FT_HEARTOFICE)
     set_flag(:heart_of_ice)
     $game_switches[SW_HEART_TAKEN] = true if $game_switches
+    # Jet Sentry walks in up the south path behind you (context 03 M3-6)
+    jet = nil
+    if st.map?
+      jet = st.actor(:jet_sentry, 14, 26, 8, graphic: LOPUNNY_GFX)
+      st.walk_to(jet, $game_player.x, $game_player.y, adjacent: true) if jet
+      st.turn_to(jet) if jet
+    end
+    say(["JET SENTRY: A heart of ice. It's what's left when she tries to wear someone, and can't.",
+         as(:shade, "(very quiet) ...She couldn't. Good.")])
     if !flag?(:meat_meat_joined)
       eggs = herald?(:reptin) ? "your arms" : "Reptin's arms"
       say(["Behind the altar, a bundle of furs sneezes.",
            "A goblin, half frozen, chewing mushroom jerky. Long white hair stiff with frost.",
            "Cracked goggles. Violet eyes. A pack bigger than she is.",
+           "MEAT MEAT: Meat Meat followed Razzy's feet from Targos. Snow ate the feet.",
            "MEAT MEAT: Meat Meat dreamed Razzy fell into cold light.",
            "MEAT MEAT: Meat Meat followed the dream. Dream was wrong place. Rude dream.",
-           "She sees the egg in #{eggs} and goes very still.",
-           "MEAT MEAT: ...Razzy?",
+           "She sees the egg in #{eggs} and goes very still."])
+      pbMessage(_INTL("What do you do?"), [herald?(:reptin) ? _INTL("(Hold the egg out to her.)") : _INTL("(Nudge Reptin toward her.)")], -1)
+      say(["MEAT MEAT: ...Razzy?",
            "The egg warms so suddenly it nearly slips.",
            "MEAT MEAT: That is Razzy. Razzy not dead. Just very cold. Meat Meat promises."])
-      speak(:reptin, "\"A name, spoken as a promise.\" ...That's it. That's the rite.", "...A name, spoken as a promise.")
+      speak(:reptin, "She said his name, and she promised. That's the rite.", "...She said his name. She promised.")
       say(["MEAT MEAT: Razzy and Meat Meat ran away together. From a cold table.",
            "MEAT MEAT: From the lady with books and bones. She took Razzy's voice.",
+           as(:reptin, "(quietly) The scar on his throat."),
            as(:alerion, "Naerth's \"pale lady\"."),
            "MEAT MEAT: Meat Meat comes with you now. Meat Meat is not asking.",
            cl(:alberica, "Oh, I love her. Can we keep her?"),
@@ -517,12 +688,24 @@ module FrostThaw
     else
       say(["Under your coat, the egg's heartbeat answers the heart of ice, beat for beat.",
            cl(:meat_meat, "Razzy can hear her. Razzy is being very brave.")].compact)
+      if herald?(:meat_meat)
+        # her road, said aloud to Shade, so the party hears it (context 03 §6)
+        speak(:meat_meat, "The lady with books and bones took Razzy's voice. On her cold table.",
+              "...The lady with books took his voice.")
+        say([as(:alerion, "Naerth's \"pale lady\"."),
+             as(:reptin, "(quietly) The scar on his throat.")])
+      end
     end
     set_flag(:razzy_named)
-    say(["JET SENTRY: I tracked the cold man here. I was too late for her.",
-         "JET SENTRY: The Circle wants that heart.",
-         "JET SENTRY: And the man who took her waits at our Moon Temple for it."])
-    state[:goal] = "The Moon Temple, north of Lonelywood. Sephek is waiting for the heart."
+    say(["JET SENTRY: The Circle will want that heart.",
+         as(:shade, "The Circle can ask. It's my sister's. It goes where I go."),
+         "JET SENTRY: Then come with it. The Circle is our council: thirteen Wennen, in our Warren.",
+         "JET SENTRY: The Warren is under the Moon Temple, north of town. Zenith can keep it safe.",
+         "JET SENTRY: The cold man knows that. He'll be waiting at the door.",
+         as(:shade, "Let him.")])
+    st.leave(jet, 14, 27) if jet
+    st.cleanup
+    state[:goal] = "The Moon Temple, north of town: the Wennen's Warren is under it, and Sephek is waiting."
   end
 
   def scene_moon_grounds_arrival
@@ -531,7 +714,8 @@ module FrostThaw
          "Below the arches, a timber lodge with a root-grown door breathes out warm air. Mint, and earth.",
          cl(:meat_meat, "Rabbit Lords live here. Meat Meat will be very polite. Very."),
          cl(:reptin, "Leave the talking to me. Rabbits love me. Everybody does, eventually."),
-         cl(:shade, "Talk later. He's here. I can feel it.")].compact)
+         cl(:shade, flag?(:heart_of_ice) ? "Talk later. He's here. I can feel it." :
+                                           "Talk later. If he comes up here, he's mine.")].compact)
   end
 
   def scene_sephek_moon_temple(event_id = nil)
@@ -543,8 +727,9 @@ module FrostThaw
     sx, sy = spot ? [spot.x, spot.y] : ([$game_player.x, $game_player.y - 2] rescue [0, 0])
     seph = st.actor(:sephek, sx, sy, 2) if st.map?
     say(["The wind stops. Between the arches, a man in a thin linen shirt is waiting.",
-         "His eyes are still red.",
+         "His eyes are red. He hasn't stopped weeping.",
          "SEPHEK: Give me the heart, and the Frostmaiden forgets your names.",
+         "SEPHEK: I can't take it. It burns me. It has to be given.",
          as(:shade, "You killed my sister."),
          "SEPHEK: (quietly) She killed herself. I only held the knife. I'm sorry. Give it to me.",
          cl(:alberica, "(a hand on Shade's arm) Not alone, sweetheart. Not this time.")].compact)
@@ -558,19 +743,25 @@ module FrostThaw
       return
     end
     say(["SEPHEK: ...So cold. Why is it so cold? The cold never touched me..."])
-    if seph
-      st.pose(seph, "P-SEP-02", 0, frames: [0, 1], per: 10)
+    st.pose(seph, "P-SEP-02", 0, frames: [0, 1], per: 10) if seph
+    sephek_true_nature                 # what he really is (Rime of the Frostmaiden; 044_ChasmFaithful.rb)
+    if seph                            # (frost only creeps while he talks; the ice closes after: notes E10)
       pbSEPlay("Ice2") rescue nil
       st.fx("E-04", seph, frames: 10, hold: true, wait: false)
       st.pose(seph, "P-SEP-02", 0, frames: [2, 3], per: 12)
     end
-    sephek_true_nature                 # what he really is (Rime of the Frostmaiden; 044_ChasmFaithful.rb)
     say(["Ice closes over him where he kneels.",
          "In his chest, a sliver of blue light still beats. Slow as a sleeper."])
     speak(:alerion, "He's not dead. He's waiting.", "...He's waiting.")
     say([cl(:shade, "Then let him wait. Forever, if it's up to me.")].compact)
     set_flag(:sephek_defeated)
     set_flag(:sephek_frozen)
+    # the Warden walks out to say where to go now (context 03 §5, 3.15 -> 3.16)
+    nova = Stage.find("Nova Keeper")
+    if nova
+      Stage.approach(nova)
+      say(lines_for(:nova_keeper), nova.id)
+    end
     state[:goal] = "The Wennen's Warren, under the Moon Temple. Zenith Abbott is waiting at the Rose."
     $game_switches[SW_SEPHEK_DOWN] = true if $game_switches
     Stage.cleanup
@@ -592,10 +783,26 @@ module FrostThaw
     log("rearm_sephek: #{e.message}")
   end
 
+  # Purpose: the Warren, its people, and the frost egg seen before the Requiem uses it (context 03 M3-9).
+  WARREN_NURSERY = [9, 34]
+
   def scene_warren_enter
+    st = Stage
     say(["The tunnel widens as it goes down: round halls of pressed clay, ribbed with white roots.",
          "Fungal veins glow along the walls. Driftwood lanterns burn amber. It's warm.",
-         "Tall figures with long ears watch you pass. The Circle of Thirteen. Waiting. Judging.",
+         "Tall figures with long ears watch you pass. The Wennen, and their Circle of thirteen."])
+    if st.map?
+      nx, ny = WARREN_NURSERY
+      st.actor(:wennen_guard, nx - 1, ny, 6, graphic: LOPUNNY_GFX)
+      st.actor(:wennen_guard, nx + 1, ny, 4, graphic: "Followers/BUNEARY")
+      st.pan_to(nx, ny)
+    end
+    say(["In a nest of white roots, two Wennen guard an egg of pale blue ice. It's never been warm."])
+    if st.map?
+      st.pan_back
+      st.cleanup
+    end
+    say([cl(:meat_meat, "Big egg. Not Razzy. Meat Meat checked."),
          cl(:meat_meat, "Meat Meat smells coffee. Rabbit coffee. Meat Meat will find it."),
          cl(:reptin, "Please don't steal from the moon-keepers."),
          cl(:meat_meat, "Meat Meat borrows.")].compact)
@@ -641,19 +848,29 @@ module FrostThaw
 
   # SC 3.07 - The Moon Requiem. The egg takes Shimmer's heart, but doesn't hatch.
   def scene_moon_requiem(event_id = nil)
-    say(["ZENITH: A heart that chose. A rose that would not close.",
-         "ZENITH: An egg that fell when winter first arose.",
-         "LUNA CARVER: The night the Rime began, the Frostmaiden's roe flew over us.",
-         "LUNA CARVER: Something fell. An egg, cold all through. It never woke. We kept it anyway.",
-         "LUNA CARVER: It needed a heart. Now one has come.",
-         herald?(:shade) ? "You lay Shimmer's heart beneath the Rose, beside a pale-blue egg." :
-                           "Shade lays Shimmer's heart beneath the Rose, beside a pale-blue egg.",
-         "The Wennen thump a slow beat with their feet. The false moon in the ceiling brightens."])
-    pbSEPlay("Ice2") rescue nil
     st = Stage
     px, py = ([$game_player.x, $game_player.y] rescue [0, 0])
+    say(["Zenith Abbott, who keeps the Rose, speaks only in verse.",
+         "ZENITH: A heart that chose. A rose that would not close.",
+         "ZENITH: An egg that fell when winter first arose."], event_id)
+    # Luna walks over for her part (notes 03 E5): nobody speaks from off screen
+    luna = st.find("Luna Carver")
+    st.approach(luna) if luna
+    say(["LUNA CARVER: (walking over) I dream for the Circle. I dreamed this egg.",
+         "LUNA CARVER: The night the Rime began, the Frostmaiden's great white bird flew over us.",
+         "LUNA CARVER: Something fell. An egg, cold all through. It never woke. We kept it anyway.",
+         "Two Wennen carry the ice egg up from the nursery and set it beneath the Rose.",
+         "LUNA CARVER: It needed a heart. Now one has come."])
+    if st.map?
+      st.actor(:wennen_bearer, px - 1, py - 1, 6, graphic: LOPUNNY_GFX)
+      st.actor(:wennen_bearer, px + 1, py - 1, 4, graphic: "Followers/BUNEARY")
+    end
     egg = st.actor(:frost_egg, px, py - 1, 2, graphic: "K-EGG-02") if st.map?
     st.pose(egg, "K-EGG-02", 1, frames: [0], per: 4) if egg
+    say([herald?(:shade) ? "You lay Shimmer's heart beneath the Rose, beside the pale-blue egg." :
+                           "Shade lays Shimmer's heart beneath the Rose, beside the pale-blue egg.",
+         "The Wennen thump a slow beat with their feet. The false moon in the ceiling brightens."])
+    pbSEPlay("Ice2") rescue nil
     say(["The egg doesn't crack. It warms.",
          "Frost-white light moves under the shell.",
          "Something inside turns over, the way someone used to in her sleep."])
@@ -662,9 +879,11 @@ module FrostThaw
     shade = (st.find("Shade") || st.actor(:shade, px + 1, py, 8)) if st.map? && !herald?(:shade)
     st.balloon(shade, "B-07", frames: 70) if shade
     say([as(:shade, "(breaking) That's... that's her song."),
+         flag?(:shimmer_asked) && !herald?(:shade) ? "You put a hand on Shade's shoulder." : nil,
          "ZENITH: Not her vessel. Her answer.",
          herald?(:alerion) ? "The ring on your hand warms for the first time. (...Frostina.)" :
-                             "ALERION: ...Frostina.",
+                             "The ring on Alerion's hand warms for the first time.",
+         herald?(:alerion) ? nil : "ALERION: ...Frostina.",
          cl(:alberica, "(softly) Frostina. She'd have hated that. She'd have loved it."),
          "LUNA CARVER: It has a heart now. It needs time, and the world hasn't got enough."].compact)
     Stage.cleanup
@@ -690,7 +909,7 @@ module FrostThaw
       return say(["LUNA CARVER: Go on. We'll be behind you, at a distance. We're good at distance."], event_id)
     end
     say(["LUNA CARVER: One heart of ice is grief. Two is a burden. Three is a summons.",
-         "LUNA CARVER: Hers was the first. The cold man's still beats in his chest.",
+         "LUNA CARVER: Shimmer's is the first. The cold man's still beats in his chest.",
          "LUNA CARVER: Bring a third to the other two, and the Frostmaiden gets a body to walk in.",
          cl(:reptin, "Then we make very sure nobody brings a third."),
          journey? ? "LUNA CARVER: (to you) You I can't see at all. Like you're not on her wheel yet." : nil,
@@ -699,26 +918,63 @@ module FrostThaw
          as(:shade, "My house is one smuggler and a carved cat. But thanks."),
          "LUNA CARVER: The cold man can't stay at our temple with his heart beating.",
          "LUNA CARVER: We'll take him south on a sledge, and follow you. At a distance.",
-         "LUNA CARVER: We keep what the cold leaves. We kept an egg for two years."].compact, event_id)
+         "LUNA CARVER: We keep what the cold leaves. Her egg, for two years. Now him."].compact, event_id)
     set_flag(:knows_three_hearts)
     set_flag(:luna_spark)
     set_flag(:wennen_follow)
     set_switch(SW_WENNEN_FOLLOW, true)
+    scene_laughing_calling           # Zenith is here to say it (notes 03 E2: not from Lonelywood)
   end
 
-  # SC 3.09 - The laughing is the calling (back in Lonelywood after the Warren)
+  # SC 3.09 - The laughing is the calling, in the Warren after Luna, then the
+  # sledge south (context 03 M3-10). Lonelywood's old autorun finds it done.
   def scene_laughing_calling
+    return if flag?(:hag_named)
+    st = Stage
+    jet = nil
+    if st.map? && $game_map.map_id == MAPS[:warren]
+      jet = st.actor(:jet_sentry, $game_player.x + 3, $game_player.y + 1, 4, graphic: LOPUNNY_GFX)
+      st.walk_to(jet, $game_player.x, $game_player.y, adjacent: true) if jet
+      st.turn_to(jet) if jet
+    end
     say(["ZENITH: South of the Hole where the ice stands still,",
          "ZENITH: a crone laughs low, and the laughing is the calling.",
          "JET SENTRY: Plain words: a hag lives in a chasm south of Dougan's Hole.",
-         "JET SENTRY: The Circle has heard her for two winters. Your trinkets pull toward her.",
+         "JET SENTRY: The fishers hear her laughing on the ice. So do your trinkets.",
          journey? ? "JET SENTRY: (to you) She keeps mirrors. Cold glass. Like the shard you carry." : nil,
-         "JET SENTRY: I'll run ahead to Bryn Shander. The east gate will be open for you.",
          cl(:alberica, "A laughing hag who wants our jewellery. I've dated worse."),
-         cl(:alerion, "You have.")].compact)
+         cl(:alerion, "You have.")].compact, jet ? jet.id : nil)
     set_flag(:hag_named)
-    state[:goal] = journey? ? "Bryn Shander's east gate, then south-east to Dougan's Hole: who's calling them, and the hag's mirrors." :
-                              "Bryn Shander's east gate, then south-east to Dougan's Hole. Find who's calling us."
+    sledge_south(jet)
+    state[:goal] = journey? ? "South-east to Dougan's Hole: who's calling them, and the hag's mirrors." :
+                              "South-east to Dougan's Hole. Find who's calling us."
+  end
+
+  # The chapter's last bridge: the Wennen's sledge, Sephek's ice, and what
+  # Shimmer bought Bryn Shander (context 03 M3-10). The road home stays walkable.
+  BRYN_EAST_GATE = [40, 22]
+
+  def sledge_south(jet = nil)
+    st = Stage
+    say(["JET SENTRY: Our sledge goes south tonight, with the cold man in his ice. Ride with us."], jet ? jet.id : nil)
+    return if !st.map? || !$scene.respond_to?(:transfer_player)
+    pbFadeOutIn { st.jump(MAPS[:bryn], *BRYN_EAST_GATE, 6) }
+    gx, gy = BRYN_EAST_GATE
+    st.actor(:sephek_sledge, gx, gy + 1, 6, graphic: "FT_sephek_frozen")
+    st.actor(:wennen_driver, gx - 1, gy + 1, 6, graphic: "Followers/BUNEARY")
+    jet = st.find("Jet Sentry") || st.actor(:jet_sentry, gx + 1, gy + 1, 4, graphic: LOPUNNY_GFX)
+    guard = $game_map.events.values.find { |e| e.name.to_s =~ /bryn_east_guard_open/ && !e.character_name.to_s.empty? }
+    guard ||= st.actor(:gate_guard, gx + 3, gy, 4, graphic: "BWPoliceman")
+    say(["Two nights on the sledge, south past Termalaine. In his ice, Sephek never once blinks."])
+    st.approach(guard) if guard
+    gid = guard ? guard.id : nil
+    say(["GUARD: (staring at the ice) Is that him? The man in the shirt?"], gid)
+    st.turn_to(jet, guard) if jet && guard
+    say(["JET SENTRY: Sleeping. We'll watch him. That's what we're for."])
+    say([herald?(:alberica) ? "GUARD: Board's down in the square. Speaker's word. Nobody drawn since you sang." :
+                              "GUARD: Board's down in the square. Speaker's word. Nobody drawn since your dwarf sang.",
+         "GUARD: Gate's open. The Hole's that way. Nobody's come back from it in a month."], gid)
+    st.cleanup
   end
 
   def apply_chapter3_switches

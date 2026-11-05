@@ -15,7 +15,7 @@ module FrostThaw
     FT_GOLDENACORN: ["Golden Acorn", "Golden Acorns", 8, 0,
       "An acorn of real gold, warm as a hand. \"It was always meant to go north.\"", 0, 0, 6],
     FT_HEARTOFICE: ["Heart of Ice", "Hearts of Ice", 8, 0,
-      "Shimmer's heart of ice. It beats once a minute, and breathes out mist.", 0, 0, 6],
+      "What's left when Auril tries to wear someone and can't. Shimmer's. It beats once a minute.", 0, 0, 6],
     FT_UNDYINGROSE: ["Undying Rose", "Undying Roses", 8, 0,
       "A cutting of a rose frozen mid-bloom. It never wilts. Warm to the touch.", 0, 0, 6],
     FT_ORDERLOCKET: ["Order's Locket", "Order's Lockets", 8, 0,

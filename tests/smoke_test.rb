@@ -592,6 +592,9 @@ c3_ok = true
   $battle_result = true
   begin
     FT.scene_lonely_road_start; FT.scene_lonelywood_arrival
+    FT.nimsy(nil)                       # (no bed yet: Sephek first, context 03 M3-2)
+    c3_ok &&= !FT.flag?(:shimmer_taken)
+    FT.sephek_torgs(nil)
     FT.nimsy(nil)
     FT.scene_glade_aftermath
     FT.scene_moon_grounds_arrival

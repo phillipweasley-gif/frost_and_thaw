@@ -88,3 +88,10 @@ module FrostThaw
   LOOP_ACT1_FLAGS.concat(%i[hag_night_ready met_hilda kanan_named ghost_beat_one acorn_remembered fall_held_on]).uniq!
   LOOP_ACT2_FLAGS.concat(%i[hag_night_ready met_hilda kanan_named ghost_beat_one acorn_remembered fall_held_on]).uniq!
 end
+
+# Chapters 2-3 context fixes (2026-11-05): Sephek at Torg's on the spine, the
+# night's watch and Shimmer's whisper (as a Journey run picks them), Jet's telling
+module FrostThaw
+  LOOP_ACT1_FLAGS.concat(%i[met_sephek_torgs watch_shade shimmer_lied jet_told]).uniq!
+  LOOP_ACT2_FLAGS.concat(%i[met_sephek_torgs watch_shade shimmer_lied jet_told]).uniq!
+end

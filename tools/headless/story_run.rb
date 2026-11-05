@@ -339,6 +339,8 @@ module Story
       travel(2021)
       HL.frames(30); HL.settle(3000)
       beat("arrive in Lonelywood", :lonelywood_arrived)
+      talk(/Sephek at Torg/)          # Sephek at the sleds, on the spine (context 03 M3-2)
+      beat("Sephek at Torg's", :met_sephek_torgs)
       travel(2027)
       talk(/Nimsy/)
       beat("rest in Nimsy's attic", :rested_lonelywood)
@@ -359,7 +361,7 @@ module Story
       beat("the Frost Egg (not hatched yet)", :frost_egg)
       talk(/Luna Carver/)
       beat("one, two, three: the Wennen follow", :wennen_follow)
-      travel(2023); travel(2021); HL.frames(30); HL.settle(3000)
+      HL.frames(30); HL.settle(3000)  # (Zenith says it in the Warren; the Wennen's sledge takes you to Bryn Shander)
       beat("the laughing is the calling", :hag_named)
       sweep("end of Chapter 3") if ENV["SWEEP"]
       chapter4 unless ENV["STOP_AT"] == "3"

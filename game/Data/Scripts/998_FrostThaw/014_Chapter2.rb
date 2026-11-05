@@ -318,7 +318,8 @@ module FrostThaw
       morninglord_acorn(event_id)
       return
     end
-    say(["MISHANN: Come in out of the dark. The Morninglord turns no one away.",
+    say([flag?(:golden_acorn) ? "MISHANN: You found my door. Come in out of the dark." :
+                                "MISHANN: Come in out of the dark. The Morninglord turns no one away.",
          "MISHANN: Sit by the fire a moment. Your Pokémon too."], event_id)
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     say(["MISHANN: There. The dawn comes back, you know. Even here. It always comes back."], event_id)
@@ -326,6 +327,26 @@ module FrostThaw
 
   # The acorn the whole act turns on (the third way). Mishann doesn't leave it to
   # chance: she comes to find Reptin the moment the seal is won.
+  # Outside the hall after the seal (notes 02 E4, context 02 M2-8): the priestess
+  # from the square waits on the steps, and says who she is and what Reptin is.
+  HALL_STEPS = [31, 20]
+
+  def mishann_on_the_steps
+    s = Stage
+    mish = nil
+    if s.map? && $scene.respond_to?(:transfer_player)
+      pbFadeOutIn { s.jump(MAPS[:bryn], *HALL_STEPS, 2) }
+      mish = s.actor(:mishann, HALL_STEPS[0] + 2, HALL_STEPS[1] + 3, 8, graphic: "BW (98)")
+      s.approach(mish) if mish
+    end
+    say(["Outside the hall, the priestess from the square is waiting, her lantern still lit.",
+         "MISHANN: There you are. Mishann. I keep the Morninglord's fire. The dawn's, such as it is.",
+         herald?(:reptin) ? "MISHANN: I've looked for you since the draw. I had a feeling." :
+                            "MISHANN: I've looked for your druid since the draw. I had a feeling."])
+    morninglord_acorn
+    s.cleanup
+  end
+
   def morninglord_acorn(event_id = nil)
     return if flag?(:golden_acorn)
     if true
@@ -364,16 +385,18 @@ module FrostThaw
   # SC 2.01 - The north road
   def scene_north_road_start
     if herald?(:meat_meat)
+      # They met her in the Targos tavern, and Shimmer promised to look for Razzy
+      # (Chapter 1): this follows on from that.
       say(["You've followed Razzy's footprints all night.",
-           "The strangers from the dock are on the same road. They have food.",
+           "The strangers from the tavern are on the same road. They have food.",
            "Razzy would want you to ask.",
-           "SHADE: A goblin. Following us. Hungry, or friendly?"])
-      pbMessage(_INTL("What do you say?"), [_INTL("\"Both. Meat Meat is looking for Razzy.\"")], 0)
+           "SHADE: You again. The goblin from the tavern. Hungry, or friendly?"])
+      pbMessage(_INTL("What do you say?"), [_INTL("\"Both. Meat Meat is still looking for Razzy.\"")], 0)
       say(["SHADE: ...Fair answer. Walk with us, then. Nobody should be out here alone.",
-           "REPTIN: Who's Razzy?",
-           "(Small. Green. Can't talk any more. Holds Meat Meat's hand at night.)",
-           "(Meat Meat doesn't say any of that. Meat Meat just walks.)",
-           cl(:alberica, "Sweetheart, you're blue. Here. Scarf. Don't argue.")].compact)
+           "SHIMMER: We said we'd look. So we're looking.",
+           "REPTIN: Small, green, out the gate. Anything else we should know?"])
+      speak(:meat_meat, "Razzy can't talk. Razzy and Meat Meat ran from a cold table.", "...Razzy can't talk.")
+      say([cl(:alberica, "Sweetheart, you're blue. Here. Scarf. Don't argue.")].compact)
       set_flag(:meat_meat_joined)
     else
       say(["The road north is a white line between black pines.",
@@ -396,19 +419,33 @@ module FrostThaw
          herald?(:reptin) ? "He grabs your sleeve and pulls." : "He grabs Reptin's sleeve and pulls."])
     speak(:reptin, "Hello, little one. You're freezing. Here, take my...", "You're freezing. Here...")
     say(["He opens his mouth. No sound comes out.",
-         "He points east, at a crack in the snow glowing blue-white. Then he runs.",
-         as(:shade, "That's either a trap or a kid. Those look the same from here."),
+         as(:reptin, "(very quiet) Someone cut that scar. On purpose.")])
+    Stage.pan_to(29, 28)
+    say(["He points east, at a crack in the snow glowing blue-white. Then he runs."])
+    Stage.pan_back
+    say([as(:shade, "That's either a trap or a kid. Those look the same from here."),
          cl(:alerion, "Kid. Traps don't shiver.")].compact)
-    say(["(Razzy. Razzy! Razzy, no, not that way...)"]) if herald?(:meat_meat)
+    if herald?(:meat_meat)
+      say(["(Razzy. Razzy! Razzy, no, not that way...)",
+           "SHIMMER: Small, green, running. That's your Razzy?"])
+    end
     state[:goal] = "The little goblin ran into the glowing crack in the rocks, east of the road."
   end
 
   # SC 2.03 - Frost-light (its own scene key: the Cackling Chasm's is scene_cackling_enter)
+  # Purpose: the first scene the Frostmaiden drives; the player learns her
+  # light is hers, and that the Aurilites pray to the winter (context 02 M2-2).
+  SIV_SPOT = [12, 24]
+
   def scene_frostlight_enter
-    say(["Blue light seeps out of the ice like breath.",
-         "Two figures in white robes chip at it with bone picks.",
-         "SIV: Her light. Every crumb belongs to her. You don't.",
-         cl(:reptin, "(under his breath) Zealots with picks. My favourite."),
+    say(["Blue light seeps out of the ice like breath."])
+    Stage.pan_to(*SIV_SPOT)
+    siv = ($game_map.events.values.find { |e| [e.x, e.y] == SIV_SPOT } rescue nil)
+    say(["Two figures in white robes chip at it with bone picks.",
+         "SIV: The Frostmaiden's light. Every crumb belongs to her. You don't."], siv ? siv.id : nil)
+    Stage.pan_back
+    say([as(:reptin, "(under his breath) Aurilites. They pray to the winter, and it listens."),
+         as(:reptin, "Zealots with picks. My favourite."),
          cl(:alberica, "Sugar, nobody belongs to anybody. Step aside.")].compact)
   end
 
@@ -441,6 +478,7 @@ module FrostThaw
     c = pbMessage(_INTL("What do you say?"), [_INTL("\"Do it.\""), _INTL("\"Wait...\"")], -1)
     if c == 0
       set_flag(:razzy_bloodwarm)
+      say([as(:reptin, "(already rolling up a sleeve) I was hoping you'd say that.")]) if !herald?(:reptin)
     else
       say([as(:reptin, "There's no waiting in this cold.")])
     end
@@ -451,7 +489,8 @@ module FrostThaw
                             "Reptin cuts his palm and presses it to the shell. The frost drinks it.",
          "The shell softens. It isn't enough.",
          as(:shade, "(digging in a pack) I've carried this since the Saltmarsh job. A unicorn's horn."),
-         as(:shade, "Never knew why I kept it.")])
+         as(:shade, "Never knew why I kept it."),
+         as(:shimmer, "(very still) ...You kept that.")])
     shade = s.actor(:shade, px + 1, py, 8)
     s.pose(shade, "P-SHA-02", 0, per: 8) if shade
     $game_screen.start_flash(Color.new(200, 255, 200, 140), 12) rescue nil
@@ -461,11 +500,15 @@ module FrostThaw
     say([herald?(:shade) ? "You lay the horn against the shell. It melts in, like snow into a hand." :
                            "Shade lays the horn against the shell. It melts in, like snow into a hand.",
          "The shell rounds into an egg, warm and green-gold.",
-         as(:reptin, "One more thing. The old rhymes want a name, spoken as a promise."),
-         as(:alberica, "And none of us knows his."),
-         cl(:alerion, "Then we find someone who does.")].compact)
+         herald?(:alerion) ? "(Your ring goes cold near the dead. The egg is warm.)" : nil,
+         herald?(:reptin) ? "(The old druid rhymes. You haven't said one aloud in years.)" : nil].compact)
+    speak(:reptin, "One more thing. The old rhymes want a name, spoken as a promise.",
+          "...The old rhymes want a name. Spoken as a promise.")
+    speak(:alberica, "And none of us knows his.", "...None of us knows his name.")
+    say([cl(:alerion, "Then we find someone who does.")].compact)
     if herald?(:meat_meat)
-      say(["(Razzy. His name is Razzy. Meat Meat promises.)",
+      say(["Reptin passes the egg to you.",
+           "(Razzy. His name is Razzy. Meat Meat promises.)",
            "You say it out loud, to the egg. The egg warms against your chest.",
            cl(:alberica, "(very softly) ...Oh, sweetheart.")].compact)
       set_flag(:razzy_named)
@@ -474,7 +517,8 @@ module FrostThaw
     give_key(:FT_MOONEGG)
     set_flag(:razzy_egg)
     add_counter(:story_beats)
-    state[:goal] = "Keep the egg warm. South-east to Bryn Shander."
+    state[:goal] = flag?(:razzy_named) ? "Keep the egg warm. On to Bryn Shander." :
+                                         "Keep the egg warm, and find someone who knows his name. On to Bryn Shander."
   rescue StandardError => e
     log("scene_razzy_falls: #{e.message}")
     Stage.cleanup rescue nil
@@ -485,15 +529,25 @@ module FrostThaw
   end
 
   # SC 2.05 - The board in the square
+  # Purpose: the stakes of tonight; what the lottery is for, and to whom, and
+  # what refusing costs (context 02 M2-4). The gate guard walks up to say it.
   def scene_bryn_arrival
+    s = Stage
     say(["Bryn Shander sits on its hill inside two rings of logs, thirty feet high, rubble packed between them.",
          "Bright lanterns twist over the narrow streets. Under them, nobody.",
-         "In the square, a board lists every name in town. Tomorrow is the new moon.",
-         "GUARD: Draw's at sundown. Speaker says nobody leaves on a draw night. Nobody.",
-         as(:shimmer, "They've added travellers."),
-         as(:alberica, "We're on it?"),
-         as(:shimmer, "Everyone's on it."),
+         "In the square, a board lists every name in town. Tonight is the new moon."])
+    guard = s.actor(:gate_guard, $game_player.x, $game_player.y - 4, 2, graphic: "BWPoliceman") if s.map?
+    s.approach(guard) if guard
+    gid = guard ? guard.id : nil
+    say(["GUARD: Draw's at sundown. Speaker says nobody leaves on a draw night. Nobody.",
+         "GUARD: And they've added travellers. You went on the board when you came through the gate."], gid)
+    speak(:alberica, "We're on it?", "...Us too?")
+    say([as(:shimmer, "Everyone's on it."),
          cl(:reptin, "How democratic.")].compact)
+    say(["GUARD: Laugh, then. One name a moon, for the Frostmaiden, and she spares the rest of us."], gid)
+    say([as(:shade, "And if you don't give her one?")])
+    say(["GUARD: Two years of her Everlasting Rime says you don't want to find out."], gid)
+    s.leave(guard, $game_player.x, $game_player.y - 6) if guard
     if flag?(:kip_list)
       say([as(:alberica, "...Kip's list. Three names on this board have never once been drawn."),
            as(:alberica, "Not in two years."),
@@ -515,6 +569,8 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Rest until sundown? (${1}, or on credit)", SCRAMSAX_ROOM))
     $Trainer.money -= SCRAMSAX_ROOM if !northlook_rest_on_credit?
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    Stage.jingle(:heal)
+    say(["You rest until the light goes. At sundown, the whole town walks to the square."])
     long_rest_taken
     # the draw is in the square: go out to it (the square's autorun plays lottery_night)
     set_switch(SW_LOTTERY_NIGHT, true)
@@ -539,6 +595,8 @@ module FrostThaw
     end.compact
     ilda = s.actor(:ilda, px - 1, py - 2, 8, graphic: "BW (16)")
     mother = s.actor(:ilda_mother, px - 2, py - 2, 8, graphic: "BW (62)")
+    # Mishann, at the crowd's edge with her lantern: PRIESTESS until she gives her name (M2-8)
+    priestess = s.actor(:priestess, px - 6, py - 1, 6, graphic: "BW (98)")
     party = {}
     [[:alberica, 1, 0], [:reptin, -1, 0], [:alerion, 2, 0], [:shade, -2, 1], [:shimmer, -1, 1]].each do |k, dx, dy|
       next if herald?(k)
@@ -547,6 +605,7 @@ module FrostThaw
     party[:alberica] = s.herald(:alberica) if me     # (you: a stand-in that can wear her action sheets)
     s.wait(10)
     say(["The square at sundown. Torches. A bowl of wooden tokens.",
+         "DUVESSA: (reaching into the bowl) For the Frostmaiden. One of us, so the rest wake up.",
          "DUVESSA: Ilda Weaverson."])
     s.balloon(mother, "B-06") if mother
     say(["A girl of twelve. Her mother makes a sound like something breaking."])
@@ -559,13 +618,14 @@ module FrostThaw
       s.walk(alb, PBMoveRoute::Up, PBMoveRoute::Up)
       s.face(alb, 2)
     end
-    say([me ? "You climb up where the whole square can see you." :
+    say([me ? "(The pendant's warm against your throat. It's never warm.)" : nil,
+         me ? "You climb up where the whole square can see you." :
               "Alberica climbs up where the whole square can see her.",
          me ? "You pull the Pendant of Black Ice out of your coat." :
               "She pulls the Pendant of Black Ice out of her coat.",
          as(:alberica, "Look at me. All of you. You remember the last summer."),
          as(:alberica, "The trout jumping. Bread you didn't have to count."),
-         as(:alberica, "Your kids asleep in a warm room. Remember it. Hold on to it.")])
+         as(:alberica, "Your kids asleep in a warm room. Remember it. Hold on to it.")].compact)
     $game_screen.start_flash(Color.new(255, 255, 255, 200), 16) rescue nil
     $game_screen.start_tone_change(Tone.new(-30, -25, 0, 10), 20) rescue nil
     crowd.each { |c| s.balloon(c, "B-06", frames: 30) }
@@ -599,8 +659,8 @@ module FrostThaw
     s.balloon(mother, "B-07", frames: 60) if mother
     say(["The crowd closes around Ilda and her mother. Nobody gives her up.",
          "DUVESSA: ...No walk tonight. Go home. All of you.",
-         cl(:reptin, "(quietly) Remind me never to argue with you in public."),
-         cl(:shade, "Too late. You already have.")].compact)
+         cl(:reptin, "(quietly) Remind me never to argue with her in public."),
+         cl(:shade, "You'd lose. So did the whole town.")].compact)
     s.face(auril, 4) if auril
     say([me ? "At the edge of the torchlight, the woman in frost-furs. She looks only at you." :
               "At the edge of the torchlight, the woman in frost-furs. She looks only at Alberica.",
@@ -615,7 +675,8 @@ module FrostThaw
               "Alberica gasps and claws at her chest.",
          me ? "Through your coat, a mark glows blue: a snowflake, cut by a crown." :
               "Through her coat, a mark glows blue: a snowflake, cut by a crown.",
-         "MISHANN: That's Her. The Frostmaiden. Auril."])
+         "PRIESTESS: (her lantern shaking) That's Her. Auril, the Frostmaiden. The winter, walking.",
+         me ? "(Too tall, at the edge of the lamplight. On the ship. That was her.)" : nil].compact)
     if auril
       s.fx("E-01", auril, frames: 10, hold: true, wait: false)
       s.pose(auril, "P-AUR-04", 0, per: 7)
@@ -623,7 +684,20 @@ module FrostThaw
     end
     s.stop_fx(rune) if alb
     s.unpose(alb) if alb
-    speak(:alberica, "...Something's pulling me north. Don't make a thing of it.", "...I'm fine. Don't look at me like that.")
+    # a second beat for the player after Auril vanishes (notes 02 E17)
+    watch_gate = false
+    if !me
+      c2 = pbMessage(_INTL("What do you do?"), [_INTL("Go to Alberica."), _INTL("Watch the north gate.")], -1)
+      if c2 == 1
+        watch_gate = true
+        $game_player.turn_up rescue nil
+      elsif alb && s.map?
+        s.walk_to($game_player, alb.x, alb.y, adjacent: true)
+        s.turn_to($game_player, alb)
+      end
+    end
+    speak(:alberica, "...I'm fine. Something's pulling me north, that's all. Don't make a thing of it.",
+          "...I'm fine. Don't look at me like that.")
     say([cl(:alerion, "You're not fine."),
          as(:alberica, "Pretty boy, I'm gorgeous. Fine is a step down.")].compact) if with_or_is?(:alerion)
     set_flag(:lottery_stand)
@@ -632,16 +706,19 @@ module FrostThaw
     # SC 2.07
     sephek = s.actor(:sephek, px, py - 9, 2)
     s.walk(sephek, PBMoveRoute::Down, PBMoveRoute::Down, PBMoveRoute::Down, PBMoveRoute::Down) if sephek
-    say(["A man walks into the square in shirtsleeves. No coat.",
-         "Snow doesn't settle on him. His footprints don't stay.",
-         "SEPHEK: A town that keeps its name owes her one. I'm sorry. She'll take what's hers."])
     shim = party[:shimmer]
+    say([watch_gate ? "At the north gate, the guards step back from someone walking in." : nil,
+         "A man walks into the square in shirtsleeves. No coat.",
+         "Snow doesn't settle on him. His footprints don't stay."].compact)
     s.balloon(shim, "B-06") if shim
+    sid = sephek ? sephek.id : nil      # (not the townsman on the square who gossips about him)
+    say([as(:shimmer, "(very still) Sephek. Nobody move. He wants someone to."),
+         "SEPHEK: A town that keeps its name owes her one. I'm sorry. She'll take what's hers."], sid)
     say([me ? "He looks past Ilda. Past you. At Shimmer." : "He looks past Ilda. Past Alberica. At Shimmer.",
          "SEPHEK: The Frostmaiden sends her regards. To the girl with the stone.",
          as(:shimmer, "Tell her I said no. Again."),
          "SEPHEK: Tell her yourself. I'll be in Lonelywood.",
-         "SEPHEK: Come before the next moon, or I choose someone from this square instead."])
+         "SEPHEK: Come before the next moon, or I choose someone from this square instead."], sid)
     if sephek
       sephek.turn_up rescue nil
       s.walk(sephek, PBMoveRoute::Up, PBMoveRoute::Up, PBMoveRoute::Up, PBMoveRoute::Up, PBMoveRoute::Up)
@@ -650,16 +727,64 @@ module FrostThaw
     s.balloon(shim, "B-01", frames: 60) if shim
     say([cl(:shade, "(very quiet) ...Shimmer."),
          as(:shimmer, "I know.")].compact)
-    s.cleanup
-    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 20) rescue nil
+    # "Again" becomes a question the next chapter answers (context 02 M2-5)
+    speak(:alberica, "\"Again\"? You've said no to her before?", "...\"Again\"?")
+    say([as(:shimmer, "Later. Not in front of the whole town.")])
+    set_flag(:lottery_stand)
     set_flag(:seen_sephek_bryn)
-    state[:goal] = "Sephek. Lonelywood. Before the next moon. (Duvessa's seal opens the north gate.)"
+    if journey?
+      # the player's own road pulls the other way, and the player chooses
+      say(["In your pocket, the lantern glass tugs south-east. Toward the Hole, not the north gate.",
+           cl(:alerion, "(to you) Your road's south-east. Ours just walked north.")].compact)
+      c = pbMessage(_INTL("What do you say?"), [_INTL("\"North, with them.\""), _INTL("\"How far is the Hole?\"")], -1)
+      if c == 1
+        say([cl(:alerion, "Past the east gate. Shut till the Speaker says. North's the only road open.")].compact)
+      else
+        set_flag(:shimmer_first)
+        say([as(:shimmer, "(not looking at you) ...Stray. Thanks.")])
+      end
+    else
+      speak(:alerion, "North gate's shut. Only the Speaker opens it.", "...Only the Speaker opens the north gate.")
+    end
+    say([as(:reptin, "Then we need the Speaker's seal either way. Town Hall, in the morning.")])
+    lottery_morning(party)
+    state[:goal] = "Win Speaker Duvessa's seal at the Town Hall. It opens the north gate to Lonelywood."
     add_counter(:story_beats)
   rescue StandardError => e
     log("lottery_night: #{e.message}")
     Stage.cleanup rescue nil
     $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
     %i[lottery_stand alberica_marked auril_named seen_sephek_bryn].each { |f| set_flag(f) }
+  end
+
+  # The morning after (context 02 M2-6): a night passes, the girl the whole
+  # scene was for is alive at her door, and the Speaker sends for you.
+  WEAVER_DOOR = [34, 31]
+
+  def lottery_morning(_party = nil)
+    s = Stage
+    wx, wy = WEAVER_DOOR
+    pbFadeOutIn do
+      s.cleanup
+      $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
+      if s.map?
+        $game_player.moveto(wx, wy + 2) rescue nil
+        $game_player.turn_up rescue nil
+      end
+    end
+    ilda = nil
+    if s.map?
+      ilda = s.actor(:ilda, wx, wy + 1, 2, graphic: "BW (16)")
+      s.actor(:ilda_mother, wx + 1, wy + 1, 2, graphic: "BW (62)")
+    end
+    say(["Morning. The square is empty. The lottery board is still up.",
+         herald?(:alberica) ? "ILDA: (from the Weaver's door, to you) Will you sing the summer one again?" :
+                              "ILDA: (from the Weaver's door, to Alberica) Will you sing the summer one again?"])
+    speak(:alberica, "Every night till it comes back.", "...Yes.")
+    guard = s.actor(:hall_guard, wx, wy + 6, 8, graphic: "BWPoliceman") if s.map?
+    s.approach(guard) if guard
+    say(["GUARD: Speaker's compliments. Town Hall. She says bring the singer."], guard ? guard.id : nil)
+    s.cleanup
   end
 
   #-----------------------------------------------------------------------------
@@ -681,7 +806,8 @@ module FrostThaw
            "DUVESSA: Come back after. If you still want to."], event_id)
       return
     end
-    say(["DUVESSA: Ten speakers signed a bargain with the cold. I signed it first. A necessary evil, we called it.",
+    say(["DUVESSA: Ten Speakers signed a bargain with Her. A life a month, or food, or warmth.",
+         "DUVESSA: I signed it first. A necessary evil, we called it.",
          "DUVESSA: Last night you made me break it. Show me it was worth it.",
          cl(:reptin, "(under his breath) That was a compliment. Probably.")].compact, event_id)
     won = pbTrainerBattle(:FT_SPEAKER_F, "Duvessa", nil, false, 0)
@@ -696,9 +822,7 @@ module FrostThaw
       pbReceiveItem(:TM118) rescue nil
       say(["DUVESSA: That TM teaches Steel Wing. Fitting for a town that's all walls and watchmen."], event_id)
       state[:goal] = "Sephek is in Lonelywood: out the north gate, through Termalaine."
-      say(["Outside the hall, a priestess of the Morninglord is waiting on the steps, out of breath, her lantern still lit.",
-           "MISHANN: There you are. I've been looking for #{herald?(:reptin) ? 'you' : 'your wolf-friend'} since the draw. I had a feeling."])
-      morninglord_acorn
+      mishann_on_the_steps
     end
   end
 
