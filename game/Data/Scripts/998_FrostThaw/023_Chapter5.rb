@@ -985,8 +985,12 @@ module FrostThaw
   # SC 5.09 - The third way, again. Then SC 5.10 - Falling.
   def scene_third_way
     me_alb = herald?(:alberica)
-    say(["Thredra's Reflection cracks. The last mirror.",
-         "You're the one who breaks it.",
+    if journey?
+      last_mirror_choice
+    else
+      say(["Thredra's Reflection cracks. The last mirror.", "You're the one who breaks it."])
+    end
+    say([
          "The Heart pulses hard. It's still hungry. The root under the ice opens like a mouth.",
          as(:reptin, "(stepping toward it) It wants a life.")])
     speak(:alberica, "No. Shimmer showed us. There's always a third way.", "...There's always a third way.")
@@ -1171,3 +1175,28 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("Chapter 5 switches failed: #{err.message}")
   end
 }
+
+module FrostThaw
+  module_function
+
+  # The player's decision (owner's call, 2026-11-05): the last mirror is your way
+  # home. Step through and leave them, or break it. Either way it breaks, and
+  # the Reversal takes everyone; what you chose is remembered.
+  def last_mirror_choice
+    say(["Thredra's Reflection cracks. One mirror is left standing, and the lantern glass in your pocket answers it.",
+         "In it: Rootspire's market, gold with festival lanterns. Hellen's door. Tamsin, holding a cracked lantern.",
+         "THREDRA: (from a thousand shards) Go on, lost one. Step through. Leave them to Granny. Home by supper."])
+    c = pbMessage(_INTL("The last mirror..."), [_INTL("Step through."), _INTL("Break it.")], 1)
+    if c == 0
+      set_flag(:tried_to_leave)
+      say(["You put your hand to the glass. It's warm. It gives, like water.",
+           "Behind you, the cub cries out once in its chains.",
+           "In the mirror, Tamsin turns to look at you, and smiles with someone else's teeth."])
+      sayc([cl(:alberica, "(catching your wrist) Not like that, darling. Not through her door."),
+            "The glass cracks under both your hands."])
+    else
+      set_flag(:broke_last_mirror)
+      say(["You don't look at it for long. Home, warm, a saved seat.", "You break it."])
+    end
+  end
+end

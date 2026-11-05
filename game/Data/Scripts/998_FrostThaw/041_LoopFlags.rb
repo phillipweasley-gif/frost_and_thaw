@@ -69,3 +69,9 @@ module FrostThaw
     widow_spheal wolves_beaten wyn_cleared wyn_joined yarro_witness yeti_calmed yeti_faced
   ])
 end
+
+# The player's own goals (2026-11-05)
+module FrostThaw
+  LOOP_ACT1_FLAGS.concat(%i[glass_read broke_last_mirror]).uniq!
+  LOOP_ACT2_FLAGS.concat(%i[glass_read broke_last_mirror their_time_known promised_their_time]).uniq!
+end

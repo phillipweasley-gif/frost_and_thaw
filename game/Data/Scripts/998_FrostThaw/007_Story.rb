@@ -154,7 +154,12 @@ module FrostThaw
            "(Cold things in their pockets. Cold like the lab. Meat Meat follows cold things.)",
            "(Also, taverns have coffee. Probably. Meat Meat will find out.)"])
     elsif journey? || herald?(:wyn)
-      say(["You land on frozen planks. Snow, everywhere. The sky has no sun in it at all.",
+      if journey?
+        say(["You land on frozen planks. Your hand is still closed round something: a shard of the lantern's glass.",
+             "It's colder than the snow."])
+        give_key(:FT_LANTERNGLASS) rescue nil
+      end
+      say(["Snow, everywhere. The sky has no sun in it at all.",
            "ALERION: You fell out of the air.",
            "ALERION: ...Nobody else saw. Keep it that way.",
            "SHIMMER: Tavern's up the hill. Whatever you are, you'll freeze the same as us.",

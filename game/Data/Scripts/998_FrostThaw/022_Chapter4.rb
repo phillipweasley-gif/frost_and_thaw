@@ -396,7 +396,8 @@ module FrostThaw
   def scene_eastway_start
     set_flag(:eastway_started)
     sayc(["Past Bryn Shander's east gate, the Eastway runs out across open snowfields.",
-          "South-east, past Good Mead, is Dougan's Hole. Zenith said a hag laughs in a chasm there.",
+          journey? ? "South-east, past Good Mead, is Dougan's Hole, and the hag's mirrors." :
+                     "South-east, past Good Mead, is Dougan's Hole. Zenith said a hag laughs in a chasm there.",
           cl(:shade, "A laughing hag. In a chasm. Is anything in this Dale just a nice lake?"),
           as(:alerion, "Then let's go and find out what's so funny."),
           cl(:alberica, "Look at that, pretty boy made a joke. Mark the date, somebody.")])
@@ -528,13 +529,15 @@ module FrostThaw
     $game_screen.start_tone_change(Tone.new(*NIGHT_TONE), 30) rescue nil
     state[:dh_night_tone] = true
     pbBGMPlay("scary_ambient") rescue nil
-    sayc(["Laughter on the ice. It comes from everywhere at once. Your relics go so cold they burn.",
+    sayc([journey? ? "Laughter on the ice. It comes from everywhere at once. Their relics go so cold they burn." :
+                     "Laughter on the ice. It comes from everywhere at once. Your relics go so cold they burn.",
+          journey? ? "In your pocket, the lantern glass rings like a struck bell." : nil,
           "Among the Twenty Stones, south-west of town, stand three tall mirrors of ice.",
           "In each one, an old woman in a patchwork cloak is smiling.",
           as(:alberica, "Durmoot told us to stay in."),
           as(:shade, "Durmoot tells everyone to stay in."),
           cl(:meat_meat, "Meat Meat never stays in. Meat Meat is already outside.")])
-    state[:goal] = "The Twenty Stones. Find who's calling."
+    state[:goal] = journey? ? "The Twenty Stones: who's calling them, and the mirrors you came through." : "The Twenty Stones. Find who's calling."
   end
 
   def mirrors_broken
@@ -555,12 +558,18 @@ module FrostThaw
       speak(:alberica, "You sent them. You sent me that pendant, you dried-up old...", "...You sent them.", event_id)
       lines = ["THREDRA: I sent them. My watchers watched you aboard.",
                "THREDRA: She wants a new coat to wear, you see. I'm only her seamstress."]
-      lines << "THREDRA: (squinting at you) And this one isn't anywhere at all. Interesting. Very interesting." if journey? || herald?(:wyn)
+      if journey?
+        lines << "THREDRA: (squinting at you) And this one fell through my glass. Lost, dearie?"
+        lines << "THREDRA: Granny could send you home. Granny's very good at sending."
+      elsif herald?(:wyn)
+        lines << "THREDRA: (squinting at you) And this one isn't anywhere at all. Interesting. Very interesting."
+      end
       lines << cl(:reptin, "(aside) Seamstress. Lovely. Let's not let her take our measurements.")
       say(lines.compact, event_id)
       hag_bargain_offer(event_id)       # the module's "A Hag's Bargain" (044_ChasmFaithful.rb)
       say(["THREDRA: Now. Let's dance upon the glass, and see who shatters first.",
-           "THREDRA: Break my mirrors, dearies. If you can bear to look in them."], event_id)
+           journey? ? "THREDRA: Want your still ones back? Break my glass. Mind, lost one: it's the way you go home." :
+                     "THREDRA: Break my mirrors, dearies. If you can bear to look in them."], event_id)
       set_flag(:thredra_sent_relics)
       return
     end
@@ -582,7 +591,8 @@ module FrostThaw
            "Behind its shoulder, a crone is smiling. (She's waiting at the centre stone.)"], event_id)
       return
     end
-    say(["You look into the mirror. Your reflection grins back with someone else's teeth.",
+    say([journey? && i == 3 ? "You look into the mirror. It shows Hellen's tavern, warm. Someone is saving your seat. Then it grins." :
+                             "You look into the mirror. Your reflection grins back with someone else's teeth.",
          "The glass bulges, and something climbs out of it!"], event_id)
     foe = [[:SNORUNT, 26], [:B429H427, 27], [:GLALIE, 27]][i - 1]
     return if !boss_battle(named_mon(foe[0], foe[1], "Mirror-wight"))
@@ -608,8 +618,9 @@ module FrostThaw
     pbSEPlay("Ice2") rescue nil
     say(["THREDRA: Clever. Clever, clever. You broke them. Do you know how long it takes to grow a mirror?",
          "THREDRA: Come and find me in the chasm, dearies. Bring your wolf. Granny keeps her bargains.",
+         journey? ? "THREDRA: And you, lost one. My last glass is in the chasm. Yours too." : nil,
          "She splits into shards and blows away south.",
-         "Out on the lake, the frozen figures breathe. One by one they sag, gasp, and fall to their knees."])
+         "Out on the lake, the frozen figures breathe. One by one they sag, gasp, and fall to their knees."].compact)
     sayc([cl(:reptin, "(hand closing over the bite) ...Bring your wolf. She means me."),
           cl(:alerion, "She means all of us. She just said your name first.")])
     set_flag(:husband_thawed)
@@ -631,7 +642,8 @@ module FrostThaw
           "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns. ...Don't tell anyone I said that either."])
     pbReceiveItem(:TM95) rescue nil
     set_flag(:dh_morning)
-    state[:goal] = "The Cackling Chasm, south of Dougan's Hole. She's there."
+    state[:goal] = journey? ? "The Cackling Chasm, south of Dougan's Hole. She's there, with the last of her mirrors." :
+                              "The Cackling Chasm, south of Dougan's Hole. She's there."
   end
 
   def apply_chapter4_switches

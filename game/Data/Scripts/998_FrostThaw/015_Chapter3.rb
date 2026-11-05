@@ -693,6 +693,7 @@ module FrostThaw
          "LUNA CARVER: Hers was the first. The cold man's still beats in his chest.",
          "LUNA CARVER: Bring a third to the other two, and the Frostmaiden gets a body to walk in.",
          cl(:reptin, "Then we make very sure nobody brings a third."),
+         journey? ? "LUNA CARVER: (to you) You I can't see at all. Like you're not on her wheel yet." : nil,
          "LUNA CARVER: (turning to Shade) And you. Your house has a spark in it that isn't out.",
          "LUNA CARVER: I can see it on you. It's waiting somewhere bright.",
          as(:shade, "My house is one smuggler and a carved cat. But thanks."),
@@ -711,11 +712,13 @@ module FrostThaw
          "ZENITH: a crone laughs low, and the laughing is the calling.",
          "JET SENTRY: Plain words: a hag lives in a chasm south of Dougan's Hole.",
          "JET SENTRY: The Circle has heard her for two winters. Your trinkets pull toward her.",
+         journey? ? "JET SENTRY: (to you) She keeps mirrors. Cold glass. Like the shard you carry." : nil,
          "JET SENTRY: I'll run ahead to Bryn Shander. The east gate will be open for you.",
          cl(:alberica, "A laughing hag who wants our jewellery. I've dated worse."),
          cl(:alerion, "You have.")].compact)
     set_flag(:hag_named)
-    state[:goal] = "Bryn Shander's east gate, then south-east to Dougan's Hole. Find who's calling us."
+    state[:goal] = journey? ? "Bryn Shander's east gate, then south-east to Dougan's Hole: who's calling them, and the hag's mirrors." :
+                              "Bryn Shander's east gate, then south-east to Dougan's Hole. Find who's calling us."
   end
 
   def apply_chapter3_switches

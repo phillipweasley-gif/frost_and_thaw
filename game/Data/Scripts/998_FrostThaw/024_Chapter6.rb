@@ -611,6 +611,7 @@ module FrostThaw
            cl(:alberica, "Slow and stubborn. Story of my love life. ...Thank you, Speaker.")].compact)
       pbReceiveItem(:LEFTOVERS) rescue nil
     end
+    their_time_beat if journey?
     set_flag(:wardens_emeritus)      # the Root-Tier stair opens either way (switch 3935)
     ($game_switches[SW_WARDENS] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
@@ -728,3 +729,37 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("Chapter 6 switches failed: #{err.message}")
   end
 }
+
+module FrostThaw
+  module_function
+
+  # The player's second goal (owner's call, 2026-11-05): it grows out of the
+  # first. You went to Dougan's Hole for a way home and broke the glass; it
+  # brought you home, and them four hundred years out of theirs. The Wall that
+  # splits their time from yours stands because the wheel is stuck. That is the
+  # whole game's road from here: the third way brings the Wall down.
+  def their_time_beat
+    return if flag?(:their_time_known)
+    set_flag(:their_time_known)
+    say(["SELRAE: (to the Heralds) You should know where you are. Inside the Wall, four hundred years.",
+         "SELRAE: Outside it, weeks. Your Dale's still out there. Still frozen.",
+         cl(:reptin, "(very quietly) Weeks. Anduin's out there. It's only been weeks."),
+         "SELRAE: The Wall holds because the wheel is stuck. Summer won't leave in here. Winter won't leave out there.",
+         "SELRAE: Unstick it, and the Wall comes down. Your time and ours, one morning."].compact)
+    sayc([cl(:alerion, "(to you) You came home. We came with you.")])
+    c = pbMessage(_INTL("The Heralds look at you."), [_INTL("\"I'll get you home.\""), _INTL("\"I'm sorry.\"")], 0)
+    if c == 0
+      set_flag(:promised_their_time)
+      sayc([cl(:reptin, "Then we'd better start with this summer, dear. One stuck season at a time."),
+            cl(:meat_meat, "Meat Meat will hold you to it. Meat Meat holds very hard.")])
+    elsif flag?(:tried_to_leave)
+      sayc([cl(:alberica, "(quietly) You'd have gone, in the chasm. I'd have gone too. We're here now. All of us."),
+            cl(:alerion, "Sorry's a start. Then help.")])
+    else
+      sayc([cl(:alberica, "Don't be, darling. You broke a mirror. We'd have broken it anyway."),
+            cl(:alerion, "Sorry's a start. Then help.")])
+    end
+    side_goal(:their_time, "Your own: you broke the glass that brought them. Put the wheel right, and the Wall between their time and yours comes down.",
+              done: %i[ending_third_way ending_shatter ending_still_keeper])
+  end
+end

@@ -913,7 +913,8 @@ module FrostThaw
     speak(:reptin, "(quietly) ...She can do that? Take it out of me?", "...Can she?")
     set_flag(:reptin_tempted)
     sayc([cl(:alberica, "Sugar, she's a hag. They lie. It's the only thing they do for free."),
-          cl(:alerion, "Everything she offers has a hook in it. Find the hook before you bite.")])
+          cl(:alerion, "Everything she offers has a hook in it. Find the hook before you bite."),
+          journey? ? cl(:shade, "(to you) Whatever she's selling, she's selling it twice.") : nil])
   end
 
   #-----------------------------------------------------------------------------

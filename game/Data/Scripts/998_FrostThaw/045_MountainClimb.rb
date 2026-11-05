@@ -56,6 +56,8 @@ module FrostThaw
                               [15, :GRAVELER, 21, 23], [10, :SKARMORY, 22, 24], [10, :ABSOL, 22, 24]] }
 
   RELIC_ITEMS.merge!(
+    FT_LANTERNGLASS: ["Lantern Glass", "Lantern Glass", 8, 0,
+      "A curved shard from the lantern Tamsin bought you. \"Real Reversal glass.\" It's colder than the snow, and now and then it hums.", 0, 0, 6],
     FT_SCRIMSHAWBOX: ["Velryn Scrimshaw", "Velryn Scrimshaws", 8, 0,
       "Keegan's wooden box of four figurines: a spouting whale, a smiling fox, two dancing hares, and a walrus carved \"BIG LOVE\".", 0, 0, 6],
     FT_ASTRIXBOOK: ["Astrix's Spellbook", "Astrix's Spellbooks", 8, 0,

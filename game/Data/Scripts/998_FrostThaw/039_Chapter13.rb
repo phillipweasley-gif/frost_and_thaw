@@ -558,6 +558,7 @@ module FrostThaw
           "The Auroral Wall falls, and the two times meet. Rootspire and Ten-Towns share one sky.",
           cl(:alberica, "...Well. That's one way to end a party.")])
     say(["SEPHEK: Next solstice."]) if flag?(:sephek_turned)
+    their_time_payoff
     set_flag(:ending_shatter)
     epilogue
   end
@@ -582,6 +583,7 @@ module FrostThaw
           "That autumn the leaves fall in Rootspire. That winter it snows, and then it stops.",
           "In spring, the Dale thaws.",
           "Frostina and Razzilith turn the wheel: one carries winter in, the other carries it away."])
+    their_time_payoff
     set_flag(:ending_third_way)
     wheel(1)
     epilogue
@@ -791,6 +793,22 @@ module FrostThaw
     else
       side_goal(:vault, "Postgame: three Frostshard Sigils wake a door in the north. Eirwen keeps one; the Echo Gate's wraiths and Sephek the others.",
                 done: %i[sigils_merged avarice_body_broken])
+    end
+  end
+end
+
+module FrostThaw
+  module_function
+
+  # The player's second goal, paid (owner's call, 2026-11-05): the Wall comes down.
+  def their_time_payoff
+    return if !journey? || !flag?(:their_time_known)
+    say(["Where the Auroral Wall stood, there's a line of melting frost across the snow.",
+         "On one side, your city. On the other, their Dale. One morning, for both."])
+    if flag?(:promised_their_time)
+      sayc([cl(:reptin, "(to you) You said you'd get us home, dear. You brought home to us. I'll allow it.")])
+    else
+      sayc([cl(:alberica, "(to you) You said sorry. This is better.")])
     end
   end
 end

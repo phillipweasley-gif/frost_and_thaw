@@ -75,6 +75,7 @@ module FrostThaw
          herald?(:alberica) ? "(Pretty boy's right. Nobody leaves me presents unless they want something.)" :
                               "ALBERICA: Pretty boy's right. Nobody leaves me presents unless they want something.",
          "SHIMMER: Then that's where it is."].compact, event_id)
+    lantern_glass_reading(event_id) if journey?
     set_flag(:relics_are_lures)
     state[:goal] = flag?(:badge_targos) ? "Find who's calling us. South-east, past Bryn Shander, to Dougan's Hole." :
                                           (flag?(:naerth_terms) ? "Win Speaker Naerth's seal at the Town Hall. It opens the south-west gate." :
@@ -423,5 +424,33 @@ module FrostThaw
       @vp.dispose rescue nil
       @sprites = {}
     end
+  end
+end
+
+module FrostThaw
+  module_function
+
+  # The player's own goal (owner's call, 2026-11-05): the lantern glass you fell
+  # through is hag-glass, from the mirrors at Dougan's Hole. The Heralds' lures
+  # and your way home point at the same place, for different reasons.
+  def lantern_glass_reading(event_id = nil)
+    return if flag?(:glass_read)
+    set_flag(:glass_read)
+    say(["EPHERIS: (to you) And you. You've been holding something since you came in. Show me.",
+         "You open your hand. The shard of lantern glass hums, very low, and the compass needle swings to it.",
+         "EPHERIS: ...Hag-glass. Mirror-ice. Nobody makes it but one old woman in the Dale.",
+         "EPHERIS: South-east. Dougan's Hole. Same as theirs."], event_id)
+    c = pbMessage(_INTL("Ask Epheris..."), [_INTL("\"Can it send me home?\""), _INTL("\"Same as theirs?\"")], 0)
+    if c == 0
+      say(["EPHERIS: Glass that brought you can take you back. If you find the mirror it broke from.",
+           "EPHERIS: That's not a promise. I don't do promises. I do appraisals."], event_id)
+    else
+      say(["EPHERIS: Five cold trinkets and one cold shard, all pointing at the same old woman. I'd call that a pattern.",
+           "EPHERIS: Glass that brought you might take you back. If you find the mirror it broke from."], event_id)
+    end
+    sayc([cl(:reptin, "(to you) Then we're going the same way, dear. Walk with us, and argue on the way."),
+          cl(:shade, "Five relics and a stray with a shard. Somebody's collecting.")])
+    side_goal(:way_home, "Your own: the hag's mirrors at Dougan's Hole. The glass you fell through broke from one.",
+              done: :reversal)
   end
 end
