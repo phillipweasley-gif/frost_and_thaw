@@ -15,6 +15,7 @@ SW_PRO_STARTER = 3960   # the battle's done: Tamsin ran back to the Hearth (and 
 SW_PRO_MURAL = 3962     # you've seen the sixth figure: Tamsin is at the lantern stall
 SW_PRO_LECTURE = 3956   # Tamsin has led you to Wynsnow's lecture room
 SW_PRO_LED = 3957       # Tamsin has led you from the lift to the Hearth
+SW_PRO_MORNING = 3958   # breakfast's done, no starter yet: Tamsin leads you to the lift (context 00, notes E10)
 
 def copy_of(id)
   b = reopen(id)
@@ -68,6 +69,8 @@ m.npc(28, 29, "BW (30)", :pro_lantern_seller, dir: 6, name: "Lantern seller")
 # Tamsin waits by the lift after the battle and leads you to the Hearth...
 tamsin_between(m, 17, 12, SW_PRO_STARTER, SW_PRO_LED, :pro_tamsin_wall, dir: 4)
 autorun_when(m, 1, 0, SW_PRO_STARTER, :pro_market_lead)
+# ...and the first time out of the Hearth, she's outside the door and leads you up to the lift.
+autorun_when(m, 2, 0, SW_PRO_MORNING, :pro_market_up)
 # ...and after the mural, haggles at the lantern stall.
 tamsin_between(m, 29, 29, SW_PRO_MURAL, nil, :pro_tamsin_stall, dir: 4)
 autorun_when(m, 0, 0, SW_PRO_MURAL, :pro_lantern)

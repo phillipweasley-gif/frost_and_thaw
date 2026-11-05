@@ -28,6 +28,7 @@ module FrostThaw
   SW_PRO_MURAL   = 3962   # you've seen the sixth figure: Tamsin is at the lantern stall
   SW_PRO_LECTURE = 3956   # Tamsin has led you to Wynsnow's lecture room and waits by the table
   SW_PRO_LED     = 3957   # Tamsin has led you from the lift to the Hearth (the market Tamsin is gone)
+  SW_PRO_MORNING = 3958   # breakfast's done, no starter yet: Tamsin waits outside to lead you to the lift
 
   # The College's east lecture room (built by tools/build_prologue.rb).
   PRO_BALL_Y = 4                    # the three balls sit on the table's top row, x 19-21
@@ -154,6 +155,32 @@ module FrostThaw
          "(The College of Auroral Arts is at the top of the tree. Take the root-lift from the market.)"])
     state[:goal] = "Get to the College at the top of the tree. The root-lift's by the big stair, north."
     set_flag(:intro_started)
+    set_switch(SW_PRO_MORNING, true)
+    Stage.cleanup
+  end
+
+  # The first time out of the Hearth (context 00 bridges; notes E10): the lift is
+  # 31 tiles off across a market you've never been shown, so Tamsin waits by the
+  # door and takes you there, the way a rival does in a Pokémon opening.
+  def scene_pro_market_up
+    return if flag?(:pro_led_up) || flag?(:pro_battle_done)
+    set_flag(:pro_led_up)
+    tamsin = Stage.actor(:tamsin, $game_player.x + 1, $game_player.y + 1, 8)
+    if tamsin
+      Stage.emote(tamsin, :exclaim)
+      Stage.turn_to($game_player, tamsin)
+      say(["TAMSIN: (still chewing) Finally. Lift's up by the big stair. Come ON."])
+      if Stage.escort(tamsin, 17, 12, facing: 4)
+        say(["LIFT-KEEPER: Two for the College? Festival's got the cage running slow."])
+        Stage.hop(tamsin)
+        say(["TAMSIN: Slow? I'm taking the stairs. Race you to the top!"])
+        Stage.leave(tamsin, 22, 12)
+      else
+        say(["TAMSIN: North, by the big stair. Race you!"])
+        Stage.leave(tamsin, $game_player.x, $game_player.y + 3)
+      end
+    end
+    set_switch(SW_PRO_MORNING, false)
     Stage.cleanup
   end
 
@@ -591,6 +618,7 @@ module FrostThaw
     set_switch(SW_PRO_STARTER, prologue? && flag?(:pro_battle_done))
     set_switch(SW_PRO_LED, prologue? && flag?(:pro_led))
     set_switch(SW_PRO_MURAL, prologue? && flag?(:saw_sixth_figure))
+    set_switch(SW_PRO_MORNING, prologue? && flag?(:intro_started) && !flag?(:pro_led_up) && !flag?(:pro_battle_done))
   end
 end
 
