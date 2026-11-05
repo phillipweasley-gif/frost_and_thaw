@@ -163,7 +163,7 @@ The Heralds drive the plot. Every character below wants something specific, and 
 
 ### You, and Tamsin
 
-**You (New Journey).** A Rootspire kid who runs errands for Professor Wynsnow's College and grew up on Herald stories in Hellen's tavern. You are silent, and your choices are your voice. Your arc is from fan to peer: you find out the legends were people who chose, and that one of the figures carved on Hellen's wall, the one nobody could ever name, is you. Auril can't read you, because you aren't on her wheel.
+**You (New Journey).** A Rootspire kid who runs errands for Professor Wynsnow's College and grew up on Herald stories in Hellen's tavern. You are silent, and your choices are your voice. Your arc is from fan to peer: you find out the legends were people who chose, and that one of the figures carved on Hellen's wall, the one nobody could ever name, is you. On that wall, Alberica is the figure with the lute and Reptin is the wolf (owner, 2026-11-05). Auril can't read you, because you aren't on her wheel.
 
 **Wyn Mode.** Wyn takes your place. Wyn is a Rootwarden on festival watch, and the lantern pulls them back instead.
 
@@ -174,6 +174,7 @@ The Heralds drive the plot. Every character below wants something specific, and 
 **Alberica, Keeper of Memory.** Dwarf bard. Partner: Lutling (haunted lute line). She plays it badly and says so.
 
 - **Wants:** to know why something keeps calling her north, and what her family's bargain cost.
+- **The family bargain** (owner, 2026-11-05): her family bargained with Auril that their small village would be spared the Rime's hardships and the lottery's sacrifices, so long as the White Vault stayed sealed, keeping the Heralds out of it far in the future. Her pendant is the key that unlocks it. She knows there was a bargain and that the pendant is part of it; she doesn't know what it cost.
 - **Strength and flaw:** her memory. She holds on to everything, so she can't let anything go. That is exactly what Auril wants in a vessel.
 - **Three words:** stubborn, wry, tender underneath.
 - **Voice:** loud, warm and shameless; the heart of the party with the filthiest laugh in the Dale. Goes plain and quiet when it matters, then sings. Never says "I'm scared"; says "Something's pulling me north." (Full sheet in the Voices tab.)
