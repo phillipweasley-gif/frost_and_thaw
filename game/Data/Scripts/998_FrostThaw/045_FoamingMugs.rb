@@ -89,7 +89,7 @@ module FrostThaw
       $Trainer.has_running_shoes = true rescue nil
       set_flag(:got_snowshoes)
     end
-    sayc([cl(:shade, "Iron's heavy. Goblins love heavy things they didn't have to carry."),
+    sayc([cl(:shade, "Iron's heavy. Goblin raiders love heavy things they didn't have to carry."),
           cl(:reptin, "A yeti, a sled, and a blizzard season. Of course we'll help. Somebody has to.")])
     if pbConfirmMessage(_INTL("Go and fetch the dwarves' sled?"))
       say(["HRUNA: Straight toward Kelvin's Cairn. The sled's halfway between here and the mountain, out on the tundra.",
