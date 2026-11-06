@@ -265,7 +265,7 @@ module FrostThaw
          "SOOTY DUERGAR: Then she told the rest of us her name was Xardorok, our old king's name, and burned the sigils in.",
          "SOOTY DUERGAR: She talks about the Great Unchaining. When the dragon flies, she says, the seasons come off their chains.",
          "SOOTY DUERGAR: Summer forever, she says. Then the Dale goes down into the Hells, still warm, and she goes up.",
-         "SOOTY DUERGAR: The lever by the machinery opens the Barricade gate. Pull it. Go down. End her."])
+         "SOOTY DUERGAR: The lever by the machinery opens the gate. Pull it. Go down. End her."])
     sayc([cl(:meat_meat, "Meat Meat will end her. Meat Meat has been practising."),
           cl(:alberica, "The Great Unchaining. She does love a title."),
           cl(:reptin, "(gently) What's your name, friend?"),

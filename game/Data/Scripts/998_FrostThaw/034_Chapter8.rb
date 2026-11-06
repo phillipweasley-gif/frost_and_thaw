@@ -489,7 +489,9 @@ module FrostThaw
           as(:wyn, "(stricken) That's her sap. That's Hyphora's blood."),
           cl(:alerion, flag?(:heart_given_summer) ? "That's the cold Sephek carried. Eline said Summer had his heart. There it is." :
                                                     "That's the cold Sephek carried. I'd know it anywhere. That's his heart."),
-          cl(:glimmer, "(the Rimefang shaking in his hand) ...Brightmane said I'd find a better fire. That's it.")])
+          # (Brightmane's own words if the player heard her answer, 048_F; else Ch6's, on the spine)
+          cl(:glimmer, flag?(:brightmane_answered) ? "(the Rimefang shaking) ...Brightmane said I'd know the fire when I saw it. That's it." :
+                                                     "(the Rimefang shaking in his hand) ...Brightmane said I'd find a better fire. That's it.")])
     Stage.stop_fx(heart)
     Stage.cleanup rescue nil
     state[:goal] = "Through the forge's keepers, to the engine."
@@ -780,7 +782,7 @@ module FrostThaw
          # (dialogue 08 §3b: he answers her; 6.08's words, and the echo turns)
          "GLIMMER: (stepping past her) Neither.",
          "GLIMMER: This blade's been killing me slowly since Saltmarsh.",
-         "GLIMMER: Brightmane said I'd find a better fire.",
+         flag?(:brightmane_answered) ? "GLIMMER: \"You'll know it when you see it,\" Brightmane said." : "GLIMMER: Brightmane said I'd find a better fire.",
          "He lifts the Rimefang.",
          "GLIMMER: She never said it'd be me."])
     c = pbMessage(_INTL("Glimmer..."), [_INTL("Reach for him"), _INTL("Let him go")], 0)
@@ -843,7 +845,7 @@ module FrostThaw
     say(["In the silver pool beneath the dead engine, something floats free, gathering ice and auroral light: the Frost Saint Shard.",
          "Sephek's heart, veined with frost-light. It whispers prayers in a voice that isn't his."])
     lines = []
-    lines << "(The notes in the labyrinth's lab: a goddess poured into a drowned man's heart. It went too right.)" if flag?(:knows_shard_origin)
+    lines << "(The labyrinth's lab notes: a goddess poured into a drowned man's heart. It went too right.)" if flag?(:knows_shard_origin)
     lines << "(The ghost in the Antechapel: cleanse me, leave me whole, or break me. None of them clean.)" if flag?(:shard_echo_heard)
     lines << "(The whispering attendant's price, still owing: #{state[:attendant_promise] == :free ? 'free the heart' : 'burn the forge'}.)" if state[:attendant_promise]
     say(lines) if !lines.empty?
