@@ -29,6 +29,7 @@ SW_MEAT_JOINED = 3965     # Meat Meat travels with you
 SW_HERALD_MEAT = 3904     # you ARE Meat Meat (Herald Mode)
 SW_TORRGA_GONE = 4000     # Torg's is dealt with: Torrga beaten, the camp packed up (044_ChasmFaithful.rb)
 SW_HLIN_PAID   = 4001     # Hlin Trollbane has paid out and gone
+SW_HEART_TAKEN = 3917     # the heart of ice taken at the Glade: Jet Sentry goes north to the Warren
 LOPUNNY = "Followers/LOPUNNY"
 BUNEARY = "Followers/BUNEARY"
 
@@ -129,14 +130,17 @@ t.event(15, 31, "Door ramshackle_closed", [{ trigger: 1, script: "FT.talk(:ramsh
 [11, 12].each { |y| t.warp(LW - 1, y, ID[:glade], y == 11 ? 14 : 15, 26, 8, name: "To the Glade") }
 t.cutscene(41, 35, :lonelywood_arrival)
 # SC 3.09: back in town after the Requiem, the laughing is the calling (once)
-t.event(1, 1, "Cutscene laughing_calling", [{}, { switch: SW_REQUIEM_DONE, trigger: 3, script: "FT.scene(:laughing_calling, @event_id)" },
+# (it now plays in the Warren after Luna; this only catches saves from before that, scene_laughing_calling_town)
+t.event(1, 1, "Cutscene laughing_calling", [{}, { switch: SW_REQUIEM_DONE, trigger: 3, script: "FT.scene(:laughing_calling_town, @event_id)" },
                                              { self_switch: "A" }])
 t.npc(16, 24, "BW (16)", :scoop_huddle, dir: 4, name: "Scoop")      # (stands still: wandering, he blocked the door)
 t.npc(12, 17, "BWFisherman", :lonely_fisher, dir: 4)
 t.npc(26, 12, "BW (54)", :lonely_logger, dir: 2)
 t.npc(17, 36, "BWOldWoman", :lonely_moon_talk, dir: 8)
 t.npc(27, 4, "BW (38)", :lonely_north_path, dir: 2)
-npc_when(t, 15, 25, LOPUNNY, :jet_sentry_town, SW_SHIMMER_TAKEN, dir: 8, name: "Jet Sentry")
+# one Jet Sentry (notes 03 E12): under Nimsy's window from the night until she goes north with the heart
+jt = npc_when(t, 15, 25, LOPUNNY, :jet_sentry_town, SW_SHIMMER_TAKEN, dir: 8, name: "Jet Sentry")
+jt.pages << t.build_page(jt.pages[0], { switch: SW_HEART_TAKEN, graphic: "", through: true })
 t.trainer(10, 24, "BWFisherman", :fisher_garrow, :FISHERMAN, dir: 4, sight: 4)
 t.trainer(33, 12, "BWWorker", :logger_breck, :WORKER, dir: 4, sight: 4)
 t.sign(40, 33, :lonely_sign)
@@ -224,13 +228,25 @@ wr.door(34, 45, ID[:moon_grounds], 20, 28, 2, name: "Exit")
 [[9, 47], [10, 31], [33, 9]].each { |x, y| wr.event(x, y, "Bolt tunnel", [{ trigger: 1, script: "FT.talk(:warren_bolt_tunnel, @event_id)" }]) }
 # the Circle of Thirteen, each in their chamber (Nova Keeper waits at the Moon
 # Temple, Aphelion Roads in its sanctum)
-{ jet_sentry: [33, 42, LOPUNNY, 4], aurora_traveller: [22, 41, BUNEARY, 6],        # resting chamber
+{ aurora_traveller: [22, 41, BUNEARY, 6],                                        # resting chamber
   eclipse_spicer: [26, 25, BUNEARY, 2],                                            # council hollow
   pulsar_bond: [32, 31, LOPUNNY, 4],                                               # herbal chambers
   celeste_scribe: [31, 17, LOPUNNY, 2], cosmo_bookman: [33, 20, BUNEARY, 4],      # library tunnel
   stellar_fletcher: [22, 16, LOPUNNY, 6], helios_meadow: [26, 15, BUNEARY, 2],    # forge cavern
   umbra_rider: [30, 6, LOPUNNY, 2] }.each do |key, (x, y, gfx, dir)|   # dreaming alcove
   wr.npc(x, y, gfx, key, dir: dir, name: key.to_s.split("_").map(&:capitalize).join(" "))
+end
+# Jet Sentry is home once the heart is (notes 03 E12), and rides the sledge south after Luna
+wr.event(33, 42, "Jet Sentry", [
+  { graphic: "", through: true },
+  { switch: SW_HEART_TAKEN, graphic: LOPUNNY, direction: 4, script: "FT.talk(:jet_sentry, @event_id)" },
+  { switch: SW_WENNEN_FOLLOW, graphic: "", through: true }
+])
+# the way out: after the Requiem, Jet sends you back to hear Luna first (notes 03 E5)
+[[33, 44], [35, 44], [34, 43]].each do |x, y|
+  wr.event(x, y, "Luna first", [{ through: true },
+                                { switch: SW_REQUIEM_DONE, trigger: 1, through: true, script: "FT.warren_exit_check(@event_id)" },
+                                { switch: SW_WENNEN_FOLLOW, through: true }])
 end
 wr.event(20, 6, "Luna Carver", [{ graphic: BUNEARY, direction: 2, script: "FT.luna(@event_id)" }])   # SC 3.08
 wr.event(10, 10, "Zenith Abbott", [{ graphic: LOPUNNY, direction: 2, script: "FT.zenith(@event_id)" }])
@@ -262,7 +278,7 @@ g.event(14, 29, "Sephek in ice", [
 ])
 g.npc(9, 19, LOPUNNY, :nova_keeper, dir: 6, name: "Nova Keeper")
 g.trainer(12, 24, "BW (107)", :aurilite_five, :FT_AURILITE, dir: 4, sight: 3)
-g.trainer(16, 29, "BW (108)", :aurilite_six, :FT_AURILITE, dir: 4, sight: 3)
+g.trainer(12, 15, "BW (108)", :aurilite_six, :FT_AURILITE, dir: 4, sight: 3)   # up the sanctum path, clear of Sephek's fight (notes 03 E25)
 save(g, :moon_grounds)
 
 # 2025: the Moon Temple sanctum (three altars under the moon)
@@ -287,21 +303,22 @@ forest_except(gl, GW, GH, gopen)
 [[9, 6], [19, 6], [6, 11], [22, 11], [8, 16], [20, 16], [12, 4], [16, 4]].each { |x, y| gl.stamp(BOULDER, x, y) }
 gl.stamp(ICE_BOULDER, 14, 10)                                          # the altar, rimed in ice
 [14, 15].each { |x| gl.warp(x, GH - 1, ID[:lonelywood], 42, x == 14 ? 11 : 12, 4, name: "To Lonelywood") }
-gl.event(14, 11, "Altar", [
-  { graphic: "", through: false, script: "FT.talk(:glade_altar_before, @event_id)" },
-  { switch: SW_SHIMMER_TAKEN, graphic: "", through: false, script: "FT.talk(:undying_rose, @event_id)" }
-])
-gl.event(15, 11, "Altar", [{ graphic: "", through: false, script: "FT.talk(:undying_rose, @event_id)" }])
-[13, 14, 15, 16].each do |x|
-  gl.event(x, 18, "Glade aftermath", [
+# (no rose before there's a rose: notes 03 E3)
+[14, 15].each do |x|
+  gl.event(x, 11, "Altar", [
+    { graphic: "", through: false, script: "FT.talk(:glade_altar_before, @event_id)" },
+    { switch: SW_SHIMMER_TAKEN, graphic: "", through: false, script: "FT.talk(:undying_rose, @event_id)" }
+  ])
+end
+# the whole width of the clearing's south edge, so the scene can't be walked round (notes 03 E9)
+(8..21).each do |x|
+  gl.event(x, 19, "Glade aftermath", [
     { through: true },
     { switch: SW_SHIMMER_TAKEN, trigger: 1, through: true, script: "FT.scene(:glade_aftermath, @event_id)" },
     { self_switch: "A", through: true }
   ])
 end
-mm = npc_when(gl, 18, 13, "FT_meat_meat", :meat_meat_glade, SW_SHIMMER_TAKEN, dir: 4, name: "Meat Meat")
-# gone once she travels with you, and never there when you ARE her
-[SW_HERALD_MEAT, SW_MEAT_JOINED].each { |sw| mm.pages << gl.build_page(mm.pages[0], { switch: sw, graphic: "", through: true }) }
+# (Meat Meat is staged by the scene itself, asleep behind the altar: notes 03 E9)
 seal_edges(gl)
 save(gl, :glade)
 

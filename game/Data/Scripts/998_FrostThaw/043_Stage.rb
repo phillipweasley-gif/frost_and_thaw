@@ -79,7 +79,7 @@ module FrostThaw
       ev.id = id
       ev.name = "stage_#{key}"
       pg = ev.pages[0]
-      pg.graphic.character_name = graphic || "FT_#{key}"
+      pg.graphic.character_name = graphic || default_graphic(key)
       pg.graphic.direction = dir
       pg.through = true
       pg.walk_anime = true
@@ -94,6 +94,12 @@ module FrostThaw
     rescue StandardError => e
       log("actor #{key}: #{e.message}")
       nil
+    end
+
+    # A stand-in's sprite: Alberica keeps Auril's mark once she has it (notes 02 E16).
+    def default_graphic(key)
+      return "FT_alberica_rune" if key.to_s == "alberica" && (FrostThaw.flag?(:alberica_marked) rescue false)
+      "FT_#{key}"
     end
 
     def remove_actor(ge)

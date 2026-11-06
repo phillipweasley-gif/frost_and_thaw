@@ -117,3 +117,10 @@ module FrostThaw
   LOOP_ACT2_FLAGS.concat(%i[stone_barricade clock_first_light child_carried_up kelyn_heard_reveal
                             tree_prophecy_heard avarice_doubt_shared]).uniq!
 end
+
+# scene b: Chapters 2-3 scene pass (2026-11-06): Scramsax's pitch heard once,
+# Nimsy's word the morning after, Sephek's fight won (so it can't be re-armed)
+module FrostThaw
+  LOOP_ACT1_FLAGS.concat(%i[northlook_pitched nimsy_sorry sephek_won]).uniq!
+  LOOP_ACT2_FLAGS.concat(%i[northlook_pitched nimsy_sorry sephek_won]).uniq!
+end
