@@ -33,6 +33,9 @@ module FrostThaw
   SW_ENGINE_DEAD    = 3979   # the engine is dead (Glimmer is gone)
   SW_SELRAE_PEN     = 3980   # Selrae is in the last cocoon (selrae_ahead, not yet rescued)
   SW_CIRCLE_PHASE   = 4095   # the Breaking Circle: the engine drinks, and you can work the spires
+  # The Heart Chamber's Var event: his name and hers, so both VAR: and AVARICE:
+  # lines find him on screen (notes 08 E2; tools/build_ch8.rb).
+  VAR_EVENT = "Var Rime-Breaker (Avarice)"
 
   MAPS.merge!(barricade: 2072, hag_domain: 2073, hag_pens: 2074, dragonforge: 2075, heart_chamber: 2076)
   MAP_NAMES.merge!(2072 => "The Rootward Barricade", 2073 => "The Hag's Abandoned Domain", 2074 => "The Cocoon Pens",
@@ -84,7 +87,8 @@ module FrostThaw
     duergar_brask_after: ["I had a name before the Forge. I'm sure I did."],
     duergar_hild_after:  ["The words are in the ledger. Everyone knows them. Nobody says them."],
     duergar_thane_after: ["Go on, then. The engine doesn't care who feeds it."],
-    devil_priest_after:  ["Go on. She's waiting. She's always waiting. That's the worst of her."],
+    devil_priest_after:  ["Go on. She's waiting. She's always waiting. That's the worst of her.",
+                          "Her dragon flies at first light. She's never late."],
     barricade_illusion: ["Out of a root platform by the wall, a model of the Dale has grown: hills of bark, a lake of sap gone hard and pale, ten little towns of knotwood.",
                          "Over it an illusion flares on a loop: a mechanical dragon of frost and fire, its eyes burning hell-red.",
                          "It circles the ten towns in the same order every time. Each time it passes over one, the town's lights go out. And come back. And go out.",
@@ -140,18 +144,49 @@ module FrostThaw
     set_flag(:barricade_entered)
     add_counter(:story_beats)
     set_rest_at(FORGE_REST) rescue nil
+    guard = Stage.actor(:duergar, 8, 13, 4, graphic: "BW054")   # the one who speaks, on screen
     say(["The tunnel narrows until a wall of fused root and blackened iron blocks the way.",
          "The exposed wood pulses faintly, like a heart under strain. Infernal sigils glow along the iron plates hammered into it.",
          "A single slit near the top leaks a strip of red-gold light. Something beyond is hammering. Something patient. Something building.",
-         "Duergar wearing Avarice's sigils guard it. Among them, Hew's missing diggers haul sap with blank smiles.",
+         "Grey dwarves, duergar, wearing Avarice's sigils, guard it.",
+         "Among them, Hew's missing diggers haul sap with blank smiles.",
          "DUERGAR: Xardorok said you'd come. The failures always return."])
+    # (dialogue 08 §3.1: the answer straight after the line it answers; §4:
+    # "Xardorok" said to be a name nobody here can put a face to)
+    sayc([cl(:meat_meat, "Failures. Meat Meat has been called worse. By better.")])
+    if with_or_is?(:reptin)
+      speak(:reptin, "That's the spirit. ...Who's Xardorok?", "...Xardorok?")
+    end
+    sayc([cl(:alerion, "Whoever's in charge down here. It's an old grey-dwarf king's name.")])
+    Stage.leave(guard, 26, 13) if guard
     say(lines_for(:barricade_illusion))
     set_flag(:flight_path_seen)
-    sayc([with_or_is?(:alberica) ? as(:alberica, "That's the Dale. Our Dale. Outside the Wall.") : "That's the Dale. Outside the Wall.",
-          cl(:meat_meat, "Failures. Meat Meat has been called worse. By better."),
-          cl(:reptin, "That's the spirit.")])
-    state[:goal] = "Get through the Barricade. The duergar have words they say at the gate."
+    say([with_or_is?(:alberica) ? as(:alberica, "That's the Dale. Our Dale. Outside the Wall.") : "That's the Dale. Outside the Wall."])
+    barricade_stone
+    state[:goal] = "Through the Barricade. Find Var, whoever he's become. The duergar have words at the gate."
     hew_compass_wakes if flag?(:hew_gift) && !flag?(:hew_compass_woke)
+  end
+
+  # Context 08 M8-1: Kelyn's sending-stone (given at the Council's summons, Ch6)
+  # warms, and the chapter's question is said aloud, with its two wrong answers.
+  def barricade_stone
+    set_flag(:stone_barricade)
+    say(["In your pack, the sending-stone warms. Kelyn's voice comes out of it, thin and far.",
+         "KELYN: (from the stone) Heralds? The tree shook again. Have you found Var?"])
+    c = pbMessage(_INTL("Tell Kelyn..."), [_INTL("\"Not yet.\""), _INTL("\"There's a dragon.\"")], 0)
+    say([c == 1 ? "KELYN: (from the stone, a long pause) ...Then find Var. He'll know what it is." :
+                  "KELYN: (from the stone) Then keep looking. If he's down there, he's been there a week.",
+         "The stone goes cool."])
+    if with_or_is?(:alerion)
+      speak(:alerion, "Summer took the Saint's heart. Paid for the sap. Gave Selrae a key to these roots.",
+                      "...Summer's in all of it.")
+    end
+    if with_or_is?(:reptin)
+      speak(:reptin, "So Var's a prisoner down here, or he's the one handing out the keys.", "...Prisoner, or keeper.")
+    end
+    if with_or_is?(:wyn)
+      speak(:wyn, "(very quietly) ...Or something else. The roots don't know his name.", "...The roots don't know him.")
+    end
   end
 
   # The comic-to-horror turn (rootspire.md 1177): at the siege of the Barricade,
@@ -172,8 +207,12 @@ module FrostThaw
                "It skitters off toward the gate on its root-legs. You catch it with a boot before it gets there, and it cracks."])
     take_key(:FT_ROOTCOMPASS) rescue nil
     give_key(:FT_DEADCOMPASS)
-    sayc([cl(:alberica, "Hew didn't know. Look at his face when we tell him, and you'll see he didn't know."),
-          cl(:meat_meat, "Hew builds things. She gets inside things. Meat Meat is going to check every pocket now. Every one."),
+    # Context 08 M8-1 boxes 12-13: the third "little failures", heard as the third.
+    heard = [flag?(:mira_core_broken) || flag?(:mira_freed) ? "Mira said that." : nil,
+             flag?(:met_mirror_child) ? "The boy's mirror said that." : nil].compact
+    sayc([cl(:meat_meat, heard.empty? ? "(very still) Little failures. Meat Meat knows that voice. From the cold table." :
+                                        "(very still) #{heard.join(' ')} Little failures."),
+          cl(:alberica, "Built from parts Summer's people paid for. Lovely. Somebody check my pockets."),
           cl(:alerion, "Then she knows we're here."), cl(:wyn, "(very quietly) She always knew.")])
   end
 
@@ -270,24 +309,46 @@ module FrostThaw
          "One plate is empty, its cocoon split open from the inside, long ago. V-7.",
          herald?(:meat_meat) ? "(Very quietly, to yourself: ...That one is Meat Meat.)" : "MEAT MEAT: (very quietly) ...That one is Meat Meat."])
     say(lines_for(:pens_journal))
+    # Context 08 M8-2: the name and the face meet. Meat Meat goes to the empty
+    # V-7 plate and names the neat white hand (the Act I "lady with books and
+    # bones" is Avarice); then what the method was proven for (the dragon).
     if herald?(:meat_meat)
+      Stage.walk_to($game_player, 21, 5, face: 8) rescue nil
+      say(["You put your hand flat on the empty plate.",
+           "(Neat white hand. Hers. Avarice.)"])
       speak(:meat_meat, "Meat Meat is not a method.", "...Not a method.")
       sayc([with_or_is?(:reptin) ? "REPTIN: (kneeling beside you) No. You're not." : nil,
             with_or_is?(:alberica) ? "Alberica doesn't make a joke. She just holds out her arm, and you lean into it." : nil])
-    else
-      sayc(["MEAT MEAT: (after a long time) Meat Meat is not a method.",
+    elsif with_or_is?(:meat_meat)
+      mm = Stage.summon(:meat_meat)
+      Stage.walk_to(mm, 21, 5, face: 8) if mm
+      Stage.walk_to($game_player, 19, 5, face: 6) rescue nil   # you go with her; the camera follows
+      sayc(["MEAT MEAT: (a hand flat on the empty plate) Neat white hand. That is her. Avarice.",
+            "MEAT MEAT: She wrote on Meat Meat too. Under the hair. Same seven.",
+            "MEAT MEAT: (after a long time) Meat Meat is not a method.",
             with_or_is?(:reptin) ? as(:reptin, "(kneeling beside her) No. You're not.") : nil,
             herald?(:alberica) ? "You don't make a joke. You just hold out your arm, and Meat Meat leans into it." :
               (with_or_is?(:alberica) ? "Alberica doesn't make a joke. She just holds out her arm, and Meat Meat leans into it." : nil)])
+    end
+    if with_or_is?(:alerion)
+      speak(:alerion, "(reading it again) Raz-MKIII. Razzy. And \"the method is proven.\" Proven for what?",
+                      "...\"The method is proven.\" For what?")
+    else
+      say(["(Raz-MKIII. Razzy. \"The method is proven.\" Proven for what?)"])
+    end
+    if with_or_is?(:meat_meat)
+      dir = herald?(:alberica) ? "(into your sleeve)" : with_or_is?(:alberica) ? "(into Alberica's sleeve)" : "(very quietly)"
+      speak(:meat_meat, "#{dir} For something bigger than Razzy.", "...Bigger.")
     end
     set_flag(:mm_origin_seen)
   end
 
   def selrae_cocoon(event_id = nil)
-    return say(["An empty cocoon, cut open, the amber still soft at the edges."], event_id) if flag?(:selrae_rescued) || !flag?(:selrae_ahead)
+    return say(["An empty cocoon, cut open, the amber still soft at the edges."], event_id) if flag?(:selrae_rescued)
+    return say(["An empty cocoon, split long ago. Whatever was in it got out."], event_id) if !flag?(:selrae_ahead)
     say(["In the last cocoon: the Winter Matron, half-frozen in amber. Her eyes are open.",
          "You cut her free."], event_id)
-    sayc(["SELRAE: ...Thank you. I'll be quieter about my opinions from now on.",
+    sayc(["SELRAE: ...Thank you. Winter doesn't ask to be rescued. It seems I do.",
           "SELRAE: Go on. I'll find my own way up. I've had a lot of practice being in the wrong place.",
           cl(:alerion, "Told you she'd get caught."),
           cl(:alberica, "Nobody likes a told-you-so, pretty boy."),
@@ -314,20 +375,28 @@ module FrostThaw
   def autumn_hand
     if flag?(:heist_exposed)
       { full: "Maera Vell", tag: "MAERA", he: "she", him: "her", his: "her", He: "She", His: "Her",
-        dress: "her crowning robes scorched", title: "Autumn's Maera Vell" }
+        dress: "crowning robes are scorched", title: "Autumn's Maera Vell",
+        intro: "Autumn's robe-maker in Darrus's place", who: "Autumn's Maera Vell" }
     else
       { full: "Darrus Fell", tag: "DARRUS", he: "he", him: "him", his: "his", He: "He", His: "His",
-        dress: "his velvet scorched", title: "Autumn Warden Darrus Fell" }
+        dress: "velvet is scorched", title: "Autumn Warden Darrus Fell",
+        intro: "the Autumn Warden from the Council", who: "The Autumn Warden" }
     end
   end
 
   def scene_autumn_falls
     return if flag?(:autumn_fell)
     a = autumn_hand
-    say(["#{a[:full]}, #{a[:dress]}, drags a cocoon toward the forge. Inside it, a child's face.",
+    # Context 08 M8-4: who he is (name and role again, two chapters on), and his case.
+    say(["#{a[:full]}, #{a[:intro]}, drags a cocoon toward the forge.",
+         "#{a[:His]} #{a[:dress]}. Inside the cocoon, a child's face, asleep.",
          "#{a[:tag]}: Stand aside! The engine needs one more. One more, and it never stops.",
          "#{a[:tag]}: Eternal summer! No famine years, no winters, ever.",
          "#{a[:tag]}: Do you know what Autumn's ledgers could do with that?"])
+    if with_or_is?(:reptin)
+      speak(:reptin, "(very pleasantly) You sold her the city, for a summer.", "...You sold her the city.")
+    end
+    say(["#{a[:tag]}: Autumn counts what winter will take. I've counted for thirty years. I'm done."])
     if with_or_is?(:meat_meat)
       speak(:meat_meat, "That is a child.", "...Put the child down.")
     end
@@ -365,8 +434,39 @@ module FrostThaw
     set_flag(:child_saved)
     ($game_switches[SW_AUTUMN_FELL] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    say(["The child in the cocoon is breathing. Somebody will have to carry them up.",
-         herald?(:meat_meat) ? "You don't let anybody else." : "Meat Meat doesn't let anybody else."])
+    child_goes_up(a)
+  end
+
+  # Context 08 M8-5: Rootwardens the Speaker sent down take the child up, and
+  # hear from Meat Meat where Autumn went (the witness for Chapter 9's charge).
+  def child_goes_up(a)
+    say(["The child in the cocoon is breathing."])
+    pbBGMFade(0.8) rescue nil                    # only the forge's hammering
+    w1 = Stage.actor(:rootwarden, 1, 14, 6, graphic: "BW029")
+    w2 = Stage.actor(:rootwarden_2, 1, 15, 6, graphic: "BW029")
+    Stage.approach(w1)
+    Stage.walk_to(w2, ($game_player.x - 2 rescue 5), ($game_player.y + 1 rescue 15), face: 6) if w2
+    say(["ROOTWARDEN: (soot to the knees) The Speaker sent us. Your stone went quiet. Is that a child?"])
+    speak(:meat_meat, "(holding the cocoon tighter) Meat Meat found her. Meat Meat carries her.", "...Mine to carry.")
+    say(["ROOTWARDEN: #{a[:who]} came down this way. Where is #{a[:he]}?"])
+    Stage.face(w1, 2) if w1                      # he follows her look, over the rail
+    if flag?(:mm_reached)
+      speak(:meat_meat, "In the sap. Meat Meat reached for #{a[:him]}. Not fast enough.", "...In the sap. Not fast enough.")
+    else
+      speak(:meat_meat, "In the sap. #{a[:He]} let go of the child. Meat Meat let go of #{a[:him]}.", "...In the sap.")
+    end
+    say(["The Rootwarden looks down at the sap for a long time.",
+         "ROOTWARDEN: Give her to me. She'll be up top by dawn. So will this."])
+    if herald?(:meat_meat)
+      pbMessage(_INTL("The child..."), [_INTL("Hand her over"), _INTL("Hold on a moment longer")], 0)
+      say(["You don't let go. Then you do."])
+    else
+      c = pbMessage(_INTL("Meat Meat holds on to the cocoon."), [_INTL("Nod to her"), _INTL("Wait")], 0)
+      say([c == 0 ? "You nod. Meat Meat doesn't let go. Then she does." : "You wait. Meat Meat doesn't let go. Then she does."])
+    end
+    Stage.leave_all([w1, w2].compact, 0, 14)
+    set_flag(:child_carried_up)                  # (Chapter 9: Rheven's wardens heard what happened)
+    Stage.theme(nil) rescue nil
   end
 
   #-----------------------------------------------------------------------------
@@ -379,15 +479,18 @@ module FrostThaw
     heart = dragon ? Stage.fx("E-14", [dragon.x, dragon.y], oy: 40, loop_from: 0) : nil   # the stolen heart, beating
     sayc(["Heat slams into you like a living wall.",
           "A cathedral-sized cavern: a hollow womb carved into the fused roots of the World Tree, where molten sap rivers churn like liquid gold.",
-          "Great mechanical arms churn and turn. Twenty standing stones ring the floor: the old Stones of Thruun.",
-          "This was the hag's first lair, under Dougan's Hole, where the Reversal began. The Stones were her altar, and the altar is still beating:",
-          "a holy wound in the World Tree's roots. Avarice's sigils run from it into the tree's memory, like nails into a living thing.",
+          "Mechanical arms churn. Round the floor stand the Twenty Stones, the hag's old ring.",
+          "This was the hag's first lair, where the Reversal began. The Stones were her altar.",
+          "The altar still beats: a holy wound in the roots, Avarice's sigils driven in like nails.",
           "Chained among them, on a cradle of iron and root: a dragon of black crystal and mirror glass.", "Its eyes are dark now, but its chains are still swinging from the last time it pulled.",
           "Above it hangs the engine, a cage of chardalyn and roots.",
           "In its heart burns a sliver of blue frost-light, wrapped in Hyphora's gold sap.", "Blue at the edges. Red at the core.",
           as(:wyn, "(stricken) That's her sap. That's Hyphora's blood."),
-          cl(:alerion, "And that's his heart. Sephek's."),
-          cl(:glimmer, "(the Rimefang shaking in his hand) ...Brightmane said I'd know the fire when I saw it.")])
+          cl(:alerion, flag?(:heart_given_summer) ? "That's the cold Sephek carried. Eline said Summer had his heart. There it is." :
+                                                    "That's the cold Sephek carried. I'd know it anywhere. That's his heart."),
+          # (Brightmane's own words if the player heard her answer, 048_F; else Ch6's, on the spine)
+          cl(:glimmer, flag?(:brightmane_answered) ? "(the Rimefang shaking) ...Brightmane said I'd know the fire when I saw it. That's it." :
+                                                     "(the Rimefang shaking in his hand) ...Brightmane said I'd find a better fire. That's it.")])
     Stage.stop_fx(heart)
     Stage.cleanup rescue nil
     state[:goal] = "Through the forge's keepers, to the engine."
@@ -406,16 +509,22 @@ module FrostThaw
     set_flag(:forge_reached)
     ($game_switches[SW_FORGE_CLEARED] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    say(["VEXMORTIS: Go on. She's waiting. She's always waiting. That's the worst of her."])
+    # Context 08 M8-6: the clock, on the spine (it used to live in her vault).
+    say(["VEXMORTIS: Go on. She's waiting. She's always waiting. That's the worst of her.",
+         "VEXMORTIS: Hurry, if you like. Her dragon flies at first light. She's never late."], event_id)
+    sayc([cl(:alerion, "Then it's tonight.")])
+    set_flag(:clock_first_light)
     if companions.size >= 3
       set_flag(:devil_fled)
       say(["He counts you, and counts again, and decides he's outnumbered.",
-           "VEXMORTIS: I serve her willingly. Not THAT willingly.",
-           "His wings fold round him, and he's gone in a smell of struck matches."])
+           "VEXMORTIS: I serve her willingly. Not THAT willingly."], event_id)
+      say(["His wings fold round him, and he's gone in a smell of struck matches."])
       set_self_switch(event_id, "B") if event_id
+      # (context 08 §4: "my patron" glossed on the spine, by the one who knows deals)
+      sayc([cl(:glimmer, "(watching the smoke) A devil minding her stair. She's made a deal with something.")])
     end
     say(["Behind the altar, a stair of black glass winds up toward her rooms, and the Heart beyond them."])
-    state[:goal] = "Up the black-glass stair: Avarice's rooms, and the Heart Chamber."
+    state[:goal] = "Up the black-glass stair: Avarice's rooms, and the Heart Chamber. Her dragon flies at first light."
   end
 
   #-----------------------------------------------------------------------------
@@ -433,44 +542,13 @@ module FrostThaw
     return if flag?(:engine_dead) || flag?(:circle_phase)
     if !flag?(:heart_met)
       set_flag(:heart_met)
-      say(["The enormous cavern of glowing roots opens round a pool of silver sap.",
-           "Over the pool hangs the engine, beating slowly, unnaturally, like something refusing to die.",
-           "Twelve root-spires ring the pool. On every one, two sets of runes: frost underneath, fire scarred on top.",
-           "A big, scarred man in the Summer Marshal's gold stands at the engine's controls, his back to you.",
-           "KELYN: (over the sending-stone) Did you find him? Is Var down there?",
-           "He turns. His face is Var's. His eyes are red-gold, and they don't blink.",
-           "VAR: (a woman's voice, amused) Variables that refused to die. Hello again, my little failures.",
-           "The face cracks like a mirror.", "Behind the cracks: white hair spilling like frostfire, infernal sigils burned into her arms, eyes burning red-gold with ambition.",
-           "AVARICE: Thirty years I've worn this man. Thirty years of summer.",
-           "AVARICE: You survived my early prototypes. You lived through the frost that should have hollowed you.",
-           "AVARICE: And now you've come home, to die in the womb that birthed you.",
-           "KELYN: (over the stone, very small) ...Var?",
-           "AVARICE: (to the stone) Gone thirty years, Speaker. Do keep up."])
-      set_flag(:summer_unmasked)
-      if flag?(:var_story_known)
-        say(["(Var, at the Split Dock, his glaive coming up: \"Who in the Nine Hells are you?\" Thirty years ago. He never got an answer.)"])
-      end
-      say(["AVARICE: The duergar call me Xardorok. Names are coats too. So is summer.",
-           "AVARICE: A season that never ends has a god's worth of power in it. Mine. And when my dragon flies,",
-           "AVARICE: Ten-Towns melts, and every soul in the Dale is harvested warm, and I sit where the Frostmaiden sits.",
-           "AVARICE: My patron gets the rest. The whole Dale, stitched to the Nine Hells like a new pocket on an old coat.",
-           "AVARICE: He likes his meals warm. I'll be the one who serves them."])
-      if flag?(:avarice_shard_lodged)
-        say(["AVARICE: (to you, almost fond) I watched you come down through my garden. You've been carrying my eye since the Shattered Bed."])
-      end
-      if with_or_is?(:meat_meat)
-        speak(:meat_meat, "You took Razzy's voice.", "...You.")
-      end
-      sayc(["AVARICE: I took a great deal more than that, V-7. Come here and I'll show you.",
-            herald?(:meat_meat) ? cl(:reptin, "(stepping in front of you) She's not going anywhere near you.") :
-                                  cl(:reptin, "(stepping in front of Meat Meat) She's not going anywhere near you.")])
-      if flag?(:took_hag_secret)
-        say(["(The hag's whisper: the heart in her engine isn't hers.)",
-             "(You can see it now, under the gold: a seam of blue frost-light where the coat is stitched on.)"])
-      end
+      heart_reveal
     else
+      Stage.pan_to(10, 15) if stage_event(VAR_EVENT)
+      (stage_event(VAR_EVENT).character_name = "FT_var_cracked") rescue nil
       say(["Avarice is back at the engine's controls, still wearing what's left of Var, humming.",
            "AVARICE: Again? Again. I love a repeatable experiment."])
+      Stage.pan_back rescue nil
     end
     heart_lair_actions
     return avarice_fight if flag?(:circle_done)
@@ -481,6 +559,8 @@ module FrostThaw
     end
     if !flag?(:heart_mechs_won)
       $game_screen.start_shake(4, 6, 16) rescue nil
+      Stage.pan_to(10, 15) if stage_event(VAR_EVENT)      # (she stays in view between the fights)
+      (stage_event(VAR_EVENT).character_name = "FT_var_cracked") rescue nil   # (the map page still shows his face)
       say(["AVARICE: Round two, little failures.",
            "The silver pool heaves. Two Infernal Rootbreaker mechs climb out of it, sap sheeting off their plates."])
       setBattleRule("double")
@@ -489,6 +569,70 @@ module FrostThaw
       set_flag(:heart_mechs_won)
     end
     start_breaking_circle
+  end
+
+  # Context 08 M8-7: the reveal, with its clues. Var at the engine (his own
+  # sprite, panned to); Kelyn on the sending-stone, offered a hostage and then
+  # not; the face cracks; three clues from the player's own road, one box each.
+  def heart_reveal
+    var = stage_event(VAR_EVENT)
+    Stage.pan_to(10, 15) if var                 # Var at the engine and you at the door, both in view
+    say(["The enormous cavern of glowing roots opens round a pool of silver sap.",
+         # (the portrait over his seat plays at the first Council, 024 kelyn on main: M8-3)
+         (flag?(:wardens_sworn) || flag?(:wardens_refused)) ? "At the engine stands the man from the portrait: big, scarred, in the Marshal's gold. Var." :
+                                     "A big, scarred man in the Summer Marshal's gold stands at the engine, his back to you.",
+         "Over the pool hangs the engine, beating slowly, unnaturally, like something refusing to die.",
+         "In your pack, the sending-stone warms.",
+         "KELYN: (from the stone) Did you find him? Is Var down there?"])
+    c = pbMessage(_INTL("The stone..."), [_INTL("Hold it up to him"), _INTL("Keep it covered")], 0)
+    say([c == 0 ? "You hold it out across the pool. He doesn't turn round." : "You close your hand over it. He hears her anyway.",
+         "VAR: (warm and rough, without turning) Kelyn. I'm here. It's worse than I told you.",
+         "KELYN: (from the stone) Oh, thank the seasons. Var, come up. Come up now."])
+    sayc([cl(:meat_meat, "(very still) He talks like the cold table. Slow. Counting.")])
+    Stage.turn_to(var) if var
+    say(["He turns. His face is Var's. His eyes are red-gold, and they don't blink.",
+         "VAR: (a woman's voice, amused) Variables that refused to die.",
+         "VAR: Hello again, my little failures."])
+    pbBGMFade(0.8) rescue nil                   # silence for the crack
+    Stage.fx("E-06", var, frames: 10, oy: 32) if var
+    var.character_name = "FT_var_cracked" if var rescue nil
+    say(["The face cracks like a mirror.",
+         "Behind the cracks: white hair like frostfire, sigils burned into her arms. Avarice.",
+         "AVARICE: Thirty years I've worn this man. Thirty years of summer."])
+    Stage.theme(nil) rescue nil                 # the chamber's music comes back under her
+    set_flag(:summer_unmasked)
+    # The look-back (never more than three): clues the player walked past.
+    recall = []
+    recall << "(Eline, at the Shrine: \"Summer has the heart. Summer keeps promises.\")" if flag?(:heart_given_summer)
+    recall << "(Selrae, in the Sap Wells: \"The Root-Key. Summer gave Winter a copy.\" Her own key.)" if flag?(:root_key)
+    recall << "(The compass Summer's people paid for: \"Hello, little failures.\")" if flag?(:hew_compass_woke) && !flag?(:var_story_known)
+    recall << "(Var at the Split Dock, glaive up: \"Who in the Nine Hells are you?\" No answer, ever.)" if flag?(:var_story_known)
+    say(recall.first(3)) if !recall.empty?
+    say(["KELYN: (from the stone, very small) ...Var?",
+         "AVARICE: (to the stone) Gone thirty years, Speaker. Do keep up.",
+         "The stone goes cold in your hand."])
+    say(["AVARICE: The duergar call me Xardorok. Names are coats too. So is summer.",
+         "AVARICE: A summer without end is a god's worth of power. When my dragon flies, it's mine.",
+         "AVARICE: Ten-Towns melts. Every soul in the Dale is harvested warm. I take Auril's seat."])
+    # (dialogue 08 §3b: an exchange, not a speech; she answers with sums)
+    if with_or_is?(:reptin)
+      speak(:reptin, "(politely) And the Dale? What does your summer cost them?", "...And the Dale?")
+      say(["AVARICE: Auril takes one a month and calls it mercy. I take them all at once. Do the sums."])
+    end
+    if flag?(:avarice_shard_lodged)
+      say(["AVARICE: (to you, almost fond) I watched you come down through my garden.",
+           "AVARICE: You've been carrying my eye since the Shattered Bed."])
+    end
+    if with_or_is?(:meat_meat)
+      speak(:meat_meat, "You took Razzy's voice.", "...You.")
+    end
+    sayc(["AVARICE: I took a great deal more than that, V-7. Come here and I'll show you.",
+          herald?(:meat_meat) ? cl(:reptin, "(stepping in front of you) She's not going anywhere near you.") :
+                                cl(:reptin, "(stepping in front of Meat Meat) She's not going anywhere near you.")])
+    if flag?(:took_hag_secret)
+      say(["(The hag was right: under the gold, a seam of frost-light where the coat is stitched on.)"])
+    end
+    Stage.pan_back rescue nil
   end
 
   # Lair actions: molten sap bursts and frost-blasts every round, and the
@@ -514,6 +658,7 @@ module FrostThaw
   def start_breaking_circle
     set_flag(:circle_phase)
     state[:circle_actions] ||= 0
+    Stage.pan_to(10, 15) if stage_event(VAR_EVENT)
     say(["Avarice steps back to the engine and lays both hands on it. It drinks from her, or she from it.",
          "AVARICE: (eyes half closed) The engine needs a minute to drink. So do I. Fiddle with my circle, if you like.",
          "AVARICE: Every second you spend, my dragon wakes a little more.",
@@ -524,6 +669,7 @@ module FrostThaw
     sayc([cl(:alerion, "Scour her glyphs and the frost shows through. Break both and nothing does."),
           cl(:alberica, "And if Auril's sigils show through, darling, Auril gets a word in."),
           "(Before the engine's next beat, you have time to work on six spires. Speak to Avarice when you're ready.)"])
+    Stage.pan_back rescue nil
     ($game_switches[SW_CIRCLE_PHASE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
   end
 
@@ -633,15 +779,19 @@ module FrostThaw
     say(["Avarice staggers, laughing. Behind her, the engine screams.",
          "Blue frost-light and red fire twist together.", "It's going to burst, and take the tree's heart with it.",
          "AVARICE: Kill me and it blows. Leave me and it runs forever. Your move.",
-         "Glimmer steps past her.",
+         # (dialogue 08 §3b: he answers her; 6.08's words, and the echo turns)
+         "GLIMMER: (stepping past her) Neither.",
          "GLIMMER: This blade's been killing me slowly since Saltmarsh.",
-         "GLIMMER: Brightmane said the curse breaks in a sacred fire.",
+         flag?(:brightmane_answered) ? "GLIMMER: \"You'll know it when you see it,\" Brightmane said." : "GLIMMER: Brightmane said I'd find a better fire.",
          "He lifts the Rimefang.",
-         "GLIMMER: I am a sacred fire. Brightmane made me one."])
+         "GLIMMER: She never said it'd be me."])
+    c = pbMessage(_INTL("Glimmer..."), [_INTL("Reach for him"), _INTL("Let him go")], 0)
+    say([c == 0 ? "You reach for him. He's already past you." : "You let him go. It's the hardest thing you've done down here."])
     if with_or_is?(:alberica)
       speak(:alberica, "Glimmer. Sweetheart. Don't you dare.", "...Glimmer.")
     end
-    sayc(["GLIMMER: It's all right. Shimmer found the third way. I'm only following her.",
+    say(["AVARICE: (interested, not moving) Go on. I want to see the sums."])
+    sayc(["GLIMMER: Shimmer found the third way. I'm only following her.",
           "He drives the Rimefang into the heart of the engine.",
           "The Lumen Shard in his chest blazes like a sunrise."])
     pbSEPlay("Saint7") rescue nil
@@ -676,6 +826,7 @@ module FrostThaw
     Stage.cleanup rescue nil
     give_key(:FT_DAWNFANG)
     pbMessage(_INTL("Glimmer is gone.")) rescue nil
+    pbFadeOutIn {} rescue nil                    # (a breath before the Shard rises: story review 08 §8)
     scene_heart_choice
     scene_coat_falls
   end
@@ -694,14 +845,30 @@ module FrostThaw
     say(["In the silver pool beneath the dead engine, something floats free, gathering ice and auroral light: the Frost Saint Shard.",
          "Sephek's heart, veined with frost-light. It whispers prayers in a voice that isn't his."])
     lines = []
-    lines << "(The notes in the Dissectory: a goddess poured into a drowned man's heart. An experiment that went too right.)" if flag?(:knows_shard_origin)
+    lines << "(The lab notes: a goddess poured into a drowned man's heart. It went too right.)" if flag?(:knows_shard_origin)
     lines << "(The ghost in the Antechapel: cleanse me, leave me whole, or break me. None of them clean.)" if flag?(:shard_echo_heard)
     lines << "(The whispering attendant's price, still owing: #{state[:attendant_promise] == :free ? 'free the heart' : 'burn the forge'}.)" if state[:attendant_promise]
-    say(lines) if !lines.empty?
+    say(lines.first(2)) if !lines.empty?          # (notes 08 F13: no more than two memories here)
     shard_battle if !flag?(:shard_fought)
-    sayc([cl(:wyn, "(kneeling at the pool's edge) It's... it's frightened. Both of them in there are."),
-          cl(:alberica, "Darling, whatever we do, we do it together."),
-          cl(:meat_meat, "Meat Meat votes stab. Meat Meat always votes stab. ...Meat Meat will listen, this once.")])
+    # Context 08 M8-8: what each choice does, from someone who'd pick it.
+    sayc([cl(:wyn, "(kneeling at the pool's edge) It's... it's frightened. Both of them in there are.")])
+    if with_or_is?(:wyn)
+      speak(:wyn, "Hyphora's sap could burn her out of it. Only his heart would be left.", "...Only his heart would be left.")
+    else
+      say(["(Hyphora's gold sap could burn Auril out of it. Only Sephek's heart would be left.)"])
+    end
+    if with_or_is?(:alerion)
+      speak(:alerion, "Or leave it whole. Then it's still hers, and someone will come for it.", "...Or leave it whole. Someone will come.")
+    else
+      say(["(Or leave it whole: still hers, and someone will come for it.)"])
+    end
+    if with_or_is?(:meat_meat)
+      speak(:meat_meat, "Or break it. She loses a piece. And he never comes back. Not ever.", "...Or break it. He never comes back.")
+    else
+      say(["(Or break it: Auril loses a piece, and Sephek never comes back.)"])
+    end
+    sayc([cl(:meat_meat, "(quietly) Meat Meat wants to stab it. ...Meat Meat will listen. For him."),
+          cl(:alberica, "Darling, whatever we do, we do it together.")])
     c = pbMessage(_INTL("The Frost Saint Shard..."), [_INTL("Sanctify it"), _INTL("Leave it whole"), _INTL("Destroy it")], 0)
     case c
     when 0
@@ -795,15 +962,18 @@ module FrostThaw
   # it. A careful player can catch the lie: Vessel IX (the Stasis Gallery's last
   # page), bare arms, and a mirror shard that fogs once, as if breathed on.
   def scene_coat_falls
+    var = stage_event(VAR_EVENT)
+    av = var ? Stage.actor(:avarice, var.x, var.y, 2, graphic: "FT_var_cracked") : nil   # (notes 08 E2: she's seen to the end)
     sayc(["With the engine dead, Var's body cracks all over, like ice on a lake.",
           "Avarice looks down at her hands.",
           "AVARICE: (almost admiring) Oh. That was clever.",
           "She reaches for a shard of the hag's old mirror, and the shard is cracked through. It won't take her.",
           "A pillar of red-black flame roars up round her: Hell's Veil, eating the air.",
           "From inside the fire, her voice, not laughing now:",
-          "AVARICE: We will speak again in the White Womb, little failures.",
+          # (notes 08 E19: no promise to return, or nobody would believe "Dead.")
+          "AVARICE: The White Womb. I was so close to th-",
           "The pillar collapses inward with a sound like a door slamming. Then nothing."])
-    var = stage_event("Var Rime-Breaker")
+    Stage.hide(av) if av
     Stage.fx("E-06", stage_spot(var, 0, -2), frames: 10, oy: 32)   # the shard shatters in the heat
     sayc(["When the smoke clears, there's a body in a ring of melted mirror-glass: white hair, burned black at the ends, face down.",
           "Beside it, Var Rime-Breaker's borrowed body falls, empty, and turns to glass, and breaks.",
@@ -815,16 +985,40 @@ module FrostThaw
       if c == 0
         set_flag(:avarice_doubt)
         say(["You look at the arms. They're bare.", "Avarice's arms were covered in burned sigils. These have none.",
-             "(Vessel IX: viable. Keep it warm. If they come, let them find me.)",
+             "(The note in the labyrinth: \"Vessel IX: viable. Keep it warm.\" A spare body.)",
              "You don't say anything. Nobody else noticed. You're not sure you want them to."])
       end
     end
+    white_womb_beat
+    # Context 08 M8-9: Kelyn heard it all; the city didn't.
+    say(["The sending-stone warms in your hand.",
+         "KELYN: (from the stone, hoarse) I heard her. All of it. ...The leaves are turning up here.",
+         "KELYN: (from the stone) Come up. Before the city decides what it saw."])
+    set_flag(:kelyn_heard_reveal)
     say(["On the floor, a last splinter of the hag's mirror fogs once, as if somebody very far away had breathed on it."])
     set_flag(:avarice_faked_death)
     set_flag(:avarice_believed_dead)
     set_flag(:summer_dead)
     add_counter(:story_beats)
     scene_launch
+  end
+
+  # Context 08 §6: the White Womb, said by her as she burned, is a place
+  # Alberica's family has a word for (her bargain: the Vault stays shut).
+  # §8b: with the ice mask's name, Alerion joins the three names.
+  def white_womb_beat
+    if herald?(:alberica)
+      say(["(The White Womb. Gran's word for it was \"the Vault\". The one we keep shut.)"])
+    elsif with_or_is?(:alberica)
+      say([as(:alberica, "(a hand on her rune) The White Womb. Gran had a word for that place.")])
+      if with_or_is?(:alerion)
+        speak(:alerion, "What word?", "...What word?")
+        say([as(:alberica, "...Later, pretty boy.")])
+      end
+    end
+    if flag?(:ithryn_athis_clue) && with_or_is?(:alerion)
+      say([as(:alerion, "The White Womb. The glass mask called it Ithryn. The sigils call it a vault.")])
+    end
   end
 
   #-----------------------------------------------------------------------------
@@ -836,12 +1030,14 @@ module FrostThaw
     sayc(["Below, among the Twenty Stones, the heart-engine's last pulse runs down into the dragon's chains.",
           "The molten sap rivers surge. Chains snap like thunder. A roar comes up the roots and shakes the World Tree itself.",
           "The dragon tears free. Infernal runes blaze. Frost pours from its jaws. Wings of mirror-glass unfurl.",
-          "In its chest, something beats that was never its own: an old wyrm's heart, stolen from the ice and corrupted.",
-          "It blasts through the cavern roof, through the roots, through the Heartroot, and rises into the night: toward Ten-Towns."])
+          "In its chest beats another heart, older than Sephek's, and never its own.",
+          "It blasts through the roof and the roots, and rises into the night: toward Ten-Towns.",
+          # (context 08 M8-6: the cost of winning is the player's own doing)
+          flag?(:clock_first_light) ? cl(:alerion, "First light, she said. We woke it early.") : nil])
     say([herald?(:meat_meat) ? "(You scream it before you know you're going to: RAZZY!) And far above, Razzilith panics: a picture in your head of every scale on end." :
                                "MEAT MEAT: RAZZY! (Far above, Razzilith panics: a picture in all your heads of every scale on end, and then pure rage.)"])
     lines = []
-    lines << cl(:alerion, "(already running) That's frostcraft. Winter's Revenant work, the old kind. ...Frostina.")
+    lines << cl(:alerion, "(already running) That's old frostcraft. Older than her. ...Frostina.")
     lines << (herald?(:alberica) ? "(Every memory-thread you have is screaming at once.)" : cl(:alberica, "(a hand to her rune, white-faced) The memory-threads are screaming. All of them."))
     lines << (herald?(:reptin) ? "(The seasons spike in your chest like a fever breaking the wrong way.)" : cl(:reptin, "(staggering) The seasons just spiked. Like a fever breaking the wrong way."))
     lines << (herald?(:meat_meat) ? "In your hands, the golden dagger hums, and won't stop." :
