@@ -95,3 +95,11 @@ module FrostThaw
   LOOP_ACT1_FLAGS.concat(%i[met_sephek_torgs watch_shade shimmer_lied jet_told]).uniq!
   LOOP_ACT2_FLAGS.concat(%i[met_sephek_torgs watch_shade shimmer_lied jet_told]).uniq!
 end
+
+# e: Chapters 8-9 context fixes (2026-11-06): Kelyn's stone at the Barricade,
+# the first-light clock, the child carried up, Kelyn heard the reveal, Lumin's
+# prophecy at the Shrine, the bare arms told in Bryn Shander
+module FrostThaw
+  LOOP_ACT2_FLAGS.concat(%i[stone_barricade clock_first_light child_carried_up kelyn_heard_reveal
+                            tree_prophecy_heard avarice_doubt_shared]).uniq!
+end

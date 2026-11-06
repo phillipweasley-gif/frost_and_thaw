@@ -199,13 +199,13 @@ module FrostThaw
     say(["LUMIN: (the Wennen priest, his head bowed) The Sparkbearer isn't with you."])
     c = pbMessage(_INTL("Lumin waits."), [_INTL("\"He's gone.\""), _INTL("Say nothing")], 0)
     say([c == 0 ? "Lumin's ears go flat." : "You don't have to. Lumin's ears go flat."])
-    say([as(:meat_meat, "(holding up Dawnfang) He's in here now. And up there."),
-         "LUMIN: (a long breath) ...Then hear what the tree told us, the night he came.",
+    speak(:meat_meat, "(holding up Dawnfang) He's in here now. And up there.", "(holding up Dawnfang) ...He's in here now.")
+    say(["LUMIN: (a long breath) ...Then hear what the tree told us, the night he came.",
          "LUMIN: \"Each needs a rider who is not afraid of falling. Each will choose one.\""])
     speak(:alerion, "I'm afraid of falling.", "...I'll fall anyway.")
-    say(["LUMIN: Then she chose well. The ones who aren't afraid don't hold on.",
-         as(:meat_meat, "Meat Meat is afraid of falling. Meat Meat will do it anyway. That counts."),
-         "LUMIN: \"And a third season walks among you, with a song, and a mark on her chest.\"",
+    say(["LUMIN: Then she chose well. The ones who aren't afraid don't hold on."])
+    speak(:meat_meat, "Meat Meat is afraid of falling. Meat Meat will do it anyway. That counts.", "...Meat Meat will do it anyway.")
+    say(["LUMIN: \"And a third season walks among you, with a song, and a mark on her chest.\"",
          "LUMIN: \"She will be asked to hold the cold still. She must not. Seasons are turned.\""])
     if herald?(:alberica)
       speak(:alberica, "(your hand on your rune) ...Well. That's not ominous at all.", "...Hm.")
