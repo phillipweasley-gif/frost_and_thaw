@@ -477,6 +477,8 @@ module FrostThaw
     if !flag?(:throne_entered)
       set_flag(:throne_entered)
       broken = TESTS.count { |k, *| flag?(:"test_#{k}_broken") }
+      throne = stage_event("Auril")
+      Stage.pan_to(throne.x, throne.y + 4) if throne       # her and you, both in view
       say(["A throne room with nothing in it but a throne. She needs nothing else.",
            "The woman in frost-furs is sitting on it.",
            broken >= 4 ? "AURIL: You broke my tests." :
@@ -515,6 +517,7 @@ module FrostThaw
         say(["AURIL: (to you, almost fond) You answered me politely once. In a little shrine, under the Forge.",
              "AURIL: I said I'd remember. I'll give you the first breath."])
       end
+      Stage.pan_back if Stage.panned?
       return if !auril_stage(sp, lv, nm, flag?(f), polite)
       stage += 1
       state[:auril_stage] = stage
@@ -855,7 +858,7 @@ module FrostThaw
     pbFadeOutIn { Stage.jump(*CHASM_CODA) } rescue nil
     say(["Many years later. The Cackling Chasm."])
     px, py = ([$game_player.x, $game_player.y] rescue [0, 0])
-    old = Stage.actor(:green_ghost, px, py, 2, graphic: "FT_green_ghost")
+    old = Stage.actor(:old_alberica, px, py, 2, graphic: "FT_green_ghost")
     hid = old && !$game_player.transparent
     $game_player.transparent = true if hid
     say(["An old dwarf woman in green robes stands in the hall where a hag once laughed.",

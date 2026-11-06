@@ -87,8 +87,7 @@ module FrostThaw
     Stage.theme(:tamsin)
     tam = Stage.actor(:tamsin, px + 4, py, 4)
     if tam
-      Stage.walk_to(tam, px + 2, py, face: 4)
-      tam.through = false                         # (nobody walks in to stand on them)
+      Stage.walk_to(tam, px + 3, py, face: 4)     # (past the tiles companions walk in to)
       Stage.turn_to($game_player, tam)
       Stage.emote(tam, :exclaim)
     end
@@ -132,11 +131,8 @@ module FrostThaw
     end
     sayc([cl(:meat_meat, "Meat Meat will train. Meat Meat will train SO hard. After coffee."),
           cl(:alerion, "You said that last time.")])
-    hel = Stage.actor(:hellen, px + 4, py + 1, 4)
-    if hel
-      Stage.walk_to(hel, px + 2, py + 1, face: 4)
-      hel.through = false
-    end
+    hel = Stage.actor(:hellen, px + 5, py + 1, 4)
+    Stage.walk_to(hel, px + 3, py + 1, face: 4) if hel
     sayc(["HELLEN: (packing food into every bag you own) Nobody saves the Dale on an empty stomach.",
           "HELLEN: Eat first. Then heroics.",
           outsider? ? "HELLEN: (to the Heralds) And bring them back. I've only just got you on the right wall." :
