@@ -112,11 +112,11 @@ module FrostThaw
                      "I skate Redwaters every winter. This one, I'll skate it faster."],
     # (balance, scene pass: Nell and Birk stand on the shore path a few steps
     # apart, with no rest between; four Pokémon back to back beat two-Pokémon
-    # teams nine times in ten. Nell keeps her ghost of the ice, Birk his bears,
-    # each a level lower.)
+    # teams nine times in ten. Nell keeps her ghost of the ice and Birk his big
+    # bear, one Pokemon each.)
     aurilite_eight: [:FT_AURILITE,     "Nell",  [[:B427H200, 23]],
                      "The ones on the ice can hear you. It's all they can do."],
-    trapper_birk:   [:HIKER,           "Birk",  [[:TEDDIURSA, 22], [:B217H220, 23]],
+    trapper_birk:   [:HIKER,           "Birk",  [[:B217H220, 23]],
                      "Wolves took my best traps. You took my best Pokémon. Busy week."],
     channeler_mag:  [:CHANNELER,       "Mag",   [[:GASTLY, 24], [:B200H429, 25]],
                      "She laughed at me, child. From under the ice."],
@@ -179,7 +179,7 @@ module FrostThaw
                            "The town keeps a candle burning for him. (You don't go in.)"],
     gm_door_closed: ["The door is barred. Someone inside calls, \"We're not buying!\""],
     fef_moryn: ["FEF: Fef Moryn. Trapper. Five of the militia went after that verbeeg.",
-                "FEF: I found what was left. Something big did it, with a club. Not the verbeeg. Something dumber.",
+                "FEF: I found what was left. Something big did it, with a club. Not the verbeeg.", "FEF: Something dumber.",
                 "FEF: I'm not going back in those woods."],
     fef_fox: ["A white fox sits by Fef's boots, ears flat, watching the treeline."],
     mead_drinker: ["The last cask in Good Mead. We're drinking it slowly. In memory.",
@@ -203,19 +203,19 @@ module FrostThaw
                        "Like they're melting it from below."],
     aurilite_eight_after: ["Twenty stones in a ring, in Dougan's Hole. Older than the town. She likes old things."],
     trapper_birk_after: ["Dougan's Hole? Mind your fingers. They'll bite you for a trout."],
-    channeler_mag_after: ["There's a chasm south of the Hole. Hunters say it laughs on the new moon. The cackling carries for miles on the wind.",
-                          "Folk here think the witch who froze us made it her lair. Somebody ought to make sure she can't come back up out of it."],
+    channeler_mag_after: ["There's a chasm south of the Hole. Hunters say it laughs on the new moon.", "The cackling carries for miles on the wind.",
+                          "Folk here think the witch who froze us made it her lair.", "Somebody ought to make sure she can't come back up out of it."],
     # --- Dougan's Hole -----------------------------------------------------------------
     sign_dougans: ["DOUGAN'S HOLE", "Speaker: Edgra Durmoot.", "(Someone has carved a crude wolf into the post, and scratched it out.)"],
     sign_twenty_stones: ["THE TWENTY STONES OF THRUUN.", "Nineteen granite menhirs in a rough triangle, and one at the centre.",
                          "Nobody knows who raised them. They were here when Dougan Dubrace found the place."],
     dh_door_closed: ["Nobody answers. A curtain twitches."],
-    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["(A local with small, misshapen ears, beaming) You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
+    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["(beaming) You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
                      ["A local with small, misshapen ears grabs your sleeve.", "Them wolves are big as horses! They know words, an' a mighty lot of 'em!"]],
-    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["(Grinning a mouthful of little pointed teeth) Sil an' Finn are home! I'm gonna tell everybody! I already told everybody!"] },
+    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["(grinning, all pointed teeth) Sil an' Finn are home! I'm gonna tell everybody!", "I already told everybody!"] },
                       ["Someone grins at you with a mouthful of little pointed teeth.", "They took Sil an' her brother Finn th' other day! Big ol' wolves did!"]],
     dh_pier: ["A single wooden pier, buckled by the ice so it humps up like a frozen wave.",
-              "Two keelboats are locked in the ice beside it, their masts white with rime. Nobody has sailed since the Rime came.",
+              "Two keelboats are locked in the ice beside it, masts white with rime.", "Nobody has sailed since the Rime came.",
               "Fifty people live in Dougan's Hole. You'd guess fewer."],
     dh_chorus_sister: [{ if: { flag: :kids_home }, lines: ["Hilda's not stopped crying since. The good kind, mind."] },
                        ["Wolves say they ain't givin' 'em back till the town pays a king's ransom. Food an' gold.",
@@ -243,12 +243,12 @@ module FrostThaw
     smoke_fisher: ["Knucklehead trout, smoked. It's what we eat, what we trade, and what we talk about."],
     smoke_trout_wife: ["We don't get many visitors. The ones we get mostly want something. What do you want?",
                        "...Oh. To help? Huh."],
-    dh_lodge_guide: [{ if: { flag: :kids_home }, lines: ["The trappers are back off the ice line. They'll want a go at you first. Edgra likes it that way.",
+    dh_lodge_guide: [{ if: { flag: :kids_home }, lines: ["The trappers are back off the ice line. They'll want a go at you first.", "Edgra likes it that way.",
                                                          "Her Pokémon are like her. Cold, thick-skinned, and they don't go down easy."] },
                      ["The trappers are all out on the ice line, watching for wolves. Edgra sent every one.",
                       "She'd never say it, but she's hoping. We all are."]],
     trapper_brann_after: ["Edgra's at the back. Mind the traps on the walls. Some are still set."],
-    trapper_holt_after: ["The Speaker lost her husband to the ice. She doesn't lose anything else, if she can help it."],
+    trapper_holt_after: ["The Speaker lost her husband to the ice. She doesn't lose anything else if she can help it."],
     trapper_ysa_after: ["Go on. She's been waiting. She just won't say so."],
     # --- the tundra and the lodge ------------------------------------------------------------
     sign_tundra: ["West of Dougan's Hole: open tundra for thirteen miles.", "Beyond that, nothing. And then a house of ice."],
@@ -262,7 +262,7 @@ module FrostThaw
     ice_throne: ["A giant's throne, carved from one block of ice. A rune is cut into the backrest:",
                  "the Giant rune for \"ice\". It hums under your hand, like a held-back storm."],
     flensing_whale: ["The frozen body of a whale, crudely butchered. The air stinks of old decay."],
-    flensing_knife: ["Beside the whale lies a paring knife the size of a longsword. Garagai's. Too heavy to lift."],
+    flensing_knife: ["Beside the whale, a paring knife the size of a longsword. Garagai's. Too heavy to lift."],
     stone_chest_empty: ["The stone chest holds only giant-sized flensing tools now."],
     chwinga_statuette: ["Under the table lies a little stone figure of a spindly creature. A chwinga.",
                         "It isn't a carving. It turned to stone when it died."],
@@ -278,7 +278,7 @@ module FrostThaw
                      "Gods forgive me, I told her everything."],
     thawed_husband: -> {
       T.set_flag(:husband_thawed)
-      ["I'm from Targos. Came down fishing for knuckleheads, and heard someone laughing on the ice.",
+      ["I'm from Targos. Came down fishing for knuckleheads, and heard laughing on the ice.",
        "My wife... she'll think I'm dead. Tell her I'm coming home.",
        "Tell her to keep the lamp lit."]
     },
@@ -298,7 +298,7 @@ module FrostThaw
                                                       "I don't like people who know my verses."] },
               ["Small, cold and suspicious. I've played towns like this.",
                "You win them over, or you leave by the window. I've done both. Same night, once."]],
-    durmoot_lodge: ["Furs and traps. Every pelt on these walls has a story. None of them end well for the animal."],
+    durmoot_lodge: ["Furs and traps. Every pelt on these walls has a story. None end well for the animal."],
     tundra: ["I can't see my own hand. Stay close, darling. If you lose me, follow the singing."],
     ice_lodge: ["Even the echoes freeze in here. Somebody hold me. For warmth. Mostly for warmth."]
   )
@@ -516,7 +516,7 @@ module FrostThaw
   def leader_durmoot(event_id)
     if flag?(:badge_dougans)
       say(["DURMOOT: You've got my seal. Don't make a fuss about it.",
-           "DURMOOT: And if that crone comes back... you'll hear her before you see her. You always do."], event_id)
+           "DURMOOT: And if that crone comes back, you'll hear her before you see her. You always do."], event_id)
       return
     end
     if !flag?(:met_durmoot)
@@ -823,7 +823,9 @@ module FrostThaw
     sayc(["DURMOOT: Thank you.",
           "DURMOOT: ...Don't tell anyone I said that.",
           cl(:alberica, "Oh, sugar, I'm writing a song about it."),
-          "DURMOOT: Chasm's south. Take this. Snarl. It's how this town answers the wind.",
+          "DURMOOT: Chasm's south. Take this. Snarl. It's how this town answers the wind."], nil)
+    pbMessage(_INTL("Durmoot holds out the TM."), [_INTL("Take it.")], 0) rescue nil
+    sayc([
           "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns.",
           "DURMOOT: ...Don't tell anyone I said that either."])
     # The last chance at Act I's favours, said before the door (context 14, M14-9 A).

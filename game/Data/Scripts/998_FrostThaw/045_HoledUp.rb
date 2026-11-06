@@ -27,6 +27,8 @@ module FrostThaw
   SW_HU_BLIZZARD    = 4042    # the ice throne's blizzard is up around the lodge
 
   RELIC_ITEMS.merge!(
+    FT_WHALEOIL: ["Flask of Whale Oil", "Flasks of Whale Oil", 8, 0,
+      "Oil rendered from Garagai's whales, in a flask from his flensing room. It reeks, and it's slick as anything.", 0, 0, 6],
     FT_WINTERBOOTS: ["Boots of the Winterlands", "Boots of the Winterlands", 8, 0,
       "Fur-lined boots Hilda's husband won in a drinking contest. The warmest boots in the Dale.", 0, 0, 6]
   )
@@ -35,7 +37,7 @@ module FrostThaw
     garagai_bedroll: ["The only furniture in this cavernous chamber: a big fur bedroll, matted and musty.",
                       "Garagai slept here. Nobody sleeps here now."],
     lodge_exterior: ["Jutting up out of the tundra: a towering edifice built entirely of ice.",
-                     "Three tall openings on its east face. Easily three times the height of anything in Ten-Towns."],
+                     "Three tall openings on its east face, three times the height of anything in Ten-Towns."],
     wolves_wait: ["KORAN: We'll stand guard out here. Garagai isn't home. Go on in.",
                   "KANAN: (not looking at you) Take the corridor in the middle. It's quickest."],
     ice_corridor: ["The passage is choked with ice.", "Icicles hang overhead in clusters, points sharp as daggers."]
@@ -202,7 +204,7 @@ module FrostThaw
           cl(:meat_meat, "Meat Meat bites back. Meat Meat is very bitey."),
           "The wolves look at each other. Then the act drops, all at once.",
           "KORAN: It's awfully cold in that lodge.",
-          "KANAN: They won't suffer much longer. It's only a matter of time before Garagai skins them and eats them.",
+          "KANAN: They won't suffer much longer. Garagai will skin them and eat them soon.",
           "They bolt away west, leaving tracks a child could follow.",
           cl(:shade, "...And we're going to follow them. Aren't we.")])
     set_flag(:refused_wolves)
@@ -223,7 +225,7 @@ module FrostThaw
       say(["Half a mile on, the wolves lope ahead into the white.",
            "\"We'll go first,\" Koran calls back. \"Make sure the way's clear.\""])
     else
-      say(["The wind finds every gap in your furs. By the time the snow eases, everyone is numb, Pokémon included."])
+      say(["The wind finds every gap in your furs.", "By the time the snow eases, everyone is numb, Pokémon included."])
       $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 10), 1].max if !pk.egg? && pk.hp > 0 } rescue nil
     end
   end
@@ -425,11 +427,11 @@ module FrostThaw
     end
     return if !pbConfirmMessage(_INTL("Climb up and sit in the throne?"))
     say(["You climb up. The throne is far too big; your feet dangle like a child's.",
-         "The rune hums through your spine. You understand, without being told: you could call a storm from here."])
+         "The rune hums through your spine. You know, without being told: you could call a storm."])
     day = (pbGetTimeNow.to_i / 86_400 rescue 0)
     last = state[:throne_day]
     if last && day - last < 10
-      return say(["The rune is dull, still drawing breath from the last storm. (It needs a tenday to recover.)"])
+      return say(["The rune is dull, still drawing breath from the last storm. (It needs a tenday.)"])
     end
     return if !pbConfirmMessage(_INTL("Call a blizzard?"))
     state[:throne_day] = day
@@ -450,7 +452,10 @@ module FrostThaw
     sayc(["A foul smell fills the room: barrels of whale oil, rendered from Garagai's catches.",
           "You fill an empty flask. It reeks, and it's slick as anything.",
           cl(:shade, "Lovely. Now we smell like a dead giant's pantry. Very stealthy.")], event_id)
-    pbMessage(_INTL("\\me[Item get]You got a flask of whale oil."))
+    if !($PokemonBag.pbHasItem?(:FT_WHALEOIL) rescue false)
+      ($PokemonBag.pbStoreItem(:FT_WHALEOIL, 1) rescue nil)
+    end
+    pbMessage(_INTL("\\me[Key item get]You got a flask of whale oil."))
     set_flag(:whale_oil)
   end
 
@@ -539,18 +544,19 @@ module FrostThaw
         return say(["The metal is so cold it burns your fingers. It won't move a hair.",
                     "(Heat would make the slats pliable. A fire-breathing Pokémon, perhaps.)"])
       end
-      say(["Your Pokémon breathes fire along two of the slats until they glow a dull red, and the frost on them hisses away."])
+      say(["Your Pokémon breathes fire along two of the slats until they glow a dull red.", "The frost on them hisses away."])
       if !party_has_strength?
         return say(["You haul on the hot slats. They give a little, then stiffen as they cool.",
                     "(Someone stronger is needed, while they're hot. A Pokémon with real strength.)"])
       end
       say(["Your strongest Pokémon braces against the frame and hauls.", "The slats bend apart with a groan of metal.",
-           "Slender Silja wriggles through, then pulls her brother after. The gate never moves. The hinges never make a sound."])
+           "Slender Silja wriggles through, then pulls her brother after.", "The gate never moves. The hinges never make a sound."])
       return free_kids
     when :gate
       if flag?(:whale_oil)
         say(["You work the whale oil into the rusty hinges, slowly, until they're black and dripping.",
              "The gate swings open without a sound."])
+        take_key(:FT_WHALEOIL)
         return free_kids
       end
       if flag?(:norsu_beaten)
