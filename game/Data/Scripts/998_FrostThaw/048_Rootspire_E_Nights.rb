@@ -157,6 +157,10 @@ module FrostThaw
     say([frame] + lines.map { |l| omen_text(l, me) })
     $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10) rescue nil
     omen_secret_choice if me && !state[:omen_secret] && (flag?(:trials_open) || lines.any? { |l| l.include?("told anyone") })
+    # The first line about her family's key meets the bargain (context 09 §6)
+    if me && lines.any? { |l| l.include?("Memory keeps the key") }
+      say(["(The key. Gran's pendant. The Vault stays shut.)", "(That was the bargain, and you never asked what it cost.)"])
+    end
 
     if first && !me
       sayc([cl(:alberica, "(very lightly, to nobody) I'm fine, darlings. Just a chill. Somebody's walking over my grave.")].compact)
