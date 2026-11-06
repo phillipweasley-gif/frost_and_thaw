@@ -48,7 +48,7 @@ Ch9; Var's seventh-night oath.
 
 - **06–07 (d):** none left in d's files; d's items in other files were applied above.
 - **08–09 (e):** 10.md's Part 9 plant (it belongs to the option decision 2 didn't choose); the refugee village line
-  (**needs a village name from the owner**); the Great Unchaining; the F5 tag.
+  (built after the audit: the owner's call, Ironhollow); the Great Unchaining; the F5 tag.
 - **10–11 (f):** the trial week's day clock (notes/10 E2); E17 (Alerion's mode only); Project Rime; the 10.13 shard.
 - **12–13 (g):** staging for the test shades (visions); the Root-Gate stair box (Low); dialogue §4 lines outside §3;
   panels S-12a and S-12b (art; the crossing works without them).

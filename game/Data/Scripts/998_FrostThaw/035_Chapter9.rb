@@ -528,6 +528,10 @@ module FrostThaw
          # (context 09 M9-4: the town's own reason to leave its walls: Chapter 2's lottery)
          "DUVESSA: (looking at the lottery board) Two years of that board.",
          "DUVESSA: If there's warm ground out there, I'm done drawing names.",
+         # (context 09 §8b: her village was spared, the bargain's price paid by someone
+         # else; the owner's call, 2026-11-06: the village is Ironhollow, made up. She doesn't answer.)
+         "REFUGEE: (under her breath) Not one name drawn from Ironhollow in two years.",
+         "REFUGEE: Lucky, down south. Always lucky.",
          "DUVESSA: (to the whole square) Bryn Shander! Pack what you can carry!"].compact)
     if flag?(:husband_thawed)
       widow = Stage.actor(:widow, px - 4, py + 2, 6, graphic: "BWOldWoman")

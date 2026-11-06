@@ -840,4 +840,5 @@ Your answers are now in the script. Nothing is left open.
 - The ghost in the Cackling Chasm is Alberica, very old: her story in Chapter 5 hints at the loop without naming her.
 - Anduin is said briefly in Chapter 9 when he appears (still unsaid in Act I).
 - Var is sworn to sit the empty Summer Throne on the festival's seventh night: the week's deadline.
+- Alberica's home village is **Ironhollow** (invented here, not canon), somewhere south of Ten-Towns. The lottery never drew a name from it: the bargain's price was paid by others. A Bryn Shander refugee says so in Chapter 9; Alberica names it when the Vault opens.
 

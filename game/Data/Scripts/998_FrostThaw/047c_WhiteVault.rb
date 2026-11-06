@@ -392,7 +392,7 @@ module FrostThaw
     say(["#{al ? 'You set' : 'Alberica sets'} the pendant in the hollow. It fits like it was cut for it. It was.",
          "The door of wings swings inward, very slowly, with a sound like ice letting go of a ship."])
     set_flag(:vault_door_unlocked)
-    cline(:alberica, "(very quietly) Somewhere south, my village just felt that.", "...My village felt that.")
+    cline(:alberica, "(very quietly) Somewhere south, Ironhollow just felt that. My village.", "...Ironhollow felt that.")
     true
   end
 
