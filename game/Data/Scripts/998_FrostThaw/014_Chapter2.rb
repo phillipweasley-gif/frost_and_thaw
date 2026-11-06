@@ -429,6 +429,9 @@ module FrostThaw
          "MISHANN: See what it does out of spite.",
          cl(:alberica, "Oh, I like her.")].compact, event_id)
     give_key(:FT_GOLDENACORN)
+    # (context 05 M5-2: Reptin carries it from here, so the Chasm's "from Reptin's pack" is true)
+    say([herald?(:reptin) ? "You tuck the Golden Acorn into your pack. (You can check on it in Key Items.)" :
+                            "Reptin tucks the Golden Acorn into his pack. (You can check on it in Key Items.)"])
     set_flag(:golden_acorn)
     state[:goal] = "Sephek is in Lonelywood: out the north gate, through Termalaine."
   end
