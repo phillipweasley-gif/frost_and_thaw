@@ -1,6 +1,6 @@
 # Boots Infinite Fusion's real scripts (with Frost & Thaw) headlessly.
 # Usage: ruby boot.rb [game_dir]   (then the driver takes over)
-GAME_DIR = File.expand_path(ENV["PIF_DIR"] || "/home/claude/pifrun")
+GAME_DIR = File.expand_path(ENV["PIF_DIR"] || (File.directory?("Data/Scripts/998_FrostThaw") ? Dir.pwd : "/home/claude/pifrun"))
 Dir.chdir(GAME_DIR)
 require_relative "rgss"
 
