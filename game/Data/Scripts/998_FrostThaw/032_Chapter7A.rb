@@ -597,10 +597,10 @@ module FrostThaw
     end
     if flag?(:road_a_done) && flag?(:road_b_done)
       if $game_switches && $game_switches[SW_FORGE_OPEN]
-        return say(["The roots know you. They open. Heat and hammering pour up the shaft."], event_id)   # (the door's own page takes you down)
+        return say(["The roots know Hyphora's leave on you. They open. Heat and hammering pour up the shaft."], event_id)   # (the door's own page takes you down)
       end
       set_switch(SW_FORGE_OPEN, true)
-      say(["The roots know you. They open. Heat and hammering pour up the shaft."], event_id)
+      say(["The roots know Hyphora's leave on you. They open. Heat and hammering pour up the shaft."], event_id)
       return transfer(*FORGE_ARRIVAL) if forge_door_talk
       pbMoveRoute($game_player, [PBMoveRoute::Backward]) rescue nil
       return

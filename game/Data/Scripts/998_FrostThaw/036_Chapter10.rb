@@ -274,6 +274,13 @@ module FrostThaw
 
   def chapter10_start
     set_switch(SW_TRIBUNAL, true)
+    # A night between the arrest and the court (notes/09 E5), so the Tribunal's
+    # "That evening." is the next day's: the root-cells, then the card.
+    $game_screen.start_tone_change(Tone.new(-255, -255, -255, 0), 12) rescue nil
+    say(["The root-cells under the Council Hall. A night, and most of a day.",
+         "Light through the bars, in four colours. Somewhere above, a city arguing about you."])
+    say(["CHAPTER 10: TRIALS OF THE ROOTS"])
+    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 12) rescue nil
     transfer(2054, 11, 17, 8)
   end
 
@@ -291,9 +298,12 @@ module FrostThaw
          "HER MOTHER: (a refugee, a hand over the child's mouth) Hush. They brought us out of the snow.",
          "The doors swing open. The seasonal crystals cast long shadows across the floor.",
          "Four chairs wait. Two of them, gold and red, are draped in white."])
-    say(["KELYN: Heralds of Dawn and Dusk. You slew Summer: Avarice, who wore our Marshal.",
-         "KELYN: You did it without this Council's leave. Some call you liberators. Some call you murderers.",
+    say(["KELYN: Heralds of Dawn and Dusk. Summer is dead, and our Marshal with her. By your hands.",
+         "KELYN: You did it without this Council's leave.",
          "KELYN: Meat Meat is charged separately. The Autumn Warden died by her hand."])
+    # (dialogue 09 §3 item 13: nobody named the one who broke the engine)
+    speak(:alberica, "(very plainly) Glimmer stopped your summer. You'll want to thank him. You can't.",
+                     "(very plainly) ...Glimmer did it. And you can't thank him.") if with_or_is?(:alberica) && flag?(:glimmer_gone)
     # Owner's decision (2026-11-06, context 10 M10-2): Selrae is in the dock.
     # She confessed to the party in the Sap Wells (7B); here she says it to the city.
     selrae = stage_event("Selrae Vorn")
