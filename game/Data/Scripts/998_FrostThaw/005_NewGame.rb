@@ -307,13 +307,13 @@ module FrostThaw
     pbMessage(_INTL("Razzy was in the next cage at the lab. Smaller than you. He used to talk."))
     pbMessage(_INTL("Razzy can't talk any more. Razzy holds your hand all night anyway."))
     pbMessage(_INTL("(Meat Meat doesn't cry. Meat Meat promised Razzy.)"))
-    pbMessage(_INTL("Tonight Razzy is gone. Small footprints in the snow, going toward the south gate."))
+    pbMessage(_INTL("Tonight Razzy is gone. Small footprints in the snow, going toward the south-west gate."))
     pbMessage(_INTL("The gate's shut. Speaker's guards. Nobody leaves Targos in lottery season."))
     pkmn = starter_pokemon(h[:starter])
     pbAddPokemonSilent(pkmn)
     Stage.cry(pkmn.species)
     pbMessage(_INTL("Your {1} chirps from the rafters. It found you the night you ran, and it never left.", pkmn.speciesName))
-    side_goal(:razzy, "Meat Meat's own: Razzy's footprints, out past the south gate.", done: :met_razzy)
+    side_goal(:razzy, "Meat Meat's own: Razzy's footprints, out past the south-west gate.", done: :met_razzy)
   end
 
   # SC 0.05 - Wyn's watch. Wyn starts four hundred years later, at the Sap Gate,

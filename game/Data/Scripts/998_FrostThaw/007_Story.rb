@@ -143,8 +143,8 @@ module FrostThaw
   SW_PARTY_FORMED = 3961   # the Heralds have met: their tavern NPCs are gone (they travel with you)
   SW_NAERTH_TERMS = 3963   # Naerth has set his terms at the Luskan Arms: he's back in the Town Hall
   # After the seal: rest first (the carved cat, SC 1.07), then the road.
-  TARGOS_REST_GOAL = "Rest at Three Flags Sailing; Ma Yarbroul keeps the fire. Then out the south-west gate."
-  TARGOS_ROAD_GOAL = "The south-west gate is open. Bryn Shander is south-east along the road, and Dougan's Hole beyond it."
+  TARGOS_REST_GOAL = "Rest at Three Flags Sailing tonight, then take the south-west gate to Bryn Shander."
+  TARGOS_ROAD_GOAL = "The south-west gate is open. Bryn Shander is south-east along the road."
 
   # SC 1.01 - Out of the air. Where and when you are, and the three who find
   # you on the pier, walking in and off on screen (context/01.md B1, HB1, HB3).
@@ -179,13 +179,9 @@ module FrostThaw
                       "(Targos. A name from the old songs. ...Sableye, I think we fell into a history lesson.)"])
       stage_pier_welcome
     else
-      say(["Five travellers come down three gangplanks on the same night. None of you planned it.",
-           "All of you look up at the same moment, as if something called your names.",
-           "Warm light spills from a tavern along the docks: Three Flags Sailing.",
-           as(:alberica, "Is that a tavern? That's a tavern. Out of my way, I want the stool by the fire."),
-           as(:reptin, "(watching the dwarf go) First sensible thing anyone's said in Targos.")])
+      stage_herald_landing
     end
-    state[:goal] = "Get out of the cold. Three Flags Sailing, up the hill."
+    state[:goal] = "Get out of the cold. Three Flags Sailing, west along the docks."
     set_flag(:arrived_targos)
   end
 
@@ -202,7 +198,7 @@ module FrostThaw
     shimmer = Stage.actor(:shimmer, 37, 25, 4)
     Stage.walk_to(shimmer, 34, 25, face: 8) if shimmer
     Stage.emote(shimmer, :exclaim) if shimmer
-    say(["SHIMMER: I saw. Tavern's west, up the hill. Whatever you are, you'll freeze like us."])
+    say(["SHIMMER: I saw. Tavern's west, on the docks. Whatever you are, you'll freeze like us."])
     Stage.leave(shimmer, 26, 25) if shimmer
     alberica = Stage.actor(:alberica, 37, 25, 4)
     Stage.walk_to(alberica, 34, 25, face: 8) if alberica
@@ -210,6 +206,32 @@ module FrostThaw
                     "ALBERICA: (sea-bag, lute on her back) Pretty boy's found someone! Can we keep them?"])
     Stage.leave_all([alberica, alerion].compact, 26, 25)
     Stage.cleanup
+  end
+
+  # SC 0.06 lands (Alberica, Reptin, Alerion): the five come down three
+  # gangplanks onto the one pier, on screen, and the dwarf leads the way to the
+  # only warm light (notes/01 E1: nobody speaks from off the map).
+  def stage_herald_landing
+    others = %i[alberica alerion shade shimmer reptin].reject { |k| herald?(k) }
+    spots = [[33, 22], [33, 23], [33, 24], [33, 20]]
+    walkers = {}
+    others.each_with_index { |k, i| walkers[k] = Stage.actor(k, *spots[i], i < 3 ? 2 : 8) }
+    say(["Five travellers come down three gangplanks on the same night. None of you planned it."])
+    walkers.each_value { |ev| Stage.face(ev, 8) if ev }
+    Stage.balloon($game_player, "B-06")
+    say(["All of you look up at the same moment, as if something called your names.",
+         "Warm light spills from a tavern along the docks: Three Flags Sailing."])
+    walkers.each_value { |ev| Stage.face(ev, 2) if ev }
+    speak(:alberica, "Is that a tavern? That's a tavern. Out of my way, I want the stool by the fire.",
+          "...Is that a tavern? Out of my way.")
+    Stage.leave(walkers.delete(:alberica), 16, 18) if walkers[:alberica]
+    say([herald?(:alberica) ? "REPTIN: (behind you) First sensible thing anyone's said in Targos." :
+                              as(:reptin, "(watching the dwarf go) First sensible thing anyone's said in Targos.")])
+    Stage.leave_all(walkers.values.compact, 16, 18)
+    Stage.cleanup
+  rescue StandardError => e
+    log("stage_herald_landing: #{e.message}")
+    Stage.cleanup rescue nil
   end
 
   # Meat Meat watches the five come up from the ships and along the shore to
@@ -224,9 +246,12 @@ module FrostThaw
     log("stage_strangers_pass: #{e.message}")
   end
 
-  # SC 1.02 - The woman in frost-furs, then SC 1.03 - Five cold things
+  #-----------------------------------------------------------------------------
+  # SC 1.02 - The woman in frost-furs. Purpose: a cold that isn't weather looks
+  # at each stranger and at you, and the room goes quiet; then someone asks you
+  # to sit. It ends on your input: you choose whom to sit with (notes/01 E15).
+  #-----------------------------------------------------------------------------
   def scene_tavern_convergence
-    outsider = journey? || herald?(:wyn)
     say(["A fire that barely warms. Five strangers at five tables."])
     # Meat Meat is in the room before the woman comes in (context/01.md HB3).
     if herald?(:meat_meat)
@@ -236,69 +261,144 @@ module FrostThaw
            "(The smuggler smells like the sea. Meat Meat decides not to bite the smuggler. Yet.)"])
     end
     stage_frost_furs_enters
-    ma = Stage.find("Barkeep")
-    say(["MA YARBROUL: Drinks are on the house, ducks. Please leave tomorrow.",
+    ma = Stage.find("Ma Yarbroul")
+    Stage.turn_to(ma) if ma
+    say(["The barkeep, a grey-haired woman they call Ma Yarbroul, sets out cups with shaking hands.",
+         "MA YARBROUL: Drinks are on the house, ducks. Please leave tomorrow.",
          as(:alberica, "Free drinks. See? The night's turning around already."),
          as(:reptin, "(to the barkeep) That's very generous, thank you. We'll be gone by noon."),
          as(:reptin, "Probably. Ask me again after the drinks.")], ma && ma.id)
-    Stage.pan_to(10, 8)              # the whole room in view: you by the door, Shimmer by the far wall
-    say(["SHADE: Well. That was a terrible omen. I'm Shade.", "SHADE: This is my sister, Shimmer. We're in shipping.",
-         "SHIMMER: Smuggling.",
-         "SHADE: Smuggling is a kind of shipping."])
-    if herald?(:meat_meat)
-      speak(:meat_meat, "Meat Meat.", "...Meat Meat.")
-      say(["SHADE: ...Is that one name or two?",
-           as(:meat_meat, "One name. Twice. So nobody forgets Meat Meat.")])
+    # Nobody says what they all just saw (dialogue/01 §3). The whole room in
+    # view: you by the door, Shimmer by the far wall (notes/01 E5).
+    Stage.pan_to(10, 8)
+    say(["SHADE: Anyone want to say what that was?", "SHIMMER: No."])
+    if !herald?(:meat_meat)
+      shade = Stage.find("Shade")
+      Stage.emote(shade, :exclaim) if shade
+      say(["SHADE: (to you) You. By the door. Sit down before you fall down."])
     end
-    speak(:alberica, "Alberica. I sing, I drink, and I'm told I'm a terrible influence.",
-          "...Alberica. I sing.")
-    # The recognition: only the player knows who these five are (context/01.md B2, HB1).
-    if outsider
-      Stage.emote($game_player, :exclaim)
-      Stage.turn_to($game_player, Stage.find("Alberica"))
-      say([journey? ? "Alberica. The one with the lute, on Hellen's wall." :
-                      "(Alberica. With the lute. ...Oh. Oh, no. I know this song.)"])
+    Stage.pan_back
+    set_flag(:tavern_woman)
+    state[:goal] = tavern_goal
+  end
+
+  # The five you can sit with: each table is one conversation (Shade and
+  # Shimmer are one table's worth: they came in together). Your own Herald's
+  # introduction plays when the last of the others has spoken.
+  TAVERN_TALKS = %i[alberica reptin alerion shade]
+
+  def tavern_left
+    TAVERN_TALKS.reject { |k| herald?(k) || flag?(:"tav_#{k}") }
+  end
+
+  def tavern_goal
+    names = tavern_left.map { |k| k == :shade ? "Shade and Shimmer" : k.to_s.capitalize }
+    return nil if names.empty?
+    "Meet the strangers at their tables: #{names.join(', ')}."
+  end
+
+  # A Herald at their table in Three Flags Sailing (SC 1.03, one conversation
+  # at a time). The first time: who they are and the cold thing they carry.
+  # After that: what they say to someone they've met (their old table lines).
+  def tavern_table(who, event_id = nil)
+    key = who == :shimmer ? :shade : who
+    return say(lines_for(:"npc_#{who}"), event_id) if !flag?(:tavern_woman) || flag?(:met_party)
+    if flag?(:"tav_#{key}")
+      return say(lines_for(:"npc_#{who}"), event_id)
     end
-    say(["She sets a pendant of black ice on the table.",
-         as(:alberica, "I threw this in the sea three weeks ago. It came back."),
-         as(:alberica, "Most things I throw out don't come back. Men, mostly."),
-         as(:reptin, "Reptin. I talk us into places and, now and then, out of them."),
-         journey? ? "Reptin. The wolf." : nil,
-         "A frost-etched medallion, beside the pendant.",
-         as(:reptin, "Someone left this for me. No name, no note. Rude, frankly."),
-         "A silver ring, rimed white, beside that.",
-         as(:alerion, "Alerion. It was on a dock rail. It's cold. That's all I know."),
-         herald?(:alberica) ? "(That's all? Pretty boy, you have to give us more than that.)" :
-                              "ALBERICA: That's all? Pretty boy, you have to give us more than that."].compact)
-    speak(:alerion, "No I don't.", "...That's all I have. Sorry.")
-    say(["SHADE: And this turned up in my boot. I don't own boots this nice.",
-         "A pale dagger, smoking with cold.",
-         "SHIMMER: I've got a stone. It's under my ribs. Don't ask.",
-         as(:alberica, "Oh, now I have to ask."),
-         "SHIMMER: Don't.",
-         "Old things, cold things. Relics, the Dale calls them."])
+    set_flag(:"tav_#{key}")
+    tavern_intro(key)
+    if tavern_left.empty?
+      tavern_closing
+    else
+      state[:goal] = tavern_goal
+    end
+  end
+
+  # SC 1.03, one table: a name, a cold thing set down, and the line that
+  # makes them who they are. Lines another Herald answers are spoken (speak).
+  def tavern_intro(key)
+    me = herald?(key)
+    case key
+    when :alberica
+      ev = me ? nil : Stage.find("Alberica")
+      if ev
+        Stage.turn_to(ev)
+        Stage.hop(ev)
+      end
+      speak(:alberica, "Alberica. I sing, I drink, and I'm told I'm a terrible influence.", "...Alberica. I sing.")
+      # The recognition: only the player knows who these five are (context/01.md B2, HB1).
+      if outsider? && ev
+        Stage.emote($game_player, :exclaim)
+        Stage.turn_to($game_player, ev)
+        say([journey? ? "Alberica. The one with the lute, on Hellen's wall." :
+                        "(Alberica. With the lute. ...Oh. Oh, no. I know this song.)"])
+      end
+      say([me ? "You set a pendant of black ice on the table." : "She sets a pendant of black ice on the table.",
+           as(:alberica, "I threw this in the sea three weeks ago. It came back.")])
+      Stage.hop(ev) if ev
+      say([as(:alberica, "Most things I throw out don't come back. Men, mostly.")])
+    when :reptin
+      ev = me ? nil : Stage.find("Reptin")
+      Stage.turn_to(ev) if ev
+      say([as(:reptin, "Reptin. I talk us into places and, now and then, out of them."),
+           journey? ? "Reptin. The wolf." : nil,
+           me ? "You set a frost-etched medallion on the table." : "He sets a frost-etched medallion on the table.",
+           as(:reptin, "Someone left this for me. No name, no note. Rude, frankly.")].compact)
+    when :alerion
+      ev = me ? nil : Stage.find("Alerion")
+      Stage.turn_to(ev) if ev
+      say([me ? "Your silver ring sits on the table, rimed white." : "A silver ring sits on the table in front of him, rimed white.",
+           as(:alerion, "Alerion. It was on a dock rail. It's cold. That's all I know.")])
+      alb = Stage.find("Alberica")
+      Stage.turn_to(alb, ev || $game_player) if alb
+      speak(:alberica, "That's all? Pretty boy, you have to give us more than that.", "...That's all?")
+      speak(:alerion, "No I don't.", "...That's all I have. Sorry.")
+    when :shade
+      shade = Stage.find("Shade")
+      shimmer = Stage.find("Shimmer")
+      Stage.turn_to(shade) if shade
+      Stage.turn_to(shimmer) if shimmer
+      say(["SHADE: Well. That was a terrible omen. I'm Shade.", "SHADE: This is my sister, Shimmer. We're in shipping.",
+           "SHIMMER: Smuggling.",
+           "SHADE: Smuggling is a kind of shipping."])
+      if herald?(:meat_meat)
+        speak(:meat_meat, "Meat Meat.", "...Meat Meat.")
+        say(["SHADE: ...Is that one name or two?",
+             as(:meat_meat, "One name. Twice. So nobody forgets Meat Meat.")])
+      end
+      say(["SHADE: And this turned up in my boot. I don't own boots this nice.",
+           "A pale dagger, smoking with cold.",
+           "SHIMMER: I've got a stone. It's under my ribs. Don't ask."])
+      alb = Stage.find("Alberica")
+      Stage.turn_to(alb, shimmer || $game_player) if alb
+      speak(:alberica, "Oh, now I have to ask.", "...Now I have to ask.")
+      say(["SHIMMER: Don't."])
+    end
+  end
+
+  # SC 1.03, the close: once you've sat with each of them, the relics hum
+  # together and the five decide to go to Epheris together. Purpose: the five
+  # strangers (and you) become a party, and you choose how much to tell them.
+  def tavern_closing
+    Stage.theme(:heralds)
+    tavern_intro(herald) if herald && TAVERN_TALKS.include?(herald)     # your own, now theirs are said
+    say(["Old things, cold things. Relics, the Dale calls them."])
     stage_relics_hum
-    say(["Four relics on the table, and the stone under Shimmer's ribs makes five.", "They hum together, like a chord.",
-         as(:reptin, "They know each other. That's either very good news or the start of a ghost story."),
-         as(:alerion, "Ghost story."),
+    say(["Four relics on four tables. The stone under Shimmer's ribs makes five.",
+         "They hum together, like a chord."])
+    speak(:reptin, "They know each other. That's either very good news or the start of a ghost story.",
+          "...Good news, or a ghost story.")
+    say([as(:alerion, "Ghost story."),
          as(:alberica, "I don't need it to make sense. I need it to stop."),
          as(:alberica, "...And I need another drink.")])
-    if outsider
+    if outsider?
       say([journey? ? "...They're the Heralds. And nobody's carved them yet." :
                       "(Every lantern in Rootspire is lit for them. They're sitting by the worst fire in Targos.)",
            "SHADE: (to you) And you? You came off no ship I saw."])
       c = pbMessage(_INTL("What do you do?"), [_INTL("Show your Pokémon"), _INTL("\"I'm from somewhere else.\""), _INTL("Say nothing")], -1)
       case c
-      when 1
-        say([as(:alerion, "Clearly."),
-             as(:alberica, "Ignore him, he's like that with everyone. It's part of the charm. Allegedly.")])
-        set_flag(:told_somewhere)
-      when 2
-        say(["SHIMMER: Good. Keep doing that.",
-             as(:alberica, "She likes you. That's how you can tell.")])
-        set_flag(:told_nothing)
-        set_flag(:shimmer_warm)
-      else
+      when 0
         mon = ($Trainer.party[0] rescue nil)
         if mon
           Stage.cry(mon.species)
@@ -306,7 +406,16 @@ module FrostThaw
         end
         say([as(:reptin, "Good instinct. Nobody distrusts someone with a Pokémon that cute."),
              as(:reptin, "(to your Pokémon) Hello, little ambassador.")])
+        set_flag(:showed_pokemon)
+      when 1
+        say([as(:alerion, "Clearly."),
+             as(:alberica, "Ignore him, he's like that with everyone. It's part of the charm. Allegedly.")])
+        set_flag(:told_somewhere)
+      else
+        say(["SHIMMER: Good. Keep doing that.",
+             as(:alberica, "She likes you. That's how you can tell.")])
         set_flag(:told_nothing)
+        set_flag(:shimmer_warm)
       end
     end
     # Meat Meat's want, said to people who can help.
@@ -318,30 +427,59 @@ module FrostThaw
     say(["SHADE: Relic dealer by the south-west wall. Epheris. He's cheated better people than us."])
     speak(:reptin, "Leave the talking to me. Epheris will love me. Everybody does, eventually.",
           "I'll talk to him. Politely.")
-    say([as(:alerion, "Everybody leaves eventually, too."),
-         as(:alberica, "(raising a mug) To bad omens and free drinks."),
-         herald?(:alerion) ? "Shimmer touches her mug to Alberica's without looking up. After a moment, so do you." :
-                             "Shimmer touches her mug to Alberica's without looking up. Alerion, after a moment, does too."])
+    say([as(:alerion, "Everybody leaves eventually, too.")])
+    if herald?(:alberica)
+      say(["You raise a mug."])
+      speak(:alberica, "To bad omens and free drinks.", "...To bad omens.")
+    else
+      say(["ALBERICA: (raising a mug) To bad omens and free drinks."])
+    end
+    say([herald?(:alberica) ? "Shimmer touches her mug to yours, not looking up. Alerion, after a moment, does too." :
+         herald?(:alerion) ? "Shimmer touches her mug to Alberica's, not looking up. After a moment, so do you." :
+                             "Shimmer touches her mug to Alberica's, not looking up. Alerion, after a moment, does too."])
     # Together, then: the one who'd organise it says so, and the five walk out
     # ahead of you (context/01.md B3).
     shade = Stage.find("Shade")
     Stage.hop(shade) if shade
     say(["SHADE: Nobody walks Targos alone tonight. Epheris first, all of us."])
     Stage.leave_all(%w[Alberica Reptin Alerion Shade Shimmer].map { |n| Stage.find(n) }.compact, 6, 12)
-    Stage.pan_back
     pbSEPlay("Door exit") rescue nil
+    Stage.theme(nil)
     state[:companions] = [:alberica, :reptin, :alerion, :shade, :shimmer]
-    state[:goal] = "Ask Epheris, the relic dealer, what the relics are."
+    state[:goal] = "Ask Epheris the relic dealer about the relics. His shop's by the south-west wall."
     set_flag(:met_party)
     set_switch(SW_PARTY_FORMED, true)
+  end
+
+  # The tavern door before you've met them all: somebody calls you back (a
+  # person as the gate, WRITING_GUIDE §9a).
+  def tavern_door(event_id = nil)
+    return if flag?(:met_party)
+    shade = Stage.find("Shade")
+    Stage.emote(shade, :exclaim) if shade
+    say(["SHADE: (across the room) Out in that? You'd be ice by the gate. Sit with us a while."])
+    Stage.walk($game_player, PBMoveRoute::Up)
+  end
+
+  # The first step outside after the meeting: the menu tip, now that the five
+  # are the people with you (dialogue/01 §3: not over the toast).
+  def heralds_tip_due?
+    active? && flag?(:met_party) && !flag?(:heralds_tip) && $game_map && $game_map.map_id == 2001
+  end
+
+  def heralds_tip
+    set_flag(:heralds_tip)
     say(["(Tip: choose Heralds in the menu to hear what your companions think, wherever you are.)"])
   end
 
   # SC 1.02, staged: the woman in frost-furs walks in, looks at each of them,
-  # and goes out as frost (P-AUR-04, B-06, E-01).
+  # and goes out as frost (P-AUR-04, B-06, E-01). The music dies when the door
+  # opens and comes back when it shuts (notes/01 E9).
   def stage_frost_furs_enters
     s = Stage
+    pbBGMFade(0.6) rescue nil
     pbSEPlay("Door exit") rescue nil
+    pbSEPlay("Wind1", 70) rescue nil
     $game_screen.start_flash(Color.new(220, 235, 255, 120), 10) rescue nil
     auril = s.actor(:auril_furs, 6, 12, 8)
     say(["The door opens and lets the night in. A woman in furs that shine with frost."])
@@ -350,15 +488,14 @@ module FrostThaw
              PBMoveRoute::Right, PBMoveRoute::Right)
     end
     say(["She doesn't go to the bar. She doesn't go to the fire."])
-    %i[alberica reptin alerion shimmer].each do |k|
+    %i[alberica reptin alerion shade shimmer].each do |k|
       ev = herald?(k) ? $game_player : s.find(k.to_s.capitalize)
       next if !ev
       s.face(auril, ev.x < auril.x ? 4 : ev.x > auril.x ? 6 : (ev.y < auril.y ? 8 : 2)) if auril
       s.balloon(ev, "B-06")
       s.wait(14)
     end
-    say(["She looks at each of them in turn.",
-         [herald?(:alberica) ? "Your hand goes to your throat." : "Alberica's hand goes to her throat.",
+    say([[herald?(:alberica) ? "Your hand goes to your throat." : "Alberica's hand goes to her throat.",
           herald?(:reptin) ? "Your medallion fogs." : "Reptin's medallion fogs."].join(" "),
          [herald?(:alerion) ? "Your ring cracks with rime." : "Alerion's ring cracks with rime.",
           "Shimmer stops breathing."].join(" ")])
@@ -368,10 +505,13 @@ module FrostThaw
       s.balloon($game_player, "B-06")
       s.wait(30)
     end
-    outsider = journey? || herald?(:wyn)
-    say(["Then she looks at you.", "She tilts her head, like you're a word in a language she almost knows."]) if outsider
-    say(["She looks at you last, and longest."]) if herald? && !herald?(:wyn)
-    say(["She smiles. Not warm. Not kind."])
+    pbSEPlay("Ice5", 60) rescue nil                      # the cold sting, for her look
+    if outsider?
+      say(["Then she looks at you.", "She tilts her head, like you're a word in a language she almost knows."])
+    else
+      say(["She looks at you last, and longest."])
+    end
+    say(["She smiles at you. Only at you."])
     if auril
       s.fx("E-01", auril, frames: 10, hold: true, wait: false)
       s.pose(auril, "P-AUR-04", 0, per: 7)
@@ -379,6 +519,7 @@ module FrostThaw
       s.wait(20)
     end
     say(["The frost stays on the floor where she stood. The door swings shut on nothing."])
+    s.theme(nil)
     s.cleanup
   rescue StandardError => e
     log("stage_frost_furs_enters: #{e.message}")
@@ -409,21 +550,47 @@ module FrostThaw
     say(["MA YARBROUL: Leaving at first bell, by the look of you. There's no first light. Not here.",
          "MA YARBROUL: One more night by the fire?"], event_id)
     return if !pbConfirmMessage(_INTL("Rest at Three Flags Sailing?"))
-    pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    # Night, and the five round the dying fire, on screen (notes/01 E11).
+    rest = {}
+    begin
+      pbFadeOutIn do
+        $Trainer.heal_party
+        $game_screen.start_tone_change(Tone.new(-70, -70, -20, 40), 0) rescue nil
+        $game_player.moveto(8, 8) rescue nil
+        $game_player.turn_up rescue nil
+        { alberica: [5, 9, 6], alerion: [6, 9, 8], reptin: [7, 9, 8], shimmer: [10, 7, 4], shade: [11, 7, 4] }.each do |k, (x, y, d)|
+          next if herald?(k) || !companions.include?(k)
+          rest[k] = Stage.actor(k, x, y, d)
+        end
+      end
+    rescue StandardError
+      $Trainer.heal_party rescue nil
+    end
     long_rest_taken if respond_to?(:long_rest_taken)
-    say(["Late. The fire's down to coals.",
-         as(:alberica, "(stretched out along a bench) Night, pretty boy. Dream of me."),
-         as(:alerion, "I don't dream."),
-         as(:alberica, "Then think of me. Same thing, done awake."),
-         as(:reptin, "(face in his cloak) Goodnight, everyone. Please. Goodnight."),
-         "Across the hearth, Shimmer turns a little carved wooden cat over and over in her fingers.",
+    say(["Late. The fire's down to coals."])
+    speak(:alberica, "(stretched out along a bench) Night, pretty boy. Dream of me.", "...Night, pretty boy.")
+    speak(:alerion, "I don't dream.", "...I don't.")
+    say([as(:alberica, "Then think of me. Same thing, done awake."),
+         as(:reptin, "(face in his cloak) Goodnight, everyone. Please. Goodnight.")])
+    Stage.face(rest[:shimmer], 2) if rest[:shimmer]
+    say(["Across the hearth, Shimmer turns a little carved wooden cat over and over in her fingers.",
          "SHADE: She does that when she's scared.",
          "SHIMMER: I'm not scared. I'm counting.",
          "SHIMMER: Shade carved it when we were kids. Terrible cats. Shade always wanted to be one.",
          "SHADE: I still do. Cats land on their feet.",
-         "SHIMMER: Cats get nine lives. You've used about six.",
-         "SHADE: (quietly) Saltmarsh was one of them. Yours, not mine.",
+         "SHIMMER: Cats get nine lives. You've used about six."])
+    Stage.turn_to(rest[:shade], rest[:shimmer]) if rest[:shade] && rest[:shimmer]
+    say(["SHADE: (quietly) Saltmarsh was one of them. Yours, not mine.",
          "SHIMMER: ...Go to sleep, Shade."])
+    begin
+      pbFadeOutIn do
+        Stage.cleanup
+        $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
+      end
+    rescue StandardError
+      Stage.cleanup rescue nil
+      $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
+    end
     set_flag(:heard_of_glimmer)
     state[:goal] = TARGOS_ROAD_GOAL if state[:goal] == TARGOS_REST_GOAL
   end
@@ -443,31 +610,35 @@ module FrostThaw
     say(["NAERTH: Everyone would. #{count} strangers in a blizzard. Shall we speak plainly?",
          "NAERTH: Here is how Targos works. Everyone owes me something.",
          "NAERTH: Each new moon, Targos draws a name. So do Bryn Shander and Easthaven.",
-         as(:reptin, "(quietly) And everyone thanks him for the privilege. Charming.")], event_id)
+         as(:reptin, "(to Shimmer) And everyone thanks him for the privilege. Charming.")], event_id)
     # What the lottery is for, and whose name it is (context/01.md B4).
     if journey?
       say(["NAERTH: Whoever's drawn walks out onto the ice, for Auril."], event_id)
       Stage.emote(naerth, :question) if naerth
-      say(["NAERTH: (to you) You don't know Auril? Where did you say you were from?",
-           "SHIMMER: Somewhere warm. Leave it.",
+      say(["NAERTH: (to you) You don't know Auril? Where did you say you were from?"], event_id)
+      # Your answer, and Shimmer steps in front of it either way (context/01.md B4).
+      c = pbMessage(_INTL("You say..."), [_INTL("\"Far away.\""), _INTL("Nothing.")], -1)
+      say([c == 0 ? "SHIMMER: Very far. Somewhere warm. Leave it." : "SHIMMER: Somewhere warm. Leave it.",
            "NAERTH: Auril. The Frostmaiden. Winter's own goddess. She's had two years of names."], event_id)
     else
       say(["NAERTH: Whoever's drawn walks onto the ice, for Auril, winter's goddess. Two years now."], event_id)
     end
     say(["NAERTH: Some people pay to keep their names off the board. Lately, they get found. Frozen.",
          "NAERTH: By a man who doesn't feel the cold.",
-         "SHIMMER: Sephek.",
-         "NAERTH: ...You know his name. Interesting.",
+         "SHIMMER: (very still) Sephek."], event_id)
+    Stage.emote(naerth, :exclaim) if naerth
+    say(["NAERTH: ...You know his name. Interesting.",
          "NAERTH: My seal says you aren't running. Earn it. Town Hall. I'll be waiting.",
-         journey? && flag?(:glass_read) ? "NAERTH: And the stray wants Dougan's Hole. Everyone wants something." : nil,
-         as(:alberica, "Men like him are always waiting. It's the only exercise they get."),
-         herald?(:meat_meat) ? "(The gate. Razzy got out. Razzy is small. Meat Meat is not small enough.)" : nil].compact,
+         journey? && flag?(:glass_read) ? "NAERTH: And the stray wants Dougan's Hole. Everyone wants something." : nil].compact,
         event_id)
     set_flag(:naerth_terms)
     state[:goal] = flag?(:relics_are_lures) ? "Win Speaker Naerth's seal at the Town Hall. It opens the south-west gate." :
                                               "Ask Epheris what the relics are, then win Naerth's seal at the Town Hall."
     set_switch(SW_NAERTH_TERMS, true)
+    # He walks out on "I'll be waiting", and Alberica says it to his back (notes/01 E7).
     Stage.leave(naerth, 9, 12) if naerth && Stage.map?   # off to the Town Hall, ahead of you
+    say([as(:alberica, "Men like him are always waiting. It's the only exercise they get."),
+         herald?(:meat_meat) ? "(The gate. Razzy got out. Razzy is small. Meat Meat is not small enough.)" : nil].compact)
   end
 
   def apply_chapter1_switches
@@ -520,9 +691,8 @@ module FrostThaw
       say([as(:reptin, "Thank you, Speaker. We'll treasure it."),
            as(:reptin, "(quietly) Right up to the gate.")], event_id)
       pbReceiveItem(:TM46) rescue nil
-      say(["NAERTH: That TM teaches Thief. Fitting, for this town.",
-           "NAERTH: One more thing, free.",
-           "NAERTH: A lady in a tower pays very well for cold trinkets like yours.",
+      say(["NAERTH: That TM teaches Thief. Every child in Targos knows it. Now you do.",
+           "NAERTH: One more thing, free. A lady in a tower pays well for cold trinkets like yours.",
            "NAERTH: Pale. Books and bones. If you meet her, you never met me.",
            as(:alerion, "We never met you. That part's easy.")], event_id)
       naerth_splicers(event_id)
@@ -636,3 +806,13 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("Chapter 1 switches failed: #{err.message}")
   end
 }
+
+if Events.respond_to?(:onStepTaken)
+  Events.onStepTaken += proc { |_sender, _e|
+    begin
+      FrostThaw.heralds_tip if FrostThaw.heralds_tip_due?
+    rescue StandardError => err
+      FrostThaw.log("Heralds tip failed: #{err.message}")
+    end
+  }
+end

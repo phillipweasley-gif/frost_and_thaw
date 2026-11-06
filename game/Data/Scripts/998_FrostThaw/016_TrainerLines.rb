@@ -13,7 +13,9 @@ module FrostThaw
     tavern_brawler:   "GORM: That's my stool you're eyeing, stranger. Fight me for it.",
     zhent_thug_1:     "DASK: Strangers in the Luskan Arms. The Speaker likes to know what strangers are made of.",
     zhent_thug_2:     "VEY: Lost, are we? Let me show you how Targos treats people who wander.",
-    hall_enforcer_2:  "ILSA: Zhentarim. Nobody sees the Speaker without getting past us first.",
+    # Before Naerth has asked for you, there's no Speaker in the hall to see (notes/01 E22).
+    hall_enforcer_2:  -> { FrostThaw.flag?(:naerth_terms) ? "ILSA: Zhentarim. Nobody sees the Speaker without getting past us first." :
+                                                            "ILSA: Speaker's at the Arms tonight. You can still try getting past me." },
     hall_enforcer_1:  "CORRIN: Naerth said to test anyone who came looking for his seal. This is the test.",
     hall_dealer:      "MARA: Care to play a hand? House rules: my Pokémon against yours. The house always wins.",
     # --- Chapter 2: the road to Bryn Shander ------------------------------------------
@@ -80,6 +82,7 @@ module FrostThaw
 
   def trainer_intro(key, event_id = nil)
     line = TRAINER_INTROS[key]
+    line = line.call if line.respond_to?(:call)
     say([line], event_id) if line
   end
 end

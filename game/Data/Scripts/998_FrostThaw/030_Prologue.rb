@@ -164,7 +164,7 @@ module FrostThaw
     pbSEPlay("Exit Door") rescue nil
     say(["Tamsin's gone, toast in their teeth.",
          "(Your first Pokémon is at the College, top of the tree. The root-lift's in the market.)"])
-    state[:goal] = "Go up to the College for your first Pokémon. The root-lift's by the big stair, north."
+    state[:goal] = "Your first Pokémon is at the College. The root-lift's by the big stair, north."
     set_flag(:intro_started)
     set_switch(SW_PRO_MORNING, true)
     Stage.cleanup

@@ -33,7 +33,7 @@ module FrostThaw
       return say(["WIDOW: ...Alive? He's alive? Out on the ice at Dougan's Hole, all this time?",
                   "WIDOW: He said to keep the lamp lit. He always says that. He always says that.",
                   "She's laughing and crying at once.",
-                  "By the door, the little Spheal wriggles. It would be wagging, if it had a tail."], event_id)
+                  "Your Spheal's Poké Ball rocks on your belt. It would be wagging, if it had a tail."], event_id)
     end
     if flag?(:widow_told)
       return say(["WIDOW: The lamp's lit. Every night, until he's home. Thank you. Thank you."], event_id)
@@ -42,13 +42,42 @@ module FrostThaw
       return say(["WIDOW: My husband's Spheal... is she well? Good. He'd have liked you."], event_id)
     end
     say(lines_for(:fisher_widow), event_id)
-    if pbAddPokemon(:SPHEAL, 6)
+    # The Spheal by the door comes to you, and she's a she (notes/01 E12, E26).
+    pet = Stage.find("Spheal")
+    if pet
+      Stage.cry(:SPHEAL)
+      Stage.approach(pet)
+    end
+    pkmn = (Pokemon.new(:SPHEAL, 6) rescue nil)
+    pkmn.makeFemale rescue nil if pkmn
+    if pbAddPokemon(pkmn || :SPHEAL, 6)
       set_flag(:widow_spheal)
+      if pet
+        set_self_switch(pet.id, "A")
+        pet.erase rescue nil
+      end
+      # Her husband vanished where the compass points (notes/01 S3).
+      sayc([flag?(:relics_are_lures) ? cl(:reptin, "Dougan's Hole. Where the compass points.") : nil])
     else
       say(["WIDOW: Oh... you've no room for her. Come back when you do."], event_id)
     end
   rescue StandardError => e
     log("widow_gift failed: #{e.message}")
+  end
+
+  # The Spheal by the cottage door, before she's yours.
+  def widow_spheal_pet(event_id = nil)
+    Stage.cry(:SPHEAL)
+    say(["The Spheal by the door looks past you, at the door. Waiting for somebody."])
+  end
+
+  # Kip calls out once as you pass his alley (notes/01 S7).
+  def kip_passby
+    return if flag?(:kip_hint) || flag?(:met_kip)
+    set_flag(:kip_hint)
+    kip = Stage.find("Kip")
+    Stage.emote(kip, :exclaim) if kip
+    say(lines_for(:kip_hint), kip && kip.id)
   end
 
   # --- Epheris's cataloguer (the Pokédex) ---------------------------------------------
@@ -64,22 +93,25 @@ module FrostThaw
     end
     Stage.arrive(%i[reptin alberica alerion shimmer shade], 9, 11)   # all of you, through the door (context/01.md B6)
     say(["EPHERIS: Put those down. Not on the counter. On the floor.",
-         as(:reptin, "(setting the medallion down very gently) Of course. So sorry. Is the floor also cursed?"),
+         herald?(:reptin) ? "You set your medallion on the floor, very gently." :
+                            "Reptin sets his medallion on the floor, very gently.",
+         as(:reptin, "Of course. So sorry. Is the floor also cursed?"),
          "EPHERIS: Five cold trinkets. All found where you'd find them, right when you'd find them.",
-         "EPHERIS: That's not luck. That's bait.",
-         as(:alberica, "Bait for what?"),
-         "EPHERIS: For you. Somebody wanted you here.",
+         "EPHERIS: That's not luck. That's bait."], event_id)
+    speak(:alberica, "Bait? I've been called a lot of things, but bait?", "...Bait?", event_id)
+    say(["EPHERIS: Not you. The trinkets are the bait. You're the fish. Somebody wanted you here.",
          "He holds a compass needle over the pendant. It swings south-east, and stays there.",
-         "EPHERIS: And they want you closer still. South-east is Dougan's Hole.",
+         "EPHERIS: And closer still. South-east. Dougan's Hole. I'd go anywhere else.",
          "EPHERIS: Nothing in Dougan's Hole but ice, and people who don't like you.",
-         as(:alerion, "Someone went to a lot of trouble."),
-         herald?(:alberica) ? "(Pretty boy's right. Nobody leaves me presents unless they want something.)" :
-                              "ALBERICA: Pretty boy's right. Nobody leaves me presents unless they want something.",
+         flag?(:widow_spheal) ? as(:reptin, "The fisher's widow said her husband went out there.") : nil,
+         as(:alerion, "Five of us, three ships, one night. Someone paid a lot of captains."),
+         as(:alberica, "Nobody leaves me presents unless they want something back."),
          "SHIMMER: Then that's where they collect."].compact, event_id)
     # What Epheris sees in Alberica's pendant, the first time (context/01.md HB4).
     if herald?(:alberica)
-      say(["EPHERIS: (to you) That pendant. Put it away, and don't take it out in this town again.",
-           "EPHERIS: Black ice that never melts. The Brotherhood would kill for it. I was one."], event_id)
+      say(["EPHERIS: (to you) That pendant. Put it away, and don't take it out in this town again."], event_id)
+      say(["(Charming. He's looking at it like it bites.)"])
+      say(["EPHERIS: Black ice that never melts. The Brotherhood would kill for it. I was one."], event_id)
     end
     # Six people, five trinkets: the one with no lure (context/01.md HB3).
     if herald?(:meat_meat)
@@ -182,7 +214,7 @@ module FrostThaw
     $game_switches[sw] = true                     # a spar never costs you money
     won = pbTrainerBattle(info[:type], info[:name], nil, false, 0, true)
     $game_switches[sw] = old
-    say([won ? info[:win] : info[:loss]], event_id)
+    say([info[:loss]], event_id) if !won          # (the win line already played in the battle)
     add_counter(:spars_won) if won
     won
   rescue StandardError => e
@@ -479,9 +511,14 @@ module FrostThaw
       say(["EPHERIS: Five cold trinkets and one cold shard, all pointing at the same old woman. I'd call that a pattern.",
            "EPHERIS: Glass that brought you might take you back. If you find the mirror it broke from."], event_id)
     end
-    sayc([cl(:reptin, "(to you) Then we're going the same way, dear. Walk with us, and argue on the way."),
+    welcome = if flag?(:told_somewhere) then "(to you) So \"somewhere else\" has a door. Then we're going the same way."
+              elsif flag?(:showed_pokemon) then "(to your Pokémon) Then we're going the same way, little ambassador."
+              else "(to you) Then we're going the same way, dear. Walk with us, and argue on the way."
+              end
+    sayc([cl(:reptin, welcome),
+          flag?(:shimmer_warm) ? cl(:shimmer, "And you still don't have to say where you're from.") : nil,
           cl(:shade, "Five relics and a stray with a shard. Somebody's collecting.")])
-    side_goal(:way_home, "Your own: the hag's mirrors at Dougan's Hole. The glass you fell through broke from one.",
+    side_goal(:way_home, "Your own: the hag's mirrors at Dougan's Hole. Your glass broke from one.",
               done: :reversal)
   end
 end

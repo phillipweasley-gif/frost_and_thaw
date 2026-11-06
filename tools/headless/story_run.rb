@@ -286,19 +286,31 @@ module Story
       beat("through the lantern", :fell_through)
     end
 
+    # SC 1.03: you meet the five by sitting at each table (Shade's covers Shimmer).
+    def tavern_tables
+      %w[Alberica Reptin Alerion Shade].each do |n|
+        break if FrostThaw.flag?(:met_party)
+        ev = find_event(/\A#{n}\z/)
+        next if !ev || ev.character_name.to_s.empty?
+        talk(/\A#{n}\z/)
+        HL.settle(3000)
+      end
+    end
+
     def run
       prologue
       return if ENV["STOP_AT"] == "0"
       fit(14)
       beat("arrive in Targos", :arrived_targos)
       travel(2002); HL.frames(20); HL.settle(3000)
+      tavern_tables
       beat("meet the party at Three Flags Sailing", :met_party)
       travel(2001)
       travel(2008); talk(/Widow/); travel(2001)
       beat("the widow's Spheal", :widow_spheal)
       travel(2006); talk(/Epheris/); travel(2001)
       beat("Pokédex from Epheris", :got_pokedex)
-      travel(2003); talk(/Trapper/); travel(2001)
+      travel(2001); talk(/Trapper/)
       beat("snowshoes from the trapper", :got_snowshoes)
       sweep("start of the game") if ENV["SWEEP"]
       fit(16)

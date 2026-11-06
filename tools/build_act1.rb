@@ -135,8 +135,11 @@ b.door(34, 34, ID[:hut_b], 9, 11, 8, name: "Door Fisher's Cottage")
 b.door(16, 37, ID[:hut_c], 9, 11, 8, name: "Door Lantern House")
 b.door(41, 34, 2124, 9, 11, 8, name: "Door Velryn")
 # "Mountain Climb": Boy, Garret Velryn's sled dog, runs loose in the streets with a broken harness
+# He paces a few steps up and down the lower street (no longer a chase across
+# town) and runs into you: touching him, or him touching you, starts it (notes/01 S2).
 b.event(18, 30, "Boy", [
-  { graphic: "Followers/MIGHTYENA", direction: 4, move_type: 1, move_frequency: 2, move_speed: 3, step_anime: true,
+  { graphic: "Followers/MIGHTYENA", direction: 4, trigger: 2, step_anime: true, move_speed: 3, move_frequency: 3,
+    move_route: [[2, []], [2, []], [15, [30]], [3, []], [3, []], [15, [30]]],
     script: "FT.boy_sled_dog(@event_id)" },
   { switch: 4043, graphic: "", through: true }
 ])
@@ -144,6 +147,7 @@ b.cutscene(33, 20, :targos_arrival)                                    # the shi
 b.npc(8, H - 4, "BWPoliceman", :targos_gate_guard, dir: 2)
 b.npc(9, H - 4, "BWPoliceman", :targos_gate_guard, dir: 2)
 b.npc(35, 27, "BWFisherman", :orvus_hollowgale, dir: 4)
+b.event(31, 26, "Trapper", [{ graphic: "BW (35)", direction: 6, script: "FT.snowshoes(@event_id)" }])
 b.npc(12, 15, "BW (38)", :targos_cold_talk, move: 1)
 b.npc(28, 31, "BW (54)", :targos_sacrifice_talk, move: 1)
 b.npc(22, 19, "BW (62)", :targos_lake_talk, dir: 6)
@@ -166,6 +170,7 @@ b.sign(12, 10, :targos_sign_ring)
 end
 # Kip's Cups: a shell game in the alley between the Pokémon Center and the Luskan Arms
 b.event(20, 27, "Kip", [{ graphic: "BWPunkGuy", direction: 2, script: "FT.cup_game(@event_id)" }])
+[[20, 30], [20, 31]].each { |x, y| b.event(x, y, "Kip's alley", [{ trigger: 1, through: true, script: "FT.kip_passby" }]) }
 seal_edges(b)
 save(b, :targos)
 
@@ -173,15 +178,22 @@ save(b, :targos)
 # 2002: the Three Sails (Celadon Café layout: one whole, warm room)
 t, ex = Builder.from_existing(768)
 exits_to(t, ex, 15, 18)
-t.event(3, 6, "Barkeep", [{ graphic: "BW (53)", direction: 6, script: "FT.barkeep(@event_id)" }])
-# The five sit at their tables until they've met (SC 1.03); then they travel with you,
-# so their tavern selves are gone (switch 3961).
-[t.npc(9, 8, "FT_alberica", :npc_alberica, dir: 2, hide_switch: SW[:alberica], name: "Alberica"),
- t.npc(10, 10, "FT_reptin", :npc_reptin, dir: 4, hide_switch: SW[:reptin], name: "Reptin"),
- t.npc(13, 5, "FT_alerion", :npc_alerion, dir: 4, hide_switch: SW[:alerion], name: "Alerion"),
- t.npc(13, 8, "FT_shade", :npc_shade, dir: 2, name: "Shade"),
- t.npc(15, 10, "FT_shimmer", :npc_shimmer, dir: 4, name: "Shimmer")].each do |e|
-  e.pages << t.build_page(e.pages[0], { switch: SW_PARTY_FORMED, graphic: "", through: true })
+# Named for the speech bubble: "MA YARBROUL:" finds her (notes/01 E4).
+t.event(3, 6, "Ma Yarbroul", [{ graphic: "BW (53)", direction: 6, script: "FT.barkeep(@event_id)" }])
+# The five sit at their tables: you meet each by sitting with them (SC 1.03,
+# FT.tavern_table). Once they've met they travel with you, and walk out of
+# the door ahead of you (switch 3961 keeps them gone after that).
+{ alberica: [9, 8, 2], reptin: [10, 10, 4], alerion: [13, 5, 4], shade: [13, 8, 2], shimmer: [15, 10, 4] }.each do |k, (x, y, d)|
+  pages = [{ graphic: "FT_#{k}", direction: d, script: "FT.tavern_table(:#{k}, @event_id)" }]
+  pages << { switch: SW[k], graphic: "", through: true } if SW[k]
+  pages << { switch: SW_PARTY_FORMED, graphic: "", through: true }
+  t.event(x, y, k.to_s.capitalize, pages)
+end
+# Until the five have met, somebody calls you back from the door (FT.tavern_door).
+t.map.events.values.select { |e| e.name == "Exit" }.each do |e|
+  door_cmds = e.pages[0].list[0...-1]
+  e.instance_variable_set(:@pages, [t.build_page(e.pages[0], { trigger: 1, script: "FT.tavern_door(@event_id)" }),
+                                    t.build_page(e.pages[0], { trigger: 1, commands: door_cmds, switch: SW_PARTY_FORMED })])
 end
 t.trainer(7, 7, "BWBiker", :tavern_brawler, :BIKER, dir: 2, sight: 3)
 t.event(6, 8, "Fisher (rumours)", [{ graphic: "BWFisherman", direction: 6, script: "FT.ten_towns_rumor(\"FISHER\", @event_id)" }])
@@ -191,7 +203,6 @@ save(t, :tavern)
 # 2003: Pokémon Center (keeps the nurse, PC and healing machine)
 c, ex = Builder.from_existing(632, keep: [4, 8, 10])
 exits_to(c, ex, 14, 28)
-c.event(15, 9, "Trapper", [{ graphic: "BW (35)", direction: 4, script: "FT.snowshoes(@event_id)" }])
 save(c, :center)
 
 # 2004: the Luskan Arms (Zhentarim den)
@@ -281,7 +292,9 @@ g.event(9, 3, "Naerth", [{ graphic: "", through: true },
 g.trainer(17, 17, "BW (57)", :hall_enforcer_2, :ROUGHNECK, dir: 6, sight: 1)     # watches the first gap
 g.trainer(2, 13, "BW (63)", :hall_enforcer_1, :ROUGHNECK, dir: 4, sight: 1)      # watches the second
 g.trainer(18, 9, "BWGentleman", :hall_dealer, :ROUGHNECK, dir: 6, sight: 1)          # watches the third
-g.npc(8, 18, "BW (80)", :hall_guide, dir: 6)
+# The guide holds the first gap until Naerth has asked for you, then greets you by the door (notes/01 E16).
+npc_until(g, 18, 16, "BW (80)", :hall_guide, SW_NAERTH_TERMS, dir: 2, name: "Hall guide")
+npc_when(g, 8, 18, "BW (80)", :hall_guide, SW_NAERTH_TERMS, dir: 6, name: "Hall guide")
 save(g, :gym)
 
 # 2006-2009: houses and market
@@ -300,6 +313,9 @@ save(m, :mart)
 h, ex = Builder.from_existing(644)
 exits_to(h, ex, 34, 35)
 h.event(7, 6, "Widow", [{ graphic: "BWOldWoman", direction: 2, script: "FT.widow_gift(@event_id)" }])
+# Her husband's Spheal waits by the door, as she says it does (notes/01 E12); it comes to you when she gives it.
+h.event(11, 10, "Spheal", [{ graphic: "Followers/SPHEAL", direction: 4, step_anime: true, script: "FT.widow_spheal_pet(@event_id)" },
+                           { self_switch: "A", graphic: "", through: true }])
 save(h, :hut_b)
 
 h, ex = Builder.from_existing(644)
