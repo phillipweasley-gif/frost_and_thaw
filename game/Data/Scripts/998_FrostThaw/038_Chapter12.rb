@@ -270,7 +270,7 @@ module FrostThaw
            "FIRST MATE" => "FIRST MATE: Grimskalle, that is. Giants built it. Now it's hers." }[voyage_guide_tag(route)] ||
            "ANGAJUK: Grimskalle. She sat on it the day she took my eye."])
     sayc([cl(:meat_meat, "Meat Meat does not like the skull. The skull is showing off.")])
-    speak(:alberica, "(the rune glowing) She knows we're here. She's been counting the wingbeats.",
+    speak(:alberica, "(the rune glowing) She knows we're here. She's been counting the #{route == :griffons ? 'wingbeats' : 'miles'}.",
           "(the rune glowing) ...Something's pulling me north. Don't make a thing of it.")
     sayc([cl(:reptin, "We noticed. You've been glowing since breakfast. It's very festive.")])
     set_flag(:solstice_sighted)
@@ -634,7 +634,7 @@ module FrostThaw
     page = ev.instance_variable_get(:@event).pages[0] rescue nil
     return if !page || page.graphic.character_name == g
     page.graphic.character_name = g
-    ev.refresh rescue nil
+    ev.instance_variable_set(:@character_name, g)    # (refresh keeps the old page's look)
   rescue StandardError => e
     log("camp sprite: #{e.message}")
   end
