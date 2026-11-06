@@ -136,7 +136,8 @@ module FrostThaw
 
   TEXT.merge!(WENNEN_LINES)
   TEXT.merge!(
-    bryn_north_guard_open: ["GUARD: North path to Termalaine, and Lonelywood past it. Loggers, fishers, folk who'd rather not be found.",
+    bryn_north_guard_open: ["GUARD: North path to Termalaine, and Lonelywood past it.",
+                            "GUARD: Loggers, fishers, folk who'd rather not be found.",
                             "GUARD: Two days to Lonelywood, if the drifts are kind. The man in the shirt went that way."],
     # --- Lonelywood Road -----------------------------------------------------------
     sign_lonely_road: ["LONELYWOOD ROAD", "North to Lonelywood. Beware the white moose."],
@@ -218,7 +219,7 @@ module FrostThaw
          "NOVA KEEPER: The Warren's door is the lodge below. Go in quietly. The Circle is grieving."]
       else
         ["NOVA KEEPER: Warden of the Moon Temple. These stones are ours to keep.",
-         "NOVA KEEPER: The Warren's door is the lodge below. Knock, and wait. We don't like surprises."]
+         "NOVA KEEPER: The Warren's door is the lodge below. Knock, and wait."]
       end
     },
     aurilite_five_after: ["He'll take it back. Whatever of hers you've got. He takes everything back."],
@@ -260,7 +261,7 @@ module FrostThaw
                  "Buy me a drink, I'll tell you the truth. Two drinks, I'll tell you a better one."],
     glade: [{ if: { flag: :shimmer_taken }, lines: ["My pendant broke when she... I saw all of it.",
                                                     "I'll write it down. Somebody has to sing it right."] },
-            ["Standing stones, and nobody's left an offering in years. I don't like a shrine nobody visits."]],
+            ["Standing stones, and nobody's left an offering in years.", "I don't trust a shrine nobody visits."]],
     moon_temple: ["Old stone, older song. The Wennen sing to the moon here. I want that tune."],
     warren: ["It smells like mint and rain. I haven't smelled rain in two years.", "Don't let me cry, I'm wearing kohl."]
   )

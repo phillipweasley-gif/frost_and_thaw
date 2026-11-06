@@ -557,6 +557,7 @@ FT.state[:flags] = { met_party: true, badge_targos: true, lottery_stand: true }
 $battle_result = true
 $messages.clear
 FT.leader_duvessa(nil)
+FT.scene_mishann_steps                 # (out of the hall with the seal: Mishann waits on the steps)
 check("beating Duvessa gives the second badge and Steel Wing, and opens the north gate") { $Trainer.badges[1] && FT.flag?(:badge_bryn) && $messages.any? { |m| m.to_s.include?("Steel Wing") } && $game_switches[3912] && $game_switches[3913] }
 check("...and Mishann brings Reptin the golden acorn on the hall steps (the third way can't go missing)") { FT.flag?(:golden_acorn) && $received == :FT_GOLDENACORN }
 FT.state[:flags] = { met_party: true, badge_targos: true }; $messages.clear; FT.leader_duvessa(nil)
@@ -619,7 +620,7 @@ FT.state[:flags] = { heart_of_ice: true }
 $battle_result = false
 FT.scene_sephek_moon_temple(nil)
 check("losing to Sephek lets you try again") { !FT.flag?(:sephek_defeated) }
-FT.state[:flags] = {}
+FT.state[:flags] = { shimmer_taken: true }
 $messages.clear; FT.zenith(nil)
 check("Zenith speaks in verse until you bring the heart") { $messages.join.include?("rose will know") && !FT.flag?(:requiem_done) }
 d3 = true

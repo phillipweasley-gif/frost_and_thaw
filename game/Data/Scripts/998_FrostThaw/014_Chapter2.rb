@@ -119,7 +119,7 @@ module FrostThaw
          "TRAPPER: Whatever's in your coat, keep it warm. Cold things want warm things back."]
       else
         ["TRAPPER: There's a crack in the rocks east of here. Glows at night.",
-         "TRAPPER: Blue, like moon under ice. The Aurilites pray at it. I set my traps the other way."]
+         "TRAPPER: Blue, like moon under ice. The Aurilites pray at it.", "TRAPPER: I set my traps the other way."]
       end
     },
     road_caravan_guard: ["GUARD: Bryn Shander's caravan. Stuck till the drifts settle. We wait. We always wait.",
@@ -252,9 +252,9 @@ module FrostThaw
                                                 "...Well. One of our uses."] },
             ["The light down here hums. Like a note somebody's held too long."]],
     bryn: [{ if: { flag: :lottery_stand }, lines: ["It itches. Like a snowflake that won't melt.", "Don't make a thing of it."] },
-           ["Lanterns over every street, and not a soul under them. A town holding its breath.",
+           ["Lanterns over every street, and not a soul under them.", "A town holding its breath.",
             "Somebody should sing in that square. Somebody will."]],
-    bryn_hall: ["She keeps the whole town's winter in this room, and she still draws a name every month.",
+    bryn_hall: ["She keeps the whole town's winter in this room.", "And she still draws a name every month.",
                 "I'd have taken up drinking, darling. Well. More drinking."],
     northlook: ["Nobody's at the back table, and everybody's watching it.",
                 "That's the most popular chair in town, darling."]
@@ -263,10 +263,10 @@ module FrostThaw
     north_road: ["My medallion's been pulling east since the second field. Toward that glow.",
                  "Rude of it, not to ask first."],
     chasm: [{ if: { flag: :razzy_egg }, lines: ["My hand still stings where I cut it. Good sting. It means it took."] },
-            ["The Sacred Flame called frost-light Auril's breath. Whatever it touches, she keeps.",
+            ["The Sacred Flame called frost-light Auril's breath. What it touches, she keeps.",
              "Lovely people. Terrible theology."]],
     bryn: ["A whole town, cold to the bone. Like a winter that forgot to leave."],
-    bryn_hall: ["Naerth bought his chair. She was elected to hers. I'd like to see the difference hold."],
+    bryn_hall: ["Naerth bought his chair. She was elected to hers.", "I'd like to see that difference hold."],
     northlook: ["Someone in here smells of the Black Network. Coin and cold iron.",
                 "(under his breath) Keep smiling. They're counting us."]
   )
@@ -857,7 +857,7 @@ module FrostThaw
     say([me ? "At the edge of the torchlight, the woman in frost-furs. She looks only at you." :
               "At the edge of the torchlight, the woman in frost-furs. She looks only at Alberica.",
          counter(:loop_count) > 0 ? (me ? "(Your hand is on your chest before anything happens. I know this part. I hate this part.)" :
-                                          "ALBERICA: (a hand on her chest before anything happens) I know this part. I hate this part.") : nil].compact)
+                                          "ALBERICA: (a hand on her chest already) I know this part. I hate this part.") : nil].compact)
     pbSEPlay("Ice1") rescue nil
     if alb
       rune = s.fx("E-02", alb, frames: 8, oy: 40, loop_from: 0)
