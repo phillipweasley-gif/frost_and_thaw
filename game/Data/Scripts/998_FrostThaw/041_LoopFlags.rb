@@ -136,3 +136,9 @@ module FrostThaw
   LOOP_ACT1_FLAGS.concat(SCENE_A_FLAGS).uniq!
   LOOP_ACT2_FLAGS.concat(SCENE_A_FLAGS).uniq!
 end
+
+# scene c: Chapters 4-5 scene pass (2026-11-06): the mead hall's banter once,
+# eyes shut in the fall
+module FrostThaw
+  LOOP_ACT1_FLAGS.concat(%i[mead_hall_rested fall_eyes_shut]).uniq!
+end

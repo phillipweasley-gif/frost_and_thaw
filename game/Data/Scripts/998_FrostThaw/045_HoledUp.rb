@@ -27,15 +27,17 @@ module FrostThaw
   SW_HU_BLIZZARD    = 4042    # the ice throne's blizzard is up around the lodge
 
   RELIC_ITEMS.merge!(
+    FT_WHALEOIL: ["Flask of Whale Oil", "Flasks of Whale Oil", 8, 0,
+      "Oil rendered from Garagai's whales, in a flask from his flensing room. It reeks, and it's slick as anything.", 0, 0, 6],
     FT_WINTERBOOTS: ["Boots of the Winterlands", "Boots of the Winterlands", 8, 0,
-      "Fur-lined boots Hilda's husband won in a drinking contest. Warm in any cold; they never slip on ice.", 0, 0, 6]
+      "Fur-lined boots Hilda's husband won in a drinking contest. The warmest boots in the Dale.", 0, 0, 6]
   )
 
   TEXT.merge!(
     garagai_bedroll: ["The only furniture in this cavernous chamber: a big fur bedroll, matted and musty.",
                       "Garagai slept here. Nobody sleeps here now."],
     lodge_exterior: ["Jutting up out of the tundra: a towering edifice built entirely of ice.",
-                     "Three tall openings on its east face. Easily three times the height of anything in Ten-Towns."],
+                     "Three tall openings on its east face, three times the height of anything in Ten-Towns."],
     wolves_wait: ["KORAN: We'll stand guard out here. Garagai isn't home. Go on in.",
                   "KANAN: (not looking at you) Take the corridor in the middle. It's quickest."],
     ice_corridor: ["The passage is choked with ice.", "Icicles hang overhead in clusters, points sharp as daggers."]
@@ -55,7 +57,7 @@ module FrostThaw
     else
       set_flag(:met_hilda)
       say(["HILDA: Hilda Dejarr. Silja and Finn are mine. The Speaker says they're gone.",
-           "HILDA: They're not. A mother knows. I keep their bowls on the table.",
+           "HILDA: They're not. I keep their bowls on the table.",
            "HILDA: If you're going out there... please. Please."], event_id)
       hilda_bowls(event_id)
     end
@@ -63,7 +65,7 @@ module FrostThaw
 
   def hilda_bowls(event_id = nil)
     return if !with_or_is?(:alberica)
-    speak(:alberica, "(taking both her hands) Keep the bowls out, love. We'll fill them.",
+    speak(:alberica, "(taking both her hands) Keep the bowls out. We'll fill them.",
                      "(taking both her hands) ...We'll bring them.", event_id)
   end
 
@@ -80,7 +82,7 @@ module FrostThaw
     say(["A woman in a too-thin shawl is waiting outside the lodge. Bare feet in the snow."])
     Stage.approach(hilda) if hilda
     say(["HILDA: Hilda Dejarr. Silja and Finn are mine. The Speaker says they're gone.",
-         "HILDA: They're not. A mother knows. I keep their bowls on the table.",
+         "HILDA: They're not. I keep their bowls on the table.",
          "HILDA: If you're going out there... please. Please."])
     hilda_bowls
     Stage.leave(hilda, 21, 11) if hilda
@@ -114,9 +116,13 @@ module FrostThaw
          "HILDA: These were my husband's. He won them off an adventurer. Drinking contest.",
          "HILDA: Passed a few years back. Warmest boots in the Dale.",
          "HILDA: Take them. He'd want them walking somewhere."])
-    give_key(:FT_WINTERBOOTS)
+    if !($PokemonBag.pbHasItem?(:FT_WINTERBOOTS) rescue false)
+      ($PokemonBag.pbStoreItem(:FT_WINTERBOOTS, 1) rescue give_key(:FT_WINTERBOOTS))
+      pbMessage(_INTL("\\me[Key item get]You got the Boots of the Winterlands!")) rescue nil
+    end
     pbReceiveItem(:REVIVE, 2) rescue nil
-    sayc([cl(:alberica, "(sniffing loudly) I'm not crying. It's the wind. Somebody give me a drink for the wind.")])
+    sayc([cl(:meat_meat, "Meat Meat not crying. That is snow."),
+          cl(:alberica, "(sniffing loudly) Somebody give me a drink. For the wind.")])
     durmoot = (Stage.actor(:durmoot, 14, 11, 2, graphic: "BWOldWoman") rescue nil)
     Stage.pan_to(14, 10)
     say(["DURMOOT: (from her door, after a while) ...Lodge. Now. I said I'd fight you myself."])
@@ -131,18 +137,19 @@ module FrostThaw
   # SC 4.04 - The limping wolf
   def koran(event_id = nil)
     kor = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
-    Stage.approach(kor) if kor               # he limps up to you on screen (notes 04 E9)
-    say(["A white wolf the size of a pony limps out of the snow on one back leg, whimpering like a kicked dog.",
+    limp_up(kor)                             # he limps up to you on screen (notes 04 E9)
+    say(["A white wolf the size of a pony limps out of the snow, whimpering like a kicked dog.",
          "KORAN: Please. Please, travellers. I'm Koran. My master did this. Garagai. A frost giant.",
-         "KORAN: Mean old Garagai. He kicks me. He kicks me every day.",
-         "KORAN: He took two of the little townsfolk.",
-         "KORAN: He keeps them in his lodge, west, more than half a day.",
-         "KORAN: Help me free them. Let him feel what it's like, to lose something."], event_id)
+         "KORAN: Mean old Garagai. He kicks me. He kicks me every day."], event_id)
+    sayc([cl(:reptin, "(under his breath) Every day. Poor lamb.")], event_id)
+    say(["KORAN: He took two of the little townsfolk. He keeps them in his lodge, west.",
+         "KORAN: Help me free them. Let him feel what it's like to lose something."], event_id)
     choice = pbMessage(_INTL("What do you do?"),
                        [_INTL("\"Show us.\""), _INTL("\"Which leg was it, again?\""), _INTL("\"No.\"")], 0)
     if choice == 1
+      Stage.hop(kor) if kor
       sayc(["Koran blinks. He was limping on the left leg. Now he's limping on the right.",
-            as(:shade, "Ha! Oh, I like this one. Terrible liar. Great coat."),
+            cl(:shade, "Ha! Oh, I like this one. Terrible liar. Great coat."),
             cl(:alerion, "Liars forget which leg."),
             "KORAN: ...Clever. Follow anyway. The children are real, even if my limp isn't."])
       set_flag(:caught_koran)
@@ -150,17 +157,32 @@ module FrostThaw
       bad_wolf
     else
       sayc(["KORAN: This way. This way. Quickly, before the snow fills my tracks.",
-            as(:reptin, "(quietly) There's two of them. I can smell the other one."),
+            cl(:reptin, "(quietly) There's two of them. I can smell the other one."),
             cl(:meat_meat, "Meat Meat will walk next to the doggy. Close. Very friendly.")])
       set_flag(:followed_koran)
     end
     if !flag?(:refused_wolves)
-      say(["Koran trots off west into the white, and something else white trots after him, just out of sight."])
+      say(["Koran trots off west. Something else white trots after him, just out of sight."])
     end
+    Stage.leave(kor, [kor.x - 4, 1].max, kor.y) if kor
     set_flag(:met_wolves)
     set_switch(SW_HU_WOLVES_WAIT, true)
     set_self_switch(event_id, "A")
     state[:goal] = "Follow the wolves' tracks west across the tundra, to Garagai's lodge."
+  end
+
+  # Koran comes up to you a step and a stop at a time: the limp you're meant to see.
+  def limp_up(kor)
+    return if !kor
+    dirs = Stage.path_for(kor, $game_player.x, $game_player.y, adjacent: true)
+    Stage.turn_to(kor)
+    if !dirs || dirs.empty?             # (you walked right up to him: he limps back a step, and forward)
+      Stage.walk(kor, [13, 15, 10, 12, 15, 10])
+    else
+      Stage.walk(kor, dirs.flat_map { |d| [Stage::MOVE[d], 15, 7] })
+    end
+    Stage.turn_to(kor)
+    Stage.turn_to($game_player, kor)
   end
 
   # Kanan steps out to play the bad wolf; then both appeal to your conscience.
@@ -182,9 +204,9 @@ module FrostThaw
           cl(:meat_meat, "Meat Meat bites back. Meat Meat is very bitey."),
           "The wolves look at each other. Then the act drops, all at once.",
           "KORAN: It's awfully cold in that lodge.",
-          "KANAN: They won't suffer much longer. It's only a matter of time before Garagai skins them and eats them.",
+          "KANAN: They won't suffer much longer. Garagai will skin them and eat them soon.",
           "They bolt away west, leaving tracks a child could follow.",
-          cl(:shade, "...They want us to follow. That's the whole trick, and it's working.")])
+          cl(:shade, "...And we're going to follow them. Aren't we.")])
     set_flag(:refused_wolves)
   end
 
@@ -196,13 +218,14 @@ module FrostThaw
           flag?(:met_wolves) ? "The wolves' tracks run ahead, west, filling with snow almost as fast as you find them." :
                                "Under the drifts there are tracks: two wolves, enormous ones, heading west.",
           shield ? cl(:reptin, "(quietly) Very thoughtful of them. Suspiciously thoughtful.") : nil,
-          as(:shade, "Thirteen miles of this. Wonderful."),
+          cl(:shade, "Thirteen miles of this. Wonderful."),
           cl(:alberica, "Think of it as a long, cold walk with excellent company."),
           cl(:shade, "I am. That's the problem.")].compact)
     if shield
-      say(["Half a mile on, the wolves lope ahead into the white. \"We'll go first,\" Koran calls back. \"Make sure the way's clear.\""])
+      say(["Half a mile on, the wolves lope ahead into the white.",
+           "\"We'll go first,\" Koran calls back. \"Make sure the way's clear.\""])
     else
-      say(["The wind finds every gap in your furs. By the time the snow eases, everyone is numb, Pokémon included."])
+      say(["The wind finds every gap in your furs.", "By the time the snow eases, everyone is numb, Pokémon included."])
       $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 10), 1].max if !pk.egg? && pk.hp > 0 } rescue nil
     end
   end
@@ -211,7 +234,7 @@ module FrostThaw
   # walk round it (the campaign's bite is the root of Reptin's curse).
   def starving_pack_sighted(event_id = nil)
     return if ($game_switches && $game_switches[SW_PACK_GONE]) || flag?(:reptin_bitten)
-    say(["Shapes rise out of the snow ahead and come toward you, low and slow: four wolves, all ribs and eyes."])
+    say(["Shapes rise out of the snow ahead, low and slow: four wolves, all ribs and eyes."])
     starving_pack(event_id)
   end
 
@@ -228,7 +251,7 @@ module FrostThaw
     choice = pbMessage(_INTL("What do you do?"), opts, 0)
     if choice == 0
       sayc([me ? "The others put their rations out beside yours." : "You both put out the rations.",
-            cl(:meat_meat, "...Meat Meat gives the jerky. Not the coffee beans. Wolves don't deserve the beans.")])
+            cl(:meat_meat, "Meat Meat gives the jerky. Not the coffee. Wolves don't deserve the beans.")])
       set_flag(:fed_pack)
       wheel(1)
     else
@@ -276,17 +299,17 @@ module FrostThaw
   # and offer to stand guard while you go in. (They're waiting for Norsu.)
   def scene_lodge_approach
     return if !flag?(:met_wolves) || flag?(:kids_freed)
-    say(["Two white wolves sit in the snow before the lodge's openings, as if they've been there for hours.",
+    say(["Two white wolves sit in the snow before the lodge, as if they've been there for hours.",
          "KORAN: (sniffing the air, nose high) He's not home. Garagai. Out hunting whales.",
          flag?(:kanan_named) ? "KANAN: We'll stand guard out here. In case he comes back." :
-                               "KANAN: Kanan. His brother. We'll stand guard out here, in case he comes back.",
+                               "KORAN: My brother Kanan and I will stand guard. In case he comes back.",
          "KORAN: Go in by the corridor. The middle one. It's quickest to the children."])
     set_flag(:kanan_named)
     sayc([cl(:reptin, "(pleasantly) How thoughtful. And you won't come in yourselves?"),
           "KANAN: ...Wolves don't like ice houses.",
-          cl(:shade, "(under their breath) They're lying about the giant. He's in there. Something is."),
-          cl(:alerion, "Then why stay outside? Afraid of their master?"),
-          cl(:shade, "Or waiting to see what's left of us.")])
+          cl(:shade, "(under their breath) Somebody's home."),
+          cl(:alerion, "They won't go in."),
+          cl(:shade, "Or they're waiting to see what's left of us.")])
     set_flag(:lodge_wolves_seen)
   end
 
@@ -299,10 +322,10 @@ module FrostThaw
   def scene_lodge_enter
     set_flag(:lodge_entered)
     add_counter(:story_beats)
-    sayc(["Inside, the walls are glittering ice thirty feet high. Everything here was built for giants.",
+    sayc(["Inside, the ice walls rise thirty feet. Everything here was built for giants.",
           "From deeper in comes a sound like a bellows: something enormous, breathing slowly.",
           "And under it, very faintly, a child coughing.",
-          cl(:reptin, "(one word, flat) Quiet."),
+          cl(:reptin, "Quiet."),
           cl(:meat_meat, "(very quiet, very fast) Meat Meat hears it. Meat Meat is going.")])
   end
 
@@ -334,14 +357,19 @@ module FrostThaw
     if flag?(:norsu_met)
       return talk(:norsu_calm, event_id)
     end
+    # on camera, turning, angry (notes 04 E21)
+    nu = Stage.find("Norsu")
+    Stage.pan_to((nu.x + $game_player.x) / 2, (nu.y + $game_player.y) / 2) if nu && !Stage.on_screen?(nu)
     say(["An oval chamber with high walls of glittering ice, like a sepulchre.",
          "The frozen, hacked-up corpse of a frost giant lies on the floor, entombed in clear ice.",
-         "Standing over it: a woolly mammoth.",
-         "It turns, and it stares down at you with hate in its eyes.",
-         "Something long ago taught this beast to think, and to grieve out loud.",
-         "NORSU: You are to blame for all of this!",
-         "NORSU: Small ones killed him. Small ones took his axe, his breath.",
-         "NORSU: Small ones will pay for it.",
+         "Standing over it: a woolly mammoth."])
+    Stage.turn_to(nu) if nu
+    Stage.cry(:MAMOSWINE)
+    say(["It turns, and it stares down at you with hate in its eyes.",
+         "Something long ago taught this beast to think, and to grieve out loud."])
+    Stage.emote(nu, :angry) if nu
+    say(["NORSU: You are to blame for all of this!",
+         "NORSU: Small ones killed him. Small ones took his axe, his breath. Small ones will pay.",
          "NORSU: The wolves bring me the town's food and gold. Soon they'll bring me the town."])
     choice = pbMessage(_INTL("What do you say?"),
                        [_INTL("\"We were his friends.\""), _INTL("\"We'll find who took the axe.\""), _INTL("Stand your ground")], -1)
@@ -354,13 +382,13 @@ module FrostThaw
     when 1
       say(["NORSU: Find them? Small ones never come back for the dead. Not once.",
            "NORSU: ...Swear it. On his ice."])
-      speak(:reptin, "I swear it. Whoever took his axe will answer for it, and the axe comes back to him.",
-                     "I swear it. It comes back to him.")
+      speak(:reptin, "I swear it. It comes back to him.", "...I swear it.")
       sayc([cl(:meat_meat, "Meat Meat swears too. Meat Meat bites whoever took it."),
             "The mammoth lowers his head."])
       set_flag(:garagai_vow)
       calm_norsu
     else
+      Stage.cry(:MAMOSWINE)
       say(["Norsu lowers his tusks and charges!"])
       if boss_battle(named_mon(:MAMOSWINE, 28, "Norsu"))
         say(["Norsu staggers, groans, and sinks down beside his master. He doesn't get up.",
@@ -369,6 +397,7 @@ module FrostThaw
         set_flag(:norsu_met)
         $game_switches[SW_NORSU_CALM] = true if $game_switches
       end
+      Stage.pan_back
     end
   end
 
@@ -377,7 +406,7 @@ module FrostThaw
     c = pbMessage(_INTL("Honour Garagai?"), [_INTL("Say a prayer over him."), _INTL("Leave a gift."), _INTL("Just go.")], 0)
     if c == 0
       sayc(["You say what you can about someone you never met.",
-            cl(:alberica, "(softly, after you) He kept a whale in his kitchen and a mammoth who loved him. That's a good life."),
+            cl(:alberica, "He kept a whale in his kitchen and a mammoth who loved him. That's a good life."),
             "Norsu listens to every word."])
     elsif c == 1
       sayc(["You leave something small on the ice over his chest. Norsu looks at it for a long time.",
@@ -386,6 +415,7 @@ module FrostThaw
     set_flag(:norsu_calmed)
     set_flag(:norsu_met)
     $game_switches[SW_NORSU_CALM] = true if $game_switches
+    Stage.pan_back
   end
 
   # L5: the ice throne. The Giant rune for "ice" in its backrest; sit in it and
@@ -397,11 +427,11 @@ module FrostThaw
     end
     return if !pbConfirmMessage(_INTL("Climb up and sit in the throne?"))
     say(["You climb up. The throne is far too big; your feet dangle like a child's.",
-         "The rune hums through your spine. You understand, without being told: you could call a storm from here."])
+         "The rune hums through your spine. You know, without being told: you could call a storm."])
     day = (pbGetTimeNow.to_i / 86_400 rescue 0)
     last = state[:throne_day]
     if last && day - last < 10
-      return say(["The rune is dull, still drawing breath from the last storm. (It needs a tenday to recover.)"])
+      return say(["The rune is dull, still drawing breath from the last storm. (It needs a tenday.)"])
     end
     return if !pbConfirmMessage(_INTL("Call a blizzard?"))
     state[:throne_day] = day
@@ -422,7 +452,10 @@ module FrostThaw
     sayc(["A foul smell fills the room: barrels of whale oil, rendered from Garagai's catches.",
           "You fill an empty flask. It reeks, and it's slick as anything.",
           cl(:shade, "Lovely. Now we smell like a dead giant's pantry. Very stealthy.")], event_id)
-    pbMessage(_INTL("\\me[Item get]You got a flask of whale oil."))
+    if !($PokemonBag.pbHasItem?(:FT_WHALEOIL) rescue false)
+      ($PokemonBag.pbStoreItem(:FT_WHALEOIL, 1) rescue nil)
+    end
+    pbMessage(_INTL("\\me[Key item get]You got a flask of whale oil."))
     set_flag(:whale_oil)
   end
 
@@ -436,13 +469,14 @@ module FrostThaw
   def kobolds(event_id = nil)
     return if $game_switches && $game_switches[SW_KOBOLDS_GONE]
     say(["Three kobolds, white-scaled lizard folk no bigger than children, cower behind the chairs.",
-         "HOLGI: Don't hurt! Don't hurt! We not mean to kill little stone thing! It startle us!",
+         "HOLGI: Don't hurt! We not mean to kill the little spirit! It jump at us! Now it stone!",
          "SNORP: We think house empty! House not empty! House have BIG HAIRY ANGRY!",
-         "ZILBO: And wolves outside! Wolves everywhere! Help us get out? We very small and very sorry."], event_id)
+         "ZILBO: Wolves outside! Wolves everywhere! Help us get out? We very small. Very sorry."], event_id)
     sayc([cl(:meat_meat, "Little lizards! Meat Meat will not bite. Meat Meat promises."),
-          cl(:reptin, "She means you're safe. Mostly.")])
+          cl(:reptin, "She's never promised that before. You should feel honoured.")])
     if pbConfirmMessage(_INTL("Help the kobolds escape?"))
-      say(["You point them to the oil store and the tunnel in its floor. They bow until their snouts touch the ice.",
+      say(["You keep watch on the passage while they creep out, toward the oil store.",
+           "At the door they bow, until their snouts touch the ice.",
            "HOLGI: Kind big ones! Take shiny! Shiny cold! Never melts! We find it, now we give it!"])
       pbReceiveItem(:NEVERMELTICE) rescue nil
       say(["They scurry off in a line, tails held high, and are gone."])
@@ -477,7 +511,7 @@ module FrostThaw
     return if flag?(:kids_freed)
     if !flag?(:met_kids)
       set_flag(:met_kids)
-      say(["A huge slatted animal cage stands against the wall. Garagai built it for Norsu, when the mammoth was young.",
+      say(["A huge slatted cage stands against the wall. Garagai built it for Norsu, as a calf.",
            "Its gate hangs on rusty hinges as big as your head.",
            "Inside, two shivering teenagers look out at you.",
            "SILJA: Are you real? Are you from town? Did Mama send you?",
@@ -486,7 +520,7 @@ module FrostThaw
            "His teeth won't stop chattering.",
            "FINN: The slats won't b-bend. Too cold. And the gate screams if you open it.",
            "FINN: The hinges scream. Then HE comes."], event_id)
-      sayc([cl(:alberica, "Hey. Look at me. Big breath, all the way in. There you go. We're getting you out."),
+      sayc([cl(:alberica, "Hey. Look at me. Big breath, all the way in. There you go. We'll get you out."),
             cl(:shade, "(already looking at the lock) I've opened worse. Give me a minute.")])
     end
     opts = []
@@ -510,18 +544,19 @@ module FrostThaw
         return say(["The metal is so cold it burns your fingers. It won't move a hair.",
                     "(Heat would make the slats pliable. A fire-breathing Pokémon, perhaps.)"])
       end
-      say(["Your Pokémon breathes fire along two of the slats until they glow a dull red, and the frost on them hisses away."])
+      say(["Your Pokémon breathes fire along two of the slats until they glow a dull red.", "The frost on them hisses away."])
       if !party_has_strength?
         return say(["You haul on the hot slats. They give a little, then stiffen as they cool.",
                     "(Someone stronger is needed, while they're hot. A Pokémon with real strength.)"])
       end
       say(["Your strongest Pokémon braces against the frame and hauls.", "The slats bend apart with a groan of metal.",
-           "Slender Silja wriggles through, then pulls her brother after. The gate never moves. The hinges never make a sound."])
+           "Slender Silja wriggles through, then pulls her brother after.", "The gate never moves. The hinges never make a sound."])
       return free_kids
     when :gate
       if flag?(:whale_oil)
-        say(["You work the whale oil into the great rusty hinges, slowly, until they're black and dripping.",
+        say(["You work the whale oil into the rusty hinges, slowly, until they're black and dripping.",
              "The gate swings open without a sound."])
+        take_key(:FT_WHALEOIL)
         return free_kids
       end
       if flag?(:norsu_beaten)
@@ -566,11 +601,12 @@ module FrostThaw
     Stage.turn_to(finn) if finn
     say(["Silja is out first, pulling Finn after her. His teeth chatter so hard he can barely speak.",
          "SILJA: The wolves watch the big doors. They always watch the big doors.",
-         "SILJA: But there's a tunnel in the oil room. The big worm dug it.",
+         flag?(:kobolds_freed) ? "SILJA: There's a tunnel in the oil room. The lizards went out that way." :
+                                 "SILJA: But there's a tunnel in the oil room. The big worm dug it.",
          "FINN: I c-could've got out myself.",
          "SILJA: He couldn't."])
-    sayc([as(:shade, "Stay behind us. All the way home. Whatever happens."),
-          cl(:alberica, "And if Finn wants to carry something heroic, he can carry my bag. It's very heroic.")])
+    sayc([cl(:shade, "Walk where I walk. All the way home."),
+          cl(:alberica, "And if Finn wants to carry something heroic, he can carry my bag. Very heroic.")])
     Stage.cleanup rescue nil
     state[:goal] = "Take Silja and Finn home, east across the tundra."
   end

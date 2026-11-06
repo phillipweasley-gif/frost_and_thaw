@@ -90,7 +90,12 @@ module FrostThaw
   )
   TRAINERS.merge!(
     # the Eastway
-    ranger_hadd:    [:POKEMONRANGER_M, "Hadd",  [[:STANTLER, 22], [:B234H215, 23]],
+    # (balance, scene pass: on the road out of Bryn Shander. His old Stantler
+    # lead, with Intimidate, Stomp's flinch and Take Down, beat a two-Pokémon
+    # team two times in three. A Swinub leads now, with the moves a Swinub
+    # knows at 20; his Sneasel-headed Stantler stays the ace and the test.)
+    ranger_hadd:    [:POKEMONRANGER_M, "Hadd",  [[:SWINUB, 20, [:MUDSLAP, :POWDERSNOW, :ENDURE, :TACKLE]],
+                                                 [:B234H215, 23, [:FURYSWIPES, :QUICKATTACK, :ICYWIND, :LEER]]],
                      "The Eastway's mine to watch. Today I watched me lose on it."],
     aurilite_seven: [:FT_AURILITE,     "Corra", [[:SNORUNT, 22], [:B87H215, 23]],
                      "The crone on the ice is Auril's. She keeps her the way you keep a dog."],
@@ -105,9 +110,13 @@ module FrostThaw
                      "Knucklehead trout don't bite when the ice laughs. Neither do I."],
     skater_lys:     [:BEAUTY,          "Lys",   [[:SMOOCHUM, 23], [:B225H124, 24]],
                      "I skate Redwaters every winter. This one, I'll skate it faster."],
-    aurilite_eight: [:FT_AURILITE,     "Nell",  [[:B427H200, 24], [:SNEASEL, 24]],
+    # (balance, scene pass: Nell and Birk stand on the shore path a few steps
+    # apart, with no rest between; four Pokémon back to back beat two-Pokémon
+    # teams nine times in ten. Nell keeps her ghost of the ice and Birk his big
+    # bear, one Pokemon each.)
+    aurilite_eight: [:FT_AURILITE,     "Nell",  [[:B427H200, 23]],
                      "The ones on the ice can hear you. It's all they can do."],
-    trapper_birk:   [:HIKER,           "Birk",  [[:TEDDIURSA, 23], [:B217H220, 24]],
+    trapper_birk:   [:HIKER,           "Birk",  [[:B217H220, 23]],
                      "Wolves took my best traps. You took my best Pokémon. Busy week."],
     channeler_mag:  [:CHANNELER,       "Mag",   [[:GASTLY, 24], [:B200H429, 25]],
                      "She laughed at me, child. From under the ice."],
@@ -170,16 +179,16 @@ module FrostThaw
                            "The town keeps a candle burning for him. (You don't go in.)"],
     gm_door_closed: ["The door is barred. Someone inside calls, \"We're not buying!\""],
     fef_moryn: ["FEF: Fef Moryn. Trapper. Five of the militia went after that verbeeg.",
-                "FEF: I found what was left. Something big did it, with a club. Not the verbeeg. Something dumber.",
+                "FEF: I found what was left. Something big did it, with a club. Not the verbeeg.", "FEF: Something dumber.",
                 "FEF: I'm not going back in those woods."],
     fef_fox: ["A white fox sits by Fef's boots, ears flat, watching the treeline."],
     mead_drinker: ["The last cask in Good Mead. We're drinking it slowly. In memory.",
                    "Mostly in memory."],
     mead_hive_keeper: ["The hive room's the warmest place in town.",
                        "The bees sleep in a ball round the queen. We sleep in a ball round the fire."],
-    olivessa_untapoor: ["OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
-                        "She presses a honey cake into every hand in reach.",
-                        "OLIVESSA: I make the casks. Cakes are a hobby. Feeding people is a hobby."],
+    olivessa_untapoor: ["OLIVESSA: You again! Did you eat? You didn't. Here.",
+                        "She presses another honey cake on you, and one on everyone behind you.",
+                        "OLIVESSA: Casks are the job. Cakes are a hobby. Feeding people is a hobby."],
     luna_camp_dh: ["LUNA CARVER: We keep what the cold leaves. We kept an egg for two years.",
                    "LUNA CARVER: The cold man sleeps on the sledge. His heart still beats.",
                    "LUNA CARVER: We'll watch it from here, at the edge of town."],
@@ -194,19 +203,19 @@ module FrostThaw
                        "Like they're melting it from below."],
     aurilite_eight_after: ["Twenty stones in a ring, in Dougan's Hole. Older than the town. She likes old things."],
     trapper_birk_after: ["Dougan's Hole? Mind your fingers. They'll bite you for a trout."],
-    channeler_mag_after: ["There's a chasm south of the Hole. Hunters say it laughs on the new moon. The cackling carries for miles on the wind.",
-                          "Folk here think the witch who froze us made it her lair. Somebody ought to make sure she can't come back up out of it."],
+    channeler_mag_after: ["There's a chasm south of the Hole. Hunters say it laughs on the new moon.", "The cackling carries for miles on the wind.",
+                          "Folk here think the witch who froze us made it her lair.", "Somebody ought to make sure she can't come back up out of it."],
     # --- Dougan's Hole -----------------------------------------------------------------
     sign_dougans: ["DOUGAN'S HOLE", "Speaker: Edgra Durmoot.", "(Someone has carved a crude wolf into the post, and scratched it out.)"],
     sign_twenty_stones: ["THE TWENTY STONES OF THRUUN.", "Nineteen granite menhirs in a rough triangle, and one at the centre.",
                          "Nobody knows who raised them. They were here when Dougan Dubrace found the place."],
     dh_door_closed: ["Nobody answers. A curtain twitches."],
-    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["(A local with small, misshapen ears, beaming) You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
+    dh_chorus_ears: [{ if: { flag: :kids_home }, lines: ["(beaming) You brought 'em back! By Thruun's Stones, you brought 'em back!"] },
                      ["A local with small, misshapen ears grabs your sleeve.", "Them wolves are big as horses! They know words, an' a mighty lot of 'em!"]],
-    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["(Grinning a mouthful of little pointed teeth) Sil an' Finn are home! I'm gonna tell everybody! I already told everybody!"] },
+    dh_chorus_teeth: [{ if: { flag: :kids_home }, lines: ["(grinning, all pointed teeth) Sil an' Finn are home! I'm gonna tell everybody!", "I already told everybody!"] },
                       ["Someone grins at you with a mouthful of little pointed teeth.", "They took Sil an' her brother Finn th' other day! Big ol' wolves did!"]],
     dh_pier: ["A single wooden pier, buckled by the ice so it humps up like a frozen wave.",
-              "Two keelboats are locked in the ice beside it, their masts white with rime. Nobody has sailed since the Rime came.",
+              "Two keelboats are locked in the ice beside it, masts white with rime.", "Nobody has sailed since the Rime came.",
               "Fifty people live in Dougan's Hole. You'd guess fewer."],
     dh_chorus_sister: [{ if: { flag: :kids_home }, lines: ["Hilda's not stopped crying since. The good kind, mind."] },
                        ["Wolves say they ain't givin' 'em back till the town pays a king's ransom. Food an' gold.",
@@ -234,12 +243,12 @@ module FrostThaw
     smoke_fisher: ["Knucklehead trout, smoked. It's what we eat, what we trade, and what we talk about."],
     smoke_trout_wife: ["We don't get many visitors. The ones we get mostly want something. What do you want?",
                        "...Oh. To help? Huh."],
-    dh_lodge_guide: [{ if: { flag: :kids_home }, lines: ["The trappers are back off the ice line. They'll want a go at you first. Edgra likes it that way.",
+    dh_lodge_guide: [{ if: { flag: :kids_home }, lines: ["The trappers are back off the ice line. They'll want a go at you first.", "Edgra likes it that way.",
                                                          "Her Pokémon are like her. Cold, thick-skinned, and they don't go down easy."] },
                      ["The trappers are all out on the ice line, watching for wolves. Edgra sent every one.",
                       "She'd never say it, but she's hoping. We all are."]],
     trapper_brann_after: ["Edgra's at the back. Mind the traps on the walls. Some are still set."],
-    trapper_holt_after: ["The Speaker lost her husband to the ice. She doesn't lose anything else, if she can help it."],
+    trapper_holt_after: ["The Speaker lost her husband to the ice. She doesn't lose anything else if she can help it."],
     trapper_ysa_after: ["Go on. She's been waiting. She just won't say so."],
     # --- the tundra and the lodge ------------------------------------------------------------
     sign_tundra: ["West of Dougan's Hole: open tundra for thirteen miles.", "Beyond that, nothing. And then a house of ice."],
@@ -253,7 +262,7 @@ module FrostThaw
     ice_throne: ["A giant's throne, carved from one block of ice. A rune is cut into the backrest:",
                  "the Giant rune for \"ice\". It hums under your hand, like a held-back storm."],
     flensing_whale: ["The frozen body of a whale, crudely butchered. The air stinks of old decay."],
-    flensing_knife: ["Beside the whale lies a paring knife the size of a longsword. Garagai's. Too heavy to lift."],
+    flensing_knife: ["Beside the whale, a paring knife the size of a longsword. Garagai's. Too heavy to lift."],
     stone_chest_empty: ["The stone chest holds only giant-sized flensing tools now."],
     chwinga_statuette: ["Under the table lies a little stone figure of a spindly creature. A chwinga.",
                         "It isn't a carving. It turned to stone when it died."],
@@ -269,7 +278,7 @@ module FrostThaw
                      "Gods forgive me, I told her everything."],
     thawed_husband: -> {
       T.set_flag(:husband_thawed)
-      ["I'm from Targos. Came down fishing for knuckleheads, and heard someone laughing on the ice.",
+      ["I'm from Targos. Came down fishing for knuckleheads, and heard laughing on the ice.",
        "My wife... she'll think I'm dead. Tell her I'm coming home.",
        "Tell her to keep the lamp lit."]
     },
@@ -289,7 +298,7 @@ module FrostThaw
                                                       "I don't like people who know my verses."] },
               ["Small, cold and suspicious. I've played towns like this.",
                "You win them over, or you leave by the window. I've done both. Same night, once."]],
-    durmoot_lodge: ["Furs and traps. Every pelt on these walls has a story. None of them end well for the animal."],
+    durmoot_lodge: ["Furs and traps. Every pelt on these walls has a story. None end well for the animal."],
     tundra: ["I can't see my own hand. Stay close, darling. If you lose me, follow the singing."],
     ice_lodge: ["Even the echoes freeze in here. Somebody hold me. For warmth. Mostly for warmth."]
   )
@@ -319,18 +328,18 @@ module FrostThaw
     redwaters: ["My ring is cold out here. The people on that ice aren't dead.", "Not yet."],
     dougans: [{ if: { flag: :hag_defeated }, lines: ["She went south. Toward the chasm.", "We'll follow her. We always end up following them."] },
               ["If the wolf comes, watch which leg it favours.", "Liars forget."]],
-    durmoot_lodge: ["Durmoot isn't cruel. She's priced hope and decided she can't afford it."],
+    durmoot_lodge: ["I like her. Don't tell her."],
     tundra: ["The blizzard's covering our tracks. Good for us.", "Good for anything following us."],
     ice_lodge: ["A frost giant's tomb. Thirty-foot ceilings. Every step echoes.", "Walk soft."]
   )
   PARTY_CHAT[:shade].merge!(
-    eastway: ["Keep walking. If I stop, I start thinking about her.", "So I'm not stopping."],
+    eastway: ["She'd have hated this road. Too flat. Nowhere to hide."],
     good_mead: ["Out of mead. Of course they're out of mead. That's the Dale for you."],
     redwaters: ["She'd have walked straight out onto that ice to see who they were.",
                 "She never could leave a mystery alone."],
     dougans: [{ if: { flag: :hag_defeated }, lines: ["Next time I see that hag, she doesn't get to laugh."] },
               ["Everyone here looks at us like we're about to steal something.", "I might."]],
-    durmoot_lodge: ["I like her. Don't tell her."],
+    durmoot_lodge: ["Durmoot isn't cruel. She's priced hope and decided she can't afford it."],
     tundra: ["I can't feel my face. That's fine. It wasn't doing anything useful."],
     ice_lodge: ["Two kids in a cage in a dead giant's house.", "Let's get them out. Then we can be clever."]
   )
@@ -338,7 +347,7 @@ module FrostThaw
   PARTY_CHAT[:meat_meat].merge!(
     eastway: ["Big empty. Meat Meat likes big empty. Nobody to count pockets."],
     good_mead: ["Bees! Tiny honey goblins! Meat Meat will meet the queen. Politely.",
-                "No coffee here. Only honey. Meat Meat gives Good Mead four bees out of ten."],
+                "No coffee here. Only honey. Meat Meat gives Good Mead three bees out of ten."],
     redwaters: ["The still ones on the ice smell like old mushroom. Bad mushroom."],
     dougans: [{ if: { flag: :hag_defeated }, lines: ["Laughing lady ran away. Meat Meat laughed back. Meat Meat laughs better."] },
               ["Small town with pointy teeth. Meat Meat feels very at home.",
@@ -372,19 +381,27 @@ module FrostThaw
     $PokemonGlobal.pokecenterDirection = dir
   end
 
+  # The rest stop: the laughing planted (the bees go quiet), then a heal. The
+  # banter plays on the first rest only (notes 04 E30); later rests just heal.
   def mead_hall_rest(event_id = nil)
-    say(["BREWMISTRESS: Come in, come in! Sit by the hive fire.",
-         "BREWMISTRESS: No mead to sell, but warmth's free in Good Mead.",
+    if flag?(:mead_hall_rested)
+      say(["BREWMISTRESS: Back again? Sit by the hives. The fire's free."], event_id)
+      pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+      set_rest_at(GOOD_MEAD_REST)
+      return
+    end
+    set_flag(:mead_hall_rested)
+    say(["BREWMISTRESS: In you go. Sit by the hive fire. No mead to sell, but the warmth's free.",
          "BREWMISTRESS: Some nights you hear it from here. Laughing, out on Redwaters.",
          "BREWMISTRESS: The bees go quiet when it starts."], event_id)
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     set_rest_at(GOOD_MEAD_REST)
-    sayc(["BREWMISTRESS: There. Listen to them hum. Sounds like summer, doesn't it?",
+    sayc(["Behind the fire, the hives hum. It sounds like summer.",
           cl(:alberica, "A mead hall with no mead. It's like a bed with no company. Technically works."),
           cl(:meat_meat, "Meat Meat asked for coffee. Lady gave Meat Meat hot honey water."),
           cl(:meat_meat, "Meat Meat is not angry. Meat Meat is disappointed. Three bees out of ten."),
-          cl(:reptin, "Thank you, it's lovely. She's saying it's lovely."),
-          cl(:alerion, "She isn't.")], event_id)
+          cl(:reptin, "Thank you, it's lovely. Hot honey water. A classic."),
+          cl(:alerion, "It isn't.")], event_id)
   end
 
   def smokehouse_rest(event_id = nil)
@@ -438,24 +455,33 @@ module FrostThaw
     set_flag(:eastway_started)
     sayc(["Past Bryn Shander's east gate, the Eastway runs out across open snowfields.",
           outsider? ? "South-east, past Good Mead, is Dougan's Hole, and the hag's mirrors." :
-                     "South-east, past Good Mead, is Dougan's Hole. Zenith said a hag laughs in a chasm there.",
+                     "South-east, past Good Mead, is Dougan's Hole, where the laughing comes from.",
           cl(:shade, "A laughing hag. In a chasm. Is anything in this Dale just a nice lake?"),
-          as(:alerion, "Then let's go and find out what's so funny."),
-          cl(:alberica, "Look at that, pretty boy made a joke. Mark the date, somebody.")])
+          cl(:alerion, "No."),
+          cl(:alberica, "He's right. That's the worst part.")])
   end
 
-  # SC 4.01 - Good Mead
+  # SC 4.01 - Good Mead. A rest town on the way, and a face the player needs
+  # in Chapter 9: Olivessa walks up with honey cake, then goes back to her
+  # cooperage (notes 04 E11).
   def scene_good_mead_arrival
     set_flag(:good_mead_arrived)
     set_flag(:good_mead_met)
-    sayc(["A day's walk east, and the snow smells of honey.",
-          "Good Mead: squat houses carved with dinosaurs and serpents.",
-          "Over them, a two-storey mead hall, its eaves painted like wyverns.",
-          "Its founders came from the hot south. The beasts on its lintels have never seen snow.",
-          "Bees hum somewhere in a heated hall.",
-          "OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
-          cl(:alberica, "A woman who feeds strangers on sight. I think I'm in love."),
+    say(["A day's walk east, and the snow smells of honey.",
+         "Good Mead: squat houses carved with dinosaurs and serpents.",
+         "Over them, a two-storey mead hall, its eaves painted like wyverns.",
+         "Its founders came from the hot south. The beasts on its lintels have never seen snow."])
+    oli = (Stage.actor(:olivessa, $game_player.x + 3, $game_player.y + 4, 8, graphic: "BW (56)") rescue nil)
+    say(["A woman with sawdust on her apron comes up the road at a trot, a basket on her arm."])
+    Stage.approach(oli) if oli
+    sayc(["OLIVESSA: Olivessa. I make casks. Headed to the Hole? Eat first.",
+          "OLIVESSA: Nobody comes back from there fat.",
+          "She presses a honey cake into every hand in reach.",
+          cl(:alberica, "Cake first, questions later. My kind of town."),
           cl(:meat_meat, "Meat Meat smells honey. Meat Meat does not smell coffee. Suspicious town.")])
+    say(["OLIVESSA: Cooperage is the low hut on the west side. Come and see me before you go south."]) if oli
+    Stage.leave(oli, 7, 16) if oli
+    Stage.cleanup rescue nil
   end
 
   # SC 4.02 - The still ones on the ice. The player's goal (the hag's mirrors)
@@ -490,7 +516,7 @@ module FrostThaw
   def leader_durmoot(event_id)
     if flag?(:badge_dougans)
       say(["DURMOOT: You've got my seal. Don't make a fuss about it.",
-           "DURMOOT: And if that crone comes back... you'll hear her before you see her. You always do."], event_id)
+           "DURMOOT: And if that crone comes back, you'll hear her before you see her. You always do."], event_id)
       return
     end
     if !flag?(:met_durmoot)
@@ -505,14 +531,14 @@ module FrostThaw
             cl(:meat_meat, "Lady Speaker. Meat Meat likes her. Meat Meat would still bite her."),
             cl(:reptin, "(aside) Please don't."),
             "DURMOOT: The west way's open to you. Freeze where you like. I've told the militia."], event_id)
-      state[:goal] = "Find Silja and Finn. West, out on the tundra."
+      state[:goal] = "Find Silja and Finn, west on the tundra. Durmoot will fight you for her seal."
       return
     end
     if !flag?(:kids_home)
       say(["DURMOOT: Still here? The west way's open. Bring them back, or don't come back."], event_id)
       return
     end
-    say(["DURMOOT: ...I said I'd fight you myself.",
+    say(["DURMOOT: You brought them home.",
          "DURMOOT: Dougan's Hole keeps its word. Even when it's sorry it gave it."], event_id)
     won = pbTrainerBattle(:FT_SPEAKER_DH, "Durmoot", nil, false, 0)
     return if !won
@@ -525,7 +551,7 @@ module FrostThaw
     pbReceiveItem(:TM79) rescue nil
     sayc(["DURMOOT: That TM's Frost Breath. Every hit's a deep one. Like a Dougan's Hole winter.",
           "DURMOOT: ...Stay in tonight.",
-          cl(:alberica, "Was that concern? I think that was concern. She likes us."),
+          cl(:alberica, "Was that concern? She likes us."),
           cl(:alerion, "She likes nobody. She said it anyway.")], event_id)
     state[:goal] = "Rest at the smokehouse for the night. Durmoot said stay in."
   end
@@ -535,10 +561,14 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Boss battles against creatures that can't be caught (and can't be run from)
   #-----------------------------------------------------------------------------
-  def boss_battle(*mons)
+  # bgm: a boss's music, not the wild-battle theme (notes 04 E24, 05 E16).
+  BOSS_BGM = "ancientbattle"
+
+  def boss_battle(*mons, bgm: BOSS_BGM)
     sw = (SWITCH_CANNOT_CATCH_POKEMON rescue 75)
     was = $game_switches[sw]
     $game_switches[sw] = true
+    ($PokemonGlobal.nextBattleBGM = pbStringToAudioFile(bgm)) rescue nil if bgm && $PokemonGlobal
     setBattleRule("cannotRun")
     setBattleRule("double") if mons.size >= 2
     decision = pbWildBattleCore(*mons)
@@ -583,6 +613,7 @@ module FrostThaw
     state[:dh_night_tone] = true
     say(["That night."])
     pbBGMPlay("scary_ambient") rescue nil
+    cackle
     relics = if herald?(:alberica) then "Under your coat, the rune burns blue. The others' relics frost over."
              elsif herald?(:meat_meat) then "The others' relics frost over. Under Alberica's coat, the rune glows blue."
              elsif herald? then "Your relic frosts over. Under Alberica's coat, the rune glows blue."
@@ -595,10 +626,20 @@ module FrostThaw
           flag?(:frost_egg) ? cl(:shade, "She doesn't like it either.") : nil,
           "Among the Twenty Stones, south-west of town, stand three tall mirrors of ice.",
           "In each one, an old woman in a patchwork cloak is smiling.",
-          as(:alberica, "Durmoot told us to stay in."),
-          as(:shade, "Durmoot tells everyone to stay in."),
+          cl(:alberica, "Durmoot told us to stay in."),
+          cl(:shade, "Durmoot tells everyone to stay in."),
           cl(:meat_meat, "Meat Meat never stays in. Meat Meat is already outside.")])
     state[:goal] = outsider? ? "The Twenty Stones: who's calling them, and the mirrors you came through." : "The Twenty Stones. Find who's calling."
+  end
+
+  # Her laugh. (Art/audio request: a crone's cackle SE. A Mismagius cry, a
+  # shrill witch's laugh, stands in.)
+  def cackle
+    if (audioFileExists(:SE, "FT_cackle") rescue false)
+      pbSEPlay("FT_cackle") rescue nil
+    else
+      Stage.cry(:MISMAGIUS)
+    end
   end
 
   def mirrors_broken
@@ -617,7 +658,12 @@ module FrostThaw
       say(["THREDRA: Come in, dearies. Mind the cold. Mind your step.",
            "THREDRA: Granny Thredra. Everyone's granny, sooner or later.",
            "THREDRA: Did you like my little trinkets? A pendant for the daughter of song."], event_id)
-      say(["Your hand goes to your throat. The pendant isn't there any more."]) if herald?(:alberica)
+      cackle
+      if herald?(:alberica)
+        say(["Your hand goes to your throat. The pendant isn't there any more."])
+      elsif with_or_is?(:alberica)
+        say(["Alberica's hand goes to her throat, where the pendant used to hang."])
+      end
       say(["THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time."], event_id)
       say(["(The medallion fogs in your palm. \"It knows,\" the captain said.)"]) if herald?(:reptin)
       sayc([cl(:alerion, "...Boy."),
@@ -628,7 +674,7 @@ module FrostThaw
         say(["THREDRA: Names are for the living, dearie."], event_id)
       end
       speak(:alberica, "You sent them. You sent me that pendant, you dried-up old...", "...You sent them.", event_id)
-      say(["THREDRA: Old, dearie. Not dried. My watchers watched you aboard."], event_id)
+      say(["THREDRA: Old, dearie. Not dried. My watchers saw each of you onto your ships."], event_id)
       if herald?(:alberica)
         say(["(The tall thing at the edge of the lamplight. On the ship. That was hers.)"])
       else
@@ -657,7 +703,7 @@ module FrostThaw
       say(["THREDRA: Heh-heh. #{n == 0 ? 'Not one' : (n == 1 ? 'One' : 'Two')} of three. The wheel turns so slowly, doesn't it?"], event_id)
       return
     end
-    say(["The last mirror lies in pieces. The crone stops laughing.",
+    say(["The last mirror lies in pieces. Thredra isn't smiling now.",
          "THREDRA: Then let's dance upon the glass, dearies, and see who shatters first."], event_id)
     won = pbTrainerBattle(:FT_HAG_NIGHT, "Thredra", nil, false, 0)
     return if !won
@@ -704,10 +750,13 @@ module FrostThaw
       Stage.hide(pane)
       Stage.fx("E-06", pane, oy: 56)
     end
-    say(["The mirror cracks top to bottom and falls into the snow in a hundred laughing pieces.",
-         "Behind you, the crone stops laughing, just for a moment."])
-    Stage.cleanup rescue nil
+    cackle
     set_flag(:"hag_mirror_#{i}")
+    after = ["Behind you, the crone's laugh catches, just for a moment.",
+             "Out on the lake, one of the dark shapes lifts its head.",
+             "Behind you, the laughing has stopped."][mirrors_broken - 1]
+    say(["The mirror cracks top to bottom and falls into the snow in a hundred laughing pieces.", after].compact)
+    Stage.cleanup rescue nil
     set_self_switch(event_id, "A")
     state[:goal] = "The mirrors are broken. Face Thredra at the centre stone." if mirrors_broken >= 3
   end
@@ -720,10 +769,12 @@ module FrostThaw
     add_counter(:story_beats)
     pbSEPlay("Ice2") rescue nil
     thr = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
-    say(["THREDRA: Clever. Clever, clever. Do you know how long it takes to grow a mirror?",
+    say(["THREDRA: Clever. Clever, clever. You broke them.",
+         "THREDRA: Do you know how long it takes to grow a mirror?",
+         "Her outline flickers, thin as frost on a windowpane.",
          "THREDRA: Come and find me in the chasm, dearies. Bring your wolf.",
          "THREDRA: Granny keeps her bargains."], event_id)
-    say(["THREDRA: And you, lost one. My last glass is in the chasm. Yours too."], event_id) if outsider?
+    say(["THREDRA: (to you) And you, lost one. My last glass is in the chasm. Yours too."], event_id) if outsider?
     if thr
       Stage.hide(thr)
       Stage.fx("E-06", thr, oy: 40)
@@ -772,7 +823,9 @@ module FrostThaw
     sayc(["DURMOOT: Thank you.",
           "DURMOOT: ...Don't tell anyone I said that.",
           cl(:alberica, "Oh, sugar, I'm writing a song about it."),
-          "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind.",
+          "DURMOOT: Chasm's south. Take this. Snarl. It's how this town answers the wind."], nil)
+    pbMessage(_INTL("Durmoot holds out the TM."), [_INTL("Take it.")], 0) rescue nil
+    sayc([
           "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns.",
           "DURMOOT: ...Don't tell anyone I said that either."])
     # The last chance at Act I's favours, said before the door (context 14, M14-9 A).
@@ -786,6 +839,20 @@ module FrostThaw
     set_flag(:dh_morning)
     state[:goal] = outsider? ? "The Cackling Chasm, south of Dougan's Hole. She's there, with the last of her mirrors." :
                               "The Cackling Chasm, south of Dougan's Hole. She's there."
+  end
+
+  # A shape on the ice, up close, before the thaw (notes 04 E12; act1_script SC 4.02).
+  FROZEN_SHAPES = {
+    thawed_fisher_a: "A man with a fishing line, mid-cast. His breath is frozen in the air in front of him.",
+    thawed_old_man:  "An old man on a stool by his hole, a cup halfway to his mouth. The cup is empty.",
+    thawed_husband:  "A man with a Spheal-shaped float on his line. Frost holds him mid-step, facing north.",
+    thawed_woman:    "A woman with her arms held out, as if to hug someone. There's nobody there.",
+    thawed_fisher_b: "A fisher on one knee by a hole, one hand in the water. The water froze round it."
+  }
+
+  def frozen_shape(key, event_id = nil)
+    say([FROZEN_SHAPES[key] || "Someone stands on the ice, stopped mid-breath. Snow has drifted at their legs.",
+         "Their eyes are open. They don't blink."], event_id)
   end
 
   def apply_chapter4_switches
