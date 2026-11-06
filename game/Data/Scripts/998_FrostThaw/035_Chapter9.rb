@@ -320,8 +320,11 @@ module FrostThaw
     strong = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && pk.moves.any? { |m| m && (m.id == :STRENGTH || (GameData::Move.get(m.id).type == :FIGHTING rescue false)) } }
     who = strong ? strong.name : (with_or_is?(:reptin) ? "Reptin" : "You")
     say(["#{who} #{strong ? 'hits' : 'hit'} the door. Once. Twice.",
-         "It bursts inward in a cloud of smoke and furious bees.",
-         "Olivessa stumbles out with them, coughing, a hive in her arms."])
+         "It bursts inward in a cloud of smoke and furious bees."])
+    door = event_id ? $game_map.events[event_id] : nil
+    oli = door ? ch9_actor(:olivessa, door.x, door.y, 2, "BW (56)") : nil
+    Stage.walk_to(oli, door.x - 1, door.y + 1, face: 6) if oli
+    say(["Olivessa stumbles out with them, coughing, a hive in her arms."])
     say([flag?(:good_mead_met) ? "OLIVESSA: You! The honey-cake people! It's been a month, where were you?" :
                                  "OLIVESSA: Whoever you are, you've got a hive's worth of thanks and a jar of mead coming.",
          cl(:alberica, "Mead. Darling, I could kiss you. Later. When less of the town is on fire."),
@@ -417,7 +420,8 @@ module FrostThaw
          "Behind walls that can't stop anything with wings.",
          "DUVESSA: (on the wall) You. You left with my seal a month ago. Where have you...",
          "DUVESSA: Never mind. Never mind! Is that thing yours?"])
-    speak(:alerion, "No. It's coming here. It always meant to come here.", "...No. It meant to come here.")
+    pbMessage(_INTL("Duvessa waits for an answer."), [_INTL("\"No!\""), _INTL("Look at the sky")], 0) if !herald?(:alerion)
+    speak(:alerion, "It's coming here. It always meant to come here.", "...It meant to come here.")
     say(["DUVESSA: (understanding, horrified) Everyone's here. That's the point, isn't it.",
          cl(:wyn, "(very quietly) ...There are so many children."),
          cl(:alberica, "Then nobody's dying today, sweetheart. Stay close to me.")].compact)

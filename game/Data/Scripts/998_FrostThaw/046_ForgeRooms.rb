@@ -489,11 +489,14 @@ module FrostThaw
     return say(["The pod hangs open and empty."], event_id) if flag?(key)
     return if !pbConfirmMessage(_INTL("Cut the prisoner free?"))
     set_flag(key)
+    pod = event_id ? $game_map.events[event_id] : nil
+    freed = (n <= 2 && pod) ? Stage.actor(n == 1 ? :rootwarden : :fisherwoman, pod.x, pod.y + 1, 2, graphic: n == 1 ? "BW029" : "BW (37)") : nil
     case n
     when 1 then say(["The Rootwarden slides out and catches your arm.", "ROOTWARDEN: Stop her. I'll... I'll find my own way up. Stop her."])
     when 2 then say(["A Ten-Towns fisherwoman tumbles out, still in her oilskins.", "FISHERWOMAN: Caer-Konig. She took the whole boat. Where's my boat?"])
     else        say(["A duergar child, no sigils yet. It runs before you can say anything."])
     end
+    Stage.leave(freed, 3, 2) if freed                 # (WRITING_GUIDE §9a: out, up the way you came)
     set_flag(:prisoners_freed) if flag?(:prison_pod_1) && flag?(:prison_pod_2) && flag?(:prison_pod_3)
   end
 

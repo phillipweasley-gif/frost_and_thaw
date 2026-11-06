@@ -457,8 +457,14 @@ module FrostThaw
       speak(:meat_meat, "In the sap. #{a[:He]} let go of the child. Meat Meat let go of #{a[:him]}.", "...In the sap.")
     end
     say(["The Rootwarden looks down at the sap for a long time.",
-         "ROOTWARDEN: Give her to me. She'll be up top by dawn. So will this.",
-         herald?(:meat_meat) ? "You don't let go. Then you do." : "Meat Meat doesn't let go. Then she does."])
+         "ROOTWARDEN: Give her to me. She'll be up top by dawn. So will this."])
+    if herald?(:meat_meat)
+      pbMessage(_INTL("The child..."), [_INTL("Hand her over"), _INTL("Hold on a moment longer")], 0)
+      say(["You don't let go. Then you do."])
+    else
+      c = pbMessage(_INTL("Meat Meat holds on to the cocoon."), [_INTL("Nod to her"), _INTL("Wait")], 0)
+      say([c == 0 ? "You nod. Meat Meat doesn't let go. Then she does." : "You wait. Meat Meat doesn't let go. Then she does."])
+    end
     Stage.leave_all([w1, w2].compact, 0, 14)
     set_flag(:child_carried_up)                  # (Chapter 9: Rheven's wardens heard what happened)
     Stage.theme(nil) rescue nil
@@ -622,8 +628,7 @@ module FrostThaw
           herald?(:meat_meat) ? cl(:reptin, "(stepping in front of you) She's not going anywhere near you.") :
                                 cl(:reptin, "(stepping in front of Meat Meat) She's not going anywhere near you.")])
     if flag?(:took_hag_secret)
-      say(["(The hag's whisper: the heart in her engine isn't hers.)",
-           "(You can see it now, under the gold: a seam of blue frost-light where the coat is stitched on.)"])
+      say(["(The hag was right: under the gold, a seam of frost-light where the coat is stitched on.)"])
     end
     Stage.pan_back rescue nil
   end
@@ -778,6 +783,8 @@ module FrostThaw
          "GLIMMER: Brightmane said I'd find a better fire.",
          "He lifts the Rimefang.",
          "GLIMMER: She never said it'd be me."])
+    c = pbMessage(_INTL("Glimmer..."), [_INTL("Reach for him"), _INTL("Let him go")], 0)
+    say([c == 0 ? "You reach for him. He's already past you." : "You let him go. It's the hardest thing you've done down here."])
     if with_or_is?(:alberica)
       speak(:alberica, "Glimmer. Sweetheart. Don't you dare.", "...Glimmer.")
     end
@@ -971,12 +978,6 @@ module FrostThaw
           with_or_is?(:alerion) ? as(:alerion, "(crouching, one hand over her, not touching) ...Dead. Nothing in her. Nothing at all.") : "She doesn't move.",
           cl(:alberica, "(very plainly) She doesn't get to come back from that. Not even her."),
           cl(:meat_meat, "(after a long time) ...Good.")])
-    white_womb_beat
-    # Context 08 M8-9: Kelyn heard it all; the city didn't.
-    say(["The sending-stone warms in your hand.",
-         "KELYN: (from the stone, hoarse) I heard her. All of it. ...The leaves are turning up here.",
-         "KELYN: (from the stone) Come up. Before the city decides what it saw."])
-    set_flag(:kelyn_heard_reveal)
     if flag?(:decoy_clue)
       c = pbMessage(_INTL("The body in the glass..."), [_INTL("Look more closely"), _INTL("Leave it")], 1)
       if c == 0
@@ -986,6 +987,12 @@ module FrostThaw
              "You don't say anything. Nobody else noticed. You're not sure you want them to."])
       end
     end
+    white_womb_beat
+    # Context 08 M8-9: Kelyn heard it all; the city didn't.
+    say(["The sending-stone warms in your hand.",
+         "KELYN: (from the stone, hoarse) I heard her. All of it. ...The leaves are turning up here.",
+         "KELYN: (from the stone) Come up. Before the city decides what it saw."])
+    set_flag(:kelyn_heard_reveal)
     say(["On the floor, a last splinter of the hag's mirror fogs once, as if somebody very far away had breathed on it."])
     set_flag(:avarice_faked_death)
     set_flag(:avarice_believed_dead)
