@@ -171,8 +171,8 @@ module FrostThaw
          "LIRIELLE: Oh! Sorry. Lirielle Mossdancer, of the Perfumed Root. I read the air.",
          "LIRIELLE: Yours is very old. And very new. That's not supposed to happen.",
          "LIRIELLE: My people came from the Circle in Lonelywood. We carry the Moon Requiem with us.",
-         "LIRIELLE: The night the frost egg hatched. You know it? ...Your ears just went red.",
-         "LIRIELLE: You don't have the ears for it, but they did. You were there.",
+         "LIRIELLE: The night the frost egg hatched. You know it?",
+         "LIRIELLE: (sniffing) ...You were there. It's still on your coat. Snow, and a lullaby.",
          "LIRIELLE: Lately I dream every night. Roots burning. Sap screaming.",
          "LIRIELLE: Something below is burning the seasons alive.",
          "LIRIELLE: Nobody wants to hear that during a festival. You look like you'd go and check."]
@@ -356,11 +356,10 @@ module FrostThaw
          "EIRWEN: And the chronal leaves are yours to read, all of you, whenever you like. The ones that remember days. Ask me."].compact
       end
     },
-    # (context 15 M15-3: the four riddles go in the Goal menu; dialogue 06 §3.7:
-    # he says why he has them, and who they're for, to the Journey kid too)
+    # (dialogue 06 §3.7, 15 line 1: he says why he has the riddles, and who
+    # they're for, to the Journey kid too. The Goal lines are 048_F's.)
     lorn_scribe: -> {
       next ["LORN SCRIBE: (writing backwards) .ti dah syawla uoY .yek eht dnuof uoy taht nwod etorw I"] if T.flag?(:key_found)
-      T.scribe_side_goals if defined?(::Scene_Map) && $scene.is_a?(::Scene_Map)      # (only when he's really talking, not when lines are checked)
       ["An old dwarf draped in frost-paper scrolls writes without looking.", "His eyes are milky, inked with runes.",
                    T.journey? ? "LORN SCRIBE: Four riddles, kept for the Heralds. You'll do to carry them, Herald's friend." :
                                 "LORN SCRIBE: Four riddles, kept four hundred years for the Heralds. One for each of you.",
@@ -984,23 +983,6 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The Wind-Glass Library: Alberica's sub-vault, and the Cycle Canticle
   #-----------------------------------------------------------------------------
-  # The Lorn Scribe's four riddles, written down (context 15 M15-3). The place
-  # names are the answers on purpose: the riddle is flavour, the way is plain.
-  SCRIBE_RIDDLES = [
-    [:scribe_key, :alberica, "a key 'where the year sleeps', in the Wind-Glass Library", :key_found],
-    [:scribe_blade, :meat_meat, "a blade in the silt where the boats froze: the Split Dock", :blade_found],
-    [:scribe_staff, :reptin, "a staff with the first Wardens, in clear sap: the Rootwarden Crypt", :staff_found],
-    [:scribe_mantle, :alerion, "a mantle where the world stops at the wall of light: the Wall's edge", :mantle_found]
-  ]
-
-  def scribe_side_goals
-    SCRIBE_RIDDLES.each do |key, who, what, done|
-      next if flag?(done) || !with_or_is?(who)
-      whose = herald?(who) ? "your" : HERALD_NAMES[who] ? "#{HERALD_NAMES[who]}'s" : "a Herald's"
-      side_goal(key, "The Lorn Scribe's riddle, #{whose}: #{what}.", done: done)
-    end
-  end
-
   def subvault(event_id = nil)
     if flag?(:key_found)
       return say(["The instrument case lies open and empty. Its lock of two interlocking notes still hums faintly."], event_id)
@@ -1055,7 +1037,7 @@ module FrostThaw
     say(["The Council Hall of Seasons is lit by four pulsing crystals: green, red, white and gold.",
          "As you come in, the colours shift in a slow dance: spring to winter to autumn to summer. The air hums like a heartbeat.",
          "Archivist Eirwen Solglass is waiting, barefoot on the polished root floor.",
-         "EIRWEN: (whispering) To heal the fracture in our history, we must sing the Cycle Canticle anew.",
+         "EIRWEN: (whispering) It isn't my song. It's yours, Alberica. The crystals are waiting.",
          "EIRWEN: The ritual has to finish before dawn. Will you lend your voice?"], event_id)
     if !with_or_is?(:alberica)
       return say(["EIRWEN: ...Ah. Not yours. Hers. The Key won't wake for anyone but the Dwarf of Song. Bring her back."])

@@ -133,7 +133,10 @@ module FrostThaw
     hearth_drinker: ["To the Heralds! ...They're on the wall, see. Fire on one side, snow on the other.",
                      "Every carving's a bit different. Depends who was paying."],
     hearth_bard: ["Do you know 'The Shade and the Shimmer'? Everybody's sick of it.", "I'm going to play it anyway."],
-    warden_ash_after: ["The Root-Gate's sealed. Council orders.", "Nobody's said why, and we're the ones guarding it."],
+    # (context 15 M15-1: the seal now has a reason, said at the Shrine)
+    warden_ash_after: [{ if: { flag: :ch7_started }, lines: ["The Root-Gate's open. Speaker's word. Mind the stair, it's warm."] },
+                       ["The Root-Gate's sealed. Council orders, till the festival's done.",
+                        "If the Marshal doesn't come up on the seventh night, we go down after him."]],
     warden_lis_after: ["Rootwardens are going missing beyond the Auroral Wall. Three this season.",
                        "We don't talk about it at the festival."],
     warden_tobin_after: ["If the Winter Matron asks you anything, think about your answer.", "She remembers everything you say."],
