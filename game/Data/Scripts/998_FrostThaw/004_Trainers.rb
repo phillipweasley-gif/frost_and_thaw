@@ -78,6 +78,10 @@ module GameData
     class << self
       alias ft_orig_front_sprite_filename front_sprite_filename unless method_defined?(:ft_orig_front_sprite_filename)
       def front_sprite_filename(tr_type)
+        # Avarice still wearing what's left of Var (Ch8, the Heart Chamber's first rounds)
+        if tr_type.to_s == "FT_AVARICE" && $ft_var_mask && (pbResolveBitmap("Graphics/Trainers/FT_VAR_cracked") rescue nil)
+          return "Graphics/Trainers/FT_VAR_cracked"
+        end
         own = "Graphics/Trainers/#{tr_type}"
         return own if FrostThaw.borrowed_trainer_type(tr_type) && (pbResolveBitmap(own) rescue nil)   # our own picture, if we've drawn one
         borrowed = FrostThaw.borrowed_trainer_type(tr_type)

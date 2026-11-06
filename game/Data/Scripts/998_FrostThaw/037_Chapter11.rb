@@ -301,8 +301,11 @@ module FrostThaw
     Stage.walk(goer, [PBMoveRoute::ChangeSpeed, 6, PBMoveRoute::Backward, PBMoveRoute::Backward]) if goer
     say([al ? "You go for the crystal. One beat of her wings throws you down the steps." :
               "Alerion goes for the crystal. One beat of her wings throws him down the steps.",
-         "Iskra takes the crystal in her talons.",
-         flag?(:eline_captured) ? "Sephek climbs onto her back alone. In the root-cords, Eline is still praying backwards." :
+         "Iskra takes the crystal in her talons."])
+    Stage.panel("S-11a")                       # (the roc mantling over Frostina's crystal on the Shrine stump)
+    say(["For one breath she spreads her wings over the Shrine stump, guarding what she's taken."])
+    Stage.panel_off
+    say([flag?(:eline_captured) ? "Sephek climbs onto her back alone. In the root-cords, Eline is still praying backwards." :
                                   "Sephek and Eline climb onto her back."])
     if iskra
       [frostina, sephek, stage_event("stage_eline")].each { |e| e.opacity = 0 if e rescue nil }   # they go with her

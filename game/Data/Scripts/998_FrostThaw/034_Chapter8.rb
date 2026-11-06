@@ -554,7 +554,12 @@ module FrostThaw
     heart_lair_actions
     return avarice_fight if flag?(:circle_done)
     if !flag?(:heart_opening_won)
-      won = pbTrainerBattle(:FT_AVARICE, "Avarice (opening)", nil, false, 0) ? true : false
+      $ft_var_mask = true                       # she's still in Var's cracked face for the opening
+      won = begin
+        pbTrainerBattle(:FT_AVARICE, "Avarice (opening)", nil, false, 0) ? true : false
+      ensure
+        $ft_var_mask = false
+      end
       return if !won
       set_flag(:heart_opening_won)
     end
