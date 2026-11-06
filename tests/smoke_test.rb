@@ -956,6 +956,12 @@ FT.set_flag(:reflection_claimed); v3 = FT.attendant_vision(:alerion)
 check("the Echo Vault's visions point at the quest still open") { v1.include?("Finish the step") && v2.include?("maze of mirror-ice") && v3.include?("walk back") }
 %i[mantle_found reflection_claimed].each { |f| FT.state[:flags]&.delete(f) }
 check("each White Vault circuit answers to a Herald's relic") { FT::CIRCUIT_RELICS.keys.sort == FT::VAULT_CIRCUITS.sort }
+check("the Vault's key items sit on numbers no relic uses") {
+  last_relic = FT::RELIC_ITEM_NUMBER + FT::RELIC_ITEMS.size - 1
+  FT::VAULT_KEY_ITEM_NUMBER > last_relic &&
+    (FT::VAULT_KEY_ITEM_NUMBER...(FT::VAULT_KEY_ITEM_NUMBER + FT::VAULT_KEY_ITEMS.size)).none? { |n|
+      (it = GameData::Item::DATA[n]) && !FT::VAULT_KEY_ITEMS.key?(it.id) }
+}
 
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

@@ -50,7 +50,7 @@ module FrostThaw
     FT_BLACKPENDANT: ["Pendant of Black Ice", "Pendants of Black Ice", 8, 0,
       "Alberica's pendant, come back again. Her family kept it so a door would stay shut: it's the White Vault's one key.", 0, 0, 6]
   }
-  VAULT_KEY_ITEM_NUMBER = 9190
+  VAULT_KEY_ITEM_NUMBER = 9600   # well clear of the relics (9100 up, 134 of them at 0.7.4)
 
   TRAINER_TYPES.merge!(
     FT_FROST_DRUID: ["Frost Druid", :CHANNELER, 0, 120, :LEADER_Pryce],
