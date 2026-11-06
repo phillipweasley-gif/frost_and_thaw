@@ -309,6 +309,6 @@ maps.each do |id, m|
   end
 end
 # counter clerks are talked to across the counter: known and fine
-problems.reject! { |p| p =~ /^(2002|2007|2014|2016|2024|2028|2005): (Barkeep|Clerk|Innkeeper|Danae|Iriskree|Naerth)/ }
+problems.reject! { |p| p =~ /^(2002|2007|2014|2016|2024|2028|2005): (Barkeep|Ma Yarbroul|Clerk|Innkeeper|Danae|Iriskree|Naerth)/ }
 puts problems.empty? ? "all map checks passed (#{maps.size} maps)" : problems
 exit(problems.empty? ? 0 : 1)

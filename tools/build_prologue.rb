@@ -57,7 +57,8 @@ save_map(h, P_HEARTH)
 # --- the market: everything is shut for the festival but the Hearth and the lift --
 m = copy_of(2050)
 m.door(31, 27, P_HEARTH, 5, 11, 8, name: "Door Rooted Hearth")
-m.event(16, 11, "Lift-keeper", [{ graphic: "BW (62)", direction: 2, script: "FT.pro_lift(@event_id)" }])
+# The lift-keeper in a worker's uniform: a role you have to find, so not the bard's sprite (notes/00 E18).
+m.event(16, 11, "Lift-keeper", [{ graphic: "BW (75)", direction: 2, script: "FT.pro_lift(@event_id)" }])
 [[24, 18], [34, 16], [20, 28], [14, 9], [44, 16], [45, 16]].each { |x, y| closed(m, x, y) }
 crowd = ["BW (29)", "BWParasolLady", "BW (37)", "BW (30)"]
 [[7, 22], [58, 28], [58, 29], [58, 30], [58, 31]].each_with_index do |(x, y), i|

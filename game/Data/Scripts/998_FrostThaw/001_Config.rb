@@ -59,7 +59,7 @@ module FrostThaw
                          "\"Meat Meat will bite you. Fondly.\""] },
     wyn:       { name: "Wyn",                 gender: 2, starter: :SABLEYE,     chapter_ready: true,
                  blurb: ["Spores druid and Rootwarden of Rootspire, 400 years after the Heralds.",
-                         "On watch at the Sap Gate, Wyn falls through an old mirror shard into the Heralds' own time.",
+                         "On watch at the Sap Gate, Wyn falls through an old mirror shard into the Heralds' time.",
                          "\"...Um. Hello. Sorry. Hello.\""] }
   }
 

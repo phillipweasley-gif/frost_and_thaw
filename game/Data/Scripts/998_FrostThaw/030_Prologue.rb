@@ -41,13 +41,19 @@ module FrostThaw
   # Who beats whom: Tamsin always takes the starter that beats yours.
   TAMSIN_COUNTER = { B7H220: :B330H152, B330H152: :WICKIT, WICKIT: :B7H220 }
 
+  # Where and when, before the morning: the lanterns are hung by day and lit at
+  # dusk (notes E5), and the fall comes by day.
+  PRO_CARD = ["Rootspire, the city under the World Tree. Year 400 since the tree grew, all in one night.",
+              "This morning is the Festival of Returning Light.",
+              "Every lantern in the city is hung for the Heralds of Dawn and Dusk."]
+
   TEXT.merge!(
     pro_hellen: -> {
       if flag?(:saw_sixth_figure)
-        ["HELLEN: Go on, then. Lanterns are lit, and Tamsin's already at the stall.",
+        ["HELLEN: Go on, then. Tamsin's already at the lantern stall.",
          "HELLEN: Take a bun for the road. Take two. You're too thin for a festival."]
       elsif flag?(:got_starter)
-        ["HELLEN: There it is. Your first. Here, it can have a crust. Everyone eats in my house.",
+        ["HELLEN: Fed it yet? Everyone eats in my house. Pokémon too.",
          "HELLEN: Don't let Tamsin tell you it was a fair fight, whichever way it went.",
          "HELLEN: They're at the wall. They check it every festival."]
       else
@@ -59,7 +65,7 @@ module FrostThaw
                "BARD: (singing) \"...the Shade and the Shimmer, who smuggled the last of the light...\"",
                "BARD: Third time this morning. They'll want it thirty more by tonight."],
     pro_drinker: ["The festival's the one day a year the whole city looks up at the same thing.",
-                  "Four hundred years since the tree grew in a night. Four hundred! And the light's still gold."],
+                  "Four hundred years since the tree grew in a night. Four hundred! And still gold."],
     # The edges of town are shut for the parade; the crowd tells you where to go instead.
     pro_crowd: -> {
       if flag?(:saw_sixth_figure)
@@ -81,7 +87,7 @@ module FrostThaw
     pro_lantern_seller: -> {
       flag?(:saw_sixth_figure) ? ["LANTERN SELLER: Real Reversal glass! Dug from the deep roots!",
                                   "LANTERN SELLER: From right where the old hag's mirrors broke!"] :
-        ["LANTERN SELLER: Lanterns tonight, little one! Come back when you've a Pokémon to show them to."]
+        ["LANTERN SELLER: Lanterns for dusk, little one! Come back with a Pokémon to show them."]
     },
     pro_wynsnow: -> {
       if flag?(:got_starter)
@@ -125,15 +131,19 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def scene_pro_morning
     hellen = Stage.find("Hellen")
+    if !flag?(:pro_card_shown)                        # (over the Hearth: no daytime backdrop yet)
+      set_flag(:pro_card_shown)
+      say(PRO_CARD)
+    end
     say(["Gold light through the tavern's knot-window. It's been gold every morning of your life.",
-         "You fell asleep at the corner table again, somewhere in the middle of last night's stories."])
+         "You fell asleep at the corner table again, halfway through last night's Herald stories."])
     pbSEPlay("Exit Door") rescue nil
     tamsin = Stage.actor(:tamsin, 6, 11, 8)
     Stage.walk(tamsin, 4, 4)
     say(["TAMSIN: Up! UP! #{pro_name}! Wynsnow said first light, and first light was an hour ago!"])
     Stage.approach(tamsin)
     Stage.hop(tamsin)
-    say(["Tamsin Brightrun: Hellen's kid, about your age, and set on joining the tree's Rootwardens."])
+    say(["Tamsin Brightrun. Hellen's kid, your best friend, set on joining the tree's Rootwardens."])
     Stage.face($game_player, 8)                      # you glance at the gold window
     Stage.wait(16)
     say(["TAMSIN: Don't look at the window. It's ALWAYS first light. The point is POKÉMON."])
@@ -144,17 +154,19 @@ module FrostThaw
     Stage.face($game_player, 4)
     Stage.face(tamsin, 4)
     Stage.turn_to(hellen) if hellen
-    say(["Hellen Brightrun keeps the Rooted Hearth, and nobody has ever left it hungry.",
-         "HELLEN: (sliding a plate over) Eat first.",
-         "HELLEN: Heralds didn't save the Dale on an empty stomach.",
+    say(["Hellen Brightrun keeps the Rooted Hearth, and nobody has ever left it hungry."])
+    # (The plate is staging, not words: the hook word "on" stays where Tamsin
+    # bounces off it, dialogue/00 §6. "Eat first" is Ma Yarbroul's too, four
+    # hundred years earlier: an echo on purpose, said once by each.)
+    say(["HELLEN: Eat first. Heralds didn't save the Dale on an empty stomach.",
          "TAMSIN: They saved it on pine-mead and spite. You told us!",
          "HELLEN: And I'll tell you again, with toast. Eat. Then College."])
     Stage.hop(tamsin)
     Stage.leave(tamsin, 6, 12)
     pbSEPlay("Exit Door") rescue nil
     say(["Tamsin's gone, toast in their teeth.",
-         "(The College of Auroral Arts is at the top of the tree. Take the root-lift from the market.)"])
-    state[:goal] = "Get to the College at the top of the tree. The root-lift's by the big stair, north."
+         "(Your first Pokémon is at the College, top of the tree. The root-lift's in the market.)"])
+    state[:goal] = "Your first Pokémon is at the College. The root-lift's by the big stair, north."
     set_flag(:intro_started)
     set_switch(SW_PRO_MORNING, true)
     Stage.cleanup
@@ -198,11 +210,13 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def scene_pro_college_arrive
     return if flag?(:got_starter)
-    tamsin = Stage.actor(:tamsin, 13, 15, 8)
-    Stage.wait(12)
+    # She came up the stairs first and has been peeking at the table: she runs
+    # out of the lecture-room corridor, off screen, to meet you (notes E17).
+    tamsin = Stage.actor(:tamsin, 20, 10, 2)
+    Stage.walk_to(tamsin, 13, 15, face: 2) || (tamsin && tamsin.moveto(13, 15))
     Stage.face(tamsin, 2)
     Stage.emote(tamsin, :exclaim)
-    say(["TAMSIN: THERE you are! He's put them out already, #{pro_name}. All three!"])
+    say(["TAMSIN: THERE you are! He's put them out already. All three!"])
     Stage.approach(tamsin)
     say(["TAMSIN: Wynsnow's lecture room, the east one. Come on, follow me!"])
     Stage.escort(tamsin, 20, 9, facing: 8)
@@ -253,7 +267,7 @@ module FrostThaw
     say(["WYNSNOW: A Pokémon in each. Raise it well and it'll fight beside you. Usually for you.",
          "WYNSNOW: Three Pokémon, three futures. Choose before I start measuring them."])
     Stage.walk_to($game_player, 20, 6, face: 8)
-    say(["WYNSNOW: Look in each Poké Ball first, then pick one. I'll be writing all of it down."])
+    say(["WYNSNOW: Look in each Poké Ball first, then pick one."])
     state[:goal] = "Look in the three Poké Balls on Wynsnow's table, and choose your first Pokémon."
   end
 
@@ -310,7 +324,7 @@ module FrostThaw
     say([pro_starter_line(sp, name)])
     wyn = Stage.find("Professor Wynsnow")
     pbCallBub(2, wyn.id) rescue nil if wyn
-    if !pbConfirmMessage(_INTL("WYNSNOW: So! You want {1}, the {2} Pokémon?", name, s[:label]))
+    if !pbConfirmMessage(_INTL("WYNSNOW: So! {1}? Think carefully. It's already thinking about you.", name))
       say(["WYNSNOW: Take your time. Not all of it, mind. The lanterns go up at dusk."])
       return
     end
@@ -386,7 +400,7 @@ module FrostThaw
     Stage.theme(nil)
     set_flag(:pro_battle_done)
     set_switch(SW_PRO_STARTER, true)
-    state[:goal] = "Tamsin's run back to the Rooted Hearth. Take the root-lift down to the market."
+    state[:goal] = "Head back down to the market. Tamsin's racing you to the Hearth."
     Stage.cleanup
   end
 
@@ -406,11 +420,17 @@ module FrostThaw
     hash = { id: key, id_number: 9890, trainer_type: :FT_TAMSIN_I, name: "Tamsin", version: 1,
              items: [], lose_text: "Hey! That one was practice.", pokemon: [mon] }
     GameData::Trainer::DATA[key] = GameData::Trainer.new(hash)
+    # A rival's fight, not a gym leader's: FT_TAMSIN_I borrows Brock's class,
+    # music and all (notes E12).
+    $PokemonGlobal.nextBattleBGM = pbStringToAudioFile(TAMSIN_BATTLE_BGM) rescue nil
     return pbTrainerBattle(:FT_TAMSIN_I, "Tamsin", nil, false, 1, true) ? true : false
   rescue StandardError => e
     log("Tamsin's prologue battle failed: #{e.message}")
     return false
+  ensure
+    $PokemonGlobal.nextBattleBGM = nil rescue nil
   end
+  TAMSIN_BATTLE_BGM = "Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)"
 
   #-----------------------------------------------------------------------------
   # Back in the market: Tamsin waits by the lift and leads you to the Hearth.
@@ -459,9 +479,11 @@ module FrostThaw
     Stage.walk_to($game_player, 15, 8, face: 6)
     Stage.face(tamsin, 6) if tamsin
     Stage.theme(:heralds)
-    say(["TAMSIN: Look. Every festival I check if it moved.",
-         "Five heroes in the living wood. One wreathed in snow, one in flame, one with a lute.",
+    say(["TAMSIN: Look. Every festival I check if it moved."])
+    Stage.panel("S-00")                               # the carving itself (art request; skipped until it exists)
+    say(["Five heroes in the living wood. One wreathed in snow, one in flame, one with a lute.",
          "One with a wolf. One half in shadow, with a knife. Two dragons coil above them."])
+    Stage.panel_off
     # "Last night's stories": Tamsin recites the legend and gets it wrong; Hellen,
     # who told it, puts it right (context/00.md M1).
     Stage.hop(tamsin) if tamsin
@@ -489,7 +511,10 @@ module FrostThaw
       Stage.pan_to(9, 7)
       Stage.turn_to(hellen)
     end
-    say(["HELLEN: (from the bar) The carver was my great-great-something. She said the wood grew it."])
+    say(["HELLEN: The carver was my great-great-something. She said the wood grew it."])
+    # The only one who notices your first Pokémon, and the festival cake served.
+    say(["HELLEN: There it is. Your first. Here, it can have a crust. Everyone eats in my house."])
+    Stage.cry(state[:starter]) if state[:starter]
     Stage.pan_back
     Stage.turn_to(tamsin) if tamsin
     say(["TAMSIN: Lanterns! The stall's right outside. Come on, before they sell the good ones."])
@@ -552,7 +577,7 @@ module FrostThaw
       say(["TAMSIN: Did you feel that?"])
     end
     Stage.panel("S-01", fade: 20)
-    say(["The crack in the glass widens. Inside it, it's night.",
+    say(["Inside the crack in the glass, it's night.",
          "A dock in a blizzard. Five figures on a gangplank. One has a lute on her back."])
     $game_screen.start_shake(2, 4, 16) rescue nil
     Stage.panel_off(fade: 12)

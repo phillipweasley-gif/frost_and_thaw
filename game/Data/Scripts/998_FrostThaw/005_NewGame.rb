@@ -230,11 +230,18 @@ module FrostThaw
   # New Journey: a short title card, then you wake at the Rooted Hearth on the
   # festival morning (030_Prologue.rb takes it from there). Your first Pokémon
   # comes from Professor Wynsnow at the College.
+  # The card is morning: it plays over a daytime Rootspire if that picture
+  # exists, otherwise over the Hearth itself as it fades in (030_Prologue.rb),
+  # never over the night-time festival backdrop (notes E5).
   def journey_prologue
-    backdrop(:rootspire)
-    pbMessage(_INTL("Rootspire, the city under the World Tree. Year 400 since the tree grew, all in one night."))
-    pbMessage(_INTL("This morning is the Festival of Returning Light."))
-    pbMessage(_INTL("Every lantern in the city is lit for the Heralds of Dawn and Dusk."))
+    return if !scene_art?(:rootspire_day)
+    backdrop(:rootspire_day)
+    PRO_CARD.each { |l| pbMessage(_INTL(l)) }
+    set_flag(:pro_card_shown)
+  end
+
+  def scene_art?(name)
+    (pbResolveBitmap("Graphics/Pictures/FrostThaw/scene_#{name}") rescue nil) ? true : false
   end
 
   # SC 0.06 - The ship north (Alberica, Reptin, Alerion). Each opening gives
@@ -249,6 +256,9 @@ module FrostThaw
     when :meat_meat then return meat_meat_prologue(h)
     when :wyn       then return wyn_prologue
     end
+    # The ship's deck at night (notes/00 E22). Meat Meat's hay and Wyn's Sap
+    # Gate are not on a ship, so those openings keep their own pictures.
+    backdrop(:ship)
     pbMessage(_INTL(RIME_BOX))
     pkmn = nil
     if h[:starter]
@@ -299,13 +309,13 @@ module FrostThaw
     pbMessage(_INTL("Razzy was in the next cage at the lab. Smaller than you. He used to talk."))
     pbMessage(_INTL("Razzy can't talk any more. Razzy holds your hand all night anyway."))
     pbMessage(_INTL("(Meat Meat doesn't cry. Meat Meat promised Razzy.)"))
-    pbMessage(_INTL("Tonight Razzy is gone. Small footprints in the snow, going toward the south gate."))
+    pbMessage(_INTL("Tonight Razzy is gone. Small footprints in the snow, going toward the south-west gate."))
     pbMessage(_INTL("The gate's shut. Speaker's guards. Nobody leaves Targos in lottery season."))
     pkmn = starter_pokemon(h[:starter])
     pbAddPokemonSilent(pkmn)
     Stage.cry(pkmn.species)
     pbMessage(_INTL("Your {1} chirps from the rafters. It found you the night you ran, and it never left.", pkmn.speciesName))
-    side_goal(:razzy, "Meat Meat's own: Razzy's footprints, out past the south gate.", done: :met_razzy)
+    side_goal(:razzy, "Meat Meat's own: Razzy's footprints, out past the south-west gate.", done: :met_razzy)
   end
 
   # SC 0.05 - Wyn's watch. Wyn starts four hundred years later, at the Sap Gate,
@@ -366,10 +376,14 @@ module FrostThaw
   SCENE_MUSIC = {
     dale:      "mountsilver",                        # the frozen Dale
     rootspire: "fullmoonIsland",                     # the festival, 400 years later
+    rootspire_day: "fullmoonIsland",                 # the festival morning (New Journey's card)
+    ship:      "mountsilver",                        # the ship north (Herald Mode)
     mirror:    "newmoonIsland"                       # falling through the glass
   }
 
+  # A picture that won't load falls back to the frozen Dale, never to black.
   def backdrop(name)
+    name = :dale if name != :dale && !scene_art?(name)
     pbBGMPlay(SCENE_MUSIC[name]) if SCENE_MUSIC[name] rescue nil
     clear_backdrop
     @backdrop_vp = Viewport.new(0, 0, Graphics.width, Graphics.height)
@@ -378,6 +392,7 @@ module FrostThaw
     @backdrop.bitmap = RPG::Cache.load_bitmap("Graphics/Pictures/FrostThaw/", "scene_#{name}")
   rescue StandardError => e
     log("Backdrop #{name} failed: #{e.message}")
+    backdrop(:dale) if name != :dale
   end
 
   def clear_backdrop
