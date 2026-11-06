@@ -749,11 +749,21 @@ module FrostThaw
 
   ATTUNEMENT_ARRIVAL = [2165, 10, 22, 8]
 
+  # Anduin walks the Test beside Reptin: on screen when he speaks.
+  def anduin_walks_with
+    return if Stage.speaker("ANDUIN")
+    x, y = Stage.near_slot
+    Stage.actor(:anduin, x, y, $game_player.direction, graphic: "FT_anduin") if x
+  rescue StandardError
+    nil
+  end
+
   # The Heartroot's Test (Q1.2): six successes before three failures, across the
   # Attunement Way's three stations (passages, spores, whispers) and the leaf.
   def attunement_station(which, event_id = nil)
     st = (state[:attune] ||= { ok: 0, bad: 0, done: [], hand: false })
     return say(["(You've passed this way.)"], event_id) if st[:done].include?(which)
+    anduin_walks_with
     case which
     when :passages
       say(["The passage splits three ways. Roots as thick as houses, breathing.",
@@ -766,10 +776,10 @@ module FrostThaw
       say(["A drift of pale spores, thick as snow, glowing. Breathing them makes the walls swim.",
            "Somewhere in it, a voice that sounds like Anduin's says: \"Leave him. He's a god now.\""], event_id)
       unless st[:hand]
-        if pbConfirmMessage(_INTL("Let Anduin hold Reptin's hand through it?"))
+        if pbConfirmMessage(_INTL(herald?(:reptin) ? "Let Anduin hold your hand through it?" : "Let Anduin hold Reptin's hand through it?"))
           st[:hand] = true
           st[:ok] += 1
-          say(["ANDUIN: (taking his hand, gripping it hard) That isn't me. THIS is me."])
+          say(["ANDUIN: (taking #{herald?(:reptin) ? 'your' : 'his'} hand, gripping it hard) That isn't me. THIS is me."])
         end
       end
       ok = challenge("The spore-drift.", ["Breathe slow, and keep walking", "Run through it", "Hold your breath as long as you can"], 0)
