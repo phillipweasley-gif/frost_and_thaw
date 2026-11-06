@@ -71,7 +71,7 @@ module FrostThaw
     forest_hunter_brann: [:FT_TRAPPER, "Halvard", [[:NOCTOWL, 18], [:B58H216, 18]], "Fine. You find it, then. I've been out here a month."],
     forest_logger_tova:  [:WORKER, "Tova", [[:MACHOP, 17], [:B185H216, 18]], "Strong arms, weak bench. Story of my life."]
   )
-  TRAINER_INTROS[:ravisin] = "RAVISIN: Ten-Towns will be destroyed, if not by my hand, then by the Frostmaiden's!"
+  TRAINER_INTROS[:ravisin] = "RAVISIN: My moose only returns the favour. So will I."
   TRAINERS[:ravisin] = [:FT_FROSTDRUID, "Ravisin", [[:SNORUNT, 19], [:B234H215, 20], [:FROSLASS, 21]],
                         "My beasts will avenge us!"]
 
@@ -98,49 +98,61 @@ module FrostThaw
                             "LOGGER: Speaker Huddle's paying for that moose. Ask her."]],
     lonely_forest_hunter: [{ if: { flag: :white_moose_done }, lines: ["HUNTER: You got it? With what, a ballista? Huh. Drinks are on me."] },
                            ["HUNTER: White hide, white snow. It's like hunting a cloud with horns.",
-                            "HUNTER: Tracks? Everywhere. Ordinary moose, mostly. Only one in six sets are the right ones, I swear."]],
-    lonely_forest_logpile: ["Logs stacked higher than a house, waiting for sledges that don't come. The loggers won't stay out here past noon."],
+                            "HUNTER: Tracks? Everywhere. Ordinary moose, mostly. The white one's tracks don't wander."]],
+    lonely_forest_logpile: ["Logs stacked higher than a house, waiting for sledges that don't come.",
+                            "The loggers won't stay out here past noon."],
     tomb_gazebo: ["A delicately carved marble gazebo. Its polished floor is swept clean by the wind."],
-    tomb_e1: ["A white marble statue of a slender, robed figure on a seven-foot granite pillar, facing north.",
+    tomb_e1: ["A white marble statue of a slender, robed figure on a seven-foot pillar, facing north.",
               "The wind has worn the face away, but the pointed ears say elf."],
     tomb_e2: ["Embedded in the hillside: a stone door with no visible handles or hinges. Snug. Airtight.",
               "It won't budge from out here. Whatever opens it is on the other side."],
     tomb_pillars: ["Five pale blue crystal pillars stand in a half-circle around the sarcophagus.",
-                   "A carving near the top of each, north to south: a twig, a pinecone, a flame, a feather, a humanoid hand."],
-    tomb_lookout: ["From up here in the trees, you can see the whole circle of the moon dial, and the dark hole under the hill."],
-    barrow_animals: ["Foxes, hares, goats, owls, wolf pups and young bears, sleeping together among the bones, peacefully.",
+                   "A carving tops each, north to south: a twig, a pinecone, a flame, a feather, a hand."],
+    tomb_lookout: ["From up in the trees you can see the whole moon dial, and the dark hole under the hill."],
+    barrow_animals: ["Foxes, hares, goats, owls, wolf pups and young bears, asleep together among the bones.",
                      "Nobody here eats anybody. Something has told them not to."],
-    barrow_animals_after: ["The animals have scattered into the woods. The bones are all that's left, and the smell of them."],
+    barrow_animals_after: ["The animals have scattered into the woods.",
+                           "The bones are all that's left, and the smell of them."],
     barrow_lever: ["A stone lever set into the wall beside the south door."],
     tomb_e8_closed: ["A stone door engraved with a white half-moon, its rounded edge to the right. Locked.",
                      "There's no keyhole. Only the half-moon, waiting for light."],
     tomb_e9_closed: ["A stone door engraved with a white half-moon, its rounded edge to the left. Locked.",
                      "Behind it, faintly: someone humming. And something rustling, like leaves."],
-    tomb_e8_light: ["A beam of light shines down from the top of the dome onto the sarcophagus. A minor magic, centuries old."],
+    tomb_e8_light: ["A beam of light shines down from the top of the dome onto the sarcophagus.",
+                    "A minor magic, centuries old."],
     awakened_shrub: [{ if: { flag: :shrub_talked }, lines: ["SHRUB: More berries? Take. Take. Just no fire. Please, no fire."] },
                      ["The berry bush trembles."]],
-    vurnis_after: ["The sarcophagus lid lies askew. Vurnis lies under it, quiet. The pouch is gone; the smell isn't."],
+    vurnis_after: ["The sarcophagus lid lies askew. Vurnis lies under it, quiet.",
+                   "The pouch is gone; the smell isn't."],
     ramshackle_inside: ["Lumber stacked to the rafters, chairs on tables, a long bar furred with dust.",
                         "The beam over the common room is the one. Nobody's taken the hook out of it."],
     ramshackle_notice: ["A notice nailed to the bar, in a cramped hand: \"Closed. - D.\"",
                         "Under it, in a different hand, in pencil: \"He didn't do it himself.\""],
     sahnar_after: ["The sarcophagus is empty and smells, inexplicably, of pumpkin spice."],
     tomb_bones: ["Bones, mostly animal. A few aren't."],
-    forest_hunter_brann_after: ["HALVARD: A month. Not one clean look at it. It's like it KNOWS where I'll be."],
+    forest_hunter_brann_after: ["HALVARD: A month. Not one clean look at it. It's like it KNOWS where I'll be.",
+                                "HALVARD: It goes east, into the old trees. Look for tracks that don't wander."],
     forest_logger_tova_after: [{ if: { flag: :white_moose_done }, lines: ["TOVA: Back to work. Thanks. I mean it."] },
                                ["TOVA: If you find that moose, tell it I said something rude."]]
   )
 
-  PARTY_CHAT[:alberica].merge!(lonely_forest: ["Every tree in this forest looks like every other tree. Including the white ones. Especially the white ones."],
-                               elven_tomb: ["Elves always build somewhere pretty to be dead in. I respect that, darling. I do."])
-  PARTY_CHAT[:reptin].merge!(lonely_forest: ["A moose that hunts the hunters. That's not nature. That's somebody's opinion, with antlers."],
+  PARTY_CHAT[:alberica].merge!(lonely_forest: ["Every tree in this forest looks like every other tree.",
+                                               "I keep counting them. It helps."],
+                               elven_tomb: ["Elves always build somewhere pretty to be dead in. I respect that. I do."])
+  PARTY_CHAT[:reptin].merge!(lonely_forest: ["A moose that hunts the hunters. That's not nature.",
+                                             "That's somebody's opinion, with antlers."],
                              elven_tomb: ["Old magic here. Polite magic. It keeps asking us to leave."])
-  PARTY_CHAT[:alerion].merge!(lonely_forest: ["Hunters' marks on the trees. Old ones. Some of them never came back to finish the job."],
-                              elven_tomb: ["Elven. Very old. The moon dial still keeps time. Even down here, the moon matters."])
-  PARTY_CHAT[:shade].merge!(lonely_forest: ["I can read tracks. These ones read like a moose is laughing at me."],
-                            elven_tomb: ["Somebody lives under this hill. Bedroll, herbs, a fire's leavings. And they don't want visitors."])
-  PARTY_CHAT[:meat_meat].merge!(lonely_forest: ["Meat Meat smells moose. Many moose. One moose smells... clever. Meat Meat does not like clever moose."],
-                                elven_tomb: ["Statues have ears like Meat Meat's friend's ears. Pointy. They are watching the wrong way."]) if PARTY_CHAT[:meat_meat]
+  PARTY_CHAT[:alerion].merge!(lonely_forest: ["Hunters' marks on the trees. Old ones.",
+                                              "Some of them never came back to finish the job."],
+                              elven_tomb: ["Elven. Very old. The moon dial still keeps time.",
+                                           "Even down here, the moon matters."])
+  PARTY_CHAT[:shade].merge!(lonely_forest: ["Tracks I can read. It's everything else."],
+                            elven_tomb: ["Somebody lives under this hill.",
+                                         "Bedroll, herbs, a fire's leavings. And they don't want visitors."])
+  PARTY_CHAT[:meat_meat].merge!(lonely_forest: ["Meat Meat smells moose. Many moose. One moose smells... clever.",
+                                                "Meat Meat does not like clever moose."],
+                                elven_tomb: ["Statues have ears like Meat Meat's friend's ears.",
+                                             "Pointy. They are watching the wrong way."]) if PARTY_CHAT[:meat_meat]
 
   module_function
 
@@ -153,8 +165,9 @@ module FrostThaw
 
   def self.nimsy(event_id = nil)
     settled = flag?(:rested_lonelywood)   # (not on your first night: that night belongs to Shimmer)
-    nimsy_without_moose(event_id)
+    # the moose first, then her attic (notes 14 E9: not tacked on after the rest)
     white_moose_nimsy(event_id) if settled && flag?(:met_nimsy)
+    nimsy_without_moose(event_id)
   end
 
   def white_moose_nimsy(event_id = nil)
@@ -164,10 +177,12 @@ module FrostThaw
       return if !pbConfirmMessage(_INTL("Ask Speaker Huddle about the white moose after all?"))
     else
       # (the morning after her attic lost Shimmer: grief first, notes 14 E9)
-      say([flag?(:shimmer_taken) ? "NIMSY: I'm so sorry about your friend. (quietly) I'll keep the attic as she left it." :
+      # Purpose: a Speaker who just lost a guest from her attic still has a town
+      # to keep alive; she asks, gently, and the party decides whether it can.
+      say([flag?(:shimmer_taken) ? "NIMSY: (the plate, untouched since last night) I won't ask how you slept." :
                                    "NIMSY: Before you go. (She sets the cookie plate down, and doesn't offer it.)",
-           "NIMSY: And when you can spare an hour... a white moose is killing our loggers.",
-           "NIMSY: Our hunters can't touch it. It sees them coming. Will you help?"], event_id)
+           "NIMSY: A white moose is killing our loggers. It can wait. It's waited this long.",
+           "NIMSY: Our hunters can't get near it. When you're ready... will you help?"], event_id)
     end
     c = pbMessage(_INTL("What do you say?"), [_INTL("\"We'll find your moose.\""), _INTL("\"What's in it for us?\""), _INTL("\"Not now.\"")], 0)
     if c == 2
@@ -179,32 +194,32 @@ module FrostThaw
            "NIMSY: Fine. Ten thousand for its head. The butcher pays a thousand for the carcass."])
       persuade = with_or_is?(:alberica) || rand(100) < 50
       sayc([cl(:alberica, "Ten thousand? For a moose that's beaten every hunter in town? Do better."),
-            persuade ? "NIMSY: (laughing) ...Twelve and a half. And not a copper more." : "NIMSY: Ten. I've got four children and a roof that leaks."])
+            persuade ? "NIMSY: (laughing) ...Twelve and a half. And not a copper more." : "NIMSY: Ten. I've got children, and a roof that leaks."])
       set_flag(:moose_fee_125) if persuade
       sayc([cl(:shade, "And if we want more than gold?"),
             "NIMSY: Then... there's Ramshackle. The old inn. Closed two years. Nobody wants it.",
-            "NIMSY: An investment property. To do with what you will.",
-            "NIMSY: (with a smile) Of course, if our hunters get the moose first, the rewards will be theirs!"])
+            "NIMSY: An investment property. To do with what you will."])
       set_flag(:moose_fee)
     else
-      say(["NIMSY: Wonderful! Cookies for the road. Take two. Take three, you're tall.",
-           "NIMSY: (with a smile) Of course, if our hunters get the moose first, the glory's theirs!"])
+      say(["NIMSY: Thank you. (She presses cookies on you anyway.) Take two. Take three, you're tall."])
     end
-    say(["NIMSY: And my mother's lucky coin, for its head. It's all I've got that shines.",
+    say(["She takes a tarnished coin out of her apron and turns it over.",
+         "NIMSY: And my mother's lucky coin, for its head. It's all I've got that shines.",
          "NIMSY: The loggers work the woods east of town, on the logging road. Look for tracks.",
-         "NIMSY: Most of them will be ordinary moose. You'll know the white one's. Or you won't, and that's the trouble."])
+         "NIMSY: Most will be ordinary moose. You'll know the white one's. Or you won't."])
     set_flag(:white_moose_taken)
     side_goal(:moose, "The white moose: in the woods east of Lonelywood, on the logging road.", done: :white_moose_done)
   end
 
   def white_moose_reward(event_id = nil)
-    say(["You set the white moose's head down on Speaker Huddle's kitchen table. The children go very quiet.",
+    say(["You set the white moose's head down on Speaker Huddle's kitchen table.",
+         "The children go very quiet.",
          "NIMSY: ...Well. It IS white."], event_id)
     take_key(:FT_MOOSEHEAD)
     knew = (state[:mirror_topics] || []).include?(:ravisin)
     if !$game_switches[SW_WM_RAVISIN]
       if knew
-        sayc(["You tell her what the mirror showed: a frost druid, who gave the moose its words.",
+        sayc(["You tell her what the mirror showed: a frost druid gave the moose its words.",
               "NIMSY: A druid. Who makes them talk.",
               cl(:alerion, "She'll do it again. A polar bear. Something under the lake. Anything."),
               "NIMSY: (very quietly) Then this isn't over. Is it."])
@@ -225,9 +240,10 @@ module FrostThaw
       give_key(:FT_RAMSHACKLEDEED)
       set_switch(SW_WM_RAMSHACKLE, true)
     else
-      say(["NIMSY: And for heroes who asked for nothing but cookies... a whole TIN of cookies."])
+      say(["NIMSY: And for heroes who asked for nothing but cookies... a whole TIN."])
       pbReceiveItem(:RARECANDY) rescue nil
-      say(["NIMSY: ...And, oh, take Ramshackle. Somebody ought to have it. You lot clearly need a roof."])
+      say(["NIMSY: ...And, oh, take Ramshackle.",
+           "NIMSY: Somebody ought to have it. You lot clearly need a roof."])
       give_key(:FT_RAMSHACKLEDEED)
       set_switch(SW_WM_RAMSHACKLE, true)
     end
@@ -235,6 +251,7 @@ module FrostThaw
          "NIMSY: Pin it on a Pokémon and the purse comes home heavier.",
          "NIMSY: Mine never did. But I never fought anything."])
     give(:AMULETCOIN)
+    quest_done_box("The white moose is dead.")
     set_flag(:white_moose_done)
     side_goal_done(:moose)
     town_quest_finished
@@ -260,7 +277,8 @@ module FrostThaw
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     set_rest_at(RAMSHACKLE_REST)
     sayc(["You sleep among the lumber. Nobody comes. Nothing creaks that shouldn't.",
-          cl(:shade, "(in the morning) Somebody stood at the bar last night. Didn't order. Didn't leave footprints."),
+          cl(:shade, "(in the morning) Somebody stood at the bar last night."),
+          cl(:shade, "Didn't order. Didn't leave footprints."),
           cl(:alberica, "Darling, every bar has one of those.")])
   end
 
@@ -278,9 +296,9 @@ module FrostThaw
   # The book: an hour's search and a DC 15 Wisdom (Survival) check finds a set
   # of moose tracks; a d6 says whose (only a 6 is the white moose); otherwise an
   # ordinary moose after 1d4 hours, and you search again. Every three hours in
-  # the forest, the encounters table. (So it can't go on for ever: the sixth set
+  # the forest, the encounters table. (So it can't go on for ever: the third set
   # of tracks you find is always the white moose's.)
-  WHITE_MOOSE_PITY = 6
+  WHITE_MOOSE_PITY = 3            # (notes 14 E24: not a grind of a dozen prompts)
 
   def moose_tracks(event_id = nil)
     return say(["Moose tracks. Lots of them. You've found the one set that matters already."], event_id) if $game_switches[SW_WM_TOMB_FOUND]
@@ -288,9 +306,9 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Spend an hour searching for a fresh set of moose tracks?"))
     forest_hours(1)
     return if $game_switches[SW_WM_TOMB_FOUND]          # (the fox may have led you to them meanwhile)
-    found = rand(100) < (with_or_is?(:shade) ? 80 : 50)
+    found = rand(100) < (with_or_is?(:alerion) ? 80 : 50)
     return failed_track_search if !found
-    sayc([cl(:shade, "(crouching) Here. Fresh. Heavy, steady. We follow these.")]) if with_or_is?(:shade)
+    sayc([cl(:alerion, "(crouching) Here. Fresh. Heavy, steady. We follow these.")]) if with_or_is?(:alerion)
     state[:track_sets] = state[:track_sets].to_i + 1
     if rand(6) == 5 || state[:track_sets] >= WHITE_MOOSE_PITY
       return white_moose_tracks
@@ -308,24 +326,27 @@ module FrostThaw
       sayc(["An hour of squinting at snow. Every set of tracks leads into every other set.",
             cl(:meat_meat, "Meat Meat is cold. Meat Meat also cannot find moose.")])
     when 1
-      say(["No moose. But under a fallen pine, a hunter's snare, long abandoned, still baited with a frozen berry."])
+      say(["No moose.",
+           "But under a fallen pine, an old hunter's snare, still baited with a frozen berry."])
       pbReceiveItem(:PECHABERRY) rescue nil
     when 2
       say(["The tracks you follow turn out to be wolves'. A lot of wolves. Very fresh.",
            "You hear them before you see them."])
       forest_wolves
     when 3
-      sayc(["You follow a trail for an hour before it doubles back on itself, and you realise you're lost.",
+      sayc(["You follow a trail for an hour. It doubles back on itself, and you realise you're lost.",
             cl(:alerion, "The moss is on the wrong side of every tree here. Somebody did that on purpose."),
             "Another hour gone, finding the logging road again."])
       forest_hours(1)
     when 4
-      say(["No tracks. But in the hollow of an old stump: a hunter's cache, wrapped in oilcloth. Whoever left it isn't coming back."])
+      say(["No tracks. But in the hollow of an old stump: a hunter's cache, wrapped in oilcloth.",
+           "Whoever left it isn't coming back."])
       pbReceiveItem(:SUPERPOTION) rescue nil
     else
       need = %i[FT_TWIG FT_PINECONE FT_GREYFEATHER].reject { |i| $PokemonBag.pbHasItem?(i) rescue false }
       if need.empty?
-        say(["Nothing but snow, and the sense of being watched. Off in the trees, something white moves, and is gone."])
+        say(["Nothing but snow, and the sense of being watched.",
+             "Off in the trees, something white moves, and is gone."])
       else
         say(["No tracks. But something catches your eye in the snow."])
         forest_pickup(need.first)
@@ -334,7 +355,8 @@ module FrostThaw
   end
 
   def ordinary_moose
-    say(["...and find a moose. Brown. Enormous. Ordinary. Chewing bark, looking at you with total indifference.",
+    say(["...and find a moose. Brown. Enormous. Ordinary.",
+         "Chewing bark, looking at you with total indifference.",
          "It poses no threat, as long as you leave it alone."])
     c = pbMessage(_INTL("What do you do?"), [_INTL("Leave it alone."), _INTL("Battle it.")], 0)
     pbWildBattle(:STANTLER, 17) rescue nil if c == 1
@@ -354,7 +376,8 @@ module FrostThaw
   def tomb_ward(event_id = nil)
     return if $game_switches[SW_WM_TOMB_FOUND]
     say(["You walk on into the old trees, and walk, and walk...",
-         "...and somehow you're back where you started, facing the logging camp. Nobody remembers turning round."], event_id)
+         "...and somehow you're back where you started, facing the logging camp.",
+         "Nobody remembers turning round."], event_id)
     pbMoveRoute($game_player, [PBMoveRoute::TurnLeft, PBMoveRoute::TurnLeft, PBMoveRoute::Forward,
                                PBMoveRoute::Forward, PBMoveRoute::Forward]) rescue nil
   end
@@ -364,8 +387,7 @@ module FrostThaw
     return say(["Paw prints, a little scuffle in the snow. The fox and the hare are long gone."], event_id) if flag?(:fox_hare_done)
     say(["An arctic fox, patiently stalking a snowshoe hare across the snow. Neither has seen you."], event_id)
     talker = with_or_is?(:meat_meat) ? :meat_meat : nil
-    opts = [_INTL("Leave them be.")]
-    opts << _INTL("Speak to the fox.") << _INTL("Speak to the hare.") if talker
+    opts = [_INTL("Leave them be."), _INTL("Crouch down by the fox."), _INTL("Crouch down by the hare.")]
     c = pbMessage(_INTL("What do you do?"), opts, 0)
     set_flag(:fox_hare_done)
     if c == 0
@@ -373,8 +395,9 @@ module FrostThaw
                                ["The fox pounces. The hare doesn't get away. The fox trots off with dinner."])
     end
     friend = c == 1 ? "fox" : "hare"
-    sayc([as(:meat_meat, "(crouching, very gently) Little #{friend}. Meat Meat will not eat you. Meat Meat is looking for a white moose."),
-          "The #{c == 1 ? "hare" : "fox"} bolts the moment it hears a voice. The #{friend} sits, ears up, and looks at you for a long moment.",
+    sayc([talker ? as(:meat_meat, "Little #{friend}. Meat Meat will not eat you. Meat Meat wants the moose.") :
+                   "You crouch, very still, and hold out an empty hand to the #{friend}.",
+          "The #{c == 1 ? "hare" : "fox"} bolts. The #{friend} sits, ears up, and looks at you for a long moment.",
           "Then it trots off east, stopping every few steps to make sure you're following."])
     forest_hours(1 + rand(4))
     white_moose_tracks if !$game_switches[SW_WM_TOMB_FOUND]
@@ -394,9 +417,11 @@ module FrostThaw
 
   def forest_banshee
     say(["A pale shape between the trees: a woman, an elf, in a tattered cloak, with a bow of mist.",
-         "The spectral remnant of a warrior banished for something selfish and cruel. She nocks a phantom arrow."])
+         "The spectral remnant of a warrior banished for something selfish and cruel.",
+         "She nocks a phantom arrow."])
     if boss_battle(named_mon(:FROSLASS, 19, "Banshee"))
-      say(["She comes apart like breath in the cold. She'll re-form somewhere in the forest tomorrow, damned to her exile."])
+      say(["She comes apart like breath in the cold.",
+           "She'll re-form somewhere in the forest tomorrow, damned to her exile."])
     end
   end
 
@@ -405,8 +430,8 @@ module FrostThaw
       return say(["A brown bear and a scatter of cubs, nosing at the snow. The bear's mate.",
                   "She looks at you a long time, then takes her cubs the other way."])
     end
-    say(["A hungry brown bear is pulling low branches off a pine and gnawing them. It sees you,",
-         "and comes toward you, looking for tastier food."])
+    say(["A hungry brown bear is pulling low branches off a pine and gnawing them.",
+         "It sees you, and comes toward you, looking for tastier food."])
     if with_or_is?(:meat_meat)
       sayc([as(:meat_meat, "(drawing herself up to her full height, and roaring) MEAT MEAT IS NOT FOOD."),
             "The bear stops. Considers. Leaves."])
@@ -416,9 +441,10 @@ module FrostThaw
   end
 
   def forest_chwingas
-    sayc(["As you stop for a breather, something tiny and bright-eyed peers out of a hollow log. Then another. Chwingas.",
+    sayc(["As you stop for a breather, something tiny and bright-eyed peers out of a hollow log.",
+          "Then another. Chwingas.",
           "They follow you for a while, copying the way you walk, giggling silently.",
-          cl(:alberica, "(delighted) They're doing your walk, darling. It's uncanny."),
+          cl(:alberica, "(delighted, in spite of everything) They're doing your walk. It's uncanny."),
           "When they've had their fun, one leaves a little gift in a footprint, and they're gone."])
     pbReceiveItem(:ORANBERRY) rescue nil
   end
@@ -454,10 +480,11 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def scene_elven_tomb_arrival
     say(["The tracks lead to a large, circular indentation in a snowy hillside.",
-         "Rising from the middle of the circle is a triangular gnomon of beautifully carved crystal, twenty feet tall.",
-         "A ten-foot berm hugs the circle's eastern edge, evergreens around and atop it, sheltering what looks like a sarcophagus",
-         "under the snow, enclosed by a half-circle of pale blue crystal pillars.",
-         "North of the berm is a delicately carved marble gazebo; south of it, a row of outward-facing white marble statues on granite pillars."])
+         "In the middle of the circle rises a gnomon of carved crystal, twenty feet tall.",
+         "East of it, a berm crowned with evergreens shelters what looks like a sarcophagus.",
+         "Round it under the snow: a half-circle of pale blue crystal pillars.",
+         "North of it, a marble gazebo.",
+         "South, a row of white marble statues on pillars, facing outward."])
   end
 
   # E1, E6: the ten statues. Topple all ten and the misdirection ends.
@@ -465,13 +492,16 @@ module FrostThaw
     say(lines_for(:tomb_e1), event_id)
     return if !pbConfirmMessage(_INTL("Topple the statue?"))
     if !party_has_strength?
-      return say(["You heave together. The statue doesn't so much as rock. You'd need a lot more strength than this."])
+      return say(["You heave together. The statue doesn't so much as rock.",
+                  "You'd need a lot more strength than this."])
     end
-    say(["You set your shoulders to the plinth and heave. The statue goes over and breaks in the snow."])
+    say(["You set your shoulders to the plinth and heave.",
+         "The statue goes over and breaks in the snow."])
     set_self_switch(event_id, "A")
     state[:statues_down] = (state[:statues_down] || 0) + 1
     if state[:statues_down] >= 10
-      say(["As the tenth statue falls, the air changes. The polite, persistent wish to be somewhere else is gone."])
+      say(["As the tenth statue falls, the air changes.",
+           "The polite, persistent wish to be somewhere else is gone."])
       set_flag(:tomb_unwarded)
       set_switch(SW_WM_TOMB_FOUND, true)
     else
@@ -485,8 +515,9 @@ module FrostThaw
       return say(["A silver flame burns in the brazier, warm as a campfire, and it won't go out for a tenday."], event_id)
     end
     say(lines_for(:tomb_gazebo), event_id)
-    say(["In the middle of the gazebo sits an unlit stone brazier, its bowl twenty inches across,",
-         "full of snow and pine needles the wind has swept off the floor. It's fixed to the marble. It won't budge."])
+    say(["In the middle of the gazebo sits an unlit stone brazier, its bowl twenty inches across.",
+         "It's full of snow and pine needles the wind has swept off the floor.",
+         "It's fixed to the marble. It won't budge."])
     need = %i[FT_TWIG FT_PINECONE FT_GREYFEATHER FT_SKELETALHAND]
     have = need.select { |i| $PokemonBag.pbHasItem?(i) rescue false }
     return if have.size < need.size && !pbConfirmMessage(_INTL("Put something in the brazier?"))
@@ -499,7 +530,7 @@ module FrostThaw
     if !party_has_fire?
       return say(["Now you need fire. A spark, a flame, something that burns."])
     end
-    say(["A spark, and a silver flame quickly consumes the brazier's contents, then goes on burning, on nothing at all.",
+    say(["A spark, and a silver flame eats the brazier's contents, then burns on, on nothing at all.",
          "It gives off heat and light like a campfire."])
     need.each { |i| take_key(i) }
     set_flag(:brazier_lit)
@@ -509,16 +540,20 @@ module FrostThaw
   def tomb_sarcophagus(event_id = nil)
     return say(lines_for(:sahnar_after), event_id) if $game_switches[SW_WM_SAHNAR]
     say(lines_for(:tomb_pillars), event_id)
-    say(["Atop the berm, a granite sarcophagus. Clearing the snow off the lid reveals an engraving of a brazier."])
+    say(["Atop the berm, a granite sarcophagus.",
+         "Clearing the snow off the lid reveals an engraving of a brazier."])
     return say(["The lid won't move. No amount of force shifts it a hair."]) if !flag?(:brazier_lit)
     return if !pbConfirmMessage(_INTL("Push the lid aside? (It weighs as much as a horse.)"))
     if !party_has_strength?
       return say(["It weighs five hundred pounds. You'll need someone, or something, much stronger."])
     end
-    sayc(["The lid grinds aside. Inside: a moon elf, wrapped in linen, preserved, and... sitting up.",
-          "SAHNAR: (in a dry, courtly voice) Ah. Liberators. I am Sahnar. I am at your command, until I fall to dust.",
+    say(["The lid grinds aside. Inside: a moon elf, wrapped in linen, preserved, and... sitting up."])
+    sev = $game_map.events[event_id] rescue nil
+    Stage.actor(:sahnar, sev.x, sev.y - 1, 2, graphic: SAHNAR_GRAPHIC) if sev && Stage.map?
+    sayc(["SAHNAR: (in a dry, courtly voice) Ah. Liberators.",
+          "SAHNAR: I am Sahnar. At your command, until I fall to dust.",
           "A strong smell fills the air. Cinnamon, nutmeg, cloves. Pumpkin spice.",
-          cl(:alberica, "...Darling, the mummy smells like an autumn latte."),
+          cl(:alberica, "...The mummy smells like pumpkin pie."),
           cl(:meat_meat, "Meat Meat likes this one.")])
     set_switch(SW_WM_SAHNAR, true)
     pk = named_mon(:YAMASK, 18, "Sahnar")
@@ -527,21 +562,26 @@ module FrostThaw
       say(["Sahnar knows nothing of Ten-Towns, or the winter. He's been sealed up for centuries.",
            "SAHNAR: But the moon dial, that I know. Ask, and I will show you how it turns."])
       set_flag(:sahnar_with_you)
+      Stage.cleanup
     end
   rescue StandardError => e
     log("tomb_sarcophagus: #{e.message}")
   end
 
+  SAHNAR_GRAPHIC = "Followers/YAMASK"      # stand-in (art request: a linen-wrapped moon-elf mummy)
+
   # E5: the moon dial. The gnomon lights the current phase; a moonbeam can light another.
   def moon_dial(event_id = nil)
     phase = (moonphase rescue 4)
-    sayc(["The snow around the crystal gnomon has melted away, revealing a circle of moon phases carved into the stone.",
-          "A full moon to the north, a new moon to the south, and the waxing and waning phases between."], event_id)
+    sayc(["The snow round the gnomon has melted away.",
+          "Moon phases are carved in a circle in the stone.",
+          "A full moon north, a new moon south, and the waxing and waning phases between."], event_id)
     if !flag?(:dial_read)
       sayc(["Tiny Elvish inscriptions run round the full moon and the two half-moons, east and west.",
-            cl(:alerion, "\"Gaze upon your own face and have seven questions answered.\" That's the full moon."),
+            cl(:alerion, "The full moon: \"Gaze upon your own face and have seven questions answered.\""),
             cl(:alerion, "And the half-moons: \"Unlock the tombs of the half moon.\""),
-            (!with_or_is?(:alerion) ? "Full moon: \"Gaze upon your own face and have seven questions answered.\" Half-moons: \"Unlock the tombs of the half moon.\"" : nil)])
+            (!with_or_is?(:alerion) ? "The full moon: \"Gaze upon your own face and have seven questions answered.\"" : nil),
+            (!with_or_is?(:alerion) ? "The half-moons: \"Unlock the tombs of the half moon.\"" : nil)])
       set_flag(:dial_read)
     end
     dial_lit
@@ -598,17 +638,29 @@ module FrostThaw
     say(lines_for(:tomb_lookout), event_id)
     return if $game_switches[SW_WM_MOOSE_DEAD]
     return if !pbConfirmMessage(_INTL("Watch the tomb from here for an hour?"))
-    say(["An hour passes, cold and still. Then a huge white moose emerges from under the hillside,",
-         "stands in the moon dial, and sniffs the air for a few minutes.",
-         "It turns toward Lonelywood, to go on with its reign of terror, and walks straight toward your hiding place."])
+    # the moose comes out on screen (notes 14 E18): from the hole, to the dial, to you
+    say(["An hour passes, cold and still. Then something moves in the hole under the hill."])
+    moose = Stage.actor(:white_moose, 10, 8, 2, graphic: MOOSE_GRAPHIC) if Stage.map?
+    if moose
+      Stage.walk_to(moose, 16, 15)
+      Stage.cry(:STANTLER)
+    end
+    say(["A huge white moose stands in the moon dial, and sniffs the air for a few minutes."])
+    Stage.approach(moose) if moose
+    Stage.emote(moose, :angry) if moose
+    say(["It turns toward Lonelywood, and walks straight toward your hiding place."])
     white_moose_battle
+    Stage.cleanup
   end
+
+  MOOSE_GRAPHIC = "Followers/STANTLER"     # stand-in (art request: a white bull moose, palmate antlers)
 
   def white_moose_battle
     if boss_battle(named_mon(:B234H128, 22, "White moose"))
       sayc(["The white moose goes down in the snow and doesn't get up.",
             "MOOSE: (a last breath, almost a laugh) She'll... make... more.",
-            cl(:reptin, "(quietly) It could talk. It could think. Someone gave it that, and gave it nothing to do with it but hate."),
+            cl(:reptin, "(quietly) It could talk. It could think."),
+            cl(:reptin, "Someone gave it that, and gave it nothing to do with it but hate."),
             "You take its head, for Speaker Huddle."])
       give_key(:FT_MOOSEHEAD)
       set_switch(SW_WM_MOOSE_DEAD, true)
@@ -621,7 +673,7 @@ module FrostThaw
     return if flag?(:took_hand) || ($PokemonBag.pbHasItem?(:FT_SKELETALHAND) rescue false)
     return if !pbConfirmMessage(_INTL("Take a hand from the bones?"))
     sayc(["You pick out a hand, all its little bones still wired together by the cold.",
-          cl(:alberica, "Darling, I'm not going to ask. I'm going to look at the ceiling.")])
+          cl(:alberica, "I'm not going to ask. I'm going to look at the ceiling.")])
     give_key(:FT_SKELETALHAND)
     set_flag(:took_hand)
   end
@@ -630,20 +682,23 @@ module FrostThaw
     say(lines_for(:barrow_lever), event_id)
     return say(["The south door stands open to the snow."]) if $game_switches[SW_WM_BARROW_OPEN]
     return if !pbConfirmMessage(_INTL("Pull the lever?"))
-    say(["Stone grinds on stone. The airtight door in the hillside swings open from inside, and snow blows in."])
+    say(["Stone grinds on stone.",
+         "The airtight door in the hillside swings open from inside, and snow blows in."])
     set_switch(SW_WM_BARROW_OPEN, true)
   end
 
   # E7: the Mirror of the Full Moon. Seven questions, while the full moon's lit.
   def full_moon_mirror(event_id = nil)
-    say(["The passage narrows and ends at an oval mirror seven feet tall, in a decorative stone frame."], event_id)
+    say(["The passage narrows and ends at an oval mirror, seven feet tall, in a carved stone frame."], event_id)
     if !dial_lit.include?(:full)
       return say(["The frame is dark. Your own reflection stares back, tired and cold."])
     end
     say(["The mirror's frame glows with silvery, scintillating light."])
     if !$game_switches[SW_WM_MOOSE_DEAD] && !flag?(:mirror_mine)
-      say(["In the glass, instead of your faces: a logging camp. Hunters. A view from low in the trees, watching them.",
-           "The mirror is attuned to someone else. Something else. The moose uses this to watch its enemies."])
+      say(["In the glass, instead of your faces: a logging camp.",
+           "Hunters. A view from low in the trees, watching them.",
+           "The mirror is attuned to someone else. Something else.",
+           "The moose uses this to watch its enemies."])
       return if !pbConfirmMessage(_INTL("Gaze into the mirror, and make it yours?"))
     end
     set_flag(:mirror_mine)
@@ -668,28 +723,37 @@ module FrostThaw
     case key
     when :moose
       $game_switches[SW_WM_MOOSE_DEAD] ? ["The glass shows a white hide in the snow, and a head on a halfling's kitchen table."] :
-                                         ["The glass shows the barrow under this hill, and a white shape among the sleeping animals, its eyes open."]
+                                         ["The glass shows the barrow under this hill: a white shape among the sleepers, eyes open."]
     when :ravisin
-      ["A woman with frost in her hair and blue-stained teeth, in a tomb behind a half-moon door. A frost druid. Ravisin.",
+      ["A woman with frost in her hair and blue-stained teeth, in a tomb behind a half-moon door.",
+       "A frost druid. Ravisin.",
        "She gave the moose words. And a polar bear. And something very large, under the lake."]
     when :vurnis
-      ["The same woman's face, but still, and grey. Her twin. Vurnis. Hunters' arrows near Lonelywood, last autumn.",
-       "Ravisin keeps her in the sarcophagus she works on. She talks to her while she grinds her herbs."]
+      ["The same woman's face, but still, and grey. Her twin.",
+       "Vurnis. Hunters' arrows near Lonelywood, last autumn.",
+       "Ravisin keeps her in the sarcophagus she works on.",
+       "She talks to her while she grinds her herbs."]
     when :sephek
       ["A man in his shirtsleeves who never sleeps, never eats, and isn't cold.",
        "Inside him, a cold that isn't his.",
        "The glass frosts over before it shows you more."]
     when :auril
-      ["An island of ice in the Sea of Moving Ice, far to the north-west. A castle that is also a cloud.",
-       "Someone on a throne, turning, and looking straight back at you. The mirror goes dark for a moment."]
+      ["An island of ice in the Sea of Moving Ice, far to the north-west.",
+       "A castle that is also a cloud.",
+       "Someone on a throne, turning, and looking straight back at you.",
+       "The mirror goes dark for a moment."]
     when :degrootz
-      ["A common room at night. Three men who called themselves his friends. A rope, and a chair kicked over afterward."]
+      ["A common room at night. Three men who called themselves his friends.",
+       "A rope, and a chair kicked over afterward."]
     when :spine
-      ["Mountains with a city in their roots, and doors with no handles. Something older than the elves who built this tomb."]
+      ["Mountains with a city in their roots, and doors with no handles.",
+       "Something older than the elves who built this tomb."]
     when :psi
-      ["A dark ship under the ice, and something in it that thinks in screams. It wants help. You don't want to help it."]
+      ["A dark ship under the ice, and something in it that thinks in screams.",
+       "It wants help. You don't want to help it."]
     when :summer
-      ["The glass shows a lake, thawing. Green at the edges. It holds the picture a long time, and then it lets it go."]
+      ["The glass shows a lake, thawing. Green at the edges.",
+       "It holds the picture a long time, and then it lets it go."]
     else ["The mirror shows only you."]
     end
   end
@@ -700,8 +764,9 @@ module FrostThaw
     return say(["The sarcophagus lies open. The elf inside lies in peace, robes mostly dust."]) if flag?(:e8_opened)
     return if !pbConfirmMessage(_INTL("Lift the sarcophagus's lid?"))
     return say(["It weighs three hundred and fifty pounds. Not without more strength than you've got."]) if !party_has_strength?
-    say(["The rush of air stirs the cadaver's robes, and most of them crumble to dust. A withered elf lies inside, with:",
-         "an unstrung bow, six silvered arrowheads, and a wooden cup with a winged fish etched into the side."])
+    say(["The rush of air stirs the cadaver's robes, and most of them crumble to dust.",
+         "A withered elf lies inside.",
+         "With it: an unstrung bow, six silvered arrowheads, and a cup etched with a winged fish."])
     give_key(:FT_ELVENBOW)
     pbReceiveItem(:FT_SILVERARROWHEAD, 6) rescue nil
     give_key(:FT_WINGEDFISHCUP)
@@ -711,16 +776,18 @@ module FrostThaw
   # E9: Ravisin, the awakened berry bush, and Vurnis.
   def ravisin(event_id = nil)
     return if $game_switches[SW_WM_RAVISIN]
-    say(["Someone has turned this tomb into living quarters: a rack of drying herbs, an unfurled bedroll behind the sarcophagus.",
+    say(["Someone lives in this tomb: a rack of drying herbs, a bedroll behind the sarcophagus.",
          "An herbalism kit is spread across the sarcophagus lid like a workbench.",
-         "As the door opens, a figure ducks behind the sarcophagus. Then she climbs up onto it: a woman with frost in her hair",
-         "and teeth stained blue with berries. Something rustles behind her, trying to hide."], event_id)
+         "As the door opens, a figure ducks behind the sarcophagus.",
+         "Then she climbs up onto it: a woman with frost in her hair and teeth stained blue.",
+         "Something rustles behind her, trying to hide."], event_id)
     say(["(A druid. Like you. Gone the other way, the way the cold goes.)"]) if herald?(:wyn)
     # The villain's case, before the fight (dialogue 14, 14.12-4).
     say(["RAVISIN: Your towns' hunters shot my sister in these woods. Nobody even looked for her."], event_id)
     if pbTrainerBattle(:FT_FROSTDRUID, "Ravisin", nil, false, 0)
-      sayc(["Ravisin falls against the sarcophagus. Her last, gasping breath: \"My beasts will avenge us!\"",
-            cl(:alerion, "(after a long moment) ...She was grieving. It doesn't make her less dangerous. It makes her sadder."),
+      sayc(["Ravisin falls against the sarcophagus.",
+            "Her last, gasping breath: \"My beasts will avenge us!\"",
+            cl(:alerion, "(looking at the sarcophagus) Two of them. She wasn't alone in here."),
             "Behind the sarcophagus, the berry bush is shaking so hard it's dropping berries."])
       set_switch(SW_WM_RAVISIN, true)
       set_switch(SW_WM_AWAKENED, false)
@@ -736,10 +803,14 @@ module FrostThaw
       say(lines_for(:awakened_shrub), event_id)
       return
     end
-    sayc(["SHRUB: (a tiny, rustling voice) Is she... is she gone? Really gone? No fire? Please, no fire.",
-          "SHRUB: She blamed the towns, for her sister. Vurnis. Also a druid. I don't know how she died. Ravisin hid her in there.",
-          "SHRUB: Ravisin awakened lots of us. All over the Dale. Some are mean, like the moose. Some aren't. Like me.",
-          "SHRUB: She was always cross with the big one in the lake. The plesiosaurus. Too many scruples, she said.",
+    sayc(["SHRUB: (a tiny, rustling voice) Is she... is she gone? Really gone? No fire? Please.",
+          "SHRUB: She blamed the towns, for her sister. Vurnis. Also a druid.",
+          "SHRUB: I don't know how she died. Ravisin hid her in there.",
+          "Its leaves shiver.",
+          "SHRUB: Ravisin awakened lots of us, all over the Dale. Some are mean, like the moose.",
+          "SHRUB: Some aren't. Like me.",
+          "SHRUB: She was always cross with the big one in the lake. Too many scruples, she said.",
+          "A handful of berries drops into your hand.",
           "SHRUB: You can have berries. They're good. They make your teeth blue. Take, take."], event_id)
     pbReceiveItem(:ORANBERRY, 10) rescue nil
     set_flag(:shrub_talked)
@@ -747,13 +818,14 @@ module FrostThaw
 
   def vurnis(event_id = nil)
     return say(lines_for(:vurnis_after), event_id) if flag?(:vurnis_opened)
-    say(["The sarcophagus Ravisin used as a worktable. Herbs, a mortar, little knives, all laid out with care."], event_id)
+    say(["The sarcophagus Ravisin used as a worktable.",
+         "Herbs, a mortar, little knives, all laid out with care."], event_id)
     return say(["Ravisin is still here. You'd have to get past her first."]) if !$game_switches[SW_WM_RAVISIN]
     return if !pbConfirmMessage(_INTL("Move the lid aside?"))
     return say(["Three hundred and fifty pounds. You'll need more strength."]) if !party_has_strength?
     sayc(["The tomb fills with a horrible stench of decay.",
           "Inside lies the rotting corpse of a woman with Ravisin's face. Her twin, Vurnis.",
-          cl(:reptin, "(quietly, over the smell) Months. The cold slowed it. She died last autumn, or near it."),
+          cl(:reptin, "(quietly, over the smell) She kept her sister here. Through all of it."),
           "Tucked under the body: a sharkskin pouch, and two crystal vials."])
     pbReceiveItem(:FULLHEAL) rescue nil
     pbReceiveItem(:MAXPOTION) rescue nil
@@ -769,7 +841,8 @@ module FrostThaw
     end
     say(lines_for(which == :e8 ? :tomb_e8_closed : :tomb_e9_closed), event_id)
     if with_or_is?(:shade) && pbConfirmMessage(_INTL("Let Shade try the door?"))
-      sayc([as(:shade, "(after a long minute with her ear to the stone) No keyhole, no pins, no trick. It wants moonlight. Not me.")])
+      sayc([as(:shade, "(after a long minute with an ear to the stone) No keyhole, no pins, no trick."),
+            as(:shade, "It wants moonlight.")])
     end
   end
 
