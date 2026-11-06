@@ -198,8 +198,10 @@ module FrostThaw
       sayc([
             persuade ? "NIMSY: (laughing) ...Twelve and a half. And not a copper more." : "NIMSY: Ten. I've got children, and a roof that leaks."])
       set_flag(:moose_fee_125) if persuade
-      sayc([cl(:shade, "And if we want more than gold?"),
-            "NIMSY: Then... there's Ramshackle. The old inn. Closed two years. Nobody wants it.",
+      sayc(["She folds her arms. Then she unfolds them, and looks out of the window.",
+            cl(:shade, "And if we want more than gold?"),
+            with_or_is?(:shade) ? "NIMSY: Then... there's Ramshackle. The old inn. Closed two years. Nobody wants it." :
+                                  "NIMSY: And... there's Ramshackle. The old inn. Closed two years. Nobody wants it.",
             "NIMSY: An investment property. To do with what you will."])
       set_flag(:moose_fee)
     else

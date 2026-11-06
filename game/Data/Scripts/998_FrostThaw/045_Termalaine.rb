@@ -262,7 +262,7 @@ module FrostThaw
       giver_hello(event_id)
       if flag?(:council_session)
         say(["OARUS: The strangers from the Council. You walked out of that door after all.",
-             "OARUS: Please tell me you're here about the mine."], event_id)
+             "He looks past you, up the mine road, before he goes on."], event_id)
       else
         say(["A broad half-orc with a sharp, tired face waves you over: Speaker Oarus Masthew.",
              "OARUS: Swords and Pokémon. Please tell me you're here about the mine."], event_id)

@@ -253,7 +253,7 @@ module FrostThaw
          "He holds up a half-carved walrus on a cord, then puts it back in his pocket.",
          "KEEGAN: Hang it on one, and the rest learn from watching it fight. Garret swears by his.",
          "KEEGAN: Go east off the Bryn Shander road, straight across the tundra. Boy knows the way.",
-         "He looks you over, and something in his face says: young.",
+         journey? ? "He looks you over, and something in his face says: young." : nil,
          # the mountain's wild Pokémon are well above a new trainer's (notes 01 S2)
          "KEEGAN: The cairn's no place for new trainers. Bryn Shander first, if you're green."])
     sayc([cl(:alberica, "Keep the cider warm. We'll want it on the way back."),
