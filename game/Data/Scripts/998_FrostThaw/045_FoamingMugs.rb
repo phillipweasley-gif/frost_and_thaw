@@ -115,7 +115,7 @@ module FrostThaw
       set_flag(:mugs_refused, false)
       set_switch(SW_FM_TAKEN, true)
       set_switch(SW_FM_DWARVES, false)
-      side_goal(:mugs, "The Battlehammer sled: out on the tundra, east off the Bryn Shander road, toward Kelvin's Cairn.",
+      side_goal(:mugs, "The Battlehammer sled: on the tundra, east off the Bryn Shander road.",
                 done: :mugs_done)
     else
       say(["HRUNA: Hmph. We'll be right here, drinking to Oobok. Find yer spine, come find us."], event_id)

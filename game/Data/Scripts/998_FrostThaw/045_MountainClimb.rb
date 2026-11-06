@@ -223,7 +223,7 @@ module FrostThaw
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
     side_goal(:climb, flag?(:badge_targos) ? "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn." :
-                                             "Kelvin's Cairn: east off the Bryn Shander road, once you can leave Targos. Find Garret Velryn.",
+                                             "Kelvin's Cairn, east off the Bryn Shander road, once Targos lets you out. Find Garret.",
               done: :climb_done)
   end
 

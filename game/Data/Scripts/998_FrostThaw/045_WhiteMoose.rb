@@ -176,9 +176,9 @@ module FrostThaw
     end
     if c == 1
       say(["NIMSY: (unoffended) Cookies aren't enough? They're shaped like halflings!",
-           "NIMSY: Fine. Ten thousand for the moose's head. The butcher will give you a thousand for the carcass, besides."])
+           "NIMSY: Fine. Ten thousand for its head. The butcher pays a thousand for the carcass."])
       persuade = with_or_is?(:alberica) || rand(100) < 50
-      sayc([cl(:alberica, "Ten thousand. For a moose that's outsmarted every hunter in Lonelywood. Darling, you can do better than that."),
+      sayc([cl(:alberica, "Ten thousand? For a moose that's beaten every hunter in town? Do better."),
             persuade ? "NIMSY: (laughing) ...Twelve and a half. And not a copper more." : "NIMSY: Ten. I've got four children and a roof that leaks."])
       set_flag(:moose_fee_125) if persuade
       sayc([cl(:shade, "And if we want more than gold?"),
@@ -204,9 +204,9 @@ module FrostThaw
     knew = (state[:mirror_topics] || []).include?(:ravisin)
     if !$game_switches[SW_WM_RAVISIN]
       if knew
-        sayc(["You tell her what the mirror showed you: a frost druid in the tomb, who gave the moose its words.",
+        sayc(["You tell her what the mirror showed: a frost druid, who gave the moose its words.",
               "NIMSY: A druid. Who makes them talk.",
-              cl(:alerion, "She'll do it again. A polar bear. Something under the lake. Whatever she can find."),
+              cl(:alerion, "She'll do it again. A polar bear. Something under the lake. Anything."),
               "NIMSY: (very quietly) Then this isn't over. Is it."])
       end
       set_switch(SW_WM_AWAKENED, true)
@@ -231,7 +231,8 @@ module FrostThaw
       give_key(:FT_RAMSHACKLEDEED)
       set_switch(SW_WM_RAMSHACKLE, true)
     end
-    say(["NIMSY: And this, as I promised. My mother's lucky coin. Pin it on a Pokémon and the purse comes home heavier.",
+    say(["NIMSY: And my mother's lucky coin, as I promised.",
+         "NIMSY: Pin it on a Pokémon and the purse comes home heavier.",
          "NIMSY: Mine never did. But I never fought anything."])
     give(:AMULETCOIN)
     set_flag(:white_moose_done)
@@ -675,7 +676,8 @@ module FrostThaw
       ["The same woman's face, but still, and grey. Her twin. Vurnis. Hunters' arrows near Lonelywood, last autumn.",
        "Ravisin keeps her in the sarcophagus she works on. She talks to her while she grinds her herbs."]
     when :sephek
-      ["A man in his shirtsleeves who never sleeps, never eats, and isn't cold. Inside him, a cold that isn't his.",
+      ["A man in his shirtsleeves who never sleeps, never eats, and isn't cold.",
+       "Inside him, a cold that isn't his.",
        "The glass frosts over before it shows you more."]
     when :auril
       ["An island of ice in the Sea of Moving Ice, far to the north-west. A castle that is also a cloud.",

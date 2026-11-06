@@ -431,12 +431,13 @@ module FrostThaw
       speak(:shade, "It's a knife. It came out of Saltmarsh with me. It's been cold ever since.", "...It's a knife.")
       say(["SELRAE: Cold because it's hers. It marked you for her that night. You're halfway home."])
     else
-      say(["SELRAE: (low) Sparkbearer. A light that came back through a mirror. A vessel emptied once, and filled."])
+      say(["SELRAE: (low) Sparkbearer. A light that came back through a mirror. Emptied, and filled."])
     end
     say(["She draws a dagger of black ice from her sleeve and turns it so it catches the crystals' light.",
          "When the light touches it, it whispers. Prayers. Old ones. To Auril.",
          "SELRAE: The goddess needs no throne. Only a heart that can hold light and cold together.",
-         "SELRAE: Yours, perhaps. There's a vault in the ice, far north. The White Womb. They'd make a saint there."])
+         "SELRAE: Yours, perhaps.",
+         "SELRAE: There's a vault in the ice, far north. The White Womb. They'd make a saint there."])
     if who == :shade
       speak(:shade, "My sister was somebody's vessel. I carried her out. Put the knife away, Matron.",
             "...Put the knife away.")
@@ -538,7 +539,7 @@ module FrostThaw
            "IVRAN: Trade has to cross it. The ice is old, and the crews frozen in it have started getting up again.",
            "IVRAN: Corsairs call it the Frozen Run. I'll take the sledge-ship. You walk the ice beside her and keep the dead off her.",
            "IVRAN: Get her across whole and the Corsairs pay. Coin, and a favour. We're good for both."], event_id)
-      side_goal(:frozen_run, "Captain Ivran wants an escort across the Frozen Run, past the Split Dock. The Corsairs pay.",
+      side_goal(:frozen_run, "Captain Ivran wants an escort across the Frozen Run, past the Split Dock. Corsairs pay.",
                 done: :frozen_run_done)
       return if !pbConfirmMessage(_INTL("Escort Ivran's ship across the Frozen Run?"))
       say(["IVRAN: Walk the ice beside her. Don't stop for anything that waves."], event_id)
@@ -575,7 +576,7 @@ module FrostThaw
           "Far below, where the ice goes blue-black: a shape. A woman, tall as a house, arms raised.",
           "For a moment her head seems to turn.",
           flag?(:met_shivven) ? "IVRAN: Shivven saw her. I didn't believe him. ...I believe him." :
-                                "IVRAN: The old crews swore something lay under the ice. I didn't believe them. ...I believe them.",
+                                "IVRAN: The old crews swore something lay under the ice. I didn't believe them. I do now.",
           "IVRAN: The Corsairs owe you. When you need to cross water, any water, you'll have a ship.",
           cl(:alberica, "(a hand over her rune, very pale) Let's go home, darlings. Now. Please.")].compact)
     give(:PEARLSTRING)
@@ -660,7 +661,7 @@ module FrostThaw
           "At the end of it: a shape like a vault-door, wings spread over a frozen eye.",
           "WYNSNOW: The White Vault of Ithryn Athis. Under the glacier. Two keys point the way; the third opens the door.",
           "WYNSNOW: Whoever holds the third will be standing at the end of that light. I'd bring a coat.",
-          "WYNSNOW: Not this year, mind. Not while the tree's sick. When it's well, the door will wake.",
+          "WYNSNOW: Not this year, mind. Not while the tree's sick. When it's well, the door wakes.",
           cl(:alerion, "Ithryn Athis. Avarice's vault. Selrae called it the White Womb.")].compact, event_id)
     add_counter(:story_beats)
     true

@@ -225,7 +225,7 @@ module FrostThaw
          "A broad half-orc with a sharp, tired face. Speaker Oarus Masthew.",
          "OARUS: A gang of kobolds crept into the gem mine a few days back. Came in from the surface. The miners ran.",
          "OARUS: Nobody's been killed. But kobolds are too much for miners with picks.",
-         "OARUS: And a miner went missing the week before. Hessa. Some think something's crawled up from below.",
+         "OARUS: A miner went missing last week. Hessa. Some think something came up from below.",
          "OARUS: From the Underdark. The dark under the world.",
          "OARUS: I think she fell down the central shaft. It goes down so far you'd never find a body.",
          "OARUS: Five thousand to whoever clears it. And the miners' pick of the first new stones.",
@@ -568,14 +568,15 @@ module FrostThaw
       say(["Oarus comes back up the trail the next day, smiling, a clump of lichen in his hand.",
            "OARUS: All clear! Perfectly safe. And the FLORA down there, have you ever really looked at it?",
            "OARUS: Crustose, foliose, fruticose... (He stops. He blinks.) ...I'm sorry. What was I saying?",
-           "He pays you five thousand. His handwriting on the receipt is beautiful, and nothing like a half-orc's."])
+           "He pays you five thousand.",
+           "His handwriting on the receipt is beautiful, and nothing like a half-orc's."])
       sayc([cl(:alerion, "(very low) That isn't him. Not all of him."),
             cl(:shade, "The ghost. We left it down there, and it found someone who matters. Just like it wanted.")])
       set_flag(:oarus_possessed)
     else
       say(["Oarus comes back up the trail the next day, filthy and grinning.",
            "OARUS: Not a kobold, not a monster, not a sound but the river. The miners are already going back in.",
-           "OARUS: Five thousand, as promised. And Termalaine's thanks. The militia's too, whether they like it or not."])
+           "OARUS: Five thousand, as promised. And the militia's thanks, whether they like it or not."])
     end
     if flag?(:kobolds_to_town)
       say(["Within the week the kobolds have jobs: hauling, sweeping, carrying tools. The townsfolk tease them about their tails.",

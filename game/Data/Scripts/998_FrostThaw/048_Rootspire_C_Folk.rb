@@ -70,7 +70,8 @@ module FrostThaw
            "JORIK: He gets warm when he's angry. Properly warm."], event_id)
       set_switch(SW_RUN_OPEN, true)
       sayc([cl(:meat_meat, "Meat Meat saw that ore before. On these planks. Dock man swept it. Dock man was lying."),
-            cl(:reptin, "And now he isn't. Well done, Jorik. That was brave. Have a drink. One of yours.")].compact)
+            cl(:reptin, "And now he isn't. Well done, Jorik. That was brave. Have a drink. One of yours."),
+            "JORIK: (as you go) Ash meets the barrels himself. Nobody checks a Rootwarden."].compact)
     else
       say(["JORIK: HA! Brew? Brew. Brew's good. Everything's good."], event_id)
     end
@@ -477,7 +478,7 @@ module FrostThaw
         sayc([cl(:alberica, "Publish and be damned, sweetheart. I'd love to see my signature. Is it pretty?")].compact)
       else
         set_flag(:harget_settled); set_flag(:harget_reported)
-        say(["HARGET: (going grey) ...Kethan. No. No need for Kethan. The charter's very old. It may be a forgery. Scratch."])
+        say(["HARGET: (going grey) ...Kethan. No need for Kethan. The charter's very old. Scratch."])
       end
     end
     harget_decree
@@ -528,7 +529,10 @@ module FrostThaw
     sayc(["The double comes apart into thread. Hundreds of threads, and every one of them a hair or a fibre of yours.",
           "MIRA THYNELIGHT: Maera said they were for a festival. For a pageant. Heralds in the procession.",
           "MIRA THYNELIGHT: She didn't say they'd walk on their own. I'll stop. I'll stop. Here, take your hair back.",
-          cl(:alberica, "Lumea's moths, Maera's weasels, now my own face. This city collects us like stamps, darling."),
+          # (only the watchers you've caught: dialogue 15 #13)
+          (flag?(:watcher_moth_swarm) && flag?(:watcher_weasel) ?
+             cl(:alberica, "Lumea's moths, Maera's weasels, now my own face. This city collects us like stamps, darling.") :
+             cl(:alberica, "My own face, walking about without me. This city collects us like stamps.")),
           cl(:reptin, "Then let's be the kind of stamp that sticks in the throat.")].compact)
     add_counter(:story_beats)
   end
@@ -583,7 +587,7 @@ module FrostThaw
     end
     say(["Halden has filled a corner of the Library with brass rings, crystal leaves and a humming chair.",
          # (the Journey kid and Wyn are from Rootspire: context 15 §6)
-         outsider? ? "HALDEN: Ready! Sit, sit. A small reset. Back to before you ever left. You'll hardly notice." :
+         outsider? ? "HALDEN: Ready! Sit, sit. A small reset. Back to before you left. You'll hardly notice." :
                      "HALDEN: Ready! Sit, sit. A small reset. Back to your origin. Targos, four hundred years ago. You'll hardly notice.",
          "HALDEN: Your Pokémon may not come with you. Footnote. Small footnote."], event_id)
     c = pbMessage(_INTL("What do you do?"), [_INTL("\"No.\""), _INTL("Talk him out of it."), _INTL("Break the engine.")], 0)

@@ -268,6 +268,10 @@ module FrostThaw
   # 7. The Still Sky Shrine's black market: Eira Voss (the Frozen Flame)
   #-----------------------------------------------------------------------------
   def eira_black_market(event_id = nil)
+    if flag?(:cellar_cleared)
+      say(["A Halo acolyte minds Eira Voss's stall now. The Rootwardens took her. The prices stayed."], event_id)
+      return black_market
+    end
     if first_time?(:met_eira_voss)
       say(["Cold grips your lungs. Blue flame burns in cracked sconces. A dozen eyes watch from the shadows.",
            "A bone-thin woman with frost-burn scars under her eyes stands where Eline's disciples knelt.",
@@ -314,12 +318,12 @@ module FrostThaw
     first = first_time?(:met_kethan)
     if first && with_or_is?(:wyn)
       # Wyn's own captain: Wyn doesn't need him introduced (context 15 §6).
-      say(["Weapons hang beside living-root shields. Captain Kethan frowns over a glowing map of the Auroral Wall.",
+      say(["Weapons hang beside living-root shields. Captain Kethan frowns over a map of the Wall.",
            "He cracks his knuckles without looking up: pop, pop, like ice splitting far away.",
            herald?(:wyn) ? "KETHAN: Wyn. You left your post at the Sap Gate. Then you left the century." :
                            "KETHAN: Wyn. You left the Sap Gate on festival night. We'll talk about that.",
-           "KETHAN: (to the rest of you) Kethan Vale. Captain. Skytower Shelter clan. I keep order in the civic ring.",
-           "KETHAN: Patrols hear hammering under the Heartroot at night. Trees don't dream with hammers."], event_id)
+           "KETHAN: (to the others) Kethan Vale. Captain. I keep order in the civic ring.",
+           "KETHAN: Patrols hear hammers under the Heartroot at night. Trees don't dream with hammers."], event_id)
       sayc([cl(:alerion, "Skytower. Goliaths. Our Skytower?"),
             "KETHAN: Your Skytower, four hundred years on. We remember who carried the shelter's wounded down the mountain."].compact)
     elsif first

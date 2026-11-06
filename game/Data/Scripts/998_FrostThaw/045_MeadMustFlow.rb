@@ -619,7 +619,7 @@ module FrostThaw
     give(:ABILITYCAPSULE)
     say(["(The royal jelly changes a Pokémon's Ability, like an Ability Capsule.)",
          # Good Mead has no Speaker now: who to see (notes 14 E12)
-         "BREWMISTRESS: Now the town needs a Speaker. Olivessa at the cooperage wants a word with you."])
+         "BREWMISTRESS: Now the town needs a Speaker. Olivessa at the cooperage wants a word."])
     side_goal(:election, "Good Mead needs a Speaker. Olivessa Untapoor wants a word, at the cooperage.", done: :election_asked)
     side_goal_done(:mead)
     town_quest_finished
@@ -635,9 +635,10 @@ module FrostThaw
     return say(["OLIVESSA: Whatever you decide. I'll back it."], event_id) if flag?(:election_asked)
     set_flag(:election_asked)
     say(["Olivessa takes off her thick wool scarf so she can speak clearly.",
-         "OLIVESSA: The honey-cake strangers. Sit. I've a favour to ask. Some friends of mine don't want Shandar Froth",
-         "OLIVESSA: to become our next town speaker. They say he's untrustworthy. I don't know him that well,",
-         "OLIVESSA: but I've been urged to run against him. I have no interest in the speakership.",
+         "OLIVESSA: The honey-cake strangers. Sit. I've a favour to ask.",
+         "OLIVESSA: Friends of mine don't want Shandar Froth for Speaker. They don't trust him.",
+         "She turns her scarf over in her hands.",
+         "OLIVESSA: They want me to run against him. I've no interest in the speakership.",
          "OLIVESSA: But you seem to be a good leader, and this town could use one. What do you say?"], event_id)
     c = pbMessage(_INTL("What do you say?"), [_INTL("\"I'll run.\""), _INTL("\"You should run. We'll back you.\""), _INTL("\"It's not our town.\"")], 0)
     case c
@@ -694,8 +695,8 @@ module FrostThaw
     say(["You catch him on the edge of the woods. He turns, swearing, and whistles up his Pokémon."])
     if pbTrainerBattle(:FT_ZHENTARIM, "Varro", nil, false, 0)
       sayc(["THUG: All right! All right! It was a job. Scare the town, get chased out by the dwarf. Easy money.",
-            "THUG: Naerth Maxildanarr hired us. Speaker of Targos. He wants his man Froth in charge here.",
-            "THUG: Froth's wanted for murder in Mirabar. The Black Network found him. Now he does what he's told.",
+            "THUG: Naerth Maxildanarr hired us. Speaker of Targos. He wants Froth in charge here.",
+            "THUG: Froth's wanted for murder in Mirabar. The Black Network owns him now.",
             cl(:alberica, "Well. That's going to make a lovely speech, darling.")])
       set_flag(:shandar_exposed)
     else

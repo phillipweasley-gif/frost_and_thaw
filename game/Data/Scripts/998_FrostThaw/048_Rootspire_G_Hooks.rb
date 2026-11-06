@@ -168,7 +168,7 @@ module FrostThaw
     Stage.escort(ev, 17, 9) rescue nil if ev
     say(["TAMSIN: And the Promenade's over the leaf-bridge, on the Canopy. That's Autumn's. Posh."], event_id)
     say(["TAMSIN: (to you, quieter) I'm showing them round. You can come. ...You can't be in charge."], event_id) if journey?
-    side_goal(:city_tour, "The Verdant Halls: up the root-stair, north of the market. The Promenade: over the leaf-bridge.",
+    side_goal(:city_tour, "The Verdant Halls: up the root-stair, north of the market. The Promenade: the leaf-bridge.",
               done: [:festival_night, :visited_halls])
   end
 

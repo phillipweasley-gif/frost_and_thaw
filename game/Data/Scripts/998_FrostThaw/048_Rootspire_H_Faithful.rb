@@ -285,10 +285,9 @@ module FrostThaw
   # The Library check (rootspire.md: DC 14 History or Religion): pick the way in,
   # then read the leaves right. Failure means improvising one verse.
   def canticle_research
-    say(["EIRWEN: You've read the note filed under A. Then you want the Canticle. The oldest case is unlocked.",
-         "EIRWEN: What's left of the verses is on crystal leaves, scattered through three centuries of catalogue.",
-         "EIRWEN: Sung whole, it gives back what the city forgot. Names. Faces. Even yours.",
-         "EIRWEN: How do you want to look?"])
+    say(["EIRWEN: You've read the note filed under A. You want the Canticle. The case is unlocked.",
+         "EIRWEN: What's left is on crystal leaves, scattered through three centuries of catalogue.",
+         "EIRWEN: Sung whole, it gives back what the city forgot. Names. Faces. Even yours."])
     way = pbMessage(_INTL("Search the leaves..."), [_INTL("By history: when each verse was last sung"), _INTL("By faith: what each season's verse is for")], 0)
     say([way == 0 ? "You line the leaves up by date. Three verses were sung every year until the Reversal; then one, then none." :
                     "You sort the leaves by the prayers written beside them. Each hard season had a verse, and each verse had a purpose."])
@@ -316,7 +315,7 @@ module FrostThaw
          "EIRWEN: The Frostmaiden's curse didn't make Ten-Towns cruel. Avarice had been teaching it cruelty for years.",
          "EIRWEN: I'm going to put it on the open shelves. At the festival. Everyone should know.",
          "EIRWEN: ...Why are you all looking at me like that?"])
-    sayc([cl(:alerion, "Because half this city prays to the Reversal as a miracle. And Avarice was in the Dale before it."),
+    sayc([cl(:alerion, "Half this city calls the Reversal a miracle. Avarice was in the Dale before it."),
           cl(:reptin, "If the founding miracle was half her design, some people won't know what to believe in by morning."),
           cl(:alberica, "And Eirwen, darling: some people should.")].compact)
     c = pbMessage(_INTL("Naerth's ledger..."), [_INTL("\"Publish it. The truth is everyone's.\""),
@@ -422,7 +421,7 @@ module FrostThaw
       trainer(:halo_silencer)
       say(["He goes into the water rather than be questioned. The note's still sealed in your pack."])
     end
-    say(["IVRAN: (glancing back down the dock) Halo Silencer. They don't talk. They listen for a living."]) if c == 1
+    say(["IVRAN: (looking down the dock) Halo Silencer. They don't talk. They listen for a living."]) if c == 1
     say(["IVRAN: (breaking the seal with his thumb, and reading twice) Brightrun. Well, well.",
          "IVRAN: My great-grandfather owed hers his ship and his neck. Tell Hellen: the Requiem remembers the Brightruns.",
          "IVRAN: And you lot have a berth north, any night you want it. The Corsairs pay their debts. Eventually. Loudly."])
@@ -452,7 +451,7 @@ module FrostThaw
            "TOBIN: I didn't want to. I pray to you every night. I just pray very quietly now.",
            "TOBIN: There's more. They've had the lantern-carvers cut hooks into the frost-glass. For the aurora, when it bends down. Half the lanterns, and she comes.",
            "TOBIN: Please don't tell my mam."])
-      sayc([cl(:alerion, "(very still) Hooks in the lanterns. On Cycle Night. That's a door for her, not a prayer."),
+      sayc([cl(:alerion, "(very still) Hooks in the lanterns, on Cycle Night. That's a door, not a prayer."),
             cl(:reptin, "(gently) Nobody's telling your mam anything. Go home. Pray loudly, in daylight. That's all the penance this needs."),
             cl(:alberica, "And Tobin, sweetheart: if they ask, you painted it. Then come and tell us what they say.")].compact)
       set_flag(:tobin_turned)

@@ -261,7 +261,7 @@ module FrostThaw
     if !flag?(:mugs_done) && flag?(:mugs_taken)
       say(["GARN: Hruna's lot lost my iron out on the tundra? Bah. No iron, no blades. No blades, no jokes about my blades."])
     elsif !flag?(:mugs_done)
-      say(["GARN: Hruna's lot lost my iron on the tundra. Help them, and I'll owe ye. They're in the street."])
+      say(["GARN: Hruna's lot lost my iron on the tundra. Help them, and I'll owe ye."])
     end
   end
 
@@ -438,7 +438,7 @@ module FrostThaw
          "Lonelywood's chair is empty, except for a basket of halfling-shaped cookies. Dougan's Hole's chair is empty, full stop.",
          "DUVESSA: Last night Bryn Shander drew a name and did not give it up.",
          "DUVESSA: I won't apologise for it. I'm telling you because we agreed to do this together, and I broke it alone.",
-         "DUVESSA: (a hand toward the charter behind her) We called it a necessary evil. We all signed."])
+         "DUVESSA: (toward the charter behind her) We called it a necessary evil. We all signed."])
     say(["NAERTH: Alone? (He smiles at you.) I'd say she had help.",
          "NAERTH: Strangers off my docks. I let them out of Targos. I'm starting to think I should be charging them rent.",
          "DANNETH: Easthaven drew too, last night. A fisher's widow. She walked out onto the ice herself. I let her.",

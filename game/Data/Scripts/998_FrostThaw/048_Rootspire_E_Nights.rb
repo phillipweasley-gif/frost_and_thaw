@@ -194,7 +194,7 @@ module FrostThaw
   def hearth_word
     if !flag?(:city_keeps_count) && CITY_REMEMBERS.any? { |f| flag?(f) }
       set_flag(:city_keeps_count)
-      return say(["That night, far up the trunk in the Council Hall, a crystal brightens. Rootspire remembers.",
+      return say(["Far up the trunk, in the Council Hall, a crystal brightens. Rootspire remembers.",
                   "HELLEN: Word's round the Bazaar what you did. This city keeps count, love. Good and bad."])
     end
     if flag?(:ch7_started) && !flag?(:hellen_favours_word)
