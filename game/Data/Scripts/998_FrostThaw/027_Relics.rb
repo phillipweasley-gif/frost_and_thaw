@@ -322,6 +322,8 @@ if defined?(pbSlideOnIce)
   def pbSlideOnIce
     on_sap = (defined?(FrostThaw::SAP_SLICK_MAPS) && $game_map && FrostThaw::SAP_SLICK_MAPS.include?($game_map.map_id)) rescue false
     return if FrostThaw.active? && FrostThaw.blessing?(:still_sky) && !on_sap
+    # Hilda's Boots of the Winterlands "never slip on ice" (notes 14 E13)
+    return if FrostThaw.active? && !on_sap && ($PokemonBag.pbHasItem?(:FT_WINTERBOOTS) rescue false)
     ft_relic_pbSlideOnIce
   end
 end

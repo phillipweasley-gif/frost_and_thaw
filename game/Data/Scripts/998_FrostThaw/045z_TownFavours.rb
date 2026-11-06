@@ -21,6 +21,35 @@ module FrostThaw
     [:mead_returned,    "Good Mead"]
   ]
 
+  # A finished favour has its own signal (notes 14 E15): a jingle and one
+  # plain box, before the counter.
+  Stage::JINGLES[:quest] ||= "Voltorb Flip Win"
+
+  def quest_done_box(text)
+    Stage.jingle(:quest)
+    say(["(#{text})"])
+  end
+
+  # Someone travelling with you who isn't a Herald (Garret on the climb,
+  # Perilou coming down): they walk in beside you for their line, and step
+  # back out when you have control again, the way the companions do.
+  def walk_in(key, graphic)
+    return nil if !Stage.map?
+    ev = $game_map.events.values.find { |e| e.name == "stage_#{key}" && !e.transparent } rescue nil
+    return ev if ev
+    slot = Stage.free_slot || Stage.near_slot or return nil
+    x, y, fx, fy = slot
+    ge = Stage.actor(key, fx, fy, $game_player.direction, graphic: graphic) or return nil
+    Stage.walk_to(ge, x, y) if [fx, fy] != [x, y]
+    Stage.turn_to(ge)
+    ge.through = true
+    (Stage.instance_variable_get(:@summoned) || {})[key] = [ge, [fx, fy]]
+    ge
+  rescue StandardError => e
+    log("walk_in #{key}: #{e.message}")
+    nil
+  end
+
   def town_quests_done
     TOWN_QUESTS.count { |f, _| flag?(f) }
   end
@@ -73,7 +102,7 @@ module FrostThaw
     return if flag?(:ten_towns_thanked)
     set_flag(:ten_towns_thanked)
     pbMEPlay("Item get") rescue nil
-    say(["Before the day is out, a Council runner from Bryn Shander catches you up, red-faced from the cold.",
+    say(["Before the day is out, a Council runner from Bryn Shander catches you up, red with cold.",
          "She hands over a parcel wrapped in oilcloth, and a letter with Speaker Duvessa's seal.",
          "\"Five Speakers have written to me about you. Five. I said the Council would pay. It does.\"",
          "\"They have never agreed on anything. Each says you paid a debt that wasn't yours.\"",
@@ -99,6 +128,12 @@ module FrostThaw
   ]
 
   def act1_jobs_goodbye
+    # Marta's ring, read at the act's end (notes 14 E14): Alberica made the promise
+    if flag?(:act1_done) && has_key?(:FT_RINGOFWARMTH) && !flag?(:marta_ring_read) && with_or_is?(:alberica)
+      set_flag(:marta_ring_read)
+      sayc([cl(:alberica, "(turning Marta's ring over) Still warm. Even here."),
+            cl(:alberica, "I promised her a thaw. I keep my promises. Eventually.")])
+    end
     return if flag?(:act1_jobs_goodbye) || !flag?(:act1_done)
     left = ACT1_JOBS_LEFT.select { |taken, done, _| flag?(taken) && !flag?(done) }.map { |_, _, l| l.call }
     return if left.empty?
@@ -148,4 +183,36 @@ module FrostThaw
       give(item)
     end
   end
+
+  #-----------------------------------------------------------------------------
+  # The world remembers (notes 14 E14): once a town's favour is done, the
+  # Heralds' talk in that town says so. Each line is a variant that plays
+  # first, in front of whatever the town's chat already was.
+  #-----------------------------------------------------------------------------
+  def self.remember_in_chat(who, area, cond, lines)
+    return if !defined?(PARTY_CHAT) || !PARTY_CHAT[who]
+    old = PARTY_CHAT[who][area]
+    PARTY_CHAT[who][area] = -> { condition_met?(cond) ? lines : resolve(old) }
+  end
+
+  FAVOUR_CHAT = [
+    [:alberica, :targos, { flag: :climb_done }, ["\"BIG LOVE\", on a walrus. I'm going to think about that walrus for a week.",
+                                                 "Garret was chopping wood he didn't need. Boy was sitting on his feet."]],
+    [:reptin, :targos, { flag: %i[climb_done yeti_den_peace] }, ["The yeti mother let us take Perilou. She decided to.",
+                                                                  "I keep thinking about that. A mother, deciding."]],
+    [:reptin, :targos, { flag: %i[climb_done mother_yeti_beaten] }, ["We fought a mother in her own den. It was the right call.",
+                                                                      "I don't have to like it."]],
+    [:alerion, :targos, { flag: %i[climb_done mokingo_promised] }, ["We told Garret we'd go up for Mokingo in the spring. I'm holding us to it."]],
+    [:alerion, :targos, { flag: :climb_done }, ["Garret says spring, for Mokingo. Somebody should hold him to it."]],
+    [:shade, :bryn, { flag: %i[mugs_done goblins_kind] }, ["The goblins went home under a blanket, with their lives. Most raids end worse.",
+                                                            "I'd know."]],
+    [:shade, :bryn, { flag: :mugs_done }, ["Garn's melting the iron already. You can smell it from the gate. Good smell."]],
+    [:alberica, :bryn, { flag: :oobok_home }, ["They'll take Oobok home under the mountain. I hope somebody sings for him there."]],
+    [:reptin, :termalaine, { flag: :oarus_dead }, ["Shaelen stands at the mine road every morning. We left that thing down there."]],
+    [:alerion, :termalaine, { flag: %i[mine_done kobolds_to_town] }, ["Kobolds hauling carts in the street. The town's stopped staring. Mostly."]],
+    [:reptin, :lonelywood, { flag: :white_moose_done }, ["The moose could talk. Someone gave it words, and nothing to say with them but hate."]],
+    [:alberica, :good_mead, { flag: %i[mead_returned council_session] }, ["Kendrick said the first cask was on him.",
+                                                                          "...I had it. I drank it for him."]]
+  ]
+  FAVOUR_CHAT.reverse_each { |who, area, cond, lines| remember_in_chat(who, area, cond, lines) }
 end

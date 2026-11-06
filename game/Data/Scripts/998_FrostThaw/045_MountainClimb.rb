@@ -75,36 +75,45 @@ module FrostThaw
                    "The other's out of their reach. Rations for four people, three days."],
     cairn_goats_sign: ["The howling wind, blowing snow and slippery ice make the climb treacherous."],
     cairn_crevasse: ["The edge of a vast, deep crevasse. Nowhere to go but down. Nobody goes down."],
-    cairn_tent: ["A collapsed tent, half buried. Barthoom's. A shield dwarf explorer who climbed this high and made camp, a month ago."],
+    cairn_tent: ["A collapsed tent, half buried. Barthoom's.",
+                 "A shield dwarf explorer who climbed this high and made camp, a month ago."],
     yeti_blood: ["Blood on the snow, some distance from the cave mouth. Old, and frozen black."],
     yeti_bridge: ["A natural bridge of stone over the chasm, safe to cross."],
     yeti_ice_sheet: ["A foot-thick sheet of ice spans the south of the chasm. It holds your weight. For now."],
-    yeti_trophies: ["The tunnel floor is strewn with bones: a goliath's. Mokingo Growling Bear. Torn hide armour. A greataxe.",
+    yeti_trophies: ["The tunnel floor is strewn with bones: a goliath's.",
+                    "Mokingo Growling Bear. Torn hide armour. A greataxe.",
                     "His head has been ripped off, gnawed, and stuffed in a niche dug out of the wall.",
                     "Seven more crude niches hold the frozen heads of others the yetis have killed."],
-    yeti_den_gear: ["Under the shattered remains of a dogsled: a mess kit, an explorer's pack, and blood-spattered cold-weather clothing."],
-    dwarven_valley: ["Tracks run up to tunnels carved into the valley's slopes. Shield dwarves live below, in halls that join the mines.",
+    yeti_den_gear: ["Under a smashed dogsled: a mess kit, an explorer's pack, and bloodied winter clothes."],
+    dwarven_valley: ["Tracks run up to tunnels carved into the valley's slopes.",
+                     "Shield dwarves live below, in halls that join the mines.",
                      "They rarely come up nowadays, except to hunt and forage."],
     dwarf_sentry: [{ if: { flag: :mugs_done }, lines: ["DWARF: Battlehammer's friends! Come in, come in out of the wind. Stay as long as ye like.",
                                                        "DWARF: Hruna told us. Iron's in Bryn Shander. That's a debt, and we pay ours."] },
-                   ["DWARF: Clan Battlehammer. You can rest a night, if ye must. We've little food to spare and less time.",
+                   ["DWARF: Clan Battlehammer. You can rest a night, if ye must.",
+                    "DWARF: We've little food to spare and less time.",
                     "DWARF: Civil, mind. Civil's all we've got this winter."]],
-    keegan_after: ["KEEGAN: Garret's out chopping wood he doesn't need to chop. He does that when he's been somewhere bad.",
+    keegan_after: ["KEEGAN: Garret's out chopping wood he doesn't need to chop.",
+                   "KEEGAN: He does that when he's been somewhere bad.",
                    "KEEGAN: Boy hasn't left his side. Neither have I, honestly."],
     garret_home: ["GARRET: Mokingo's gone. Astrix too. I took them up there.",
-                  "GARRET: Keegan says it's not on me. Keegan's kind. ...Thank you. For coming up after a fool."],
+                  "GARRET: Keegan says it's not on me.",
+                  "GARRET: Keegan's kind. ...Thank you. For coming up after a fool."],
     perilou_home: ["PERILOU: I'm done. Yondalla kept me alive in a yeti's den. I'm not going to ask Her twice.",
                    "PERILOU: I'll go home and grow turnips. Big turnips. Nothing that bites."]
   )
 
   PARTY_CHAT[:alberica].merge!(
-    open_tundra: ["All this white. If I squint, it's a bed sheet. If I don't squint, it's death. I'm squinting."],
-    kelvins_cairn: ["A mountain. In a blizzard. Looking for people who climbed a mountain in a blizzard.",
+    open_tundra: ["All this white. If I squint, it's a bed sheet.",
+                  "If I don't squint, it's death. I'm squinting."],
+    kelvins_cairn: ["A mountain. In a blizzard.",
+                    "Looking for people who climbed a mountain in a blizzard.",
                     "Darling, we are the cautionary tale."],
     yeti_cave: ["Keep your voices down. Mothers don't like guests. Trust me. I've been the guest."]
   )
   PARTY_CHAT[:reptin].merge!(
-    open_tundra: ["Kelvin's Cairn, there. The dwarves say it's hollow. The yetis say it's theirs. Neither asked the mountain."],
+    open_tundra: ["Kelvin's Cairn, there. The dwarves say it's hollow.",
+                  "The yetis say it's theirs. Neither asked the mountain."],
     kelvins_cairn: ["Goat tracks. Cat tracks. Something heavier than both.", "Let's be very polite to all of them."],
     yeti_cave: ["They're a family. That makes this their home, not their lair.", "We are, technically, the burglars."]
   )
@@ -138,8 +147,10 @@ module FrostThaw
     tundra_aurilite: [:FT_AURILITE, "Vesna", [[:SNORUNT, 17], [:B220H124, 18]], "She'll take the mountain too, one day. All of it."]
   )
   TEXT.merge!(
-    climber_hask_after: ["Cairn's named for Kelvin. He climbed it once. That's the whole story. Nobody remembers why."],
-    climber_vala_after: ["Yetis took a party last week. Goliath, halfling, tiefling. I saw the tracks. I didn't follow them."],
+    climber_hask_after: ["Cairn's named for Kelvin. He climbed it once.",
+                         "That's the whole story. Nobody remembers why."],
+    climber_vala_after: ["Yetis took a party last week. Goliath, halfling, tiefling.",
+                         "I saw the tracks. I didn't follow them."],
     tundra_runner_after: ["Dwarven Valley's just north. Civil folk. Not friendly. Civil."],
     tundra_aurilite_after: ["The crag cats are Hers too. Hunters of Men, the old Ten-Towners call them."]
   )
@@ -149,20 +160,35 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Targos: Boy, and the Velryn house
   #-----------------------------------------------------------------------------
+  # A sled dog finds you (notes 14 E1, E2): he sees you, barks, runs at you
+  # and tugs you to the Velryns' door. "Not now" leaves him in the street.
   def boy_sled_dog(event_id = nil)
-    say(["You hear a bark over the whistle of the wind.",
-         "A wolf-sized sled dog with light grey fur runs at you, a broken leather harness dragging behind it.",
-         "It tackles you into the snow, whimpers, and licks your whole face.",
-         "Then it grabs your bootstrap in its teeth and tugs. Hard. That way. THAT way."], event_id)
-    sayc([cl(:alberica, "Oh! Oh, he's a darling. He's a darling with a job."),
-          cl(:reptin, "That's a harness, not a collar. He's run a long way. Someone's in trouble.")])
-    return if !pbConfirmMessage(_INTL("Follow the dog?"))
+    first = !flag?(:boy_met)
+    set_flag(:boy_met)
+    # (he's just spotted you and run over: 017's boy_spots_you did the bark and "!")
+    giver_hello(event_id, bark: :GROWLITHE) if !(first && flag?(:boy_spotted))
+    if first
+      say(["A wolf-sized grey sled dog runs at you, a broken harness dragging behind it.",
+           "He knocks you into the snow, whimpers, and licks your whole face.",
+           "Then he takes your bootstrap in his teeth and tugs. Hard. That way. THAT way."], event_id)
+      sayc([cl(:alberica, "Oh! Oh, he's a darling. He's a darling with a job."),
+            cl(:reptin, "(kneeling to him) Hello, you. Who sent you running, hm?")])
+    else
+      say(["The sled dog with the broken harness. He takes your bootstrap in his teeth and tugs again."], event_id)
+    end
+    if !pbConfirmMessage(_INTL("Follow the dog?"))
+      return say(["He lets go, whines, and trots a few steps east. Then he looks back at you."])
+    end
+    boy = $game_map.events[event_id] rescue nil
+    led = boy && (Stage.escort(boy, *VELRYN_STREET, facing: 8) rescue false)
+    say([led ? "Boy scratches at the door of a modest house, and barks, and barks." :
+               "Boy drags you through the snow to a modest house, and barks and scratches at the door."])
     set_switch(SW_MC_BOY_TAKEN, true)
-    say(["Boy drags you a few blocks through the snow, to the door of a modest house, and barks and scratches at it."])
     transfer(*VELRYN_DOOR)        # Keegan answers (the house's arrival scene)
   end
 
   VELRYN_DOOR = [2124, 9, 10, 8]
+  VELRYN_STREET = [41, 35]        # the street outside the Velryns' door (Targos)
 
   # The house's arrival scene, the first time Boy brings you.
   def scene_velryn_arrival
@@ -179,20 +205,32 @@ module FrostThaw
     end
     return keegan_after_garret(event_id) if flag?(:garret_found)
     return keegan_ask(event_id) if flag?(:climb_asked)
-    say(["A handsome man in his thirties opens the door. The dog races past him inside.",
-         "When he sees you instead of his husband, his smile fades.",
-         "KEEGAN: ...Come in. Come in out of the cold. You'll want cider. Everyone wants cider. Sit.",
-         companions.empty? ? "He pours you a cup of warm cider. His hands aren't steady." :
-                             "He gives each of you a cup of warm cider. His hands aren't steady.",
-         "KEEGAN: Keegan Velryn. My husband Garret's the climber in this house.",
-         "KEEGAN: You're not from Ten-Towns. Ten towns, three lakes, and one winter for all of us.",
-         "KEEGAN: Garret didn't care for city life. When I met him he was working as a guide. He loves the outdoors.",
-         "KEEGAN: A few days ago some adventurers hired him to lead them up the slopes of Kelvin's Cairn.",
-         "KEEGAN: He took six dogs and a sled. Boy here was his favourite. Raised him from a pup.",
-         "KEEGAN: Boy would never leave Garret's side. Not unless something terrible had happened."], event_id)
-    sayc([cl(:shimmer, "(quietly) Unless someone sent him."),
-          cl(:alerion, "Or unless he chose to go for help.")])
-    say(["KEEGAN: (a hand on the dog's head) Sent, or ran. Either way, he came to me."]) if with_or_is?(:shimmer) || with_or_is?(:alerion)
+    # Purpose: a stranger's husband is lost on a mountain, and his dog won't
+    # let anyone forget it; the player is asked to go up after him.
+    keegan_ev = (event_id && $game_map.events[event_id]) || Stage.find("Keegan")
+    with_boy = $game_switches[SW_MC_BOY_TAKEN]
+    # (notes 01 S2: six boxes, the ask in the fourth; Boy is in the room, E10)
+    boy = Stage.find("Boy (waiting)")
+    if with_boy
+      if boy
+        boy.moveto($game_player.x, $game_player.y)
+        say(["The door opens before you can knock. The dog shoots past the man inside, to the fire."], event_id)
+        Stage.walk_to(boy, 11, 8, face: 6)
+      else
+        say(["The door opens before you can knock. The dog shoots past the man inside, to the fire."], event_id)
+      end
+      Stage.emote(keegan_ev, :exclaim) if keegan_ev
+      say(["KEEGAN: Boy? Boy! Where's-"])
+      Stage.approach(keegan_ev) if keegan_ev
+      say(["He sees you instead of his husband. His face falls.",
+           "KEEGAN: Come in out of the cold. He came home without Garret. My husband."])
+    else
+      say(["A man sits by the fire, a cup of cider going cold in his hands. He looks up, hoping."], event_id)
+      Stage.approach(keegan_ev) if keegan_ev
+      say(["KEEGAN: You're not him. Come in. My husband's dog came home without him."])
+    end
+    say(["KEEGAN: Garret's a guide. He took some hunters up Kelvin's Cairn, days ago."])
+    Stage.hop(boy) if boy && with_boy
     keegan_ask(event_id)
   end
 
@@ -201,7 +239,8 @@ module FrostThaw
   # straight back here. The reward is said up front, in Keegan's words.
   def keegan_ask(event_id = nil)
     set_flag(:climb_asked)
-    say(["KEEGAN: It's a lot to ask. Would you go up there and find Garret and the others?"], event_id)
+    say([$game_switches[SW_MC_BOY_TAKEN] ? "KEEGAN: Boy brought you. He picked you. Will you go up the cairn and find Garret?" :
+                                           "KEEGAN: Kelvin's Cairn. Will you go up and find him? I can't climb."], event_id)
     c = pbMessage(_INTL("Keegan waits."), [_INTL("\"We'll find him.\""), _INTL("\"What can you pay?\""), _INTL("\"Not now.\"")], -1)
     if c == 2 || c < 0
       return say(["KEEGAN: ...Of course. It's a mountain. (He sits down very carefully.) The door's open.",
@@ -209,16 +248,20 @@ module FrostThaw
     end
     say([c == 0 ? "KEEGAN: (letting out a breath he's held for days) Thank you. Here's what I have." :
                   "KEEGAN: Fair. You've come a long way, by the look of you. Here's what I have.",
-         "KEEGAN: No money. But Owenn at the Luskan Arms is a friend. He'll give you rooms.",
+         "KEEGAN: I've no money. Owenn at the Luskan Arms is a friend. You'd sleep free there.",
          "KEEGAN: And I carve. Bring them home, and I'll make your Pokémon a charm.",
+         "He holds up a half-carved walrus on a cord, then puts it back in his pocket.",
          "KEEGAN: Hang it on one, and the rest learn from watching it fight. Garret swears by his.",
-         "KEEGAN: The quick way is straight across the tundra: east, off the Bryn Shander road.",
-         # the side job against the main stakes (context 14, M14-2 suggestion)
-         "KEEGAN: I asked the Speaker for two militia. Naerth said his men don't climb for free."])
-    sayc([cl(:alberica, "Sweetheart, we'd love to. Keep the cider warm."),
+         "KEEGAN: Go east off the Bryn Shander road, straight across the tundra. Boy knows the way.",
+         journey? ? "He looks you over, and something in his face says: young." : nil,
+         # the mountain's wild Pokémon are well above a new trainer's (notes 01 S2)
+         "KEEGAN: The cairn's no place for new trainers. Bryn Shander first, if you're green."])
+    sayc([cl(:alberica, "Keep the cider warm. We'll want it on the way back."),
           cl(:reptin, "We'll bring him home, Keegan. That's a promise, not a pleasantry."),
-          "KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him.",
-          "Boy is already at the door."])
+          "Boy is already at the door.",
+          "KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him."])
+    boy = Stage.find("Boy (waiting)")
+    Stage.walk_to(boy, VELRYN_DOOR[1], VELRYN_DOOR[2] + 1, adjacent: true) if boy
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
@@ -231,13 +274,17 @@ module FrostThaw
   # knows (Garret's home, or he's standing behind you); the others are still up there.
   def keegan_after_garret(event_id = nil)
     if flag?(:keegan_told_garret)
-      say(["KEEGAN: (opening the door before you knock) You came back. He's been watching the mountain all day."], event_id)
+      say(["KEEGAN: (opening the door before you knock) You came back.",
+           "KEEGAN: He's been watching the mountain all day."], event_id)
     elsif flag?(:garret_sent_home)
-      say(["Keegan opens the door with Garret's coat still over his arm. Garret is asleep by the fire, bandaged to the eyebrows.",
+      say(["Keegan opens the door with Garret's coat still over his arm.",
+           "Garret is asleep by the fire, bandaged to the eyebrows.",
            "KEEGAN: You're the ones. He told me. A yeti, and the cats, and you, out of nowhere.",
-           "KEEGAN: He won't stop talking about the others. Perilou, Astrix, Mokingo. He keeps trying to get up."], event_id)
+           "KEEGAN: He won't stop talking about the others.",
+           "KEEGAN: Perilou, Astrix, Mokingo. He keeps trying to get up."], event_id)
     else
-      say(["Keegan opens the door, sees who's standing behind you, and makes a sound you'll remember for a long time.",
+      walk_in(:garret, GARRET_GRAPHIC)
+      say(["Keegan sees who's standing behind you, and makes a sound you'll remember for a long time.",
            "GARRET: (sheepish, bloody) I'm all right. I'm all right. They found me. Ow. Not so hard.",
            "KEEGAN: (not letting go) You absolute idiot. You absolute, impossible idiot."], event_id)
       set_flag(:garret_with_you, false)
@@ -245,10 +292,13 @@ module FrostThaw
       set_switch(SW_MC_GARRET_HOME, true)
     end
     set_flag(:keegan_told_garret)
-    say(["KEEGAN: I've no money. But the Luskan Arms will give you rooms, and I'll carve you something useful.",
+    say(["KEEGAN: I've no money. Owenn will give you rooms, I'll see to it.",
+         "KEEGAN: And I'll carve you something.",
          "KEEGAN: But his friends are still on that mountain. Would you go back up for them?"])
     if !pbConfirmMessage(_INTL("Go back up Kelvin's Cairn for the others?"))
-      return say(["KEEGAN: ...Of course. You've done more than enough. (He looks at the window, at the mountain, for a long time.)"])
+      side_goal_done(:climb)      # (finding Garret unasked left a line in the Goal menu: notes 14 E5)
+      return say(["KEEGAN: ...Of course. You've done more than enough.",
+                  "He looks out of the window at the mountain for a long time."])
     end
     sayc([cl(:reptin, flag?(:climb_sworn) ? "All three. We swore it on the mountain and we'll swear it here." :
                                             "All three. We'll swear it here, if he needs it sworn."),
@@ -296,7 +346,8 @@ module FrostThaw
     say(["Five sled dogs, still harnessed to the overturned sled. Friendly. Cold. Hungry. Miserable."], event_id)
     say(["Boy licks each of their faces in turn, very seriously, like a roll call."]) if flag?(:boy_with_you)
     if pbConfirmMessage(_INTL("Cut the dogs loose?"))
-      say(["You cut the traces. The dogs bolt off downhill toward Ten-Towns and shelter, howling all the way."])
+      say(["You cut the traces.",
+           "The dogs bolt off downhill toward Ten-Towns and shelter, howling all the way."])
       set_switch(SW_MC_DOGS_FREE, true)
       wheel(1)
     end
@@ -329,11 +380,11 @@ module FrostThaw
     set_switch(SW_MC_AVALANCHE, true)
     pbSEPlay("Earth3") rescue nil
     $game_screen.start_shake(5, 8, 40) rescue nil
-    say(["Hundreds of feet up, halfway across a glistening white expanse of packed snow, you hear a loud CRACK above you.",
+    say(["Halfway across a glistening expanse of packed snow, you hear a loud CRACK above you.",
          "Then a rumble. The ground starts to shake. It's an avalanche!"])
     c = pbMessage(_INTL("Which way?"), [_INTL("Run for the rocks at the side!"), _INTL("Dig in and brace.")], 0)
     if c == 0
-      say(["You run. The last of you throws themselves behind the rocks as two hundred feet of snow thunders past.",
+      say(["You run. The last of you dives behind the rocks as two hundred feet of snow thunders past.",
            "Then it's very quiet. Everyone's here. Everyone's counting everyone."])
       sayc([cl(:alberica, "(lying in the snow, laughing a little wildly) Again! ...No. Never again.")])
     else
@@ -350,30 +401,44 @@ module FrostThaw
       return say(["GARRET: Find them. Mokingo, Perilou, Astrix. Please."], event_id)
     end
     say(["A steep, snow-covered incline dotted with jagged rocks.",
-         "Lying face down in the snow, barely conscious: a man in bloodstained cold-weather clothing.",
-         "A rugged, bearded man in his prime. Garret Velryn. His weapons and a climber's kit, and nothing else."], event_id)
+         "Face down in the snow, barely conscious: a man in bloodstained cold-weather clothing.",
+         "A rugged, bearded man in his prime. Garret Velryn.",
+         "His weapons and a climber's kit, and nothing else."], event_id)
     say(["Boy throws himself on Garret, whining, licking, shoving with his whole body.",
          "GARRET: (faint) ...Boy? Boy. Good boy. Good boy, you went for help."]) if flag?(:boy_with_you)
     say(["You tend his wounds. He comes round enough to talk.",
          "GARRET: A yeti. It came out from under a drift by a cave, higher up. Took us by surprise.",
          "GARRET: I lured it away from the others. Got it to chase me down the mountain.",
          "GARRET: It mauled me. Then it just... stopped following."])
-    pbSEPlay("Cry") rescue nil
-    say(["Two pale shapes are suddenly much closer than they were. Big cats, white as the snow.",
-         "GARRET: Crag cats. Hunters of Men. They've had my scent since yesterday..."])
-    sayc([cl(:alerion, "Stay down, Garret. Behind me."),
+    # The crag cats come down the slope (notes 14 E18): on screen, not in words.
+    gev = (event_id && $game_map.events[event_id]) || Stage.find("Garret")
+    cats = []
+    if Stage.map? && gev
+      [[gev.x + 5, gev.y - 2], [gev.x - 4, gev.y - 2]].each_with_index do |(cx, cy), i|
+        cat = Stage.actor(:"crag_cat_#{i}", cx, cy, 2, graphic: CRAG_CAT_GRAPHIC) or next
+        cats << cat
+      end
+      Stage.cry(:PERSIAN)
+      cats.each_with_index { |cat, i| Stage.walk_to(cat, gev.x + (i == 0 ? 2 : -2), gev.y, wait_for: i == cats.size - 1) }
+      cats.each { |cat| Stage.turn_to(cat, gev) }
+    end
+    say(["Two pale shapes slink down the slope. Big cats, white as the snow.",
+         "GARRET: Crag cats. Hunters of Men. They've had my scent since yesterday...",
+         "GARRET: Mokingo. Perilou. Astrix. They're still up there. Don't let the cats..."])
+    sayc([cl(:alerion, "Stay down. (He doesn't look round.) Two."),
           cl(:reptin, "Easy. Easy. We're not dinner.")])
     if !boss_battle(named_mon(:B262H53, 21, "Crag cat"))
-      return say(["(The crag cats circle back up the slope. Garret is still lying in the snow.)"])
+      cats.each { |cat| Stage.leave(cat, cat.x, [cat.y - 6, 0].max) }
+      return say(["(The crag cats slink back up the slope. Garret is still lying in the snow.)"])
     end
-    say(["The crag cat goes down in a spray of snow. The other one stops, looks at it, and bolts down the mountain."])
+    say(["The crag cat goes down in a spray of snow.",
+         "The other one stops, looks at it, and bolts down the mountain."])
+    Stage.leave(cats[1], cats[1].x, [cats[1].y + 8, $game_map.height - 1].min) if cats[1]
     set_flag(:crag_cats_beaten)
     set_flag(:garret_found)
-    set_switch(SW_MC_GARRET, true)
-    say(["GARRET: There were three more. I need to find them. They're still up there. I know they are.",
-         "GARRET: Mokingo Growling Bear. A goliath, seven feet of him. Came to fight a legend.",
-         "GARRET: Perilou Fishfinger. A little halfling, prays to Yondalla. Mokingo's shadow.",
-         "GARRET: And Astrix. A tiefling. Horns. Swears a lot. I never did learn her story."])
+    say(["GARRET: Mokingo Growling Bear. A goliath, seven feet of him. Came to fight a legend.",
+         "GARRET: Perilou, a little halfling. Prays to Yondalla, her god. Mokingo's shadow.",
+         "GARRET: And Astrix. A tiefling: horns, and a temper. Swears a lot."])
     c = pbMessage(_INTL("What do you say?"), [_INTL("\"Go home. We'll find them.\""), _INTL("\"Then come with us.\"")], 0)
     if c == 0
       if ($PokemonBag.pbHasItem?(:SUPERPOTION) rescue false) || ($PokemonBag.pbHasItem?(:POTION) rescue false)
@@ -387,6 +452,7 @@ module FrostThaw
         end
         say(["GARRET: Then I'll go. Keegan will kill me if I don't. Come on, Boy. Home."])
         say(["Boy looks at you, then at Garret, and goes with Garret. Of course he does."]) if flag?(:boy_with_you)
+        Stage.leave(gev, gev.x, [gev.y + 10, $game_map.height - 1].min) if gev
         set_flag(:boy_with_you, false)
         set_flag(:garret_sent_home)
         set_switch(SW_MC_GARRET_HOME, true)
@@ -399,8 +465,14 @@ module FrostThaw
       say(["GARRET: (getting up, swaying) Good. I know the route. What's left of it."])
       set_flag(:garret_with_you)
     end
+    set_switch(SW_MC_GARRET, true)
     side_goal(:climb, "Up the mountain: a cave above, where the yeti came from. Find Mokingo, Perilou and Astrix.", done: :climb_done)
+    Stage.cleanup
   end
+
+  CRAG_CAT_GRAPHIC = "Followers/PERSIAN_1"   # stand-in (art request: a white snow-leopard crag cat)
+  GARRET_GRAPHIC = "BWHiker"
+  PERILOU_GRAPHIC = "BW (16)"
 
   # The perilous climb: three pitches of ledge and ice. Get each one wrong and
   # you lose an hour, and your Pokémon pay for it in exhaustion.
@@ -419,14 +491,17 @@ module FrostThaw
     text, opts, right, done = CLIMB_PITCHES[n]
     loop do
       say([text], event_id)
-      say(["GARRET: (pointing) Not that way. I went that way. Look where it got me."]) if flag?(:garret_with_you) && n == 3
+      if flag?(:garret_with_you) && n == 3
+        walk_in(:garret, GARRET_GRAPHIC)
+        say(["GARRET: (pointing) Not that way. I went that way. Look where it got me."])
+      end
       c = pbMessage(_INTL("Which way?"), opts, -1)
       if c == right
         say([done])
         set_flag(key)
         return
       end
-      say(["It's wrong. An hour of nothing, slipping and hauling and getting nowhere, and you're back where you started."])
+      say(["It's wrong. An hour of slipping and hauling, and you're back where you started."])
       $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 8), 1].max unless pk.egg? || pk.fainted? } rescue nil
       say(["(Your Pokémon are wearing out.)"])
       break if !pbConfirmMessage(_INTL("Try again?"))
@@ -439,8 +514,9 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def scene_yeti_cave_enter
     say(["A fifteen-foot cave mouth. Inside, the floor has fallen away: a chasm eighty feet deep.",
-         "All that's left is a rocky ledge, a natural stone bridge to a tunnel, and a sheet of ice over the far side.",
-         "From somewhere deeper, a sound like a child laughing. And a much bigger sound, like a mother humming."])
+         "All that's left: a ledge, a stone bridge to a tunnel, and a sheet of ice to the far side.",
+         "From somewhere deeper, a sound like a child laughing.",
+         "And a much bigger sound, like a mother humming."])
   end
 
   # F1: the ice sheet over the chasm. It holds; you can walk straight across
@@ -451,7 +527,8 @@ module FrostThaw
     say(lines_for(:yeti_ice_sheet), event_id)
     sayc([cl(:shade, "Shortcut to whatever's laughing back there. Or a trapdoor. Hard to say with ice.")])
     if pbConfirmMessage(_INTL("Smash the ice sheet?"))
-      say(["You hammer at it from the edge. It cracks, groans, and falls away into the dark in great white plates.",
+      say(["You hammer at it from the edge.",
+           "It cracks, groans, and falls away into the dark in great white plates.",
            "A long time later, you hear them land. The way across is the stone bridge now, or nothing."])
       set_flag(:ice_sheet_broken)
       set_switch(SW_MC_ICE_BROKEN, true)
@@ -464,7 +541,8 @@ module FrostThaw
     return if flag?(:oobok_found)
     met = flag?(:mugs_taken) || flag?(:mugs_refused) || flag?(:mugs_done)   # (Hruna told you his name)
     if met
-      say(["One head belongs to a dwarf, his beard braided with iron rings. A Battlehammer clasp. Oobok.",
+      say(["One head belongs to a dwarf, his beard braided with iron rings.",
+           "A Battlehammer clasp. Oobok.",
            "Another, older, wears the frost of a month: a dwarf with a miner's look. Barthoom."])
       sayc([cl(:alberica, "(very quietly) Oh, you poor lads."),
             cl(:alerion, "We take the dwarf home. His friends will want him.")])
@@ -484,28 +562,44 @@ module FrostThaw
   # F3: the yeti den. Mother and tyke; Perilou being batted about like a ball.
   def yeti_den(event_id = nil)
     return if flag?(:perilou_saved)
+    mother = Stage.find("Mother yeti")
+    tyke = Stage.find("Yeti tyke")
     say(["A strange sight: a female yeti watching her child, a yeti tyke, play with a halfling.",
-         "The halfling is curled up tight in her cold-weather clothes. The tyke is knocking her around like a ball.",
-         "From her cries, she's still alive.",
-         "The tyke sees you, squeals, and scrambles up onto its mother's back.",
-         "The mother rises to her full height and ROARS. A warning, not an attack. Yet."], event_id)
+         "The halfling is curled up tight in her cold-weather clothes.",
+         "The tyke is knocking her around like a ball.",
+         "From her cries, she's still alive."], event_id)
+    if tyke
+      Stage.emote(tyke, :exclaim)
+      Stage.walk_to(tyke, mother.x, mother.y, adjacent: true) if mother
+    end
+    say(["The tyke sees you, squeals, and scrambles up onto its mother's back."])
+    if mother
+      Stage.turn_to(mother)
+      Stage.cry(:YETITAN)
+      Stage.emote(mother, :angry)
+    end
+    say(["The mother rises to her full height and ROARS. A warning, not an attack. Yet."])
     c = pbMessage(_INTL("What do you do?"),
                   [_INTL("Keep still. Show her you've only come for the halfling."), _INTL("Fight.")], 0)
     if c == 0
-      sayc(["Nobody moves. Slowly, slowly, you point at the halfling, and then at yourselves, and back the way you came.",
+      sayc(["Nobody moves.",
+            "Slowly, you point at the halfling, then at yourselves, then back the way you came.",
             cl(:reptin, "(softly, palms out) We only want our friend. Not your child. Not your home."),
-            "The mother yeti watches you a long time. Then she sits down, and pulls her tyke into her lap.",
+            "The mother yeti watches you a long time.",
+            "Then she sits down, and pulls her tyke into her lap.",
             "She lets you take the halfling."])
       set_flag(:yeti_den_peace)
       wheel(1)
     else
       return if !boss_battle(named_mon(:YETITAN, 23, "Mother yeti"))
-      say(["The mother yeti staggers back against the wall, clutching her tyke, and doesn't come at you again."])
+      say(["The mother yeti staggers back against the wall, clutching her tyke.",
+           "She doesn't come again."])
       set_flag(:mother_yeti_beaten)
     end
     say(["The halfling uncurls. Three days of cold and terror are in her face.",
          "PERILOU: Perilou. Perilou Fishfinger. Yondalla... Yondalla be thanked. And you.",
          "PERILOU: Mokingo... it killed Mokingo. He came to help Garret and it...",
+         "She can't stop shaking.",
          "PERILOU: I hid in here. Then it came back. Then it gave me to the baby.",
          "PERILOU: Astrix ran. Up the mountain, not down. I don't know what happened to her."])
     sayc([cl(:alberica, "Up you come, love. Arm round my neck. That's it."),
@@ -520,14 +614,19 @@ module FrostThaw
   def father_yeti(event_id = nil)
     return if $game_switches && $game_switches[SW_MC_FATHER_GONE]
     return if !flag?(:perilou_saved)
+    # (notes 14 E18: the father is on screen, in the mouth, before his line)
+    father = Stage.actor(:father_yeti, 15, 22, 8, graphic: "Followers/YETITAN") if Stage.map?
+    Stage.cry(:YETITAN) if father
     say(["At the cave mouth, a shape blocks out the light.",
          "A male yeti, coming home, a dead mountain goat tucked under one arm.",
          "He sees you, and the halfling, and his den behind you. He drops the goat."], event_id)
+    Stage.emote(father, :angry) if father
     friend = $Trainer.party.any? { |pk| !pk.egg? && %i[YETOT YETITAN].include?(pk.species) } rescue false
     if friend
-      say(["Your yeti steps out in front of you, small and fierce, and makes a sound you've never heard it make.",
+      say(["Your yeti steps out in front of you, small and fierce, and makes a sound you've not heard.",
            "The father yeti stops. He sniffs it. He looks at you for a long moment.",
            "Then he picks up his goat, and steps aside."])
+      Stage.walk(father, [PBMoveRoute::Left]) if father
       set_flag(:father_yeti_calmed)
     else
       sayc([cl(:alerion, "Back to back. Now."),
@@ -536,7 +635,9 @@ module FrostThaw
       say(["The father yeti reels away into the den, to his family. He doesn't follow you."])
       set_flag(:father_yeti_beaten)
     end
+    Stage.leave(father, 22, 9) if father         # home, to the den
     set_switch(SW_MC_FATHER_GONE, true)
+    Stage.cleanup
   end
 
   #-----------------------------------------------------------------------------
@@ -546,17 +647,20 @@ module FrostThaw
     if flag?(:astrix_found)
       return say(["Astrix, frozen solid, teeth clenched, still staring at the boots."], event_id)
     end
-    say(["A figure in cold-weather clothing sits in the snow by the crevasse, knees pulled tight to her chest.",
+    say(["A figure sits in the snow by the crevasse, knees pulled tight to her chest.",
          "Horns push up from under her fur-lined hood.",
-         "Astrix. Frozen solid. Teeth clenched, eyes staring at the pair of blue boots sticking out of the snow.",
+         "Astrix. Frozen solid.",
+         "Teeth clenched, eyes staring at the pair of blue boots sticking out of the snow.",
          "She got away from the yeti, but in her panic she ran up the mountain instead of down.",
-         "She hid here, too frightened to go back past the cave. The sight of the boots finished what the cold started."], event_id)
+         "She hid here, too frightened to go back past the cave.",
+         "The sight of the boots finished what the cold started."], event_id)
     sayc([cl(:shimmer, "...She was so close to just walking down."),
           cl(:alerion, "Panic doesn't walk. It climbs.")])
     say(["Tucked in her coat: a potion of invisibility, and a leather-bound spellbook."])
     pbReceiveItem(:SMOKEBALL) rescue nil
     give_key(:FT_ASTRIXBOOK)
     if flag?(:perilou_saved)
+      walk_in(:perilou, PERILOU_GRAPHIC)
       say(["PERILOU: (kneeling beside her) Astrix. You stupid, stubborn... (She doesn't finish.)",
            "PERILOU: At least now I know. At least I can tell people."])
     end
@@ -568,7 +672,8 @@ module FrostThaw
       return say(["Barthoom Hammerhome's headless body, laid out properly now, under his tent."], event_id)
     end
     say(["A pair of blue leather boots, jutting out of a snowbank.",
-         "You tug on them. A headless body comes out of the snow with them: a shield dwarf. Barthoom Hammerhome.",
+         "You tug on them. A headless body comes out of the snow with them: a shield dwarf.",
+         "Barthoom Hammerhome.",
          "On him: an empty wineskin, a half-eaten block of goat's cheese, and a miner's pick."], event_id)
     sayc([cl(:reptin, "A month up here, alone. (He lays the body straight.) Rest now, friend."),
           cl(:meat_meat, "Meat Meat does not want the cheese. ...Meat Meat wants the cheese a little.")])
@@ -589,23 +694,43 @@ module FrostThaw
                   flag?(:climb_sworn) ? "GARRET: The others, though. Perilou. Astrix. You swore." :
                                         "GARRET: The others, though. Perilou. Astrix. They're still up there."], event_id)
     end
+    walk_in(:garret, GARRET_GRAPHIC) if !flag?(:garret_sent_home)
     say(["Keegan opens the door, sees Garret, and makes a sound that isn't a word.",
-         "For a while nobody says anything at all. Boy runs circles round the both of them until he falls over."], event_id) if !flag?(:garret_sent_home)
+         "For a while nobody says anything. Boy runs circles round them both until he falls over."], event_id) if !flag?(:garret_sent_home)
     say(["Garret is already there, wrapped in three blankets by the fire, Boy across his feet.",
          "Keegan takes both your hands in both of his."], event_id) if flag?(:garret_sent_home)
     if flag?(:perilou_saved)
+      walk_in(:perilou, PERILOU_GRAPHIC)
       say(lines_for(:perilou_home))
+    end
+    # The oath was all three (notes 14 E25): whoever didn't come home is named.
+    say([flag?(:astrix_found) ? "GARRET: And Astrix. We'll tell her people. Somebody must have people." :
+                                "GARRET: Astrix ran up the mountain. Nobody's found her. I'll go back up.",
+         "GARRET: And Mokingo. He's still up there. We'll bring him down in the spring. All of us."])
+    # the player answers the oath's last part (an input mid-payout; read back in Alerion's chat)
+    if pbMessage(_INTL("What do you say?"), [_INTL("\"Spring, then. Count us in.\""), _INTL("Say nothing.")], -1) == 0
+      set_flag(:mokingo_promised)
+      say(["GARRET: (a long breath) Spring."])
+    else
+      say(["Garret nods, as if you'd said it anyway."])
+    end
+    if has_key?(:FT_ASTRIXBOOK)
+      say(["You give Keegan the spellbook from Astrix's coat.",
+           "KEEGAN: Her book. (He wipes the frost off it.) Someone will want this. I'll find them."])
+      take_key(:FT_ASTRIXBOOK)
     end
     say(["KEEGAN: I said I'd carve you something useful. That's coming. First, these.",
          "He gives you a little wooden box. Inside: four scrimshaw figurines.",
-         "A spouting whale. A smiling fox. A pair of dancing hares. And a walrus, with \"BIG LOVE\" carved into its side.",
-         "KEEGAN: And Owenn at the Luskan Arms knows. Your beds there are free, as long as he has beds."])
+         "A spouting whale. A smiling fox. A pair of dancing hares.",
+         "And a walrus, with \"BIG LOVE\" carved into its side.",
+         "KEEGAN: Owenn knows. Your beds at the Luskan Arms are free, as long as he has beds."])
     give_key(:FT_SCRIMSHAWBOX)
-    say(["KEEGAN: And this one's not for a shelf. Hang it on one of your Pokémon, and the rest learn by watching.",
+    say(["KEEGAN: This one's not for a shelf. Hang it on one Pokémon; the rest learn by watching.",
          "A walrus-bone charm on a cord, worn smooth from carving."])
     give(:EXPSHARE)
     sayc([cl(:alberica, "(holding up the walrus) Big love. I'm putting this on my tombstone."),
           cl(:shade, "You're not getting a tombstone. You're getting a song. You'll write it yourself.")])
+    quest_done_box("Garret Velryn is home.")
     set_flag(:climb_done)
     set_flag(:garret_home)
     set_flag(:boy_with_you, false)

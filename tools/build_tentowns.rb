@@ -34,13 +34,14 @@ MUSIC = {
 TARGOS = 2001
 BRYN = 2012
 BRYN_ROAD = 2010
-DOG = "Followers/MIGHTYENA"
+DOG = "Followers/MIGHTYENA"                  # the sled dogs at base camp (a team: wolf-grey is fine)
+BOY = "Followers/BOY"                        # Boy, the husky (art batch 03; build_act1.rb walks him in Targos)
 GOBLIN = "Followers/SNEASEL"
 BEAR = "Followers/BEARTIC"
-YETI = "Followers/URSARING"
-TYKE = "Followers/TEDDIURSA"
+YETI = "Followers/YETITAN"                   # the yetis, as the game draws them (notes 14 E20)
+TYKE = "Followers/YETOT"
 GOAT = "Followers/TAUROS"
-CAT = "Followers/PERSIAN"
+CAT = "Followers/PERSIAN_1"
 
 # switches (045_*.rb)
 SW_MC_BOY_TAKEN = 4043; SW_MC_TAKEN = 4044; SW_MC_GARRET = 4045; SW_MC_PERILOU = 4046; SW_MC_DONE = 4047
@@ -80,7 +81,14 @@ v.event(1, 1, "Cutscene velryn_arrival", [
 ])
 npc_when(v, 11, 6, "BWHiker", :garret_home, SW_MC_GARRET_HOME, dir: 2, name: "Garret")
 npc_when(v, 7, 8, "BW (16)", :perilou_home, SW_MC_PERILOU_HOME, dir: 6, name: "Perilou")
-npc_when(v, 12, 9, DOG, :boy_home, SW_MC_GARRET_HOME, dir: 4, name: "Boy")
+npc_when(v, 12, 9, BOY, :boy_home, SW_MC_GARRET_HOME, dir: 4, name: "Boy")
+# Boy, home without Garret (notes 01 E10): he runs in with you, waits by the
+# hearth if you say "not now", and goes with you when you take the job.
+v.event(11, 8, "Boy (waiting)", [
+  { graphic: "", through: true },
+  { switch: SW_MC_BOY_TAKEN, graphic: BOY, direction: 4, step_anime: true, script: "FT.talk(:boy_waiting, @event_id)" },
+  { switch: SW_MC_TAKEN, graphic: "", through: true }
+])
 v.sign(7, 5, :velryn_scrimshaw)
 save(v, :velryn)
 
@@ -479,7 +487,7 @@ SW_TM_GRELL = 4063; SW_TM_TREX = 4064; SW_TM_KOBOLDS_TOWN = 4065; SW_TM_OARUS_GO
 LONELY_ROAD = 2020
 RAT = "Followers/RATICATE"
 KOBOLD_TM = "Followers/GIBLE"
-GRELL = "Followers/TANGELA"
+GRELL = "Followers/TENTACRUEL"               # stand-in: a floating dome trailing tentacles (art request: the grell)
 
 # A one-cell prop the player can bump into: a crate on layer 2 (solid), with a
 # sign or an object on it.
@@ -832,7 +840,7 @@ f.event(21, 22, "Awakened bear", [
 ])
 # the tracks (an hour's search each), the fox and the hare
 [[31, 8], [39, 25], [41, 11], [29, 19]].each { |x, y| on_boulder(f, x, y, "Moose tracks", "FT.moose_tracks(@event_id)") }   # fresh tracks round a boulder
-f.event(34, 21, "Fox", [{ graphic: "Followers/VULPIX", direction: 6, script: "FT.fox_and_hare(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
+f.event(34, 21, "Fox", [{ graphic: "Followers/VULPIX_1", direction: 6, script: "FT.fox_and_hare(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
 f.event(37, 21, "Hare", [{ graphic: "Followers/BUNEARY", direction: 6, script: "FT.fox_and_hare(@event_id)" }, { self_switch: "A", graphic: "", through: true }])
 # the four things the brazier wants (three of them grow out here)
 on_boulder(f, 32, 28, "Pinecone", "FT.forest_pickup(:FT_PINECONE, @event_id)")
@@ -917,7 +925,7 @@ br.event(16, 12, "White moose", [
   { graphic: MOOSE, direction: 4, step_anime: false, script: "FT.barrow_moose(@event_id)" },
   { switch: SW_WM_MOOSE_DEAD, graphic: "", through: true }
 ])
-[["VULPIX", 14, 15], ["BUNEARY", 17, 16], ["HOOTHOOT", 19, 10], ["POOCHYENA", 18, 14], ["TEDDIURSA", 11, 16], ["DEERLING", 15, 17]].each do |sp, x, y|
+[["VULPIX_1", 14, 15], ["BUNEARY", 17, 16], ["HOOTHOOT", 19, 10], ["POOCHYENA", 18, 14], ["TEDDIURSA", 11, 16], ["DEERLING", 15, 17]].each do |sp, x, y|
   br.event(x, y, "Sleeping #{sp.downcase}", [
     { graphic: "Followers/#{sp}", direction: 2, walk_anime: false, script: "FT.talk(:barrow_animals, @event_id)" },
     { switch: SW_WM_MOOSE_DEAD, graphic: "", through: true }
@@ -943,7 +951,7 @@ br.event(24, 20, "Ravisin", [
   { graphic: "BW (40)", direction: 8, script: "FT.ravisin(@event_id)" },
   { switch: SW_WM_RAVISIN, graphic: "", through: true }
 ])
-br.event(27, 21, "Berry bush", [{ graphic: "Followers/SUDOWOODO", direction: 4, script: "FT.awakened_shrub(@event_id)" }])
+br.event(27, 21, "Berry bush (SHRUB)", [{ graphic: "Followers/SUDOWOODO", direction: 4, script: "FT.awakened_shrub(@event_id)" }])
 seal_edges(br)
 save(br, :elven_barrow)
 
@@ -984,7 +992,7 @@ SW_GM_FOX_BOUGHT = 4076; SW_GM_SHANDAR_AWAY = 4077; SW_GM_THUGS = 4078
 GOOD_MEAD = 2031
 CHWINGA = "Followers/CLEFFA"
 OGRE = "Followers/HARIYAMA"
-VERBEEG = "Followers/MACHAMP"
+VERBEEG = "Followers/HITMONLEE"              # stand-in: lanky and long-limbed (art request: a verbeeg)
 
 # --- 2132: Good Mead woods. In from Good Mead's west edge; the five dead
 # militia in a clearing; the chwinga on the trail; eight hours of ogre tracks
@@ -1091,6 +1099,7 @@ gm.map.events.each_value do |ev|
   when "NPC fef_moryn", "Fef Moryn"
     ev.pages[0].instance_variable_set(:@list, gm.send(:script_commands, "FT.fef_moryn(@event_id)") + [gm.send(:command, 0, [])])
   when "Fef's fox"
+    ev.pages[0].graphic.character_name = "Followers/VULPIX_1"   # an arctic fox: white (notes 14 E20)
     next if ev.pages.size > 1                        # (already patched)
     # bought: it walks with you (and later rides off with the chwinga); gone from Fef's feet either way
     ev.pages << gm.build_page(ev.pages[0], { switch: SW_GM_FOX_BOUGHT, graphic: "", through: true })

@@ -69,7 +69,7 @@ module FrostThaw
     FT_PSICRYSTAL: ["Psi Crystal", "Psi Crystals", 8, 0,
       "A crystal grown in a dead mind flayer's brain. Hold it, and you hear a cry for help from very far away, over and over.", 0, 0, 6],
     FT_RINGOFWARMTH: ["Ring of Warmth", "Rings of Warmth", 8, 0,
-      "A plain ring, warm as a hand. A woman in a red cloak gave it to Marta's grandparents fifty years ago, fleeing the wind.", 0, 0, 6]
+      "Warm as a hand. A woman fleeing the wind gave it to Marta's gran. Wait out a tundra blizzard with it: no one freezes.", 0, 0, 6]
   )
 
   TRAINER_TYPES.merge!(FT_MINER: ["Miner", :HIKER, 0, 40],
@@ -94,52 +94,66 @@ module FrostThaw
   TEXT.merge!(
     sign_termalaine: ["TERMALAINE", "Speaker: Oarus Masthew.", "The heraldry: a fish's open jaws swallowing a rose-pink tourmaline, on sky blue."],
     sign_termalaine_path: ["TERMALAINE PATH", "North to Termalaine (six hours, on foot). Mind the wind off the lake."],
-    tm_carvings: ["The houses are carved with wizards and homunculi, tigers and smiling djinn. Calishite work, old and fine.",
+    tm_carvings: ["The houses are carved with wizards and homunculi, tigers and smiling djinn.",
+                  "Calishite work, old and fine.",
                   "Termalaine is the most picturesque town in Icewind Dale.", "Then the north wind gets through your coat."],
     tm_wind: ["The wind comes straight down off the lake and through every layer you own.",
-              "Termalaine was built right in its path. Nobody remembers why. Somebody probably thought it was pretty."],
-    tm_fisher: ["We fish till dark, then the Blue Clam. Feet to the hearth, chowder, and Vernon's lies about the old days.",
+              "Termalaine was built right in its path. Nobody remembers why.",
+              "Somebody probably thought it was pretty."],
+    tm_fisher: ["We fish till dark, then the Blue Clam.",
+                "Feet to the hearth, chowder, and Vernon's lies about the old days.",
                 "Some nights a sled comes down from Lonelywood with a haunch of moose. Then we sing louder."],
     tm_miner_out: [{ if: { flag: :mine_done }, lines: ["Back to work! Picks in the walls again. Best sound in the world."] },
-                   ["The mine's closed. Kobolds. We ran out when they came in. Didn't stop to ask what they wanted.",
+                   ["The mine's closed. Kobolds. We ran out when they came in.",
+                    "Didn't stop to ask what they wanted.",
                     "And Hessa never came back up, the week before. They say she fell down the shaft. They say."]],
-    tm_shaelen: [{ if: { flag: :oarus_dead }, lines: ["Shaelen Masthew stands where her son used to stand, outside the Blue Clam, looking at the mine road.",
-                                                      "SHAELEN: He went in with a lantern. I told him to send someone. He said a speaker doesn't send people where he won't go.",
-                                                      "SHAELEN: The town wants me back in the chair. I've told them I'm too old to bury another one.",
-                                                      "SHAELEN: ...Something lives down there that you didn't kill. Don't come back here without killing it."] },
-                 ["SHAELEN: Shaelen Masthew. I was Speaker here, once. Now I'm Oarus's mother, which is harder.",
+    tm_shaelen: [{ if: { flag: :oarus_dead }, lines: ["Shaelen Masthew stands where her son used to stand, looking up the mine road.",
+                                                      "SHAELEN: He went in with a lantern. I told him to send someone.",
+                                                      "SHAELEN: He said a speaker doesn't send people where he won't go.",
+                                                      "She doesn't take her eyes off the mine road.",
+                                                      "SHAELEN: The town wants me back in the chair. I'm too old to bury another one.",
+                                                      "SHAELEN: ...Something down there, you didn't kill. Don't come back till you have."] },
+                 ["SHAELEN: Shaelen Masthew. I was Speaker here, once.",
+                  "SHAELEN: Now I'm Oarus's mother, which is harder.",
+                  "She doesn't take her eyes off the mine road.",
                  "SHAELEN: His parents were adventurers. Half-orcs. They didn't come back from a job. I did.",
-                 "SHAELEN: He won the speakership by a hair. Half the militia still won't salute him. He hasn't told you that, has he?"]],
+                 "SHAELEN: He won the speakership by a hair.",
+                 "SHAELEN: Half the militia still won't salute him. He hasn't told you that, has he?"]],
     tm_officer_hint: ["OFFICER: The mine? Not our job. Speaker asked. We declined.",
-                      "OFFICER: Termalaine needs a speaker who knows how things work. Speaker Maxildanarr in Targos agrees.",
+                      "OFFICER: We need a speaker who knows how things work. Speaker Maxildanarr agrees.",
                       "OFFICER: You didn't hear that. Move along."],
     vernon_braig: ["VERNON: Vernon Braig. The Blue Clam's mine, and so's the chowder. Spiced. Sit by a hearth.",
-                   "VERNON: I've hunters in Lonelywood who owe me. When a sled comes down the north trail with hares or moose, we eat like lords.",
+                   "VERNON: Hunters in Lonelywood owe me. When their sled brings moose, we eat like lords.",
                    "VERNON: Scrimshaw on the walls is all local. Best in the Dale. Don't tell Targos."],
     tm_rumour_hint: ["Fishers on long benches by the hearths, warming their feet."],
-    eastside_tunnels: ["What looks from outside like separate houses is one building, its rooms joined by passages underground.",
+    eastside_tunnels: ["What look like separate houses are one building, its rooms joined by passages underground.",
                        "The guest rooms are in the cellar, out of the wind. Warmest beds in Termalaine."],
     clyde_peskryk: ["A retired fisherman, propped up in bed. He smiles at you, and doesn't try to talk.",
                     "MARTA: That's Da. He can't get up any more. He likes visitors. He likes the song."],
     mine_sign: ["A crude wooden sign propped against an empty cart: \"Kobolds only!\"",
                 "It's written in charcoal, in far more elegant calligraphy than you'd expect from a kobold."],
-    mine_tools: ["Racks of picks and hammers nailed to the walls. Rock dust on the floor, and tracks in it:",
-                 "reptilian prints, mixed with human boots, and something like a pair of very big rats."],
+    mine_tools: ["Racks of picks and hammers on the walls. Tracks in the rock dust on the floor.",
+                 "Reptilian prints, human boots, and something like a pair of very big rats."],
     mine_river: ["An underground river, kept from freezing by vents somewhere below.",
-                 "It leaves the cave through a narrow fissure in the south wall, gathering speed toward the shaft.",
+                 "It leaves through a narrow fissure in the south wall, gathering speed toward the shaft.",
                  "Anything that wades into that fissure goes down the shaft with it. Thousands of feet."],
-    mine_benches: ["Benches and tables where the miners cleaned their stones. Gravel everywhere; dropped hammers; broken lanterns.",
+    mine_benches: ["Benches and tables where the miners cleaned their stones.",
+                   "Gravel everywhere; dropped hammers; broken lanterns.",
                    "The miners left in a hurry."],
-    mine_shaft: ["A walkway of planks and struts along the wall of a vertical shaft that just keeps going down.",
+    mine_shaft: ["A walkway of planks and struts runs along a vertical shaft that just keeps going down.",
                  "A narrow waterfall cascades down the far wall. You have to shout to hear each other."],
     mine_landing: ["The bucket lift creaks down to a little cave with two dusty tunnels going opposite ways.",
-                   "Lots of kobold feet have come and gone to the west. One set of kobold prints goes east, and doesn't come back."],
-    mine_shuttle: ["The tunnel ends at the shaft. A bucket dangles on a rope stretched across it to a platform fifteen feet away.",
+                   "Lots of kobold feet have come and gone to the west.",
+                   "One set of kobold prints goes east, and doesn't come back."],
+    mine_shuttle: ["The tunnel ends at the shaft.",
+                   "A bucket dangles on a rope stretched across it to a platform fifteen feet away.",
                    "Looking down: nothing but dark. Looking up: the underside of the walkway on level one."],
-    mine_skull: ["A fossilised skull juts out of the wall at head height. Huge eye sockets, a ridge between them, no nose,",
-                 "and four small holes where teeth should be."],
-    mine_geodes: ["Sparkling geodes stick out of the walls like glassy shards. The floor rises to a ridge along the east wall."],
-    mine_lift: ["A wooden pulley system around a hole in the floor. A bucket big enough for one person hangs on thick rope.",
+    mine_skull: ["A fossilised skull juts out of the wall at head height.",
+                 "Huge eye sockets, a ridge between them, no nose, and four small holes for a mouth."],
+    mine_geodes: ["Sparkling geodes stick out of the walls like glassy shards.",
+                  "The floor rises to a ridge along the east wall."],
+    mine_lift: ["A wooden pulley system around a hole in the floor.",
+                "A bucket big enough for one person hangs on thick rope.",
                 "A crank on the side raises and lowers it. It takes a minute either way."],
     oarus_after: [{ if: { flag: :oarus_possessed }, lines: ["OARUS: Have you ever really LOOKED at lichen? Crustose, foliose, fruticose...",
                                                             "OARUS: (He blinks.) ...Sorry. Where was I? I keep losing my place. Oh, look, moss."] },
@@ -160,23 +174,29 @@ module FrostThaw
 
   PARTY_CHAT[:alberica].merge!(
     termalaine_path: ["Six hours of this, and then a town carved with djinn. I'll take the djinn."],
-    termalaine: ["Darling, look at the carvings! Tigers! Little wizards! Somebody here had TASTE.", "...And then the wind. Of course."],
-    gem_mine: ["Tourmalines. In the walls. I'm being very good. I'm not touching anything. Mostly."]
+    termalaine: ["Look at the carvings! Tigers! Little wizards! Somebody here had TASTE.", "...And then the wind. Of course."],
+    gem_mine: ["Tourmalines. In the walls. I'm being very good.",
+               "I'm not touching anything. Mostly."]
   )
   PARTY_CHAT[:reptin].merge!(
-    termalaine_path: ["Every town on this lake hates every other town on this lake. Termalaine just hates more politely."],
+    termalaine_path: ["Every town on this lake hates every other town on this lake.",
+                      "Termalaine just hates more politely."],
     termalaine: ["A speaker the militia won't obey. I've worked for that kind of church.", "It never ends well for the priest."],
-    gem_mine: ["Something's floating in the dark. I saw it once, at the edge of the lamp. I'd rather not see it twice."]
+    gem_mine: ["Something's floating in the dark.",
+               "I saw it once, at the edge of the lamp. I'd rather not see it twice."]
   )
   PARTY_CHAT[:alerion].merge!(
-    termalaine_path: ["Keep together. This is the kind of road people walk off in the dark and aren't missed."],
-    termalaine: ["Naerth's men are here too. Officers. You can tell by how they stand when the Speaker walks past."],
-    gem_mine: ["My ring's cold. There's a dead man in here. Or what's left of one."]
+    termalaine_path: ["Keep together.",
+                      "This is the kind of road people walk off in the dark and aren't missed."],
+    termalaine: ["Naerth's men are here too. Officers.",
+                 "You can tell by how they stand when the Speaker walks past."],
+    gem_mine: ["Fancy handwriting on a kobold's sign.",
+               "Somebody down here learned to write somewhere else."]
   )
   PARTY_CHAT[:shade].merge!(
     termalaine_path: ["Footprints. Bare ones. He came this way too. Sephek."],
     termalaine: ["Kobolds in a mine aren't news. A speaker who can't order his own guards is."],
-    gem_mine: ["Fancy handwriting on a kobold sign. Somebody's pretending to be something they aren't.", "I'd know."]
+    gem_mine: ["Picks left in the walls, lamps left lit. The miners didn't walk out. They ran.", "I know what running looks like."]
   )
   PARTY_CHAT[:shimmer].merge!(
     termalaine_path: ["Lonelywood's past Termalaine. He said Lonelywood. He's waiting.", "Let's not make him wait too long. Or too short."],
@@ -191,9 +211,10 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def scene_termalaine_arrival
     set_flag(:termalaine_arrived)
-    say(["Termalaine spreads out from the shore of Maer Dualdon, bordered north and west by tall pines.",
+    say(["Termalaine spreads along the shore of Maer Dualdon, tall pines north and west.",
          "The houses are carved with wizards and homunculi, tigers and smiling djinn.",
-         "It's the most picturesque town in Icewind Dale. Then the north wind comes down off the lake and finds you."])
+         "It's the most picturesque town in Icewind Dale.",
+         "Then the north wind comes down off the lake and finds you."])
     sayc([cl(:alberica, "Oh, it's PRETTY. Why is it pretty? Nothing in this Dale is allowed to be pretty."),
           cl(:shade, "Give it a minute.")])
   end
@@ -204,11 +225,23 @@ module FrostThaw
       return say(["DARMO: The gemstone mine is OPEN! Speaker Masthew says it's SAFE! Heroes from the south!",
                   "DARMO: (quieter) That's you. I'm shouting about you."], event_id)
     end
-    say(["A boy wrapped in heavy winter clothes stands on a box, shouting the news at people who don't stop.",
+    if giver_coming?(event_id)
+      # crossing the square, you hear him (no stop: talk to him for the rest)
+      @giver_coming = nil
+      ev = $game_map.events[event_id] rescue nil
+      Stage.emote(ev, :exclaim) if ev
+      Stage.hop(ev) if ev
+      set_flag(:darmo_shouted)
+      return say(["DARMO: (from his box, at you) The gem mine's closed!",
+                  "DARMO: MONSTERS! The Speaker pays FIVE THOUSAND!"], event_id)
+    end
+    set_flag(:darmo_shouted)
+    say(["A boy on a box shouts the news at people who don't stop.",
          "DARMO: The gem mine's closed! MONSTERS! Speaker Masthew pays FIVE THOUSAND to clear it!",
          "He sees you've stopped. He looks delighted.",
-         "DARMO: You want the mine? It's north-east, half an hour up the trail into the woods. It's very important for Termalaine.",
-         "DARMO: Without the mine, nobody has any money. The Speaker's at the Blue Clam, on the docks. Go! Go!"], event_id)
+         "DARMO: You want the mine? It's north-east, half an hour up the trail into the woods.",
+         "DARMO: Without the mine, nobody has any money.",
+         "DARMO: The Speaker's at the Blue Clam, on the docks. Go!"], event_id)
     set_flag(:heard_of_mine)
   end
 
@@ -220,19 +253,39 @@ module FrostThaw
       return janth_in_oarus(event_id) if flag?(:oarus_possessed) && !flag?(:janth_rested)
       return say(lines_for(:oarus_after), event_id)
     end
-    say(["Two bundled-up figures are talking outside the tavern. One of them waves.",
-         "OARUS: You seem entirely too prepared for trouble. Are you here about the mine?",
-         "A broad half-orc with a sharp, tired face. Speaker Oarus Masthew.",
-         "OARUS: A gang of kobolds crept into the gem mine a few days back. Came in from the surface. The miners ran.",
-         "OARUS: Nobody's been killed. But kobolds are too much for miners with picks.",
-         "OARUS: A miner went missing last week. Hessa. Some think something came up from below.",
-         "OARUS: From the Underdark. The dark under the world.",
-         "OARUS: I think she fell down the central shaft. It goes down so far you'd never find a body.",
-         "OARUS: Five thousand to whoever clears it. And the miners' pick of the first new stones.",
-         "OARUS: It matters more than I can say. No mine, no money. No money..."], event_id)
-    sayc([cl(:alerion, "Your militia can't deal with kobolds?"),
-          "OARUS: (a pause that goes on a little too long) ...They're busy.",
-          cl(:shade, "(aside) He asked them. They said no. That's a speaker with a problem.")])
+    if flag?(:mine_asked)
+      say(["OARUS: Back again. Tell me it's about the mine."], event_id)
+    else
+      # Purpose: a Speaker his own militia won't obey needs strangers to do
+      # their job; the mine is his town's money.
+      set_flag(:mine_asked)
+      giver_hello(event_id)
+      if flag?(:council_session)
+        say(["OARUS: The strangers from the Council. You walked out of that door after all.",
+             "He looks past you, up the mine road, before he goes on."], event_id)
+      else
+        say(["A broad half-orc with a sharp, tired face waves you over: Speaker Oarus Masthew.",
+             "OARUS: Swords and Pokémon. Please tell me you're here about the mine."], event_id)
+      end
+      say(["OARUS: A gang of kobolds crept into the gem mine a few days back. The miners ran.",
+           "OARUS: Nobody's been killed. But kobolds are too much for miners with picks."])
+      # (Oarus answers it, so it's spoken: WRITING_GUIDE §5)
+      if with_or_is?(:alerion)
+        speak(:alerion, "(eyeing the officers by the wall) Those are your militia. Standing there.",
+                        "(quietly) Your militia. Standing there.")
+      else
+        say(["Two militia officers lean on the Blue Clam's wall, watching you talk."])
+      end
+      sayc([
+            "OARUS: (a pause that goes on a little too long) ...They're busy.",
+            "The officers find something interesting in the snow.",
+            cl(:shade, "(aside) Busy. Of course they are."),
+            "OARUS: A miner went missing last week. Hessa. Some say something came up from below.",
+            "OARUS: From the Underdark: the dark under the world. Me, I think she fell down the shaft.",
+            "OARUS: Five thousand to whoever clears it. And the miners' pick of the first new stones.",
+            "He looks up the empty mine road.",
+            "OARUS: It matters more than I can say. No mine, no money. No money..."])
+    end
     if pbConfirmMessage(_INTL("Clear out the gem mine for Speaker Masthew?"))
       say(["OARUS: Good. Good. North-east, the trail into the woods. Bring a light. Bring two."])
       set_flag(:mine_taken)
@@ -246,32 +299,39 @@ module FrostThaw
   def marta_peskryk(event_id = nil)
     if !flag?(:met_marta)
       set_flag(:met_marta)
-      say(["A willowy teenager with her sleeves rolled up, carrying a basin. She's singing to herself:",
+      # Purpose: a girl nursing her dying father keeps the one warm thing her
+      # family owns; the party learns the winter has hunted people before.
+      say(["A willowy teenager, sleeves rolled up, carries a basin past a sickbed. She's singing:",
            "MARTA: \"Ahead of winter's wind she came / The lovely woman with no name;",
-           "MARTA: Draped in a fur-lined cloak of red / To the icy lake she fled;",
-           "MARTA: The wind pursued her all the same / As sure as night she's dead.\"",
+           "MARTA: Draped in a fur-lined cloak of red / To the icy lake she fled;\"",
+           "In the bed, an old man mouths the words along with her.",
+           "MARTA: \"The wind pursued her all the same / As sure as night she's dead.\"",
            "She sees you, and blushes.",
            "MARTA: Marta. Marta Peskryk. I keep the Eastside. Me and Da. Well. Me. Da's poorly."], event_id)
-      sayc([cl(:alberica, "Sweetheart, that's a lovely song and a terrible ending. Where's it from?")])
-      say(["MARTA: Fifty years ago, a woman in a fur-lined red cloak stopped here on her way to Lonelywood.",
-           "MARTA: She was alone, and frightened. My grandparents kept the inn then. Retired adventurers.",
-           "MARTA: They tried to comfort her. She gave them a ring, for their kindness.",
-           "MARTA: Not long after, a howling wind burst into the inn. It tossed her about like a rag doll.",
-           "MARTA: Gran and Grandad got between them. The wind beat them senseless, and she got away.",
-           "MARTA: Then it went on hunting her. Nobody ever saw her again.",
-           "She touches a chain round her neck. On it, a plain ring.",
-           "MARTA: This is it. It's always warm. Always. Even now."])
+      sayc([cl(:alberica, "That's a lovely song, and a terrible ending."),
+            "The old man taps the bedframe twice. Marta sighs.",
+            "MARTA: He wants me to tell it. He always wants me to tell it.",
+            "MARTA: Fifty years back, a woman stopped here. Red cloak. Running.",
+            "MARTA: Gran gave her soup. She gave Gran a ring. Then the wind came in.",
+            "Her father's eyes are closed. He's smiling.",
+            "MARTA: It beat Gran and Grandad senseless. She got away. Nobody saw her after.",
+            "She touches a chain round her neck. On it, a plain ring.",
+            "MARTA: This is it. It's always warm. Always. Even now."])
       sayc([cl(:shimmer, "(very quietly) A woman running from the wind."),
-            cl(:reptin, "(gently) That's a ring of warmth, Marta. A real one.")])
+            cl(:reptin, "(gently) Keep it on, Marta. Someone ran a long way to give it away.")])
     end
     if !flag?(:marta_ring) && pbConfirmMessage(_INTL("Ask Marta for the ring?"))
       say(["MARTA: (her hand closing round it) It's all I've got of them."])
       c = pbMessage(_INTL("What do you tell her?"),
                     [_INTL("\"It could help us end the winter.\""), _INTL("\"Never mind. Keep it.\"")], 1)
       if c == 0
-        sayc([cl(:alberica, "Marta. We're going north, after the thing that's making this winter. All the way."),
-              cl(:reptin, "Whoever she was, she was running from the same cold. Let it help us run toward it."),
-              "MARTA: ...You mean it. You actually mean it.",
+        # (Marta answers them, so they're spoken: WRITING_GUIDE §5)
+        speak(:alberica, "Marta. We're going north, after what's making this winter. All the way.",
+                         "(quietly) We're going north. After the thing making this winter.") if with_or_is?(:alberica)
+        speak(:reptin, "Whoever she was, she ran from the same cold. Let it help us run toward it.",
+                       "(gently) Let it help us run toward the cold, not from it.") if with_or_is?(:reptin)
+        say(["You tell her where you're going: north, after whatever is making this winter."]) if !with_or_is?(:alberica) && !with_or_is?(:reptin)
+        sayc(["MARTA: ...You mean it. You actually mean it.",
               "She unclasps the chain and puts the ring in your hand. It's warm as a hand.",
               "MARTA: Bring the summer back. That's the price. Da wants to see the lake thaw once more."])
         give_key(:FT_RINGOFWARMTH)
@@ -318,7 +378,8 @@ module FrostThaw
       say(["An acorn-sized tourmaline! Flawed, but beautiful. Pink, going to black at one end."])
       pbReceiveItem(:FT_TOURMALINE, 3) rescue nil
     else
-      say(["An acorn-sized tourmaline, perfect, the colour of a red sunset. Everyone stops to look at it."])
+      say(["An acorn-sized tourmaline, perfect, the colour of a red sunset.",
+           "Everyone stops to look at it."])
       pbReceiveItem(:FT_TOURMALINE, 10) rescue nil
     end
   end
@@ -326,7 +387,8 @@ module FrostThaw
   # M3: two giant rats.
   def mine_rats(event_id = nil)
     return if $game_switches && $game_switches[SW_TM_RATS]
-    say(["Between you and the river: two halfling-sized grey rodents with long tails and beady eyes. They rush you."], event_id)
+    say(["Between you and the river: two halfling-sized grey rodents with long tails and beady eyes.",
+         "They rush you."], event_id)
     if boss_battle(named_mon(:RATICATE, 16, "Giant rat"), named_mon(:RATICATE, 16, "Giant rat"))
       set_switch(SW_TM_RATS, true)
     end
@@ -336,7 +398,8 @@ module FrostThaw
   def mine_dog_figurine(event_id = nil)
     return say(lines_for(:mine_benches), event_id) if flag?(:mine_dog)
     say(lines_for(:mine_benches), event_id)
-    say(["Under a bench: a small dog carved out of rock, with two pebble tourmalines for eyes. A miner made it on a break."])
+    say(["Under a bench: a small dog carved out of rock, with two pebble tourmalines for eyes.",
+         "A miner made it on a break."])
     pbReceiveItem(:FT_TOURMALINE, 2) rescue nil
     set_flag(:mine_dog)
   end
@@ -347,16 +410,21 @@ module FrostThaw
     say(lines_for(:mine_shaft), event_id)
     return if !pbConfirmMessage(_INTL("Look under the planks?"))
     say(["Under the walkway, clinging to the struts: two kobolds with saws, working away cheerily.",
-         "They've almost cut through. Another day and the walkway would drop anyone heavier than two kobolds."])
+         "They've almost cut through.",
+         "Another day and the walkway would drop anyone heavier than two kobolds."])
     c = pbMessage(_INTL("What do you do?"), [_INTL("Shout at them to come up."), _INTL("Knock them off.")], 0)
     if c == 0
-      say(["You shout over the waterfall. The kobolds squeak, drop their saws (down, down, gone), and scramble up onto the planks.",
-           "SCORP: Don't hurt! Trex say break the walkway so big ones can't follow!",
-           "THWIP: Trex say! Not us! We just saw!",
-           "They bolt off toward the lift."])
+      say(["You shout over the waterfall.",
+           "The kobolds squeak, drop their saws (down, down, gone), and scramble up."])
+      kobolds = [walk_in(:scorp, KOBOLD_GRAPHIC), walk_in(:thwip, KOBOLD_GRAPHIC)].compact
+      say(["SCORP: Don't hurt! Trex say break the walkway so big ones can't follow!",
+           "THWIP: Trex say! Not us! We just saw!"])
+      Stage.leave_all(kobolds, *MINE_LIFT_TOP[1, 2])
+      say(["They bolt off toward the lift."])
       set_flag(:saboteurs_spared)
     else
-      say(["One good thump on the planks. One kobold loses its grip and falls without a sound, down the shaft.",
+      say(["One good thump on the planks.",
+           "One kobold loses its grip and falls without a sound, down the shaft.",
            "The other scrambles up, shrieking, and runs."])
       sayc([cl(:reptin, "(staring down into the dark) ...That was a person. A small one. But a person."),
             cl(:alerion, "It was trying to drop us down the same hole.")])
@@ -378,23 +446,28 @@ module FrostThaw
     transfer(*MINE_LIFT_TOP)
   end
 
+  KOBOLD_GRAPHIC = "Followers/GIBLE"      # stand-in for a kobold (as at Garagai's lodge)
+  JANTH_GRAPHIC = "BWSage"                 # an old sage, drawn faint (a ghost)
+
   MINE_LIFT_BOTTOM = [2136, 22, 20, 2]
   MINE_LIFT_TOP    = [2135, 31, 9, 2]
 
   # M8: the grell. It hangs near the ceiling and waits for someone to be alone.
   def mine_grell(event_id = nil)
     return if $game_switches && $game_switches[SW_TM_GRELL]
-    say(["Floating near the ceiling, fifteen feet up, almost invisible against the rock: a huge, pale brain with a beak,",
-         "trailing long barbed tentacles. A grell.",
-         "It sees there are several of you. It drifts back into the dark, and waits for one of you to wander off."], event_id)
+    say(["Near the ceiling, fifteen feet up, almost invisible against the rock, something floats.",
+         "A huge, pale brain with a beak, trailing long barbed tentacles. A grell.",
+         "It sees there are several of you.",
+         "It drifts back into the dark, and waits for one of you to wander off."], event_id)
     c = pbMessage(_INTL("What do you do?"), [_INTL("Attack it now, together."), _INTL("Back away, carefully.")], 0)
     if c == 1
       return say(["It lets you go. You feel it following. Thirty feet behind. Always thirty feet."])
     end
     if boss_battle(named_mon(:B114H92, 19, "Grell"))
       say(["The grell drops, twitching, and its tentacles go limp.",
-           "Under the ledge where it nested: bones, and a miner's boot. Hessa didn't fall down the shaft."])
-      sayc([cl(:alerion, "Something from the Underdark. Up the shaft, looking for food.")])
+           "Under the ledge where it nested: bones, and a miner's boot.",
+           "Hessa didn't fall down the shaft."])
+      sayc([cl(:alerion, "Something from the dark under the world. Up the shaft, looking for food.")])
       set_switch(SW_TM_GRELL, true)
       set_flag(:grell_dead)
     end
@@ -403,7 +476,7 @@ module FrostThaw
   # M9: Grek and Smol, poking a dead giant rat with javelins.
   def mine_grek(event_id = nil)
     return if $game_switches && $game_switches[SW_TM_GREK]
-    say(["On a table in the miners' break room, two kobolds are poking a dead giant rat with their javelins.",
+    say(["In the miners' break room, two kobolds are poking a dead giant rat with their javelins.",
          "They screech when they see you and charge!"], event_id)
     if boss_battle(named_mon(:GIBLE, 17, "Grek"), named_mon(:GIBLE, 16, "Smol"))
       say(["The moment one of them is hurt, both have a change of heart and bolt for the tunnel north."])
@@ -412,10 +485,11 @@ module FrostThaw
         say(["You catch Smol by the tail. It squeals, then goes limp and very talkative.",
              "SMOL: Trex led us here! He has wings like dragon!",
              "SMOL: Trex smart! He speaks like human who knows a lot. He don't speak Dragon no more.",
+             "Its eyes flick to the tunnel.",
              "SMOL: Trex says miners want their mine back. Trex wants something better in return.",
              "SMOL: Trex says we be safer in town. There's food in town!",
              "You let go. Smol is gone down the tunnel before its feet touch the floor."])
-        sayc([cl(:alerion, "A kobold who stopped speaking Draconic. That's not a kobold thing. That's a someone-else thing."),
+        sayc([cl(:alerion, "A kobold that's forgotten its own tongue. Somebody else is doing the talking."),
               cl(:reptin, "Wings like a dragon, and a deal in mind. Let's go and hear it.")])
         set_flag(:kobold_questioned)
       else
@@ -438,7 +512,8 @@ module FrostThaw
       set_flag(:shuttle_seen)
       say(lines_for(:mine_shuttle), event_id)
     end
-    say(["Into the bucket, one or two at a time. Hand over hand along the rope, the dark breathing up at you.",
+    say(["Into the bucket, one or two at a time.",
+         "Hand over hand along the rope, the dark breathing up at you.",
          "Nobody looks down. Everybody looks down."])
     to_x = west ? MINE_SHUTTLE_WEST_X - 1 : MINE_SHUTTLE_EAST_X + 1
     pbFadeOutIn { $game_player.moveto(to_x, $game_player.y) } rescue $game_player.moveto(to_x, $game_player.y)
@@ -450,62 +525,90 @@ module FrostThaw
   # M11: Trex, with his fake wings and his satchel, and the ghost inside him.
   def trex(event_id = nil)
     return say(["The tunnel is empty now. A few scales, a few crumbs."], event_id) if $game_switches && $game_switches[SW_TM_TREX]
-    say(["Three skittish kobolds lurk in a dusty tunnel. One wears fake dragon wings of thin wood and tattered white cloth,",
-         "and a threadbare satchel over one shoulder. He raises his hands at once.",
+    say(["Three skittish kobolds lurk in a dusty tunnel.",
+         "One wears fake dragon wings of wood and white cloth, and a threadbare satchel.",
+         "He raises his hands at once.",
          "TREX: We mean you no harm. Please don't hurt us.",
-         "His Common is fluent. Better than fluent. His bodyguards, Vott and Zurk, look at him as if they've never heard him talk like that."], event_id)
-    say(["TREX: We were chased out of the foothills of Kelvin's Cairn by a yeti, and sought refuge here.",
-         "TREX: The miners took fright and fled before I could explain that we meant no harm.",
-         "TREX: The everlasting winter has made the wilderness unsafe for my kind, and the preternatural cold dulls our wits.",
-         "TREX: Please. We only want a place to stay out of this horrible weather. We can work. We won't cause trouble.",
-         "TREX: Termalaine would be richer for having us."])
-    sayc([cl(:shade, "(very quietly) \"Preternatural.\" He said preternatural. That kobold can't spell kobold."),
+         "His Common is fluent. Better than fluent.",
+         "His bodyguards, Vott and Zurk, look at him as if they've never heard him talk like that."], event_id)
+    say(["TREX: A yeti chased us out of the foothills of Kelvin's Cairn. We sought refuge here.",
+         "TREX: The preternatural cold dulls our wits. We only want a place out of this weather.",
+         "TREX: We can work. Termalaine would be richer for having us."])
+    sayc([cl(:shade, "(very quietly) \"Preternatural.\" He said preternatural."),
+          cl(:shade, "That kobold can't spell kobold."),
           cl(:alerion, "(his hand on his ring) Something's riding him. My ring's gone ice cold."),
           cl(:meat_meat, "Little lizard smells like old books. Meat Meat does not like it.")])
     opts = [_INTL("\"We'll take you to Termalaine.\""), _INTL("\"Give us the satchel.\""), _INTL("Attack.")]
     c = pbMessage(_INTL("What do you do?"), opts, 0)
     case c
     when 0
-      say(["TREX: (smiling far too widely for a kobold) Thank you. Thank you. Termalaine. Yes. Somewhere... important."])
+      say(["TREX: (smiling far too widely for a kobold) Thank you.",
+           "TREX: Thank you. Termalaine. Yes. Somewhere... important."])
       set_flag(:kobolds_to_town)
       set_flag(:janth_unresolved)
       set_switch(SW_TM_KOBOLDS_TOWN, true)
     when 1
-      say(["TREX: (clutching it) No. No. These are mine. My samples. Two years of moss and lichen and...",
-           "His voice cracks into someone else's. An old man's. Then the kobold's eyes go white.",
-           "JANTH: They are MINE. I died for them!"])
+      say(["TREX: (clutching it) No. No. These are mine.",
+           "TREX: My samples. Two years of moss and lichen and...",
+           "His voice cracks into someone else's. An old man's. Then the kobold's eyes go white."])
+      janth_rises(event_id)
+      say(["JANTH: They are MINE. I died for them!"])
       return trex_ghost_battle
     else
       say(["Vott and Zurk throw themselves in the way, squealing. Trex falls back behind them.",
-           "Then Trex's eyes go white, and a pale shape tears itself up out of him. The kobold drops like a sack.",
-           "JANTH: Fine. FINE. I'll take one of YOU, then. One who can carry my satchel!"])
+           "Then Trex's eyes go white, and a pale shape tears itself up out of him.",
+           "The kobold drops like a sack."])
+      janth_rises(event_id)
+      say(["JANTH: Fine. FINE. I'll take one of YOU, then. One who can carry my satchel!"])
       return trex_ghost_battle
     end
     set_switch(SW_TM_TREX, true)
   end
 
+  # The ghost, out of the kobold and on screen (notes 14 E19).
+  def janth_rises(event_id)
+    trex_ev = (event_id && $game_map.events[event_id]) || Stage.find("Trex")
+    return if !trex_ev || !Stage.map?
+    g = Stage.actor(:janth, trex_ev.x, trex_ev.y, 2, graphic: JANTH_GRAPHIC) or return
+    g.opacity = 140 rescue nil
+    Stage.walk(g, [PBMoveRoute::Up]) rescue nil
+    Stage.turn_to(g)
+  end
+
   def trex_ghost_battle
     if !pbTrainerBattle(:FT_SPIRIT, "Janth", nil, false, 0)
-      return say(["The ghost sinks back into the kobold. Trex blinks at you, frightened, and backs away into the dark."])
+      Stage.cleanup
+      return say(["The ghost sinks back into the kobold.",
+                  "Trex blinks at you, frightened, and backs away into the dark."])
     end
-    say(["The ghost of an old man in a sage's robe hangs in the air, flickering. He reaches for the satchel.",
-         "JANTH: Janth. Janth Alowar. I catalogued the flora of the Dale. All of it. A yeti took my head in the foothills.",
+    say(["The ghost of an old man in a sage's robe hangs in the air, flickering.",
+         "He reaches for the satchel.",
+         "JANTH: Janth. Janth Alowar. I catalogued the flora of the Dale.",
+         "JANTH: All of it. A yeti took my head in the foothills.",
          "JANTH: Two years. My samples. If they go, I go."])
     c = pbMessage(_INTL("What do you do with the satchel?"), [_INTL("Destroy it, and let him rest."), _INTL("Leave it be.")], 0)
     if c == 0
-      sayc(["You tear the satchel open and scatter its moss and lichen into the river's spray. It's all gone in a moment.",
-            "JANTH: ...Oh. Oh, that's... lighter. That's much lighter.",
-            "He fades like breath on a window.",
+      sayc(["You tear the satchel open and scatter its moss and lichen into the river's spray.",
+            "It's all gone in a moment.",
+            "JANTH: ...Oh. Oh, that's... lighter. That's much lighter."])
+      if (g = Stage.find("stage_janth"))
+        10.times { |i| g.opacity = 140 - i * 14 rescue nil; Stage.wait(3) }
+      end
+      Stage.cleanup
+      sayc(["He fades like breath on a window.",
             cl(:reptin, "(softly) Rest, scholar. The tundra will grow you more.")])
       set_flag(:janth_rested)
     else
-      say(["You set the satchel down on a rock by the tunnel wall, gently. The ghost settles over it like dust.",
-           "JANTH: (fading, but not gone) Someone will come. Someone always comes. Someone who can carry it..."])
+      say(["You set the satchel down on a rock by the tunnel wall, gently.",
+           "The ghost settles over it like dust.",
+           "JANTH: (fading, but not gone) Someone will come.",
+           "JANTH: Someone always comes. Someone who can carry it..."])
+      Stage.cleanup
       set_flag(:janth_unresolved)
     end
     say(["Trex sits up, shakes his head, and looks at you with small, ordinary kobold eyes.",
-         "TREX: ...Where Trex? Why Trex wearing wings? Vott? Zurk? WHY TREX WEARING WINGS?"])
-    sayc([cl(:alberica, "Darling, I've asked myself that about a lot of outfits. You'll be fine.")])
+         "TREX: ...Where is this? Why wings? Vott? Zurk? WHY ARE THERE WINGS ON ME?"])
+    sayc([cl(:alberica, "I've asked myself that about a lot of outfits, darling. You'll be fine.")])
     c = pbMessage(_INTL("What about the kobolds?"), [_INTL("\"Come to Termalaine. You can work.\""), _INTL("\"Go. Get out of the mine.\"")], 0)
     if c == 0
       set_flag(:kobolds_to_town)
@@ -522,11 +625,13 @@ module FrostThaw
   def mine_skull(event_id = nil)
     say(lines_for(:mine_skull), event_id)
     return if flag?(:psi_crystal)
-    sayc([cl(:alerion, "That's no animal. That's an illithid. A mind flayer. Old, very old."),
+    sayc([cl(:alerion, "That's no animal. A mind flayer. An illithid. Old. Very old."),
           cl(:reptin, "Leave it in the wall, perhaps? As a general policy for skulls?")])
     return if !pbConfirmMessage(_INTL("Pry the skull out of the rock?"))
-    say(["The skull shatters as it comes away. Where its brain would have been: a crystal shard, faintly glowing.",
-         "You lever it out with a pick. When your fingers close round it, you hear, very far away, a cry for help.",
+    say(["The skull shatters as it comes away.",
+         "Where its brain would have been: a crystal shard, faintly glowing.",
+         "You lever it out with a pick.",
+         "When your fingers close round it, you hear, very far away, a cry for help.",
          "Over and over. Not in any language. Just: HELP. HELP. HELP."])
     give_key(:FT_PSICRYSTAL)
     set_flag(:psi_crystal)
@@ -545,10 +650,12 @@ module FrostThaw
     grell = flag?(:grell_dead)
     ghost_loose = flag?(:janth_unresolved) && !flag?(:janth_rested)
     if flag?(:kobolds_to_town)
-      say(["OARUS: Kobolds. Living in Termalaine. (He rubs his face.) The council will love that. The militia will love that more.",
-           "OARUS: ...They'll work? Really work? Then they'll have work. Menial work, mind. And we'll see."])
+      say(["OARUS: Kobolds. Living in Termalaine. (He rubs his face.) The militia will love that.",
+           "OARUS: ...They'll work? Then they'll have work. Menial, mind. And we'll see.",
+           "He looks up the mine road."])
     end
-    say(["OARUS: I'll go down myself, tomorrow, and inspect it. Can't pay you till I know it's safe. Stay a few days."])
+    say(["OARUS: I'll go down myself, tomorrow, and inspect it.",
+         "OARUS: Can't pay you till I know it's safe. Stay a few days."])
     pbFadeOutIn {} rescue nil
     if !grell
       say(["Oarus goes into the mine the next morning with a lantern.",
@@ -566,24 +673,31 @@ module FrostThaw
     end
     if ghost_loose
       say(["Oarus comes back up the trail the next day, smiling, a clump of lichen in his hand.",
-           "OARUS: All clear! Perfectly safe. And the FLORA down there, have you ever really looked at it?",
-           "OARUS: Crustose, foliose, fruticose... (He stops. He blinks.) ...I'm sorry. What was I saying?",
+           "OARUS: All clear! Perfectly safe.",
+           "OARUS: And the FLORA down there, have you ever really looked at it?",
+           "OARUS: Crustose, foliose, fruticose...",
+           "He stops. He blinks.",
+           "OARUS: ...I'm sorry. What was I saying?",
            "He pays you five thousand.",
            "His handwriting on the receipt is beautiful, and nothing like a half-orc's."])
       sayc([cl(:alerion, "(very low) That isn't him. Not all of him."),
-            cl(:shade, "The ghost. We left it down there, and it found someone who matters. Just like it wanted.")])
+            cl(:shade, "Lovely handwriting, for a half-orc.")])
       set_flag(:oarus_possessed)
     else
       say(["Oarus comes back up the trail the next day, filthy and grinning.",
-           "OARUS: Not a kobold, not a monster, not a sound but the river. The miners are already going back in.",
+           "OARUS: Not a kobold, not a monster, not a sound but the river.",
+           "OARUS: The miners are already going back in.",
            "OARUS: Five thousand, as promised. And the militia's thanks, whether they like it or not."])
+      quest_done_box("Termalaine's mine is open.")
     end
     if flag?(:kobolds_to_town)
-      say(["Within the week the kobolds have jobs: hauling, sweeping, carrying tools. The townsfolk tease them about their tails.",
-           "Then the townsfolk start sharing their chowder. By the end of the week, the kobolds have won them over."])
+      say(["Within the week the kobolds have jobs: hauling, sweeping, carrying tools.",
+           "The townsfolk tease them about their tails.",
+           "Then the townsfolk start sharing their chowder.",
+           "By the end of the week, the kobolds have won them over."])
     end
     $Trainer.money += 5000
-    pbMessage(_INTL("You got $5000!"))
+    pbMessage(_INTL("You got $5,000!"))
     favour_seam
     set_flag(:mine_done)
     town_quest_finished
@@ -594,15 +708,17 @@ module FrostThaw
   # important. You can still lay him to rest: the satchel is on Oarus's desk.
   def janth_in_oarus(event_id = nil)
     say(lines_for(:oarus_after), event_id)
-    sayc([cl(:alerion, "(his ring ice-cold) Janth. We know you're in there."),
-          "OARUS: (the half-orc's face goes still, and an old man looks out of it) ...I only need a little longer. My samples...",
+    speak(:alerion, "(his ring ice-cold) Janth. We know you're in there.", "(quietly) Janth. We know.") if with_or_is?(:alerion)
+    sayc([
+          "The half-orc's face goes still, and an old man looks out of it.",
+          "OARUS: ...I only need a little longer. My samples...",
           "A threadbare satchel hangs at his hip, full of moss and lichen."])
     return if !pbConfirmMessage(_INTL("Destroy Janth's satchel?"))
-    sayc(["You take the satchel out into the wind and shake its moss and lichen out over the lake. The gusts take it all.",
+    sayc(["You shake the satchel's moss and lichen out over the lake. The wind takes it all.",
           "Behind you, Oarus sits down hard in the snow.",
           "OARUS: ...Have I been... talking about moss? For DAYS?",
           cl(:reptin, "(gently) Rest, scholar. The tundra will grow you more."),
-          cl(:shade, "He'll be fine. He was already a speaker nobody listens to. Now he has a reason.")])
+          cl(:shade, "He'll be fine. He was already a Speaker nobody listens to. Now he has a reason.")])
     set_flag(:janth_rested)
     set_flag(:oarus_possessed, false)
   end
