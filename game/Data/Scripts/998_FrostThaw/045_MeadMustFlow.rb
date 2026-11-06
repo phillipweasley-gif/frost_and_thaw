@@ -164,7 +164,7 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Go after the verbeeg and bring back Good Mead's casks?"))
     say(["\"It went west! Into the woods! Fef the trapper went that way this morning, checking his lines...\""])
     set_flag(:mead_taken)
-    side_goal(:mead, "Track the verbeeg west into the woods from Good Mead, and bring back the stolen casks of mead.")
+    side_goal(:mead, "Track the verbeeg west into the woods from Good Mead, and bring back the stolen casks of mead.", done: :mead_returned)
   end
 
   # Fef Moryn, lurching out of the woods with his traps.
@@ -370,7 +370,7 @@ module FrostThaw
     end
     give_key(:FT_MEADCASK)
     set_flag(:mead_casks)
-    side_goal(:mead, "Take the two casks of mead home to Good Mead.")
+    side_goal(:mead, "Take the two casks of mead home to Good Mead.", done: :mead_returned)
   end
 
   # V7: Yogobor, asleep in the dark.

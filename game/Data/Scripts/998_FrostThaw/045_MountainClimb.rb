@@ -206,7 +206,7 @@ module FrostThaw
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
-    side_goal(:climb, "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn.")
+    side_goal(:climb, "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn.", done: :climb_done)
   end
 
   # You found Garret on the mountain before anyone asked you to. Keegan already
@@ -237,7 +237,7 @@ module FrostThaw
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
-    side_goal(:climb, "Kelvin's Cairn, again: find Perilou, Astrix and Mokingo.")
+    side_goal(:climb, "Kelvin's Cairn, again: find Perilou, Astrix and Mokingo.", done: :climb_done)
   end
 
   #-----------------------------------------------------------------------------
@@ -377,7 +377,7 @@ module FrostThaw
       say(["GARRET: (getting up, swaying) Good. I know the route. What's left of it."])
       set_flag(:garret_with_you)
     end
-    side_goal(:climb, "Up the mountain: a cave above, where the yeti came from. Find Mokingo, Perilou and Astrix.")
+    side_goal(:climb, "Up the mountain: a cave above, where the yeti came from. Find Mokingo, Perilou and Astrix.", done: :climb_done)
   end
 
   # The perilous climb: three pitches of ledge and ice. Get each one wrong and
@@ -482,7 +482,7 @@ module FrostThaw
     pbReceiveItem(:FULLHEAL) rescue nil
     set_flag(:perilou_saved)
     set_switch(SW_MC_PERILOU, true)
-    side_goal(:climb, "Astrix fled up the mountain. Find her, then get Perilou home to Targos.")
+    side_goal(:climb, "Astrix fled up the mountain. Find her, then get Perilou home to Targos.", done: :climb_done)
   end
 
   # Leaving the cave: the father comes home with a goat under one arm.

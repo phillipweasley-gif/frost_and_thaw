@@ -583,8 +583,14 @@ module FrostThaw
     (state[:side_goals] ||= {}).delete(key)
   end
 
+  # Act I's side goals live in Icewind Dale. After the fall (act1_done) you can't
+  # reach them, so they leave the Goal menu (context 14, top 5 #2).
+  ACT1_SIDE_GOALS = %i[razzy way_home mugs mead election climb mine moose]
+
   def side_goals
-    (state[:side_goals] || {}).values.reject { |_t, done| done.any? { |f| flag?(f) } }.map(&:first)
+    (state[:side_goals] || {}).reject { |k, (_t, done)|
+      done.any? { |f| flag?(f) } || (flag?(:act1_done) && ACT1_SIDE_GOALS.include?(k))
+    }.values.map(&:first)
   end
 end
 
