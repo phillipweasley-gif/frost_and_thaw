@@ -185,10 +185,14 @@ exits_to(c, ex, ID[:north_road], 29, 29)
 c.cutscene(0, 0, :frostlight_enter)   # its own key: the Cackling Chasm (Ch5) uses :cackling_enter
 c.trainer(12, 24, "BW (107)", :aurilite_two, :FT_AURILITE, dir: 6, sight: 4)
 c.trainer(23, 19, "BW (108)", :aurilite_three, :FT_AURILITE, dir: 4, sight: 4)
-c.event(22, 6, "Frost-light", [          # in the open, clear of the slope's landing
-  { graphic: "BW (134)", direction: 2, script: "FT.scene(:razzy_falls, @event_id)" },
-  { self_switch: "A", graphic: "BW (134)", opacity: 90, script: "FT.talk(:chasm_after, @event_id)" }   # a faint glow left behind
+# Razzy waits at the lip of the crack (in the open, clear of the slope's landing);
+# pressing A on him, or stepping up to the lip, starts the scene. After it the
+# crack is dark, and stepping into it says so (notes 02 E3: no placeholder sprite left in the crack).
+c.event(22, 6, "Frost-light", [
+  { graphic: "FT_razzy", direction: 2, step_anime: true, script: "FT.scene(:razzy_falls, @event_id)" },
+  { self_switch: "A", graphic: "", through: true, trigger: 1, script: "FT.talk(:chasm_after, @event_id)" }   # step into the dark crack
 ])
+[[21, 6], [23, 6], [22, 7]].each { |x, y| trigger(c, x, y, :razzy_falls, name: "Lip razzy_falls") }
 save(c, :chasm)
 
 # 2012: Bryn Shander, after map 1.2 of the book: the largest of the Ten-Towns,
@@ -290,6 +294,9 @@ t.sign(22, 18, :bryn_lanterns)
 end
 # lottery night (SC 2.06): resting at the Northlook brings you out to the square at sundown
 t.event(25, 24, "Lottery night", [{ graphic: "", through: true }, { switch: 3955, trigger: 3, script: "FT.lottery_night" }])
+# SC 2.09: out of the hall with the seal, Mishann is waiting on the steps (notes 02 E4, E18)
+t.event(1, 1, "Cutscene mishann_steps", [{}, { switch: 3912, trigger: 3, script: "FT.scene(:mishann_steps, @event_id)" },
+                                         { self_switch: "A" }])
 seal_edges(t)
 save(t, :bryn)
 
@@ -330,12 +337,13 @@ save(n, :northlook)
 # 2017-2018: houses
 h, ex = Builder.from_existing(644)
 exits_to(h, ex, ID[:bryn], 34, 32)
-h.npc(13, 7, "BW (56)", :bryn_weaver, dir: 4)
+h.npc(13, 7, "BW (62)", :bryn_weaver, dir: 4, name: "Brenna")
+h.npc(7, 6, "BW (16)", :bryn_ilda, dir: 2, name: "Ilda")
 save(h, :bryn_house_a)
 h, ex = Builder.from_existing(644)
 exits_to(h, ex, ID[:bryn], 39, 30)
-h.npc(13, 7, "BW (62)", :bryn_lottery_mother, dir: 4)
-h.npc(7, 6, "BW (16)", :bryn_lottery_child, dir: 2)
+h.npc(13, 7, "BW (56)", :bryn_lottery_mother, dir: 4)
+h.npc(7, 6, "BW (17)", :bryn_lottery_child, dir: 2)
 save(h, :bryn_house_b)
 
 # ---------------------------------------------------------------------------
