@@ -101,7 +101,7 @@ module FrostThaw
       say(["SERELLE: (between verses) I dreamed it again. Shall I tell you? You'll wish I hadn't."], event_id)
       return if flag?(:serelle_vision)
       set_flag(:serelle_vision)
-      say(["SERELLE: Under the Heartroot, a forge. A woman at it, hammering light into a shape.",
+      say(["SERELLE: Under the Heartroot, a forge. Someone at it, hammering light into a shape.",
            "SERELLE: Wings. A crown. A god of light. Made wrong. Made of something that remembers being cold.",
            "SERELLE: Every time she strikes it, somebody somewhere forgets their own name.",
            "She goes back to humming. The dirge has a melody now. You wish it didn't."])

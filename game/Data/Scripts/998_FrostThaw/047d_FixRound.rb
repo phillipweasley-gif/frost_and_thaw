@@ -688,7 +688,9 @@ module FrostThaw
     set_flag(:avarice_doubt)
     sayc([cl(:meat_meat, "(very still) ...Meat Meat saw that."),
           cl(:alberica, "Saw what, sweetheart? There's nothing there."),
-          cl(:alerion, "(turning it back to the wall) Leave it. We'll know soon enough.")])
+          # (context 09, M9-3: if the doubt was shared at the Forge, they already know)
+          cl(:alerion, flag?(:avarice_doubt_shared) ? "(turning it back to the wall) Leave it. We already know." :
+                                                      "(turning it back to the wall) Leave it. We'll know soon enough.")])
   end
 
   #-----------------------------------------------------------------------------

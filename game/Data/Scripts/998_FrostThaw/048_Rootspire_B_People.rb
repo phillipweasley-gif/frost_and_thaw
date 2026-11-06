@@ -146,6 +146,8 @@ module FrostThaw
            "GORRAN: Somebody who pays in gold that's still warm from somewhere very deep. That's all I know.",
            "GORRAN: Leave it, Heralds. Some fires you don't stand close to."])
       sayc([cl(:meat_meat, "Fire man is lying. Meat Meat knows lying. Meat Meat was raised by it."),
+            # (Jorik begged not to be named: dialogue 15 #14)
+            flag?(:jorik_confessed) ? cl(:reptin, "(quietly) Jorik asked us not to say his name. Gorran just said it for him.") : nil,
             cl(:alerion, "He's afraid of someone. Not of us.")].compact)
     elsif flag?(:engine_dead)
       say(["GORRAN: The commissions stopped. The gold stopped. Nobody's come to collect.",
@@ -657,7 +659,8 @@ module FrostThaw
          "The shaft has been sealed from below with molten iron."], event_id)
     set_flag(:suncleft_tunnel)
     sayc([cl(:alerion, "Helion's road to the forge. He went down and somebody poured the door shut behind him."),
-          cl(:glimmer, "(very quietly) Brightmane said I'd know the fire when I saw it. That's not it. That's its chimney.")].compact)
+          flag?(:brightmane_answered) ? cl(:glimmer, "(very quietly) Brightmane said I'd know the fire when I saw it. That's not it. That's its chimney.") :
+                                        cl(:glimmer, "(very quietly) That's not the fire. That's its chimney.")].compact)
   end
 
   #-----------------------------------------------------------------------------
