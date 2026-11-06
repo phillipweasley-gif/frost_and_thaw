@@ -11,10 +11,14 @@ module FrostThaw
     fisher_hob:       "HOB: Oi! You're standing on my ice hole. Pay the toll, or battle!",
     sailor_brannoc:   "BRANNOC: New faces on the docks? Let's see if you've got sea legs.",
     tavern_brawler:   "GORM: That's my stool you're eyeing, stranger. Fight me for it.",
-    zhent_thug_1:     "DASK: Strangers in the Luskan Arms. The Speaker likes to know what strangers are made of.",
+    # The first Zhentarim you fight names the gang once, in both its names
+    # (notes/02 E31: Dorn, the Broker and Brosk say "Black Network" later).
+    zhent_thug_1:     -> { FrostThaw.zhent_named("DASK: Zhentarim. The Black Network. The Speaker likes to know what you're made of.",
+                                                 "DASK: Strangers in the Luskan Arms. The Speaker likes to know what strangers are made of.") },
     zhent_thug_2:     "VEY: Lost, are we? Let me show you how Targos treats people who wander.",
     # Before Naerth has asked for you, there's no Speaker in the hall to see (notes/01 E22).
-    hall_enforcer_2:  -> { FrostThaw.flag?(:naerth_terms) ? "ILSA: Zhentarim. Nobody sees the Speaker without getting past us first." :
+    hall_enforcer_2:  -> { FrostThaw.flag?(:naerth_terms) ? FrostThaw.zhent_named("ILSA: Zhentarim. The Black Network. Nobody sees the Speaker without us.",
+                                                                                "ILSA: Nobody sees the Speaker without getting past us first.") :
                                                             "ILSA: Speaker's at the Arms tonight. You can still try getting past me." },
     hall_enforcer_1:  "CORRIN: Naerth said to test anyone who came looking for his seal. This is the test.",
     hall_dealer:      "MARA: Care to play a hand? House rules: my Pokémon against yours. The house always wins.",
@@ -79,6 +83,13 @@ module FrostThaw
   }
 
   module_function
+
+  # The gang's two names, said by whichever of them you fight first; after that, the plain line.
+  def zhent_named(first, after)
+    return after if flag?(:black_network_named)
+    set_flag(:black_network_named)
+    first
+  end
 
   def trainer_intro(key, event_id = nil)
     line = TRAINER_INTROS[key]

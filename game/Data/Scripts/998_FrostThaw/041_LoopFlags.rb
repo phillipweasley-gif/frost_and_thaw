@@ -125,7 +125,7 @@ end
 # morning card shown over the Hearth.
 module FrostThaw
   SCENE_A_FLAGS = %i[tavern_woman tav_alberica tav_reptin tav_alerion tav_shade showed_pokemon
-                     heralds_tip kip_hint pro_card_shown]
+                     heralds_tip kip_hint pro_card_shown black_network_named]
   LOOP_ACT1_FLAGS.concat(SCENE_A_FLAGS).uniq!
   LOOP_ACT2_FLAGS.concat(SCENE_A_FLAGS).uniq!
 end

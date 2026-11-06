@@ -196,7 +196,7 @@ module FrostThaw
                                                        "The woman in the furs looked at each of us like she was counting. You longest."] },
                 ["The woman in the furs looked at each of us like she was counting.",
                  "Nobody counts strangers unless they mean to take some."]],
-      luskan:  ["The Brotherhood has eyes in here. I can feel them on my back.", "I'm not turning round. That's what they want."],
+      luskan:  ["The Black Network has eyes in here. I can feel them on my back.", "I'm not turning round. That's what they want."],
       hall:    ["Win his seal and he calls us friends. Lose, and he calls us debtors.",
                 "Either way he calls us. I don't like being called."]
     },
