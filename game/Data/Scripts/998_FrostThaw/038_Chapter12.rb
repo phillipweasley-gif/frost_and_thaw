@@ -88,7 +88,6 @@ module FrostThaw
     tam = Stage.actor(:tamsin, px + 4, py, 4)
     if tam
       Stage.walk_to(tam, px + 3, py, face: 4)     # (past the tiles companions walk in to)
-      Stage.turn_to($game_player, tam)
       Stage.emote(tam, :exclaim)
     end
     sayc(["TAMSIN: (cloak on crooked, planting their feet) Hold it. HOLD it, #{player_display_name}!",
@@ -622,6 +621,22 @@ module FrostThaw
     $game_switches[SW_DOCK_CLEARED] = flag?(:dock_cleared)
     $game_switches[SW_TROLL_DOWN] = flag?(:troll_down)
     $game_switches[SW_FIELDS_ROPE] = flag?(:fields_crossed)
+    camp_sprite
+  end
+
+  # The camp on the dock looks like whatever brought you (notes 12 E12): the
+  # griffons in their heap, Angajuk in the water, or the Requiem's sailor.
+  CAMP_SPRITES = { griffons: "Followers/PIDGEOT", whale: "Followers/WAILORD", bell: "Followers/WAILORD" }
+  def camp_sprite
+    return if !$game_map || $game_map.map_id != MAPS[:solstice]
+    g = CAMP_SPRITES[voyage_route] or return
+    ev = stage_event("Your camp") or return
+    page = ev.instance_variable_get(:@event).pages[0] rescue nil
+    return if !page || page.graphic.character_name == g
+    page.graphic.character_name = g
+    ev.refresh rescue nil
+  rescue StandardError => e
+    log("camp sprite: #{e.message}")
   end
 end
 

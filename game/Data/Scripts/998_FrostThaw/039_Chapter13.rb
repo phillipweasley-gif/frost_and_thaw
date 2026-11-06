@@ -575,7 +575,7 @@ module FrostThaw
     cline(:wyn, "(to the diamond, not loud) No. You'll stop.", "(to the diamond) ...You'll stop.")
     sayc([
           "In the middle of the room something forms: a woman made of all three.",
-          "Shimmer's face for a moment. Then Alberica's. Then no one's."])
+          "Shimmer's face for a moment. Then #{al ? 'yours' : "Alberica's"}. Then no one's."])
     if flag?(:council_phildendrin)
       say(["(Phildendrin's people at the dock sent up a fire-arrow and a bag of every potion in Rootspire.)",
            "(Your team is fully healed.)"])
@@ -634,6 +634,7 @@ module FrostThaw
     sayc([cl(:reptin, "Or we hold her. Somebody could.")])
     speak(:alberica, "(very still) I could. I'm the one she wanted.", "(very still) ...I could.")
     cline(:reptin, "(too quickly) I didn't mean you.", "(too quickly) ...Not you.")
+    say(["(Balance. Not a cage. You've broken enough things fixing them.)"]) if herald?(:reptin)
     speak(:alerion, "(looking at Frostina) Or. There was always a third way.", "(looking at Frostina) ...There's a third way.")
     cline(:wyn, "...Seasons. Like the spore beds. Things rest. Then they come back.", "...Seasons. Like the spore beds.")
     if (counter(:loop_count) rescue 0).to_i >= 2
