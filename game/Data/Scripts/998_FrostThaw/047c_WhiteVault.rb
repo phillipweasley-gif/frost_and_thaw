@@ -376,7 +376,7 @@ module FrostThaw
     say([al ? "Frost gathers in the hollow of your throat, and hardens." : "Frost gathers in the hollow of Alberica's throat, and hardens.",
          "And it's there: the Pendant of Black Ice."])
     cline(:alberica, "I threw you in the sea once. You came back. Of course you came back.", "...Of course you came back.")
-    give_key(:FT_BLACKPENDANT) rescue nil
+    give_key(:FT_BLACKPENDANT) if al rescue nil      # (yours to carry when you are her)
     set_flag(:vault_eye_open)
     set_flag(:pendant_returned)
   end
