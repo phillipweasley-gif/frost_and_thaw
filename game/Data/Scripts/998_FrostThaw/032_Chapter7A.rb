@@ -190,8 +190,8 @@ module FrostThaw
     if flag?(:hyphora_leave)
       return say(["EIRA: The tree breathes. The spore-guard owes you. We don't forget a debt."], event_id)
     end
-    say(["EIRA: The Sovereign holds court in the Fane, east, past the water.",
-         "EIRA: The Mnemosyne keeps to her chamber above the gardens.",
+    say(["EIRA: Sovereign Luminara holds court in the Fane, east, past the water.",
+         "EIRA: Myr, our Mnemosyne, keeps her chamber above the gardens. She keeps our memories.",
          "EIRA: Touch nothing that sings."], event_id)
   end
 
