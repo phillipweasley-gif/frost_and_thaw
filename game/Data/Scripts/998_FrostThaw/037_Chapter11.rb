@@ -39,7 +39,7 @@ module FrostThaw
     return if flag?(:auril_whisper)
     al = herald?(:alberica)
     # Context 11 M11-1: an act card, then where and when this is.
-    say(["ACT III: THE FROSTMAIDEN"])
+    say(["ACT III. THE FROSTMAIDEN"])
     say(["The Rooted Hearth, the night of the vote. The bard is playing the Heralds' song, badly.",
          "HELLEN: (stopping, eyes wet) New verse. Glimmer's. The city calls him the Dagger Reborn.",
          cl(:alerion, "(to Hellen) The verse is good. Keep going."),
@@ -355,7 +355,7 @@ module FrostThaw
       c = pbMessage(_INTL("(They wait.)"), [_INTL("I'm coming"), _INTL("I'm not done with that Wall"), _INTL("(Say nothing.)")], -1)
       c = 2 if !c || c < 0
       set_flag(%i[act3_coming act3_wall act3_silent][c])
-      say([[cl(:alerion, "(getting up, slowly) Good.") || "LUMIN: Good.",
+      say([[cl(:alerion, "(on his feet now, just) Good.") || "LUMIN: Good.",
             cl(:reptin, "Then it's all of our Wall now.") || "LUMIN: Then it's all of ours now.",
             cl(:meat_meat, "Quiet one is coming. Meat Meat can tell.") || "LUMIN: You're coming. I can tell."][c]])
       side_goal(:their_time, "Your own: bring Frostina home. Two dragons turn the wheel; with one, the Wall stays up.",
@@ -364,7 +364,7 @@ module FrostThaw
       say(["LUMIN: Two dragons turn the wheel. Never one. With her gone, it stays stuck."])
     end
     # Divine Rejuvenation: the Halo seeded the Heartroot with Auril's relics.
-    say(["SELRAE: (very low) You broke him and he got up again? Then it's begun. I know the rite.",
+    say(["SELRAE: (very low) You broke him and he got up again? Then it's begun.",
          "SELRAE: The Halo carried three of her relics into the Heartroot. Black ice. I let them in.",
          "SELRAE: While one of them stands, the Saint stands back up. Every time.",
          cl(:alerion, "Then we break them first."),
@@ -390,6 +390,7 @@ module FrostThaw
   def scene_four_chairs
     set_switch(SW_CH11_COUNCIL, false)
     return if flag?(:ch11_done)
+    Stage.arrive(companions, 11, 19) rescue nil
     # the two new councillors in the empty chairs (context 11 M11-5; notes E1)
     seats = [[10, 13], [16, 13]]
     COUNCILLOR_LOOKS.keys.select { |k| flag?(:"council_#{k}") }.first(2).each_with_index do |k, i|

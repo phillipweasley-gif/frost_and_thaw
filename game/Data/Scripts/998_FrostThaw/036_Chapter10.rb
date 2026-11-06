@@ -1412,7 +1412,12 @@ module FrostThaw
 
   def talion_resolve(event_id = nil)
     al = herald?(:alerion)
-    say(["What is he? What does Alerion do?"])
+    if al
+      # Context 10 §6: in Alerion's own mode, the look before the decision is his memory.
+      say(["(You were kneeling by the water. Your hands were glowing.)",
+           "(You wanted him back so badly the lake listened.)"])
+    end
+    say([al ? "What is he? What do you do?" : "What is he? What does Alerion do?"])
     c = pbMessage(_INTL("Talion..."), [_INTL("Accept he's a reflection, and let him fade"),
                                        _INTL("The ritual at the Mirror-Lake, at night"),
                                        _INTL(al ? "Hold on to him. Make him stay." : "Let Alerion hold on to him"), _INTL("Not yet")], 3)
@@ -2012,6 +2017,9 @@ module FrostThaw
     t = trial
     all = witnesses
     pbFadeOutIn { } rescue nil
+    Stage.arrive(companions, 11, 19) rescue nil                 # the accused, brought in together
+    selrae = stage_event("Selrae Vorn")
+    Stage.walk_to(selrae, $game_player.x + 2, $game_player.y, face: 8) if selrae
     say(["The seventh day.",
          "The Council Hall is packed: Rootspire, the refugees, Rootwardens on the walls.",
          "Kelyn presides alone. Selrae stands with the accused. Two chairs are draped in white.",
@@ -2124,7 +2132,7 @@ module FrostThaw
     say([wyn, alb])
     say([cl(:wyn, flag?(:wyn_barred) ? "(very small) ...I'll take the Gate." : "(very small) ...Thank you."), rep].compact)
     selrae = stage_event("Selrae Vorn")
-    Stage.hop(selrae) if selrae
+    Stage.walk(selrae, PBMoveRoute::Up) if selrae
     say(["Selrae steps forward to the bar of the court, on her own.",
          "KELYN: Selrae Vorn. Thirty years of the Halo's candles, in this city.",
          "SELRAE: Service, at the Echo Gate. Where the cold comes in. I ask it.",
@@ -2176,8 +2184,8 @@ module FrostThaw
          "KELYN: For the first time in my life, all of them filled.",
          "The crystals blaze: green, gold, red, white.",
          cl(:alberica, "To full chairs! Somebody find me a drink."),
-         cl(:meat_meat, "Somebody find Meat Meat a coffee."),
-         cl(:wyn, "...I made both. They're by the door. Sorry.")].compact)
+         cl(:meat_meat, "Somebody find Meat Meat a coffee.")].compact)
+    speak(:wyn, "...I made both. They're by the door. Sorry.", "...By the door.") if with_or_is?(:wyn)
     case stance
     when :stand
       if winners.include?(:heralds)
@@ -2204,6 +2212,7 @@ module FrostThaw
     %i[phildendrin anduin].each do |k|
       next if !flag?(:"petition_#{k}") || nominated?(k)
       short = [(SIGNATURES_NEEDED[k] || 0) - (trial[:signatures][k] || 0), 1].max
+      Stage.actor(k, $game_player.x - 2, $game_player.y + 1, 8, graphic: PLATFORMS[k][0]) if PLATFORMS[k]
       say(["#{k.to_s.upcase}: (from the crowd) #{short} #{short == 1 ? 'name' : 'names'} short. Next year, then."])
     end
     if !(winners & %i[mira rheven anduin heralds]).any?
@@ -2234,6 +2243,8 @@ module FrostThaw
 
   def vote_platforms(keys)
     px, py = ($game_player.x rescue 26), ($game_player.y rescue 13)
+    wall = stage_event("Captain Rheven (wall)")
+    wall.transparent = true if wall rescue nil                 # he's on the stage today, not the wall
     Stage.actor(:kelyn, px, py - 2, 2, graphic: "BW (30)")
     row = keys.select { |k| PLATFORMS[k] }
     actors = row.each_with_index.map do |k, i|
