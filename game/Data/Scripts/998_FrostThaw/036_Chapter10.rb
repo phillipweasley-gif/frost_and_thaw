@@ -283,6 +283,8 @@ module FrostThaw
   def scene_tribunal
     set_switch(SW_TRIBUNAL, false)
     return if flag?(:trials_open)
+    Stage.actor(:a_child_on_a_crate, $game_player.x - 2, $game_player.y, 6, graphic: "BW (17)")
+    Stage.actor(:her_mother, $game_player.x - 3, $game_player.y, 6, graphic: "BW (40)")
     say(["That evening. Outside the Council Hall, snow swirls through the once-warm air.",
          "Dozens of citizens crowd the plaza in furs and cloaks. Some carry tools; others, banners.",
          "A CHILD ON A CRATE: Murderers!",
@@ -730,7 +732,8 @@ module FrostThaw
   def heartroot_test_offer
     return if !pbConfirmMessage(_INTL("Go down to the Heartroot for the Test, now?"))
     pbFadeOutIn { } rescue nil
-    say(["Down through the Root Gate, past the seal circle, into a passage older than the city."])
+    say(["Anduin walks beside #{herald?(:reptin) ? 'you' : 'Reptin'} all the way down, not talking.",
+         "Down through the Root Gate, past the seal circle, into a passage older than the city."])
     transfer(*ATTUNEMENT_ARRIVAL)
   end
 
@@ -996,11 +999,15 @@ module FrostThaw
         set_flag(:mm_cooperated)
       end
     end
+    phil = Stage.actor(:hooded_woman_phildendrin, $game_player.x - 4, $game_player.y, 6, graphic: "FT_phildendrin_hooded")
+    Stage.approach(phil) if phil
     say(["Footsteps on the cell stair. A hooded figure comes down, past the sleeping guard.",
          "She's the hooded goblin woman from Bryn Shander.",
          "HOODED WOMAN: (her voice cracking) The Forge's keepers told me V-7 died. In the cold room.",
          "HOODED WOMAN: They told me my baby died.",
-         "She pulls her hood back.",
+         "She pulls her hood back."])
+    phil.character_name = "FT_phildendrin" if phil rescue nil
+    say([
          as(:meat_meat, "(very small) ...Mama?"),
          "PHILDENDRIN: (both hands through the bars, on her daughter's face) Phildendrin. My name is Phildendrin.",
          "PHILDENDRIN: I'm your mama. And I am not losing you to another cell.",
@@ -1239,6 +1246,8 @@ module FrostThaw
   def scene_underdark_crawl
     return if flag?(:underdark_crawl_started)
     set_flag(:underdark_crawl_started)
+    Stage.actor(:warden_teague, $game_player.x - 1, $game_player.y, 8, graphic: "BW029")
+    Stage.actor(:warden_oda, $game_player.x + 1, $game_player.y, 8, graphic: "BW029")
     sayc(["The old guard tunnels. Two Rootwardens fall in either side of you, spears low.",
           "WARDEN TEAGUE: Shadow things down here since the door broke. Quick ones in the water. Ones you can't see at all.",
           "WARDEN ODA: Stay off the black pools. Things in them pull.",
@@ -1620,6 +1629,8 @@ module FrostThaw
       return say(["KELYN: We're waiting at the Sap Gate, Alberica. Show us these mushrooms of yours."], event_id)
     end
     # Owner's decision (M10-3): the charge is the Bryn Shander night; the spores are the comic half.
+    selrae = stage_event("Selrae Vorn")
+    Stage.approach(selrae) if selrae
     say(["Selrae of Winter, frost on her shoulders, and Kelyn of Spring, flowers in her hair, are waiting.",
          "SELRAE: A mind is a house. In Bryn Shander you walked into a hundred without knocking.",
          "SELRAE: Now the camp's children breathe spores that do the same. Glowing dust, in bed.",
@@ -1664,7 +1675,7 @@ module FrostThaw
       set_flag(:spores_mistrust)
     end
     set_flag(:spores_debated)
-    side_goal(:fane, "Alberica's trial: Kelyn and Selrae wait at the Sap Gate, to be taken down to Luminara.", done: %i[colony_recognised colony_exiled])
+    side_goal(:fane, "Alberica's trial: Kelyn and Selrae wait at the Undercanopy's entrance, the Sap Gate in the Root-Tier.", done: %i[colony_recognised colony_exiled])
     trial_week_goal
   end
 
@@ -1692,6 +1703,7 @@ module FrostThaw
          "Kelyn's cloak doesn't make it."])
     speak(:alberica, "Lose the cloak, Councillor. You look ten years younger.", "...Leave the cloak.") if with_or_is?(:alberica)
     skirmish(named_mon(:BRELOOM, 53, "Breloom"))
+    fane_arrival(event_id)
     say(["LUMINARA: (to the councillors) Surface. Sap-takers.",
          "LUMINARA: Our spores feed her. Hyphora. They knit her roots. They let us speak, all of us, to all of us.",
          "LUMINARA: Three hundred years we've done it. Under your feet. You never asked."])
@@ -1736,6 +1748,20 @@ module FrostThaw
       set_flag(:colony_exiled)
       add_counter(:story_beats)
     end
+  end
+
+  # The councillors walk you down to the Fane: put everyone in front of the
+  # Sovereign, so the hearing happens where it says it does (WRITING_GUIDE §9a).
+  FANE_SPOT = [2068, 45, 19, 8]
+
+  def fane_arrival(event_id)
+    pair = event_id ? $game_map.events[event_id] : nil
+    (pbFadeOutIn { Stage.jump(*FANE_SPOT) }) rescue (Stage.jump(*FANE_SPOT) rescue nil)
+    pair.transparent = true if pair rescue nil                 # (they're walking with you now)
+    px, py = $game_player.x, $game_player.y
+    Stage.actor(:kelyn, px - 1, py, 8, graphic: "BW (30)")
+    Stage.actor(:selrae, px + 1, py, 8, graphic: "BWOldWoman")
+    say(["The Fane. Sovereign Luminara on her throne-cap, and the colony all round her, glowing."])
   end
 
   # The memory bubble (Q6): the day Avarice tried to fuse Mirror Wraith essence with spores.
@@ -1901,6 +1927,7 @@ module FrostThaw
   end
 
   def selrae_dream_battle
+    Stage.actor(:selrae, $game_player.x, $game_player.y - 2, 2, graphic: "BWOldWoman")
     say(["Out of the blizzard, Selrae Vorn. In the dream she's young, and her eyes are the colour of the white crystal.",
          "SELRAE: I wanted a little winter for this city. Let me show you what a little winter is."])
     return if !pbTrainerBattle(:FT_WINTER_MATRON, "Selrae", nil, false, 0)
@@ -1912,8 +1939,11 @@ module FrostThaw
     pbMessage(_INTL("\\me[Badge get]{1} received Winter's Seal!", $Trainer.name))
     give(:TM13)
     say(["SELRAE: Ice Beam. Cold, and straight, and honest."])
+    (pbFadeOutIn { Stage.jump(2054, 11, 13, 8) }) rescue nil          # you wake in the Hall
+    selrae = stage_event("Selrae Vorn")
+    Stage.approach(selrae) if selrae
     seasons_outcome
-    transfer(2054, 11, 13, 8)
+    transfer(2054, 11, 13, 8) if ($game_map.map_id rescue 0) != 2054
   end
 
   def seasons_outcome
