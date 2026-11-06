@@ -81,18 +81,34 @@ module FrostThaw
       say(["A kid with Hellen's chin catches one.",
            "TAMSIN: It's brown. Why is it brown? Is it sick?"])
     end
+    rheven = Stage.find("Captain Rheven")
+    Stage.approach(rheven) if rheven             # he walks over from the Council stair
     say(["RHEVEN: (looking up at the crown) It's not sick, kid. Summer's over.",
          "RHEVEN: It's autumn. It's supposed to happen. ...It's been a while, that's all.",
+         "High in the crown, where the dragon tore through, a ragged hole lets in the sky.",
          cl(:alberica, "Put it in your hair, Tamsin. Autumn's the best-dressed season. Trust me."),
-         cl(:meat_meat, "Meat Meat has never seen autumn. Meat Meat is suspicious of autumn."),
-         cl(:alerion, "It's leaves."),
-         cl(:meat_meat, "Ice Prince says that about everything."),
-         "Past the valley's edge, the shimmering Auroral Wall goes thin as breath.",
-         "Beyond it, snowflakes that have hung in the air for four hundred years begin, slowly, to fall."].compact)
+         cl(:meat_meat, "Meat Meat has never seen autumn.")].compact)
+    # Context 09 M9-1: one line for Glimmer before the jokes; why it isn't too late
+    # (the Wall's own rule); why the dragons wait (they won't fly without riders).
+    if with_or_is?(:alerion)
+      speak(:alerion, "(quietly) He'd have hummed at it. Badly.", "...He'd have hummed.")
+    end
+    say(["Past the valley's edge, the shimmering Auroral Wall goes thin as breath.",
+         "Beyond it, snowflakes that have hung in the air for four hundred years begin, slowly, to fall."])
+    if with_or_is?(:alerion)
+      Stage.face(Stage.summon(:alerion), 6) rescue nil       # toward the Wall, east
+      speak(:alerion, "(watching the Wall) A night in here. Out there, a few breaths.", "...A few breaths, out there.")
+    else
+      say(["(A night in here. Out there, past the Wall, a few breaths.)"])
+    end
+    sayc([cl(:reptin, flag?(:clock_first_light) ? "Then we woke it early, and it's still barely past the Wall." :
+                                                  "Then it's barely past the Wall. Good Mead hasn't even seen it yet."),
+          "RHEVEN: Your dragons came down off the crown at first light. They won't fly without you.",
+          cl(:meat_meat, "Razzy is waiting? Razzy never waits. ...Meat Meat is running.")])
     set_flag(:summer_ended)
     set_flag(:wall_thinning)
     add_counter(:story_beats)
-    state[:goal] = "The Shrine of the Twinned Dragons, on the Canopy-Tier. The dragons are waiting."
+    state[:goal] = "The Shrine of the Twinned Dragons, on the Canopy-Tier. Catch the dragon before Good Mead."
   end
 
   #-----------------------------------------------------------------------------
@@ -110,7 +126,7 @@ module FrostThaw
     if !flag?(:summer_ended) || flag?(:mounted_up)
       return talk(which == :frostina ? :frostina_shrine : :razzilith_shrine, event_id)
     end
-    say(["Frostina waits at the Shrine, very still. Razzilith paces the stump and won't settle.",
+    say(["Frostina waits at the Shrine, frost still smoking off her wings. Razzilith paces the stump.",
          "Frostina looks past all of you, at the steps, for someone who isn't there.",
          "Then she looks at the golden dagger."], event_id)
     say([as(:meat_meat, "(holding out Dawnfang) Glimmer said to tell you. It was a better fire."),
@@ -141,16 +157,16 @@ module FrostThaw
     say([as(:meat_meat, "(delighted) He is warm. Inside Meat Meat. Like coffee."),
          as(:meat_meat, "Razzilith is Meat Meat's. Meat Meat watches him. That is the rule now.")])
     reader = with_or_is?(:reptin) ? (herald?(:reptin) ? "You read" : "Reptin reads") : "You read"
-    say(["Round the old stump, so old the bark has grown over half of it, there's a carving.",
-         "#{reader} it out loud:",
+    say(["Round the old stump, half grown over with bark, there's a carving. #{reader} it out loud:",
          "THE TWINNED DRAGONS CHOOSE TWO. NOT RIDERS. DRAGOONS.",
          "GUIDES TO YOUNG DRAGONS. KEEPERS OF FRAGILE SEASONS.",
          "A LIVING VOW THAT THE SKY WILL OPEN AGAIN.",
          cl(:reptin, "...Well. Congratulations on the new job titles. I assume there's no pay."),
          as(:alerion, "I didn't apply."),
          as(:meat_meat, "Dragoon. Meat Meat likes it. It has teeth in it."),
-         cl(:wyn, "(very softly, to Razzilith) ...Congratulations. Both of you."),
-         "RAZZILITH: (a painted thought: the black dragon, and teeth) ...CHASE."].compact)
+         cl(:wyn, "(very softly, to Razzilith) ...Congratulations. Both of you.")].compact)
+    shrine_prophecy
+    say(["RAZZILITH: (a painted thought: the black dragon, and teeth) ...CHASE."])
     set_flag(:dragoons_bound)
     # A Dragoon rides their own dragon; anyone else rides behind their
     # version's Dragoon.
@@ -159,13 +175,11 @@ module FrostThaw
       set_flag(:rides_frostina)
       set_switch(SW_RIDES_FROSTINA, true)
       say([herald?(:alerion) ? "Frostina lowers her wing. You take the front, at the base of her neck, where a Dragoon sits." :
-                               "Frostina lowers her wing. Alerion takes the front, at the base of her neck.",
-           herald?(:alerion) ? nil : "That's where a Dragoon sits. You climb up behind him."].compact)
+                               "Frostina lowers her wing. Alerion takes the Dragoon's place at her neck. You climb up behind."])
     else
       set_flag(:rides_razzilith)
       say([herald?(:meat_meat) ? "Razzilith lowers his neck. You take the front, where a Dragoon sits." :
-                                 "Razzilith lowers his neck. Meat Meat takes the front, where a Dragoon sits.",
-           herald?(:meat_meat) ? nil : "You climb up behind her."].compact)
+                                 "Razzilith lowers his neck. Meat Meat takes the Dragoon's place. You climb up behind her."])
     end
     say(["The other Heralds climb onto the other dragon, behind its Dragoon."])
     set_flag(:mounted_up)
@@ -174,6 +188,35 @@ module FrostThaw
     set_rest_at(HEARTH_REST) rescue nil
     return if !pbConfirmMessage(_INTL("Take off after the black dragon?"))
     sky_chase
+  end
+
+  # Context 09 M9-2: why these two. Lumin tells the tree's prophecy (it used
+  # to wait in Chapter 8's optional Echo Vault): riders not afraid of falling,
+  # and the third season who must not hold the cold still.
+  def shrine_prophecy
+    lumin = Stage.find("Lumin Weavemoss")
+    Stage.approach(lumin) if lumin
+    say(["LUMIN: (walking over, a Wennen priest with his head bowed) The Sparkbearer isn't with you."])
+    c = pbMessage(_INTL("Lumin waits."), [_INTL("\"He's gone.\""), _INTL("Say nothing")], 0)
+    say([c == 0 ? "Lumin's ears go flat." : "You don't have to. Lumin's ears go flat."])
+    say([as(:meat_meat, "(holding up Dawnfang) He's in here now. And up there."),
+         "LUMIN: (a long breath) ...Then hear what the tree told us, the night he came.",
+         "LUMIN: \"Each needs a rider who is not afraid of falling. Each will choose one.\""])
+    speak(:alerion, "I'm afraid of falling.", "...I'll fall anyway.")
+    say(["LUMIN: Then she chose well. The ones who aren't afraid don't hold on.",
+         as(:meat_meat, "Meat Meat is afraid of falling. Meat Meat will do it anyway. That counts."),
+         "LUMIN: \"And a third season walks among you, with a song, and a mark on her chest.\"",
+         "LUMIN: \"She will be asked to hold the cold still. She must not. Seasons are turned.\""])
+    if herald?(:alberica)
+      speak(:alberica, "(your hand on your rune) ...Well. That's not ominous at all.", "...Hm.")
+      say(["(Hold the cold still. That's what she's been asking me.)"])
+    elsif with_or_is?(:alberica)
+      say(["ALBERICA: (her hand on her rune) ...Well. That's not ominous at all."])
+    end
+    set_flag(:tree_prophecy_heard)
+    if !herald?(:alerion) && !herald?(:meat_meat)
+      say(["MEAT MEAT: Ice Prince is Frostina's. Meat Meat is Razzy's. You ride with us."])
+    end
   end
 
   # (old saves: the Shrine event that was Shade's)
@@ -253,13 +296,13 @@ module FrostThaw
          "Two years of night, exactly as you left it."])
     speak(:alberica, "(shouting over the wind) It's the same winter! We've been gone a month!",
                      "(into the wind, quietly) ...It's the same winter. Nothing's moved.")
-    say([cl(:reptin, "(shouting back) Lovely to be home, isn't it? Never again!"),
+    say([cl(:reptin, "(shouting back) I'd almost forgotten how much I hate it!"),
          "Ahead, a black dragon with burning gold eyes dives on a town of beehives and honey-halls.",
          "Good Mead. Its breath is a line of light. Roofs go up like paper."].compact)
     if flag?(:flight_path_seen)
       # A4's root model: the Heralds know its path.
       sayc([cl(:alerion, "(over the wind) The model at the Barricade. Good Mead first, then Bryn Shander. Same order."),
-            cl(:meat_meat, "Then Meat Meat knows where it goes next. Meat Meat will be there first.")])
+            cl(:meat_meat, "Then Meat Meat gets to Bryn Shander first. And waits. With teeth.")])
     end
     air_battle(:seams, 50)
     say(["You land in the burning square.",
@@ -304,17 +347,19 @@ module FrostThaw
     say(["Over Redwaters, the black dragon turns its head and looks at you.",
          "Something reaches into #{herald?(rider) ? 'your' : 'your Dragoon\'s'} mind like a cold hand."])
     if herald?(rider)
-      say([rider == :alerion ? "(Your own voice, flat and wrong: ...Turn back. She's right. Let it burn.)" :
+      say([rider == :alerion ? "(Your own voice, flat and wrong: ...Turn back. Winter's right. Let it burn.)" :
                                "(Your own voice, flat and wrong: ...Meat Meat should go home. To the cold table.)",
            rider == :alerion ? "(Stillness is easier.)" : "(Meat Meat belongs there.)"])
     else
-      say([rider == :alerion ? "ALERION: (flat, wrong) ...Turn back. She's right. Let it burn." :
+      say([rider == :alerion ? "ALERION: (flat, wrong) ...Turn back. Winter's right. Let it burn." :
                                "MEAT MEAT: (flat, wrong) ...Meat Meat should go home. To the cold table.",
            rider == :alerion ? "ALERION: Stillness is easier." : "MEAT MEAT: Meat Meat belongs there."])
     end
     say(["#{mount_name} falters and banks away."])
+    # (context 09 §4: the second heartbeat offered in Journey too)
+    beat_opt = rider == :alerion ? "Listen for her heartbeat in him" : "Listen for his heartbeat in her"
     opts = herald?(rider) ? [_INTL("Say your own name"), _INTL("Hum Shimmer's four notes"), _INTL("Listen for the second heartbeat")] :
-                            [_INTL("Say their name"), _INTL("Hum Shimmer's four notes"), _INTL("Grab the reins")]
+                            [_INTL("Say their name"), _INTL("Hum Shimmer's four notes"), _INTL("Grab the reins"), _INTL(beat_opt)]
     c = pbMessage(herald?(rider) ? _INTL("The cold hand is in your head.") : _INTL("The cold hand is in your Dragoon's head."), opts, 0)
     case c
     when 1
@@ -337,6 +382,10 @@ module FrostThaw
              rider == :alerion ? "ALERION: ...Thanks. Don't do that again." :
                                  "MEAT MEAT: ...Thank you. Meat Meat will bite you later. Fondly."])
       end
+    when 3
+      say(["You lean against your Dragoon's back and listen.",
+           "Under the cold, #{mount_name}'s heart is still going: once in the dragon, once in the rider.",
+           "Your Dragoon hears it too, and comes back. #{mount_name} climbs."])
     else
       say([herald?(rider) ? "You say your own name out loud, once, the way a friend would across a table." :
                             "You say their name once, the way you'd say it across a table.",
@@ -359,16 +408,24 @@ module FrostThaw
     say(["Bryn Shander's square is packed. Every town that saw the dragon has sent its people here.",
          "Behind walls that can't stop anything with wings.",
          "DUVESSA: (on the wall) You. You left with my seal a month ago. Where have you...",
-         "DUVESSA: Never mind. Never mind! Is that thing yours?",
-         as(:alerion, "It's coming here. It always meant to come here."),
-         "DUVESSA: (understanding, horrified) Everyone's here. That's the point, isn't it.",
+         "DUVESSA: Never mind. Never mind! Is that thing yours?"])
+    speak(:alerion, "No. It's coming here. It always meant to come here.", "...No. It meant to come here.")
+    say(["DUVESSA: (understanding, horrified) Everyone's here. That's the point, isn't it.",
          cl(:wyn, "(very quietly) ...There are so many children."),
          cl(:alberica, "Then nobody's dying today, sweetheart. Stay close to me.")].compact)
     if with_or_is?(:reptin)
       say(["In the crowd, a tall elf in travelling clothes turns at #{herald?(:reptin) ? 'your' : "Reptin's"} voice.",
-           "He has an iron ring on his finger.",
+           "He has an iron ring on his finger. #{herald?(:reptin) ? 'You wear' : 'Reptin wears'} its twin.",
            "ANDUIN: ...Reptin?",
            as(:reptin, "(not able to move) ...Anduin.")])
+      # Context 09 M9-4 box 1: who he is (owner's decision 7: said briefly, here)
+      if herald?(:alberica)
+        speak(:alberica, "(to the others, very low) His husband. The voice he heard in the Rift.", "...His husband.")
+      elsif !herald?(:reptin) && with_or_is?(:alberica)
+        say(["ALBERICA: (to you, very low) His husband. The voice he heard in the Rift."])
+      elsif !herald?(:reptin)
+        say(["(Anduin. Reptin's husband: the voice he heard in the Rift.)"])
+      end
     end
     pbSEPlay("Earth3") rescue nil
     $game_screen.start_shake(6, 8, 30) rescue nil
@@ -381,7 +438,7 @@ module FrostThaw
          "The runes are Avarice's sigils. They hold the heart in place the way a nail holds a picture.",
          "Every rune is drinking from the crowd. You can feel it pulling, a thread from every chest in the square, toward the dragon.",
          cl(:alerion, "It isn't here to burn Bryn Shander. It's here to collect it."),
-         cl(:alberica, "(her memory-threads pulled tight toward it) A soul harvest. Everyone at once, all of them for the White Womb.")].compact)
+         cl(:alberica, "(a hand on her rune, pulled toward it) A soul harvest. Everyone at once, and all of it for her.")].compact)
     if seams > 0
       dragon.hp = [(dragon.totalhp * (1.0 - 0.2 * seams)).floor, 1].max
       say([seams >= 2 ? "(Its chardalyn seams are cracked all over where you hit them in the air. It's badly hurt.)" :
@@ -401,16 +458,43 @@ module FrostThaw
          "AVARICE: (from the shard) Pick me up.",
          herald?(:meat_meat) ? "You stamp on it before anyone can move." : "Meat Meat stamps on it before anyone can move.",
          as(:meat_meat, "No.")])
+    shard_face_reaction
     set_flag(:dragon_down)
     add_counter(:story_beats)
     scene_green_light
+  end
+
+  # Context 09 M9-3: the party saw her "Dead." last night; now her face spoke.
+  # The player who saw the bare arms can tell them, or keep it.
+  def shard_face_reaction
+    Stage.fx("E-06", [$game_player.x, $game_player.y], frames: 6, oy: 8) rescue nil   # glass under a heel
+    if with_or_is?(:alberica)
+      speak(:alberica, "(very quiet) That was her face. We watched her burn.", "...That was her face.")
+    end
+    if with_or_is?(:alerion)
+      speak(:alerion, "We watched a body burn.", "...A body.")
+    end
+    grind = herald?(:meat_meat) ? "You're still grinding the glass under your heel." : "Meat Meat is still grinding the glass under her heel."
+    if flag?(:avarice_doubt)
+      c = pbMessage(_INTL("The bare arms in the glass..."), [_INTL("Tell them"), _INTL("Say nothing")], 0)
+      if c == 0
+        set_flag(:avarice_doubt_shared)
+        say([herald?(:alerion) ? "You tell them: no sigils on the arms. You close your eyes." :
+                                 "You tell them: no sigils on the arms. Alerion closes his eyes."])
+      else
+        say(["You say nothing. #{grind}"])
+      end
+    else
+      say([grind])
+    end
+    speak(:meat_meat, "Every mirror. Meat Meat is going to stamp on every mirror in the world.", "...Every mirror.")
   end
 
   def scene_green_light
     say(["The square is quiet. Snow falls on the black glass."])
     if with_or_is?(:reptin)
       say(["#{herald?(:reptin) ? 'You and Anduin are' : 'Reptin and Anduin are'} holding each other. Anduin is shaking.",
-           "ANDUIN: Five weeks. Five weeks I waited in Bryn Shander.",
+           "ANDUIN: Five weeks I waited. You said a month, at most. You always say a month.",
            "ANDUIN: And you come down out of the sky on a dragon. What happened to you? You look..."])
       speak(:reptin, "(trying for a smile) Older?", "...I don't know.")
       say(["ANDUIN: (touching his face) No. Like something's growing in you.",
@@ -423,6 +507,9 @@ module FrostThaw
                      "...Home. It's warm there. You can walk through the Wall now.")
     say([cl(:meat_meat, "And coffee. Alberica forgot coffee."),
          cl(:alberica, "I never forget coffee, sweetheart. I just don't count it as food."),
+         # (context 09 M9-4: the town's own reason to leave its walls: Chapter 2's lottery)
+         "DUVESSA: (looking at the lottery board) Two years of that board.",
+         "DUVESSA: If there's warm ground out there, I'm done drawing names.",
          "DUVESSA: (to the whole square) Bryn Shander! Pack what you can carry!"].compact)
     if flag?(:husband_thawed)
       say(["The Targos widow and her husband walk past, arm in arm.",
@@ -470,19 +557,39 @@ module FrostThaw
     set_switch(SW_CH9_RETURN, false)
     return if flag?(:heralds_arrested)
     say(["A long line of refugees walks out of the snow and into autumn.",
-         "Rootspire's people stare at them. They stare back.",
-         "Rootwardens close in with spears lowered. Rheven leads them. He looks unhappy.",
+         "Rootspire's people stare at them. They stare back."])
+    # Rheven and his wardens come down the street; Kelyn after them (WRITING_GUIDE §9a)
+    px, py = ($game_player.x rescue 9), ($game_player.y rescue 22)
+    rheven = Stage.find("Captain Rheven")
+    rheven ? (rheven.moveto(px + 6, py) rescue nil) : (rheven = Stage.actor(:rheven, px + 6, py, 4, graphic: "BW (72)"))
+    wardens = [Stage.actor(:rootwarden, px + 6, py - 1, 4, graphic: "BW029"), Stage.actor(:rootwarden_2, px + 6, py + 1, 4, graphic: "BW029")]
+    Stage.approach(rheven) if rheven
+    wardens.compact.each_with_index { |w, i| Stage.walk_to(w, px + 2, py + (i.zero? ? -1 : 1), face: 4) }
+    say(["Rootwardens close in with spears lowered. Rheven leads them. He looks unhappy.",
          "RHEVEN: (not meeting your eyes) In the name of the Verdant Council.",
          "RHEVEN: The Heralds of Dawn and Dusk. For the deaths of Summer Marshal Var Rime-Breaker...",
-         "RHEVEN: ...and #{autumn_hand[:title]}.",
-         as(:meat_meat, "Var was a coat! A coat!"),
-         cl(:reptin, "(hands up, smiling) Let's all be very reasonable. Especially the people with spears."),
-         cl(:alerion, "She's right. He was a coat."),
-         "KELYN: (arriving, white-faced) I can't stop this. The city saw the summer die.",
-         "KELYN: Half of them think you saved them. Half think you killed it.",
-         "SOMEONE IN THE CROWD: Murderers!",
+         "RHEVEN: ...and #{autumn_hand[:title]}."])
+    speak(:meat_meat, "Var was a coat! A coat!", "...Var was a coat.")
+    sayc([cl(:reptin, "(hands up, smiling) Let's all be very reasonable. Especially the people with spears."),
+          cl(:alerion, "She's right. He was a coat.")])
+    kelyn = Stage.actor(:kelyn, px + 6, py, 4, graphic: "BW (30)")
+    Stage.approach(kelyn) if kelyn
+    # Context 09 M9-5: the arrest's real logic (the Speaker heard; the city saw),
+    # and its witness (the wardens who carried the child up, part 08 M8-5).
+    say([flag?(:kelyn_heard_reveal) ? "KELYN: (arriving, white-faced) I heard her on the stone. I believe you." :
+                                      "KELYN: (arriving, white-faced) I can't stop this.",
+         "KELYN: But the city didn't hear her. It saw the summer die.",
+         "KELYN: It saw its Marshal go down into the roots, and Autumn's chair go empty.",
+         flag?(:child_carried_up) ? "RHEVEN: My wardens carried a child up out of that forge. They heard what the goblin said." :
+                                    "RHEVEN: Autumn's chair is empty, and the goblin came up with the blood on her."])
+    if flag?(:mm_reached)
+      speak(:meat_meat, "Meat Meat reached. Meat Meat will say that too.", "...Meat Meat reached.")
+    else
+      speak(:meat_meat, "Meat Meat said it. Meat Meat will say it again.", "...Meat Meat will say it again.")
+    end
+    say(["SOMEONE IN THE CROWD: Murderers!",
          "SOMEONE ELSE: Liberators!",
-         "KELYN: There will be a trial. The Trials of the Roots. ...I'm sorry."].compact)
+         "KELYN: There will be a trial. The Trials of the Roots. (quieter) Bring witnesses. Bring me anything."])
     set_flag(:heralds_arrested)
     add_counter(:story_beats)
     say(["END OF CHAPTER 9"])
