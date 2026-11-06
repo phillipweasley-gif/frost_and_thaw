@@ -830,3 +830,14 @@ Your answers are now in the script. Nothing is left open.
 **Shade, Shimmer and Glimmer** stay companions only. Each leaves the party partway through, so none gets a Herald Mode route.
 
 **Parked for later, as you asked:** the visual artifacts in the wrong places and a look at your save.
+
+## Owner's decisions, 2026-11-06 (Act II–III context pass)
+
+- Selrae is tried in the dock at the Trials, alongside the Heralds. Alberica's real charge is the Bryn Shander night.
+- A New Journey player hears of Alberica's bargain twice: a hint in her Chapter 11 confession, the whole of it on the dock the night before the end.
+- The White Vault: the three Frostshard Sigils find and wake its door; Alberica's pendant is the one key that opens it.
+- Aerix, in the Test of Preservation, is a Wolf Tribe boy whose tribe's song Alberica knows.
+- The ghost in the Cackling Chasm is Alberica, very old: her story in Chapter 5 hints at the loop without naming her.
+- Anduin is said briefly in Chapter 9 when he appears (still unsaid in Act I).
+- Var is sworn to sit the empty Summer Throne on the festival's seventh night: the week's deadline.
+
