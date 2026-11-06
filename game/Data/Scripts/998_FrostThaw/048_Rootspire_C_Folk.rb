@@ -23,7 +23,7 @@ module FrostThaw
       say(["TALWYN: You came back! I knew you'd come back. I saw you go up the root-stair this morning. And down. And up.",
            "TALWYN: Not following. Guarding. From a distance. A respectful distance."], event_id)
     else
-      say(["TALWYN: (very fast) I'm writing down everything you do. For the archive. For HER. For later. Sorry. Hi."], event_id)
+      say(["TALWYN: (very fast) I'm writing down everything you do. For the archive. For the Hall. For later. Sorry. Hi."], event_id)
     end
     state[:talwyn] = n + 1
     talwyn_secret if state[:talwyn] >= 3
@@ -43,7 +43,9 @@ module FrostThaw
          "TALWYN: The white dragon came down out of the aurora and circled the Heartroot. Round and round. For an hour.",
          "TALWYN: Like she was waiting for someone to come up out of it. Or go down.",
          "TALWYN: Then you came out of a lantern. And she landed for you.",
-         "TALWYN: You're hers. Her chosen. I know it. I'm going to be there when you find out."], event_id)
+         with_or_is?(:alerion) ? "TALWYN: (looking straight at #{herald?(:alerion) ? 'you' : 'Alerion'}) One of you is hers. Her chosen. I know it." :
+                                 "TALWYN: One of you is hers. Her chosen. I know it.",
+         "TALWYN: I'm going to be there when you find out."], event_id)
     sayc([herald?(:alerion) ? "(Your ring goes cold. Then warm.)" : cl(:alerion, "(a hand on his ring) ...She's not wrong."),
           cl(:alberica, "Sweetheart, being somebody's chosen mostly means getting shouted at by dragons. Ask him.")].compact)
   end
@@ -117,6 +119,8 @@ module FrostThaw
       say(["A gnome with enormous round lenses that magnify two anxious eyes looks up from a ladder.",
            "PIMMLET: Shhh. ...Sorry. Shhh. Habit. Pimmlet Natch. Auroral Librarian. Shhh.",
            "He's whispering \"shhh\" to nobody, even when nobody is talking."], event_id)
+      # The Journey kid runs the College's errands (context 15 §6): somebody knows them.
+      say(["PIMMLET: Shhh. ...You're Wynsnow's runner. You were gone a whole HOUR. Shhh."]) if journey?
       return
     end
     if !flag?(:shimmers_heart_scroll) && (with_or_is?(:glimmer) || with_or_is?(:shade) || flag?(:twins_met))
@@ -378,8 +382,9 @@ module FrostThaw
     state[:selene_verse] = i + 1
     if i == 0
       sayc([cl(:alberica, "Darling, I've been called a lot of things. 'Demigod' is going straight on my door."),
-            cl(:alerion, "I didn't teach it to kneel. I asked it to sit down."),
-            cl(:meat_meat, "Meat Meat is in a book. Meat Meat wants a copy. Meat Meat cannot read.")].compact)
+            cl(:meat_meat, "Meat Meat is in a book. Meat Meat wants a copy. Alerion can read it to her.")].compact)
+    elsif i == 2                      # (the verse about him)
+      sayc([cl(:alerion, "Kneel. It never knelt. It sat down beside me once, and I was grateful.")].compact)
     end
   end
 
@@ -455,7 +460,7 @@ module FrostThaw
     end
     if !flag?(:harget_settled)
       c = pbMessage(_INTL("HARGET: Five thousand, and the charter goes back in the stacks. Forever."),
-                    [_INTL("Pay him."), _INTL("Refuse."), _INTL("\"Let's ask Captain Vale.\"")], 1)
+                    [_INTL("Pay him."), _INTL("Refuse."), _INTL("\"Let's ask Captain Kethan.\"")], 1)
       case c
       when 0
         if $Trainer.money >= 5000
@@ -472,7 +477,7 @@ module FrostThaw
         sayc([cl(:alberica, "Publish and be damned, sweetheart. I'd love to see my signature. Is it pretty?")].compact)
       else
         set_flag(:harget_settled); set_flag(:harget_reported)
-        say(["HARGET: (going grey) ...Vale. No. No need for Vale. The charter's very old. It may be a forgery. Scratch."])
+        say(["HARGET: (going grey) ...Kethan. No. No need for Kethan. The charter's very old. It may be a forgery. Scratch."])
       end
     end
     harget_decree
@@ -577,7 +582,9 @@ module FrostThaw
       return say(["HALDEN: Not ready. Not ready. Calibrating. Come back when the tree's had a bad night."], event_id)
     end
     say(["Halden has filled a corner of the Library with brass rings, crystal leaves and a humming chair.",
-         "HALDEN: Ready! Sit, sit. A small reset. Back to your origin. Targos, four hundred years ago. You'll hardly notice.",
+         # (the Journey kid and Wyn are from Rootspire: context 15 §6)
+         outsider? ? "HALDEN: Ready! Sit, sit. A small reset. Back to before you ever left. You'll hardly notice." :
+                     "HALDEN: Ready! Sit, sit. A small reset. Back to your origin. Targos, four hundred years ago. You'll hardly notice.",
          "HALDEN: Your Pokémon may not come with you. Footnote. Small footnote."], event_id)
     c = pbMessage(_INTL("What do you do?"), [_INTL("\"No.\""), _INTL("Talk him out of it."), _INTL("Break the engine.")], 0)
     if c == 1
@@ -672,13 +679,15 @@ module FrostThaw
          "When he tries to put the mirror down, it clings to his fingers like frost to a tongue."], event_id)
     say(["CHILD: I bought it from the lady. It's got a friend in it. She talks when the others aren't looking.",
          "The reflection's mouth moves. The boy's doesn't. The voice is a woman's, pleasant and precise:",
-         "\"Hello again, variables. You broke my house. I'm cold. My other half is down in the roots.\"",
-         "\"Bring it here and I'll let the boy go. Or don't, and I'll keep him. Children are very good at looking.\"",
+         "\"Hello again, variables. You broke the hag's glass. I was using it as a door.\"",
+         "\"I'm cold. My other half is down in the roots. Bring it here and I'll let the boy go.\"",
+         "\"Or don't, and I'll keep him. Children are very good at looking.\"",
          "\"There's a girl in my other half already. Mira's girl. She looked too long.\"",
          "Behind the boy's reflection, for a blink, another face: a woman with hollow eyes and a crown of ice.",
          "CHILD: She says that a lot. Can you make her stop?"])
     if first
       sayc([cl(:meat_meat, "(very still) That voice. Meat Meat knows that voice. From the cold table."),
+            cl(:meat_meat, "Variables. Her word for us. Things you change, to see what breaks."),
             cl(:alberica, "Shh, sweetheart. Look at me, not the glass. Big breath. We're going to find the other half and break it."),
             cl(:alerion, "The twin. In the Heartroot. Somewhere wet, where it can watch the sap.")].compact)
     end
@@ -714,8 +723,11 @@ module FrostThaw
               "He lets Meat Meat take it. The glass is cold enough to burn. She doesn't let go.",
          "In the mirror, the smirk goes flat.",
          "\"Clever. Now you're carrying me. Down you go, V-7. Down to my other half.\"",
+         mm ? "(V-7. That was you, on the cold table. Seven. Razzy was Raz.)" :
+              "MEAT MEAT: (low) V-7. That was Meat Meat, on the cold table. Seven. Razzy was Raz.",
+         cl(:alberica, "Not any more, it isn't. You're Meat Meat. Hold the glass, sweetheart."),
          "CHILD: (flexing his fingers) It's quieter. She's... she's in your hands now. Is that bad?",
-         mm ? "(Very.)" : "MEAT MEAT: Very. But Meat Meat has strong hands."])
+         mm ? "(Very.)" : "MEAT MEAT: Very. But Meat Meat has strong hands."].compact)
     give_key(:FT_BOYSMIRROR)
     set_flag(:boy_mirror_taken)
     side_goal(:mirror_boy, "Carry the boy's mirror down to its twin: in the Heartroot's Overflow Channel, where Mira's girl is trapped.", done: :twin_broken)

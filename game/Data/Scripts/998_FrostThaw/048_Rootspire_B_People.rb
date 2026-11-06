@@ -272,7 +272,7 @@ module FrostThaw
            "Her white fur cloak is stained with soot. She tilts her head too far, like a bird.",
            "EIRA VOSS: Perfect stillness. Perfect silence. ...And very reasonable prices.",
            "Her voice echoes as if she's in a cathedral. She smiles without moving her lips.",
-           "EIRA VOSS: Eline loved the cold. I love what comes after it. Buy something, Herald. Everything here is honest.",
+           "EIRA VOSS: Eline loved the cold. I love what comes after it. Buy something. Everything here is honest.",
            "EIRA VOSS: Mostly."], event_id)
       set_flag(:met_eira)
     else
@@ -309,7 +309,18 @@ module FrostThaw
   # 8. Rootwarden Hall: Captain Kethan Vale (the Hall's own business is in part C)
   #-----------------------------------------------------------------------------
   def kethan(event_id = nil)
-    if first_time?(:met_kethan)
+    first = first_time?(:met_kethan)
+    if first && with_or_is?(:wyn)
+      # Wyn's own captain: Wyn doesn't need him introduced (context 15 §6).
+      say(["Weapons hang beside living-root shields. Captain Kethan frowns over a glowing map of the Auroral Wall.",
+           "He cracks his knuckles without looking up: pop, pop, like ice splitting far away.",
+           herald?(:wyn) ? "KETHAN: Wyn. You left your post at the Sap Gate. Then you left the century." :
+                           "KETHAN: Wyn. You left the Sap Gate on festival night. We'll talk about that.",
+           "KETHAN: (to the rest of you) Kethan Vale. Captain. Skytower Shelter clan. I keep order in the civic ring.",
+           "KETHAN: Patrols hear hammering under the Heartroot at night. Trees don't dream with hammers."], event_id)
+      sayc([cl(:alerion, "Skytower. Goliaths. Our Skytower?"),
+            "KETHAN: Your Skytower, four hundred years on. We remember who carried the shelter's wounded down the mountain."].compact)
+    elsif first
       say(["Weapons hang beside living-root shields. A towering goliath with stone-grey skin and frost-blue tattoos",
            "frowns over a glowing map of the Auroral Wall. His cloak is Rootwarden; his armour is etched with constellations.",
            "KETHAN: If you're here to help, good. If not, don't.",

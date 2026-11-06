@@ -148,6 +148,54 @@ module FrostThaw
     end
   end
 
+  #-----------------------------------------------------------------------------
+  # Tamsin shows the strangers round (context 15, M15-2): during the downtime
+  # week, the first talk after you've battled her. In Rootspire the Heralds are
+  # the outsiders, and Tamsin, who wants to be a Rootwarden, is the expert.
+  #-----------------------------------------------------------------------------
+  def tamsin_tour_due?
+    flag?(:beat_tamsin) && !flag?(:tamsin_tour) && (respond_to?(:festival_business_done?) && festival_business_done?) &&
+      !flag?(:festival_night) && $game_map && $game_map.map_id == 2050
+  end
+
+  def tamsin_tour(event_id = nil)
+    set_flag(:tamsin_tour)
+    ev = event_id && $game_map ? $game_map.events[event_id] : nil
+    sayc(["TAMSIN: (to the Heralds, bouncing) Never seen the Verdant Halls? Have you? HAVE you?",
+          "TAMSIN: North stair. The Rootwarden Hall's up there. Seven shops. Everyone who's anyone.",
+          cl(:alberica, "Darling, is anyone up there who knows where Summer went?"),
+          "TAMSIN: Everyone up there THINKS they know. That's the fun of it. Come on!"].compact, event_id)
+    Stage.escort(ev, 17, 9) rescue nil if ev
+    say(["TAMSIN: And the Promenade's over the leaf-bridge, on the Canopy. That's Autumn's. Posh."], event_id)
+    say(["TAMSIN: (to you, quieter) I'm showing them round. You can come. ...You can't be in charge."], event_id) if journey?
+    side_goal(:city_tour, "The Verdant Halls: up the root-stair, north of the market. The Promenade: over the leaf-bridge.",
+              done: [:festival_night, :visited_halls])
+  end
+
+  class << self
+    alias_method :tamsin_before_tour, :tamsin if method_defined?(:tamsin) && !method_defined?(:tamsin_before_tour)
+    alias_method :party_chat_before_friends, :party_chat if method_defined?(:party_chat) && !method_defined?(:party_chat_before_friends)
+  end
+
+  def self.tamsin(event_id = nil)
+    return tamsin_tour(event_id) if tamsin_tour_due?
+    tamsin_before_tour(event_id)
+  end
+
+  # The city keeps count (context 15, M15-4 C): from the week in Rootspire the
+  # Heralds menu lists who'd speak for you. At the trial it becomes the
+  # witness list (036 show_witnesses).
+  def self.party_chat
+    if flag?(:met_hellen) && !flag?(:trials_open) && respond_to?(:witnesses) && !companions.empty?
+      list = witnesses
+      if !list.empty?
+        pbMessage(_INTL("Friends in Rootspire ({1}): who'd speak for you, and what they'd say.", list.size))
+        list.first(6).each { |_, who, what, _| pbMessage(_INTL("{1}: \"{2}\"", who, respond_to?(:witness_line) ? witness_line(what) : what)) }
+      end
+    end
+    party_chat_before_friends
+  end
+
   def tree_communion_or_talk(event_id = nil)
     return if respond_to?(:tree_communion) && tree_communion(event_id)
     talk(:great_root, event_id)
@@ -156,6 +204,7 @@ module FrostThaw
   # The switches the city's events show and hide on, kept true to the story.
   def apply_rootspire_life_switches
     return if !active? || !$game_switches
+    set_flag(:visited_halls) if ($game_map.map_id rescue 0) == 2180 && !flag?(:visited_halls)   # (Tamsin's tour goal)
     s = lambda { |id, on| $game_switches[id] = on ? true : false }
     s.call(SW_ORB_HALO, flag?(:twins_met) && !flag?(:halo_orb_cleared))
     s.call(SW_KELYN_ORB, flag?(:orb_visions) && !flag?(:kelyn_secret) && rs_day >= 3)

@@ -37,6 +37,18 @@ module FrostThaw
     fields_spirits_calm: ["Flowers and snow lie together here now, peacefully. Two small whirls of warm and cold air chase each other, playing."]
   )
 
+  # Herald Wyn is a Rootwarden: Ash is a colleague, not a stranger (context 15 §6).
+  class << self
+    alias_method :trainer_intro_before_wyn, :trainer_intro if method_defined?(:trainer_intro) && !method_defined?(:trainer_intro_before_wyn)
+  end
+
+  def self.trainer_intro(key, event_id = nil)
+    if key == :warden_ash && herald?(:wyn)
+      return say(["ASH: Wyn. Everyone's claiming to be a Herald this week. You, I'd believed were dead."], event_id)
+    end
+    trainer_intro_before_wyn(key, event_id)
+  end
+
   module_function
 
   #-----------------------------------------------------------------------------
@@ -49,6 +61,7 @@ module FrostThaw
           "The orb's green goes grey where it touches. The white deepens to blue.",
           "SISTER ILSE: She's the goddess's daughter. The Frost Saint said so. Let her mother in.",
           "BROTHER VOSK: The Matron said winter's daughter comes home through this orb. Through it, into her.",
+          "LUMIN: (from the shrine steps) The Fractured Halo. They pray for her winter to come back.",
           cl(:alerion, "(very quietly) Into Frostina."),
           cl(:alberica, "Over my dead body, darlings. And I'm very hard to kill.")].compact)
     return false if !pbTrainerBattle(:FT_HALO, "Sister Ilse", nil, false, 0)
@@ -80,7 +93,7 @@ module FrostThaw
          "KELYN: He's only half awake. He's been half awake for four hundred years, waiting for his partner.",
          "KELYN: If I could wake him fully... spring, real spring, would roll down this valley like a flood."], event_id)
     if flag?(:autumn_note)
-      say(["KELYN: There's a way. Lumea showed me, in a dream of a green crown. With your relics: the staff, the blade, the key.",
+      say(["KELYN: There's a way. A friend showed me, in a dream of a green crown. With your relics: the staff, the blade, the key.",
            "KELYN: Lend them to me. One night. I'd quicken the tree, and the wyrm, and the winter would never-"])
     else
       say(["KELYN: I've dreamed of a way. A green crown. Your relics, placed at the orb, one night. The tree would quicken.",
@@ -327,7 +340,8 @@ module FrostThaw
   def warden_ash(event_id = nil)
     if !flag?(:ash_named)
       return say(["A Rootwarden on the south steps, polishing a bark shield that's already polished.",
-                  "ASH: The Root-Gate's sealed. Council orders. Nobody's said why, and we're the ones guarding it."], event_id)
+                  flag?(:festival_night) ? "ASH: #{herald?(:wyn) ? 'Wyn. ' : ''}The Root-Gate's sealed. Council orders. Nobody's said why." :
+                                           "ASH: #{herald?(:wyn) ? 'Wyn. ' : ''}The Root-Gate's sealed. Council orders, till the festival's done."], event_id)
     end
     sayc(["ASH: (not looking up) Kethan sent you. He never could do his own talking.",
           "ASH: Yes. I moved the pins. I sent the Bough patrols where the cold could have them.",
@@ -341,7 +355,7 @@ module FrostThaw
     add_counter(:story_beats)
     sayc(["Kethan's hand closes on Ash's shoulder from behind. Neither of you heard him come. Neither did Ash.",
           "KETHAN: Rootwarden Ash. The Hall will hear you. Not me. The Hall.",
-          "ASH: (as they lead him away) It's not the root that's hungry. It's whoever's holding the other end.",
+          "ASH: (as they lead him away) It's not the Hall that's rotten. It's whoever's holding the other end.",
           cl(:alerion, "The Rite of the Long Gold. Somebody's still holding the rope."),
           cl(:alberica, "Then we cut the rope, sweetheart. And pull her up with it.")].compact)
   end
@@ -410,17 +424,26 @@ module FrostThaw
     set_flag(:selrae_courted)
     me = herald?(who)
     name = who == :glimmer ? "Glimmer" : "Shade"
-    hook = who == :glimmer ? "A light that came back through a mirror. A vessel that has been emptied once, and filled, and knows the way." :
-                             "That knife at your hip. The Rimefang. It's marked you for her since Saltmarsh. You're halfway home already."
-    say(["As the session breaks up, the Winter Matron steps down from her seat and inclines her head to #{me ? 'you' : name}. Only to #{me ? 'you' : (who == :glimmer ? 'him' : 'them')}.",
-         "SELRAE: (low) Sparkbearer. #{hook}",
-         "She draws a dagger of black ice from her sleeve and turns it so it catches the crystals' light.",
+    say(["As the session breaks up, the Winter Matron steps down from her seat and inclines her head to #{me ? 'you' : name}. Only to #{me ? 'you' : (who == :glimmer ? 'him' : 'them')}."], event_id)
+    if who == :shade
+      # (context 06, M6-4: the Rimefang and its curse, first said in a fight)
+      say(["SELRAE: (low) Knife-bearer. That knife at your hip. The Rimefang."])
+      speak(:shade, "It's a knife. It came out of Saltmarsh with me. It's been cold ever since.", "...It's a knife.")
+      say(["SELRAE: Cold because it's hers. It marked you for her that night. You're halfway home."])
+    else
+      say(["SELRAE: (low) Sparkbearer. A light that came back through a mirror. A vessel emptied once, and filled."])
+    end
+    say(["She draws a dagger of black ice from her sleeve and turns it so it catches the crystals' light.",
          "When the light touches it, it whispers. Prayers. Old ones. To Auril.",
-         "SELRAE: The goddess needs no throne. Only a heart that can hold light and cold together. Yours, perhaps.",
-         "SELRAE: Avarice has a vault in the ice to the north. The White Womb. She'd make you something there.",
-         "SELRAE: I'd make you a saint."], event_id)
-    speak(who, "I've been somebody's vessel. I'd like to be somebody's friend, for a while. Put the knife away, Matron.",
-          "...Put the knife away.")
+         "SELRAE: The goddess needs no throne. Only a heart that can hold light and cold together.",
+         "SELRAE: Yours, perhaps. There's a vault in the ice, far north. The White Womb. They'd make a saint there."])
+    if who == :shade
+      speak(:shade, "My sister was somebody's vessel. I carried her out. Put the knife away, Matron.",
+            "...Put the knife away.")
+    else
+      speak(:glimmer, "I've been through one mirror for a goddess. That was enough. Put it away, Matron.",
+            "...Put the knife away.")
+    end
     sayc([cl(:alberica, "'The White Womb.' She said it like a prayer. Did you hear her? Like a prayer."),
           cl(:alerion, "She knows where the vault is.")].compact)
     set_flag(:selrae_white_womb)
@@ -513,8 +536,12 @@ module FrostThaw
     if flag?(:ch7_started)
       say(["IVRAN: (watching the water) Heralds. I need an escort. The frozen half of the Glasswater, to the far shore.",
            "IVRAN: Trade has to cross it. The ice is old, and the crews frozen in it have started getting up again.",
-           "IVRAN: Corsairs call it the Frozen Run. I'll take the sledge-ship. You walk the ice beside her and keep the dead off her."], event_id)
+           "IVRAN: Corsairs call it the Frozen Run. I'll take the sledge-ship. You walk the ice beside her and keep the dead off her.",
+           "IVRAN: Get her across whole and the Corsairs pay. Coin, and a favour. We're good for both."], event_id)
+      side_goal(:frozen_run, "Captain Ivran wants an escort across the Frozen Run, past the Split Dock. The Corsairs pay.",
+                done: :frozen_run_done)
       return if !pbConfirmMessage(_INTL("Escort Ivran's ship across the Frozen Run?"))
+      say(["IVRAN: Walk the ice beside her. Don't stop for anything that waves."], event_id)
       set_switch(SW_FROZEN_RUN, true)
       transfer(2199, 2, 9, 6)
       return
@@ -547,7 +574,8 @@ module FrostThaw
           "IVRAN: (looking back across the ice, his glass eye catching the aurora) Look. Under the ice. Deep.",
           "Far below, where the ice goes blue-black: a shape. A woman, tall as a house, arms raised.",
           "For a moment her head seems to turn.",
-          "IVRAN: Shivven saw her. I didn't believe him. ...I believe him.",
+          flag?(:met_shivven) ? "IVRAN: Shivven saw her. I didn't believe him. ...I believe him." :
+                                "IVRAN: The old crews swore something lay under the ice. I didn't believe them. ...I believe them.",
           "IVRAN: The Corsairs owe you. When you need to cross water, any water, you'll have a ship.",
           cl(:alberica, "(a hand over her rune, very pale) Let's go home, darlings. Now. Please.")].compact)
     give(:PEARLSTRING)
@@ -632,6 +660,7 @@ module FrostThaw
           "At the end of it: a shape like a vault-door, wings spread over a frozen eye.",
           "WYNSNOW: The White Vault of Ithryn Athis. Under the glacier. Two keys point the way; the third opens the door.",
           "WYNSNOW: Whoever holds the third will be standing at the end of that light. I'd bring a coat.",
+          "WYNSNOW: Not this year, mind. Not while the tree's sick. When it's well, the door will wake.",
           cl(:alerion, "Ithryn Athis. Avarice's vault. Selrae called it the White Womb.")].compact, event_id)
     add_counter(:story_beats)
     true
@@ -802,6 +831,7 @@ module FrostThaw
                                  "His velvet fingers trace a sigil in the wax of a forged decree while he looks at Meat Meat. Only at her.",
            "DARRUS: The Guild of Roots and Stone guards a reliquary. A sealed box, older than the tree.",
            "DARRUS: It's part of the Mirror Mother's heart. Bring it to me, and I'll see you rewarded.",
+           "DARRUS: Name a price. Autumn pays. That's the only thing Autumn does well.",
            "DARRUS: The vault's under the Root-Tier docks. The Smuggler's Run. Rootwarden traps. Wards. Nothing a professional can't manage.",
            "His smile doesn't reach his eyes. Behind them, something is very frightened."], event_id)
       sayc([herald?(:meat_meat) ? "(Mirror Mother. You know that name. From under the table. From the dark.)" :
@@ -923,7 +953,8 @@ module FrostThaw
             "DARRUS: It wanted access to the Heartroot. And the box. I've been giving it... things. Little things.",
             "SELRAE: Little things. Like a dig under the Heartroot, under a forged seal.",
             "Darrus runs. Out of the Hall, down the Wardens' stair, toward the water.",
-            "KELYN: Let him go. He'll run to the Corsairs. They'll find him. ...Heralds. Thank you. I think.",
+            "KELYN: Wardens, after him. Alive. He'll run to the Corsairs, and they'll hold him.",
+            "KELYN: ...Heralds. Thank you. I think.",
             cl(:meat_meat, "Meat Meat did the job right. Meat Meat feels fed.")].compact)
     else
       set_flag(:heist_destroyed)
@@ -1027,7 +1058,14 @@ module FrostThaw
     set_flag(:"watcher_#{key}")
     add_counter(:watchers_found)
     set_self_switch(event_id, "A")
-    say(["#{decision == 4 ? 'Caught' : 'Driven off'}: one of #{master}'s watchers. They'll know you know."])
+    if key == :lurker && !flag?(:summer_ended)
+      sayc(["#{decision == 4 ? 'Caught' : 'Driven off'}: a watcher that lives in your own shadow. Whoever sent it is very close.",
+            cl(:alberica, "(very quietly) It smelled of mirrors, darling. I know that smell.")].compact)
+    elsif key == :lurker
+      say(["#{decision == 4 ? 'Caught' : 'Driven off'}: one of Avarice's own watchers. She was in your shadow the whole time."])
+    else
+      say(["#{decision == 4 ? 'Caught' : 'Driven off'}: one of #{master}'s watchers. They'll know you know."])
+    end
     if counter(:watchers_found) >= WATCHERS.size && first_time?(:all_watchers)
       sayc(["Ten watchers. Spring's, Winter's, Autumn's, Summer's, the Halo's, and hers.",
             cl(:alberica, "Observed, admired, stalked. Darling, we've been courted by an entire city."),
