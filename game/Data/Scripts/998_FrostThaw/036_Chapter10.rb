@@ -1675,7 +1675,7 @@ module FrostThaw
       set_flag(:spores_mistrust)
     end
     set_flag(:spores_debated)
-    side_goal(:fane, "Alberica's trial: Kelyn and Selrae wait at the Undercanopy's entrance, the Sap Gate in the Root-Tier.", done: %i[colony_recognised colony_exiled])
+    side_goal(:fane, "Alberica's trial: Kelyn and Selrae wait at the Sap Gate, the Undercanopy's door in the Root-Tier.", done: %i[colony_recognised colony_exiled])
     trial_week_goal
   end
 

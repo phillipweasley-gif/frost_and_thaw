@@ -65,7 +65,7 @@ module FrostThaw
     maze_pane: ["Ice, polished like a mirror. Your reflection is a heartbeat late."],
     # (after the end the Wall is down and time moves here again: context 13 M13-8)
     beyond_snow: -> { FrostThaw.flag?(:game_complete) ? ["Snow, falling the ordinary way. Where the Wall stood, nothing stops it now."] :
-                                                       ["Snowflakes hang in the air. You walk through them and they don't move; they part, and stay parted."] },
+                                                       ["Snowflakes hang in the air. You walk through them; they part, and stay parted."] },
     beyond_waves: -> { FrostThaw.flag?(:game_complete) ? ["A wave on the lake, slumped into slush and broken ice.", "It froze mid-crest for four hundred years. It's falling now, slowly."] :
                                                         ["A wave on the lake, frozen mid-crest, taller than a house.", "In its face: constellations that don't match any sky."] },
     drowned_hall_sign: ["A carved beam, half under ice: DOUGAN'S HOLE - MEAD HALL.", "The rest of the village is under four hundred years of frost."],
@@ -538,7 +538,7 @@ module FrostThaw
       # The Wall is down (context 13 M13-8): the boat crosses to where it stood. No Wall, no frozen time.
       say(["An old fisher's boat, half in the reeds. The lake is open water now, all the way north."], event_id)
       return if !pbConfirmMessage(_INTL("Row across, to where the Wall stood?"))
-      say(["You row across. Where the Wall stood there's only snow on the far shore, and the north beyond it."])
+      say(["You row across. Where the Wall stood there's only snow, and the north beyond it."])
       return transfer(2163, 4, 20, 6)
     end
     say(["An old fisher's boat, half in the reeds. The lake is half thawed, half frozen, all of it still."], event_id)
