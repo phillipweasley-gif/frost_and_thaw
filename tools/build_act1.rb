@@ -138,11 +138,15 @@ b.door(41, 34, 2124, 9, 11, 8, name: "Door Velryn")
 # He paces a few steps up and down the lower street (no longer a chase across
 # town) and runs into you: touching him, or him touching you, starts it (notes/01 S2).
 b.event(18, 30, "Boy", [
-  { graphic: "Followers/MIGHTYENA", direction: 4, trigger: 2, step_anime: true, move_speed: 3, move_frequency: 3,
+  { graphic: "Followers/BOY", direction: 4, trigger: 2, step_anime: true, move_speed: 3, move_frequency: 3,
     move_route: [[2, []], [2, []], [15, [30]], [3, []], [3, []], [15, [30]]],
     script: "FT.boy_sled_dog(@event_id)" },
   { switch: 4043, graphic: "", through: true }
 ])
+# He spots you three tiles out either side of his stretch of street: a bark,
+# "!", and he runs to you (notes/14 E1, E2).
+[13, 21].each { |x| [30, 31].each { |y| b.event(x, y, "Boy's street", [{ trigger: 1, through: true, script: "FT.boy_spots_you" }]) } }
+b.sign(42, 34, :velryn_sign)
 b.cutscene(33, 20, :targos_arrival)                                    # the ship docks at the long pier
 b.npc(8, H - 4, "BWPoliceman", :targos_gate_guard, dir: 2)
 b.npc(9, H - 4, "BWPoliceman", :targos_gate_guard, dir: 2)

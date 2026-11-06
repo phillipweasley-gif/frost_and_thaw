@@ -57,6 +57,7 @@ module FrostThaw
     },
     closed_off: ["That way is closed off."],
     targos_barricade: ["A barricade of frozen crates and sledges blocks the road north."],
+    velryn_sign: ["THE VELRYNS - Scrimshaw carved to order. Knock loud; we're usually in the back."],
     targos_sign_square: ["TARGOS - Seat of Speaker Naerth Maxildanarr.", "Visitors are asked to mind their purses."],
     targos_sign_hall: ["TARGOS TOWN HALL", "Speaker Naerth Maxildanarr. Petitions heard by appointment. Challengers welcome."],
 

@@ -71,6 +71,19 @@ module FrostThaw
     say(["The Spheal by the door looks past you, at the door. Waiting for somebody."])
   end
 
+  # Boy spots you from three tiles off: a bark, "!", and he runs to you before
+  # his scene (045_MountainClimb.rb) says he does (notes/14 E1, E2). Once.
+  def boy_spots_you
+    return if flag?(:boy_spotted) || !flag?(:arrived_targos) || ($game_switches[4043] rescue false)
+    boy = Stage.find("Boy")
+    return if !boy
+    set_flag(:boy_spotted)
+    Stage.cry(:GROWLITHE)                 # (a stand-in bark until there's a sled dog's)
+    Stage.emote(boy, :exclaim)
+    Stage.approach(boy)
+    boy_sled_dog(boy.id) if respond_to?(:boy_sled_dog)
+  end
+
   # Kip calls out once as you pass his alley (notes/01 S7).
   def kip_passby
     return if flag?(:kip_hint) || flag?(:met_kip)

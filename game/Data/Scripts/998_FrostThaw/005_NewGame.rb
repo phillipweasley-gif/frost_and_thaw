@@ -256,7 +256,9 @@ module FrostThaw
     when :meat_meat then return meat_meat_prologue(h)
     when :wyn       then return wyn_prologue
     end
-    backdrop(:ship) if scene_art?(:ship)        # a ship's deck at night (art request; the Dale until then)
+    # The ship's deck at night (notes/00 E22). Meat Meat's hay and Wyn's Sap
+    # Gate are not on a ship, so those openings keep their own pictures.
+    backdrop(:ship)
     pbMessage(_INTL(RIME_BOX))
     pkmn = nil
     if h[:starter]
@@ -379,7 +381,9 @@ module FrostThaw
     mirror:    "newmoonIsland"                       # falling through the glass
   }
 
+  # A picture that won't load falls back to the frozen Dale, never to black.
   def backdrop(name)
+    name = :dale if name != :dale && !scene_art?(name)
     pbBGMPlay(SCENE_MUSIC[name]) if SCENE_MUSIC[name] rescue nil
     clear_backdrop
     @backdrop_vp = Viewport.new(0, 0, Graphics.width, Graphics.height)
@@ -388,6 +392,7 @@ module FrostThaw
     @backdrop.bitmap = RPG::Cache.load_bitmap("Graphics/Pictures/FrostThaw/", "scene_#{name}")
   rescue StandardError => e
     log("Backdrop #{name} failed: #{e.message}")
+    backdrop(:dale) if name != :dale
   end
 
   def clear_backdrop
