@@ -734,7 +734,10 @@ module FrostThaw
   end
 
   # SC 5.07 - The ghost with her face (Alberica's future self; never confirmed in
-  # Act I). On the path now (the Heart's door waits for her), and in two beats
+  # Act I). The ghost IS Alberica (owner's decision 6, 2026-11-06): old, Keeper
+  # of Time, she came back to keep the Order's post (the epilogue's coda), and
+  # died here with the Order's last when the gnolls came. Her story hints at
+  # the loop (she was here once, young, with friends) without naming her. On the path now (the Heart's door waits for her), and in two beats
   # with an action between (context 05 M5-8): one, the Heart, the wolves, the
   # hag's plan and Reptin's choice; then you take what she left on the bier;
   # two, the blessing, the tips, the rule and the prophecy.
@@ -755,7 +758,8 @@ module FrostThaw
          "When she turns, she has Alberica's face, decades older.",
          me ? "(You have my face.)" : "ALBERICA: You have my face.",
          "GHOST: I borrowed it. I'll give it back when you're done.",
-         "GHOST: I am the last guardian of the Order of Life and Death."])
+         "GHOST: I am the last guardian of the Order of Life and Death.",
+         "GHOST: I came to it late, and old. I'd stood here once before. Young, with friends."])
     if counter(:loop_count) > 0
       say(["GHOST: (quieter) You held her still. I know. I'm the one who held her.",
            "GHOST: Holding isn't keeping. Find the song."])
@@ -778,7 +782,8 @@ module FrostThaw
          "GHOST: We swore never to use it lightly. More a promise than a weapon.",
          "GHOST: Then the gnolls came, who pray to a hyena-headed demon. They broke in, laughing.",
          cl(:shade, "(very quiet) The feast hall."),
-         "GHOST: My companions died there. I sealed the doors, and gave myself to the wards."].compact)
+         "GHOST: The last of the Order died there, old like me.",
+         "GHOST: I sealed the doors, and gave myself to the wards."].compact)
     ghost_questions
     # the wolves, the charge, and the door she means
     say([rep ? "GHOST: (to you) And you. Child of the wolf." : "GHOST: (to Reptin) And you. Child of the wolf.",

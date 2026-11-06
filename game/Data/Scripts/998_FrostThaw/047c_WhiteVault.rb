@@ -145,12 +145,12 @@ module FrostThaw
     if al
       say(["You say it very quietly.",
            seen ? "(Wings over a frozen eye. The vault you saw in the well.)" : "(Wings over a frozen eye. You've dreamed that door.)",
-           "Your hand goes to your throat, where the pendant used to hang. Something cold pulses there."])
+           "Your hand goes to your throat, where the pendant hung. Something cold pulses there."])
       speak(:alberica, "Gran's door. The one that had to stay shut.", "...I know that door.")
     elsif with_or_is?(:alberica)
       say([seen ? "ALBERICA: (very quietly) Wings over a frozen eye. The vault I saw in the well." :
                   "ALBERICA: (very quietly) Wings over a frozen eye. I've dreamed that door.",
-           "At her throat, where the pendant used to hang, something cold pulses. Brightest facing north.",
+           "Where her pendant used to hang, something cold pulses. Brightest facing north.",
            "ALBERICA: (a hand at her throat) Gran's door. The one that had to stay shut."])
     end
     if with_or_is?(:alberica)
@@ -270,12 +270,12 @@ module FrostThaw
     place = where.sub(/^./, &:upcase)
     case relics_left
     when 3
-      say(["A shard of black ice #{where}, in a nest of frost-runes. It hums with her cold.",
+      say(["A shard of black ice #{where}.", "It sits in a nest of frost-runes, and hums with her cold.",
            "The frost-runes are fresh. The Halo carried it in while Selrae was their prisoner."], event_id)
       sayc([cl(:alerion, "(a hand on his chest) It's beating. In time with Sephek."),
             cl(:wyn, "...It's taking from the tree. Like a tick. While it stands, he gets back up.")])
     when 2
-      say(["#{place}, the second shard of black ice. Fresh runes, still wet."], event_id)
+      say(["#{place}: the second shard. Fresh runes, still wet."], event_id)
       sayc([cl(:alerion, "(a hand on his chest) Same beat. Faster. He knows we're here."),
             cl(:meat_meat, "Tick. Meat Meat squashes ticks.")])
     else
@@ -373,8 +373,8 @@ module FrostThaw
     al = herald?(:alberica)
     say(["The sigil sinks into the ice. The frozen eye opens, and looks at #{al ? 'you' : 'Alberica'}.",
          "Under the eye, a hollow in the door: a teardrop, the size of a pendant."])
-    say([al ? "Frost gathers in the hollow of your throat, and hardens, and it's there: the Pendant of Black Ice." :
-              "Frost gathers in the hollow of Alberica's throat, and hardens, and it's there: the Pendant of Black Ice."])
+    say([al ? "Frost gathers in the hollow of your throat, and hardens." : "Frost gathers in the hollow of Alberica's throat, and hardens.",
+         "And it's there: the Pendant of Black Ice."])
     cline(:alberica, "I threw you in the sea once. You came back. Of course you came back.", "...Of course you came back.")
     give_key(:FT_BLACKPENDANT) rescue nil
     set_flag(:vault_eye_open)
@@ -543,9 +543,9 @@ module FrostThaw
             "It goes out like a spark in snow.",
             cl(:meat_meat, "That is for Razzy's voice. Meat Meat stamped. Meat Meat is DONE.")])
     else
-      sayc(["Behind the throne the ice wall goes silver, then clear, then it's a mirror, and she steps out of it."])
+      sayc(["Behind the throne the ice wall turns to a mirror, and she steps out of it."])
       av = (Stage.actor(:avarice, $game_player.x + 1, $game_player.y - 4, 2) rescue nil)
-      sayc(["A woman of crystal, framed in machinery, white hair, infernal sigils, a smile like arithmetic.",
+      sayc(["A woman of crystal in machinery: white hair, infernal sigils, a smile like arithmetic.",
             herald?(:alberica) ? "You're on your knees. You don't believe it. (No. No, we watched you burn.)" :
                                  cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
             # the one secret you kept alone (Ch8, "Nobody else noticed"), come due (context 13 M13-5)

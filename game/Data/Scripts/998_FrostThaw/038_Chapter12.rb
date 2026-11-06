@@ -425,8 +425,8 @@ module FrostThaw
         speak(:alberica, "My family made a bargain with Auril, long ago. Our village never drew a name.")
         speak(:alberica, "No lottery. No frost in the wells. Two years of Rime, and we ate every night.")
         say(["You touch the empty place at your throat, where the pendant used to hang."])
-        speak(:alberica, "The price was a door. The White Vault, up in the ice. It stays shut, we stay spared.")
-        speak(:alberica, "The pendant was its key. \"Keep it close,\" Gran said. \"It keeps the far future out.\"")
+        speak(:alberica, "The price was a door. The White Vault. It stays shut, and we stay spared.")
+        speak(:alberica, "Gran kept the key: the pendant. \"Keep it close. It keeps the far future out.\"")
         say([who == :reptin ? "REPTIN: (very gently) Then tomorrow we find out together. That's the price of me." :
                               "#{name}: (very quietly) Then tomorrow we find out what's behind it. Together."])
       else
@@ -441,8 +441,8 @@ module FrostThaw
          "ALBERICA: My family made a bargain with Auril, long ago. Our village never drew a name.",
          "ALBERICA: No lottery. No frost in the wells. Two years of Rime, and we ate every night.",
          "She touches the empty place at her throat, where the pendant used to hang.",
-         "ALBERICA: The price was a door. The White Vault, up in the ice. It stays shut, we stay spared.",
-         "ALBERICA: The pendant was its key. \"Keep it close,\" Gran said. \"It keeps the far future out.\"",
+         "ALBERICA: The price was a door. The White Vault. It stays shut, and we stay spared.",
+         "ALBERICA: Gran kept the key: the pendant. \"Keep it close. It keeps the far future out.\"",
          "The stove ticks. Out on the ice, Razzilith sighs in his sleep."])
     say(["ALBERICA: Those sigils in your bag hum at that door. I've heard them. I've said nothing."]) if sig > 0
     say(["ALBERICA: Nobody ever said what's behind it. I think tomorrow she'll tell me herself."])
@@ -568,13 +568,14 @@ module FrostThaw
       return say(["NASS: The safe way's past the third row of the dead.",
                   "NASS: Up, not down. Up is always the way out of here."], event_id)
     end
-    say(["NASS: (a ghost in wizard's robes) You're not with Vellynne? ...Good.",
+    say(["NASS: (a ghost in wizard's robes) You're not with her? The frost woman? ...Good.",
          "NASS: The orb in my hands talks. Too much. Free it, and I'll show you the safe way up."], event_id)
     able = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && pk.moves.any? { |m| m && ((GameData::Move.get(m.id).type rescue nil).then { |t| t == :FIGHTING || t == :FIRE }) } }
     return say(["(The ice is thick. A Fighting or Fire move would crack it.)"]) if !able
     return if !pbConfirmMessage(_INTL("Have {1} break Nass's block?", able.name))
     sayc(["#{able.name} hits the block. It splits top to bottom with a sound like a bell.",
           "PROFESSOR SKANT: (from the orb, very fast) Finally! Do you know how long I've held that thought?",
+          "A talking orb. A wizard's familiar, from the sound of it.",
           "PROFESSOR SKANT: Four hundred and eleven years. I'll tell you the thought later. It's a good one.",
           "NASS: (fading) Up, not down. Up is always the way out of here.",
           cl(:reptin, "Lovely to meet you both. We'll be going. Up, apparently.")])
@@ -612,7 +613,7 @@ module FrostThaw
     shortcuts << "Nass's safe way up" if flag?(:skant_freed)
     shortcuts << "Ukuma's back door" if flag?(:ukuma_raced)
     say(lines_for(:grimskalle_jaw), event_id)
-    say(["(Your shortcuts: #{shortcuts.join('; ')}. None of them skips a Test.)"]) if !shortcuts.empty?
+    say(["(Your shortcuts: #{shortcuts.join('; ')}.)", "(Each makes the climb easier. None of them skips a Test.)"]) if !shortcuts.empty?
     return if !pbConfirmMessage(_INTL("Go into Grimskalle?"))
     set_flag(:grimskalle_entered)
     add_counter(:story_beats)
