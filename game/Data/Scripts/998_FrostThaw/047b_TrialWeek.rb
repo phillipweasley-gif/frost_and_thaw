@@ -63,8 +63,11 @@ module FrostThaw
     guild_vault_sealed: ["A door of banded root, set deep in the rock. The Guild of Roots and Stone's seal is on it.",
                          "Something behind it hums, very faintly. Not your business. Not today."],
     maze_pane: ["Ice, polished like a mirror. Your reflection is a heartbeat late."],
-    beyond_snow: ["Snowflakes hang in the air. You walk through them and they don't move; they part, and stay parted."],
-    beyond_waves: ["A wave on the lake, frozen mid-crest, taller than a house.", "In its face: constellations that don't match any sky."],
+    # (after the end the Wall is down and time moves here again: context 13 M13-8)
+    beyond_snow: -> { FrostThaw.flag?(:game_complete) ? ["Snow, falling the ordinary way. Where the Wall stood, nothing stops it now."] :
+                                                       ["Snowflakes hang in the air. You walk through them; they part, and stay parted."] },
+    beyond_waves: -> { FrostThaw.flag?(:game_complete) ? ["A wave on the lake, slumped into slush and broken ice.", "It froze mid-crest for four hundred years. It's falling now, slowly."] :
+                                                        ["A wave on the lake, frozen mid-crest, taller than a house.", "In its face: constellations that don't match any sky."] },
     drowned_hall_sign: ["A carved beam, half under ice: DOUGAN'S HOLE - MEAD HALL.", "The rest of the village is under four hundred years of frost."],
     leaf_gap: ["A shelf of crystal leaves, humming in different tones. One gap, the shape of a leaf.",
                "The edges of the gap are burned with frost."]
@@ -393,7 +396,8 @@ module FrostThaw
            as(:wyn, "It doesn't mean to frighten anyone. It just doesn't know what else to do with them.")])
       c = pbMessage(_INTL("Pacify it?"), [_INTL("Offer it a memory of Wyn's"), _INTL("Feed it your Pokémon's strength"), _INTL("No")], 0)
       if c == 0
-        speak(:wyn, "(to the colony) Here. The night Hyphora called me. The spores singing my name. Take it. It's a good one.",
+        speak(:wyn, herald?(:wyn) ? "(to the colony) The night the spores went quiet. Then the snow. Take it. It's a good one." :
+                                    "(to the colony) Here. The night Hyphora called me. The spores singing my name. Take it.",
               "...Take this one. It's a good one.")
         say(["The colony goes quiet. Its eyes close, one by one, like lanterns going out."])
       elsif c == 1
@@ -468,7 +472,8 @@ module FrostThaw
     talk_ok = challenge("She stops. She's watching Wyn.", ["Let Wyn speak, gently, through the spores", "Draw a weapon", "Ask her what she wants"], [0, 2])
     if talk_ok
       say([as(:wyn, "(through the spores, very softly) ...You're so cold. Who made you carry that?"),
-           "GHOST: (a voice like water under ice) The Halo. Fifty years ago. A shard of the Mother's glass. I wasn't to put it down.",
+           "GHOST: (like water under ice) The Halo. Fifty years ago. A shard of the hag's glass.",
+           "GHOST: Mother Thruuna's. I wasn't to put it down.",
            "GHOST: I fell through. I'm still holding it. I can't let go."])
     else
       say(["She raises the mirror-blade. The shards in it scream."])
@@ -504,8 +509,8 @@ module FrostThaw
     say(lines_for(:leaf_gap), event_id)
     if !flag?(:leaf_quest)
       say(["EIRWEN: (barefoot, gasping) One of the chronal leaves is missing. Torn from Alberica's own timeline.",
-           "EIRWEN: Without it, a sliver of reality will unravel. Her sliver.",
-           "EIRWEN: I felt a ripple when a Rootwarden went missing beyond the Auroral Wall. Could the leaf be with them?",
+           "EIRWEN: Without it, her days come loose. A year of her, gone, like a torn-out page.",
+           "EIRWEN: A Bough patrol went out past the Wall the night it went. They never came back.",
            cl(:alberica, "(a hand on the shelf, very pale) ...Somebody's walking round with a piece of my life in their pocket. I'd like it back.")])
       set_flag(:leaf_quest)
       side_goal(:leaf, "The chronal leaf: across the Glasswater, through the Auroral Wall.", done: :leaf_restored)
@@ -529,6 +534,13 @@ module FrostThaw
 
   # The boat across the Glasswater (to the Wall).
   def glasswater_boat(event_id = nil)
+    if flag?(:game_complete)
+      # The Wall is down (context 13 M13-8): the boat crosses to where it stood. No Wall, no frozen time.
+      say(["An old fisher's boat, half in the reeds. The lake is open water now, all the way north."], event_id)
+      return if !pbConfirmMessage(_INTL("Row across, to where the Wall stood?"))
+      say(["You row across. Where the Wall stood there's only snow, and the north beyond it."])
+      return transfer(2163, 4, 20, 6)
+    end
     say(["An old fisher's boat, half in the reeds. The lake is half thawed, half frozen, all of it still."], event_id)
     return if !pbConfirmMessage(_INTL("Row across, to the Auroral Wall?"))
     if flag?(:lake_ghost_rested)
@@ -552,6 +564,13 @@ module FrostThaw
   end
 
   def scene_beyond_wall
+    if flag?(:game_complete)
+      return if flag?(:wall_site_entered)
+      set_flag(:wall_site_entered)
+      return sayc(["Where the Wall stood. The snow falls here now, the ordinary way.",
+                   "The frozen waves have slumped into the lake. Under the ice, the old village is thawing.",
+                   cl(:reptin, "(very quietly) Dougan's Hole. Four hundred years, and it's only weather now.")])
+    end
     return if flag?(:beyond_entered)
     set_flag(:beyond_entered)
     add_counter(:story_beats)
@@ -565,7 +584,7 @@ module FrostThaw
   # Frozen-time hazards: three successes before two failures.
   def time_hazard(n, event_id = nil)
     key = :"time_hazard_#{n}"
-    return say(lines_for(:beyond_snow), event_id) if flag?(key)
+    return say(lines_for(:beyond_snow), event_id) if flag?(key) || flag?(:game_complete)
     st = (state[:beyond] ||= { ok: 0, bad: 0 })
     prompt, opts = [["The path forks between two frozen waves.", ["Follow the old fence-posts under the ice", "Follow the light", "Climb the wave"]],
                     ["A sound behind you: your own voices, from a moment ago.", ["Keep walking; don't look back", "Turn round", "Answer them"]],
@@ -659,7 +678,7 @@ module FrostThaw
       return if !boss_battle(named_mon(:B92H449, 57, "Temporal Guardian"))
     end
     say(["The chest opens. Inside, under frost: a scrap of hide painted with lines of frost that won't melt.",
-         "A fragment of a map: the Draconic Vault. A glacier, north, and a door with wings on it."])
+         "A fragment of a map: the White Vault. A glacier, north, and a door with wings on it."])
     set_flag(:vault_map_3)
     add_counter(:story_beats)
     grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and slick sap: no more sliding.") if !blessing?(:still_sky)
@@ -668,6 +687,10 @@ module FrostThaw
 
   # GQ4.4: the aurora flickers; get back before the Wall closes.
   def beyond_return(event_id = nil)
+    if flag?(:game_complete)
+      say(["You walk back south, to the Glasswater's far shore."], event_id)
+      return transfer(2078, 26, 12, 4)
+    end
     say(["Behind you the aurora flickers. The Wall is closing."], event_id)
     if !challenge("Get back to the Wall!", ["Run together, holding hands", "Every one for themselves", "Wait for it to steady"], 0)
       say(["You're too slow. The world stops round you, and something stands up out of the stopped snow."])
