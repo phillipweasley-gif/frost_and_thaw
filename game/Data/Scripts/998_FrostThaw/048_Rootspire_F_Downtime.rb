@@ -454,7 +454,7 @@ module FrostThaw
     Stage.overlay_off("O-01", fade: 10) rescue nil
     set_flag(:brightmane_answered)
     set_flag(:chardalyn_vision)
-    sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. And a fire. I'll know it when I see it."),
+    sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. And a fire, under all of it."),
           cl(:alerion, "Chardalyn. Demon-crystal. If it's under the tree, somebody put it there.")].compact)
     true
   end
@@ -668,6 +668,7 @@ module FrostThaw
     # (the Codex day and the carousing are two days: context 15 §5)
     if state[:rs_day] && respond_to?(:festival_nights_left) && festival_nights_left > 2 && !flag?(:festival_night)
       state[:rs_day] += 1
+      (state[:dt_day] ||= {})[:alberica] = rs_day if with_or_is?(:alberica)   # (she spent both days)
       n = festival_nights_left
       say(["(Two days go by like that. The festival's last night is in #{n} night#{n == 1 ? '' : 's'}.)"])
     end
