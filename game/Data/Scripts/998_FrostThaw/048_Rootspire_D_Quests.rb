@@ -152,6 +152,7 @@ module FrostThaw
   def rheven_hall(event_id = nil)
     if !flag?(:rheven_counselled)
       say(["Rheven stands at the edge of the training yard, arms folded, watching the archers without seeing them.",
+           herald?(:wyn) ? "RHEVEN: (not looking round) Wyn. Good. You're back. Listen." : nil,
            "RHEVEN: The tree screams in my dreams. Every night now. Like something's eating it from under.",
            "RHEVEN: I think the Heartroot's woken. Not the tree. The root. And I think it's hungry.",
            "RHEVEN: If it's become a thing that eats, I'll burn it out. The whole root. Even if the tree dies with it.",

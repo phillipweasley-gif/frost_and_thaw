@@ -15,7 +15,7 @@ module FrostThaw
     case n
     when 0
       say(["A Rootwarden initiate with short platinum braids and ice-bitten hands nearly walks into you.",
-           "TALWYN: Oh! Heralds! I'm Talwyn, Talwyn Frostrill, initiate, Bough circle, well, nearly, I can help, I'm a guard,",
+           "TALWYN: Oh! #{herald?(:wyn) ? 'Wyn! And Heralds' : 'Heralds'}! I'm Talwyn, Talwyn Frostrill, initiate, Bough circle, well, nearly, I can help, I'm a guard,",
            "TALWYN: junior guard, nearly-guard. Do you need anything guarded? I'm very good at standing near things.",
            "She fidgets with her belt the whole time."], event_id)
       set_switch(SW_TALWYN_FIELDS, true)

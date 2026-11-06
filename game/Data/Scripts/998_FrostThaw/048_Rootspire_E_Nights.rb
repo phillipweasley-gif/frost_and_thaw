@@ -376,6 +376,7 @@ module FrostThaw
   def night_runaway_warden
     sayc(["A crash downstairs. A young Rootwarden has fallen through the Hearth's door, grey-faced, shaking.",
           "The veins in her hands glow a dull red, like coals under ash.",
+          herald?(:wyn) ? "(Til. Two years below you at the Hall. She used to steal your bread.)" : nil,
           "ROOTWARDEN TIL: Don't... don't take me back to the Hall. They'll say I deserted. I just... I touched the crates.",
           "ROOTWARDEN TIL: Black grit. Warm. From the docks. It got in my cuts and now it's in me."])
     if with_or_is?(:reptin)
