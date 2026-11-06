@@ -257,7 +257,7 @@ module FrostThaw
     end
 
     def update
-      update_summoned if !@summoned.empty? || !@leaving.empty? || (@actors && !@actors.empty?)
+      update_summoned if !@summoned.empty? || !@leaving.empty? || (@actors && !@actors.empty?) || (@moved && !@moved.empty?)
       update_overlays if @overlays && !@overlays.empty?
       return if @fx.empty? && !@panel
       @fx.dup.each do |f|
@@ -492,6 +492,7 @@ module FrostThaw
       @actors.clear
       @summoned.clear
       @leaving.clear
+      @moved&.clear
       if @hid_player
         $game_player.transparent = false rescue nil
         @hid_player = false
@@ -659,6 +660,13 @@ module FrostThaw
     # Walk up to the player (or another character) and face them.
     def approach(ev, target = $game_player)
       return if !ev || !target
+      # A map character who walks up to you goes back to its place once you have
+      # control again (send_moved_home), as a reload would put it: left beside
+      # you, solid, it could close the only way out (Selrae in the Hall's aisle).
+      # Scenes that walk someone to a set place (walk_to) leave them there.
+      if ev.is_a?(Game_Event) && !@actors.key?(ev.id) && target.equal?($game_player)
+        (@moved ||= {})[ev.id] ||= [ev, ev.x, ev.y, ev.direction]
+      end
       walk_to(ev, target.x, target.y, adjacent: true)
       turn_to(ev, target)
       turn_to(target, ev) if target.equal?($game_player)
@@ -920,6 +928,68 @@ module FrostThaw
       @hold = false
     end
 
+    # Map characters who walked up to you: once you have control, if they stand
+    # between you and ground you could otherwise reach, each walks back to where
+    # it stood (straight there if the way is shut). Otherwise they stay put.
+    def send_moved_home
+      busy = @hold || ($game_system.map_interpreter.running? rescue false) || ($game_temp.message_window_showing rescue false) ||
+             ($game_map.events.values.any?(&:starting) rescue false)
+      return if busy
+      live = @moved.values.select { |ev, *_| $game_map.events[ev.id].equal?(ev) && !ev.instance_variable_get(:@erased) }
+      return @moved.clear if live.empty?
+      # Only if they wall you in: most stay where they came to talk to you.
+      if !walls_you_in?(live.map(&:first))
+        @moved.clear
+        return
+      end
+      live.each do |ev, hx, hy, hd|
+        next if ev.move_route_forcing
+        next if ev.x == hx && ev.y == hy
+        next if $game_player.x == hx && $game_player.y == hy     # (you're standing in its place: leave it be)
+        dirs = path_for(ev, hx, hy) rescue nil
+        if dirs && !dirs.empty?
+          pbMoveRoute(ev, dirs.map { |d| MOVE[d] } + [TURN[hd]].compact) rescue nil
+        else
+          ev.moveto(hx, hy) rescue nil
+          ev.direction = hd rescue nil
+        end
+      end
+      @moved.clear
+    rescue StandardError => e
+      log("send_moved_home: #{e.message}")
+      @moved&.clear
+    end
+
+    # Whether these characters cut you off from ground you could reach without
+    # them (a flood fill from where you stand, with and without them).
+    def walls_you_in?(evs)
+      reach = lambda do
+        seen = { [$game_player.x, $game_player.y] => true }
+        q = [[$game_player.x, $game_player.y]]
+        until q.empty? || seen.size > 4000
+          x, y = q.shift
+          DIRS4.each do |d, (dx, dy)|
+            nx, ny = x + dx, y + dy
+            next if seen[[nx, ny]] || !$game_map.valid?(nx, ny)
+            next unless $game_player.passable?(x, y, d)
+            seen[[nx, ny]] = true
+            q << [nx, ny]
+          end
+        end
+        seen.size
+      end
+      with = reach.call
+      was = evs.map(&:through)
+      evs.each { |e| e.through = true }
+      without = reach.call
+      evs.zip(was).each { |e, t| e.through = t }
+      without > with + 4
+    rescue StandardError => e
+      log("walls_you_in?: #{e.message}")
+      false
+    end
+    DIRS4 = { 2 => [0, 1], 4 => [-1, 0], 6 => [1, 0], 8 => [0, -1] }
+
     # Called every frame: once the player has control again, the companions who
     # walked in step back out and go.
     def update_summoned
@@ -928,6 +998,7 @@ module FrostThaw
       # after a scene (the orb's visions, the Canticle in the Hall) boxed the
       # player into a corner with no way out but a map change.
       @actors.each_value { |ge| ge.through = true if !ge.through && !ge.move_route_forcing } if @actors && !@actors.empty?
+      send_moved_home if @moved && !@moved.empty?
       return if @summoned.empty? && @leaving.empty?
       @leaving.dup.each do |pair|
         pair[1] -= 1
