@@ -6,7 +6,7 @@
 # Its maps live in Data/FrostThaw; nothing in the base game is changed.
 #===============================================================================
 module FrostThaw
-  VERSION = "0.7.4"
+  VERSION = "0.7.5"
 
   MAP_FOLDER   = "Data/FrostThaw"
   FIRST_MAP_ID = 2000          # every map id from here up belongs to Frost & Thaw
