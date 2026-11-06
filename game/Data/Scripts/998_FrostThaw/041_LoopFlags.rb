@@ -95,3 +95,9 @@ module FrostThaw
   LOOP_ACT1_FLAGS.concat(%i[met_sephek_torgs watch_shade shimmer_lied jet_told]).uniq!
   LOOP_ACT2_FLAGS.concat(%i[met_sephek_torgs watch_shade shimmer_lied jet_told]).uniq!
 end
+
+# g (Chapters 12-13 context build, 2026-11-06): no new Act I or Act II flags.
+# The new ones are all set in Act III (the dock's camp_view_* and bargain_*,
+# auril_saw_you / auril_answered_*, the Vault's vault_eye_open,
+# vault_door_unlocked, pendant_returned), after the last loop skip point, so
+# they replay with the story and stay out of these lists on purpose.

@@ -34,7 +34,8 @@
 #     Sporechime          key item: chimes when a trainer on this map still
 #                         wants to battle you.
 #     Auroral Mote        a treasure: sells for 2,500.
-#     Frostshard Sigil    key item: one of the three keys to the White Vault.
+#     Frostshard Sigil    key item: one of the three that find and wake the White
+#                         Vault's door (Alberica's pendant opens it: 047c).
 #===============================================================================
 module FrostThaw
   # id => [name, plural, pocket, price, description, field_use, battle_use, type]
@@ -59,7 +60,7 @@ module FrostThaw
     FT_AURORALMOTE: ["Auroral Mote", "Auroral Motes", 1, 5000,
       "A bottled mote of the northern lights from the Aerie Markets. Collectors pay well for one.", 0, 0, 0],
     FT_FROSTSIGIL: ["Frostshard Sigil", "Frostshard Sigils", 8, 0,
-      "A crystal that hums near the Heartroot. One of three keys to the White Vault beyond the Auroral Wall.", 0, 0, 6]
+      "A crystal that hums near the Heartroot. One of three sigils that find the White Vault's door, far in the north, and wake it.", 0, 0, 6]
   }
   RELIC_ITEM_NUMBER = 9100
 

@@ -71,15 +71,35 @@ module FrostThaw
     voyage
   end
 
+  # A Herald's line where someone answers it: theirs if they're with you, your
+  # own words (you pick how to say them) if you are them, nothing if they're
+  # not here (WRITING_GUIDE §5).
+  def cline(key, loud, quiet = nil)
+    return if !with_or_is?(key)
+    herald?(key) ? speak(key, loud, quiet) : say([as(key, loud)])
+  end
+
+  # The rival's send-off (context 12 M12-4): Tamsin runs in to square up one
+  # last time and owns up to knowing you're the sixth figure; Hellen walks in
+  # with the food the Tests will use. Both on screen, both walk off.
   def tamsin_final
-    sayc(["TAMSIN: (blocking the way, their Rootwarden cloak on crooked) Hold it. HOLD it.",
-          "TAMSIN: You're going to fight a GOD. With THAT team? Not without one more battle first.",
-          cl(:alberica, "Look at them. All grown up and threatening people. I could cry."),
-          cl(:reptin, "They mean they'll miss us. That's how Tamsin says it."),
+    px, py = $game_player.x, $game_player.y
+    Stage.theme(:tamsin)
+    tam = Stage.actor(:tamsin, px + 4, py, 4)
+    if tam
+      Stage.walk_to(tam, px + 3, py, face: 4)     # (past the tiles companions walk in to)
+      Stage.emote(tam, :exclaim)
+    end
+    sayc(["TAMSIN: (cloak on crooked, planting their feet) Hold it. HOLD it, #{player_display_name}!",
+          "TAMSIN: You're going to fight a GOD. With THAT team? Not without one more battle first."])
+    cline(:alberica, "Look at them. All grown up and threatening people. I could cry.", "...Look at them. All grown up.")
+    sayc([cl(:reptin, "They mean they'll miss us. That's how Tamsin says it."),
           "TAMSIN: I mean I'll WIN."])
-    if journey?
-      say(["TAMSIN: Also. That's you. On Hellen's wall. The sixth figure.",
-           "TAMSIN: I've known since you fell out of the lantern. I just wanted you to say it."])
+    if outsider?
+      say([herald?(:wyn) ? "TAMSIN: Also. Hellen's wall. The sixth figure. It's got a Sableye on its boot." :
+                           "TAMSIN: Also. Hellen's wall. The sixth figure, the small one with no face.",
+           herald?(:wyn) ? "TAMSIN: I've known since you came back with them. I just wanted you to say it." :
+                           "TAMSIN: I've known since you fell out of the lantern. I just wanted you to say it."])
       c = pbMessage(_INTL("The sixth figure..."), [_INTL("Nod"), _INTL("Say nothing")], 0)
       if c == 0
         say(["TAMSIN: ...I KNEW it. I knew it, I knew it, I KNEW it."]); set_flag(:told_tamsin)
@@ -106,20 +126,93 @@ module FrostThaw
            "TAMSIN: Come back and tell me everything. Every single thing. In order."])
     else
       say(["TAMSIN: (after, very quietly) ...Huh. I didn't think I'd actually win.",
-           "TAMSIN: That's worse. That's so much worse. Train on the boat. Please."])
+           "TAMSIN: That's worse. That's so much worse. Train on the way. Please."])
     end
     sayc([cl(:meat_meat, "Meat Meat will train. Meat Meat will train SO hard. After coffee."),
-          cl(:alerion, "You said that last time."),
-          "HELLEN: (packing food into every bag you own) Nobody saves the Dale on an empty stomach.",
+          cl(:alerion, "You said that last time.")])
+    hel = Stage.actor(:hellen, px + 5, py + 1, 4)
+    Stage.walk_to(hel, px + 3, py + 1, face: 4) if hel
+    sayc(["HELLEN: (packing food into every bag you own) Nobody saves the Dale on an empty stomach.",
           "HELLEN: Eat first. Then heroics.",
+          outsider? ? "HELLEN: (to the Heralds) And bring them back. I've only just got you on the right wall." :
+                      "HELLEN: (to all of you) And come back. I've only just got you on the right wall.",
           cl(:wyn, "...Um. I packed blankets. Extra ones. For after.")])
     give(:FULLRESTORE, 3) rescue nil
+    Stage.leave_all([tam, hel].compact, px + 6, py)
+    Stage.theme(nil)
   end
 
   #-----------------------------------------------------------------------------
-  # SC 12.02 - Fog and masts
+  # SC 12.02 - Fog and masts: the crossing (context 12 M12-3). The Sea of
+  # Moving Ice is seen; two days pass; Razzilith keeps pace (he lands at the
+  # throne); the Wall behind you is your own reason to go; and the owl feather
+  # wakes as she looks up. Ends on Solstice, with Grimskalle named.
   #-----------------------------------------------------------------------------
+  # Whoever carries you north, standing by at the departure point so their lines
+  # have a face (Mira has her own event on the Root-Tier).
+  def voyage_guide(route)
+    px, py = $game_player.x, $game_player.y
+    case route
+    when :griffons
+      roost = stage_event("Griffon roost")
+      x, y = roost ? [roost.x + 1, roost.y] : [px + 1, py]
+      flag?(:council_rheven) ? Stage.actor(:rheven, x, y, 8, graphic: "BW (72)") :
+                               Stage.actor(:kethan, x, y, 8, graphic: "BW (98)")
+    when :whale, :bell
+      bell = stage_event("Wennen bell")
+      x, y = bell ? [bell.x, bell.y - 2] : [px, py - 2]
+      Stage.actor(:angajuk, x, y, 2, graphic: "Followers/WAILORD")
+    end
+  rescue StandardError
+    nil
+  end
+
+  # The guide's name in their line tag, and what Reptin calls them.
+  def voyage_guide_tag(route)
+    case route
+    when :griffons then flag?(:council_rheven) ? "RHEVEN" : "KETHAN"
+    when :ship then flag?(:mira_left_possessed) ? "FIRST MATE" : "MIRA"
+    else "ANGAJUK"
+    end
+  end
+
+  def voyage_crossing(route)
+    tag = voyage_guide_tag(route)
+    say([{ griffons: "Below: the Sea of Moving Ice. Floes the size of towns, grinding past each other.",
+           ship: "Round the hull: the Sea of Moving Ice. Floes the size of towns, grinding past each other." }[route] ||
+           "Round Angajuk: the Sea of Moving Ice. Floes the size of towns, grinding past each other.",
+         "Behind you, the Auroral Wall rings Rootspire like a curtain. From out here, it's thin."])
+    # the Wall is why you go (context 12 §2 adhesive; your own goal, Ch6)
+    if herald?(:wyn)
+      say(["(Your post's in there. Sableye's in there. And it's all inside a wall.)"])
+    elsif !journey?
+      say(["(Out here it's your Dale again, still frozen. Bring her winter round, and the Wall falls.)"])
+    elsif flag?(:promised_their_time) && with_or_is?(:reptin)
+      say(["REPTIN: (to you) Bring her winter round, and that falls. Your promise."])
+    elsif with_or_is?(:alerion)
+      say(["ALERION: (to you) Turn the wheel and that comes down. Remember that."])
+    end
+    say([{ griffons: "Above the clouds a green shape keeps pace: Razzilith, too big to ride a griffon's wake.",
+           ship: "Above the masts a green shape keeps pace: Razzilith, too big for any deck." }[route] ||
+           "Above you a green shape keeps pace: Razzilith, too big for any boat."])
+    sayc([cl(:meat_meat, "Razzy follows. Razzy is not allowed to land first. Meat Meat SAID.")])
+    cline(:alerion, "(a hand to the heart) North. A little east. She's beating louder.", "(a hand to the heart) ...That way.")
+    if with_or_is?(:alerion) && with_or_is?(:reptin)
+      who = { "RHEVEN" => "Captain", "MIRA" => "Captain", "KETHAN" => "Kethan", "FIRST MATE" => "mate" }[tag] || "old one"
+      sayc([cl(:reptin, herald?(:alerion) ? "Our Dragoon steers by heartbeat, #{who}. Do keep up." :
+                                            "He's steering by his dragon's heart, #{who}. Do keep up.")])
+    end
+    # the second day (a fade marks the time)
+    pbFadeOutIn { $game_screen.start_tone_change(Tone.new(-10, -5, 10, 90), 0) rescue nil } rescue nil
+    say(["The second day."])
+  end
+
   def voyage
+    route = voyage_route
+    guide = voyage_guide(route)
+    Stage.turn_to($game_player, guide) if guide
+    say(["#{voyage_guide_tag(route).capitalize} whistles, and the griffons crouch for you to climb on."]) if route == :griffons
+    pbFadeOutIn { $game_screen.start_tone_change(Tone.new(30, 40, 70, 40), 0) rescue nil } rescue nil
     case voyage_route
     when :ship
       paid = flag?(:council_mira) ? nil : flag?(:council_heralds) ? "the Council's warrant" : "Darrus Fell's coin"
@@ -156,20 +249,34 @@ module FrostThaw
         pbFadeOutIn { $Trainer.heal_party } rescue nil
       end
     end
+    voyage_crossing(route)
     say(["Fog comes down. The masts of sunken ships stand up out of it like dead trees."])
-    speak(:alerion, "(at the rail) Every one of those was somebody.", "(at the rail) ...So many.")
+    rail = { griffons: "looking down past the wing", ship: "at the rail" }[route] || "looking down into the water"
+    speak(:alerion, "(#{rail}) Every one of those was somebody.", "(#{rail}) ...So many.")
     if with_or_is?(:reptin) && !herald?(:alerion)
       sayc([cl(:reptin, "He means: be careful."), "ALERION: I meant what I said."])
     end
+    if outsider? && has_key?(:FT_OWLFEATHER)
+      say(["In your pack, the owl feather stiffens with frost, as if something looked up."])
+    end
+    Stage.theme(nil) rescue nil
     say(["The fog parts. An island of ice, shaped like a snowflake. Six jagged arms.",
          "On it, a mountain carved into a giant skull, wearing a crown."])
+    # Grimskalle, joined to the skull (Eirwen's plans named it at the Council)
+    stair = flag?(:council_eirwen) ? " Eirwen's servants' stair is round the back." : " She moved in."
+    say([{ "RHEVEN" => "RHEVEN: Grimskalle. The giants' old fortress.#{stair}",
+           "KETHAN" => "KETHAN: Grimskalle. The giants' old fortress.#{stair}",
+           "MIRA" => "MIRA: Grimskalle. Giants built it. She moved in.",
+           "FIRST MATE" => "FIRST MATE: Grimskalle, that is. Giants built it. Now it's hers." }[voyage_guide_tag(route)] ||
+           "ANGAJUK: Grimskalle. She sat on it the day she took my eye."])
     sayc([cl(:meat_meat, "Meat Meat does not like the skull. The skull is showing off.")])
-    speak(:alberica, "(the rune glowing) She knows we're here. She's watched us the whole way.",
+    speak(:alberica, "(the rune glowing) She knows we're here. She's been counting the #{route == :griffons ? 'wingbeats' : 'miles'}.",
           "(the rune glowing) ...Something's pulling me north. Don't make a thing of it.")
-    sayc([cl(:reptin, "We noticed, darling. You've been glowing since breakfast. It's very festive.")])
+    sayc([cl(:reptin, "We noticed. You've been glowing since breakfast. It's very festive.")])
     set_flag(:solstice_sighted)
     add_counter(:story_beats)
-    state[:goal] = "Solstice. Up to the crowned skull."
+    state[:goal] = "Solstice. Grimskalle, the crowned skull: Frostina is at the top."
+    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
     set_rest_at(SOLSTICE_DOCK)
     transfer(*SOLSTICE_DOCK)
   end
@@ -195,18 +302,154 @@ module FrostThaw
     end
   end
 
-  # The first night on Solstice: whoever's with you, round the camp stove.
+  # The night on the giants' dock (context 12 M12-6), the last rest before the
+  # end. Reptin said they'd decide on the way what to do with Auril: here they
+  # do, each Herald taking a side and its cost, and you take one too (13.10
+  # reads it back). Then Alberica tells you the whole of her family's bargain
+  # (owner's decision 3), the setup the Vault hook pays. Plays once, after Rest.
   def solstice_camp_banter
-    return if flag?(:solstice_camp_talk)
-    lines = [cl(:meat_meat, "This island has no coffee. This island is dead to Meat Meat."),
-             cl(:wyn, "...Um. I brought some. Mushroom. It's still a bit warm, if you hold it close."),
-             (with_or_is?(:wyn) ? cl(:meat_meat, "Mushroom friend. Meat Meat will die for you. Tomorrow, probably.") : nil),
-             cl(:alberica, "Nobody's dying tomorrow, sugar. I haven't finished my drink."),
-             cl(:alerion, "You finished it an hour ago."),
-             (with_or_is?(:alerion) ? cl(:alberica, "Then I'll pour another. Problem solved, pretty boy.") : nil)].compact
-    return if lines.size < 3
+    return if flag?(:solstice_council)
+    party = %i[alberica reptin alerion meat_meat wyn].select { |k| companions.include?(k) }
+    return if party.size < 2
+    set_flag(:solstice_council)
     set_flag(:solstice_camp_talk)
-    say(lines)
+    night = Tone.new(-85, -75, -20, 50)
+    stand = []
+    pbFadeOutIn do
+      $game_screen.start_tone_change(night, 0) rescue nil
+      # round the stove (the camp is the tile in front of you), facing in
+      ring = [[-1, 1, 6], [1, 1, 4], [-1, 0, 2], [1, 0, 2], [0, -1, 2]]
+      party.each_with_index { |k, i| dx, dy, d = ring[i]; stand << [k, stand_in(k, dx, dy, d)] }
+    end rescue nil
+    say(["Night on the giants' dock. Up the ice, the skull's eyes are lit from inside."])
+    sayc([cl(:meat_meat, "This island has no coffee. This island is dead to Meat Meat.")])
+    if with_or_is?(:wyn)
+      cline(:wyn, "...Um. I brought some. Mushroom. It's still a bit warm, if you hold it close.",
+            "...Um. Mushroom coffee? It's still warm.")
+      sayc([cl(:meat_meat, "Mushroom friend. Meat Meat will die for you. Tomorrow, probably.")])
+    end
+    cline(:alberica, "Nobody dies tomorrow, sugar. I've got a song half-written about tomorrow.",
+          "...Nobody dies tomorrow. I've got a song to finish.")
+    if with_or_is?(:alerion)
+      sayc([cl(:alerion, "You finished it an hour ago.")])
+      sayc([cl(:alberica, "Then I'll write another. Problem solved, pretty boy.")])
+    end
+    # what do we do with her? (Reptin's promise at the Shrine: "on the way, we decide")
+    cline(:reptin, "(setting the cup down) I said we'd decide on the way. This is the end of the way.",
+          "(setting the cup down) ...We said we'd decide. So.")
+    cline(:meat_meat, "(a hand on Dawnfang) Meat Meat decided. One stab. No more winters.",
+          "(a hand on Dawnfang) ...Meat Meat would miss snow a little.")
+    cline(:reptin, "Kill a god and her faithful pray her back. Then we do this again, older.")
+    cline(:alberica, "(very still) Or somebody holds her. Keeps her still. I'm good at keeping.",
+          "(very still) ...Or somebody holds her.")
+    cline(:alerion, "No.", "...No. Not you.")
+    cline(:wyn, "...Um. In the spore beds nothing's ever gone. It rests. Then it comes back.")
+    cline(:alerion, "Shimmer told Sephek there was a third way. She never said what it was.")
+    asker = herald?(:reptin) ? :alberica : :reptin
+    if outsider?
+      sayc([cl(asker, asker == :reptin ? "(to you) You've been quiet, dear. And it's your Wall riding on it." :
+                                         "(to you) You've been quiet, wolf. And it's your Wall riding on it.")])
+      if has_key?(:FT_OWLFEATHER)
+        if companions.include?(:wyn)
+          say(["WYN: (very quietly) And she's marked you. Like Alberica. I saw the feather."])
+        elsif companions.include?(:alberica)
+          say(["ALBERICA: (very quietly) And she's marked you. Like me. I saw the feather."])
+        end
+      end
+    else
+      sayc([cl(asker, asker == :reptin ? "(to you) You haven't said, dear." : "(to you) You haven't said, wolf.")])
+    end
+    c = pbMessage(_INTL("What do we do with her?"),
+                  [_INTL("\"End her.\""), _INTL("\"Give winter back its place.\""), _INTL("\"I don't know yet.\"")], 2)
+    case c
+    when 0
+      set_flag(:camp_view_end)
+      if herald?(:meat_meat)
+        sayc([cl(:reptin, "(to you) One vote, dear. A loud one. It's a start.")])
+      else
+        sayc([cl(:meat_meat, "Meat Meat and you. That's two."), cl(:reptin, "Two is a start, dear. Not a vote.")])
+      end
+    when 1
+      set_flag(:camp_view_place)
+      sayc([herald?(:wyn) ? nil : cl(:wyn, "(brightening, a little) ...Like the spore beds."),
+            cl(:alerion, "Then we find out what that means.")])
+    else
+      set_flag(:camp_view_unsure)
+      if herald?(:alberica)
+        sayc([cl(:reptin, "Honest. I'll take honest, the night before.")])
+      else
+        sayc([cl(:alberica, "Good. People who know the night before are liars.")])
+      end
+    end
+    cline(:alerion, "We choose up there. All of us. Nobody does it alone.", "...Up there. All of us.")
+    solstice_bargain(stand) if with_or_is?(:alberica)
+    pbFadeOutIn do
+      Stage.cleanup rescue nil
+      $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
+    end rescue nil
+    say(["Dawn comes up grey over the ice. Up the slope, the skull is waiting."])
+    if !flag?(:statue_fields_entered)
+      state[:goal] = "Grimskalle, the crowned skull. Frostina is at the top. So is Auril."
+    end
+  end
+
+  # Alberica's family bargain, told whole, the night before the end (owner's
+  # decision 3; bible "The family bargain"): her village is spared Auril's
+  # hardships as long as the White Vault stays sealed, and the pendant was the
+  # key her family kept so it would stay that way. What's behind the door, she
+  # doesn't know: the postgame Vault answers that. Playing Alberica, you choose
+  # whether to tell Reptin.
+  def solstice_bargain(stand)
+    me = herald?(:alberica)
+    # the others lie down; Alberica (and, playing her, whoever you'd tell) stays up
+    keep = me ? [(companions.include?(:reptin) ? :reptin : companions.first)] : [:alberica]
+    pbFadeOutIn do
+      stand.each { |k, ev| Stage.remove_actor(ev) if ev && !keep.include?(k) }
+    end rescue nil
+    say([me ? "The others sleep. You don't. Your fingers keep finding the hollow of your throat." :
+              "The others sleep. Alberica doesn't. Her fingers keep finding the hollow of her throat."])
+    sig = sigils_held rescue 0
+    if me
+      who = keep.first
+      nice = who.to_s.split("_").map(&:capitalize).join(" ")
+      name = nice.upcase
+      c = pbMessage(_INTL("{1} is still awake, watching you.", nice),
+                    [_INTL("(Tell {1}.)", nice), _INTL("(Keep it.)")], 1)
+      if c == 0
+        set_flag(:bargain_told)
+        speak(:alberica, "My family made a bargain with Auril, long ago. Our village never drew a name.")
+        speak(:alberica, "No lottery. No frost in the wells. Two years of Rime, and we ate every night.")
+        say(["You touch the empty place at your throat, where the pendant used to hang."])
+        speak(:alberica, "The price was a door. The White Vault. It stays shut, and we stay spared.")
+        speak(:alberica, "Gran kept the key: the pendant. \"Keep it close. It keeps the far future out.\"")
+        say([who == :reptin ? "REPTIN: (very gently) Then tomorrow we find out together. That's the price of me." :
+                              "#{name}: (very quietly) Then tomorrow we find out what's behind it. Together."])
+      else
+        set_flag(:bargain_kept)
+        say(["(Not tonight. Tomorrow, if there is one.)"])
+      end
+      return
+    end
+    set_flag(:bargain_told)
+    say([outsider? ? "ALBERICA: (low, to you) You came in from outside all this. So you get told. Nobody else." :
+                     "ALBERICA: (low, to you) You've known me a month. That's longer than most. So you get told.",
+         "ALBERICA: My family made a bargain with Auril, long ago. Our village never drew a name.",
+         "ALBERICA: No lottery. No frost in the wells. Two years of Rime, and we ate every night.",
+         "She touches the empty place at her throat, where the pendant used to hang.",
+         "ALBERICA: The price was a door. The White Vault. It stays shut, and we stay spared.",
+         "ALBERICA: Gran kept the key: the pendant. \"Keep it close. It keeps the far future out.\"",
+         "The stove ticks. Out on the ice, Razzilith sighs in his sleep."])
+    say(["ALBERICA: Those sigils in your bag hum at that door. I've heard them. I've said nothing."]) if sig > 0
+    say(["ALBERICA: Nobody ever said what's behind it. I think tomorrow she'll tell me herself."])
+    c = pbMessage(_INTL("Alberica waits."), [_INTL("(Listen.)"), _INTL("\"It's not yours to pay.\"")], 0)
+    if c == 0
+      set_flag(:bargain_heard_out)
+      say([herald?(:reptin) ? "ALBERICA: ...Thank you. And don't make a plan, wolf. You will anyway." :
+                              "ALBERICA: ...Thank you. Don't tell Reptin. He'll make a plan."])
+    else
+      set_flag(:bargain_pushed)
+      say(["ALBERICA: (a tired laugh) Everybody says that until it's due. ...Go to sleep."])
+    end
   end
 
   #-----------------------------------------------------------------------------
@@ -217,14 +460,23 @@ module FrostThaw
     sayc(["A ruined dock built for giants.",
           "A small grinning thing made of ice sits on a bollard, kicking its heels.",
           "SOPO: Visitors! Oh, VISITORS! I'm the guide. I guide people. Mostly into holes.",
-          "SOPO: (cackling at nothing) She's expecting you! Everybody's expecting you. Even the dead ones!",
+          "SOPO: (cackling) The Frostmaiden's expecting you! Everybody is. Even the dead ones!",
           cl(:reptin, "Charming. We'll find our own way, thank you."),
           cl(:meat_meat, "Meat Meat will bite it. Not fondly.")], event_id)
     help = flag?(:council_mira) || flag?(:corsair_favour) || voyage_route == :ship   # (the Requiem's crew came too)
     if help
+      # whose sloop that is (context 12 M12-5): the favour from Mira's gym, and
+      # Hellen's note to her where you carried it
       say(["A Corsair sloop slides out of the fog and grinds against the dock.",
-           "Mira's people pile off, shouting, and fall on Sopo's pack.",
-           "CORSAIR: Captain's compliments! The little ones are ours. The giggly one's yours."])
+           "Mira's people pile off, shouting, and fall on Sopo's pack."])
+      px, py = $game_player.x, $game_player.y
+      cor = Stage.actor(:corsair, px + 3, py + 1, 4, graphic: "BW_Sailor")
+      Stage.walk_to(cor, px + 1, py, face: 4) if cor
+      say([flag?(:mira_left_possessed) ? "CORSAIR: The Requiem's compliments. The captain would want it." :
+           flag?(:hellen_note_delivered) ? "CORSAIR: Captain Mira's compliments. The Brightruns' debt, paid." :
+                                           "CORSAIR: Captain Mira's compliments. She pays her debts.",
+           "CORSAIR: The little ones are ours. The giggly one's yours."])
+      Stage.leave(cor, px + 3, py + 1) if cor
       return if !boss_battle(named_mon(:B428H124, 59, "Sopo"))
     else
       return if !pbTrainerBattle(:FT_MEPHIT, "Sopo", nil, false, 0)
@@ -269,7 +521,7 @@ module FrostThaw
     say(["At the far edge, one statue isn't an animal.",
          "A young woman, arms open, smiling into the wind.",
          as(:alerion, "(stopping dead) ...Shimmer."),
-         as(:alberica, "It's her. From the vision. Auril kept her. She kept the moment.")], event_id)
+         as(:alberica, "It's her. Auril kept her. Like a flower pressed in a book.")], event_id)
     speak(:alerion, "(touching the cold cheek) She didn't keep anything. That's not her.",
           "(touching the cold cheek) ...No.", event_id)
     sayc([as(:alerion, "It's what she looked like. Shimmer's in Frostina now. Shade made sure of that."),
@@ -311,13 +563,14 @@ module FrostThaw
       return say(["NASS: The safe way's past the third row of the dead.",
                   "NASS: Up, not down. Up is always the way out of here."], event_id)
     end
-    say(["NASS: (a ghost in wizard's robes) You're not with Vellynne? ...Good.",
+    say(["NASS: (a ghost in wizard's robes) You're not with her? The frost woman? ...Good.",
          "NASS: The orb in my hands talks. Too much. Free it, and I'll show you the safe way up."], event_id)
     able = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && pk.moves.any? { |m| m && ((GameData::Move.get(m.id).type rescue nil).then { |t| t == :FIGHTING || t == :FIRE }) } }
     return say(["(The ice is thick. A Fighting or Fire move would crack it.)"]) if !able
     return if !pbConfirmMessage(_INTL("Have {1} break Nass's block?", able.name))
     sayc(["#{able.name} hits the block. It splits top to bottom with a sound like a bell.",
           "PROFESSOR SKANT: (from the orb, very fast) Finally! Do you know how long I've held that thought?",
+          "A talking orb. A wizard's familiar, from the sound of it.",
           "PROFESSOR SKANT: Four hundred and eleven years. I'll tell you the thought later. It's a good one.",
           "NASS: (fading) Up, not down. Up is always the way out of here.",
           cl(:reptin, "Lovely to meet you both. We'll be going. Up, apparently.")])
@@ -355,7 +608,7 @@ module FrostThaw
     shortcuts << "Nass's safe way up" if flag?(:skant_freed)
     shortcuts << "Ukuma's back door" if flag?(:ukuma_raced)
     say(lines_for(:grimskalle_jaw), event_id)
-    say(["(Your shortcuts: #{shortcuts.join('; ')}. None of them skips a Test.)"]) if !shortcuts.empty?
+    say(["(Your shortcuts: #{shortcuts.join('; ')}.)", "(Each makes the climb easier. None of them skips a Test.)"]) if !shortcuts.empty?
     return if !pbConfirmMessage(_INTL("Go into Grimskalle?"))
     set_flag(:grimskalle_entered)
     add_counter(:story_beats)
@@ -368,6 +621,22 @@ module FrostThaw
     $game_switches[SW_DOCK_CLEARED] = flag?(:dock_cleared)
     $game_switches[SW_TROLL_DOWN] = flag?(:troll_down)
     $game_switches[SW_FIELDS_ROPE] = flag?(:fields_crossed)
+    camp_sprite
+  end
+
+  # The camp on the dock looks like whatever brought you (notes 12 E12): the
+  # griffons in their heap, Angajuk in the water, or the Requiem's sailor.
+  CAMP_SPRITES = { griffons: "Followers/PIDGEOT", whale: "Followers/WAILORD", bell: "Followers/WAILORD" }
+  def camp_sprite
+    return if !$game_map || $game_map.map_id != MAPS[:solstice]
+    g = CAMP_SPRITES[voyage_route] or return
+    ev = stage_event("Your camp") or return
+    page = ev.instance_variable_get(:@event).pages[0] rescue nil
+    return if !page || page.graphic.character_name == g
+    page.graphic.character_name = g
+    ev.instance_variable_set(:@character_name, g)    # (refresh keeps the old page's look)
+  rescue StandardError => e
+    log("camp sprite: #{e.message}")
   end
 end
 
