@@ -269,10 +269,14 @@ module FrostThaw
       end
       speak(:meat_meat, "(very still) That mark. The mirror with the A in it. It was on the cold table.",
                 "(very still) ...That mark. The cold table.")
-      sayc([as(:meat_meat, "On the jars. On the straps. On Meat Meat's arm, once."),
-            mm ? cl(:alberica, "(not touching it) Whose mark, sweetheart? You've gone grey.") :
-                 cl(:alberica, "(not touching it) Whose mark, sweetheart?"),
-            as(:meat_meat, "The lady with books and bones. White hair. Her name starts with it.")].compact)
+      say([as(:meat_meat, "On the jars. On the straps. On Meat Meat's arm, once.")])
+      # Meat Meat answers her, so Alberica's line is spoken (WRITING_GUIDE §5)
+      if mm
+        sayc([cl(:alberica, "(not touching it) Whose mark, sweetheart? You've gone grey.")].compact)
+      elsif with_or_is?(:alberica)
+        speak(:alberica, "(not touching it) Whose mark, sweetheart?", "(not touching it) ...Whose mark?")
+      end
+      say([as(:meat_meat, "The lady with books and bones. White hair. Her name starts with it.")])
       speak(:meat_meat, "Avarice.", "...Avarice.")
       sayc([cl(:alerion, "Naerth's pale lady. Then she came through the glass too.")].compact)
     else
