@@ -848,7 +848,7 @@ module FrostThaw
                "The Council gives her a new title: Keeper of Time. She makes them spell it properly."])
     if flag?(:ending_third_way) && (counter(:wheel) rescue 0).to_i >= 4
       lines << ["The next autumn's Festival of Returning Light.",
-                outsider? ? "All the Heralds, Tamsin#{flag?(:sephek_turned) ? ' and Sephek' : ''}, round one table at the Hearth, and you." :
+                journey? ? "All the Heralds, Tamsin#{flag?(:sephek_turned) ? ' and Sephek' : ''}, round one table at the Hearth, and you." :
                             "All of you, Tamsin#{flag?(:sephek_turned) ? ' and Sephek' : ''}, round one table at the Hearth.",
                 "And one empty chair, with a carved wooden cat on it.",
                 "Hellen pours. Nobody makes a speech.",
