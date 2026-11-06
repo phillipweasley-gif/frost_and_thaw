@@ -666,7 +666,7 @@ module FrostThaw
     end
     dt_step!(:alberica) if dt_ready?(:alberica)
     # (the Codex day and the carousing are two days: context 15 §5)
-    if state[:rs_day] && respond_to?(:festival_nights_left) && festival_nights_left > 2 && !flag?(:festival_night)
+    if state[:rs_day] && flag?(:rite_stopped) && respond_to?(:festival_nights_left) && festival_nights_left > 2 && !flag?(:festival_night)
       state[:rs_day] += 1
       (state[:dt_day] ||= {})[:alberica] = rs_day if with_or_is?(:alberica)   # (she spent both days)
       n = festival_nights_left

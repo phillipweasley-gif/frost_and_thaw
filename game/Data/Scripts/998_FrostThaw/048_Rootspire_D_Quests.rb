@@ -62,7 +62,7 @@ module FrostThaw
           "SISTER ILSE: She's the goddess's daughter. The Frost Saint said so. Let her mother in.",
           "BROTHER VOSK: The Matron said winter's daughter comes home through this orb. Through it, into her.",
           "LUMIN: (from the shrine steps) The Fractured Halo. They pray for her winter to come back.",
-          cl(:alerion, "(very quietly) Into Frostina."),
+          cl(:alerion, "(very quietly) Winter's daughter. They mean Frostina."),
           cl(:alberica, "Over my dead body, darlings. And I'm very hard to kill.")].compact)
     return false if !pbTrainerBattle(:FT_HALO, "Sister Ilse", nil, false, 0)
     return false if !pbTrainerBattle(:FT_HALO, "Brother Vosk", nil, false, 0)

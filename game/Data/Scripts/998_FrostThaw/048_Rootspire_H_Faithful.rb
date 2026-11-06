@@ -59,11 +59,23 @@ module FrostThaw
   # The morning beats at the Hearth (048_E hearth_night calls this).
   #-----------------------------------------------------------------------------
   def hearth_extras
-    return true if lantern_rumours
     return true if favour_tick
     return true if autumn_ruin
     return true if glasswater_recap
     false
+  end
+
+  # Whether a morning beat is due tonight, without playing it: hearth_night
+  # keeps the night's one beat for it, as hearth_extras came first before.
+  def hearth_morning_due?
+    f = state[:favour] || {}
+    patron = state[:patron_faction]
+    best = f.max_by { |_k, v| v || 0 }
+    favour = (!patron && best && (best[1] || 0) >= 2) ||
+             (patron && (f[patron] || 0) >= 4 && !flag?(:"favour_trusted_#{patron}")) ||
+             f.any? { |fac, v| (v || 0) <= -2 && !flag?(:"favour_cold_#{fac}") }
+    !!(favour || (!flag?(:autumn_ruin_seen) && flag?(:heist_exposed)) ||
+       (!flag?(:glasswater_recap) && rs_day >= 2))
   end
 
   # The 11/25 recap's first-morning sights (rootspire.md 5388-5396).

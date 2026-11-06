@@ -172,15 +172,26 @@ module FrostThaw
       act1_jobs_goodbye if respond_to?(:act1_jobs_goodbye)   # the Dale's unfinished favours (context 14, M14-9 B)
       return
     end
+    # The rite is "tonight" until it's stopped, so no night passes before it
+    # (notes/06 E12): the week Var's oath counts starts the night after.
+    return if !flag?(:rite_stopped)
     state[:rs_day] += 1
     bank_grow if respond_to?(:bank_grow)
-    dawn_hue
+    # A night runs in order (notes/06 E13): Hellen at the rest, the night's one
+    # beat, then dawn, then the morning. One beat a night, as before, and the
+    # morning ones (boons, Autumn's ruin, the Glasswater view) still come first
+    # in line, so the week's pacing doesn't change: they just play after dawn.
     hearth_word
-    return if investigation_night
+    return if investigation_night               # past midnight: the night carries on from the knock
+    morning = (respond_to?(:hearth_morning_due?) && hearth_morning_due?) ||
+              MORNING_VIGNETTES.include?(next_vignette)   # a morning vignette keeps its place in the queue
+    night = (respond_to?(:lantern_rumours) && lantern_rumours) ||       # late in the common room: first in line, as before
+            (!morning && (omen_check || hearth_vignette(:night) || night_event))
+    dawn_hue
     downtime_morning if respond_to?(:downtime_morning)
-    return if respond_to?(:hearth_extras) && hearth_extras   # the Cycle Day rumours, standing boons, Autumn's ruin (048_H)
-    return if omen_check
-    hearth_vignette || night_event
+    return if night
+    return if respond_to?(:hearth_extras) && hearth_extras   # standing boons, Autumn's ruin, the Glasswater view (048_H)
+    hearth_vignette(:morning)
   end
 
   def rs_day = state[:rs_day] || 1
@@ -646,8 +657,14 @@ module FrostThaw
     }]
   ]
 
-  def hearth_vignette
-    row = HEARTH_VIGNETTES.find { |k, cond, _| !flag?(k) && cond.call }
+  # Vignettes set in the morning play after dawn; the rest are the night's.
+  MORNING_VIGNETTES = %i[summer_scorch]
+
+  def next_vignette = HEARTH_VIGNETTES.find { |k, cond, _| !flag?(k) && cond.call }&.first
+
+  def hearth_vignette(slot = nil)
+    row = HEARTH_VIGNETTES.find { |k, cond, _|
+      !flag?(k) && (slot.nil? || (slot == :morning) == MORNING_VIGNETTES.include?(k)) && cond.call }
     return false if !row
     set_flag(row[0])
     row[2].call
