@@ -697,9 +697,8 @@ module FrostThaw
     end
     # Context 06 M6-2: the four seats named by the seats, and the man in
     # Summer's; 08 M8-3: Var's face, and "thirty years" said twice at once.
-    say(["Four crystal obelisks pulse: green, gold, red, white. Three seats are filled.",
-         "A chair under each crystal: Spring, Summer, Autumn, Winter. One season to a seat.",
-         "The fourth is gold-leafed and vine-draped, scorched black, with warm sap dripping under it.",
+    say(["Four crystals pulse over four chairs: green Spring, gold Summer, red Autumn, white Winter.",
+         "Three seats are filled. The fourth is gold-leafed and vine-draped, and scorched black.",
          "KELYN: Four hundred years late. Or right on time. Welcome home.",
          "KELYN: Kelyn, of Spring. I speak for the Council of Seasons. One chair each.",
          "SELRAE: (not unkindly) We'd hoped you'd be taller.",
@@ -721,6 +720,7 @@ module FrostThaw
          "KELYN: Rootspire has been stuck in this summer for thirty years. I need people the tree trusts.",
          "KELYN: (very quietly, and only to you) And if the cold comes back... the old cold. Hers.",
          "Her hand has gone white on the arm of her seat. She doesn't seem to notice.",
+         "KELYN: We have stories about what she does to cities that forget her. I grew up on them. I still can't sleep in a cold room.",
          "KELYN: Swear to defend Rootspire from the old cold gods, and the Council will name you Wardens Emeritus. Officially. With seals.",
          "KELYN: Will you swear the Wardens' oath?"].compact, event_id)
     c = pbMessage(_INTL("Swear the Wardens' oath?"), [_INTL("\"We'll guard the pulse.\""), _INTL("\"We just got here.\"")], 0)

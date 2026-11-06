@@ -360,7 +360,7 @@ module FrostThaw
     # he says why he has them, and who they're for, to the Journey kid too)
     lorn_scribe: -> {
       next ["LORN SCRIBE: (writing backwards) .ti dah syawla uoY .yek eht dnuof uoy taht nwod etorw I"] if T.flag?(:key_found)
-      T.scribe_side_goals
+      T.scribe_side_goals if defined?(::Scene_Map) && $scene.is_a?(::Scene_Map)      # (only when he's really talking, not when lines are checked)
       ["An old dwarf draped in frost-paper scrolls writes without looking.", "His eyes are milky, inked with runes.",
                    T.journey? ? "LORN SCRIBE: Four riddles, kept for the Heralds. You'll do to carry them, Herald's friend." :
                                 "LORN SCRIBE: Four riddles, kept four hundred years for the Heralds. One for each of you.",
