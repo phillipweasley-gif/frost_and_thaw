@@ -71,3 +71,9 @@ map checks 157/157 including the new sprite-matches-picture pairs. Full games as
 (235/236) and Meat Meat (236/237), the same beats as before; all seven new trainer pictures meet the player in
 battle, and the new sprites play in their scenes (`traces_077/`). The driver's new misses on 2053 and 2072 are
 first tries it retried and passed, and Meat Meat's Koran miss came after a lost battle.
+
+## Batch 05, late (2026-11-06, 0.7.7)
+
+| File | In the game as | Where |
+| --- | --- | --- |
+| `Characters/FT_hlin_trollbane` | same | the Lucky Liar, Lonelywood (Ch3), replacing the old-woman stand-in |

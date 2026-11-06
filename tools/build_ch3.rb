@@ -202,7 +202,7 @@ ll.npc(13, 5, "BWFisherman", :liar_fisher, dir: 4)
 ll.trainer(10, 10, "BW (57)", :liar_brawler, :ROUGHNECK, dir: 8, sight: 2)
 # Hlin Trollbane, sitting apart with her pipe: the ice-dagger killer's hunter
 ll.event(15, 9, "Hlin Trollbane", [
-  { graphic: "BWOldWoman", direction: 8, script: "FT.hlin(@event_id)" },
+  { graphic: "FT_hlin_trollbane", direction: 8, script: "FT.hlin(@event_id)" },
   { switch: SW_HLIN_PAID, graphic: "", through: true }
 ])
 save(ll, :lucky_liar)
