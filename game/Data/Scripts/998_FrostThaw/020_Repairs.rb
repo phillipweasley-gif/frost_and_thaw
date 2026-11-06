@@ -49,3 +49,38 @@ module Game
   end
 end
 end
+
+# Quash (move 11E) walks every battler slot, and in a single battle the empty
+# slots are nil, so the base game crashes ("undefined method `effects' for nil")
+# the moment anyone uses it. Found by the full Herald runs, 2026-11-05.
+if defined?(PokeBattle_Move_11E)
+  class PokeBattle_Move_11E
+    def ft_highest_quash
+      @battle.battlers.compact.map { |b| b.effects[PBEffects::Quash] }.max || 0
+    end
+
+    def pbFailsAgainstTarget?(user, target)
+      return true if pbMoveFailedTargetAlreadyMoved?(target)
+      if !@battle.choices[target.index][2]
+        @battle.pbDisplay(_INTL("But it failed!"))
+        return true
+      end
+      highestQuash = ft_highest_quash
+      if highestQuash > 0 && target.effects[PBEffects::Quash] == highestQuash
+        @battle.pbDisplay(_INTL("But it failed!"))
+        return true
+      end
+      if highestQuash == 0 && @battle.pbPriority.last.index == target.index
+        @battle.pbDisplay(_INTL("But it failed!"))
+        return true
+      end
+      return false
+    end
+
+    def pbEffectAgainstTarget(user, target)
+      target.effects[PBEffects::Quash] = ft_highest_quash + 1
+      target.effects[PBEffects::MoveNext] = false
+      @battle.pbDisplay(_INTL("{1}'s move was postponed!", target.pbThis))
+    end
+  end
+end

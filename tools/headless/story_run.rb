@@ -323,7 +323,8 @@ module Story
       travel(2012)
       HL.frames(30); HL.settle(3000)
       beat("arrive in Bryn Shander", :bryn_arrived)
-      travel(2016); talk(/Innkeeper|Scramsax/); travel(2012)
+      # a loss to the inn's Zhentarim sends you back to Targos's Pokémon Center: walk back, as a player would
+      until_flag(:lottery_stand) { travel(2012); travel(2016); talk(/Innkeeper|Scramsax/); travel(2012) }
       beat("lottery night: Alberica's stand", :lottery_stand)
       beat("Auril marks Alberica", :alberica_marked)
       beat("Sephek in Bryn Shander", :seen_sephek_bryn)

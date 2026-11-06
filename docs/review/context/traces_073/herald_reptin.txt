@@ -1,0 +1,757 @@
+[pick] English  (of English | Français)
+[msg] Which adventure would you like to begin?
+[pick] Pokémon Frost & Thaw  (of Pokémon Infinite Fusion | Pokémon Frost & Thaw)
+[map] Frost & Thaw [2000] at (9,7)
+[stage] overlay off O-01
+[scene] intro
+[music] mountsilver
+[msg] POKÉMON FROST & THAW
+[msg] Four hundred years ago, a winter that would not end gripped Icewind Dale.
+[msg] A few strangers walked into it. They came out the other side with spring.
+[msg] Which version?
+[pick] Pokémon Frost  (of Pokémon Frost | Pokémon Thaw | What's the difference?)
+[msg] How would you like to play?
+[pick] Herald Mode  (of New Journey (start here) | Herald Mode | What's the difference?)
+[msg] The Heralds of Dawn and Dusk. Strangers, once, who met in that winter.
+[msg] Which Herald are you?
+[pick] Reptin  (of Alberica | Reptin | Alerion Froststride | Meat Meat | Wyn)
+[msg] Elf druid, exile of the Sacred Flame. His Medallion of Everfrost hums near frost magic.
+[msg] "Winter has a place. Just not all of it."
+[ask] Play as Reptin?
+[msg] Choose a difficulty.
+[pick] Normal  (of Easy | Normal | Hard | What's the difference?)
+[msg] Icewind Dale. Two years now the winter hasn't let go. They call it the Everlasting Rime.
+[msg] The Medallion of Everfrost came to your door wrapped in cloth. "Left for you." No name.
+[msg] (Someone with excellent taste and no manners at all.)
+[msg] It fogs near frost magic. On this ship it hasn't cleared since the coast.
+[msg] The captain watches it like it might bite. "It knows," he says, and won't say what.
+[msg] (The Sacred Flame cast me out for fixing something. They called it breaking. Same thing.)
+[stage] cry BULBASAUR
+[se] Cries/BULBASAUR
+[msg] Your Bulbasaur sneezes at the snow and burrows deeper into your coat.
+[msg] Ahead, Targos, the biggest town on the lake. Its lanterns are the only warmth for miles.
+[msg] You obtained 5 Poké Balls!
+[msg] You put the Poké Balls awayin the <icon=bagPocket3>Poké Balls Pocket.
+[msg] You obtained 2 Potions!
+[msg] You put the Potions awayin the <icon=bagPocket2>Medicine Pocket.
+[flag] intro_done
+[stage] overlay off O-01
+[music] mountsilver
+[map] Targos [2001] at (33,21)
+[scene] targos_arrival
+[msg] Five travellers come down three gangplanks on the same night. None of you planned it.
+[msg] All of you look up at the same moment, as if something called your names.
+[msg] Warm light spills from a tavern along the docks: Three Flags Sailing.
+[offstage] ALBERICA absent
+[msg] ALBERICA: Is that a tavern? That's a tavern. Out of my way, I want the stool by the fire.
+[msg] Watching the dwarf go. (First sensible thing anyone's said in Targos.)
+[flag] arrived_targos
+[goal] Get out of the cold. Three Flags Sailing, up the hill.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Lostlorn Forest
+[screen] tone (0,0,0) 12
+[map] Three Flags Sailing [2002] at (5,11)
+[scene] tavern_convergence
+[msg] A fire that barely warms. Five strangers at five tables.
+[se] Door exit
+[screen] flash (220,235,255) 10
+[stage] auril_furs appears at (6,12)
+[msg] The door opens and lets the night in. A woman in furs that shine with frost.
+[stage] auril_furs(6,12) moves [4, 4, 4, 4, 3, 3]
+[msg] She doesn't go to the bar. She doesn't go to the fire.
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Alberica(9,8)
+[stage] auril_furs(8,8) faces left
+[stage] B-06 balloon over you
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Alerion(13,5)
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Shimmer(15,10)
+[msg] She looks at each of them in turn.
+[msg] Alberica's hand goes to her throat. Your medallion fogs.
+[msg] Alerion's ring cracks with rime. Shimmer stops breathing.
+[stage] auril_furs(8,8) faces left
+[stage] B-06 balloon over you
+[msg] She looks at you last, and longest.
+[msg] She smiles. Not warm. Not kind.
+[stage] effect E-01 at auril_furs(8,8)
+[stage] auril_furs(8,8) pose P-AUR-04 row 0
+[stage] auril_furs(8,8) hidden
+[msg] The frost stays on the floor where she stood. The door swings shut on nothing.
+[msg] MA YARBROUL: Drinks are on the house, ducks. Please leave tomorrow.
+[msg] ALBERICA: Free drinks. See? The night's turning around already.
+[msg] To the barkeep. (That's very generous, thank you. We'll be gone by noon.)
+[msg] (Probably. Ask me again after the drinks.)
+[stage] camera pans to (10,8)
+[msg] SHADE: Well. That was a terrible omen. I'm Shade.
+[msg] SHADE: This is my sister, Shimmer. We're in shipping.
+[msg] SHIMMER: Smuggling.
+[msg] SHADE: Smuggling is a kind of shipping.
+[msg] ALBERICA: Alberica. I sing, I drink, and I'm told I'm a terrible influence.
+[msg] She sets a pendant of black ice on the table.
+[msg] ALBERICA: I threw this in the sea three weeks ago. It came back.
+[msg] ALBERICA: Most things I throw out don't come back. Men, mostly.
+[msg] (Reptin. I talk us into places and, now and then, out of them.)
+[msg] A frost-etched medallion, beside the pendant.
+[msg] (Someone left this for me. No name, no note. Rude, frankly.)
+[msg] A silver ring, rimed white, beside that.
+[msg] ALERION: Alerion. It was on a dock rail. It's cold. That's all I know.
+[msg] ALBERICA: That's all? Pretty boy, you have to give us more than that.
+[msg] ALERION: No I don't.
+[msg] SHADE: And this turned up in my boot. I don't own boots this nice.
+[msg] A pale dagger, smoking with cold.
+[msg] SHIMMER: I've got a stone. It's under my ribs. Don't ask.
+[msg] ALBERICA: Oh, now I have to ask.
+[msg] SHIMMER: Don't.
+[msg] Old things, cold things. Relics, the Dale calls them.
+[stage] B-06 balloon over Alberica(9,8)
+[stage] B-06 balloon over you
+[stage] B-06 balloon over Alerion(13,5)
+[stage] B-06 balloon over Shimmer(15,10)
+[stage] B-06 balloon over Shade(13,8)
+[msg] Four relics on the table, and the stone under Shimmer's ribs makes five.
+[msg] They hum together, like a chord.
+[msg] (They know each other. That's either very good news or the start of a ghost story.)
+[msg] ALERION: Ghost story.
+[msg] ALBERICA: I don't need it to make sense. I need it to stop.
+[msg] ALBERICA: ...And I need another drink.
+[msg] SHADE: Relic dealer by the south-west wall. Epheris. He's cheated better people than us.
+[msg] (You say...)
+[pick] Leave the talking to me. Epheris will...  (of Leave the talking to me. Epheris will... | I'll talk to him. Politely.)
+[msg] (Leave the talking to me. Epheris will love me. Everybody does, eventually.)
+[msg] ALERION: Everybody leaves eventually, too.
+[msg] ALBERICA: (raising a mug) To bad omens and free drinks.
+[msg] Shimmer touches her mug to Alberica's without looking up. Alerion, after a moment, does too.
+[stage] Shade(13,8) hops
+[msg] SHADE: Nobody walks Targos alone tonight. Epheris first, all of us.
+[stage] Alberica(9,8) moves [37, 2, 2, 2, 1, 1, 1, 1, 38, {:wait_for=>false}]
+[stage] Alerion(13,5) moves [37, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 38, {:wait_for=>false}]
+[stage] Shade(13,8) moves [37, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 38, {:wait_for=>false}]
+[stage] Shimmer(15,10) moves [37, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 38, {:wait_for=>false}]
+[stage] camera pans back to you
+[se] Door exit
+[flag] met_party
+[msg] (Tip: choose Heralds in the menu to hear what your companions think, wherever you are.)
+[goal] Ask Epheris, the relic dealer, what the relics are.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (15,18)
+[flag] commons_lesson
+[stage] shimmer appears at (24,34)
+[stage] shimmer(24,34) walks to (23,34)
+[msg] SHIMMER: Something's moving in the drifts. Wear it down, then throw. Don't wait.
+[msg] SHIMMER: A ball on a fresh one is a ball wasted. Ask Shade. They've wasted plenty.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Swinub
+[stage] overlay off O-01
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] lake_crater
+[screen] tone (0,0,0) 12
+[map] Fisher's Cottage [2008] at (9,11)
+[talk] Widow at (7,6) on Fisher's Cottage [2008]
+[msg] WIDOW: My husband fished near Dougan's Hole. Folk heard laughing on the ice. Then nothing.
+[msg] WIDOW: Take his Spheal. It sits by the door every night. It shouldn't have to wait alone.
+[msg] Reptin obtained Spheal!
+[ask] Would you like to give a nickname to Spheal?
+[flag] widow_spheal
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (34,35)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] sinjoh
+[screen] tone (0,0,0) 12
+[map] Thornweald's Relics [2006] at (9,11)
+[talk] Epheris at (13,7) on Thornweald's Relics [2006]
+[stage] alberica appears at (9,11)
+[stage] alberica(9,11) moves [3, 4, 3, 4, 4, 4, 4, 3, 18, {:wait_for=>false}]
+[stage] alerion appears at (9,11)
+[stage] alerion(9,11) moves [3, 4, 3, 4, 4, 4, 18, {:wait_for=>false}]
+[stage] shimmer appears at (9,11)
+[stage] shimmer(9,11) moves [3, 4, 3, 4, 4, 18, {:wait_for=>false}]
+[stage] shade appears at (9,11)
+[stage] shade(9,11) moves [3, 4, 3, 4, 4, 4, 4, 18, {:wait_for=>false}]
+[msg] EPHERIS: Put those down. Not on the counter. On the floor.
+[msg] Setting the medallion down very gently. (Of course. So sorry. Is the floor also cursed?)
+[msg] EPHERIS: Five cold trinkets. All found where you'd find them, right when you'd find them.
+[msg] EPHERIS: That's not luck. That's bait.
+[msg] ALBERICA: Bait for what?
+[msg] EPHERIS: For you. Somebody wanted you here.
+[msg] He holds a compass needle over the pendant. It swings south-east, and stays there.
+[msg] EPHERIS: And they want you closer still. South-east is Dougan's Hole.
+[msg] EPHERIS: Nothing in Dougan's Hole but ice, and people who don't like you.
+[msg] ALERION: Someone went to a lot of trouble.
+[msg] ALBERICA: Pretty boy's right. Nobody leaves me presents unless they want something.
+[msg] SHIMMER: Then that's where they collect.
+[flag] relics_are_lures
+[msg] EPHERIS: Take this. I used to catalogue relics for men in towers.
+[msg] EPHERIS: Catalogue something alive, for a change.
+[me] Key item get
+[msg] You received the Pokédex!
+[msg] EPHERIS: It records every Pokémon you meet. Open it from your menu.
+[flag] got_pokedex
+[msg] He goes back to his ledger.
+[msg] EPHERIS: South-east means out the gate, and the gate means Naerth's say-so.
+[msg] EPHERIS: Speaker of Targos. Runs the town, and most of its debts. Try the Luskan Arms.
+[goal] Get Speaker Naerth's seal to leave Targos. He does business at the Luskan Arms.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (4,35)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] pokecenter
+[screen] tone (0,0,0) 12
+[map] Targos Pokémon Center [2003] at (10,11)
+[talk] Trapper at (15,9) on Targos Pokémon Center [2003]
+[msg] TRAPPER: You're walking the drifts like that? You'll be all winter getting anywhere.
+[msg] TRAPPER: Here. I carved a spare pair of snowshoes on the boat from Easthaven.
+[msg] TRAPPER: Light as anything. Go on, take them. I've only got the two feet.
+[flag] got_snowshoes
+[me] Key item get
+[msg] You got the Snowshoes!
+[msg] Hold the run button to run: over snow, ice, or anything else.
+[msg] TRAPPER: There's a killer loose in the Dale. Walks through blizzards in his shirtsleeves.
+[msg] TRAPPER: Never shivers, they say. The Frostmaiden's chosen.
+[msg] TRAPPER: If you meet a man who doesn't feel the cold... run.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (14,28)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Pokemon RBY - Team Rocket Hideout -Jazz Arrange-
+[screen] tone (0,0,0) 12
+[map] The Luskan Arms [2004] at (9,11)
+[talk] Naerth at (8,6) on The Luskan Arms [2004]
+[stage] shimmer appears at (9,11)
+[stage] shimmer(9,11) moves [4, 2, 2, 4, 4, 4, 18, {:wait_for=>false}]
+[stage] alberica appears at (9,11)
+[stage] alberica(9,11) moves [4, 2, 2, 4, 4, 4, 2, 4, 18, {:wait_for=>false}]
+[msg] (You say...)
+[pick] Speaker. We'd like to leave Targos. Qu...  (of Speaker. We'd like to leave Targos. Qu... | Speaker. We'd like to leave. Quietly.)
+[msg] (Speaker. We'd like to leave Targos. Quietly, and soon.)
+[msg] NAERTH: Everyone would. Five strangers in a blizzard. Shall we speak plainly?
+[msg] NAERTH: Here is how Targos works. Everyone owes me something.
+[msg] NAERTH: Each new moon, Targos draws a name. So do Bryn Shander and Easthaven.
+[msg] Quietly. (And everyone thanks him for the privilege. Charming.)
+[msg] NAERTH: Whoever's drawn walks onto the ice, for Auril, winter's goddess. Two years now.
+[msg] NAERTH: Some people pay to keep their names off the board. Lately, they get found. Frozen.
+[msg] NAERTH: By a man who doesn't feel the cold.
+[msg] SHIMMER: Sephek.
+[msg] NAERTH: ...You know his name. Interesting.
+[msg] NAERTH: My seal says you aren't running. Earn it. Town Hall. I'll be waiting.
+[msg] ALBERICA: Men like him are always waiting. It's the only exercise they get.
+[flag] naerth_terms
+[stage] Naerth(8,6) leaves toward (9,12)
+[goal] Win Speaker Naerth's seal at the Town Hall. It opens the south-west gate.
+[msg] DASK: Strangers in the Luskan Arms. The Speaker likes to know what strangers are made of.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Dask
+[stage] overlay off O-01
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (25,31)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] gym_kanto
+[screen] tone (0,0,0) 12
+[map] Targos Town Hall [2005] at (10,19)
+[talk] Trainer(1) at (17,17) on Targos Town Hall [2005]
+[msg] ILSA: Zhentarim. Nobody sees the Speaker without getting past us first.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Ilsa
+[stage] overlay off O-01
+[talk] Trainer(1) at (2,13) on Targos Town Hall [2005]
+[msg] CORRIN: Naerth said to test anyone who came looking for his seal. This is the test.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Corrin
+[stage] overlay off O-01
+[talk] Trainer(1) at (18,9) on Targos Town Hall [2005]
+[msg] MARA: Care to play a hand? House rules: my Pokémon against yours. The house always wins.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Mara
+[stage] overlay off O-01
+[talk] Naerth at (9,3) on Targos Town Hall [2005]
+[stage] alberica appears at (10,19)
+[stage] alberica(18,6) moves [2, 2, 2, 2, 2, 2, 2, 2, 4, 19, {:wait_for=>false}]
+[stage] alerion appears at (10,19)
+[stage] alerion(16,6) moves [2, 2, 2, 2, 2, 2, 2, 2, 4, 19, {:wait_for=>false}]
+[msg] NAERTH: Reptin of the Sacred Flame. I hear things about you. Useful things.
+[msg] NAERTH: An exile who fixes things. Targos has a great many things that need fixing.
+[msg] NAERTH: Everyone in this town fights for me. Let's see who you fight for.
+[msg] (Diplomacy is just threatening people politely. Time to be very polite.)
+[music] gymleader
+[battle] start vs Speaker Naerth
+[stage] overlay off O-01
+[msg] You found a Tiny Mushroom!
+[msg] You put the Tiny Mushroom awayin the <icon=bagPocket1>Items Pocket.
+[flag] badge_targos
+[msg] NAERTH: Fine. You're not running. You're walking toward something. That's worse.
+[msg] NAERTH: Here. My seal. Any guard on the lake will let you pass.
+[msg] Reptin received the Speaker's Seal!
+[msg] (Thank you, Speaker. We'll treasure it.)
+[msg] Quietly. (Right up to the gate.)
+[msg] You obtained TM46 Thief!
+[msg] You put the TM46 awayin the <icon=bagPocket4>TMs & HMs Pocket.
+[msg] NAERTH: That TM teaches Thief. Fitting, for this town.
+[msg] NAERTH: One more thing, free.
+[msg] NAERTH: A lady in a tower pays very well for cold trinkets like yours.
+[msg] NAERTH: Pale. Books and bones. If you meet her, you never met me.
+[msg] ALERION: We never met you. That part's easy.
+[msg] NAERTH: My last one was two in one skin. Twinning, the traders call it.
+[msg] NAERTH: You're going into the Dale. Take these. DNA Splicers: two Pokémon in, one out.
+[msg] You obtained 3 DNA Splicers!
+[msg] You put the DNA Splicers awayin the <icon=bagPocket1>Items Pocket.
+[msg] NAERTH: Use them from your Bag, on two of your Pokémon. Splice again to pull them apart.
+[msg] NAERTH: Triglio's shop stocks them now. He'll still charge you.
+[flag] got_splicers
+[goal] Rest at Three Flags Sailing; Ma Yarbroul keeps the fire. Then out the south-west gate.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (8,13)
+[stage] overlay off O-01
+[music] Reversal Mountain (White 2)
+[map] Bryn Shander Road [2010] at (1,66)
+[scene] north_road_start
+[msg] The road north is a white line between black pines.
+[msg] Behind you, the lanterns of Targos shrink to sparks.
+[stage] alerion appears at (1,67)
+[msg] ALERION: Single file. The drifts hide holes.
+[stage] shimmer appears at (1,64)
+[stage] shimmer(1,64) walks to (1,65)
+[msg] SHIMMER: My stone's humming. It never hums.
+[stage] shade appears at (0,66)
+[msg] SHADE: You hum all the time.
+[msg] SHIMMER: I'm in tune. It isn't.
+[stage] alberica appears at (0,67)
+[msg] ALBERICA: Darling, nobody's in tune at this temperature.
+[goal] Follow the road south-east to Bryn Shander.
+[scene] razzy_appears
+[flag] met_razzy
+[msg] A small goblin bursts out of the snow. Thin. A pale scar across his throat.
+[msg] Green light moves under his skin, like veins.
+[msg] He grabs your sleeve and pulls.
+[msg] (You say...)
+[pick] Hello, little one. You're freezing. He...  (of Hello, little one. You're freezing. He... | You're freezing. Here...)
+[msg] (Hello, little one. You're freezing. Here, take my...)
+[msg] He opens his mouth. No sound comes out.
+[msg] Very quiet. (Someone cut that scar. On purpose.)
+[stage] camera pans to (29,28)
+[msg] He points east, at a crack in the snow glowing blue-white. Then he runs.
+[stage] camera pans back to you
+[stage] shade appears at (8,42)
+[stage] shade(8,42) walks to (7,42)
+[msg] SHADE: That's either a trap or a kid. Those look the same from here.
+[stage] alerion appears at (6,44)
+[stage] alerion(6,44) walks to (6,43)
+[msg] ALERION: Kid. Traps don't shiver.
+[goal] The little goblin ran into the glowing crack in the rocks, east of the road.
+[scene] razzy_appears
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Seafoam Islands Music
+[screen] tone (0,0,0) 12
+[map] Frost-Light Chasm [2011] at (21,31)
+[scene] frostlight_enter
+[msg] Blue light seeps out of the ice like breath.
+[stage] camera pans to (12,24)
+[msg] Two figures in white robes chip at it with bone picks.
+[msg] SIV: The Frostmaiden's light. Every crumb belongs to her. You don't.
+[stage] camera pans back to you
+[msg] Under your breath. (Aurilites. They pray to the winter, and it listens.)
+[msg] (Zealots with picks. My favourite.)
+[stage] alberica appears at (22,31)
+[msg] ALBERICA: Sugar, nobody belongs to anybody. Step aside.
+[talk] Frost-light at (22,6) on Frost-Light Chasm [2011]
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Sneasel
+[stage] overlay off O-01
+[msg] You obtained a Sharp Feather!
+[ask] Would you like to put it on right now?
+[se] shiny
+[msg] You put on the Sharp Feather!
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Geodude
+[stage] overlay off O-01
+[scene] razzy_falls
+[stage] razzy appears at (22,6)
+[stage] razzy(22,6) pose K-RZY-02 row 0
+[msg] Razzy stands at the lip of the crack, where the light is brightest.
+[stage] razzy(22,6) pose K-RZY-02 row 0
+[msg] He looks back at you. Almost smiling.
+[stage] razzy(22,6) pose K-RZY-02 row 0
+[stage] razzy(22,6) hidden
+[screen] shake 3 6 10
+[msg] Then the ice gives.
+[stage] effect E-03 at [22, 6]
+[msg] He doesn't fall far. The light catches him and closes, like hands.
+[msg] When it stops, a shell of frost sits in the crack.
+[msg] Inside it, slow and green, something beats.
+[msg] (He's alive. The light's... keeping him.)
+[stage] alberica appears at (24,7)
+[stage] alberica(24,7) walks to (23,7)
+[msg] ALBERICA: Then we get him back. Tell me how, and I'll do it.
+[msg] The medallion on your chest pulls toward the shell.
+[msg] (You say...)
+[pick] It wants blood. Mine. Of course it does.  (of It wants blood. Mine. Of course it does. | ...It wants my blood.)
+[msg] (It wants blood. Mine. Of course it does.)
+[msg] What do you say?
+[pick] "Wait..."  (of "Do it." | "Wait...")
+[msg] (There's no waiting in this cold.)
+[stage] reptin appears at (22,7)
+[stage] reptin(22,7) faces up
+[stage] reptin(22,7) pose P-REP-02 row 0
+[msg] You cut your palm and press it to the shell. The frost drinks it.
+[msg] The shell softens. It isn't enough.
+[stage] shade appears at (20,7)
+[stage] shade(20,7) walks to (21,7)
+[msg] SHADE: (digging in a pack) I've carried this since the Saltmarsh job. A unicorn's horn.
+[msg] SHADE: Never knew why I kept it.
+[stage] shimmer appears at (22,9)
+[stage] shimmer(22,9) walks to (22,8)
+[msg] SHIMMER: (very still) ...You kept that.
+[stage] shade appears at (23,7)
+[stage] shade(23,7) pose P-SHA-02 row 0
+[screen] flash (200,255,200) 12
+[stage] egg appears at (22,6) as K-EGG-01
+[stage] egg(22,6) pose K-EGG-01 row 0
+[msg] Shade lays the horn against the shell. It melts in, like snow into a hand.
+[msg] The shell rounds into an egg, warm and green-gold.
+[msg] (The old druid rhymes. You haven't said one aloud in years.)
+[msg] (You say...)
+[pick] One more thing. The old rhymes want a...  (of One more thing. The old rhymes want a... | ...The old rhymes want a name. Spoken...)
+[msg] (One more thing. The old rhymes want a name, spoken as a promise.)
+[msg] ALBERICA: And none of us knows his.
+[stage] alerion appears at (24,9)
+[stage] alerion(24,9) walks to (23,8)
+[msg] ALERION: Then we find someone who does.
+[msg] You obtained a Moon-Touched Egg!
+[msg] You put the Moon-Touched Egg awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] razzy_egg
+[goal] Keep the egg warm, and find someone who knows his name. On to Bryn Shander.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Gasbat
+[stage] overlay off O-01
+[msg] You found a Grassy Seed!
+[msg] You put the Grassy Seed awayin the <icon=bagPocket1>Items Pocket.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Sneasel
+[stage] overlay off O-01
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Reversal Mountain (White 2)
+[screen] tone (0,0,0) 12
+[map] Bryn Shander Road [2010] at (29,29)
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[map] Bryn Shander [2012] at (10,43)
+[scene] bryn_arrival
+[msg] Bryn Shander sits on its hill inside two rings of logs, thirty feet high, rubble packed between them.
+[msg] Bright lanterns twist over the narrow streets. Under them, nobody.
+[msg] In the square, a board lists every name in town. Tonight is the new moon.
+[stage] gate_guard appears at (10,39) as BWPoliceman
+[stage] gate_guard(10,39) walks up to you
+[msg] GUARD: Draw's at sundown. Speaker says nobody leaves on a draw night. Nobody.
+[msg] GUARD: And they've added travellers. You went on the board when you came through the gate.
+[stage] alberica appears at (11,43)
+[msg] ALBERICA: We're on it?
+[stage] shimmer appears at (8,43)
+[stage] shimmer(8,43) walks to (9,43)
+[msg] SHIMMER: Everyone's on it.
+[msg] (How democratic.)
+[msg] GUARD: Laugh, then. One name a moon, for the Frostmaiden, and she spares the rest of us.
+[stage] shade appears at (10,45)
+[stage] shade(10,45) walks to (10,44)
+[msg] SHADE: And if you don't give her one?
+[msg] GUARD: Two years of her Everlasting Rime says you don't want to find out.
+[stage] gate_guard(10,42) leaves toward (10,37)
+[flag] bryn_arrived
+[goal] The lottery is drawn at sundown. Wait it out at the Northlook inn.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Lostlorn Forest
+[screen] tone (0,0,0) 12
+[map] The Northlook [2016] at (5,11)
+[talk] Trainer(2) at (10,8) on The Northlook [2016]
+[msg] DORN: You're sitting too close to the back table. Move, or I move you.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Dorn
+[stage] overlay off O-01
+[msg] mYou scurry back to a Pokémon Center, protecting your exhausted Pokémon from any further harm...
+[stage] overlay off O-01
+[music] pokecenter
+[stage] overlay off O-01
+[music] pokecenter
+[map] Targos Pokémon Center [2003] at (10,7)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (14,28)
+[stage] overlay off O-01
+[music] Reversal Mountain (White 2)
+[map] Bryn Shander Road [2010] at (1,66)
+[msg] TOR: Ho there! Only way to keep warm out here is a good battle!
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Hiker Tor
+[stage] overlay off O-01
+[scene] razzy_appears
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Swinub
+[stage] overlay off O-01
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[map] Bryn Shander [2012] at (9,43)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] gym_kanto
+[screen] tone (0,0,0) 12
+[map] Bryn Shander Town Hall [2015] at (10,19)
+[talk] Trainer(2) at (2,13) on Bryn Shander Town Hall [2015]
+[msg] GARVIN: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Militia Garvin
+[stage] overlay off O-01
+[talk] Duvessa at (10,3) on Bryn Shander Town Hall [2015]
+[msg] CORVIN: My family's kept the Council's papers six generations. I still know how to fight.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Gentleman Corvin
+[stage] overlay off O-01
+[msg] DUVESSA: It's a draw night. The hall's closed until it's done.
+[msg] DUVESSA: Come back after. If you still want to.
+[note] lost or blocked; training to L31 and trying again
+[talk] Trainer(1) at (10,6) on Bryn Shander Town Hall [2015]
+[msg] HASKEL: Last gap before the Speaker. Last chance to turn round.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Militia Haskel
+[stage] overlay off O-01
+[talk] Duvessa at (10,3) on Bryn Shander Town Hall [2015]
+[msg] DUVESSA: It's a draw night. The hall's closed until it's done.
+[msg] DUVESSA: Come back after. If you still want to.
+[note] lost or blocked; training to L34 and trying again
+[talk] Duvessa at (10,3) on Bryn Shander Town Hall [2015]
+[msg] DUVESSA: It's a draw night. The hall's closed until it's done.
+[msg] DUVESSA: Come back after. If you still want to.
+[note] lost or blocked; training to L37 and trying again
+[talk] Duvessa at (10,3) on Bryn Shander Town Hall [2015]
+[msg] DUVESSA: It's a draw night. The hall's closed until it's done.
+[msg] DUVESSA: Come back after. If you still want to.
+[note] lost or blocked; training to L40 and trying again
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[screen] tone (0,0,0) 12
+[map] Bryn Shander [2012] at (31,20)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] sinjoh
+[screen] tone (0,0,0) 12
+[map] House of the Morninglord [2019] at (9,11)
+[talk] Mishann at (13,7) on House of the Morninglord [2019]
+[msg] MISHANN: Come in out of the dark. The Morninglord turns no one away.
+[msg] MISHANN: Sit by the fire a moment. Your Pokémon too.
+[msg] MISHANN: There. The dawn comes back, you know. Even here. It always comes back.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[screen] tone (0,0,0) 12
+[map] Bryn Shander [2012] at (33,11)
+[note] lost or blocked; training to L43 and trying again
+[note] lost or blocked; training to L46 and trying again
+[note] lost or blocked; training to L49 and trying again
+[note] lost or blocked; training to L52 and trying again
+[note] lost or blocked; training to L55 and trying again
+[note] lost or blocked; training to L58 and trying again
+[note] lost or blocked; training to L61 and trying again
+[note] lost or blocked; training to L64 and trying again
+[note] lost or blocked; training to L67 and trying again
+[note] lost or blocked; training to L70 and trying again
+[note] lost or blocked; training to L73 and trying again
+[note] lost or blocked; training to L76 and trying again
+[note] lost or blocked; training to L79 and trying again
+[note] lost or blocked; training to L82 and trying again
+[note] lost or blocked; training to L85 and trying again
+[note] lost or blocked; training to L88 and trying again
+[note] lost or blocked; training to L91 and trying again
+[note] lost or blocked; training to L94 and trying again
+[note] lost or blocked; training to L97 and trying again
+[note] lost or blocked; training to L100 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[talk] Trainer(3) at (16,23) on Bryn Shander [2012]
+[msg] BROSK: The Black Network has questions about you, stranger. Answer them in battle.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Brosk
+[stage] overlay off O-01
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again
+[note] lost or blocked; training to L103 and trying again

@@ -288,6 +288,27 @@ module FrostThaw
     return COMPANION_NAMES[key]
   end
 
+  # A stage direction about the speaker's own body, said of the Herald you are,
+  # becomes "your" (WRITING_GUIDE §5): "under his breath" -> "under your breath".
+  # Only phrases that can only mean the speaker are changed; "a hand on his
+  # back" or "taking both her hands" are about someone else and stay.
+  SELF_DIRECTIONS = [
+    /\b(under|through) (his|her|their) (breath|teeth)\b/i,
+    /\b(wiping|rubbing|shutting|closing) (his|her|their) (eyes|nose|face)\b/i,
+    /\bmanaging (his|her|their) voice\b/i,
+    /\bon (his|her|their) knees\b/i,
+    /\bbehind (his|her|their) hand\b/i,
+    /\b(his|her|their) own\b/i,
+    /\b(his|her|their) (empty )?hands?\b(?= on (his|her|their) (rune|ring|chest|pendant|medallion))/i,
+    /\bon (his|her|their) (rune|ring|chest|pendant|medallion)\b/i,
+    /\bat (his|her|their) empty hands\b/i
+  ]
+  def your_direction(dir)
+    SELF_DIRECTIONS.reduce(dir) do |d, re|
+      d.gsub(re) { |m| m.gsub(/\b(his|her|their)\b/i) { |w| w[0] == w[0].upcase ? "Your" : "your" } }
+    end
+  end
+
   # Speaks a line as a companion; when you are that Herald it becomes a thought.
   def as(key, text)
     if herald?(key)
@@ -295,6 +316,7 @@ module FrostThaw
       # neck) I'll watch her." -> "A hand on her neck. (I'll watch her.)"
       if text =~ /\A\(([^()]+)\)\s*(.*)\z/m
         dir, rest = $1, $2
+        dir = your_direction(dir)
         dir = dir[0].upcase + dir[1..-1]
         return rest.empty? ? "#{dir}." : "#{dir}. (#{rest})"
       end
