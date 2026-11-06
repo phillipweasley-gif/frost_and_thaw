@@ -117,3 +117,9 @@ module FrostThaw
   LOOP_ACT2_FLAGS.concat(%i[stone_barricade clock_first_light child_carried_up kelyn_heard_reveal
                             tree_prophecy_heard avarice_doubt_shared]).uniq!
 end
+
+# scene c: Chapters 4-5 scene pass (2026-11-06): the mead hall's banter once,
+# eyes shut in the fall
+module FrostThaw
+  LOOP_ACT1_FLAGS.concat(%i[mead_hall_rested fall_eyes_shut]).uniq!
+end
