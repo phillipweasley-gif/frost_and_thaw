@@ -404,7 +404,7 @@ module FrostThaw
     say(["KELYN: Meat Meat's service to the camp waits until she's home."]) if flag?(:verdict_service)
     say(["KELYN: One item."])
     lines = []
-    lines << "RHEVEN: Kethan's clan, Skytower, owes you a debt. Griffons, tomorrow at first light." if flag?(:council_rheven)
+    lines << "RHEVEN: The Skytower clan owes you a debt. Griffons, tomorrow at first light." if flag?(:council_rheven)
     lines << "MIRA: The Requiem's provisioned. My Corsairs have wanted somewhere frightening for years." if flag?(:council_mira)
     lines << "EIRWEN: I found Grimskalle's plans in the oldest leaves. There's a servants' stair." if flag?(:council_eirwen)
     lines << "EIRWEN: Grimskalle's her fortress on Solstice. Frost giants carved it out of a skull." if flag?(:council_eirwen)
