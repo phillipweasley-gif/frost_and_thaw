@@ -154,9 +154,11 @@ module FrostThaw
     Stage.face($game_player, 4)
     Stage.face(tamsin, 4)
     Stage.turn_to(hellen) if hellen
-    say(["Hellen Brightrun keeps the Rooted Hearth, and nobody has ever left it hungry.",
-         "HELLEN: (sliding a plate over) Eat first.",
-         "HELLEN: Heralds didn't save the Dale on an empty stomach.",
+    say(["Hellen Brightrun keeps the Rooted Hearth, and nobody has ever left it hungry."])
+    # (The plate is staging, not words: the hook word "on" stays where Tamsin
+    # bounces off it, dialogue/00 §6. "Eat first" is Ma Yarbroul's too, four
+    # hundred years earlier: an echo on purpose, said once by each.)
+    say(["HELLEN: Eat first. Heralds didn't save the Dale on an empty stomach.",
          "TAMSIN: They saved it on pine-mead and spite. You told us!",
          "HELLEN: And I'll tell you again, with toast. Eat. Then College."])
     Stage.hop(tamsin)

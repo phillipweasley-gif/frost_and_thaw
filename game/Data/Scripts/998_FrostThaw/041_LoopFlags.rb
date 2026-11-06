@@ -117,3 +117,15 @@ module FrostThaw
   LOOP_ACT2_FLAGS.concat(%i[stone_barricade clock_first_light child_carried_up kelyn_heard_reveal
                             tree_prophecy_heard avarice_doubt_shared]).uniq!
 end
+
+# scene a: the Act I scene pass, parts 00-01 (2026-11-06). The tavern's tables
+# (tavern_woman, tav_alberica/reptin/alerion/shade), Show your Pokemon's own
+# flag (showed_pokemon, which a Journey run now sets where told_nothing was),
+# the Heralds tip on the first step outside, Kip's call from his alley, and the
+# morning card shown over the Hearth.
+module FrostThaw
+  SCENE_A_FLAGS = %i[tavern_woman tav_alberica tav_reptin tav_alerion tav_shade showed_pokemon
+                     heralds_tip kip_hint pro_card_shown]
+  LOOP_ACT1_FLAGS.concat(SCENE_A_FLAGS).uniq!
+  LOOP_ACT2_FLAGS.concat(SCENE_A_FLAGS).uniq!
+end

@@ -484,8 +484,9 @@ module FrostThaw
     auril = s.actor(:auril_furs, 6, 12, 8)
     say(["The door opens and lets the night in. A woman in furs that shine with frost."])
     if auril
-      s.walk(auril, PBMoveRoute::Up, PBMoveRoute::Up, PBMoveRoute::Up, PBMoveRoute::Up,
-             PBMoveRoute::Right, PBMoveRoute::Right)
+      # round the rumour fisher at (6,8), not through him (notes/01 E8)
+      s.walk(auril, PBMoveRoute::Right, PBMoveRoute::Up, PBMoveRoute::Up, PBMoveRoute::Up, PBMoveRoute::Up,
+             PBMoveRoute::Right)
     end
     say(["She doesn't go to the bar. She doesn't go to the fire."])
     %i[alberica reptin alerion shade shimmer].each do |k|
@@ -545,6 +546,7 @@ module FrostThaw
       return say(lines_for(:barkeep), event_id)
     end
     if flag?(:heard_of_glimmer)
+      # ("Eat first": Hellen's words too, four hundred years on. An echo on purpose.)
       return say(["MA YARBROUL: Leaving tomorrow, I hope. For your sakes, not mine. Eat first."], event_id)
     end
     say(["MA YARBROUL: Leaving at first bell, by the look of you. There's no first light. Not here.",
@@ -685,8 +687,9 @@ module FrostThaw
       $Trainer.badges[0] = true
       set_flag(:badge_targos)
       $game_switches[3910] = true if $game_switches     # the Targos gate guards step aside
-      say(["NAERTH: Fine. You're not running. You're walking toward something. That's worse.",
-           "NAERTH: Here. My seal. Any guard on the lake will let you pass."], event_id)
+      say(["NAERTH: Fine. You're not running. You're walking toward something. That's worse."], event_id)
+      Stage.approach($game_map.events[event_id]) if event_id && $game_map.events[event_id]   # he hands it over (notes/01 E6)
+      say(["NAERTH: Here. My seal. Any guard on the lake will let you pass."], event_id)
       pbMessage(_INTL("\\me[Badge get]{1} received the Speaker's Seal!", $Trainer.name))
       say([as(:reptin, "Thank you, Speaker. We'll treasure it."),
            as(:reptin, "(quietly) Right up to the gate.")], event_id)
