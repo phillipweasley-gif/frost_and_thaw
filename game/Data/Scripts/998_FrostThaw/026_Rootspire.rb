@@ -1320,7 +1320,10 @@ module FrostThaw
          "Among the fallen glass, one crystal doesn't break.", "It hums, a low note that pulls toward the Heartroot."])
     give(:FT_FROSTSIGIL)
     set_flag(:sigil_echo)
-    say(["(A Frostshard Sigil. One of three keys to the White Vault, beyond the Auroral Wall.)"])
+    # (owner's decision 4: the sigils find the Vault's door and wake it; they don't open it.
+    # Context 06 §4: one line ties the name to Selrae's.)
+    say(["(A Frostshard Sigil. One of three that find the White Vault's door, far north beyond the Wall.)"])
+    sayc([flag?(:selrae_white_womb) ? cl(:alerion, "The White Vault. The Matron called it the White Womb.") : nil].compact)
     if with_or_is?(:alerion)
       set_flag(:talion_foreshadowed)
       sayc([cl(:alerion, "That voice. My brother. Talion. The lake took him. I tried to bring him back. I tried to bring them all back."),

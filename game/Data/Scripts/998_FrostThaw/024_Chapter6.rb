@@ -381,7 +381,7 @@ module FrostThaw
           say(["HELLEN: The festival opened the morning you fell, love. Its last night's the seventh.",
                "HELLEN: #{n == 1 ? 'Tomorrow' : "#{n} more nights"}. Nobody rushes the seventh night.",
                "HELLEN: Spend the days. The city's been waiting four hundred years to show you round.",
-               "HELLEN: The Halls up the north stair, the Promenade over the leaf-bridge. Go and be looked at."])
+               "HELLEN: Halls up the north stair, the Promenade over the leaf-bridge. Go and be looked at."])
         else
           say(["HELLEN: The festival's last night is the seventh. #{n == 1 ? 'Tomorrow' : "#{n} more nights"}, love. Nobody rushes the seventh night.",
                "HELLEN: Spend the days. The city's been waiting four hundred years to show you round."])
@@ -524,7 +524,7 @@ module FrostThaw
     say(["KELYN: (setting down her glass, very quietly) Something is waking below. I don't know what yet.",
          "KELYN: Stay in the city tonight, Heralds. When we know, the Council will send for you."])
     Stage.walk_to(cast[:hew], $game_player.x + 3, $game_player.y - 1, face: 4) if cast[:hew]
-    say(["HEW: (shoving through) Hew Talmire, Guild of Roots! Then find my diggers. Twelve gone in the Dig!"])
+    say(["HEW: (shoving through) Hew Talmire, Guild of Roots! Then find my diggers! Twelve, gone!"])
     if herald?(:wyn)
       speak(:wyn, "The roots have another way down. Through the myconids. I can take you.",
             "...I know another way down. The myconids'.")
@@ -668,7 +668,7 @@ module FrostThaw
          "Then she looks at Shade, tilts her head, and hums four notes.",
          "SHADE: (sitting down in the street) ...Hi.",
          cl(:reptin, "(gently) Take your time."),
-         "LUMIN: (a Wennen in priest's robes, trembling) The Twinned Dragons haven't touched the ground in a century.",
+         "LUMIN: (a rabbit-eared Wennen priest, trembling) The Twinned Dragons haven't touched ground in a century.",
          "LUMIN: The old texts say they'd wait for their partners. Not masters. Partners.",
          "The dragons lift off together, back toward the Shrine of the Twinned Dragons on the Canopy-Tier."].compact)
     set_flag(:twins_met)
@@ -762,8 +762,8 @@ module FrostThaw
          herald?(:wyn) ? "KELYN: Kethan Vale says it was no accident. Your captain, Wyn. He'll want you back." :
                          "KELYN: Kethan Vale says it was no accident. He keeps the Rootwarden Hall's watch.",
          "KELYN: The Hall's in the Verdant Halls, up the north stair. Hear him out.",
-         "SELRAE: The Fractured Halo pray for the old winter. They'll move on the festival's first night.",
-         "SELRAE: If they do, Kelyn, I want the Canopy under martial law. My wardens. To protect the Rift.",
+         "SELRAE: The Fractured Halo want the old winter back. They'll move tonight.",
+         "SELRAE: If they do, I want the Canopy under martial law, Kelyn. My wardens, at the Rift.",
          "KELYN: No.",
          "SELRAE: (to you, mildly) She always says no. Then something burns, and she says yes.",
          "DARRUS: And while we're saying no to things: the Guild wants the lower terraces. More roots cut, more halls, more trade.",
@@ -771,7 +771,7 @@ module FrostThaw
          "SELRAE: Grow too slowly and the cold remembers us. Expansion is a wall, Kelyn. Walls keep winter out.",
          "KELYN: Walls keep winter in, too. ...We'll vote on it after the festival. As we have for six years.",
          cl(:alberica, "(behind her hand) They've been having this argument since before the coffee was invented, haven't they."),
-         "SELRAE: There's a rite at the Still Sky Shrine tonight, the festival's first. Watch it. Closely.",
+         "SELRAE: The Still Sky Shrine holds a rite tonight, the festival's first. Watch it. Closely.",
          "KELYN: The Wardens' stair down to the Root-Tier is in the woodcarver's workshop, by the old gate."])
     selrae_court if respond_to?(:selrae_court)
     state[:goal] = "The Still Sky Shrine, in the Root-Tier. (The woodcarver's workshop has the stair down.)"
@@ -862,7 +862,7 @@ module FrostThaw
     end
     say(["A big man in Rootwarden green comes in at a run, a grey direwolf at his heel."])
     say(["RHEVEN: (a look at you) Wyn. You're meant to be on the Gate. ...Later."]) if herald?(:wyn)
-    sayc(["RHEVEN: Rheven Stormbranch, captain of the Rootwardens. I heard the rite break from the dock.",
+    sayc(["RHEVEN: Rheven Stormbranch, Rootwarden Captain. I heard the rite break from the dock.",
           "RHEVEN: Summer has the Saint's heart? Then Summer answers for it. Not tonight.",
           cl(:alerion, "Why not tonight?"),
           "RHEVEN: Summer's Marshal is sworn to sit the Throne on the festival's seventh night.",

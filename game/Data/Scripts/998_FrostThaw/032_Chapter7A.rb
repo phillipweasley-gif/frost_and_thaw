@@ -574,7 +574,7 @@ module FrostThaw
       sayc(["The roots part, but a door of iron and mirror glass blocks the far side.",
             cl(:alerion, "Locked. From the city side."),
             as(:wyn, "The Guild Dig. Hew's tunnels touch it."),
-            "Hyphora's roots carry you up, slow and warm, toward the Sap Gate. It's dusk when you come out."])
+            "Hyphora's roots carry you up, slow and warm, to the Sap Gate. It's dusk when you come out."])
       state[:goal] = "The other road: Hew's ladder, east of the market. The door of iron and glass is locked from that side."
       transfer(*SAP_GATE_TOP)
     end

@@ -213,7 +213,7 @@ module FrostThaw
           "HEW: I'll say it again at any trial you like. I'll say it to the tree.",
           "HEW: My last ladder runs past the south cache, to a door I was told never to open.",
           "HEW: Iron and glass. Summer's people again.",
-          "HEW: They had the only key. Took it down the Root-Gate. Find whoever's down there, you'll find it."])
+          "HEW: They had the only key, and took it down the Root-Gate. Find them, you'll find it."])
     # Hew's gift (rootspire.md 1174): mechanical assistance, and, though he
     # doesn't know it, a dormant fragment of Avarice's code in the works.
     sayc(["HEW: Here. You'll want this down there. Built it from Prototype 3's spare parts, the batch Summer's people paid for.",
@@ -226,7 +226,7 @@ module FrostThaw
       set_flag(:hew_thanked)
       sayc(["HEW: And Gant. And Hobb. You brought two of them back to me.",
             cl(:reptin, "(gently) And the other ten?"),
-            "HEW: Further down. Past anywhere I've ever dug. If you find them... tell them I'm still here.",
+            "HEW: Further down. Past anywhere I've dug. If you find them... tell them I'm still here.",
             "HEW: Take the Guild's dig money. Take the light. Take anything."])
       $Trainer.money += 6000 rescue nil
       pbMessage(_INTL("\\me[Item get]{1} received $6,000 from the Guild!", $Trainer.name)) rescue nil

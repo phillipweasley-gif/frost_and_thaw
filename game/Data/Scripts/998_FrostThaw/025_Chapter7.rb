@@ -116,6 +116,18 @@ module FrostThaw
     say(["The Rootwardens' willow seal lies cut on the ground.",
          "Warm air rises out of the well: sap, and old ice.",
          "A stair of living root spirals down into the dark. You climb over the fence and go down."], event_id)
+    root_gate_hook
+  end
+
+  # Context 07 §5: nothing on the spine points at the boy in the Bazaar; a
+  # Rootwarden at the fence does, once (a hook, not a goal).
+  def root_gate_hook
+    return if flag?(:boy_mirror_hook) || flag?(:boy_mirror_taken) || flag?(:mirror_child_free)
+    set_flag(:boy_mirror_hook)
+    w = Stage.actor(:rootwarden, $game_player.x + 1, $game_player.y, 4, graphic: "BW (72)") if Stage.map?
+    say(["A Rootwarden at the fence calls after you.",
+         "ROOTWARDEN: A Bazaar kid's got a mirror stuck to his hands. Says it talks."])
+    Stage.remove_actor(w) if w
   end
 
   #-----------------------------------------------------------------------------
