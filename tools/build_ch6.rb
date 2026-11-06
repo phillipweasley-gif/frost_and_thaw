@@ -124,7 +124,7 @@ rs.trainer(18, 31, nil, :warden_tobin, :FT_ROOTWARDEN, dir: 8, sight: 2)
 # W5: the root-stair up to the Verdant Halls (the civic ring), at the top of the north lane
 rs.door(17, 8, LIFE[:halls], 62, 40, 4, name: "Root-stair to the Verdant Halls")
 # Mira of the North Wind's mirror stall in the Bazaar, until she's herself again; the boy with the mirror
-person_until(rs, 36, 20, "FT_mira_of_the_north_wind", :mira_stall, SW_MIRA_FREED, dir: 2, name: "Mira's mirror stall")
+person_until(rs, 36, 20, "FT_mira_possessed", :mira_stall, SW_MIRA_FREED, dir: 2, name: "Mira's mirror stall")
 rs.event(38, 20, "Boy with a mirror", [{ graphic: "BW (17)", direction: 2, script: "FT.rs_mirror_child(@event_id)" }])
 rs.event(10, 23, "Krolf the Mossback", [{ graphic: "BW (115)", direction: 4, script: "FT.krolf(@event_id)" }])
 rs.event(47, 18, "Mistress Felka", [{ graphic: "BWOldWoman", direction: 4, script: "FT.felka(@event_id)" }])

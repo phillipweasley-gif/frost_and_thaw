@@ -537,3 +537,18 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("Road B switches failed: #{err.message}")
   end
 }
+
+# Mira left possessed at Gym 6 (:mira_left_possessed): wherever she's drawn as
+# herself after that (the docks, the trial week, the Council), it's the thing
+# wearing her. Map events and stage actors both come through refresh.
+class Game_Event
+  alias ft_mira_look_refresh refresh unless method_defined?(:ft_mira_look_refresh)
+  def refresh
+    ft_mira_look_refresh
+    if @character_name == "FT_mira_of_the_north_wind" && (FrostThaw.active? rescue false) &&
+       (FrostThaw.flag?(:mira_left_possessed) rescue false) &&
+       (pbResolveBitmap("Graphics/Characters/FT_mira_possessed") rescue nil)
+      @character_name = "FT_mira_possessed"
+    end
+  end
+end

@@ -88,3 +88,4 @@ first tries it retried and passed, and Meat Meat's Koran miss came after a lost 
 
 Mira's mirror stall still uses her own sprite while she's possessed; her possessed variant hasn't come in.
 A New Journey run (244/245) meets both in battle and shows both sprites.
+| `Characters/FT_mira_possessed` | same | the mirror stall (before Gym 6), and every later Mira if you leave her possessed (a `Game_Event#refresh` swap in 033, so map events and scene actors both follow); checked by a probe on the docks |
