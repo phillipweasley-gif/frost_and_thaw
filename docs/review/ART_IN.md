@@ -24,7 +24,7 @@ The designer's exports land in `Desktop/Pokemon fusions/Cutscene Game Assets/Gra
 | `K-YET-03` | Ch5, if you fight her: she drags herself to her mate and curls over him; stays there | 023, plus a "Her body" event at (16,21) in the feast hall (2042) |
 | `P-SEP-05` | Ch3, Torg's: misty step across the sled | 044 `sephek_misty_step` |
 | `P-SEP-06` | Ch3, the Moon Temple: the second voice | 044 `sephek_true_nature(seph)` |
-| `Items/*` (84) | The bag | `build/gfx/Items` |
+| `Items/*` (94) | The bag (84, then 10 more the same afternoon) | `build/gfx/Items` |
 
 Notes:
 
