@@ -393,7 +393,8 @@ module FrostThaw
            as(:wyn, "It doesn't mean to frighten anyone. It just doesn't know what else to do with them.")])
       c = pbMessage(_INTL("Pacify it?"), [_INTL("Offer it a memory of Wyn's"), _INTL("Feed it your Pokémon's strength"), _INTL("No")], 0)
       if c == 0
-        speak(:wyn, "(to the colony) Here. The night Hyphora called me. The spores singing my name. Take it. It's a good one.",
+        speak(:wyn, herald?(:wyn) ? "(to the colony) The night the spores went quiet. Then the snow. Take it. It's a good one." :
+                                    "(to the colony) Here. The night Hyphora called me. The spores singing my name. Take it.",
               "...Take this one. It's a good one.")
         say(["The colony goes quiet. Its eyes close, one by one, like lanterns going out."])
       elsif c == 1
@@ -468,7 +469,8 @@ module FrostThaw
     talk_ok = challenge("She stops. She's watching Wyn.", ["Let Wyn speak, gently, through the spores", "Draw a weapon", "Ask her what she wants"], [0, 2])
     if talk_ok
       say([as(:wyn, "(through the spores, very softly) ...You're so cold. Who made you carry that?"),
-           "GHOST: (a voice like water under ice) The Halo. Fifty years ago. A shard of the Mother's glass. I wasn't to put it down.",
+           "GHOST: (like water under ice) The Halo. Fifty years ago. A shard of the hag's glass.",
+           "GHOST: Mother Thruuna's. I wasn't to put it down.",
            "GHOST: I fell through. I'm still holding it. I can't let go."])
     else
       say(["She raises the mirror-blade. The shards in it scream."])
@@ -504,8 +506,8 @@ module FrostThaw
     say(lines_for(:leaf_gap), event_id)
     if !flag?(:leaf_quest)
       say(["EIRWEN: (barefoot, gasping) One of the chronal leaves is missing. Torn from Alberica's own timeline.",
-           "EIRWEN: Without it, a sliver of reality will unravel. Her sliver.",
-           "EIRWEN: I felt a ripple when a Rootwarden went missing beyond the Auroral Wall. Could the leaf be with them?",
+           "EIRWEN: Without it, her days come loose. A year of her, gone, like a torn-out page.",
+           "EIRWEN: A Bough patrol went out past the Wall the night it went. They never came back.",
            cl(:alberica, "(a hand on the shelf, very pale) ...Somebody's walking round with a piece of my life in their pocket. I'd like it back.")])
       set_flag(:leaf_quest)
       side_goal(:leaf, "The chronal leaf: across the Glasswater, through the Auroral Wall.", done: :leaf_restored)
@@ -659,7 +661,7 @@ module FrostThaw
       return if !boss_battle(named_mon(:B92H449, 57, "Temporal Guardian"))
     end
     say(["The chest opens. Inside, under frost: a scrap of hide painted with lines of frost that won't melt.",
-         "A fragment of a map: the Draconic Vault. A glacier, north, and a door with wings on it."])
+         "A fragment of a map: the White Vault. A glacier, north, and a door with wings on it."])
     set_flag(:vault_map_3)
     add_counter(:story_beats)
     grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and slick sap: no more sliding.") if !blessing?(:still_sky)
