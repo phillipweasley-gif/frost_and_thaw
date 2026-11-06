@@ -43,7 +43,8 @@ def stamp_pine(b, x, y) = tree(b, x, y, 2)
 # A dark shape standing silent out on the ice (a figure drawn as a shadow).
 def shape(b, x, y, graphic, key, name)
   b.event(x, y, name, [
-    { graphic: graphic, direction: 8, opacity: 210, blend_type: 2, step_anime: false, walk_anime: false },
+    { graphic: graphic, direction: 8, opacity: 210, blend_type: 2, step_anime: false, walk_anime: false,
+      script: "FT.frozen_shape(:#{key}, @event_id)" },          # what you see up close (notes 04 E12)
     { switch: SW_HAG_DOWN, graphic: graphic, direction: 2, script: "FT.talk(:#{key}, @event_id)" }
   ])
 end

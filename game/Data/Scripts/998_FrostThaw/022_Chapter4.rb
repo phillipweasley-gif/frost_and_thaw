@@ -479,7 +479,7 @@ module FrostThaw
           "She presses a honey cake into every hand in reach.",
           cl(:alberica, "Cake first, questions later. My kind of town."),
           cl(:meat_meat, "Meat Meat smells honey. Meat Meat does not smell coffee. Suspicious town.")])
-    say(["OLIVESSA: The cooperage, by the hives. Come and see me before you go south."]) if oli
+    say(["OLIVESSA: Cooperage is the low hut on the west side. Come and see me before you go south."]) if oli
     Stage.leave(oli, 7, 16) if oli
     Stage.cleanup rescue nil
   end
@@ -531,14 +531,14 @@ module FrostThaw
             cl(:meat_meat, "Lady Speaker. Meat Meat likes her. Meat Meat would still bite her."),
             cl(:reptin, "(aside) Please don't."),
             "DURMOOT: The west way's open to you. Freeze where you like. I've told the militia."], event_id)
-      state[:goal] = "Find Silja and Finn. West, out on the tundra."
+      state[:goal] = "Find Silja and Finn, west on the tundra. Durmoot will fight you for her seal."
       return
     end
     if !flag?(:kids_home)
       say(["DURMOOT: Still here? The west way's open. Bring them back, or don't come back."], event_id)
       return
     end
-    say(["DURMOOT: ...I said I'd fight you myself.",
+    say(["DURMOOT: You brought them home.",
          "DURMOOT: Dougan's Hole keeps its word. Even when it's sorry it gave it."], event_id)
     won = pbTrainerBattle(:FT_SPEAKER_DH, "Durmoot", nil, false, 0)
     return if !won
@@ -551,7 +551,7 @@ module FrostThaw
     pbReceiveItem(:TM79) rescue nil
     sayc(["DURMOOT: That TM's Frost Breath. Every hit's a deep one. Like a Dougan's Hole winter.",
           "DURMOOT: ...Stay in tonight.",
-          cl(:alberica, "Was that concern? I think that was concern. She likes us."),
+          cl(:alberica, "Was that concern? She likes us."),
           cl(:alerion, "She likes nobody. She said it anyway.")], event_id)
     state[:goal] = "Rest at the smokehouse for the night. Durmoot said stay in."
   end
@@ -561,10 +561,14 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Boss battles against creatures that can't be caught (and can't be run from)
   #-----------------------------------------------------------------------------
-  def boss_battle(*mons)
+  # bgm: a boss's music, not the wild-battle theme (notes 04 E24, 05 E16).
+  BOSS_BGM = "ancientbattle"
+
+  def boss_battle(*mons, bgm: BOSS_BGM)
     sw = (SWITCH_CANNOT_CATCH_POKEMON rescue 75)
     was = $game_switches[sw]
     $game_switches[sw] = true
+    ($PokemonGlobal.nextBattleBGM = pbStringToAudioFile(bgm)) rescue nil if bgm && $PokemonGlobal
     setBattleRule("cannotRun")
     setBattleRule("double") if mons.size >= 2
     decision = pbWildBattleCore(*mons)
@@ -609,6 +613,7 @@ module FrostThaw
     state[:dh_night_tone] = true
     say(["That night."])
     pbBGMPlay("scary_ambient") rescue nil
+    cackle
     relics = if herald?(:alberica) then "Under your coat, the rune burns blue. The others' relics frost over."
              elsif herald?(:meat_meat) then "The others' relics frost over. Under Alberica's coat, the rune glows blue."
              elsif herald? then "Your relic frosts over. Under Alberica's coat, the rune glows blue."
@@ -621,10 +626,20 @@ module FrostThaw
           flag?(:frost_egg) ? cl(:shade, "She doesn't like it either.") : nil,
           "Among the Twenty Stones, south-west of town, stand three tall mirrors of ice.",
           "In each one, an old woman in a patchwork cloak is smiling.",
-          as(:alberica, "Durmoot told us to stay in."),
-          as(:shade, "Durmoot tells everyone to stay in."),
+          cl(:alberica, "Durmoot told us to stay in."),
+          cl(:shade, "Durmoot tells everyone to stay in."),
           cl(:meat_meat, "Meat Meat never stays in. Meat Meat is already outside.")])
     state[:goal] = outsider? ? "The Twenty Stones: who's calling them, and the mirrors you came through." : "The Twenty Stones. Find who's calling."
+  end
+
+  # Her laugh. (Art/audio request: a crone's cackle SE. A Mismagius cry, a
+  # shrill witch's laugh, stands in.)
+  def cackle
+    if (audioFileExists(:SE, "FT_cackle") rescue false)
+      pbSEPlay("FT_cackle") rescue nil
+    else
+      Stage.cry(:MISMAGIUS)
+    end
   end
 
   def mirrors_broken
@@ -643,7 +658,12 @@ module FrostThaw
       say(["THREDRA: Come in, dearies. Mind the cold. Mind your step.",
            "THREDRA: Granny Thredra. Everyone's granny, sooner or later.",
            "THREDRA: Did you like my little trinkets? A pendant for the daughter of song."], event_id)
-      say(["Your hand goes to your throat. The pendant isn't there any more."]) if herald?(:alberica)
+      cackle
+      if herald?(:alberica)
+        say(["Your hand goes to your throat. The pendant isn't there any more."])
+      elsif with_or_is?(:alberica)
+        say(["Alberica's hand goes to her throat, where the pendant used to hang."])
+      end
       say(["THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time."], event_id)
       say(["(The medallion fogs in your palm. \"It knows,\" the captain said.)"]) if herald?(:reptin)
       sayc([cl(:alerion, "...Boy."),
@@ -654,7 +674,7 @@ module FrostThaw
         say(["THREDRA: Names are for the living, dearie."], event_id)
       end
       speak(:alberica, "You sent them. You sent me that pendant, you dried-up old...", "...You sent them.", event_id)
-      say(["THREDRA: Old, dearie. Not dried. My watchers watched you aboard."], event_id)
+      say(["THREDRA: Old, dearie. Not dried. My watchers saw each of you onto your ships."], event_id)
       if herald?(:alberica)
         say(["(The tall thing at the edge of the lamplight. On the ship. That was hers.)"])
       else
@@ -683,7 +703,7 @@ module FrostThaw
       say(["THREDRA: Heh-heh. #{n == 0 ? 'Not one' : (n == 1 ? 'One' : 'Two')} of three. The wheel turns so slowly, doesn't it?"], event_id)
       return
     end
-    say(["The last mirror lies in pieces. The crone stops laughing.",
+    say(["The last mirror lies in pieces. Thredra isn't smiling now.",
          "THREDRA: Then let's dance upon the glass, dearies, and see who shatters first."], event_id)
     won = pbTrainerBattle(:FT_HAG_NIGHT, "Thredra", nil, false, 0)
     return if !won
@@ -730,10 +750,13 @@ module FrostThaw
       Stage.hide(pane)
       Stage.fx("E-06", pane, oy: 56)
     end
-    say(["The mirror cracks top to bottom and falls into the snow in a hundred laughing pieces.",
-         "Behind you, the crone stops laughing, just for a moment."])
-    Stage.cleanup rescue nil
+    cackle
     set_flag(:"hag_mirror_#{i}")
+    after = ["Behind you, the crone's laugh catches, just for a moment.",
+             "Out on the lake, one of the dark shapes lifts its head.",
+             "Behind you, the laughing has stopped."][mirrors_broken - 1]
+    say(["The mirror cracks top to bottom and falls into the snow in a hundred laughing pieces.", after].compact)
+    Stage.cleanup rescue nil
     set_self_switch(event_id, "A")
     state[:goal] = "The mirrors are broken. Face Thredra at the centre stone." if mirrors_broken >= 3
   end
@@ -746,10 +769,12 @@ module FrostThaw
     add_counter(:story_beats)
     pbSEPlay("Ice2") rescue nil
     thr = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
-    say(["THREDRA: Clever. Clever, clever. Do you know how long it takes to grow a mirror?",
+    say(["THREDRA: Clever. Clever, clever. You broke them.",
+         "THREDRA: Do you know how long it takes to grow a mirror?",
+         "Her outline flickers, thin as frost on a windowpane.",
          "THREDRA: Come and find me in the chasm, dearies. Bring your wolf.",
          "THREDRA: Granny keeps her bargains."], event_id)
-    say(["THREDRA: And you, lost one. My last glass is in the chasm. Yours too."], event_id) if outsider?
+    say(["THREDRA: (to you) And you, lost one. My last glass is in the chasm. Yours too."], event_id) if outsider?
     if thr
       Stage.hide(thr)
       Stage.fx("E-06", thr, oy: 40)
@@ -798,7 +823,7 @@ module FrostThaw
     sayc(["DURMOOT: Thank you.",
           "DURMOOT: ...Don't tell anyone I said that.",
           cl(:alberica, "Oh, sugar, I'm writing a song about it."),
-          "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind.",
+          "DURMOOT: Chasm's south. Take this. Snarl. It's how this town answers the wind.",
           "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns.",
           "DURMOOT: ...Don't tell anyone I said that either."])
     # The last chance at Act I's favours, said before the door (context 14, M14-9 A).
@@ -812,6 +837,20 @@ module FrostThaw
     set_flag(:dh_morning)
     state[:goal] = outsider? ? "The Cackling Chasm, south of Dougan's Hole. She's there, with the last of her mirrors." :
                               "The Cackling Chasm, south of Dougan's Hole. She's there."
+  end
+
+  # A shape on the ice, up close, before the thaw (notes 04 E12; act1_script SC 4.02).
+  FROZEN_SHAPES = {
+    thawed_fisher_a: "A man with a fishing line, mid-cast. His breath is frozen in the air in front of him.",
+    thawed_old_man:  "An old man on a stool by his hole, a cup halfway to his mouth. The cup is empty.",
+    thawed_husband:  "A man with a Spheal-shaped float on his line. Frost holds him mid-step, facing north.",
+    thawed_woman:    "A woman with her arms held out, as if to hug someone. There's nobody there.",
+    thawed_fisher_b: "A fisher on one knee by a hole, one hand in the water. The water froze round it."
+  }
+
+  def frozen_shape(key, event_id = nil)
+    say([FROZEN_SHAPES[key] || "Someone stands on the ice, stopped mid-breath. Snow has drifted at their legs.",
+         "Their eyes are open. They don't blink."], event_id)
   end
 
   def apply_chapter4_switches

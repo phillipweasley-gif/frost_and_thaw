@@ -54,6 +54,10 @@ module FrostThaw
       "A wolf and a flower, carved together out of ancient ice. Warm to the touch. Nobody saw who left it.", 2, 0, 6],
     FT_OWLFEATHER: ["Rimed Owl Feather", "Rimed Owl Feathers", 8, 0,
       "A black feather from a snowy owl, coated in rime. It doesn't thaw. The Frostmaiden's mark.", 2, 0, 6],
+    FT_BONEDUST: ["Bone Dust", "Bone Dust", 8, 0,
+      "A pinch of grey dust from the oldest bones in the feast hall, folded in a scrap of cloth. You kept it on an impulse.", 0, 0, 6],
+    FT_SWADDLING: ["Yeti Swaddling", "Yeti Swaddlings", 8, 0,
+      "Soft white fur tied with sinew, from the dead yeti's hand. Someone small was wrapped in it.", 0, 0, 6],
     FT_GLIMMERJOURNAL: ["Glimmer's Journal", "Glimmer's Journals", 8, 0,
       "A waterlogged journal from the feast hall, signed \"Glimmer\". Most of it is ruined with blood.", 2, 0, 6],
     FT_OPAL: ["Hag's Opal", "Hag's Opals", 1, 8000,
@@ -112,7 +116,8 @@ module FrostThaw
                   "HUNGER. FEAST.",
                   "Over the top of everything, a sign like a hyena's head, cut deep into the stone:",
                   "the mark of Yeenoghu, the demon lord of gnolls, gouged across an older carving.",
-                  "Under the gouges you can just make out what it defaced: a ring of leaf and bone. Life and death, turning."],
+                  "Under the gouges, what it defaced: a ring of leaf and bone.",
+                  "Life and death, turning."],
     chasm_coins: ["Among the bones and the frozen packs: coins. Ten-Towns mint, and some from much further south.",
                   "Whoever carried them didn't get any further than this hall."],
     gnoll_axe_left: ["A gnoll lies broken in the bones. Its greataxe is gone; you took it.",
@@ -136,8 +141,10 @@ module FrostThaw
                  "TORG'S. GOODS FOR SALE. NO CREDIT. NO QUESTIONS."],
     torgs_dogs: ["Six sled dogs to a team, curled nose to tail in the snow. One thumps its tail at you.",
                  "Friendlier than the people who own them."],
-    torgs_hand_idle: ["TORG'S HAND: Buying? Talk to the boss. Not buying? Keep walking.",
-                      "TORG'S HAND: And don't stare at the cold one. He likes it."],
+    torgs_hand_idle: [{ if: { flag: :shimmer_taken }, lines: ["TORG'S HAND: Buying? Talk to the boss. Not buying? Keep walking.",
+                                                              "TORG'S HAND: The cold one's gone. Nobody's sorry."] },
+                      ["TORG'S HAND: Buying? Talk to the boss. Not buying? Keep walking.",
+                       "TORG'S HAND: And don't stare at the cold one. He likes it."]],
     torgs_camp_gone: ["Sled tracks and frozen dog mess. Torg's has moved on, and not in a hurry to come back."],
   )
 
@@ -165,11 +172,11 @@ module FrostThaw
     1 => ["Somewhere in the dark ahead, very faintly, someone whispers your name.",
           "When you stop to listen, there's only the wind, and the wind laughing."],
     2 => ["Your torchlight shivers in the draught.", "The shadows on the walls reach like hands, and let go.",
-          "The floor here is glazed with ice. Somebody's feet go out from under them, and they land hard, and laugh too loudly getting up.",
-          "Out of the corner of your eye, something watches. When you turn, it's your own reflection in the ice."],
+          :slip,
+          "Something watches from the corner of your eye. When you turn, it's your own reflection."],
     3 => ["A whiff of smoke and herbs drifts down from somewhere deep. Somebody is cooking.",
           "Under it, the old, sweet smell of rot."],
-    4 => ["Frost has crept over every buckle and blade you're carrying. Your breath hangs in front of you like a ghost.",
+    4 => ["Frost creeps over every buckle and blade you carry. Your breath hangs in front of you.",
           "Your name again, closer. Then a giggle."]
   }
 
@@ -177,7 +184,12 @@ module FrostThaw
     key = :"chasm_whisper_#{n}"
     return if flag?(key)
     set_flag(key)
-    say(WHISPERS[n] || [])
+    say((WHISPERS[n] || []).map do |l|
+      next l if l != :slip         # someone named, on the ice (dialogue 05 §3)
+      herald?(:meat_meat) ? "Ice underfoot. You go down hard, and laugh too loudly getting up." :
+      with_or_is?(:meat_meat) ? "Ice underfoot. Meat Meat goes down hard, and laughs too loudly getting up." :
+                                "Ice underfoot. Your feet go out from under you, and you laugh too loudly getting up."
+    end)
     if n == 4
       sayc([cl(:shade, "Did everyone hear that, or is it just me?"),
             cl(:alerion, "Everyone."),
@@ -215,7 +227,7 @@ module FrostThaw
   def scene_feast_hall_enter
     return if flag?(:feast_hall_seen)
     set_flag(:feast_hall_seen)
-    say(["The tunnel widens into a chamber of ice and dark. Your light finds a scene of carnage, frozen in place.",
+    say(["The tunnel widens into a chamber of ice and dark. Your light finds carnage, frozen there.",
          "Gnawed bones and carcasses everywhere: mountain goats, foxes, hares, gnolls.",
          "A trapper's boot with the foot still in it.",
          "A dwarf's caravan harness. What looks like a human arm.",
@@ -224,14 +236,13 @@ module FrostThaw
     if herald?(:reptin)
       say(["The smell hits you like a hand. Your gums ache. Your eyes sting, then sharpen: everything in the hall goes amber.",
            "(The wolf wants this place. The wolf thinks this place smells like dinner.)"])
-      speak(:reptin, "(through his teeth) I'm fine. Give me a moment. I'm fine.", "...A moment.")
+      speak(:reptin, "(through gritted teeth) It smells like dinner. I hate that it smells like dinner.", "...Give me a moment.")
     else
-      sayc(["Reptin stops dead. His breath comes short. When he looks round, his eyes are flashing amber.",
-            "REPTIN: (baring his teeth, then catching it) This...",
-            "REPTIN: this isn't right. She's been busy in here.",
-            "REPTIN: Give me a moment. I'm fine."])
+      sayc(["Reptin stops dead. His breath comes short. When he looks round, his eyes flash amber.",
+            "REPTIN: (baring his teeth, then catching it) ...It smells like dinner.",
+            "REPTIN: I hate that it smells like dinner."])
     end
-    sayc([cl(:alberica, "(a hand flat between his shoulder blades) Breathe, sugar. In through the nose. Actually, no. Through the mouth."),
+    sayc([cl(:alberica, "(a hand on his back) Breathe, sugar. In through the nose. Actually, no. Mouth."),
           cl(:alerion, "(stepping between him and the worst of it) Look at me, not at that.")])
     set_flag(:reptin_amber)
     blood_runes if pbConfirmMessage(_INTL("Among the smears on the walls, there are shapes. Runes. Look closer?"))
@@ -241,7 +252,7 @@ module FrostThaw
     talk(:blood_runes, event_id)
     return if flag?(:read_blood_runes)
     set_flag(:read_blood_runes)
-    sayc([cl(:alerion, "Gnolls. They pray to a hyena-headed demon. They broke in and defiled this place."),
+    sayc([cl(:alerion, "Gnoll script. Somebody carved this first. They didn't like it."),
           cl(:reptin, "That ring under the gouges. Leaf and bone. I've seen it before. In the dream.")])
   end
 
@@ -264,7 +275,8 @@ module FrostThaw
   # The yeti's after-fight: the hag watches, and Reptin swears.
   def yeti_after_echo
     if flag?(:yeti_calmed)
-      say(["From everywhere, delighted: \"Singing to the beasties? How sweet. Hurry along, dearies. Time is ticking.\""])
+      say(["From everywhere, delighted: \"Singing to the beasties? How sweet.\"",
+           "\"Hurry along, dearies. Time is ticking.\""])
     else
       say(["From everywhere at once, the crone's voice, pleased as a cat:",
            "\"Ohhh, such violence... tsk, tsk. Hurry along now, dearies. Time is ticking...\""])
@@ -285,7 +297,7 @@ module FrostThaw
     state[:bridge_plan] = plan
     case plan
     when :rope
-      sayc([cl(:alerion, "Rope. Round the waist. I anchor this end, then whoever's last anchors the other."),
+      sayc([cl(:alerion, "Rope. Round the waist. I go first, anchor the far end. Last one brings the rope."),
             cl(:alberica, "The old railing?"),
             cl(:alerion, "Don't touch the old railing."),
             "You knot yourselves together and go over one at a time, slowly."])
@@ -302,14 +314,21 @@ module FrostThaw
   def bridge_slip(event_id = nil)
     return if flag?(:bridge_slipped)
     set_flag(:bridge_slipped)
-    say(["Out of the dark below, two small glowing lights rise beside the bridge and bob there, like lanterns held by nobody.",
+    say(["Two small lights rise out of the dark beside the bridge, like lanterns held by nobody.",
          "Something with leathery wings bursts out from under the span, shrieking, and is gone."])
     case bridge_plan
     when :rope
-      say(["A foot goes. Somebody's over the side!",
-           "The rope snaps taut.",
-           "They swing out over nothing, and back, and you haul them up hand over hand.",
-           "Nobody says anything for a long moment. Then everybody breathes."])
+      who = herald?(:shade) ? :alerion : :shade
+      if !with_or_is?(who)
+        say(["Your foot goes. You're over the side!", "The rope snaps taut.",
+             "You swing out over nothing, and back, and they haul you up hand over hand."])
+      else
+        nm = COMPANION_NAMES[who].capitalize
+        say(["#{nm}'s foot goes. #{who == :shade ? "They're" : "He's"} over the side!",
+             "The rope snaps taut.",
+             "#{nm} swings out over nothing, and back. You haul #{who == :shade ? 'them' : 'him'} up hand over hand."])
+      end
+      say(["Nobody says anything for a long moment. Then everybody breathes."])
       sayc([cl(:alerion, "That's what the rope's for.")])
     when :slow
       say(["Your foot goes out from under you. You're flat on your belly on the ice, clinging,",
@@ -327,7 +346,9 @@ module FrostThaw
       say(["Your fingers catch the lip of the stone. You're hanging over the dark by one hand."])
       saver = [:alberica, :alerion, :shade, :meat_meat, :reptin].find { |k| companions.include?(k) }
       if saver
-        say(["#{COMPANION_NAMES[saver].capitalize} throws themself flat and grabs your wrist.",
+        self_word = { alberica: "herself", alerion: "himself", shade: "themself", meat_meat: "herself", reptin: "himself" }[saver]
+        name = saver == :meat_meat ? "Meat Meat" : COMPANION_NAMES[saver].capitalize
+        say(["#{name} throws #{self_word} flat and grabs your wrist.",
              "For a long moment nobody's sure which way this is going. Then they haul, and you come up over the edge."])
         say([as(saver, { alberica: "I'm putting that in the song. With me as the hero. Which I was.",
                          alerion: "Don't do that again.",
@@ -343,9 +364,10 @@ module FrostThaw
 
   def fall_from_bridge
     pbSEPlay("Fall") rescue nil
-    say(["The dark takes you. Wind, laughter, the bridge shrinking to a thread overhead,",
-         "and then ice, and broken stone, and a long, long slide."])
+    say(["The dark takes you. Wind, laughter, the bridge shrinking to a thread overhead.",
+         "Then ice, and broken stone, and a long, long slide."])
     hurt_party(0.35)
+    say(["(Your Pokémon are hurt.)"])
     set_flag(:fell_into_rift)
     transfer(MAPS[:rift_floor], 14, 7, 2)
   end
@@ -365,15 +387,16 @@ module FrostThaw
          "It takes a long time. Your hands go numb, then stop telling you anything at all."], event_id)
     return if !pbConfirmMessage(_INTL("Climb back up to the bridge?"))
     hurt_party(0.05)
-    say(["Hand over hand, notch over notch, you climb out of the rift and roll onto the near ledge."])
+    say(["Hand over hand, notch over notch, you climb out of the rift and roll onto the near ledge.",
+         "(Your Pokémon are hurt.)"])
     transfer(MAPS[:rift], 8, 22, 6)
   end
 
   def gnoll_remains(event_id = nil)
     return talk(:gnoll_quiet, event_id) if flag?(:rift_gnoll_laid)
     talk(:gnoll_remains, event_id)
-    say(["Then the bones begin to laugh. A ghost climbs up out of them, hyena-headed, cackling with a dead mouth,",
-         "and grabs for you with hands like smoke!"])
+    say(["Then the bones begin to laugh. A ghost climbs up out of them, hyena-headed, cackling.",
+         "It grabs for you with hands like smoke!"])
     return if !boss_battle(named_mon(:B229H94, 30, "Gnoll ghost"))
     say(["The ghost comes apart in the wind like smoke, still laughing, and the laugh goes thin, and stops."])
     set_flag(:rift_gnoll_laid)
@@ -389,7 +412,7 @@ module FrostThaw
     # one line each that names who they hear (context 05 M5-4): the only place in
     # Act I that Anduin and Talion can be planted
     sayc([herald?(:alberica) ? "(A woman laughing the way your mother used to, at a joke you've forgotten.)" :
-                               cl(:alberica, "...That's my mother laughing. She's been dead twenty years."),
+                               cl(:alberica, "...Mum? (a breath) No. She's been dead twenty years."),
           herald?(:reptin) ? "(Wolves, singing. And under them Anduin, your husband, calling you home.)" :
                              cl(:reptin, "Wolves. And Anduin, calling me home. My husband. He can't be here.")])
     if herald?(:alerion)
@@ -416,9 +439,12 @@ module FrostThaw
   def scene_rift_walker_wakes
     return if flag?(:walker_down) || flag?(:walker_woke)
     set_flag(:walker_woke)
+    walker = Stage.find("Coldlight walker")
+    Stage.pan_to(walker.x, walker.y) if walker
     say(["On the far ledge, two pinpoints of blue-white light ignite in the dark:",
          "the eyes of a gaunt, frozen corpse, standing where nobody should be standing.",
-         "It raises an arm and lets out a long, hollow moan, and its eyes swing toward you like lanterns."])
+         "It raises an arm and moans, long and hollow. Its eyes swing toward you like lanterns."])
+    Stage.pan_back
   end
 
   def coldlight_walker(event_id = nil)
@@ -426,10 +452,11 @@ module FrostThaw
     say(["A gaunt figure stands frozen on the ledge in the rags of a traveller's coat.",
          "Its eyes are two blazing lamps of cold light. When it turns them on you, the light is like a blow."], event_id)
     hurt_party(0.05)
+    say(["(Your Pokémon are hurt.)"])
     return if !pbConfirmMessage(_INTL("Fight the coldlight walker?"))
     return if !boss_battle(named_mon(:B200H427, 31, "Coldlight walker"))
     say(["The lamps in its eyes gutter out. The frozen wanderer folds slowly to its knees, and then to the ice.",
-         "In its coat: a little pouch, and a note in a careful hand. \"If you find this, tell Bryn Shander I tried.\""])
+         "In its coat: a little pouch, and a note in a careful hand: \"I got further than anyone.\""])
     give(:FT_GEMSTONE, 3)
     pbReceiveItem(:REVIVE) rescue nil
     set_flag(:walker_down)
@@ -446,9 +473,9 @@ module FrostThaw
     if !flag?(:ghost_blessing)
       return say(["(It doesn't feel like yours to take. Not with her lying there watching.)"])
     end
-    say(["You open it carefully. Druidic script, and pictures: wolves under the moon, a reaper cradling a child, a heart of ice.",
-         "The Order's rites. Its wardens' oaths. And, at the back, in a different hand, a ritual:",
-         "how to wake the Heart again with a life that's freely given. Someone has written beside it: NEVER."])
+    say(["You open it carefully. Druidic script, and pictures: wolves, a reaper with a child, a heart of ice.",
+         "The Order's rites. Its wardens' oaths. And, at the back, in a different hand, a ritual.",
+         "How to wake the Heart with a life freely given. Someone has written beside it: NEVER."])
     give_key(:FT_DRUIDCODEX)
     set_flag(:druid_codex)
     $game_switches[SW_CODEX_TAKEN] = true if $game_switches
@@ -687,6 +714,11 @@ module FrostThaw
     say([flag?(:cub_wounded) ? cl(:meat_meat, "(arriving at a dead run, pressing both hands over the cut) MINE. Meat Meat's baby now. Stay breathing, baby.") :
                                cl(:meat_meat, "(arriving at a dead run) MINE. Meat Meat's baby now. Back off, granny."),
          cl(:reptin, "(between her and the cub, every hair on end) Not one more step.")].compact)
+    if flag?(:shielded_cub) && !flag?(:locket_caught_wrist)
+      sayc([cl(:alberica, "Your arm, sugar. Give it here. No, don't argue.")])
+    elsif flag?(:freed_cub_midfight)
+      sayc([cl(:meat_meat, "Baby is behind you. Good. Stay there, baby.")])
+    end
     true
   end
 
@@ -706,23 +738,25 @@ module FrostThaw
     end
     pbSEPlay("Saint7") rescue nil
     $game_screen.start_flash(Color.new(200, 20, 30, 200), 30) rescue nil
-    say(["The Heart drinks. Its red light goes up through the roof of the cavern in a column, throbbing,",
-         "and you feel the whole world lurch, as if something enormous had cried out.",
+    say(["The Heart drinks. Its red light goes up through the roof of the cavern in a column, throbbing.",
+         "The whole world lurches, as if something enormous had cried out.",
          "Far above, through a mile of rock and ice, the aurora goes out.",
          "And somewhere over Icewind Dale, for the first time in two years, the sun comes up."])
     if rep
       say(["The wolf goes out of you like a breath, and doesn't come back.",
            "The moon is just the moon. The hunger is gone. You're only you.",
-           "You're on your knees beside the little body, holding it, and the sound coming out of you is a howl,",
-           "a long human howl with nothing wolf left in it at all."])
+           "You're on your knees beside the little body, holding it.",
+           "The sound coming out of you is a long human howl, with nothing wolf left in it at all."])
     else
-      say(["Reptin is on his knees. His yellow eyes fade, flicker, and go human. The wolf is gone. Just like that.",
-           "He gathers up the tiny body in both arms, and the sound he makes isn't a wolf's howl. It's worse."])
+      say(["Reptin is on his knees. His yellow eyes fade, flicker, and go human. The wolf is gone.",
+           "He gathers up the tiny body in both arms. The sound he makes isn't a wolf's howl. It's worse."])
     end
     if cause == :agreed
       say(["THREDRA: (swelling, laughing, a winter wind in her hair) I always keep my end of a bargain!",
-           "THREDRA: The Frostmaiden's winter is broken, just as I promised. And now it's mine. All of it. Mine.",
+           "THREDRA: The Frostmaiden's winter is broken, just as I promised.",
+           "THREDRA: And now it's mine. All of it. Mine.",
            "THREDRA: Not so fickle as Auril. Oh, no. I'll be very, very steady.",
+           "Her winter wind howls round the dais.",
            "THREDRA: Now, dearies. My reward is so much bigger than I am. Let's start with you."])
       won = with_battle_script(:crown) { pbTrainerBattle(:FT_WINTERCROWN, "Thredra", nil, false, 0, true) }
       if !won
@@ -734,15 +768,16 @@ module FrostThaw
            "and comes apart into snow."])
     else
       say(["Thredra, beaten and bloody, laughs and laughs as the light pours into her.",
-           "Then it's too much. The Heart's power backlashes through her. She shrieks, and comes apart into snow."])
+           "Then it's too much. The Heart's power lashes back through her.",
+           "She shrieks, and comes apart into snow."])
     end
-    say(["Ten-Towns will rejoice. The Rime is broken. They'll call you saviours. They'll sing about you.",
+    say(["Ten-Towns will rejoice. The Rime is broken. They'll call you saviours, and sing about you.",
          "Every one of you will carry this for the rest of your days.",
          "\"Life for death. Death for life.\" You'll hear it in your sleep."])
-    sayc([cl(:alberica, "(very quietly) I'm not writing this one down. Nobody is ever writing this one down."),
+    sayc([cl(:alberica, "I'm not writing this one down. Nobody is ever writing this one down."),
           cl(:shade, "...We could have said no."),
           cl(:alerion, "We could have.")])
-    say(["That night, a single black feather of a snowy owl drifts onto the ledge beside you, coated in rime.",
+    say(["That night, a black feather from a snowy owl drifts onto the ledge beside you, rimed white.",
          "The Frostmaiden has seen. The Frostmaiden will remember."])
     give_key(:FT_OWLFEATHER)
     chasm_wheel_turns_back
@@ -754,16 +789,16 @@ module FrostThaw
     say(["You fall. The others fall around you.",
          "Thredra sits down on her dais with the Heart in her lap, humming to it.",
          "Outside, the sun rises over Icewind Dale. For a little while, it's warm.",
-         "Then it isn't. The famine comes after, and the long night after that,",
-         "and every year the Witch-Queen of the North takes a little more, and calls it a gift.",
-         "The Order of Life and Death is gone for good. Nobody is left who remembers what it was for."])
+         "Then it isn't. The famine comes after, and the long night after that.",
+         "Every year the Witch-Queen of the North takes a little more, and calls it a gift.",
+         "The Order of Life and Death is gone for good. Nobody remembers what it was for."])
     chasm_wheel_turns_back
   end
 
   # The wheel won't stop here. Back to the start, as in the Still Keeper's loop.
   def chasm_wheel_turns_back
     pbBGMFade(2.0) rescue nil
-    say(["In the dark behind your eyes, an old dwarf woman in dark green robes shakes her head.",
+    say(["In the dark behind your eyes, an old dwarf woman in dark green shakes her head.",
          "GHOST: No. That isn't how it goes, dear. That's never how it goes.",
          "GHOST: Time is a wheel. Go round again. Find the third way.",
          "GHOST: You'll remember a little. Use it."])
@@ -808,13 +843,23 @@ module FrostThaw
     if mother_alive && !flag?(:yeti_calmed)
       say(["Down the tunnel from the feast hall comes the mother, limping, roaring, and the cub runs to her."])
     end
+    cub = Stage.find("Yeti cub")
     if mother_alive
-      say(["Mother and cub, nose to nose. Then the cub looks back at you. Then it comes to you, and presses its head against your leg."])
+      say(["Mother and cub, nose to nose. Then the cub looks back at you."])
+      Stage.walk_to(cub, $game_player.x, $game_player.y, adjacent: true) if cub
+      Stage.turn_to(cub) if cub
+      say(["It comes to you, and presses its head against your leg."])
     else
-      say(["It looks round the cavern for someone who isn't coming. Then it creeps to you,",
-           "presses its furry head against your leg, and makes a small, sad, cooing sound for its lost parents."])
+      say(["It looks round the cavern for someone who isn't coming."])
+      Stage.walk_to(cub, $game_player.x, $game_player.y, adjacent: true) if cub
+      Stage.turn_to(cub) if cub
+      say(["Then it creeps to you, presses its head against your leg, and makes a small, sad sound."])
       sayc([cl(:reptin, "(crouching, very gently) I know. I know. I'm sorry."),
             cl(:meat_meat, "Meat Meat has no mama either for a long time. It gets better. Slowly. Meat Meat promises.")])
+    end
+    if has_key?(:FT_SWADDLING)
+      say(["You tuck the swaddling from the feast hall round it. It sniffs it, and goes very still."])
+      take_key(:FT_SWADDLING)
     end
     if pbConfirmMessage(_INTL("Take Yetot with you?"))
       cub = Pokemon.new(:YETOT, 25)
@@ -832,25 +877,24 @@ module FrostThaw
     set_flag(:cub_home)
     # the warden: the Heart knows its wolf
     say(["The Heart has gone quiet: pale now, faintly warm. Its light turns, slowly, toward #{reptin_name}.",
-         herald?(:reptin) ? "The wolf in you lies down. Not gone. Still there, and still yours. But it's stopped pulling at the chain." :
-                            "Reptin breathes out like he's been holding that breath for a year.",
-                            "The wolf in him has lain down: still there, still his, no longer pulling at the chain.",
+         herald?(:reptin) ? "The wolf in you lies down. Not gone. Still yours. It's stopped pulling at the chain." :
+                            "Reptin breathes out like he's held that breath for a year.",
+         herald?(:reptin) ? nil : "The wolf in him has lain down: still his, no longer pulling at the chain.",
          herald?(:reptin) ? "(A warden's bond. The rage was the curse. The rest of it is you.)" :
-                            "REPTIN: (wondering) It's still there. It's just... quiet. It knows me now."])
+                            "REPTIN: (wondering) It's still there. It's just... quiet. It knows me now."].compact)
     set_flag(:reptin_wolf_calm)
     if flag?(:ghost_blessing)
       say([herald?(:reptin) ? "You turn toward the tunnel to the sanctum, where she lies, and say a few words." :
                               "Reptin turns toward the tunnel to the sanctum, where she lies, and says a few words."])
-      speak(:reptin, "Rest, warden. We kept it. Your wolves will keep it after us. I'll keep it, after them.",
-                     "...Rest, warden. We kept it.")
+      speak(:reptin, "Rest, warden. It's kept.", "...Rest, warden.")
       set_flag(:warden_honoured)
     end
     c = pbMessage(_INTL("The Heart pulses, slow and warm."), [_INTL("Leave it be."), _INTL("Break it, so nobody ever uses it again.")], 0)
     if c == 1
       say(["You raise your hand over it.",
-           "And from nowhere, a voice in your head, an old dwarf woman's, very tired:",
-           "\"Leave it. It must stay here, watched by its wardens, until the time for balance to shift.",
-           "If it's destroyed, the energies will be catastrophic.\"",
+           "From nowhere, a voice in your head, an old dwarf woman's, very tired:",
+           "\"Leave it. It must stay here, watched by its wardens, until the balance shifts.\"",
+           "\"Break it, and what's inside it breaks the Dale.\"",
            "You lower your hand."])
     end
     speak(:reptin, "Somebody has to watch it. Whatever happens next, I'll come back for it. I swear.",
@@ -859,21 +903,23 @@ module FrostThaw
     chasm_spoils
     say(["Far above, up at the chasm mouth, wolves are howling. Not hungry. Watchful.",
          herald?(:reptin) ? "You tip your head back and answer them. (Keep the watch till I'm back.)" :
-                            "Reptin tips his head back and answers them, once. REPTIN: (quietly) Keep the watch till I'm back."])
+                            "Reptin tips his head back and answers them, once.",
+         herald?(:reptin) ? nil : "REPTIN: (quietly) Keep the watch till I'm back."].compact)
   end
 
   # The loot, in the one quiet moment before the floor tips: the staff and the
   # pelt as their own beats, the rest in one box (notes 05 E8).
   def chasm_spoils
     if flag?(:broke_hag_staff) || flag?(:thredra_beaten)
-      say(["The two halves of the hag's black staff lie on the ice, still crackling faintly. You take them."])
+      say(["The two halves of her black staff lie on the ice, still crackling. You take them."])
       give(:FT_GRAYSTAFF)
     end
     if flag?(:minions_down)
-      say(["The hank of white pelt Kanan left behind is thick and warm. It would make a fine cloak against the cold."])
+      say(["Kanan left a hank of white pelt on the ice. Thick and warm: it would make a fine cloak."])
       give(:FT_WOLFPELT)
     end
-    say(["In her rags and her cauldron: opals, a black ice ring, a counterspell. You take it all."])
+    say(["Where she went into the glass, her rags lie on the ice.",
+         "In them, and in her cauldron: opals, a black ice ring, a counterspell. You take it all."])
     quiet_add = lambda do |item, qty|
       ok = ($PokemonBag.pbStoreItem(item, qty) rescue false)
       ok = ($bag.add(item, qty) rescue false) if !ok
@@ -881,9 +927,14 @@ module FrostThaw
     end
     [[:FT_OPAL, 3], [:FT_BLACKICERING, 1], [:GUARDSPEC, 1], [:ICEHEAL, 1], [:FULLRESTORE, 1]].each { |it, q| quiet_add.(it, q) }
     pbMessage(_INTL("\\me[Item get]You put the hag's things in your bag.")) rescue nil
-    say(["A sliver of red ice skitters to your feet. It beats, once, against your palm."])
-    give_key(:FT_HEARTSHARD)
-    set_flag(:heart_shard)
+    say(["A sliver of red ice skitters to your feet. It's beating, very faintly."])
+    if pbConfirmMessage(_INTL("Pick it up?"))
+      say(["It beats, once, against your palm."])
+      give_key(:FT_HEARTSHARD)
+      set_flag(:heart_shard)
+    else
+      say(["You leave it where it lies. Some things should stay in the chasm."])
+    end
   end
 
   # SC 5.10, the first moments of the fall: what the chasm leaves behind, in
@@ -891,12 +942,12 @@ module FrostThaw
   def chasm_falling_glimpses
     say(["The chasm mouth at dawn. In a crack in the frost, a single wildflower.",
          "Wolves on the ridge above it, howling at nothing. Not hungry. Watchful.",
-         flag?(:order_wardens) ? "A ring of Reghed tents at the chasm mouth, and a post carved with a wolf and a scythe." : nil,
+         flag?(:order_wardens) ? "Nomad tents ring the chasm mouth, round a post carved with a wolf and a scythe." : nil,
          "Dougan's Hole. Durmoot lifts a cup: \"To the ones who went down.\" A pause. \"...Don't tell.\"",
          "In Bryn Shander a bard sings \"Glimmer in the Chasm\": a small light, and an old spirit."].compact)
     sayc([cl(:shade, "(somewhere in the fall) ...Glimmer. That name again.")])
     say(["The woman in dark green, and beside her a small light, like a lantern. They smile at you.",
-         "\"Thank you,\" they whisper, like wind chimes. \"Balance is restored... for now.\""])
+         "\"Thank you,\" they whisper, like wind chimes. \"Keep the watch.\""])
   end
 
   # Landing: two things in your pack that weren't there before.
@@ -914,7 +965,7 @@ module FrostThaw
       say(["The Frostmaiden has seen what you did. She has marked you."])
     end
     give_key(:FT_OWLFEATHER)
-    say(["And in your pack, a small carving that wasn't there before: a wolf and a bloom, twined together, carved from ancient ice.",
+    say(["In your pack, a carving that wasn't there before: a wolf and a bloom, twined, in old ice.",
          "Nobody saw who left it. It's warm, like the locket was. Like she was."])
     give_key(:FT_WOLFBLOOM)
   end
@@ -936,14 +987,14 @@ module FrostThaw
     if c == 0
       set_flag(:asked_hag_task)
       say(["THREDRA: Oh, a little thing. Come to my home in the chasm, south of here. Bring your wolf.",
-           "THREDRA: There's a door down there only a wolf can open, and a thing I need fetched. Heehee. You'll see."], event_id)
+           "THREDRA: There's a door down there only a wolf can open, and a thing I need fetched."], event_id)
     else
       say(["THREDRA: Oh, you'll come anyway. They always come. Bring the wolf."], event_id)
     end
     speak(:reptin, "(quietly) ...She can do that? Take it out of me?", "...Can she?")
     set_flag(:reptin_tempted)
     sayc([cl(:alberica, "Sugar, she's a hag. They lie. It's the only thing they do for free."),
-          cl(:alerion, "Everything she offers has a hook in it. Find the hook before you bite."),
+          cl(:alerion, "There's a hook. Don't bite."),
           journey? ? cl(:shade, "(to you) Whatever she's selling, she's selling it twice.") : nil])
   end
 
@@ -952,13 +1003,14 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def read_glimmer_journal
     pbMessage(_INTL("Most of the pages are ruined with blood. A few lines are left."))
-    pbMessage(_INTL("\"...voices in the wind. Something about a treasure of life beyond death, hidden in the chasm...\""))
-    pbMessage(_INTL("\"...met an old woman on the trail. She called herself Granny Thredra. She knew things about me... offered a deal.\""))
-    pbMessage(_INTL("\"I don't trust her, but I'm desperate to save Alberica... Tomorrow, I venture into the chasm.\""))
+    pbMessage(_INTL("\"...voices in the wind. A treasure of life beyond death, in the chasm...\""))
+    pbMessage(_INTL("\"...met an old woman on the trail. Granny Thredra, she called herself.\""))
+    pbMessage(_INTL("\"She knew things about me. She offered a deal.\""))
+    pbMessage(_INTL("\"I don't trust her. But I'm desperate to save Alberica. Tomorrow, the chasm.\""))
     pbMessage(_INTL("\"The voices - children laughing? - echo at night. I must keep my wits.\""))
     pbMessage(_INTL("It's signed: Glimmer."))
     if flag?(:reversal)
-      pbMessage(_INTL("At the bottom of the last page, a line you couldn't read before has come up out of the stains:"))
+      pbMessage(_INTL("At the bottom of the last page, a line has come up out of the stains:"))
       pbMessage(_INTL("\"Balance must be kept. Spare the innocent.\""))
     end
   end
@@ -1032,19 +1084,21 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def hlin(event_id = nil)
     if flag?(:hlin_paid)
-      return say(["HLIN: (tamping her pipe) Murders stopped. My trust wasn't misplaced. Drink's on me, if you're buying."], event_id)
+      return say(["HLIN: (tamping her pipe) Murders stopped. Trust well placed. Drink's on me, if you're buying."], event_id)
     end
     if flag?(:hlin_hired) && flag?(:sephek_defeated)
       say(["HLIN: You're back. And the ice-dagger killer?"], event_id)
-      say([flag?(:sephek_origin_known) ? "You tell her: a sailor, drowned off Auril's island, and something cold that climbed into him and stayed." :
+      say([flag?(:sephek_origin_known) ? "You tell her: a drowned sailor, and something cold that climbed into him and stayed." :
                                          "You tell her about the Moon Temple, and the ice."])
-      say(["HLIN: (a long breath of smoke) Not dead. Frozen. Well. He won't be killing anyone from in there.",
-           "HLIN: The murders stop, I'll know you did right by me. Here. A hundred gold. I've more than I need."])
+      say(["HLIN: (a long breath of smoke) Not dead. Frozen. Well. He won't kill anyone from in there.",
+           "HLIN: The murders stop, I'll know you did right by me. Here. A hundred gold."])
       give_money(5000, "Hlin counts out a hundred gold pieces.")
       if flag?(:found_torgs_corpse) && !flag?(:torrga_beaten)
-        say(["HLIN: And the half-elf in Torrga's sack? Leave Torrga to me. I've a few old friends in Luskan she won't enjoy meeting."])
+        say(["HLIN: And the half-elf in Torrga's sack? Leave Torrga to me.",
+             "HLIN: I've old friends in Luskan she won't enjoy meeting."])
       elsif flag?(:torrga_beaten)
-        say(["HLIN: You took Torrga down too? (She laughs, and it turns into a cough.) Retirement's going to be very boring."])
+        say(["HLIN: You took Torrga down too? (She laughs, and it turns into a cough.)",
+             "HLIN: Retirement's going to be very boring."])
       end
       set_flag(:hlin_paid)
       $game_switches[SW_HLIN_PAID] = true if $game_switches
@@ -1053,36 +1107,45 @@ module FrostThaw
     end
     # First met after the Moon Temple: she's heard already, and pays for work you did without her.
     if !flag?(:hlin_hired) && flag?(:sephek_defeated)
-      say(["An elderly shield dwarf sits apart from everyone else, a nasty scar across her nose, smoking a long pipe.",
+      say(["An old shield dwarf sits apart from everyone, a scar across her nose, smoking a long pipe.",
            "HLIN: Sit. Hlin Trollbane. Retired. Bounty hunter. You'd be the lot who went up to the Moon Temple.",
-           "HLIN: Three murders this past month, each with a dagger of ice through the heart. I'd followed Torg's a tenday.",
-           "HLIN: Their bodyguard. Sephek Kaltro. I was going to hire somebody to deal with him. Seems I'm late."], event_id)
+           "HLIN: Three murders this past month, each with a dagger of ice through the heart.",
+           "HLIN: I'd followed Torg's a tenday. Their bodyguard, Sephek Kaltro. Seems I'm late."], event_id)
       set_flag(:hlin_hired)
       return hlin(event_id)
     end
     if flag?(:hlin_hired)
-      return say(["HLIN: Torg's is camped by the clearing, past the fisher's house. Sephek's the one in his shirtsleeves.",
-                  "HLIN: Get him alone if you can. He's no trouble to anyone while Torrga's open for business."], event_id)
+      # (notes 03 E17: he leaves Torg's when he takes Shimmer)
+      return say(["HLIN: He's left Torg's. Up toward the old temple on the hill, the woodcutters say.",
+                  "HLIN: Go careful. He makes knives out of nothing."], event_id) if flag?(:shimmer_taken)
+      return say(["HLIN: Torg's is camped by the clearing, past the fisher's house. Sephek's in shirtsleeves.",
+                  "HLIN: Get him alone if you can. He's no trouble while Torrga's open for business."], event_id)
     end
-    say(["An elderly shield dwarf sits apart from everyone else, a nasty scar across her nose, smoking a long pipe.",
+    say(["An old shield dwarf sits apart from everyone, a scar across her nose, smoking a long pipe.",
          "She's been watching you since you walked in. She takes the pipe out of her mouth.",
          "HLIN: Sit. You've the look of people who don't scare. I'm Hlin Trollbane. Retired. Bounty hunter.",
          "HLIN: Three murders this past month. A halfling trapper in Easthaven. A shipbuilder in Targos.",
-         "HLIN: And, three days back, a dwarf glassblower in Bryn Shander. Each found with a dagger of ice through the heart.",
-         "HLIN: Nobody else'll look into it. Not even the Council of Speakers. So I did."], event_id)
-    say(["HLIN: Sephek Kaltro. He works for a little travelling outfit called Torg's. Torrga Icevein's company. Shady dwarf.",
-         "HLIN: He's her bodyguard. He's charming, makes friends easy. Good with a blade, I'd guess.",
-         "HLIN: His victims all come from the three towns that sacrifice people to the Frostmaiden on new-moon nights.",
+         "HLIN: And, three days back, a dwarf glassblower in Bryn Shander."], event_id)
+    sayc([cl(:reptin, "(quietly) All dead the same way, I take it.")])
+    say(["HLIN: Each with a dagger of ice through the heart.",
+         "HLIN: Nobody else'll look into it. Not even the Council of Speakers. So I did."])
+    sayc([cl(:shade, "And you found someone.")])
+    say(["HLIN: Sephek Kaltro. He works for a travelling outfit called Torg's. Torrga Icevein's. Shady dwarf.",
+         "HLIN: He's her bodyguard. Charming, makes friends easy. Good with a blade, I'd guess.",
+         "HLIN: His victims all come from the three towns that give people to the Frostmaiden at the new moon.",
          "HLIN: Maybe they found a way to keep their names out of the drawing. Maybe he found out.",
          flag?(:kip_list) ? as(:alberica, "Kip's list. Three names on Bryn Shander's board that never got drawn.") : nil,
          flag?(:kip_list) ? "HLIN: (a slow nod) The glassblower's was one. Paid a clerk, the way I hear it." : nil,
-         "HLIN: I followed Torg's for a tenday. What struck me: no coat on him. No gloves. Like the cold can't touch him.",
+         "HLIN: I followed Torg's for a tenday. No coat on him. No gloves. Like the cold can't touch him.",
          "HLIN: Kiss of the Frostmaiden, indeed. And now Torg's is camped here. In Lonelywood. Right by the clearing."].compact)
     say(["HLIN: I'll pay you a hundred gold to take Sephek Kaltro, make sure of his guilt, and deal with him.",
          "HLIN: Quietly, if you can. Without the authorities. Come back to me when it's done."])
-    c = pbMessage(_INTL("Take Hlin's job?"), [_INTL("\"We'll do it.\""), _INTL("\"We were going after him anyway.\"")], 0)
+    c = pbMessage(_INTL("Take Hlin's job?"),
+                  [_INTL("\"We'll do it.\""), _INTL("\"We were going after him anyway.\""), _INTL("\"Not now.\"")], 2)
+    # (notes 03 E26: the job can be refused, and asked about again)
+    return say(["HLIN: Then don't drink my ale. Offer stands."]) if c == 2
     say([c == 0 ? "HLIN: Good. Mind his hands. He makes knives out of nothing." :
-                  "HLIN: Then I'll pay you for something you were doing anyway. Best kind of job. Mind his hands."])
+                  "HLIN: Then I'll pay you for something you were doing anyway. Best kind of job."])
     set_flag(:hlin_hired)
     sayc([cl(:shimmer, "(very quiet) He's here for me. Isn't he."),
           cl(:shade, "(a hand on her shoulder) He's here for a fight. He'll get one.")])
@@ -1097,7 +1160,7 @@ module FrostThaw
          "No coat, no hat, no gloves. Olive skin, dark hair in a tail.",
          "Snow lands on his shoulders and doesn't melt.",
          "His eyes are as blue as a frozen lake.",
-         "SEPHEK: (smiling, easy) Travellers! Good. It gets so quiet. Buying, or just looking at me?"], event_id)
+         "SEPHEK: (smiling, easy) Travellers! Good. So quiet out here. Buying, or just looking?"], event_id)
     if with_or_is?(:shimmer)
       say(["His eyes go past you to Shimmer, and stay there.",
            "SEPHEK: (gently) There you are."])
@@ -1109,18 +1172,18 @@ module FrostThaw
       say(["SEPHEK: I was born on Midwinter. The Frostmaiden's blessing keeps the cold off me. Lucky, in a place like this."])
     when 1
       say(["He doesn't even pretend.",
-           "SEPHEK: They cheated her. A clerk paid, a name rubbed off a board, and somebody else's child walks out into the snow instead.",
+           "SEPHEK: They cheated her. A clerk paid. A name rubbed off a board.",
+           "SEPHEK: So somebody else's child walked out into the snow instead.",
            "SEPHEK: She is owed. I collect. That's all."])
       set_flag(:sephek_confessed)
     else
       say(["SEPHEK: (still smiling) A careful one. Good."])
     end
     sayc([cl(:shade, "(hand on a knife) Then let's do this now."),
-          "SEPHEK: Here? With the Speaker's little ones playing two roads over?",
-          "SEPHEK: No. I'm not a monster.",
+          "SEPHEK: Here? With the Speaker's little ones two roads over? No. I'm not a monster.",
           with_or_is?(:shimmer) ? "SEPHEK: (to Shimmer, softly) Before the next moon. Come to me, or I pick someone else." : nil,
           with_or_is?(:shimmer) ? "SEPHEK: You always did come, in the end." : nil,
-          "Frost swirls up round him like a breath, and he's standing on the far side of the sled, ten paces off.",
+          "Frost swirls up round him like a breath. Then he's on the far side of the sled, ten paces off.",
           cl(:alerion, "Misty step. He's not running. He's showing us he can."),
           cl(:shimmer, "...I know.")])
     if !flag?(:shimmer_taken)
@@ -1148,15 +1211,17 @@ module FrostThaw
     end
     if !flag?(:met_torrga)
       set_flag(:met_torrga)
-      say(["A shield dwarf in good furs presides over three dog-sleds of goods, canopies keeping the snow off.",
-           "TORRGA: Torrga Icevein. Torg's is my company. Cut wood, flint, whale oil, blankets, wine, medicines.",
-           "TORRGA: Prices are prices. Twice what you'd pay in Bryn Shander, and worth every copper, out here."], event_id)
+      say(["A shield dwarf in good furs presides over three dog-sleds of goods, under canopies.",
+           "TORRGA: Torrga Icevein. Torg's is my company. Wood, flint, whale oil, blankets, wine, medicine.",
+           "TORRGA: Twice what you'd pay in Bryn Shander, and worth every copper, out here."], event_id)
     end
     if flag?(:sephek_defeated) && !flag?(:torrga_grudge_said)
       set_flag(:torrga_grudge_said)
-      say(["TORRGA: (not looking up from her ledger) My bodyguard went up to the Moon Temple and didn't come back down.",
+      say(["TORRGA: (not looking up from her ledger) My bodyguard went up to the Moon Temple.",
+           "TORRGA: He didn't come back down.",
            "TORRGA: Frozen solid, they're saying. And here you are, warm as toast.",
-           "TORRGA: I've done business in every town on these lakes for twenty years. They listen to me. Remember that."])
+           "Her drivers have stopped working. They're watching you.",
+           "TORRGA: I've traded in every town on these lakes for twenty years. They listen to me."])
     end
     if flag?(:found_torgs_corpse) || flag?(:sephek_defeated)
       opts = [_INTL("Buy something"), _INTL("Confront her"), _INTL("Leave")]
@@ -1170,21 +1235,24 @@ module FrostThaw
                    "TORRGA: And what's in my sacks is mine. Boys. Kill them.",
                    "Her four drivers drop the dogs' traces and come round the sleds."])
       # the drivers first, two by two, then Torrga and her lead driver
+      say([TRAINER_INTROS[:torg_hand2], TRAINER_INTROS[:torg_hand3]].compact)
       won = pbDoubleTrainerBattle(:FT_TORGHAND, "Oska", 0, nil, :FT_TORGHAND, "Corran", 0, nil) rescue nil
       won = pbTrainerBattle(:FT_TORGHAND, "Oska", nil, false, 0) if won.nil?
       return if !won
-      say(["Oska and Corran go down in the snow. Skeld looks at them, looks at you, and doesn't run."])
+      say(["Oska and Corran go down in the snow. Skeld looks at them, looks at you, and doesn't run.",
+           TRAINER_INTROS[:torg_hand4]].compact)
       won = pbTrainerBattle(:FT_TORGHAND, "Skeld", nil, false, 0)
       return if !won
+      say([TRAINER_INTROS[:torrga], TRAINER_INTROS[:torg_hand]].compact)
       won = pbDoubleTrainerBattle(:FT_BANDITCAPTAIN, "Torrga", 0, nil, :FT_TORGHAND, "Brannig", 0, nil) rescue nil
       won = pbTrainerBattle(:FT_BANDITCAPTAIN, "Torrga", nil, false, 0) if won.nil?
       return if !won
       say(["TORRGA: (on her knees in the snow) Fine. FINE. Take it. Take the box.",
-           "She drags a key on a thong over her head. Her little iron strongbox holds coins, and seven small gems."])
+           "She drags a key on a thong over her head. Her iron strongbox holds coins, and seven small gems."])
       give_money(4700, "Torrga's strongbox: ninety-two gold, seventy-six silver and a scatter of copper.")
       give(:FT_GEMSTONE, 7)
       say(["By morning Torg's has packed its sleds and gone south, fast, and without its sack."])
-      say(["(Whatever she was telling the merchants about you, she won't be telling it any more.)"]) if flag?(:torrga_grudge)
+      say(["(Whatever she was telling the merchants about you, she won't be saying it any more.)"]) if flag?(:torrga_grudge)
       set_flag(:torrga_beaten)
       set_flag(:torrga_grudge, false)
       $game_switches[SW_TORRGA_GONE] = true if $game_switches
@@ -1221,9 +1289,10 @@ module FrostThaw
          "SEPHEK: And something cold came and climbed into me, and ate what I was, and stayed.",
          "Then something older answers, out of the same mouth.",
          "SEPHEK: (the other voice) A druid of the old winter. Hers. I wear him. I cannot leave him.",
-         "SEPHEK: (the other voice) If the vessel dies, so do I. So he does not die. So he waits."])
+         "SEPHEK: (the other voice) If the vessel dies, so do I.",
+         "SEPHEK: (the other voice) So he does not die. So he waits."])
     sayc([cl(:reptin, "A winter druid. We druids tell stories about them, to scare the young."),
-          cl(:shade, "I don't care how many of him there are.")])
+          cl(:shade, "I don't care who's wearing who.")])
   end
 
   # Lonelywood after the Moon Temple: the ice-dagger murders have stopped.
@@ -1249,7 +1318,8 @@ module FrostThaw
   def apply_w1_switches
     return if !active? || !$game_switches
     # Torrga survives, and believes you slew her bodyguard: she leans on the merchants
-    set_flag(:torrga_grudge) if flag?(:sephek_defeated) && !flag?(:torrga_beaten) && !flag?(:torrga_grudge)
+    set_flag(:torrga_grudge) if flag?(:sephek_defeated) && !flag?(:torrga_beaten) && !flag?(:torrga_grudge) &&
+                                (flag?(:met_torrga) || flag?(:met_sephek_torgs))
     sync_switch(SW_TORRGA_GONE, flag?(:torrga_beaten))
     # Good Mead: the exposed thug waits in Olivessa's cooperage until the vote (045_MeadMustFlow)
     sync_switch(4006, flag?(:shandar_exposed) && !$game_switches[4079])
