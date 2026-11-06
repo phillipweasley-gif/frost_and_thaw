@@ -549,6 +549,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def scene_root_chapel
     return if flag?(:hyphora_leave)
+    Stage.panel("S-hyphora", fade: 24)                # the face in the roots
     sayc(["The roots around you glow amber. Something enormous and very young looks at you through them.",
           "HYPHORA: (no words at first; only the feeling of being held)",
           "HYPHORA: You planted me. You came back.",
@@ -563,6 +564,7 @@ module FrostThaw
           cl(:reptin, "You do not."),
           cl(:alberica, "Spiritually."),
           cl(:wyn, "(a hand on the root) We'll be careful. I promise.")])
+    Stage.panel_off(fade: 16)
     set_flag(:hyphora_leave)
     set_flag(:road_a_done)
     ($game_switches[SW_HYPHORA] = true; $game_map.need_refresh = true if $game_map) if $game_switches

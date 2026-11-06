@@ -321,7 +321,7 @@ module MapKit
       FT_ZHENTARIM: "BW054", FT_ZHENTARIM_F: "BW040", FT_AURILITE: "BW (40)",
       FT_TRAPPER: "BW (72)", FT_ROOTWARDEN: "BW029", FT_HALO: "FT_halo_disciple_male", FT_HALO_F: "FT_halo_disciple_female",
       FT_HALO_MATRON: "FT_matron_eline", FT_WINTER_MATRON: "FT_winter_matron_selrae_vorn",
-      FT_SKYSAILOR: "BW (23)", FT_SCHOLAR: "BW (55)", FT_GUILD: "BW (75)", FT_DUERGAR: "BW054", FT_DEVIL: "BW (40)",
+      FT_SKYSAILOR: "BW (23)", FT_SCHOLAR: "BW (55)", FT_GUILD: "BW (75)", FT_DUERGAR: "FT_duergar_guard", FT_DEVIL: "BW (40)",
       # Ten-Towns (045_*): Bryn Shander's militia, a sellsword, Zhentarim thugs, goblins, frost druids, miners
       FT_MILITIA: "BWPoliceman", FT_SELLSWORD: "BW (72)", FT_THUG: "BW054", FT_GOBLIN: "BW (40)", FT_FROSTDRUID: "BW (40)", FT_MINER: "BW (75)"
     }

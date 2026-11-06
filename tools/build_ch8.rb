@@ -44,7 +44,7 @@ ba.trainer(21, 11, nil, :duergar_brask, :FT_DUERGAR, dir: 2, sight: 3)
 ba.trainer(26, 13, nil, :duergar_hild, :FT_DUERGAR, dir: 4, sight: 2)
 [13, 14].each do |y|
   ba.event(29, y, "Barricade gate", [
-    { graphic: "BW054", direction: 4, script: "FT.barricade_gate(@event_id)" },
+    { graphic: "FT_duergar_guard", direction: 4, script: "FT.barricade_gate(@event_id)" },
     { switch: SW_BARRICADE_OPEN, graphic: "", through: true }
   ])
 end

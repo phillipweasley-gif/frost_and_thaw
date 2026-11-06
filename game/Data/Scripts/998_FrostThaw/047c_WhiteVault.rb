@@ -592,6 +592,11 @@ if Events.respond_to?(:onTrainerPartyLoad)
   Events.onTrainerPartyLoad += proc { |_sender, e|
     begin
       trainer = e.is_a?(Array) ? e[0] : e
+      # her crystal body (the last of her party) has a picture of its own
+      if trainer && trainer.name == "Avarice" && trainer.trainer_type.to_s == "FT_AVARICE_R" && (last = trainer.party.last) &&
+         last.species == FrostThaw::AVARICE_BODY
+        last.instance_variable_set(:@ft_picture, "FT_AVARICE_BODY")
+      end
       n = $ft_avarice_circuits.to_i
       if n > 0 && trainer && trainer.name == "Avarice" && FrostThaw.flag?(:vault_entered)
         trainer.party.each { |pk| pk.hp = [(pk.totalhp * (1.0 - 0.15 * n)).floor, 1].max }

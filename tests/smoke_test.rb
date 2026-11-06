@@ -121,7 +121,7 @@ check("trainer classes registered") { %i[FT_ZHENTARIM FT_ZHENTARIM_F FT_SPEAKER]
 check("new trainer class names show") { GameData::TrainerType.get(:FT_SPEAKER).name == "Speaker" }
 check("borrowed battle sprite resolves") { GameData::TrainerType.front_sprite_filename(:FT_ZHENTARIM).to_s.include?("ROUGHNECK") }
 check("a class with its own picture uses it") {
-  %i[FT_SPEAKER FT_SPEAKER_F FT_SPEAKER_DH FT_HALO FT_HALO_F FT_HALO_MATRON FT_WINTER_MATRON FT_GUILDMASTER FT_CORSAIR_CAPT].all? { |t|
+  %i[FT_SPEAKER FT_SPEAKER_F FT_SPEAKER_DH FT_HALO FT_HALO_F FT_HALO_MATRON FT_WINTER_MATRON FT_GUILDMASTER FT_CORSAIR_CAPT FT_AVARICE_R].all? { |t|
     GameData::TrainerType.front_sprite_filename(t).to_s == "Graphics/Trainers/#{t}" } }
 check("every trainer is in the game's trainer list") {
   FT::TRAINERS.all? { |k, (type, name)| GameData::Trainer.try_get(type, name, 0) } }
@@ -980,6 +980,8 @@ pose_sheets = Dir[File.join(repo, "game/Data/Scripts/998_FrostThaw/*.rb")].flat_
   File.read(f, encoding: "UTF-8").scan(/pose\([^,]+,\s*"([A-Z]-[A-Z]{2,3}-\d\d)"/).flatten }.uniq
 missing_poses = pose_sheets.reject { |n|
   File.exist?(File.join(repo, "build/gfx/Characters/#{n}.png")) || File.exist?(File.join(repo, "build/Characters/#{n}.png")) }
+check("every boss with its own battle picture has one in the art") {
+  (FT::BOSS_PICTURES.values + ["FT_AVARICE_BODY"]).all? { |n| File.exist?(File.join(repo, "build/gfx/Battlers/FrostThaw/bosses/#{n}.png")) } }
 check("every pose sheet the scenes play is in the art (#{pose_sheets.size} sheets)") { pose_sheets.size > 20 && missing_poses.empty? }
 puts "  missing: #{missing_poses.join(', ')}" if !missing_poses.empty?
 

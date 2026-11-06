@@ -554,7 +554,7 @@ module FrostThaw
   # over from their stalls (stand-ins; the stalls' own people step out of sight
   # for the night); Wyn comes in from the east road.
   FESTIVAL_STAND_INS = {
-    "Captain Rheven" => [:rheven, "FT_captain_rheven_stormbranch", 4, 1, 4], "Rheven's direwolf" => [:direwolf, "Followers/MIGHTYENA", 5, 1, 4],
+    "Captain Rheven" => [:rheven, "FT_captain_rheven_stormbranch", 4, 1, 4], "Rheven's direwolf" => [:direwolf, "Followers/FT_rheven_direwolf", 5, 1, 4],
     "Lirielle Mossdancer" => [:lirielle, "Followers/BUNEARY", -4, -1, 6], "Hew Talmire" => [:hew, "FT_master_hew_talmire", 6, -1, 4]
   }
 

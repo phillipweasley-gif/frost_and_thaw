@@ -109,7 +109,7 @@ rs.npc(46, 21, "Followers/BUNEARY", :lirielle, dir: 4, name: "Lirielle Mossdance
 rs.npc(13, 28, "Followers/LOPUNNY", :reva, dir: 6, name: "Reva Mosscut")
 rs.event(32, 29, "Tamsin", [{ graphic: "FT_tamsin", direction: 8, script: "FT.tamsin(@event_id)" }])
 rs.npc(50, 29, "FT_captain_rheven_stormbranch", :rheven, dir: 4, name: "Captain Rheven")
-rs.npc(51, 29, "Followers/MIGHTYENA", :rheven_wolf, dir: 4, name: "Rheven's direwolf")
+rs.npc(51, 29, "Followers/FT_rheven_direwolf", :rheven_wolf, dir: 4, name: "Rheven's direwolf")
 rs.event(48, 27, "Hew Talmire", [{ graphic: "FT_master_hew_talmire", direction: 2, script: "FT.hew(@event_id)" }])   # the Guild's ladder comes up beside him
 rs.npc(16, 23, "BWParasolLady", :rs_festival_goer, dir: 2)
 rs.npc(44, 27, "BW (30)", :rs_lantern_maker, dir: 6)   # (standing still: the east gap under the ledge is one tile wide)

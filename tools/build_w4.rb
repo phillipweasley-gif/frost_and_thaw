@@ -192,7 +192,7 @@ end
 gw.event(8, 9, "Old boat", [{ graphic: "", tile_id: CRATE, script: "FT.glasswater_boat(@event_id)" }])
 gw.event(8, 14, "The lake's edge", [{ graphic: "", tile_id: ICE_CRYSTAL, opacity: 120, script: "FT.glasswater_shore(@event_id)" }])
 gw.event(9, 12, "Talion at the lake", [{ graphic: "", through: true },
-                                        { switch: SW_TALION, graphic: "BW (17)", direction: 6, opacity: 170, script: "FT.talion_ritual(@event_id)" }])
+                                        { switch: SW_TALION, graphic: "FT_talion", direction: 6, opacity: 170, script: "FT.talion_ritual(@event_id)" }])
 gw.event(26, 15, "Far-shore boat", [{ graphic: "", tile_id: CRATE, script: "FT.glasswater_boat(@event_id)" }])
 gw.sign(4, 8, :glasswater_still)
 seal_edges(gw)
@@ -522,7 +522,7 @@ person_when(fl, 17, 15, "Refugee from Termalaine", "BW (29)", "FT.refugee_voice(
 person_when(fl, 10, 15, "Signer refugees", "BW (30)", "FT.petition_signer(:refugees, @event_id)", SW_PETITIONS)
 [[17, 19], [20, 18]].each { |x, y| fl.stamp(HAY, x, y) if [[x, y], [x + 1, y], [x, y + 1], [x + 1, y + 1]].all? { |c| walkable?(fl, *c) && !taken?(fl, *c) } }
 person_when(fl, 26, 9, "Debate stage (Fields)", "BW (30)", "FT.debate_stage(:fields, @event_id)", SW_DEBATES)
-person_when(fl, 39, 9, "Talion", "BW (17)", "FT.talion(@event_id)", SW_TALION_FIELDS, dir: 4)
+person_when(fl, 39, 9, "Talion", "FT_talion", "FT.talion(@event_id)", SW_TALION_FIELDS, dir: 4)
 # (R2's two spirits stand in the Fields from Chapter 6: tools/build_ch6b.rb.)
 fl.event(46, 14, "A thin place in the Wall", [{ through: true }, { switch: SW_GLASSWATER, trigger: 1, through: true,
                                                                    commands: [fl.command(201, [0, 2078, 1, 11, 6, 0])] }])

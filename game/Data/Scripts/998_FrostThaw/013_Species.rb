@@ -509,6 +509,11 @@ module GameData
     class << self
       alias ft_orig_sprite_bitmap_from_pokemon sprite_bitmap_from_pokemon unless method_defined?(:ft_orig_sprite_bitmap_from_pokemon)
       def sprite_bitmap_from_pokemon(pkmn, back = false, species = nil)
+        # a boss with its own picture (FrostThaw.named_mon, Avarice's last body)
+        if !back && pkmn && !species && (pic = (pkmn.instance_variable_get(:@ft_picture) rescue nil))
+          path = (pbResolveBitmap("Graphics/Battlers/FrostThaw/bosses/#{pic}") rescue nil)
+          return AnimatedBitmap.new(path) if path
+        end
         if back && pkmn && !species && !(pkmn.egg? rescue false)
           num = (pkmn.species_data.id_number rescue nil)
           path = num && FrostThaw.our_back_path(pkmn)

@@ -144,7 +144,7 @@ module FrostThaw
     set_flag(:barricade_entered)
     add_counter(:story_beats)
     set_rest_at(FORGE_REST) rescue nil
-    guard = Stage.actor(:duergar, 8, 13, 4, graphic: "BW054")   # the one who speaks, on screen
+    guard = Stage.actor(:duergar, 8, 13, 4, graphic: "FT_duergar_guard")   # the one who speaks, on screen
     say(["The tunnel narrows until a wall of fused root and blackened iron blocks the way.",
          "The exposed wood pulses faintly, like a heart under strain. Infernal sigils glow along the iron plates hammered into it.",
          "A single slit near the top leaks a strip of red-gold light. Something beyond is hammering. Something patient. Something building.",

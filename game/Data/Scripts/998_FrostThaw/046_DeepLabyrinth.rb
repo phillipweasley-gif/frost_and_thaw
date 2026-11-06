@@ -1049,6 +1049,13 @@ module FrostThaw
          "VAR: (the glaive coming up) Who in the Nine Hells are you?",
          unmasked ? "AVARICE: Close. I need a coat, Marshal. Yours will do." : nil,
          "The lantern goes out."].compact)
+    pit = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
+    echo = (pit && (pbResolveBitmap("Graphics/Characters/FT_var_echo") rescue nil)) ?
+             (Stage.actor(:var_echo, pit.x, pit.y, 2, graphic: "FT_var_echo") rescue nil) : nil
+    if echo
+      echo.opacity = 200
+      Stage.turn_to(echo, $game_player) rescue nil
+    end
     say(["In the dark, someone is still standing in the mirror: Var, as he was, glaive in his hands, looking straight out at you."])
     target = with_or_is?(:alerion) ? :alerion : nil
     if target == :alerion && herald?(:alerion)
@@ -1071,6 +1078,7 @@ module FrostThaw
          "VAR: And take this. She left it here because it hums when Sephek's near, and she didn't like it humming at her."])
     give_key(:FT_VARGLAIVE)
     say(["The mirror goes still. Var's echo raises a hand, and the glass is only glass."])
+    Stage.remove_actor(echo) if echo
     set_flag(:var_story_known)
     set_flag(:var_glaive)
     set_flag(:corsair_arms_deal)

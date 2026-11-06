@@ -118,3 +118,23 @@ Rheven's direwolf is still the Mightyena stand-in (its own follower hasn't come 
 
 Checks: smoke 233/233, maps 157/157 (named sprites matched in check_all), New Journey 244/245 and Alberica
 236/237 (the misses are lost-battle retries).
+
+## Batch 08 (2026-11-06, 0.7.7)
+
+| File (designer's name) | In the game as | Where |
+| --- | --- | --- |
+| `FT_myconid_myr`, `FT_myconid_yarro` | same | Mnemosyne Myr; Yarro (the Undercanopy) |
+| `FT_duergar_guard` | same; every `FT_DUERGAR` trainer's map sprite | the Barricade (gate and the guard who speaks), all duergar trainers |
+| `FT_duergar_worker` | same | the sooty traitor, the hiding duergar |
+| `FT_duergar_sleeper` | same | the chanting duergar in the barracks |
+| `FT_duergar_bound_captain` | same | the bound captain |
+| `FT_talion` | same | at the lake ritual, in the Fields |
+| `FT_var_echo` | same | stands in the liquid mirror for Var's story and fight (046), gone when the glass goes still |
+| `Followers/FT_rheven_direwolf` | same | beside Rheven in the square and at the festival |
+| `Pictures/S-hyphora` | same | Hyphora's leave in the root chapel (Ch7A), for the whole speech |
+| `Battlers/.../proposals/FT_*_BATTLE` (8) | `Battlers/FrostThaw/bosses/FT_*` | the Shadow Mycolith and its enraged form, Sephek's Minor and Major Avatars, Avarice's Reflection, the Brittle Maiden, Winter's Womb (`BOSS_PICTURES` in 022, read in 013's sprite hook), and Avarice's crystal body (the last of her party, set when her party loads) |
+| `FT_AVARICE_REFORGED_BATTLE` | `Trainers/FT_AVARICE_R` | her trainer picture: the art is drawn at 3x on a 96-pixel canvas, so it was cropped to its 80-pixel figure and set at 2x (no resampling) |
+| `Pictures/S-brightmane` | **not used** | it shows a lion; Brightmane is a unicorn in the script. A redraw is on Art List 2 |
+
+Checks: smoke 234/234 (new: every boss picture is in the art), maps 157/157, New Journey 244/245 and Reptin
+236/237; a probe built each boss and Avarice's party and read back their pictures.

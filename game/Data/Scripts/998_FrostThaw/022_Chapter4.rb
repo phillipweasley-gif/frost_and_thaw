@@ -578,9 +578,18 @@ module FrostThaw
     $game_switches[sw] = was if $game_switches && sw
   end
 
+  # Bosses with a battle picture of their own (Graphics/Battlers/FrostThaw/bosses)
+  BOSS_PICTURES = {
+    "Shadow Mycolith" => "FT_SHADOW_MYCOLITH", "Mycolith, Enraged" => "FT_SHADOW_MYCOLITH_ENRAGED",
+    "Sephek, Minor Avatar" => "FT_SEPHEK_MINOR_AVATAR", "Sephek, Major Avatar" => "FT_SEPHEK_MAJOR_AVATAR",
+    "Avarice's Reflection" => "FT_AVARICE_SOUL", "The Brittle Maiden" => "FT_AURIL_BRITTLE_MAIDEN",
+    "Winter's Womb" => "FT_AURIL_WINTER_S_WOMB"
+  }
+
   def named_mon(species, level, name)
     pk = Pokemon.new(species, level)
     pk.name = name
+    pk.instance_variable_set(:@ft_picture, BOSS_PICTURES[name]) if BOSS_PICTURES[name]
     pk.calc_stats
     pk
   end
