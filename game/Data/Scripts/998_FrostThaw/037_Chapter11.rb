@@ -77,6 +77,8 @@ module FrostThaw
     # The omens she sent all through the city (048_E): she knows which ones you saw.
     if (counter(:omens_seen) rescue 0).to_i >= 3
       say(["AURIL: You've seen them. Every sign. Frost on his shadow. Vines on her breath. Your own throat, cold.",
+           *{ never: ["AURIL: \"Never,\" you told yourself."],
+              not_yet: ["AURIL: \"Not yet,\" you said. Every night, \"not yet.\""] }[herald?(:alberica) ? state[:omen_secret] : nil].to_a,
            "AURIL: You told no one. That's how I knew you were mine."])
     end
     say(["She leans in.",

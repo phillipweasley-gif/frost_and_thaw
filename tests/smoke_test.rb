@@ -901,6 +901,10 @@ FT.define_singleton_method(:downtime_morning) { nil }
 $messages.clear
 FT.hearth_night
 d1 = FT.state[:rs_day]
+FT.state[:flags]&.delete(:rite_stopped)
+FT.hearth_night
+check("the rite is tonight until it's stopped: resting before it passes no night") { FT.state[:rs_day] == 1 }
+FT.set_flag(:rite_stopped)
 FT.hearth_night
 check("the night you arrive is Day 1, and each rest at the Hearth is another day") { d1 == 1 && FT.state[:rs_day] == 2 }
 check("...and the night brings something: an omen, a vignette or a night event") { $messages.size > 1 }

@@ -148,7 +148,7 @@ module FrostThaw
            "Your hand goes to your throat, where the pendant hung. Something cold pulses there."])
       speak(:alberica, "Gran's door. The one that had to stay shut.", "...I know that door.")
     elsif with_or_is?(:alberica)
-      say([seen ? "ALBERICA: (very quietly) Wings over a frozen eye. The vault I saw in the well." :
+      say([seen ? "ALBERICA: (very quietly) Wings over a frozen eye. I saw that in the well, on the old map." :
                   "ALBERICA: (very quietly) Wings over a frozen eye. I've dreamed that door.",
            "Where her pendant used to hang, something cold pulses. Brightest facing north.",
            "ALBERICA: (a hand at her throat) Gran's door. The one that had to stay shut."])
@@ -243,7 +243,7 @@ module FrostThaw
     end
     say(["Something falls out of the whirlwind and rings on the altar stone: a crystal that hums.",
          "Then the ice runs back together, flake by flake, and Sephek stands up again.",
-         "SEPHEK: (almost sorry) Not here. Not in her garden. Here I come back."])
+         "SEPHEK: (almost sorry) Not here. Not while her relics stand under this tree.", "SEPHEK: Here, I come back."])
     if !flag?(:sigil_sephek)
       give(:FT_FROSTSIGIL)
       set_flag(:sigil_sephek)

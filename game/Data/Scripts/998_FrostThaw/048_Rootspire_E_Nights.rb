@@ -156,9 +156,19 @@ module FrostThaw
             end
     say([frame] + lines.map { |l| omen_text(l, me) })
     $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10) rescue nil
+    omen_secret_choice if me && !state[:omen_secret] && (flag?(:trials_open) || lines.any? { |l| l.include?("told anyone") })
+
     if first && !me
       sayc([cl(:alberica, "(very lightly, to nobody) I'm fine, darlings. Just a chill. Somebody's walking over my grave.")].compact)
     end
+  end
+
+  # Herald Alberica keeps the omens to herself because you chose it (context 10
+  # §6, 11 §6): both answers keep the secret; Auril reads it back (037).
+  def omen_secret_choice
+    c = pbMessage(_INTL("(Tell someone?)"), [_INTL("Not yet."), _INTL("Never.")], 0) rescue 0
+    state[:omen_secret] = c == 1 ? :never : :not_yet
+    say([c == 1 ? "(Never. Some things you carry alone.)" : "(Not yet. Not until you know what it is.)"])
   end
 
   #-----------------------------------------------------------------------------

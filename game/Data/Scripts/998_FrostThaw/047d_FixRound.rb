@@ -403,17 +403,17 @@ module FrostThaw
       next if w == :neutral
       case fac
       when :spring
-        say(["A Renewal Warden presses a basket into your hands as you cross the Bazaar.",
+        say(["A warden in Spring's green presses a basket into your hands as you cross the Bazaar.",
              "SPRING WARDEN: Seeds from the Spring Seat's own beds. Kelyn's people remember their friends. We'll speak for you this week."])
         give(:REVIVALHERB, w == :trusted ? 3 : 2)
         add_opinion(1)
       when :winter
-        say(["A Rootwarden of the Order of Balance falls in beside you, and stays there.",
+        say(["A Rootwarden in Winter's white falls in beside you, and stays there.",
              "BALANCE WARDEN: Ysera's word. The Order watches over its friends this week. Nobody throws anything while I'm here."])
         trial[:mud] = [trial[:mud] - 1, 0].max
         give(:FULLRESTORE, 1) if w == :trusted
       when :autumn
-        say(["A courier of the Court of Splendor, in gold leaf, bows far too low.",
+        say(["A courier in Autumn's gold leaf bows far too low.",
              "AUTUMN COURIER: With the Court's compliments. Splendor rewards its admirers. Discreetly."])
         ($Trainer.money += (w == :trusted ? 4000 : 2000)) rescue nil
         say(["(The purse is heavy. The Court's rivals will hear of it.)"])
@@ -489,7 +489,9 @@ module FrostThaw
          "He holds out a hand. In it, a snowflake that doesn't melt."])
     if with_or_is?(:meat_meat)
       say(["PILGRIM: (to Meat Meat, softer still) And you. Prototype Verdant. Your blood remembers the cold table. So do I.",
-           herald?(:meat_meat) ? "(Your skin crawls. He knows your number.)" : "MEAT MEAT: (in the dream, very small) ...Meat Meat does not like this man."])
+           herald?(:meat_meat) ? "(Nobody calls you that. Only the cold table did. Your skin crawls.)" :
+                                 "MEAT MEAT: (very small) Nobody calls Meat Meat that. Only the cold table did.",
+           herald?(:meat_meat) ? nil : "MEAT MEAT: (smaller still) ...Meat Meat does not like this man."].compact)
     end
     if with_or_is?(:alerion)
       say(["PILGRIM: (not looking at Alerion) And the other one who listens for her. Two of us is one too many."])
@@ -664,9 +666,10 @@ module FrostThaw
     set_flag(:ledger_found)
     set_flag(:ledger_from_quarters)
     add_counter(:story_beats)
-    sayc([cl(:alberica, "The Halo paid her. And she sent them names for the lottery. She ran BOTH sides."),
-          cl(:reptin, "This is the sort of thing a Council asks to see. Keep it dry."),
-          cl(:alerion, "Keep it safe.")])
+    speak(:alberica, "(very quiet) Bryn Shander's lottery. The Halo paid her to pick the names.",
+          "(very quiet) ...Bryn Shander's lottery. She sent them the names.") if with_or_is?(:alberica)
+    sayc([cl(:reptin, "This is the sort of thing a Council asks to see. Keep it dry."),
+          cl(:alerion, "It's been dry thirty years.")].compact)
   end
 
   def quarters_wardrobe(event_id = nil)
@@ -809,7 +812,7 @@ module FrostThaw
     if flag?(:canopy_martial_law)
       say(["SELRAE: Martial law on the Canopy ends today. My wardens are needed on the Wall more than on the walkways."])
     elsif flag?(:canopy_watched)
-      say(["KELYN: And the watch on the Canopy is lifted. The Rift has been quiet all week."])
+      say(["KELYN: And the watch on the Canopy is lifted. Not one Halo candle lit all week."])
     end
     if flag?(:council_heralds)
       say(["KELYN: And Summer's chair, for the first time in thirty years, holds somebody who isn't wearing anybody.",
