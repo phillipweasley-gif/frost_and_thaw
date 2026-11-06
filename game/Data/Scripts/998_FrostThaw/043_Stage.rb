@@ -257,7 +257,7 @@ module FrostThaw
     end
 
     def update
-      update_summoned if !@summoned.empty? || !@leaving.empty?
+      update_summoned if !@summoned.empty? || !@leaving.empty? || (@actors && !@actors.empty?)
       update_overlays if @overlays && !@overlays.empty?
       return if @fx.empty? && !@panel
       @fx.dup.each do |f|
@@ -923,6 +923,11 @@ module FrostThaw
     # Called every frame: once the player has control again, the companions who
     # walked in step back out and go.
     def update_summoned
+      # A scene's actors never block you once they've stopped walking: a forced
+      # route ends with the event's through back off, and a party left standing
+      # after a scene (the orb's visions, the Canticle in the Hall) boxed the
+      # player into a corner with no way out but a map change.
+      @actors.each_value { |ge| ge.through = true if !ge.through && !ge.move_route_forcing } if @actors && !@actors.empty?
       return if @summoned.empty? && @leaving.empty?
       @leaving.dup.each do |pair|
         pair[1] -= 1
