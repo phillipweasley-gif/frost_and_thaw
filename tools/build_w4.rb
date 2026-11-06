@@ -461,7 +461,7 @@ resave(rh, 2053)
 # 2054 the Council Hall: Selrae's bid, Wyn's hearing, the spores hearing.
 ch = reopen(2054)
 sel = find_event(ch, "Selrae Vorn")
-sel.pages << ch.build_page(sel.pages[0], { switch: SW_FOUR_SEASONS, graphic: "BWOldWoman", direction: 2, script: "FT.selrae_bid(@event_id)" })
+sel.pages << ch.build_page(sel.pages[0], { switch: SW_FOUR_SEASONS, graphic: "FT_winter_matron_selrae_vorn", direction: 2, script: "FT.selrae_bid(@event_id)" })
 person_when(ch, 12, 13, "Captain Kethan Vale (hearing)", "BW029", "FT.wyn_hearing(@event_id)", SW_WYN_HEARING, dir: 2)
 person_when(ch, 7, 11, "Spring and Winter", "BW (30)", "FT.spores_debate(@event_id)", SW_TRIALS, dir: 6)
 # The stair in the back corner (the base map's closed-off upper floor) climbs the

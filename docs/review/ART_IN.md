@@ -45,3 +45,29 @@ yeti (70/70, `HL_PICK='What do you do=>^Fight'`, new in `story_run.rb`). Every n
 simulated, and its Thredra fight always ends in the in-battle lunge), so a probe ran both: the lunge plays
 P-THR-04 on Thredra's event and puts her back; `battle_pose` draws on a stand-in battle scene and still shows
 its lines with no scene at all.
+
+## Batch 05 (2026-11-06, 0.7.7)
+
+| File (designer's name) | In the game as | Where |
+| --- | --- | --- |
+| `Characters/FT_speaker_naerth` + `Trainers/FT_SPEAKER_NAERTH_TR` | same OW name; trainer `FT_SPEAKER` | Targos (his hall, the gym), the Council of Speakers |
+| `Characters/FT_speaker_duvessa_shane` + `..._TR` | same; `FT_SPEAKER_F` | Bryn Shander (the gym, the square), Ch9 on the wall, the Council of Speakers |
+| `Characters/FT_speaker_edgra_durmoot` + `..._TR` | same; `FT_SPEAKER_DH` | Dougan's Hole (the gym; after the hag), the Holed Up lodge |
+| `Characters/FT_matron_eline` + `Trainers/FT_MATRON_ELINE_TR` | same; `FT_HALO_MATRON` | the Shrine (Ch6), Ch11, the coda; the White Vault fight |
+| `Characters/FT_winter_matron_selrae_vorn` + `..._TR` | same; `FT_WINTER_MATRON` | the Council Hall, the Sap Wells, the pens, Ch10–11 |
+| `Characters/FT_halo_disciple_male` + `..._MALE_TR` | same; `FT_HALO` | every Halo brother, the masked trader, Brother Vosk |
+| `Characters/FT_halo_disciple_female` + `..._FEMALE_TR` | same; new class `FT_HALO_F` | Sisters Wenna, Ilse, Odile and Ren, Oda the Silent, Eira Voss (her battle picture; her own OW is still on the list) |
+| `Characters/Followers/FT_koran`, `FT_kanan` | same | Dougan's Hole, the ambush on the way home; Kanan at the Heart |
+| `Items/*` (6) | same | Medicine: Clear Mind, Emberleaf, Hyphora Seed, Renewal Draught, Frostbite Tincture, Sanguine Tonic |
+
+Notes:
+
+- The Halo had one trainer class for brothers and sisters, so the sisters now battle as `FT_HALO_F` (same name,
+  "Fractured Halo"); the map builder pairs each class with its overworld sprite, so their map sprites follow.
+- `tools/check_all.rb` now also checks the Speakers', Eline's and Selrae's map sprites match their battle pictures.
+
+Checks: smoke test 233/233 (a check that the Speakers', Matrons' and Halo classes use their own pictures);
+map checks 157/157 including the new sprite-matches-picture pairs. Full games as New Journey (244/245), Wyn
+(235/236) and Meat Meat (236/237), the same beats as before; all seven new trainer pictures meet the player in
+battle, and the new sprites play in their scenes (`traces_077/`). The driver's new misses on 2053 and 2072 are
+first tries it retried and passed, and Meat Meat's Koran miss came after a lost battle.

@@ -760,7 +760,7 @@ module FrostThaw
     mood(:rime)
     $game_screen.start_tone_change(Tone.new(-70, -60, -10, 40), 0) rescue nil
     px, py = ([$game_player.x, $game_player.y] rescue [0, 0])
-    duvessa = s.actor(:duvessa, px, py - 4, 2, graphic: "BW_Jasmine")
+    duvessa = s.actor(:duvessa, px, py - 4, 2, graphic: "FT_speaker_duvessa_shane")
     crowd = [[-4, -2, "BW (20)"], [-3, -1, "BW (38)"], [3, -2, "BW (54)"], [4, -1, "BW (61)"],
              [-5, -1, "BWOldMan"], [5, -2, "BWOldWoman"], [2, -1, "BW (77)"]].map do |dx, dy, g|
       s.actor(:crowd, px + dx, py + dy, 8, graphic: g)

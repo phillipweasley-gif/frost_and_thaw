@@ -47,7 +47,7 @@ module FrostThaw
     digger_gant:  [:FT_GUILD, "Gant", [[:GRAVELER, 38], [:B95H76, 39]], "Where's my lamp? I had a lamp. I had a whole crew."],
     digger_hobb:  [:FT_GUILD, "Hobb", [[:MACHOKE, 38], [:B208H75, 39]], "The amber talked. I listened. Shouldn't have listened."],
     halo_tarn:    [:FT_HALO, "Brother Tarn", [[:MAGCARGO, 39], [:B124H219, 40]], "Burn the tree from within. The Matron said it was mercy."],
-    halo_odile:   [:FT_HALO, "Sister Odile", [[:B215H429, 39], [:WEAVILE, 40]], "Fire or frost. Either way the tree stops. Either way."]
+    halo_odile:   [:FT_HALO_F, "Sister Odile", [[:B215H429, 39], [:WEAVILE, 40]], "Fire or frost. Either way the tree stops. Either way."]
   )
   TRAINER_INTROS.merge!(
     thrall_bryce: "BRYCE: You're not on the list. Nobody's on the list. The heart wants a list.",

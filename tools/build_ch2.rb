@@ -406,7 +406,7 @@ hall_line(g, 1, 8, 7, [Hall::CRATE, Hall::BOXES, Hall::CRATE])
 hall_line(g, 12, 19, 7, [Hall::CRATE, Hall::CANS, Hall::CRATE])   # gap at x 9-11
 [[6, 18], [14, 18], [5, 14], [15, 14], [4, 10], [12, 10], [6, 6], [15, 6]].each { |x, y| g.set(x, y, 1, Hall::STOOL) }
 [9, 10, 11].each { |x| g.door(x, 20, ID[:bryn], 31, 20, 2, name: "Exit") }
-g.event(10, 3, "Duvessa", [{ graphic: "BW_Jasmine", direction: 2, script: "FT.gym_leader(:duvessa, @event_id)" }])
+g.event(10, 3, "Duvessa", [{ graphic: "FT_speaker_duvessa_shane", direction: 2, script: "FT.gym_leader(:duvessa, @event_id)" }])
 g.trainer(2, 13, "BWPoliceman", :bhall_militia_1, :FT_MILITIA, dir: 2, sight: 2)
 g.trainer(17, 9, "BWGentleman", :bhall_clerk_2, :GENTLEMAN, dir: 2, sight: 2)
 g.trainer(10, 6, "BWPoliceman", :bhall_militia_2, :FT_MILITIA, dir: 2, sight: 1)

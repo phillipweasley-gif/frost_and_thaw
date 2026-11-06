@@ -119,7 +119,10 @@ check("MapInfos gain our map names") { i = FT.map_infos_with_ours({}); i[2001] &
 GameData.load_all
 check("trainer classes registered") { %i[FT_ZHENTARIM FT_ZHENTARIM_F FT_SPEAKER].all? { |t| GameData::TrainerType.try_get(t) } }
 check("new trainer class names show") { GameData::TrainerType.get(:FT_SPEAKER).name == "Speaker" }
-check("borrowed battle sprite resolves") { GameData::TrainerType.front_sprite_filename(:FT_SPEAKER).to_s.include?("ROCKETBOSS") }
+check("borrowed battle sprite resolves") { GameData::TrainerType.front_sprite_filename(:FT_ZHENTARIM).to_s.include?("ROUGHNECK") }
+check("a class with its own picture uses it") {
+  %i[FT_SPEAKER FT_SPEAKER_F FT_SPEAKER_DH FT_HALO FT_HALO_F FT_HALO_MATRON FT_WINTER_MATRON].all? { |t|
+    GameData::TrainerType.front_sprite_filename(t).to_s == "Graphics/Trainers/#{t}" } }
 check("every trainer is in the game's trainer list") {
   FT::TRAINERS.all? { |k, (type, name)| GameData::Trainer.try_get(type, name, 0) } }
 check("every trainer's Pokémon is a real species or fusion") {

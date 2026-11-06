@@ -128,7 +128,7 @@ module FrostThaw
     pbReceiveItem(:REVIVE, 2) rescue nil
     sayc([cl(:meat_meat, "Meat Meat not crying. That is snow."),
           cl(:alberica, "(sniffing loudly) Somebody give me a drink. For the wind.")])
-    durmoot = (Stage.actor(:durmoot, 14, 11, 2, graphic: "BWOldWoman") rescue nil)
+    durmoot = (Stage.actor(:durmoot, 14, 11, 2, graphic: "FT_speaker_edgra_durmoot") rescue nil)
     Stage.pan_to(14, 10)
     say(["DURMOOT: (from her door, after a while) ...Lodge. Now. I said I'd fight you myself."])
     Stage.pan_back

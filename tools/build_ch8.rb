@@ -86,7 +86,7 @@ cp.event(21, 4, "Cocoon V-7", [{ tile_id: 808, script: "FT.talk(:cocoon_v7, @eve
 cp.event(12, 9, "Journal", [{ tile_id: 581, script: "FT.talk(:pens_journal, @event_id)" }])
 cp.event(23, 7, "Last cocoon", [
   { tile_id: 808, script: "FT.selrae_cocoon(@event_id)" },
-  { switch: SW_SELRAE_PEN, graphic: "BWOldWoman", direction: 2, opacity: 170, step_anime: false, script: "FT.selrae_cocoon(@event_id)" }
+  { switch: SW_SELRAE_PEN, graphic: "FT_winter_matron_selrae_vorn", direction: 2, opacity: 170, step_anime: false, script: "FT.selrae_cocoon(@event_id)" }
 ])
 cp.event(5, 14, "Shelf", [{ tile_id: 581, script: "FT.garagai_shelf(@event_id)" }])
 [22, 23, 24].each { |x| cp.warp(x, 18, 2150, 5, 4, 2, name: "Down into the Dragonforge's upper works") }

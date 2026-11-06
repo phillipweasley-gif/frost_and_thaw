@@ -415,7 +415,7 @@ module FrostThaw
   def scene_bryn_trap
     return if flag?(:dragon_down)
     px, py = ($game_player.x rescue 17), ($game_player.y rescue 12)
-    ch9_actor(:duvessa, px, py - 3, 2, "BW_Jasmine")        # on the wall
+    ch9_actor(:duvessa, px, py - 3, 2, "FT_speaker_duvessa_shane")        # on the wall
     say(["Bryn Shander's square is packed. Every town that saw the dragon has sent its people here.",
          "Behind walls that can't stop anything with wings.",
          "DUVESSA: (on the wall) You. You left with my seal a month ago. Where have you...",
@@ -506,7 +506,7 @@ module FrostThaw
 
   def scene_green_light
     px, py = ($game_player.x rescue 17), ($game_player.y rescue 12)
-    duv = ch9_actor(:duvessa, px, py - 3, 2, "BW_Jasmine")
+    duv = ch9_actor(:duvessa, px, py - 3, 2, "FT_speaker_duvessa_shane")
     say(["The square is quiet. Snow falls on the black glass."])
     if with_or_is?(:reptin)
       anduin = ch9_actor(:anduin, px + 4, py + 2, 4, "FT_anduin")

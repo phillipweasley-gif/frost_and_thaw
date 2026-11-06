@@ -164,8 +164,8 @@ module FrostThaw
     real = stage_event("Frostina")
     real.transparent = true if real rescue nil          # the scene's Frostina stands in for her
     sephek = Stage.actor(:sephek, px, py - 3, 2, graphic: "FT_sephek_frozen")
-    eline = Stage.actor(:eline, px - 1, py - 2, 6, graphic: "BW (40)")
-    [[px - 3, py - 2], [px + 1, py - 4], [px - 2, py - 4]].each { |x, y| Stage.actor(:halo_robe, x, y, 2, graphic: "BW (40)") }
+    eline = Stage.actor(:eline, px - 1, py - 2, 6, graphic: "FT_matron_eline")
+    [[px - 3, py - 2], [px + 1, py - 4], [px - 2, py - 4]].each_with_index { |(x, y), i| Stage.actor(:halo_robe, x, y, 2, graphic: i.odd? ? "FT_halo_disciple_female" : "FT_halo_disciple_male") }
     heart = Stage.fx("E-14", [px - 1, py - 2], oy: 24, loop_from: 0)   # beating in Eline's hands
     frostina = Stage.actor(:frostina, px + 3, py - 3, 4)
     # Context 11 M11-2: name the two who come back after four chapters, and how the heart got here.
@@ -341,7 +341,7 @@ module FrostThaw
       say([cl(:alerion, "(flat) No. You didn't.")].compact)
     end
     # Selrae comes up the root-lift: she heard the scream from the Hall, and she knows this rite.
-    selrae = Stage.actor(:selrae, 12, 33, 8, graphic: "BWOldWoman")
+    selrae = Stage.actor(:selrae, 12, 33, 8, graphic: "FT_winter_matron_selrae_vorn")
     Stage.approach(selrae) if selrae
     say(["SELRAE: (out of breath) I heard the scream. I know this rite. I sat with them for years.",
          "SELRAE: Solstice. Her island in the Sea of Moving Ice.",

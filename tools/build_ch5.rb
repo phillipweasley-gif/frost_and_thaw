@@ -257,7 +257,7 @@ hb.event(11, 6, "Thredra", [
   { switch: SW_REVERSAL, graphic: "", through: true }
 ])
 hb.event(10, 10, "Kanan", [
-  { graphic: WOLF, direction: 2, script: "FT.thredra(@event_id)" },
+  { graphic: "Followers/FT_kanan", direction: 2, script: "FT.thredra(@event_id)" },
   { switch: SW_REVERSAL, graphic: "", through: true }
 ])
 hb.event(14, 10, "Ice troll", [

@@ -161,8 +161,8 @@ module FrostThaw
     warden_claw:     [:FT_ROOTWARDEN, "Hode", [[:B59H232, 40], [:PILOSWINE, 40]], "Claw circle holds the line. Mostly. Not against you."],
     warden_seed:     [:FT_ROOTWARDEN, "Ama", [[:BELLOSSOM, 40], [:B182H113, 41]], "The Seed circle heals what it breaks. Hold still."],
     halo_frost_wick: [:FT_HALO, "Brother Wick", [[:SNEASEL, 41], [:B124H215, 42]], "Perfect stillness. Perfect silence."],
-    halo_soot_ren:   [:FT_HALO, "Sister Ren", [[:B228H124, 41], [:B126H220, 42]], "Freeze it. Then burn what's left. Then nothing."],
-    halo_cinder_oda: [:FT_HALO, "Oda the Silent", [[:JYNX, 42], [:B229H215, 43]], "..."],
+    halo_soot_ren:   [:FT_HALO_F, "Sister Ren", [[:B228H124, 41], [:B126H220, 42]], "Freeze it. Then burn what's left. Then nothing."],
+    halo_cinder_oda: [:FT_HALO_F, "Oda the Silent", [[:JYNX, 42], [:B229H215, 43]], "..."],
     prom_patron_vell:  [:GENTLEMAN, "Lord Aster", [[:B36H38, 41], [:GIRAFARIG, 41]], "An Autumn salon loss. How very seasonal."],
     prom_artist_cora:  [:BEAUTY, "Cora", [[:BELLOSSOM, 41], [:B122H65, 41]], "You've ruined the composition. Thank you."],
     run_warden_moss:   [:FT_ROOTWARDEN, "Moss", [[:B91H215, 41], [:STANTLER, 41]], "Guild vault. Rootwarden-warded. And you walked past the wards."],
@@ -177,7 +177,7 @@ module FrostThaw
     halo_ambusher: [:FT_HALO, "Halo Knife", [[:SNEASEL, 41], [:B124H215, 41]], "The Frost Saint knows your names."],
     eren_touched: [:FT_DREAMER, "Eren", [[:B163H124, 43], [:GLACEON, 44], [:B215H163, 44]], "...I can remember everything. Everything. Make it stop."],
     halden_vex:   [:FT_SCHOLAR, "Halden Vex", [[:B137H82, 43], [:B65H178, 43], [:B178H137, 44]], "Reset... failed. Fascinating. Distressing. Fascinating."],
-    eira_voss:    [:FT_HALO, "Eira Voss", [[:B124H94, 44], [:B228H215, 44], [:B94H124, 45]], "...silence... after... both..."],
+    eira_voss:    [:FT_HALO_F, "Eira Voss", [[:B124H94, 44], [:B228H215, 44], [:B94H124, 45]], "...silence... after... both..."],
     kethan_duel:  [:FT_WATCHMAN, "Kethan", [[:B68H112, 44], [:B76H208, 44], [:B112H68, 45]], "Truthful. Your fists, I mean. That's rare."]
   )
   TRAINER_INTROS.merge!(

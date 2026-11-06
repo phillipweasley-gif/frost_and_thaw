@@ -64,7 +64,7 @@ module FrostThaw
           "LUMIN: (from the shrine steps) The Fractured Halo. They pray for her winter to come back.",
           cl(:alerion, "(very quietly) Winter's daughter. They mean Frostina."),
           cl(:alberica, "Over my dead body, darlings. And I'm very hard to kill.")].compact)
-    return false if !pbTrainerBattle(:FT_HALO, "Sister Ilse", nil, false, 0)
+    return false if !pbTrainerBattle(:FT_HALO_F, "Sister Ilse", nil, false, 0)
     return false if !pbTrainerBattle(:FT_HALO, "Brother Vosk", nil, false, 0)
     set_flag(:halo_orb_cleared)
     set_switch(SW_ORB_HALO, false)
@@ -1022,7 +1022,7 @@ module FrostThaw
           "She tilts her head too far, like a bird. Her eyes glitter. Her lips don't move.",
           "EIRA VOSS: Eline wanted the cold. The forge wants fire. I want what comes after both. Silence.",
           "EIRA VOSS: Every soul I send down to the forge brings it closer. Yours would bring it very close."], event_id)
-    return if !pbTrainerBattle(:FT_HALO, "Eira Voss", nil, false, 0)
+    return if !pbTrainerBattle(:FT_HALO_F, "Eira Voss", nil, false, 0)
     set_flag(:cellar_cleared)
     set_self_switch(event_id, "A")
     add_counter(:story_beats)

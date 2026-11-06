@@ -293,7 +293,7 @@ npc_when(d, 4, 19, "BW (54)", :dh_militia_open, SW_DH_WEST_OPEN, dir: 2, name: "
 # Koran, the "good" wolf, waits at the edge of town once the way is open
 d.event(5, 22, "Koran", [
   { graphic: "", through: true },
-  { switch: SW_DH_WEST_OPEN, graphic: WOLF, direction: 4, step_anime: true, script: "FT.koran(@event_id)" },
+  { switch: SW_DH_WEST_OPEN, graphic: "Followers/FT_koran", direction: 4, step_anime: true, script: "FT.koran(@event_id)" },
   { self_switch: "A", graphic: "", through: true }
 ])
 # coming home with the Dejarr siblings
@@ -424,7 +424,7 @@ hall_line(dl, 13, 19, 11, [Hall::CANS, Hall::CRATE, Hall::BOXES])
 hall_line(dl, 4, 19, 7, [Hall::BOXES, Hall::CRATE, Hall::CANS, Hall::CRATE]) # gap at x 1-3
 [[5, 14], [15, 14], [3, 9], [17, 9], [6, 5], [14, 5]].each { |x, y| dl.set(x, y, 1, Hall::STOOL) }
 [9, 10, 11].each { |x| dl.door(x, 16, ID[:dougans], 14, 11, 2, name: "Exit") }
-dl.event(10, 3, "Durmoot", [{ graphic: "BWOldWoman", direction: 2, script: "FT.gym_leader(:durmoot, @event_id)" }])
+dl.event(10, 3, "Durmoot", [{ graphic: "FT_speaker_edgra_durmoot", direction: 2, script: "FT.gym_leader(:durmoot, @event_id)" }])
 # The trappers are out on the ice line hunting wolves until the children are
 # home; then they're back, and they test anyone who wants the Speaker's seal.
 def trapper_when_home(b, x, y, key, dir, sight)
@@ -477,7 +477,7 @@ end
 [[22, 14], [22, 17]].each_with_index do |(x, y), i|
   t.event(x, y, i == 0 ? "Koran" : "Kanan", [
     { graphic: "", through: true },
-    { switch: SW_KIDS_FREED, graphic: WOLF, direction: 4, script: "FT.wolves_ambush(@event_id)" },
+    { switch: SW_KIDS_FREED, graphic: i == 0 ? "Followers/FT_koran" : "Followers/FT_kanan", direction: 4, script: "FT.wolves_ambush(@event_id)" },
     { switch: SW_WOLVES_GONE, graphic: "", through: true }
   ])
 end

@@ -98,7 +98,7 @@ end
 sw.sign(20, 26, :heart_wall)
 sw.event(30, 18, "Whispering attendant", [{ graphic: "Followers/PHANTUMP_fly", direction: 2, step_anime: true, script: "FT.attendant(@event_id)" }])
 sw.event(20, 20, "Selrae Vorn", [
-  { graphic: "BWOldWoman", direction: 2, script: "FT.selrae_heartroot(@event_id)" },
+  { graphic: "FT_winter_matron_selrae_vorn", direction: 2, script: "FT.selrae_heartroot(@event_id)" },
   { switch: SW_SELRAE, graphic: "", through: true }
 ])
 [4, 5].each { |x| sw.warp(x, 2, ID[:root_gate], x == 4 ? 7 : 8, 33, 8, name: "Up to the Root Gate") }

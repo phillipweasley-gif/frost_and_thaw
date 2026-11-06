@@ -177,9 +177,9 @@ ch.event(8, 13, "Darrus Fell", [{ graphic: "BW (55)", direction: 2, script: "FT.
 # (after the rite (3936) Selrae goes down after Var: her seat is empty, her
 # cloak on it, until you've found her below (3939); context 06 M6-10. The
 # trial week's page is added by build_w4.)
-ch.event(17, 12, "Selrae Vorn", [{ graphic: "BWOldWoman", direction: 4, script: "FT.selrae_hall(@event_id)" },
-                                 { switch: 3936, graphic: "BWOldWoman", direction: 4, opacity: 0, script: "FT.selrae_hall(@event_id)" },
-                                 { switch: 3939, graphic: "BWOldWoman", direction: 4, script: "FT.selrae_hall(@event_id)" }])
+ch.event(17, 12, "Selrae Vorn", [{ graphic: "FT_winter_matron_selrae_vorn", direction: 4, script: "FT.selrae_hall(@event_id)" },
+                                 { switch: 3936, graphic: "FT_winter_matron_selrae_vorn", direction: 4, opacity: 0, script: "FT.selrae_hall(@event_id)" },
+                                 { switch: 3939, graphic: "FT_winter_matron_selrae_vorn", direction: 4, script: "FT.selrae_hall(@event_id)" }])
 ch.event(14, 11, "Speaker's alcove", [{ graphic: "", script: "FT.talk(:kelyn_mural, @event_id)" }])
 ch.event(9, 16, "Petitioners' bench", [{ graphic: "", script: "FT.petition_bench(@event_id)" }])
 # the Heralds' statues along the side aisles (each with their partner Pokémon carved at their feet)
@@ -286,12 +286,12 @@ sh.event(14, 21, "Auril's statue", [
   { graphic: "Followers/FROSLASS", direction: 2, opacity: 170, step_anime: false, walk_anime: false, script: "FT.talk(:auril_statue, @event_id)" }
 ])
 sh.event(14, 19, "Matron Eline", [
-  { graphic: "BW (40)", direction: 2, script: "FT.eline(@event_id)" },
+  { graphic: "FT_matron_eline", direction: 2, script: "FT.eline(@event_id)" },
   { switch: SW_RITE_STOPPED, graphic: "", through: true }
 ])
 [[11, 20], [17, 20]].each_with_index do |(x, y), i|
   sh.event(x, y, "Disciple #{i + 1}", [
-    { graphic: "BW (40)", direction: i == 0 ? 6 : 4, script: "FT.talk(:halo_disciple, @event_id)" },
+    { graphic: i == 0 ? "FT_halo_disciple_female" : "FT_halo_disciple_male", direction: i == 0 ? 6 : 4, script: "FT.talk(:halo_disciple, @event_id)" },
     { switch: SW_RITE_STOPPED, graphic: "", through: true }
   ])
 end

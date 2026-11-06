@@ -119,7 +119,7 @@ module FrostThaw
     # The Canopy-Tier
     sky_wren:    [:FT_SKYSAILOR, "Wren",  [[:SKARMORY, 38], [:ALTARIA, 38]], "Wind took my line. It does that up here."],
     sky_talla:   [:FT_SKYSAILOR, "Talla", [[:XATU, 38], [:B227H18, 39]], "You win. Don't tell the Aerie. I had money on me."],
-    halo_ilse:   [:FT_HALO, "Sister Ilse", [[:JYNX, 38], [:B87H215, 39]], "She's the goddess's daughter. Someone should tell her."],
+    halo_ilse:   [:FT_HALO_F, "Sister Ilse", [[:JYNX, 38], [:B87H215, 39]], "She's the goddess's daughter. Someone should tell her."],
     halo_vosk:   [:FT_HALO, "Brother Vosk", [[:DELIBIRD, 38], [:B91H200, 39]], "The orb was nearly cold. Nearly."],
     scholar_pell:  [:FT_SCHOLAR, "Hollis",  [[:KADABRA, 37], [:PORYGON2, 38]], "My thesis survives. Barely. Footnotes everywhere."],
     scholar_quill: [:FT_SCHOLAR, "Quill", [[:XATU, 37], [:B82H122, 38]], "Chronal anomalies hit harder than expected. Noted."],

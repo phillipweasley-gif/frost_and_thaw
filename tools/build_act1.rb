@@ -224,7 +224,7 @@ l.event(6, 9, "Rat", [{ graphic: "Followers/RATTATA", direction: 2, step_anime: 
 l.sign(5, 5, :luskan_decor)
 l.sign(9, 5, :naerth_snakes)
 # Naerth does business here until he's set his terms (SC 1.05), then waits at the Town Hall.
-l.event(8, 6, "Naerth", [{ graphic: "BW_giovanni", direction: 2, script: "FT.naerth_terms(@event_id)" },
+l.event(8, 6, "Naerth", [{ graphic: "FT_speaker_naerth", direction: 2, script: "FT.naerth_terms(@event_id)" },
                          { switch: SW_NAERTH_TERMS, graphic: "", through: true }])
 save(l, :luskan)
 
@@ -292,7 +292,7 @@ hall_line(g, 1, 18, 7, [Hall::TABLE, Hall::CANS, Hall::CRATE, Hall::TABLE, Hall:
 [[4, 14], [8, 14], [12, 13], [6, 10], [10, 10], [14, 10], [5, 6], [15, 6], [3, 18], [17, 18]].each { |x, y| g.set(x, y, 1, Hall::STOOL) }
 [9, 10, 11].each { |x| g.door(x, 20, ID[:targos], 8, 13, 2, name: "Exit") }
 g.event(9, 3, "Naerth", [{ graphic: "", through: true },
-                         { switch: SW_NAERTH_TERMS, graphic: "BW_giovanni", direction: 2, script: "FT.gym_leader(:naerth, @event_id)" }])
+                         { switch: SW_NAERTH_TERMS, graphic: "FT_speaker_naerth", direction: 2, script: "FT.gym_leader(:naerth, @event_id)" }])
 g.trainer(17, 17, "BW (57)", :hall_enforcer_2, :ROUGHNECK, dir: 6, sight: 1)     # watches the first gap
 g.trainer(2, 13, "BW (63)", :hall_enforcer_1, :ROUGHNECK, dir: 4, sight: 1)      # watches the second
 g.trainer(18, 9, "BWGentleman", :hall_dealer, :ROUGHNECK, dir: 6, sight: 1)          # watches the third

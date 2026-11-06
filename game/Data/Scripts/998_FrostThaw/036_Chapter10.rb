@@ -1780,7 +1780,7 @@ module FrostThaw
     pair.transparent = true if pair rescue nil                 # (they're walking with you now)
     px, py = $game_player.x, $game_player.y
     Stage.actor(:kelyn, px - 1, py, 8, graphic: "BW (30)")
-    Stage.actor(:selrae, px + 1, py, 8, graphic: "BWOldWoman")
+    Stage.actor(:selrae, px + 1, py, 8, graphic: "FT_winter_matron_selrae_vorn")
     say(["The Fane. Sovereign Luminara on her throne-cap, and the colony all round her, glowing."])
   end
 
@@ -1947,7 +1947,7 @@ module FrostThaw
   end
 
   def selrae_dream_battle
-    Stage.actor(:selrae, $game_player.x, $game_player.y - 2, 2, graphic: "BWOldWoman")
+    Stage.actor(:selrae, $game_player.x, $game_player.y - 2, 2, graphic: "FT_winter_matron_selrae_vorn")
     say(["Out of the blizzard, Selrae Vorn. In the dream she's young, and her eyes are the colour of the white crystal.",
          "SELRAE: I wanted a little winter for this city. Let me show you what a little winter is."])
     return if !pbTrainerBattle(:FT_WINTER_MATRON, "Selrae", nil, false, 0)

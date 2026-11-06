@@ -815,7 +815,7 @@ module FrostThaw
     pbBGMPlay("Lavender Town") rescue nil
     say(["Morning."])
     durmoot = begin
-      Stage.actor(:durmoot, $game_player.x + 3, $game_player.y - 2, 2, graphic: "BWOldWoman")
+      Stage.actor(:durmoot, $game_player.x + 3, $game_player.y - 2, 2, graphic: "FT_speaker_edgra_durmoot")
     rescue StandardError
       nil
     end

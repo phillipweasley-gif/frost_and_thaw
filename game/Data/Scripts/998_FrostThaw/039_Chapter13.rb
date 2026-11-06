@@ -312,7 +312,7 @@ module FrostThaw
     return ev if ev
     sev = stage_event("Sephek")
     x, y = sev ? [sev.x - 1, sev.y] : [$game_player.x - 1, $game_player.y - 3]
-    Stage.actor(:eline, x, y, 2, graphic: "BW (40)")
+    Stage.actor(:eline, x, y, 2, graphic: "FT_matron_eline")
   rescue StandardError
     nil
   end

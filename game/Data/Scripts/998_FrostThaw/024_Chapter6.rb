@@ -52,6 +52,7 @@ module FrostThaw
   TRAINER_TYPES.merge!(
     FT_ROOTWARDEN: ["Rootwarden", :POKEMONRANGER_M, 0, 60],
     FT_HALO:       ["Fractured Halo", :CHANNELER, 1, 60],
+    FT_HALO_F:     ["Fractured Halo", :CHANNELER, 1, 60],
     FT_HALO_MATRON: ["Matron of the Halo", :CHANNELER, 1, 160, :LEADER_Pryce]
   )
   TRAINERS.merge!(
@@ -63,7 +64,7 @@ module FrostThaw
                    "Four hundred years and you still hit like a blizzard. Welcome home, Heralds."],
     halo_vigil:   [:FT_HALO, "Brother Iskar", [[:SNEASEL, 37], [:B215H200, 38]],
                    "The thaw is a fever. Someone has to sit with the patient while it breaks."],
-    halo_ascetic: [:FT_HALO, "Sister Wenna",  [[:B124H227, 37], [:DEWGONG, 38]],
+    halo_ascetic: [:FT_HALO_F, "Sister Wenna",  [[:B124H227, 37], [:DEWGONG, 38]],
                    "I was a Rootwarden once. I listened to the tree. It's so tired."],
     eline:        [:FT_HALO_MATRON, "Eline", [[:JYNX, 38], [:B91H225, 39], [:B221H124, 40]],
                    "Still... the sky was still... for one moment, it was still...", [:HYPERPOTION, :FULLHEAL]]
