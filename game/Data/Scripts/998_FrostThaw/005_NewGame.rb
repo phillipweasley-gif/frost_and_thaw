@@ -230,11 +230,18 @@ module FrostThaw
   # New Journey: a short title card, then you wake at the Rooted Hearth on the
   # festival morning (030_Prologue.rb takes it from there). Your first Pokémon
   # comes from Professor Wynsnow at the College.
+  # The card is morning: it plays over a daytime Rootspire if that picture
+  # exists, otherwise over the Hearth itself as it fades in (030_Prologue.rb),
+  # never over the night-time festival backdrop (notes E5).
   def journey_prologue
-    backdrop(:rootspire)
-    pbMessage(_INTL("Rootspire, the city under the World Tree. Year 400 since the tree grew, all in one night."))
-    pbMessage(_INTL("This morning is the Festival of Returning Light."))
-    pbMessage(_INTL("Every lantern in the city is lit for the Heralds of Dawn and Dusk."))
+    return if !scene_art?(:rootspire_day)
+    backdrop(:rootspire_day)
+    PRO_CARD.each { |l| pbMessage(_INTL(l)) }
+    set_flag(:pro_card_shown)
+  end
+
+  def scene_art?(name)
+    (pbResolveBitmap("Graphics/Pictures/FrostThaw/scene_#{name}") rescue nil) ? true : false
   end
 
   # SC 0.06 - The ship north (Alberica, Reptin, Alerion). Each opening gives
@@ -249,6 +256,7 @@ module FrostThaw
     when :meat_meat then return meat_meat_prologue(h)
     when :wyn       then return wyn_prologue
     end
+    backdrop(:ship) if scene_art?(:ship)        # a ship's deck at night (art request; the Dale until then)
     pbMessage(_INTL(RIME_BOX))
     pkmn = nil
     if h[:starter]
@@ -366,6 +374,8 @@ module FrostThaw
   SCENE_MUSIC = {
     dale:      "mountsilver",                        # the frozen Dale
     rootspire: "fullmoonIsland",                     # the festival, 400 years later
+    rootspire_day: "fullmoonIsland",                 # the festival morning (New Journey's card)
+    ship:      "mountsilver",                        # the ship north (Herald Mode)
     mirror:    "newmoonIsland"                       # falling through the glass
   }
 
