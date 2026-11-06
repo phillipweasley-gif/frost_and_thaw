@@ -93,8 +93,8 @@ module FrostThaw
     # (balance, scene pass: on the road out of Bryn Shander. His old Stantler
     # lead, with Intimidate, Stomp's flinch and Take Down, beat a two-Pokémon
     # team two times in three. A Swinub leads now, with the moves a Swinub
-    # knows at 21; his Sneasel-headed Stantler stays the ace and the test.)
-    ranger_hadd:    [:POKEMONRANGER_M, "Hadd",  [[:SWINUB, 21, [:MUDSLAP, :POWDERSNOW, :ENDURE, :TACKLE]],
+    # knows at 20; his Sneasel-headed Stantler stays the ace and the test.)
+    ranger_hadd:    [:POKEMONRANGER_M, "Hadd",  [[:SWINUB, 20, [:MUDSLAP, :POWDERSNOW, :ENDURE, :TACKLE]],
                                                  [:B234H215, 23, [:FURYSWIPES, :QUICKATTACK, :ICYWIND, :LEER]]],
                      "The Eastway's mine to watch. Today I watched me lose on it."],
     aurilite_seven: [:FT_AURILITE,     "Corra", [[:SNORUNT, 22], [:B87H215, 23]],
