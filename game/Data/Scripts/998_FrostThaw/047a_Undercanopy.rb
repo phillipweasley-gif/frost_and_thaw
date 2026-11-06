@@ -92,7 +92,7 @@ module FrostThaw
     tether_threads: ["Thin silver threads hang from the ceiling and vanish into the floor, humming."],
     rheven_blight: -> {
       with_or_is?(:reptin) ? ["CAPTAIN RHEVEN: (frost on his cloak, kneeling by the black caps) Reptin. Good. The sap's gone black up top too.",
-                              "CAPTAIN RHEVEN: Look at it with me. You can hear the pulse; I can't."] :
+                              "CAPTAIN RHEVEN: Look at it with me. You planted her. You can hear her; I can't."] :
                              ["CAPTAIN RHEVEN: (kneeling by the black caps) The sap's gone black in the Root-Tier.",
                               "CAPTAIN RHEVEN: I'd hoped your warden would come. Reptin. He can hear the tree."] },
     run_hatch_shut: ["At the Run's far end, a crack in the rock breathes cold spore-mist. It's too dark to see how deep it goes.",
@@ -110,7 +110,9 @@ module FrostThaw
   def verdant_sickness_ritual
     sayc(["Captain Rheven Stormbranch comes down the root-stair, cloak white with frost, and kneels at the black caps.",
           "RHEVEN: The sap's gone black up top too. Clotted. The tree's heartbeat's muffled, like a drum under a blanket.",
-          "RHEVEN: (gripping Reptin's shoulder) Reptin. You can hear the pulse. Will you cleanse it, or shall we cut away the rot?"])
+          herald?(:reptin) ? "RHEVEN: (gripping your shoulder) Reptin. You planted her. You can hear her." :
+                             "RHEVEN: (gripping Reptin's shoulder) Reptin. You planted her. You can hear her.",
+          "RHEVEN: Cleanse it, or do we cut away the rot?"])
     set_flag(:rheven_met_blight)
     c = pbMessage(_INTL("The blight..."), [_INTL("Cleanse it (Reptin's ritual)"), _INTL("Cut away the rot (burn it)")], 0)
     return nil if c != 0
