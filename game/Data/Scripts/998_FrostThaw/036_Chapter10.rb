@@ -2285,7 +2285,7 @@ module FrostThaw
   # [graphic, line]: one clause of the platform, then what the seat does if Auril comes
   PLATFORMS = {
     rheven: ["BW (72)", "RHEVEN: Walls, and patrols past the Wall. If she comes, the Skytower griffons fly for us."],
-    mira: ["BW (33)", "MIRA: Trade with Ten-Towns. And a ship that can cross the Sea of Moving Ice."],
+    mira: ["FT_mira_of_the_north_wind", "MIRA: Trade with Ten-Towns. And a ship that can cross the Sea of Moving Ice."],
     eirwen: ["BW (30)", "EIRWEN: Listen to the crystals. And the oldest maps of the north are mine. Every one."],
     phildendrin: ["FT_phildendrin", "PHILDENDRIN: Fair trials. And Duvessa's people hold this city, if you must go."],
     anduin: ["FT_anduin", "ANDUIN: Serve the tree. And the Wennen's bell calls something huge from the sea."]

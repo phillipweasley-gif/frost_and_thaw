@@ -555,7 +555,7 @@ module FrostThaw
   # for the night); Wyn comes in from the east road.
   FESTIVAL_STAND_INS = {
     "Captain Rheven" => [:rheven, "BW (72)", 4, 1, 4], "Rheven's direwolf" => [:direwolf, "Followers/MIGHTYENA", 5, 1, 4],
-    "Lirielle Mossdancer" => [:lirielle, "Followers/BUNEARY", -4, -1, 6], "Hew Talmire" => [:hew, "BW (75)", 6, -1, 4]
+    "Lirielle Mossdancer" => [:lirielle, "Followers/BUNEARY", -4, -1, 6], "Hew Talmire" => [:hew, "FT_master_hew_talmire", 6, -1, 4]
   }
 
   def festival_cast
@@ -593,7 +593,7 @@ module FrostThaw
     return if flag?(:ch7_started)
     say(["The runner takes you straight to the Council Hall of Seasons."])
     (pbFadeOutIn { Stage.jump(*COUNCIL_SUMMONS_SPOT) } rescue Stage.jump(*COUNCIL_SUMMONS_SPOT)) if $game_map && $game_map.map_id != COUNCIL_SUMMONS_SPOT[0]
-    hew = Stage.actor(:hew, 12, 18, 8, graphic: "BW (75)")              # Hew waits in the doorway, cap in his hands
+    hew = Stage.actor(:hew, 12, 18, 8, graphic: "FT_master_hew_talmire")              # Hew waits in the doorway, cap in his hands
     sayc(["All four crystals in the Hall are lit, and nobody is sitting down.",
           "Summer's chair is still empty. Winter's too: frost on Selrae's cloak, and no Selrae.",
           "KELYN: Heralds. Something is waking below, and Eirwen says it's under the Heartroot.",

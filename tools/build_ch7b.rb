@@ -48,7 +48,7 @@ gd.sign(21, 3, :guild_amber)
 gd.event(9, 9, "Prototype 3", [{ graphic: "Followers/GOLETT", direction: 8, step_anime: true, script: "FT.father_construct(@event_id)" }])
 # SC 7B.02: Hew comes down his ladder with you and waits in the Annex; two of his workers stand guard
 gd.event(7, 6, "Hew Talmire", [{ graphic: "", through: true },
-                                         { switch: 3972, graphic: "BW (75)", direction: 2, script: "FT.leader_hew(@event_id)" }])
+                                         { switch: 3972, graphic: "FT_master_hew_talmire", direction: 2, script: "FT.leader_hew(@event_id)" }])
 gd.trainer(10, 10, nil, :guild_worker_pell, :FT_GUILD, dir: 4, sight: 2)
 gd.trainer(15, 12, nil, :guild_worker_rusk, :FT_GUILD, dir: 4, sight: 2)
 # SC 7B.08: the door of iron and glass at the bottom of Hew's last ladder

@@ -121,7 +121,7 @@ check("trainer classes registered") { %i[FT_ZHENTARIM FT_ZHENTARIM_F FT_SPEAKER]
 check("new trainer class names show") { GameData::TrainerType.get(:FT_SPEAKER).name == "Speaker" }
 check("borrowed battle sprite resolves") { GameData::TrainerType.front_sprite_filename(:FT_ZHENTARIM).to_s.include?("ROUGHNECK") }
 check("a class with its own picture uses it") {
-  %i[FT_SPEAKER FT_SPEAKER_F FT_SPEAKER_DH FT_HALO FT_HALO_F FT_HALO_MATRON FT_WINTER_MATRON].all? { |t|
+  %i[FT_SPEAKER FT_SPEAKER_F FT_SPEAKER_DH FT_HALO FT_HALO_F FT_HALO_MATRON FT_WINTER_MATRON FT_GUILDMASTER FT_CORSAIR_CAPT].all? { |t|
     GameData::TrainerType.front_sprite_filename(t).to_s == "Graphics/Trainers/#{t}" } }
 check("every trainer is in the game's trainer list") {
   FT::TRAINERS.all? { |k, (type, name)| GameData::Trainer.try_get(type, name, 0) } }

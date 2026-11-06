@@ -479,7 +479,7 @@ person_when(rt, 12, 19, "Ivo", "BW029", "FT.pell(@event_id)", SW_PELL, dir: 4)
 rt.npc(24, 9, "BW (38)", :smuggler_dockworker, dir: 2, name: "Dockworker")
 # (The way down to the Undercity is the crack at the far end of the Smuggler's Run, 2198, below.)
 mira = find_event(rt, "Mira of the North Wind")
-mira.pages << rt.build_page(mira.pages[0], { switch: SW_MIRA_FREED, switch2: SW_TRIALS, graphic: "BW (33)", direction: 2, script: "FT.mira_trials(@event_id)" })
+mira.pages << rt.build_page(mira.pages[0], { switch: SW_MIRA_FREED, switch2: SW_TRIALS, graphic: "FT_mira_of_the_north_wind", direction: 2, script: "FT.mira_trials(@event_id)" })
 person_when(rt, 20, 21, "Signer dockers", "BW (38)", "FT.petition_signer(:dockers, @event_id)", SW_PETITIONS)
 resave(rt, 2055)
 

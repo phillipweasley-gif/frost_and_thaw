@@ -77,3 +77,14 @@ first tries it retried and passed, and Meat Meat's Koran miss came after a lost 
 | File | In the game as | Where |
 | --- | --- | --- |
 | `Characters/FT_hlin_trollbane` | same | the Lucky Liar, Lonelywood (Ch3), replacing the old-woman stand-in |
+
+## Batch 05, last (2026-11-06, 0.7.7)
+
+| File (designer's name) | In the game as | Where |
+| --- | --- | --- |
+| `Characters/FT_master_hew_talmire` + `Trainers/FT_MASTER_HEW_TALMIRE_TR` | same; trainer `FT_GUILDMASTER` | Rootspire (by the Guild ladder, the festival, the Hearth doorway), the Guild annex gym |
+| `Characters/FT_mira_of_the_north_wind` + `Trainers/FT_MIRA_OF_THE_NORTH_WIND_TR` | same; trainer `FT_CORSAIR_CAPT` | the mirror stall, the docks, the trial week, the Council (platforms, the four chairs) |
+| `Items/*` (4) | same | the last medicine: Sapstone, Spore Dream, Vitality Phial, Spore Charm (104 icons in all) |
+
+Mira's mirror stall still uses her own sprite while she's possessed; her possessed variant hasn't come in.
+A New Journey run (244/245) meets both in battle and shows both sprites.

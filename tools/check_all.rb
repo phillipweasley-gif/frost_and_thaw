@@ -141,7 +141,8 @@ Dir[File.expand_path("../game/Data/Scripts/998_FrostThaw/*.rb", __dir__)].each d
   File.read(f, encoding: "UTF-8").scan(/^\s{4}(\w+):\s+\[:(\w+),\s+"[^"]+",\s+\[\[/) { |k, t| trainer_class[k] = t.to_sym }
 end
 leaders = { "Naerth" => "FT_speaker_naerth", "Duvessa" => "FT_speaker_duvessa_shane", "Durmoot" => "FT_speaker_edgra_durmoot",
-            "Matron Eline" => "FT_matron_eline", "Selrae Vorn" => "FT_winter_matron_selrae_vorn", "Sephek in ice" => "FT_sephek_frozen" }
+            "Matron Eline" => "FT_matron_eline", "Selrae Vorn" => "FT_winter_matron_selrae_vorn",
+            "Hew Talmire" => "FT_master_hew_talmire", "Mira of the North Wind" => "FT_mira_of_the_north_wind", "Sephek in ice" => "FT_sephek_frozen" }
 maps.each do |id, m|
   m.events.each_value do |e|
     src = e.pages.flat_map(&:list).select { |c| [355, 655].include?(c.code) }.map { |c| c.parameters[0] }.join("\n")
