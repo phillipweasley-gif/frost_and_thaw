@@ -156,9 +156,20 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   TEXT.merge!(
     # --- the Trunk-Tier ----------------------------------------------------------
-    lift_keeper: [{ if: { flag: :twins_met }, lines: ["LIFT-KEEPER: Canopy? The dragons have circled low since you came.",
-                                                       "LIFT-KEEPER: Whole city's got a crick in its neck from looking up."] },
-                  ["LIFT-KEEPER: Root-lift, up to the Canopy-Tier. Hold on to something that isn't me."]],
+    # (context 12 row 12.05: on the eve of the crossing the twins' line is Act II's; it
+    # names the roost only when the griffons are the way you're going)
+    lift_keeper: -> {
+      if T.flag?(:ch11_done) && !T.flag?(:solstice_sighted)      # (the eve of the crossing)
+        T.respond_to?(:voyage_route) && T.voyage_route == :griffons ?
+          ["LIFT-KEEPER: Canopy again? Griffons have been pacing the roost since dawn."] :
+          ["LIFT-KEEPER: Canopy again? It's quiet up there, without the white one circling."]
+      elsif T.flag?(:twins_met)
+        ["LIFT-KEEPER: Canopy? The dragons have circled low since you came.",
+         "LIFT-KEEPER: Whole city's got a crick in its neck from looking up."]
+      else
+        ["LIFT-KEEPER: Root-lift, up to the Canopy-Tier. Hold on to something that isn't me."]
+      end
+    },
     lirielle: -> {
       if T.flag?(:lirielle_dream)
         ["LIRIELLE: I've written your scent down. Snow, smoke, something green. I'm calling it Herald.",
