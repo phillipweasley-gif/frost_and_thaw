@@ -230,10 +230,23 @@ module FrostThaw
     f, _m, where = AURIL_RELICS.find { |k, _, _| k == which }
     return if !f
     return say(lines_for(:auril_relic_gone), event_id) if flag?(f)
-    say(["A shard of black ice #{where}, in a nest of frost-runes. It hums with her cold.",
-         "The frost-runes are fresh. The Halo has been down here, carrying it in."], event_id)
-    sayc([cl(:alerion, "(a hand on his chest) It's beating. In time with him."),
-          cl(:wyn, "...It's taking from the tree. Just a little. Like a tick.")])
+    # Three relics, three different beats (context 12 M12-2): the first names
+    # whose heart it keeps and what smashing it does; the others move on.
+    place = where.sub(/^./, &:upcase)
+    case relics_left
+    when 3
+      say(["A shard of black ice #{where}, in a nest of frost-runes. It hums with her cold.",
+           "The frost-runes are fresh. The Halo carried it in while Selrae was their prisoner."], event_id)
+      sayc([cl(:alerion, "(a hand on his chest) It's beating. In time with Sephek."),
+            cl(:wyn, "...It's taking from the tree. Like a tick. While it stands, he gets back up.")])
+    when 2
+      say(["#{place}, the second shard of black ice. Fresh runes, still wet."], event_id)
+      sayc([cl(:alerion, "(a hand on his chest) Same beat. Faster. He knows we're here."),
+            cl(:meat_meat, "Tick. Meat Meat squashes ticks.")])
+    else
+      say(["#{place}, the last shard of black ice."], event_id)
+      sayc([cl(:alberica, "Last one, darlings. Then he stays down.")])
+    end
     return if !pbConfirmMessage(_INTL("Smash Auril's relic?"))
     say(["The runes flare. The cold stands up out of the shard and takes a shape: a woman of rime, faceless."])
     return if !boss_battle(named_mon(:B429H215, 62, "Relic-Warden"))
@@ -242,7 +255,8 @@ module FrostThaw
     set_flag(f)
     left = relics_left
     if left == 0
-      sayc(["Far away, north, something that was holding its breath lets it out.",
+      sayc(["Far away, north, a breath that was being held runs out.",
+            herald?(:reptin) ? "(The tree leans toward you a little when the last one breaks. You'd swear it.)" : nil,
             cl(:alerion, "That's all three. He won't get up again.")])
       set_flag(:auril_relics_destroyed)
     else
