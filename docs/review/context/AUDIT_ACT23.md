@@ -10,7 +10,7 @@ Ch9; Var's seventh-night oath.
 
 - Smoke test 231/231 (two new checks: the rite clock; the Vault's key items stay clear of the relics' numbers).
 - Full games re-recorded (`traces_074/`): Herald Reptin, Wyn, Meat Meat and Alberica 236/237 (Wyn 235/236, which has
-  one beat fewer); New Journey in its own row below. The one miss in every mode is the postgame merge of the three sigils,
+  one beat fewer); New Journey 244/245. The one miss in every mode is the postgame merge of the three sigils,
   which misses on the 0.7.3 baseline too. Meat Meat now plays the whole game with `HL_STARTER=1`; with her default team
   the driver loses Act I battles (Ranger Hadd, Good Mead) and reruns vary.
 - Postgame Glasswater crossing (builder f, untested by f): no Wall prompt, no time-freeze, lands on "Where the Wall
