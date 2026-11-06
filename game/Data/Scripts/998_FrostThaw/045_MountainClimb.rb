@@ -165,10 +165,10 @@ module FrostThaw
   def boy_sled_dog(event_id = nil)
     first = !flag?(:boy_met)
     set_flag(:boy_met)
-    giver_hello(event_id, bark: :GROWLITHE)
+    # (he's just spotted you and run over: 017's boy_spots_you did the bark and "!")
+    giver_hello(event_id, bark: :GROWLITHE) if !(first && flag?(:boy_spotted))
     if first
-      say(["A wolf-sized sled dog with light grey fur bounds at you.",
-           "A broken harness drags behind him.",
+      say(["A wolf-sized grey sled dog runs at you, a broken harness dragging behind it.",
            "He knocks you into the snow, whimpers, and licks your whole face.",
            "Then he takes your bootstrap in his teeth and tugs. Hard. That way. THAT way."], event_id)
       sayc([cl(:alberica, "Oh! Oh, he's a darling. He's a darling with a job."),
@@ -209,47 +209,38 @@ module FrostThaw
     # let anyone forget it; the player is asked to go up after him.
     keegan_ev = (event_id && $game_map.events[event_id]) || Stage.find("Keegan")
     with_boy = $game_switches[SW_MC_BOY_TAKEN]
+    # (notes 01 S2: six boxes, the ask in the fourth; Boy is in the room, E10)
+    boy = Stage.find("Boy (waiting)")
     if with_boy
-      boy = Stage.actor(:boy, $game_player.x, $game_player.y, 8, graphic: BOY_GRAPHIC) if Stage.map?
-      say(["The door opens before you can knock.",
-           "The dog shoots past the man inside, straight to the fire."], event_id)
-      Stage.walk_to(boy, 12, 8) if boy
+      if boy
+        boy.moveto($game_player.x, $game_player.y)
+        say(["The door opens before you can knock. The dog shoots past the man inside, to the fire."], event_id)
+        Stage.walk_to(boy, 11, 8, face: 6)
+      else
+        say(["The door opens before you can knock. The dog shoots past the man inside, to the fire."], event_id)
+      end
       Stage.emote(keegan_ev, :exclaim) if keegan_ev
       say(["KEEGAN: Boy? Boy! Where's-"])
       Stage.approach(keegan_ev) if keegan_ev
-      say(["He sees you instead of his husband. His face falls."])
+      say(["He sees you instead of his husband. His face falls.",
+           "KEEGAN: Come in out of the cold. He came home without Garret. My husband."])
     else
-      say(["A man sits by the fire, a cup of cider going cold in his hands.",
-           "He looks up as if you might be someone else."], event_id)
+      say(["A man sits by the fire, a cup of cider going cold in his hands. He looks up, hoping."], event_id)
       Stage.approach(keegan_ev) if keegan_ev
+      say(["KEEGAN: You're not him. Come in. My husband's dog came home without him."])
     end
-    say(["KEEGAN: ...Come in out of the cold. You'll want cider. Everyone wants cider. Sit.",
-         companions.empty? ? "He pours you a cup of warm cider. His hands aren't steady." :
-                             "He gives each of you a cup of warm cider. His hands aren't steady.",
-         with_boy ? "KEEGAN: He came home without Garret. My husband. He's been at that door all night." :
-                    "KEEGAN: My husband's dog came home without him. He won't stop running the streets.",
-         "KEEGAN: You're not from Ten-Towns. Ten towns, three lakes, and one winter for all of us.",
-         "Keegan Velryn turns his cup round and round.",
-         "He's the carver, he says. Garret's the climber.",
-         "KEEGAN: Garret's a guide. Some adventurers paid him to take them up Kelvin's Cairn.",
-         "KEEGAN: Six dogs and a sled. Boy was his favourite. He'd never leave Garret. Not unless..."])
-    if with_or_is?(:shimmer)
-      sayc([cl(:shimmer, "(quietly) Unless someone sent him."),
-            "KEEGAN: (to the dog) Did he? Did he send you, Boy?"])
-    end
-    say([with_boy ? "Boy is back at the door, whining, worrying the latch with his teeth." :
-                    "Outside, faintly, a dog is barking at the end of the street. Keegan flinches."])
+    say(["KEEGAN: Garret's a guide. He took some hunters up Kelvin's Cairn, days ago."])
+    Stage.hop(boy) if boy && with_boy
     keegan_ask(event_id)
   end
-
-  BOY_GRAPHIC = "Followers/LYCANROC_D"   # stand-in for a grey sled dog (art request: a husky follower)
 
   # The ask itself, with the moose's three answers (context 14, M14-2): help,
   # what can you pay, not now. "Not now" never locks it: a second talk comes
   # straight back here. The reward is said up front, in Keegan's words.
   def keegan_ask(event_id = nil)
     set_flag(:climb_asked)
-    say(["KEEGAN: Kelvin's Cairn. Please. Boy won't stop pulling, and I can't climb."], event_id)
+    say([$game_switches[SW_MC_BOY_TAKEN] ? "KEEGAN: Boy brought you. He picked you. Will you go up the cairn and find Garret?" :
+                                           "KEEGAN: Kelvin's Cairn. Will you go up and find him? I can't climb."], event_id)
     c = pbMessage(_INTL("Keegan waits."), [_INTL("\"We'll find him.\""), _INTL("\"What can you pay?\""), _INTL("\"Not now.\"")], -1)
     if c == 2 || c < 0
       return say(["KEEGAN: ...Of course. It's a mountain. (He sits down very carefully.) The door's open.",
@@ -257,17 +248,20 @@ module FrostThaw
     end
     say([c == 0 ? "KEEGAN: (letting out a breath he's held for days) Thank you. Here's what I have." :
                   "KEEGAN: Fair. You've come a long way, by the look of you. Here's what I have.",
-         "KEEGAN: No money. But Owenn at the Luskan Arms is a friend. He'll give you rooms.",
+         "KEEGAN: I've no money. Owenn at the Luskan Arms is a friend. You'd sleep free there.",
          "KEEGAN: And I carve. Bring them home, and I'll make your Pokémon a charm.",
          "He holds up a half-carved walrus on a cord, then puts it back in his pocket.",
          "KEEGAN: Hang it on one, and the rest learn from watching it fight. Garret swears by his.",
-         "KEEGAN: The quick way is straight across the tundra: east, off the Bryn Shander road.",
-         # the side job against the main stakes (context 14, M14-2 suggestion)
-         "KEEGAN: I asked the Speaker for two militia. Naerth said his men don't climb for free."])
+         "KEEGAN: Go east off the Bryn Shander road, straight across the tundra. Boy knows the way.",
+         "He looks you over, and something in his face says: young.",
+         # the mountain's wild Pokémon are well above a new trainer's (notes 01 S2)
+         "KEEGAN: The cairn's no place for new trainers. Bryn Shander first, if you're green."])
     sayc([cl(:alberica, "Keep the cider warm. We'll want it on the way back."),
           cl(:reptin, "We'll bring him home, Keegan. That's a promise, not a pleasantry."),
-          "KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him.",
-          "Boy is already at the door."])
+          "Boy is already at the door.",
+          "KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him."])
+    boy = Stage.find("Boy (waiting)")
+    Stage.walk_to(boy, VELRYN_DOOR[1], VELRYN_DOOR[2] + 1) if boy
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)

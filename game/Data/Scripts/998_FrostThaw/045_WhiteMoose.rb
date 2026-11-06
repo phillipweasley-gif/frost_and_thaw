@@ -193,7 +193,9 @@ module FrostThaw
       say(["NIMSY: (unoffended) Cookies aren't enough? They're shaped like halflings!",
            "NIMSY: Fine. Ten thousand for its head. The butcher pays a thousand for the carcass."])
       persuade = with_or_is?(:alberica) || rand(100) < 50
-      sayc([cl(:alberica, "Ten thousand? For a moose that's beaten every hunter in town? Do better."),
+      speak(:alberica, "Ten thousand? For a moose that's beaten every hunter in town? Do better.",
+                       "(quietly) Ten thousand. For that moose.") if with_or_is?(:alberica)
+      sayc([
             persuade ? "NIMSY: (laughing) ...Twelve and a half. And not a copper more." : "NIMSY: Ten. I've got children, and a roof that leaks."])
       set_flag(:moose_fee_125) if persuade
       sayc([cl(:shade, "And if we want more than gold?"),

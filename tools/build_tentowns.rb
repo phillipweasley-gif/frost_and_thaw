@@ -35,7 +35,7 @@ TARGOS = 2001
 BRYN = 2012
 BRYN_ROAD = 2010
 DOG = "Followers/MIGHTYENA"                  # the sled dogs at base camp (a team: wolf-grey is fine)
-BOY = "Followers/LYCANROC_D"                 # Boy: stand-in for a grey husky (notes 14 E2; art request)
+BOY = "Followers/BOY"                        # Boy, the husky (art batch 03; build_act1.rb walks him in Targos)
 GOBLIN = "Followers/SNEASEL"
 BEAR = "Followers/BEARTIC"
 YETI = "Followers/YETITAN"                   # the yetis, as the game draws them (notes 14 E20)
@@ -82,6 +82,13 @@ v.event(1, 1, "Cutscene velryn_arrival", [
 npc_when(v, 11, 6, "BWHiker", :garret_home, SW_MC_GARRET_HOME, dir: 2, name: "Garret")
 npc_when(v, 7, 8, "BW (16)", :perilou_home, SW_MC_PERILOU_HOME, dir: 6, name: "Perilou")
 npc_when(v, 12, 9, BOY, :boy_home, SW_MC_GARRET_HOME, dir: 4, name: "Boy")
+# Boy, home without Garret (notes 01 E10): he runs in with you, waits by the
+# hearth if you say "not now", and goes with you when you take the job.
+v.event(11, 8, "Boy (waiting)", [
+  { graphic: "", through: true },
+  { switch: SW_MC_BOY_TAKEN, graphic: BOY, direction: 4, step_anime: true, script: "FT.talk(:boy_waiting, @event_id)" },
+  { switch: SW_MC_TAKEN, graphic: "", through: true }
+])
 v.sign(7, 5, :velryn_scrimshaw)
 save(v, :velryn)
 
@@ -1143,21 +1150,6 @@ end
 by = reopen(BRYN)
 by.map.events.delete_if { |_k, e| e.name == "To Lonelywood Road" || (e.name == "NPC bryn_north_guard_open" && e.y == 4) }
 resave(by, BRYN)
-
-# ===========================================================================
-# Boy in Targos's streets (build_act1.rb places him): a grey sled dog, not the
-# tundra's wolves, and slower, so he reads as someone's dog (notes 14 E2). He
-# comes to you himself (045_TenTowns.rb, GIVERS).
-tg = reopen(TARGOS)
-tg.map.events.each_value do |ev|
-  next unless ev.name == "Boy"
-  pg = ev.pages[0]
-  pg.graphic.character_name = BOY
-  pg.instance_variable_set(:@move_frequency, 2)
-  pg.instance_variable_set(:@move_speed, 3)
-end
-has_event?(tg, "Sign velryn_sign") || tg.sign(40, 34, :velryn_sign)   # on the house front, left of the door
-resave(tg, TARGOS)
 
 # ===========================================================================
 merge_infos(ID.map { |k, v| [v, NAMES[k]] }.select { |id, _| File.exist?(File.join(OUT, format("Map%04d.rxdata", id))) })

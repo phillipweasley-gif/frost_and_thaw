@@ -76,8 +76,8 @@ module FrostThaw
      "Without that mead, half the taverns in Ten-Towns might go dry!", :mead_returned, [:council_session, :termalaine_arrived]],
     ["In Lonelywood, beware the dreaded white moose! It attacks loggers and trappers on sight.",
      "Speaker Huddle's hunters can't catch it. She'd pay anyone who could.", :white_moose_done, nil],
-    ["In Targos, Keegan Velryn's man led some adventurers up Kelvin's Cairn.",
-     "Days ago. His dog came back alone. Keegan's beside himself.", :climb_done, nil],
+    ["Garret Velryn took hunters up Kelvin's Cairn days ago. None of them came back.",
+     "His husband Keegan's worried sick. East end of Targos, by the wall.", :climb_taken, nil],
     ["In Termalaine, Speaker Masthew has closed a gem mine. Kobolds crept in.",
      "Anyone who clears out the mine can expect to be well paid.", :mine_done, nil],
     ["In Lonelywood, nobody's run Ramshackle since the owner hanged.",
@@ -155,7 +155,8 @@ module FrostThaw
                           "We'd give a person, but we ain't got many o' those either."],
     sign_tundra_east: ["A trail east, off the road, onto the open tundra.", "Far off, a mountain: Kelvin's Cairn."],
     sign_kelvins_cairn: ["KELVIN'S CAIRN", "(Someone has scratched underneath: \"YETIS. GO HOME.\")"],
-    velryn_sign: ["THE VELRYNS. Scrimshaw.", "(Under it, in a climber's scrawl: \"Back in a tenday. - G.\")"],
+    boy_waiting: ["The sled dog lies by the hearth with his nose on his paws, watching the door.",
+                  "When you look at him, his tail thumps once."],
     velryn_scrimshaw: ["Shelves of Keegan's scrimshaw: whales, foxes, hares, walruses, all carved in trout bone.",
                        "Half of them are of a bearded man climbing things."],
     boy_home: ["Boy lies across Garret's feet and won't move for anybody. He thumps his tail at you."],
@@ -196,7 +197,6 @@ module FrostThaw
   # the "!" and the walk.
   #-----------------------------------------------------------------------------
   GIVERS = {
-    2001 => [["Boy", 3, -> { !flag?(:boy_met) && flag?(:arrived_targos) }]],
     2012 => [["Hruna", 3, -> { !flag?(:mugs_asked) && !flag?(:mugs_taken) }]],
     2120 => [["Darmo Mazlu", 5, -> { !flag?(:heard_of_mine) && !flag?(:mine_taken) }],
              ["Oarus Masthew", 3, -> { !flag?(:mine_asked) && !flag?(:mine_taken) }]],
@@ -264,6 +264,12 @@ module FrostThaw
     ready = lambda { |need| need.nil? || Array(need).any? { |f| flag?(f) } }
     fresh = TEN_TOWNS_RUMORS.reject { |_a, _b, done, need| (done && flag?(done)) || !ready.(need) }
     fresh = TEN_TOWNS_RUMORS.select { |_a, _b, _d, need| need.nil? } if fresh.empty?
+    # In Targos, the town's own job comes first (notes 01 S4)
+    if !flag?(:climb_taken) && !flag?(:climb_rumour_told) && (AREAS[$game_map.map_id] rescue nil) != :lucky_liar
+      set_flag(:climb_rumour_told)
+      a, b, = TEN_TOWNS_RUMORS.find { |_a, _b, done, _n| done == :climb_taken }
+      return say(["#{who}: #{a}", "#{who}: #{b}"], event_id)
+    end
     state[:rumor_i] = ((state[:rumor_i] || -1) + 1) % fresh.size
     a, b, = fresh[state[:rumor_i]]
     # the Lucky Liar's teller boasts (dialogue 14 top 5 #5): every rumour is his
@@ -290,7 +296,8 @@ module FrostThaw
     say(["OWENN: Owenn Tarsenel. I keep the Arms. Oldest public house in Ten-Towns.",
          "A quiet, balding man. He polishes the same glass the whole time he talks.",
          "OWENN: Mind the floorboards. And the rats. And the Speaker's guests.",
-         "OWENN: Summer again one day, they tell me. (He polishes the same glass. Slower.)"] +
+         "OWENN: It'll be summer again one day, they tell me.",
+         "He polishes the same glass. Harder."] +
         (flag?(:climb_taken) ? [] : ["OWENN: Keegan Velryn's man went up the Cairn a tenday back. His dog came home alone."]), event_id)
     sayc([cl(:alberica, "(softly) Oh, sweetheart. Somebody hug this man."),
           cl(:reptin, "(aside) Please don't hug the innkeeper.")])
@@ -552,6 +559,7 @@ module FrostThaw
       sp[:danneth] = st.actor(:danneth, 12, 9, 8, graphic: "BW (54)")
     end
     look = ->(k) { st.turn_to(sp[k]) if sp[k] }
+    st.pan_to(10, 8) if st.map?           # the table, not the door (everyone at it is on screen)
     say(["The Council Hall is full for the first time in a year.",
          "Duvessa Shane sits at the head of the long table. Young. Tired. Very straight.",
          "Down one side: Naerth Maxildanarr of Targos, drumming his rings on the wood.",
@@ -559,8 +567,7 @@ module FrostThaw
          "He keeps glancing at the door.",
          "A huge man with a beard like a hedge: Kendrick Rielsbarrow of Good Mead, mug at his elbow.",
          "Danneth Waylen of Easthaven, a plain, humble man wrapped to the eyes, his furs steaming.",
-         "Lonelywood's chair is empty, but for a basket of halfling-shaped cookies.",
-         "Dougan's Hole's chair is empty, full stop."])
+         "Lonelywood's chair holds a basket of halfling cookies. Dougan's Hole's is just empty."])
     say(["DUVESSA: Last night Bryn Shander drew a name and did not give it up.",
          "DUVESSA: I won't apologise for it. We agreed to do this together, and I broke it alone."])
     st.face(sp[:duvessa], 8) if sp[:duvessa]
@@ -630,6 +637,7 @@ module FrostThaw
     say(["OARUS: (at the door) If those strangers fix my mine, I'll write to you. Mark it.",
          "DUVESSA: Then I'll be reading a lot. Five towns, five letters. The Council pays on five."])
     st.leave_all([sp[:oarus], sp[:duvessa]].compact, 10, 14)
+    st.pan_back
     Stage.cleanup rescue nil
     set_switch(SW_TT_COUNCIL_DONE, true)
     add_counter(:story_beats)

@@ -17,7 +17,7 @@ when "bryn"
   check(HL.log.any? { |l| l =~ /Bitey/i }, "Ol' Bitey in his barrel")
   go(2019, 9, 11, 8); answer([/What do you say/, 1]); talk(/Copper/); check(flag(:copper_asked), "Copper and the Black Cabin")
   go(2014, 6, 12, 8); talk(/Elza/); talk(/Garn/); check(flag(:met_elza), "Elza and Garn at Blackiron Blades")
-  FrostThaw.state[:scramsax_tab] = 300
+  FrostThaw.state[:scramsax_tab] = 300; FrostThaw.set_flag(:badge_bryn)   # (the bill comes due after the seal: notes 02 E24)
   go(2016, 5, 11, 8); answer([/Pay Scramsax/, 1]); talk(/Scramsax/)
   check(FrostThaw.state[:scramsax_tab].to_i == 0, "Scramsax collects his tab, one way or another")
 

@@ -270,8 +270,14 @@ module FrostThaw
       end
       say(["OARUS: A gang of kobolds crept into the gem mine a few days back. The miners ran.",
            "OARUS: Nobody's been killed. But kobolds are too much for miners with picks."])
-      sayc([with_or_is?(:alerion) ? cl(:alerion, "(eyeing the officers by the wall) Those are your militia. Standing there.") :
-                                    "Two militia officers lean on the Blue Clam's wall, watching you talk.",
+      # (Oarus answers it, so it's spoken: WRITING_GUIDE §5)
+      if with_or_is?(:alerion)
+        speak(:alerion, "(eyeing the officers by the wall) Those are your militia. Standing there.",
+                        "(quietly) Your militia. Standing there.")
+      else
+        say(["Two militia officers lean on the Blue Clam's wall, watching you talk."])
+      end
+      sayc([
             "OARUS: (a pause that goes on a little too long) ...They're busy.",
             "The officers find something interesting in the snow.",
             cl(:shade, "(aside) Busy. Of course they are."),
@@ -320,10 +326,13 @@ module FrostThaw
       c = pbMessage(_INTL("What do you tell her?"),
                     [_INTL("\"It could help us end the winter.\""), _INTL("\"Never mind. Keep it.\"")], 1)
       if c == 0
-        sayc([cl(:alberica, "Marta. We're going north, after the thing that's making this winter."),
-              cl(:alberica, "All the way."),
-              cl(:reptin, "Whoever she was, she was running from the same cold. Let it help us run toward it."),
-              "MARTA: ...You mean it. You actually mean it.",
+        # (Marta answers them, so they're spoken: WRITING_GUIDE §5)
+        speak(:alberica, "Marta. We're going north, after what's making this winter. All the way.",
+                         "(quietly) We're going north. After the thing making this winter.") if with_or_is?(:alberica)
+        speak(:reptin, "Whoever she was, she ran from the same cold. Let it help us run toward it.",
+                       "(gently) Let it help us run toward the cold, not from it.") if with_or_is?(:reptin)
+        say(["You tell her where you're going: north, after whatever is making this winter."]) if !with_or_is?(:alberica) && !with_or_is?(:reptin)
+        sayc(["MARTA: ...You mean it. You actually mean it.",
               "She unclasps the chain and puts the ring in your hand. It's warm as a hand.",
               "MARTA: Bring the summer back. That's the price. Da wants to see the lake thaw once more."])
         give_key(:FT_RINGOFWARMTH)
@@ -700,7 +709,8 @@ module FrostThaw
   # important. You can still lay him to rest: the satchel is on Oarus's desk.
   def janth_in_oarus(event_id = nil)
     say(lines_for(:oarus_after), event_id)
-    sayc([cl(:alerion, "(his ring ice-cold) Janth. We know you're in there."),
+    speak(:alerion, "(his ring ice-cold) Janth. We know you're in there.", "(quietly) Janth. We know.") if with_or_is?(:alerion)
+    sayc([
           "The half-orc's face goes still, and an old man looks out of it.",
           "OARUS: ...I only need a little longer. My samples...",
           "A threadbare satchel hangs at his hip, full of moss and lichen."])
