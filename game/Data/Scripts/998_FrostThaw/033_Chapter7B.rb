@@ -420,7 +420,8 @@ module FrostThaw
             cl(:alerion, "Plans.")])
       if !flag?(:vault_map_2)
         say(["In the third basin, where the visions overlapped, the sap has set into something flat and pale:",
-             "a second fragment of the frost-drawn map. A glacier. A door. A dragon's eye."])
+             flag?(:vault_map_1) ? "a second fragment of the frost-drawn map. A glacier. A door. A dragon's eye." :
+                                   "a fragment of a frost-drawn map. A glacier. A door. A dragon's eye."])
         set_flag(:vault_map_2)
         sayc([flag?(:vault_map_1) ? cl(:alberica, "Two pieces, darling. Told you there'd be more.") :
                                     cl(:alberica, "One piece, darling. There'll be more. There always are."),

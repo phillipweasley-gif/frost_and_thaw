@@ -511,7 +511,7 @@ module FrostThaw
            "(You've heard that silence once before: the night you left your post.)",
            "(You left the Gate open behind you. You didn't even think.)"])
     else
-      Stage.walk_to(cast[:wyn], 33, 29, face: 8) if cast[:wyn]
+      Stage.walk_to(cast[:wyn], $game_player.x + 2, $game_player.y + 1, face: 8) if cast[:wyn]
       say(["A Rootwarden pushes through the crowd, out of breath, a Sableye clinging to their shoulder.",
            "WYN: Captain Rheven... it's Wyn. From the Sap Gate. The spores went silent.",
            "RHEVEN: Silent? They've never... Who's on the Gate?",
@@ -523,7 +523,7 @@ module FrostThaw
     # rootspire.md 5643-5684): council_summons, below.
     say(["KELYN: (setting down her glass, very quietly) Something is waking below. I don't know what yet.",
          "KELYN: Stay in the city tonight, Heralds. When we know, the Council will send for you."])
-    Stage.walk_to(cast[:hew], 34, 27, face: 4) if cast[:hew]
+    Stage.walk_to(cast[:hew], $game_player.x + 3, $game_player.y - 1, face: 4) if cast[:hew]
     say(["HEW: (shoving through) Hew Talmire, Guild of Roots! Then find my diggers. Twelve gone in the Dig!"])
     if herald?(:wyn)
       speak(:wyn, "The roots have another way down. Through the myconids. I can take you.",
@@ -540,31 +540,41 @@ module FrostThaw
       set_flag(:wyn_joined)
       pbMessage(_INTL("Wyn joined the party."))
     end
-    Stage.cleanup rescue nil
+    festival_cast_off(cast)
     restore_sky
     state[:goal] = "The festival's over. Rest at the Hearth: the Council will send for you."
   end
 
   # Festival night's people, on screen round the Throne (WRITING_GUIDE §9a):
-  # Kelyn and Eirwen by the Throne; Rheven, his direwolf and Lirielle walk over
-  # from their stalls; Hew waits for his line; Wyn comes in from the east road.
+  # Kelyn and Eirwen by the Throne; Rheven, his direwolf, Lirielle and Hew come
+  # over from their stalls (stand-ins; the stalls' own people step out of sight
+  # for the night); Wyn comes in from the east road.
+  FESTIVAL_STAND_INS = {
+    "Captain Rheven" => [:rheven, "BW (72)", 4, 1, 4], "Rheven's direwolf" => [:direwolf, "Followers/MIGHTYENA", 5, 1, 4],
+    "Lirielle Mossdancer" => [:lirielle, "Followers/BUNEARY", -4, -1, 6], "Hew Talmire" => [:hew, "BW (75)", 6, -1, 4]
+  }
+
   def festival_cast
-    cast = {}
+    cast = { hidden: [] }
     return cast if !Stage.map? || $game_map.map_id != MAPS[:rootspire]
     px, py = $game_player.x, $game_player.y
     cast[:kelyn]  = Stage.actor(:kelyn, px, py + 2, 8, graphic: "BW (30)")
     cast[:eirwen] = Stage.actor(:eirwen, px - 2, py + 2, 8, graphic: "BW (30)")
-    { "Captain Rheven" => [px + 4, py + 1, 4], "Rheven's direwolf" => [px + 5, py + 1, 4],
-      "Lirielle Mossdancer" => [px - 4, py - 1, 6] }.each do |name, (x, y, d)|
+    FESTIVAL_STAND_INS.each do |name, (key, graphic, dx, dy, d)|
       ev = Stage.find(name)
-      Stage.walk_to(ev, x, y, face: d, wait_for: false) if ev
+      (ev.transparent = true; cast[:hidden] << ev) if ev
+      cast[key] = Stage.actor(key, px + dx, py + dy, d, graphic: graphic)
     end
-    cast[:hew] = Stage.find("Hew Talmire")
     cast[:wyn] = Stage.actor(:wyn, px + 7, py + 1, 4, graphic: "FT_wyn") if !herald?(:wyn)
     cast
   rescue StandardError => e
     log("festival_cast: #{e.message}")
-    cast || {}
+    cast || { hidden: [] }
+  end
+
+  def festival_cast_off(cast)
+    Stage.cleanup rescue nil
+    (cast[:hidden] || []).each { |ev| ev.transparent = false rescue nil }
   end
 
   # GM outline step 6 (rootspire.md 5675-5684): the Council's formal summons,
