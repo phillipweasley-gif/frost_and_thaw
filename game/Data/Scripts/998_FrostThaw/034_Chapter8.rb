@@ -446,8 +446,7 @@ module FrostThaw
     w2 = Stage.actor(:rootwarden_2, 1, 15, 6, graphic: "BW029")
     Stage.approach(w1)
     Stage.walk_to(w2, ($game_player.x - 2 rescue 5), ($game_player.y + 1 rescue 15), face: 6) if w2
-    say(["Two Rootwardens come down the ramp at a run, spears up, soot to the knees.",
-         "ROOTWARDEN: The Speaker sent us after you. Your stone went quiet. Is that a child?"])
+    say(["ROOTWARDEN: (soot to the knees) The Speaker sent us. Your stone went quiet. Is that a child?"])
     speak(:meat_meat, "(holding the cocoon tighter) Meat Meat found her. Meat Meat carries her.", "...Mine to carry.")
     say(["ROOTWARDEN: #{a[:who]} came down this way. Where is #{a[:he]}?"])
     Stage.face(w1, 2) if w1                      # he follows her look, over the rail
@@ -848,7 +847,7 @@ module FrostThaw
     lines << "(The lab notes: a goddess poured into a drowned man's heart. It went too right.)" if flag?(:knows_shard_origin)
     lines << "(The ghost in the Antechapel: cleanse me, leave me whole, or break me. None of them clean.)" if flag?(:shard_echo_heard)
     lines << "(The whispering attendant's price, still owing: #{state[:attendant_promise] == :free ? 'free the heart' : 'burn the forge'}.)" if state[:attendant_promise]
-    say(lines) if !lines.empty?
+    say(lines.first(2)) if !lines.empty?          # (notes 08 F13: no more than two memories here)
     shard_battle if !flag?(:shard_fought)
     # Context 08 M8-8: what each choice does, from someone who'd pick it.
     sayc([cl(:wyn, "(kneeling at the pool's edge) It's... it's frightened. Both of them in there are.")])

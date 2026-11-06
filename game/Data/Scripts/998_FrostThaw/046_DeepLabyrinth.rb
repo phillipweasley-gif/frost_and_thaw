@@ -165,8 +165,9 @@ module FrostThaw
          "a garden of mirrors; a hollow core with bridges over a frozen lake; a vault of amber;",
          "and at the bottom, drawn over and over until the pen tore through: a heart.",
          "In the margin: \"Six zones. She lives in the sixth.\""])
-    sayc([cl(:alerion, "Six. We've done two."),
-          cl(:meat_meat, "Meat Meat counts four more. Meat Meat will need snacks."),
+    # (notes 07 / dialogue 07 §3.9: the Root Gate is the first of the six)
+    sayc([cl(:alerion, "Six. This is the first."),
+          cl(:meat_meat, "Meat Meat counts five more. Meat Meat will need snacks."),
           cl(:wyn, "(tracing the heart with one finger) ...It's drawn like it's beating.")])
     state[:goal] = flag?(:root_key) ? "The knotted heart-wall in the Sap Wells: the Root-Key, and the zones below." : state[:goal]
   end
@@ -713,7 +714,7 @@ module FrostThaw
     lines << "CATALOGUER: SPECIMEN: GOBLIN, V-SERIES, NUMBER SEVEN. STATUS: ESCAPED. RECAPTURE PRIORITY: HIGHEST." if with_or_is?(:meat_meat)
     lines << "CATALOGUER: SPECIMEN: ELF, LUPINE TAINT. PREVIOUS ATTEMPT: POD THREE. STATUS: SUPERIOR." if with_or_is?(:reptin)
     lines << "CATALOGUER: SPECIMEN: DWARF, MARKED. NOTE: THE RUNE ON HER CHEST IS NOT OURS. DO NOT TOUCH." if with_or_is?(:alberica)
-    lines << "CATALOGUER: SPECIMEN: HUMAN, NECROMANTIC. NOTE: HE IS COLD ALREADY. INTERESTING." if with_or_is?(:alerion)
+    lines << "CATALOGUER: SPECIMEN: ELADRIN, NECROMANTIC. NOTE: HE IS COLD ALREADY. INTERESTING." if with_or_is?(:alerion)
     lines << "CATALOGUER: SPECIMEN: FELINE, LIGHT-BEARING. NOTE: INCOMPATIBLE. BURN ON SIGHT." if with_or_is?(:glimmer)
     lines << "CATALOGUER: SPECIMEN: MYCONID-TOUCHED. NOTE: CANNOT BE FOUND WHEN NOT LOOKED FOR." if with_or_is?(:wyn)
     lines << "CATALOGUER: SPECIMEN: UNKNOWN. NOT ON THE WHEEL. CANNOT BE CATALOGUED. ERROR. ERROR." if journey?
