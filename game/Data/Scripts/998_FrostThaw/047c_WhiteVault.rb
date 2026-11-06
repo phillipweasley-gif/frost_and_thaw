@@ -6,7 +6,9 @@
 #
 #   * Three Frostshard Sigils: the Echo Gate's wraiths, Eirwen (their custodian)
 #     and Sephek, whose defeat drops one. Held together they merge: "wings spread
-#     over a frozen eye", and somewhere beyond the Auroral Wall a door opens.
+#     over a frozen eye", and far north, where the Wall stood, a door wakes.
+#     Alberica's Pendant of Black Ice is the one key that opens it (owner's
+#     decision 4, 2026-11-06): her family kept it so the door stayed shut.
 #   * Sephek fights in two stages. The Minor Avatar leans on his followers (two
 #     frost druids, ice mephits) and can't be killed inside Rootspire: he
 #     reforms. The Major Avatar comes when Auril pours herself into him, with
@@ -21,7 +23,7 @@
 #===============================================================================
 module FrostThaw
   SW_AURIL_RELICS = 4138   # Sephek has risen: Auril's relics wait in the Heartroot
-  SW_SIGILS_MERGED = 4139  # the three sigils are one: the door beyond the Wall is open
+  SW_SIGILS_MERGED = 4139  # the three sigils are one: the Vault's door has woken
   SW_VAULT_BROKEN = 4140   # Avarice's cradle is broken
 
   MAPS.merge!(vault_gate: 2168, vault_circuits: 2169, vault_cradle: 2170)
@@ -36,12 +38,19 @@ module FrostThaw
                        Cave: [[30, :SNEASEL, 60, 62], [25, :GLALIE, 60, 62], [20, :JYNX, 60, 62],
                               [15, :FROSLASS, 61, 63], [10, :DUSCLOPS, 61, 63]] }
   VAULT_ARRIVAL = [2168, 14, 26, 8]
+  VAULT_GOAL = "Postgame: past the Glasswater, where the Wall stood, to the White Vault. Alberica's door."
 
   RELIC_ITEMS.merge!(
     FT_SERAPHSIGIL: ["Seraph Sigil", "Seraph Sigils", 8, 0,
-      "Three Frostshard Sigils, merged: wings spread over a frozen eye. It pulls north, toward a door beyond the Auroral Wall.", 0, 0, 6],
+      "Three Frostshard Sigils, merged: wings spread over a frozen eye. It pulls north, past where the Auroral Wall stood, toward a door of wings.", 0, 0, 6],
     # (FT_SCALECORE is defined once, in 048_Rootspire_D_Quests.rb: the Corsairs' wyrmling scale core.)
   )
+
+  VAULT_KEY_ITEMS = {
+    FT_BLACKPENDANT: ["Pendant of Black Ice", "Pendants of Black Ice", 8, 0,
+      "Alberica's pendant, come back again. Her family kept it so a door would stay shut: it's the White Vault's one key.", 0, 0, 6]
+  }
+  VAULT_KEY_ITEM_NUMBER = 9190
 
   TRAINER_TYPES.merge!(
     FT_FROST_DRUID: ["Frost Druid", :CHANNELER, 0, 120, :LEADER_Pryce],
@@ -114,23 +123,49 @@ module FrostThaw
            "(They won't wake while Auril holds the north. Keep them.)"])
       return false
     end
+    # The hook, after the end (context 13 M13-8): the bargain paid forward (the
+    # dock told it, 12.md M12-6), the map made true (the Wall has fallen), and
+    # the White Womb joined to the White Vault.
+    say(["Rootspire. Some time later."])
     pbSEPlay("Saint7") rescue nil
     $game_screen.start_flash(Color.new(220, 240, 255, 180), 20) rescue nil
     say(["The aurora brightens, stretching northward like a path of glass.",
-         "You hold the three Frostshard Sigils together, and they merge into a single symbol of draconic design:",
+         "You hold the three Frostshard Sigils together. They merge into one symbol:",
          "wings spread over a frozen eye.",
          "The World Tree shivers, and from its roots rises a wind that smells of ancient ice.",
-         "Somewhere beyond the Auroral Wall, in a glacier, something frozen at a throne has thawed. It's counting.",
-         "A door has opened. The White Vault awaits."])
+         "Far north, the mirror Frostina froze at Auril's throne splits. Whatever was in it is gone.",
+         "Further north still, past where the Wall stood, a door wakes. The White Vault is waiting."])
     take_key(:FT_FROSTSIGIL) rescue nil
     give_key(:FT_SERAPHSIGIL)
     set_flag(:sigils_merged)
     set_switch(SW_SIGILS_MERGED, true)
-    side_goal(:vault, "Postgame: the path of glass beyond the Auroral Wall, past the Glasswater, to the White Vault.",
-              done: :avarice_body_broken)
-    sayc([cl(:alberica, "(very quietly) Wings over a frozen eye. That's the vault I saw in the well."),
-          cl(:alerion, "Then we know where it is."),
+    side_goal(:vault, VAULT_GOAL, done: :avarice_body_broken)
+    al = herald?(:alberica)
+    seen = flag?(:well_vision_3)
+    if al
+      say(["You say it very quietly.",
+           seen ? "(Wings over a frozen eye. The vault you saw in the well.)" : "(Wings over a frozen eye. You've dreamed that door.)",
+           "Your hand goes to your throat, where the pendant used to hang. Something cold pulses there."])
+      speak(:alberica, "Gran's door. The one that had to stay shut.", "...I know that door.")
+    elsif with_or_is?(:alberica)
+      say([seen ? "ALBERICA: (very quietly) Wings over a frozen eye. The vault I saw in the well." :
+                  "ALBERICA: (very quietly) Wings over a frozen eye. I've dreamed that door.",
+           "At her throat, where the pendant used to hang, something cold pulses. Brightest facing north.",
+           "ALBERICA: (a hand at her throat) Gran's door. The one that had to stay shut."])
+    end
+    if with_or_is?(:alberica)
+      told = flag?(:bargain_told) || flag?(:bargain_heard_out)
+      cline(:reptin, told ? "Your family's bargain. What happens if it opens?" : "Alberica? You've gone white, dear.",
+            told ? "...The bargain. What happens if it opens?" : "...Alberica?")
+      cline(:alberica, "I don't know. Nobody ever said what's behind it. We'd have to open it to see.",
+            "...I don't know. Nobody ever said.")
+      if flag?(:bargain_pushed)
+        say(["ALBERICA: (to you) You said it wasn't mine to pay. Let's find out whose it is."])
+      end
+    end
+    sayc([cl(:alerion, "Then we know where it is."),
           vault_map_pieces >= 3 ? cl(:reptin, "And with all three pieces of the map, we know where its heart is. Lovely. I hate it.") : nil,
+          cl(:meat_meat, "Selrae called it the White Womb. So did Avarice. Meat Meat hates both names."),
           cl(:wyn, "...Something in there is awake. I can hear it counting.")])
     add_counter(:story_beats)
     true
@@ -307,7 +342,7 @@ module FrostThaw
     add_counter(:story_beats)
     sayc(["A glacier, and in the glacier a vault of white ice, older than any name in the Dale.",
           "The path of glass ends at a door carved with wings spread over a frozen eye.",
-          cl(:alberica, "(the rune on her chest prickling) I dreamed this door. Before the Chasm. Before any of it."),
+          cl(:alberica, "(her rune prickling) I dreamed this door. Before the Chasm. Before any of it."),
           cl(:meat_meat, "Meat Meat smells hot metal. Under ice. That is wrong."),
           cl(:reptin, "(quietly) Everyone stay close. And nobody touch anything that hums.")])
   end
@@ -318,14 +353,47 @@ module FrostThaw
     if !flag?(:sigils_merged)
       return say(["The hollows are cold and empty. It wants three sigils, made one."])
     end
-    return if !pbConfirmMessage(_INTL("Press the Seraph Sigil into the frozen eye?"))
-    say(["The sigil sinks into the ice. The frozen eye opens.",
-         "Behind the door, two things of mirror and iron stir: Mirror Sentinels, helmed and hollow."])
+    if !flag?(:vault_eye_open)
+      return if !pbConfirmMessage(_INTL("Press the Seraph Sigil into the frozen eye?"))
+      vault_pendant_returns
+    end
+    return if !flag?(:vault_door_unlocked) && !vault_pendant_turns
+    say(["Behind the door, two things of mirror and iron stir: Mirror Sentinels, helmed and hollow."])
     return if !boss_battle(named_mon(:B449H227, 72, "Mirror Sentinel"), named_mon(:B449H227, 72, "Mirror Sentinel"))
     say(["The sentinels come apart into plates of glass and lie still.", "The door of wings stands open."])
     set_flag(:vault_door_open)
     set_self_switch(event_id, "A") rescue nil
     $game_map.need_refresh = true if $game_map
+  end
+
+  # The sigils wake the door; the pendant opens it (owner's decision 4). The
+  # pendant cracked in Lonelywood and was gone; it has always come back (she
+  # threw it in the sea once), and at Gran's door, it does.
+  def vault_pendant_returns
+    al = herald?(:alberica)
+    say(["The sigil sinks into the ice. The frozen eye opens, and looks at #{al ? 'you' : 'Alberica'}.",
+         "Under the eye, a hollow in the door: a teardrop, the size of a pendant."])
+    say([al ? "Frost gathers in the hollow of your throat, and hardens, and it's there: the Pendant of Black Ice." :
+              "Frost gathers in the hollow of Alberica's throat, and hardens, and it's there: the Pendant of Black Ice."])
+    cline(:alberica, "I threw you in the sea once. You came back. Of course you came back.", "...Of course you came back.")
+    give_key(:FT_BLACKPENDANT) rescue nil
+    set_flag(:vault_eye_open)
+    set_flag(:pendant_returned)
+  end
+
+  # Returns true once the door of wings is unlocked.
+  def vault_pendant_turns
+    al = herald?(:alberica)
+    q = al ? _INTL("Set your pendant in the door?") : _INTL("Alberica holds the pendant up to the door. Let her?")
+    if !pbConfirmMessage(q)
+      cline(:alberica, "(lowering it) Not yet. Gran kept it shut for longer than this.", "...Not yet.")
+      return false
+    end
+    say(["#{al ? 'You set' : 'Alberica sets'} the pendant in the hollow. It fits like it was cut for it. It was.",
+         "The door of wings swings inward, very slowly, with a sound like ice letting go of a ship."])
+    set_flag(:vault_door_unlocked)
+    cline(:alberica, "(very quietly) Somewhere south, my village just felt that.", "...My village felt that.")
+    true
   end
 
   # The Mirror Circuits: Avarice, only in the mirrors; three circuits feed her cradle.
@@ -338,18 +406,28 @@ module FrostThaw
     sayc(["Machinery under the ice: pipes of mirror-glass, brass wheels the size of houses, all of it humming.",
           "Every mirror shows you. Then, one by one, every mirror shows her.",
           "White hair. Infernal sigils. A smile like arithmetic.",
-          "AVARICE: (from every mirror at once) Variables that refused to die. Hello again.",
+          "AVARICE: (from every mirror at once) Variables that refused to die. How untidy.",
           cl(:alberica, "(very still) We froze you. At her throne. We watched it hold."),
           al ? "AVARICE: You froze a mirror, songbird. Did you think I kept only one?" :
                "AVARICE: You froze a mirror, Alberica. Did you think I kept only one?",
           "AVARICE: A little of me lived in every mirror I ever made. A little is all I've ever needed."])
-    whispers = []
-    whispers << (herald?(:meat_meat) ? "(She says your number. V-7. Then, softly, the sound you made the day you were born.)" :
-                                       "AVARICE: (to Meat Meat) V-7. I still have the sound you made the day you were made.") if with_or_is?(:meat_meat)
-    whispers << "AVARICE: (to Alerion) The boy in the lake. You know where you learned to call him back? I taught a ghost to teach you." if with_or_is?(:alerion)
-    whispers << "AVARICE: (to Reptin) Your wolf howled at your birth. I heard it. I hear everything said in my laboratories." if with_or_is?(:reptin)
-    whispers << "AVARICE: (to Wyn) Little shadow. You'd make a lovely lens." if with_or_is?(:wyn)
-    sayc(whispers)
+    if with_or_is?(:meat_meat)
+      say([herald?(:meat_meat) ? "(She says your number. V-7. Then, softly, the sound you made the day you were born.)" :
+                                 "AVARICE: (to Meat Meat) V-7. I still have the sound you made the day you were made."])
+      cline(:meat_meat, "(very quiet, very fast) Meat Meat's name is Meat Meat.", "...Meat Meat's name is Meat Meat.")
+    end
+    if with_or_is?(:alerion)
+      say(["AVARICE: (to Alerion) The boy in the lake. Who taught you to call him back?"])
+      cline(:alerion, "Talion did.")
+    end
+    if with_or_is?(:reptin)
+      say(["AVARICE: (to Reptin) And the wolf. I heard it bite, through a puddle."])
+      cline(:reptin, "(smiling) Listening at puddles. How lonely for you.")
+    end
+    if with_or_is?(:wyn)
+      say(["AVARICE: (to Wyn) Little shadow. You'd make a lovely lens."])
+      cline(:wyn, "(very quietly) ...Sableye doesn't like you. He's usually right.")
+    end
     sayc(["AVARICE: Draconic essence, and divine. Razzy's scale core and V-7's blood, and a season I can wind like a clock.",
           "AVARICE: The Seraph-Draco: a living god of ordered seasons. No more wheel. Just the schedule.",
           "AVARICE: Come to the cradle. You were always going to.",
@@ -442,7 +520,7 @@ module FrostThaw
       set_flag(:scale_core_given)
     end
     sayc([
-          cl(:alberica, "She isn't dead. She's never been dead. Why do the clever ones never stay dead?"),
+          cl(:alberica, "Why do the clever ones never stay dead?"),
           cl(:wyn, "...It's quiet down here now. She's stopped counting.")])
     set_flag(:avarice_revealed)
     set_flag(:avarice_body_broken)
@@ -465,9 +543,13 @@ module FrostThaw
             "It goes out like a spark in snow.",
             cl(:meat_meat, "That is for Razzy's voice. Meat Meat stamped. Meat Meat is DONE.")])
     else
-      sayc(["Behind the throne the ice wall goes silver, then clear, then it's a mirror, and she steps out of it.",
-            "A woman of crystal, framed in machinery, white hair, infernal sigils, a smile like arithmetic.",
-            cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
+      sayc(["Behind the throne the ice wall goes silver, then clear, then it's a mirror, and she steps out of it."])
+      av = (Stage.actor(:avarice, $game_player.x + 1, $game_player.y - 4, 2) rescue nil)
+      sayc(["A woman of crystal, framed in machinery, white hair, infernal sigils, a smile like arithmetic.",
+            herald?(:alberica) ? "You're on your knees. You don't believe it. (No. No, we watched you burn.)" :
+                                 cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
+            # the one secret you kept alone (Ch8, "Nobody else noticed"), come due (context 13 M13-5)
+            flag?(:avarice_doubt) ? "You knew. You saw her arms in the Forge, bare, and you never said." : nil,
             flag?(:mira_left_possessed) ? "AVARICE: (in Mira's voice) You watched a coat burn. I had another. You left her for me, on her own ship." :
                                           "AVARICE: You watched a coat burn. Did you think I only had one?",
             "AVARICE: A god in a gem. The last variable. Thank you for weighing her out for me."])
@@ -482,6 +564,7 @@ module FrostThaw
         say(["She reaches for the diamond. Razzilith gets there first, and bites her hand off at the wrist.",
              "Frostina breathes on the ice wall, and the mirror freezes solid with her in it."])
       end
+      Stage.remove_actor(av) if av
       set_flag(:avarice_revealed)
     end
     set_flag(:avarice_ended)
@@ -555,7 +638,7 @@ module FrostThaw
     say([line1, line2])
     sayc([cl(who, who == :reptin ? "(very quietly) Steady. Hold. That's all a root ever does." :
                   who == :alerion ? "Let her look for herself in the fog." :
-                                    "(turning the key) Some things should stay locked. She taught me that.")].compact)
+                                    "(turning the key) Keys open. They also lock. A goddess told me that.")].compact)
     set_flag(key)
     set_flag(:"#{key}_by_relic")
     left = VAULT_CIRCUITS.count { |k| !flag?(k) }
@@ -619,6 +702,9 @@ module FrostThaw
   def eline_at_the_crown(stage)
     return if flag?(:eline_captured) || flag?(:eline_fate)
     if stage == :before && flag?(:eline_unbeaten)
+      el = (eline_actor rescue nil)
+      sev = stage_event("Sephek")
+      Stage.walk_to(el, sev.x, sev.y + 1) if el && sev
       say(["ELINE: (stepping between you and him) No further. I carried his heart up a mountain. I'll carry it up this one.",
            "ELINE: Silence is mercy, and I've been merciful long enough."])
       type, name = TRAINERS[:eline_sephek]
@@ -629,11 +715,12 @@ module FrostThaw
         set_flag(:eline_final_foe)
       end
     elsif stage == :after && flag?(:eline_spared)
-      say(["The cold comes off Auril's throne behind you in one last wave, at all of you, at him.",
+      eline_actor rescue nil
+      say(["Cold rolls out under the throne-room door in one last wave, at all of you, at him.",
            "Eline steps into it. She doesn't say anything at all.",
            "When it passes, she's kneeling where she stood, frosted white from her hair to her open hands, and she doesn't get up.",
            "SEPHEK: (on his knees beside her) ...Eline. Eline, you didn't have to. You never had to.",
-           cl(:wyn, "(very quietly) She chose. That's what you gave her, when you let her go. A choice.")].compact)
+           cl(:wyn, "(very quietly) She chose. Somebody let her, once.")].compact)
       set_flag(:eline_fate)
       set_flag(:eline_martyred)
     end
@@ -647,3 +734,39 @@ Events.onMapSceneChange += proc { |_sender, _e|
     FrostThaw.log("White Vault switches failed: #{err.message}")
   end
 }
+
+# The Pendant of Black Ice, the Vault's key (owner's decision 4): registered on
+# its own number after the relics, so no other item's number moves.
+module GameData
+  class << self
+    alias ft_vault_load_all load_all unless method_defined?(:ft_vault_load_all)
+    def load_all
+      ft_vault_load_all
+      begin
+        n = FrostThaw::VAULT_KEY_ITEM_NUMBER
+        FrostThaw::VAULT_KEY_ITEMS.each do |id, (name, plural, pocket, price, desc, field, battle, type)|
+          it = GameData::Item.new(id: id, id_number: n, name: name, name_plural: plural, pocket: pocket,
+                                  price: price, description: desc, field_use: field, battle_use: battle, type: type)
+          it.define_singleton_method(:name) { name }
+          it.define_singleton_method(:name_plural) { plural }
+          it.define_singleton_method(:description) { desc }
+          GameData::Item::DATA[id] = it
+          GameData::Item::DATA[n] = it
+          n += 1
+        end
+      rescue StandardError => e
+        FrostThaw.log("Vault key items failed: #{e.message}")
+      end
+    end
+  end
+end
+
+# After the Wall falls, the map that was "Beyond the Auroral Wall" is where it
+# stood (context 13 M13-8; WRITING_GUIDE §9: all depictions of a place agree).
+if defined?(pbGetMapNameFromId)
+  alias ft_vault_pbGetMapNameFromId pbGetMapNameFromId unless defined?(ft_vault_pbGetMapNameFromId)
+  def pbGetMapNameFromId(id)
+    return "Where the Wall Stood" if id == 2163 && (FrostThaw.active? && FrostThaw.flag?(:game_complete) rescue false)
+    ft_vault_pbGetMapNameFromId(id)
+  end
+end
