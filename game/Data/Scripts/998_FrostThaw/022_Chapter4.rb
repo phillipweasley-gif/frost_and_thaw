@@ -90,7 +90,12 @@ module FrostThaw
   )
   TRAINERS.merge!(
     # the Eastway
-    ranger_hadd:    [:POKEMONRANGER_M, "Hadd",  [[:STANTLER, 22], [:B234H215, 23]],
+    # (balance, scene pass: on the road out of Bryn Shander. His old Stantler
+    # lead, with Intimidate, Stomp's flinch and Take Down, beat a two-Pokémon
+    # team two times in three. A Swinub leads now, with the moves a Swinub
+    # knows at 21; his Sneasel-headed Stantler stays the ace and the test.)
+    ranger_hadd:    [:POKEMONRANGER_M, "Hadd",  [[:SWINUB, 21, [:MUDSLAP, :POWDERSNOW, :ENDURE, :TACKLE]],
+                                                 [:B234H215, 23, [:FURYSWIPES, :QUICKATTACK, :ICYWIND, :LEER]]],
                      "The Eastway's mine to watch. Today I watched me lose on it."],
     aurilite_seven: [:FT_AURILITE,     "Corra", [[:SNORUNT, 22], [:B87H215, 23]],
                      "The crone on the ice is Auril's. She keeps her the way you keep a dog."],
@@ -105,9 +110,13 @@ module FrostThaw
                      "Knucklehead trout don't bite when the ice laughs. Neither do I."],
     skater_lys:     [:BEAUTY,          "Lys",   [[:SMOOCHUM, 23], [:B225H124, 24]],
                      "I skate Redwaters every winter. This one, I'll skate it faster."],
-    aurilite_eight: [:FT_AURILITE,     "Nell",  [[:B427H200, 24], [:SNEASEL, 24]],
+    # (balance, scene pass: Nell and Birk stand on the shore path a few steps
+    # apart, with no rest between; four Pokémon back to back beat two-Pokémon
+    # teams nine times in ten. Nell keeps her ghost of the ice, Birk his bears,
+    # each a level lower.)
+    aurilite_eight: [:FT_AURILITE,     "Nell",  [[:B427H200, 23]],
                      "The ones on the ice can hear you. It's all they can do."],
-    trapper_birk:   [:HIKER,           "Birk",  [[:TEDDIURSA, 23], [:B217H220, 24]],
+    trapper_birk:   [:HIKER,           "Birk",  [[:TEDDIURSA, 22], [:B217H220, 23]],
                      "Wolves took my best traps. You took my best Pokémon. Busy week."],
     channeler_mag:  [:CHANNELER,       "Mag",   [[:GASTLY, 24], [:B200H429, 25]],
                      "She laughed at me, child. From under the ice."],
@@ -177,9 +186,9 @@ module FrostThaw
                    "Mostly in memory."],
     mead_hive_keeper: ["The hive room's the warmest place in town.",
                        "The bees sleep in a ball round the queen. We sleep in a ball round the fire."],
-    olivessa_untapoor: ["OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
-                        "She presses a honey cake into every hand in reach.",
-                        "OLIVESSA: I make the casks. Cakes are a hobby. Feeding people is a hobby."],
+    olivessa_untapoor: ["OLIVESSA: You again! Did you eat? You didn't. Here.",
+                        "She presses another honey cake on you, and one on everyone behind you.",
+                        "OLIVESSA: Casks are the job. Cakes are a hobby. Feeding people is a hobby."],
     luna_camp_dh: ["LUNA CARVER: We keep what the cold leaves. We kept an egg for two years.",
                    "LUNA CARVER: The cold man sleeps on the sledge. His heart still beats.",
                    "LUNA CARVER: We'll watch it from here, at the edge of town."],
@@ -319,18 +328,18 @@ module FrostThaw
     redwaters: ["My ring is cold out here. The people on that ice aren't dead.", "Not yet."],
     dougans: [{ if: { flag: :hag_defeated }, lines: ["She went south. Toward the chasm.", "We'll follow her. We always end up following them."] },
               ["If the wolf comes, watch which leg it favours.", "Liars forget."]],
-    durmoot_lodge: ["Durmoot isn't cruel. She's priced hope and decided she can't afford it."],
+    durmoot_lodge: ["I like her. Don't tell her."],
     tundra: ["The blizzard's covering our tracks. Good for us.", "Good for anything following us."],
     ice_lodge: ["A frost giant's tomb. Thirty-foot ceilings. Every step echoes.", "Walk soft."]
   )
   PARTY_CHAT[:shade].merge!(
-    eastway: ["Keep walking. If I stop, I start thinking about her.", "So I'm not stopping."],
+    eastway: ["She'd have hated this road. Too flat. Nowhere to hide."],
     good_mead: ["Out of mead. Of course they're out of mead. That's the Dale for you."],
     redwaters: ["She'd have walked straight out onto that ice to see who they were.",
                 "She never could leave a mystery alone."],
     dougans: [{ if: { flag: :hag_defeated }, lines: ["Next time I see that hag, she doesn't get to laugh."] },
               ["Everyone here looks at us like we're about to steal something.", "I might."]],
-    durmoot_lodge: ["I like her. Don't tell her."],
+    durmoot_lodge: ["Durmoot isn't cruel. She's priced hope and decided she can't afford it."],
     tundra: ["I can't feel my face. That's fine. It wasn't doing anything useful."],
     ice_lodge: ["Two kids in a cage in a dead giant's house.", "Let's get them out. Then we can be clever."]
   )
@@ -338,7 +347,7 @@ module FrostThaw
   PARTY_CHAT[:meat_meat].merge!(
     eastway: ["Big empty. Meat Meat likes big empty. Nobody to count pockets."],
     good_mead: ["Bees! Tiny honey goblins! Meat Meat will meet the queen. Politely.",
-                "No coffee here. Only honey. Meat Meat gives Good Mead four bees out of ten."],
+                "No coffee here. Only honey. Meat Meat gives Good Mead three bees out of ten."],
     redwaters: ["The still ones on the ice smell like old mushroom. Bad mushroom."],
     dougans: [{ if: { flag: :hag_defeated }, lines: ["Laughing lady ran away. Meat Meat laughed back. Meat Meat laughs better."] },
               ["Small town with pointy teeth. Meat Meat feels very at home.",
@@ -372,19 +381,27 @@ module FrostThaw
     $PokemonGlobal.pokecenterDirection = dir
   end
 
+  # The rest stop: the laughing planted (the bees go quiet), then a heal. The
+  # banter plays on the first rest only (notes 04 E30); later rests just heal.
   def mead_hall_rest(event_id = nil)
-    say(["BREWMISTRESS: Come in, come in! Sit by the hive fire.",
-         "BREWMISTRESS: No mead to sell, but warmth's free in Good Mead.",
+    if flag?(:mead_hall_rested)
+      say(["BREWMISTRESS: Back again? Sit by the hives. The fire's free."], event_id)
+      pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+      set_rest_at(GOOD_MEAD_REST)
+      return
+    end
+    set_flag(:mead_hall_rested)
+    say(["BREWMISTRESS: In you go. Sit by the hive fire. No mead to sell, but the warmth's free.",
          "BREWMISTRESS: Some nights you hear it from here. Laughing, out on Redwaters.",
          "BREWMISTRESS: The bees go quiet when it starts."], event_id)
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     set_rest_at(GOOD_MEAD_REST)
-    sayc(["BREWMISTRESS: There. Listen to them hum. Sounds like summer, doesn't it?",
+    sayc(["Behind the fire, the hives hum. It sounds like summer.",
           cl(:alberica, "A mead hall with no mead. It's like a bed with no company. Technically works."),
           cl(:meat_meat, "Meat Meat asked for coffee. Lady gave Meat Meat hot honey water."),
           cl(:meat_meat, "Meat Meat is not angry. Meat Meat is disappointed. Three bees out of ten."),
-          cl(:reptin, "Thank you, it's lovely. She's saying it's lovely."),
-          cl(:alerion, "She isn't.")], event_id)
+          cl(:reptin, "Thank you, it's lovely. Hot honey water. A classic."),
+          cl(:alerion, "It isn't.")], event_id)
   end
 
   def smokehouse_rest(event_id = nil)
@@ -438,24 +455,33 @@ module FrostThaw
     set_flag(:eastway_started)
     sayc(["Past Bryn Shander's east gate, the Eastway runs out across open snowfields.",
           outsider? ? "South-east, past Good Mead, is Dougan's Hole, and the hag's mirrors." :
-                     "South-east, past Good Mead, is Dougan's Hole. Zenith said a hag laughs in a chasm there.",
+                     "South-east, past Good Mead, is Dougan's Hole, where the laughing comes from.",
           cl(:shade, "A laughing hag. In a chasm. Is anything in this Dale just a nice lake?"),
-          as(:alerion, "Then let's go and find out what's so funny."),
-          cl(:alberica, "Look at that, pretty boy made a joke. Mark the date, somebody.")])
+          cl(:alerion, "No."),
+          cl(:alberica, "He's right. That's the worst part.")])
   end
 
-  # SC 4.01 - Good Mead
+  # SC 4.01 - Good Mead. A rest town on the way, and a face the player needs
+  # in Chapter 9: Olivessa walks up with honey cake, then goes back to her
+  # cooperage (notes 04 E11).
   def scene_good_mead_arrival
     set_flag(:good_mead_arrived)
     set_flag(:good_mead_met)
-    sayc(["A day's walk east, and the snow smells of honey.",
-          "Good Mead: squat houses carved with dinosaurs and serpents.",
-          "Over them, a two-storey mead hall, its eaves painted like wyverns.",
-          "Its founders came from the hot south. The beasts on its lintels have never seen snow.",
-          "Bees hum somewhere in a heated hall.",
-          "OLIVESSA: Headed to the Hole? Eat first. Nobody comes back from there fat.",
-          cl(:alberica, "A woman who feeds strangers on sight. I think I'm in love."),
+    say(["A day's walk east, and the snow smells of honey.",
+         "Good Mead: squat houses carved with dinosaurs and serpents.",
+         "Over them, a two-storey mead hall, its eaves painted like wyverns.",
+         "Its founders came from the hot south. The beasts on its lintels have never seen snow."])
+    oli = (Stage.actor(:olivessa, $game_player.x + 3, $game_player.y + 4, 8, graphic: "BW (56)") rescue nil)
+    say(["A woman with sawdust on her apron comes up the road at a trot, a basket on her arm."])
+    Stage.approach(oli) if oli
+    sayc(["OLIVESSA: Olivessa. I make casks. Headed to the Hole? Eat first.",
+          "OLIVESSA: Nobody comes back from there fat.",
+          "She presses a honey cake into every hand in reach.",
+          cl(:alberica, "Cake first, questions later. My kind of town."),
           cl(:meat_meat, "Meat Meat smells honey. Meat Meat does not smell coffee. Suspicious town.")])
+    say(["OLIVESSA: The cooperage, by the hives. Come and see me before you go south."]) if oli
+    Stage.leave(oli, 7, 16) if oli
+    Stage.cleanup rescue nil
   end
 
   # SC 4.02 - The still ones on the ice. The player's goal (the hag's mirrors)

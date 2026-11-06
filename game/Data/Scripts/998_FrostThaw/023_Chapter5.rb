@@ -56,8 +56,8 @@ module FrostThaw
                        Cave: [[25, :GOLBAT, 28, 30], [20, :GASTLY, 28, 30], [15, :SNORUNT, 28, 30],
                               [15, :SNEASEL, 28, 30], [15, :CUBONE, 28, 30], [10, :HAUNTER, 29, 31]] }
   ENCOUNTERS[2044] = { step_chances: { Cave: 8 },
-                       Cave: [[25, :GOLBAT, 29, 31], [20, :HAUNTER, 29, 31], [15, :SNORUNT, 29, 31],
-                              [15, :DUSKULL, 29, 31], [15, :CUBONE, 29, 31], [10, :GLALIE, 30, 32]] }
+                       Cave: [[30, :GOLBAT, 29, 31], [20, :HAUNTER, 29, 31], [15, :SNORUNT, 29, 31],
+                              [15, :DUSKULL, 29, 31], [15, :CUBONE, 29, 31], [5, :GLALIE, 29, 31]] }   # (balance: the bridge is the only way on)
   VERSION_ENCOUNTERS[:frost][2041] = { Land: [[10, :MISDREAVUS, 27, 29]] }
   VERSION_ENCOUNTERS[:thaw][2041]  = { Land: [[10, :GROWLITHE, 27, 29]] }
   VERSION_ENCOUNTERS[:frost][2042] = { Cave: [[10, :SMOOCHUM, 28, 30]] }
