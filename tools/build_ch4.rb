@@ -330,7 +330,7 @@ d.event(40, 4, "Cutscene dh_night", [
   shape(d, x, lake_y.(x).floor + 1, gfx, key, "Shape on the ice")
 end
 # the Wennen camp at the edge of town, with Sephek's ice on a sledge (SC 3.08; they're inside the bubble when it forms)
-npc_when(d, 46, 3, "Followers/BUNEARY", :luna_camp_dh, 3964, dir: 4, name: "Luna Carver")
+npc_when(d, 46, 3, "FT_wennen_luna", :luna_camp_dh, 3964, dir: 4, name: "Luna Carver")
 d.sign(39, 5, :sign_dougans)
 d.sign(11, 25, :sign_twenty_stones)
 d.npc(25, 15, "BW (54)", :dh_chorus_ears, dir: 2)

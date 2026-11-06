@@ -30,8 +30,8 @@ SW_HERALD_MEAT = 3904     # you ARE Meat Meat (Herald Mode)
 SW_TORRGA_GONE = 4000     # Torg's is dealt with: Torrga beaten, the camp packed up (044_ChasmFaithful.rb)
 SW_HLIN_PAID   = 4001     # Hlin Trollbane has paid out and gone
 SW_HEART_TAKEN = 3917     # the heart of ice taken at the Glade: Jet Sentry goes north to the Warren
-LOPUNNY = "Followers/LOPUNNY"
-BUNEARY = "Followers/BUNEARY"
+LOPUNNY = "FT_wennen_generic"        # the Wennen (their own sprite; the names kept from the stand-ins)
+BUNEARY = "FT_wennen_generic"
 
 def save(b, key) = save_map(b, ID[key], MUSIC[key])
 
@@ -139,7 +139,7 @@ t.npc(26, 12, "BW (54)", :lonely_logger, dir: 2)
 t.npc(17, 36, "BWOldWoman", :lonely_moon_talk, dir: 8)
 t.npc(27, 4, "BW (38)", :lonely_north_path, dir: 2)
 # one Jet Sentry (notes 03 E12): under Nimsy's window from the night until she goes north with the heart
-jt = npc_when(t, 15, 25, LOPUNNY, :jet_sentry_town, SW_SHIMMER_TAKEN, dir: 8, name: "Jet Sentry")
+jt = npc_when(t, 15, 25, "FT_wennen_jet_sentry", :jet_sentry_town, SW_SHIMMER_TAKEN, dir: 8, name: "Jet Sentry")
 jt.pages << t.build_page(jt.pages[0], { switch: SW_HEART_TAKEN, graphic: "", through: true })
 t.trainer(10, 24, "BWFisherman", :fisher_garrow, :FISHERMAN, dir: 4, sight: 4)
 t.trainer(33, 12, "BWWorker", :logger_breck, :WORKER, dir: 4, sight: 4)
@@ -239,7 +239,7 @@ end
 # Jet Sentry is home once the heart is (notes 03 E12), and rides the sledge south after Luna
 wr.event(33, 42, "Jet Sentry", [
   { graphic: "", through: true },
-  { switch: SW_HEART_TAKEN, graphic: LOPUNNY, direction: 4, script: "FT.talk(:jet_sentry, @event_id)" },
+  { switch: SW_HEART_TAKEN, graphic: "FT_wennen_jet_sentry", direction: 4, script: "FT.talk(:jet_sentry, @event_id)" },
   { switch: SW_WENNEN_FOLLOW, graphic: "", through: true }
 ])
 # the way out: after the Requiem, Jet sends you back to hear Luna first (notes 03 E5)
@@ -248,8 +248,8 @@ wr.event(33, 42, "Jet Sentry", [
                                 { switch: SW_REQUIEM_DONE, trigger: 1, through: true, script: "FT.warren_exit_check(@event_id)" },
                                 { switch: SW_WENNEN_FOLLOW, through: true }])
 end
-wr.event(20, 6, "Luna Carver", [{ graphic: BUNEARY, direction: 2, script: "FT.luna(@event_id)" }])   # SC 3.08
-wr.event(10, 10, "Zenith Abbott", [{ graphic: LOPUNNY, direction: 2, script: "FT.zenith(@event_id)" }])
+wr.event(20, 6, "Luna Carver", [{ graphic: "FT_wennen_luna", direction: 2, script: "FT.luna(@event_id)" }])   # SC 3.08
+wr.event(10, 10, "Zenith Abbott", [{ graphic: "FT_wennen_zenith", direction: 2, script: "FT.zenith(@event_id)" }])
 wr.sign(11, 9, :undying_rose_warren)
 wr.sign(9, 34, :warren_nursery)
 wr.sign(22, 18, :shadow_vault)
@@ -334,7 +334,7 @@ unless has_event?(bryn, "To Lonelywood Road")
   npc_when(bryn, 21, 4, "BWPoliceman", :bryn_north_guard_open, SW_NORTH_OPEN, dir: 6)
   [22, 23].each { |x| bryn.warp(x, 0, ID[:lonely_road], x == 22 ? 14 : 15, H - 2, 8, name: "To Lonelywood Road") }
   # Jet Sentry ran ahead and waits by the east gate (SC 3.09)
-  npc_when(bryn, 42, 21, LOPUNNY, :jet_sentry_gate, SW_REQUIEM_DONE, dir: 4, name: "Jet Sentry")
+  npc_when(bryn, 42, 21, "FT_wennen_jet_sentry", :jet_sentry_gate, SW_REQUIEM_DONE, dir: 4, name: "Jet Sentry")
 end
 resave(bryn, BRYN)
 

@@ -91,7 +91,7 @@ end
 [[19, 1656], [20, 1657], [21, 1659]].each { |x, t| c.set(x, 5, 1, t) }   # its front (a counter: talk across it)
 [17, 23].each { |x| c.set(x, 4, 2, 8898); c.set(x, 5, 2, 8906) }          # two potted plants (as in Oak's lab)
 c.cutscene(0, 0, :pro_college_arrive)
-c.event(20, 3, "Professor Wynsnow", [{ graphic: "BW (55)", direction: 8, script: "FT.talk(:pro_wynsnow, @event_id)" }])
+c.event(20, 3, "Professor Wynsnow", [{ graphic: "FT_professor_wynsnow", direction: 8, script: "FT.talk(:pro_wynsnow, @event_id)" }])
 3.times do |i|
   c.event(19 + i, 4, "Starter ball #{i + 1}", [{ graphic: "BW153", direction: 2, script: "FT.pro_ball(#{i}, @event_id)" },
                                               { self_switch: "A", graphic: "", through: true }])

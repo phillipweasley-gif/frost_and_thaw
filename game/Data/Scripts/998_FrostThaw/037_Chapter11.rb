@@ -394,7 +394,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # SC 11.04 - Four chairs
   #-----------------------------------------------------------------------------
-  COUNCILLOR_LOOKS = { rheven: "FT_captain_rheven_stormbranch", mira: "FT_mira_of_the_north_wind", eirwen: "BW (30)", phildendrin: "FT_phildendrin",
+  COUNCILLOR_LOOKS = { rheven: "FT_captain_rheven_stormbranch", mira: "FT_mira_of_the_north_wind", eirwen: "FT_eirwen_solglass", phildendrin: "FT_phildendrin",
                        anduin: "FT_anduin" }
 
   def scene_four_chairs
@@ -438,7 +438,7 @@ module FrostThaw
                      "...I'm going. She doesn't get to wait for me.")
     say([cl(:reptin, "(sighing) Then I'd better pack something nice. I'm not meeting a god in travel clothes.")].compact)
     # The White Vault thread: Eirwen keeps the second sigil; Sephek dropped the third.
-    eirwen = stage_event("stage_eirwen") || Stage.actor(:eirwen, 12, 19, 8, graphic: "BW (30)")
+    eirwen = stage_event("stage_eirwen") || Stage.actor(:eirwen, 12, 19, 8, graphic: "FT_eirwen_solglass")
     Stage.approach(eirwen) if eirwen
     say(["As the Council rises, Eirwen Solglass pads over, barefoot on the cold floor."])
     eirwen_sigil

@@ -50,7 +50,7 @@ cn.event(16, 30, "Griffon roost", [{ graphic: "Followers/PIDGEOT", direction: 2,
 resave(cn, 2061)
 ch = reopen(2054); autorun(ch, 2, 1, "Cutscene four_chairs", SW_CH11_COUNCIL, "FT.scene_four_chairs"); resave(ch, 2054)
 rt = reopen(2055)
-rt.event(32, 9, "Wennen bell", [{ graphic: "Followers/LOPUNNY", direction: 8, script: "FT.departure(:whale, @event_id)" }])
+rt.event(32, 9, "Wennen bell", [{ graphic: "FT_wennen_generic", direction: 8, script: "FT.departure(:whale, @event_id)" }])
 resave(rt, 2055)
 
 # --- 2079: Solstice -------------------------------------------------------------

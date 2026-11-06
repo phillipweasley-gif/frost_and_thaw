@@ -172,7 +172,7 @@ ch.event(14, 13, "Kelyn of Spring", [
 ])
 # (once he's fallen in the forge (3977) he's gone: notes/09 E6, the dead Autumn
 # Warden no longer stands in the Hall he's charged in)
-ch.event(8, 13, "Darrus Fell", [{ graphic: "BW (55)", direction: 2, script: "FT.darrus(@event_id)" },
+ch.event(8, 13, "Darrus Fell", [{ graphic: "FT_darrus_fell", direction: 2, script: "FT.darrus(@event_id)" },
                                 { switch: 3977, graphic: "", through: true }])
 # (after the rite (3936) Selrae goes down after Var: her seat is empty, her
 # cloak on it, until you've found her below (3939); context 06 M6-10. The

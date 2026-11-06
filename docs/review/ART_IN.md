@@ -101,3 +101,20 @@ A New Journey run (244/245) meets both in battle and shows both sprites.
 | `Characters/FT_high_speaker_kelyn_of_spring` | same | the Council Hall, the orb, the Undercanopy, the spores debate, Ch6/9/10 scenes |
 
 Rheven's direwolf is still the Mightyena stand-in (its own follower hasn't come in).
+
+## Batch 07 (2026-11-06, 0.7.7)
+
+| File | Where |
+| --- | --- |
+| `FT_professor_wynsnow` | the prologue, the College |
+| `FT_eirwen_solglass` | the Library, the Shrine (trial week), Ch6 cast, the Council platforms and chairs |
+| `FT_darrus_fell` | the Council Hall, the Dragonforge (Autumn falls) |
+| `FT_darrus_fell_corsair_coat` | hiding on the Smuggler's Run (after he's exposed) |
+| `FT_prototype_3` | the Guild dig (replaces the Golett) |
+| `FT_wennen_generic` | every Wennen in Ch3 (the Warren, guards, bearers, the driver, the Nova Keeper), the Wennen scholar, the Wennen bell |
+| `FT_wennen_zenith`, `FT_wennen_luna`, `FT_wennen_jet_sentry`, `FT_wennen_lumin` | Zenith Abbott; Luna (the Warren, Dougan's Hole camp); Jet Sentry (Nimsy's window, the Warren, the gate, the sledge); Lumin at the twin orb |
+| `FT_myconid_eira` | Eira Shadebloom |
+| `FT_myconid_generic` | Yarro, Korun, Mnemosyne Myr, Zym, the Accountancy, the market duel, the signers, the tortured myconid (the small sporelings and Faria keep Shroomish) |
+
+Checks: smoke 233/233, maps 157/157 (named sprites matched in check_all), New Journey 244/245 and Alberica
+236/237 (the misses are lost-battle retries).

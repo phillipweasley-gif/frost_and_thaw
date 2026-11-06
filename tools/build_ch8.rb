@@ -101,7 +101,7 @@ paint(df, [0, 13, 6, 3], [16, 4, 21, 23])
 cave_bridge_h(df, 6, 15, 14)                                    # over the boiling sap
 [13, 14, 15].each { |y| df.warp(0, y, 2150, 13, 27, 8, name: "Back up to the root-keep gate") }
 df.event(11, 14, "Darrus Fell", [
-  { graphic: "BW (55)", direction: 4, script: "FT.scene_autumn_falls" },
+  { graphic: "FT_darrus_fell", direction: 4, script: "FT.scene_autumn_falls" },
   { switch: SW_AUTUMN_FELL, graphic: "", through: true }
 ])
 [14, 15].each { |y| trigger(df, 8, y, :autumn_falls) }        # stepping on to the bridge

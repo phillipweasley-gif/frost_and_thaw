@@ -58,7 +58,8 @@ module FrostThaw
   VERSION_ENCOUNTERS[:thaw][2020]  = { Land: [[10, :HOPPIP, 15, 17]] }
 
   COMPANION_NAMES[:meat_meat] = "MEAT MEAT"
-  LOPUNNY_GFX = "Followers/LOPUNNY"        # the Wennen (as on the maps, tools/build_ch3.rb)
+  LOPUNNY_GFX = "FT_wennen_generic"        # the Wennen (as on the maps, tools/build_ch3.rb)
+  JET_GFX = "FT_wennen_jet_sentry"
 
   #-----------------------------------------------------------------------------
   # Trainers
@@ -737,7 +738,7 @@ module FrostThaw
     # Jet Sentry walks in up the south path behind you (context 03 M3-6)
     jet = nil
     if st.map?
-      jet = st.actor(:jet_sentry, 14, 26, 8, graphic: LOPUNNY_GFX)
+      jet = st.actor(:jet_sentry, 14, 26, 8, graphic: JET_GFX)
       st.walk_to(jet, $game_player.x, $game_player.y, adjacent: true) if jet
       st.turn_to(jet) if jet
     end
@@ -900,7 +901,7 @@ module FrostThaw
     if st.map?
       nx, ny = WARREN_NURSERY
       st.actor(:wennen_guard, nx - 1, ny, 6, graphic: LOPUNNY_GFX)
-      st.actor(:wennen_guard, nx + 1, ny, 4, graphic: "Followers/BUNEARY")
+      st.actor(:wennen_guard, nx + 1, ny, 4, graphic: LOPUNNY_GFX)
       st.pan_to(nx, ny)
     end
     say(["In a nest of white roots, two Wennen guard an egg of pale blue ice. It's never been warm."])
@@ -988,7 +989,7 @@ module FrostThaw
     if st.map?
       rx, ry = ROSE_TILE
       b1 = st.actor(:wennen_bearer, px - 1, py + 3, 8, graphic: LOPUNNY_GFX)
-      b2 = st.actor(:wennen_bearer, px, py + 3, 8, graphic: "Followers/BUNEARY")
+      b2 = st.actor(:wennen_bearer, px, py + 3, 8, graphic: LOPUNNY_GFX)
       st.walk_to(b1, rx - 1, ry - 1, wait_for: false) if b1
       st.walk_to(b2, rx, ry - 1, face: 2) if b2
       guard = 0
@@ -1118,7 +1119,7 @@ module FrostThaw
     mood(:hunt)
     if st.map? && $game_map.map_id == MAPS[:warren]
       # (she comes up the passage from the south, the way the egg came)
-      jet = st.actor(:jet_sentry, $game_player.x, $game_player.y + 3, 8, graphic: LOPUNNY_GFX)
+      jet = st.actor(:jet_sentry, $game_player.x, $game_player.y + 3, 8, graphic: JET_GFX)
       st.walk_to(jet, $game_player.x, $game_player.y, adjacent: true) if jet
       st.turn_to(jet) if jet
     end
@@ -1150,8 +1151,8 @@ module FrostThaw
     pbFadeOutIn { st.jump(MAPS[:bryn], *BRYN_EAST_GATE, 6) }
     gx, gy = BRYN_EAST_GATE
     st.actor(:sephek_sledge, gx, gy + 1, 6, graphic: "FT_sephek_frozen")
-    st.actor(:wennen_driver, gx - 1, gy + 1, 6, graphic: "Followers/BUNEARY")
-    jet = st.find("Jet Sentry") || st.actor(:jet_sentry, gx + 1, gy + 1, 4, graphic: LOPUNNY_GFX)
+    st.actor(:wennen_driver, gx - 1, gy + 1, 6, graphic: LOPUNNY_GFX)
+    jet = st.find("Jet Sentry") || st.actor(:jet_sentry, gx + 1, gy + 1, 4, graphic: JET_GFX)
     guard = $game_map.events.values.find { |e| e.name.to_s =~ /bryn_east_guard_open/ && !e.character_name.to_s.empty? }
     guard ||= st.actor(:gate_guard, gx + 3, gy, 4, graphic: "BWPoliceman")
     say(["Two nights on the sledge, south past Termalaine. In his ice, Sephek never once blinks."])

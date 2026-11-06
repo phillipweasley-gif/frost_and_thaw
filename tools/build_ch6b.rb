@@ -123,8 +123,8 @@ cn.map.events.clear
 cn.sign(11, 32, :canopy_sign)
 cn.event(22, 24, "Twin orb", [{ graphic: "", script: "FT.twin_orb(@event_id)" }])
 cn.event(20, 22, "Lumin Weavemoss", [
-  { graphic: "Followers/LOPUNNY", direction: 2, script: "FT.twin_orb(@event_id)" },
-  { switch: SW_TWINS_MET, graphic: "Followers/LOPUNNY", direction: 2, script: "FT.lumin(@event_id)" }
+  { graphic: "FT_wennen_lumin", direction: 2, script: "FT.twin_orb(@event_id)" },
+  { switch: SW_TWINS_MET, graphic: "FT_wennen_lumin", direction: 2, script: "FT.lumin(@event_id)" }
 ])
 cn.event(31, 5, "Lumen Shard", [{ graphic: "", script: "FT.lumen_shard(@event_id)" }])
 cn.door(9, 12, PROMENADE, 29, 44, 8, name: "Leaf-bridge to the Lightfall Promenade")
@@ -154,7 +154,7 @@ save(cn, :canopy)
 lb, ex = Builder.from_existing(96)
 lb.map.events.clear
 [6, 7].each { |y| lb.door(17, y, ID[:canopy], 34, 17, 8, name: "Exit") }   # (the museum's own way out was out of reach)
-lb.event(7, 4, "Eirwen Solglass", [{ graphic: "BW (30)", direction: 2, script: "FT.eirwen(@event_id)" }])
+lb.event(7, 4, "Eirwen Solglass", [{ graphic: "FT_eirwen_solglass", direction: 2, script: "FT.eirwen(@event_id)" }])
 lb.event(4, 9, "The Lorn Scribe", [{ graphic: "BW (72)", direction: 6, script: "FT.lorn_scribe(@event_id)" }])
 lb.event(10, 3, "Solvaran's counter", [{ graphic: "BW (109)", direction: 2, script: "FT.solvaran(@event_id)" }])
 lb.event(12, 10, "Pimmlet Natch", [{ graphic: "BW (17)", direction: 4, script: "FT.pimmlet(@event_id)" }])
@@ -162,7 +162,7 @@ lb.event(6, 10, "Professor Halden Vex", [{ graphic: "BW (55)", direction: 6, scr
 shown_on(lb, 7, 11, "Halden's engine", SW_HALDEN, "", "FT.halden_reset(@event_id)")
 lb.event(11, 5, "Alerion's desk", [{ graphic: "", script: "FT.alerion_desk(@event_id)" }])
 lb.sign(2, 9, :prophecy_leaf)
-lb.npc(14, 8, "Followers/BUNEARY", :wennen_scholar, dir: 4, name: "Wennen scholar")
+lb.npc(14, 8, "FT_wennen_generic", :wennen_scholar, dir: 4, name: "Wennen scholar")
 lb.sign(4, 4, :library_note)
 lb.event(15, 4, "Sub-vault", [{ graphic: "", script: "FT.subvault(@event_id)" }])
 save(lb, :library)
@@ -174,7 +174,7 @@ cg, _ex = Builder.from_existing(360)
 cg.map.events.clear
 [12, 13, 14].each { |x| cg.door(x, 19, ID[:canopy], 28, 32, 8, name: "Exit") }
 stairs_closed(cg, 13, 2)
-cg.event(13, 4, "Professor Wynsnow", [{ graphic: "BW (55)", direction: 2, script: "FT.wynsnow(@event_id)" }])
+cg.event(13, 4, "Professor Wynsnow", [{ graphic: "FT_professor_wynsnow", direction: 2, script: "FT.wynsnow(@event_id)" }])
 cg.trainer(6, 5, nil, :scholar_pell, :FT_SCHOLAR, dir: 2, sight: 2)
 cg.trainer(20, 5, nil, :scholar_quill, :FT_SCHOLAR, dir: 2, sight: 2)
 cg.sign(3, 11, :college_relics)
@@ -204,17 +204,17 @@ uc, _ex = Builder.from_existing(364, keep: [11, 12, 13, 14, 15, 16])   # (the si
 uc.map.events.delete_if { |id, _| ![11, 12, 13, 14, 15, 16].include?(id) }
 uc.warp(9, 44, ROOT_TIER, 9, 21, 6, name: "Up through the Sap Gate")
 uc.cutscene(9, 42, :undercanopy_enter)
-uc.event(10, 40, "Eira Shadebloom", [{ graphic: "Followers/BRELOOM", direction: 2, script: "FT.eira(@event_id)" }])
-uc.event(9, 30, "Yarro", [{ graphic: "Followers/SHROOMISH", direction: 2, step_anime: true, script: "FT.undercanopy_rest(@event_id)" }])
+uc.event(10, 40, "Eira Shadebloom", [{ graphic: "FT_myconid_eira", direction: 2, script: "FT.eira(@event_id)" }])
+uc.event(9, 30, "Yarro", [{ graphic: "FT_myconid_generic", direction: 2, step_anime: true, script: "FT.undercanopy_rest(@event_id)" }])
 uc.npc(8, 33, "Followers/SHROOMISH", :yarro, dir: 6, name: "Sporeling")
 uc.event(12, 25, "The Blight", [{ graphic: "Followers/SHROOMISH", direction: 2, blend_type: 2, step_anime: false, walk_anime: false, script: "FT.yarro_blight(@event_id)" }])
 uc.npc(13, 17, "Followers/GLOOM", :lysella, dir: 2, name: "Lysella")
-uc.event(8, 19, "Korun", [{ graphic: "Followers/BRELOOM", direction: 6, script: "FT.korun_smith(@event_id)" }])   # (his forge: 047d)
-uc.event(17, 12, "Mnemosyne Myr", [{ graphic: "Followers/PARASECT", direction: 2, script: "FT.myr(@event_id)" }])
+uc.event(8, 19, "Korun", [{ graphic: "FT_myconid_generic", direction: 6, script: "FT.korun_smith(@event_id)" }])   # (his forge: 047d)
+uc.event(17, 12, "Mnemosyne Myr", [{ graphic: "FT_myconid_generic", direction: 2, script: "FT.myr(@event_id)" }])
 uc.sign(19, 12, :myr_threads)
 uc.event(21, 20, "Faria", [{ graphic: "Followers/SHROOMISH", direction: 2, step_anime: true, script: "FT.talk(:faria, @event_id)\nFT.mart(:faria, @event_id)" }])
 uc.event(23, 21, "Masked trader", [{ graphic: "FT_halo_disciple_male", direction: 2, script: "FT.masked_trader(@event_id)" }])
-uc.event(26, 19, "Zym", [{ graphic: "Followers/BRELOOM", direction: 4, script: "FT.talk(:zym, @event_id)" }])
+uc.event(26, 19, "Zym", [{ graphic: "FT_myconid_generic", direction: 4, script: "FT.talk(:zym, @event_id)" }])
 uc.event(39, 27, "The lake", [{ graphic: "", script: "FT.shadow_mycolith(@event_id)" }])
 uc.event(45, 17, "Sovereign Luminara", [{ graphic: "FT_luminara", direction: 2, script: "FT.leader_luminara(@event_id)" }])
 uc.sign(44, 16, :hyphora_roots)

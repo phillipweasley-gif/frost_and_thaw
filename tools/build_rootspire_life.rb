@@ -201,7 +201,7 @@ save(aa, :auroral_arms)
 # 2187 Thorned Ledger Bank: the Accountancy (a fungal collective) and its vault
 lbk, ex = interior(298, [[4, 15], [5, 15]])
 exits_to(lbk, ex, ID[:halls], 49, 43)
-person(lbk, 8, 10, "Followers/BRELOOM", :accountancy, dir: 2, name: "The Accountancy")
+person(lbk, 8, 10, "FT_myconid_generic", :accountancy, dir: 2, name: "The Accountancy")
 person(lbk, 3, 11, "Followers/SHROOMISH", :counting_spore, dir: 2, name: "Counting spore",
        pages: [{ graphic: "Followers/SHROOMISH", direction: 2, step_anime: true, script: "FT.counting_spore(@event_id)" }])
 lbk.sign(2, 12, :vault_door)
@@ -355,7 +355,7 @@ sr.trainer(15, 16, nil, :run_smuggler_kett, :SAILOR, dir: 2, sight: 3)
 # the old moorings, east: where Darrus runs if he's exposed
 sr.event(41, 10, "Old moorings", [{ graphic: "", script: "FT.old_moorings(@event_id)" }])
 sr.event(36, 21, "Darrus, hiding", [{ graphic: "", through: true },
-                                    { switch: 4165, graphic: "BW (55)", direction: 4, script: "FT.darrus_hiding(@event_id)" }])
+                                    { switch: 4165, graphic: "FT_darrus_fell_corsair_coat", direction: 4, script: "FT.darrus_hiding(@event_id)" }])
 save(sr, :smugglers_run)
 
 # 2199 The Frozen Run: across the still-frozen half of the Glasswater, beside

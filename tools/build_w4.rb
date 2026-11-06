@@ -486,7 +486,7 @@ resave(rt, 2055)
 # 2056 the Still Sky Shrine: Eirwen, this week. (Selrae's bid is in the Hall now.)
 sh = reopen(2056)
 sh.map.events.delete_if { |_id, e| e.name == "Selrae Vorn" }
-person_when(sh, 12, 10, "Eirwen at the shrine", "BW (30)", "FT.eirwen_shrine(@event_id)", SW_EIRWEN_SHRINE)
+person_when(sh, 12, 10, "Eirwen at the shrine", "FT_eirwen_solglass", "FT.eirwen_shrine(@event_id)", SW_EIRWEN_SHRINE)
 resave(sh, 2056)
 
 # 2057 the Heartroot: the appeal at the seal; Mira's cursed mirror; Auril's relic.
@@ -563,7 +563,7 @@ uc.set(6, 31, 2, GLOWCAP)
 once_trigger(uc, 11, 36, "Root tremor", "FT.garden_tremor(@event_id)", switch: SW_DREAM_OPEN)
 person_when(uc, 13, 26, "Captain Rheven (blight)", "FT_captain_rheven_stormbranch", "FT.talk(:rheven_blight, @event_id)", SW_RHEVEN_BLIGHT, dir: 4)
 person_when(uc, 28, 20, "Spore games", "Followers/SHROOMISH", "FT.spore_games(@event_id)", 3942)
-person_when(uc, 33, 20, "Market duel", "Followers/BRELOOM", "FT.market_duel(@event_id)", 3942)
+person_when(uc, 33, 20, "Market duel", "FT_myconid_generic", "FT.market_duel(@event_id)", 3942)
 in_wall(uc, 25, 22, "Disused root", "FT.talk(:kobold_hole, @event_id)", tile: 0)
 dr_ev = find_event(uc, "Disused root")
 dr_ev.pages << uc.build_page(dr_ev.pages[0], { switch: SW_KOBOLD_NEST, commands: [uc.command(201, [0, 2172, 7, 10, 8, 0])] })
@@ -584,7 +584,7 @@ in_wall(uc, 14, 13, "Memory archive", "FT.memory_archive(@event_id)", tile: MIRR
 person_when(uc, 16, 11, "Tether threads", "", "FT.tether_threads(@event_id)", SW_DREAM_OPEN)
 tt = find_event(uc, "Tether threads"); tt.pages[1].graphic.instance_variable_set(:@tile_id, MIRROR_TILE)
 person_when(uc, 18, 14, "Archive thief", "BW (40)", "FT.memory_heist(@event_id)", SW_MEMORY_HEIST, dir: 8)
-person_when(uc, 10, 38, "Signer myconids", "Followers/BRELOOM", "FT.petition_signer(:myconids, @event_id)", SW_PETITIONS)
+person_when(uc, 10, 38, "Signer myconids", "FT_myconid_generic", "FT.petition_signer(:myconids, @event_id)", SW_PETITIONS)
 # after the sap raid night (the Fane delegation's grudge): a shared watch on the vats
 person_when(uc, 46, 24, "Sap vat watch", "BW029", "FT.talk(:sap_raid_after, @event_id)", SW_SAP_RAID, dir: 4)
 resave(uc, 2068)

@@ -563,7 +563,7 @@ module FrostThaw
     return cast if !Stage.map? || $game_map.map_id != MAPS[:rootspire]
     px, py = $game_player.x, $game_player.y
     cast[:kelyn]  = Stage.actor(:kelyn, px, py + 2, 8, graphic: "FT_high_speaker_kelyn_of_spring")
-    cast[:eirwen] = Stage.actor(:eirwen, px - 2, py + 2, 8, graphic: "BW (30)")
+    cast[:eirwen] = Stage.actor(:eirwen, px - 2, py + 2, 8, graphic: "FT_eirwen_solglass")
     FESTIVAL_STAND_INS.each do |name, (key, graphic, dx, dy, d)|
       ev = Stage.find(name)
       (ev.transparent = true; cast[:hidden] << ev) if ev
