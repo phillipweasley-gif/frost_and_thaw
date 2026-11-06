@@ -146,6 +146,8 @@ module FrostThaw
            "GORRAN: Somebody who pays in gold that's still warm from somewhere very deep. That's all I know.",
            "GORRAN: Leave it, Heralds. Some fires you don't stand close to."])
       sayc([cl(:meat_meat, "Fire man is lying. Meat Meat knows lying. Meat Meat was raised by it."),
+            # (Jorik begged not to be named: dialogue 15 #14)
+            flag?(:jorik_confessed) ? cl(:reptin, "(quietly) Jorik asked us not to say his name. Gorran just said it for him.") : nil,
             cl(:alerion, "He's afraid of someone. Not of us.")].compact)
     elsif flag?(:engine_dead)
       say(["GORRAN: The commissions stopped. The gold stopped. Nobody's come to collect.",
@@ -266,13 +268,17 @@ module FrostThaw
   # 7. The Still Sky Shrine's black market: Eira Voss (the Frozen Flame)
   #-----------------------------------------------------------------------------
   def eira_black_market(event_id = nil)
+    if flag?(:cellar_cleared)
+      say(["A Halo acolyte minds Eira Voss's stall now. The Rootwardens took her. The prices stayed."], event_id)
+      return black_market
+    end
     if first_time?(:met_eira_voss)
       say(["Cold grips your lungs. Blue flame burns in cracked sconces. A dozen eyes watch from the shadows.",
            "A bone-thin woman with frost-burn scars under her eyes stands where Eline's disciples knelt.",
            "Her white fur cloak is stained with soot. She tilts her head too far, like a bird.",
            "EIRA VOSS: Perfect stillness. Perfect silence. ...And very reasonable prices.",
            "Her voice echoes as if she's in a cathedral. She smiles without moving her lips.",
-           "EIRA VOSS: Eline loved the cold. I love what comes after it. Buy something, Herald. Everything here is honest.",
+           "EIRA VOSS: Eline loved the cold. I love what comes after it. Buy something. Everything here is honest.",
            "EIRA VOSS: Mostly."], event_id)
       set_flag(:met_eira)
     else
@@ -309,7 +315,18 @@ module FrostThaw
   # 8. Rootwarden Hall: Captain Kethan Vale (the Hall's own business is in part C)
   #-----------------------------------------------------------------------------
   def kethan(event_id = nil)
-    if first_time?(:met_kethan)
+    first = first_time?(:met_kethan)
+    if first && with_or_is?(:wyn)
+      # Wyn's own captain: Wyn doesn't need him introduced (context 15 §6).
+      say(["Weapons hang beside living-root shields. Captain Kethan frowns over a map of the Wall.",
+           "He cracks his knuckles without looking up: pop, pop, like ice splitting far away.",
+           herald?(:wyn) ? "KETHAN: Wyn. You left your post at the Sap Gate. Then you left the century." :
+                           "KETHAN: Wyn. You left the Sap Gate on festival night. We'll talk about that.",
+           "KETHAN: (to the others) Kethan Vale. Captain. I keep order in the civic ring.",
+           "KETHAN: Patrols hear hammers under the Heartroot at night. Trees don't dream with hammers."], event_id)
+      sayc([cl(:alerion, "Skytower. Goliaths. Our Skytower?"),
+            "KETHAN: Your Skytower, four hundred years on. We remember who carried the shelter's wounded down the mountain."].compact)
+    elsif first
       say(["Weapons hang beside living-root shields. A towering goliath with stone-grey skin and frost-blue tattoos",
            "frowns over a glowing map of the Auroral Wall. His cloak is Rootwarden; his armour is etched with constellations.",
            "KETHAN: If you're here to help, good. If not, don't.",
@@ -646,7 +663,8 @@ module FrostThaw
          "The shaft has been sealed from below with molten iron."], event_id)
     set_flag(:suncleft_tunnel)
     sayc([cl(:alerion, "Helion's road to the forge. He went down and somebody poured the door shut behind him."),
-          cl(:glimmer, "(very quietly) Brightmane said I'd know the fire when I saw it. That's not it. That's its chimney.")].compact)
+          flag?(:brightmane_answered) ? cl(:glimmer, "(very quietly) Brightmane said I'd know the fire when I saw it. That's not it. That's its chimney.") :
+                                        cl(:glimmer, "(very quietly) That's not the fire. That's its chimney.")].compact)
   end
 
   #-----------------------------------------------------------------------------

@@ -140,6 +140,7 @@ module FrostThaw
     t = line.gsub(/\[\[([^|\]]*)\|([^\]]*)\]\]/) { me ? $2 : $1 }
     t = t.gsub("{A's}", me ? "your" : "Alberica's").gsub("{A}", me ? "you" : "Alberica")
     t = t.gsub("{She}", me ? "You" : "She").gsub("{she}", me ? "you" : "she").gsub("{her}", me ? "your" : "her")
+    t = t.gsub(/([.!?]\)?\s+)(you|your)\b/) { "#{$1}#{$2.capitalize}" }   # (context 09: "...again. You can't")
     t.sub(/\A(you|your)\b/) { $1.capitalize }
   end
 
@@ -148,9 +149,14 @@ module FrostThaw
     me = herald?(:alberica)
     pbSEPlay("Ice8", 60, 120) rescue nil
     $game_screen.start_tone_change(Tone.new(-40, -20, 30, 60), 6) rescue nil
-    say([me ? "(Something only you can see.)" : "(Something only Alberica sees.)"] + lines.map { |l| omen_text(l, me) })
+    first = counter(:omens_seen) == 1
+    frame = if me then "(Something only you can see.)"
+            elsif first then "(For a moment you see what Alberica sees. Nobody else does.)"
+            else "(Something only Alberica sees.)"
+            end
+    say([frame] + lines.map { |l| omen_text(l, me) })
     $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10) rescue nil
-    if counter(:omens_seen) == 3 && !me
+    if first && !me
       sayc([cl(:alberica, "(very lightly, to nobody) I'm fine, darlings. Just a chill. Somebody's walking over my grave.")].compact)
     end
   end
@@ -163,11 +169,13 @@ module FrostThaw
     return if !flag?(:met_hellen) || flag?(:auril_whisper)    # Chapter 11 begins with the Whisper at the Hearth
     if !state[:rs_day]                 # the night you arrive is Day 1
       state[:rs_day] = 1
+      act1_jobs_goodbye if respond_to?(:act1_jobs_goodbye)   # the Dale's unfinished favours (context 14, M14-9 B)
       return
     end
     state[:rs_day] += 1
     bank_grow if respond_to?(:bank_grow)
     dawn_hue
+    hearth_word
     return if investigation_night
     downtime_morning if respond_to?(:downtime_morning)
     return if respond_to?(:hearth_extras) && hearth_extras   # the Cycle Day rumours, standing boons, Autumn's ruin (048_H)
@@ -176,6 +184,30 @@ module FrostThaw
   end
 
   def rs_day = state[:rs_day] || 1
+
+  # Act II side quests that the city remembers (and the trial will call): the
+  # first one done, Hellen says so (context 15, M15-4 B).
+  CITY_REMEMBERS = %i[heist_done ash_exposed oath_of_roots still_beast_done frozen_run_done cellar_cleared kelyn_secret
+                      eren_settled naerth_ledger_decided halden_done canticle_learned robes_seen]
+
+  # One line from Hellen at the night's rest, at most: what's changed in the city.
+  def hearth_word
+    if !flag?(:city_keeps_count) && CITY_REMEMBERS.any? { |f| flag?(f) }
+      set_flag(:city_keeps_count)
+      return say(["Far up the trunk, in the Council Hall, a crystal brightens. Rootspire remembers.",
+                  "HELLEN: Word's round the Bazaar what you did. This city keeps count, love. Good and bad."])
+    end
+    if flag?(:ch7_started) && !flag?(:hellen_favours_word)
+      set_flag(:hellen_favours_word)
+      return say(["HELLEN: Since the Council sent you down, half the city's come to me with a favour.",
+                  "HELLEN: I've told them where you sleep."])
+    end
+    if rs_day >= 3 && flag?(:orb_visions) && !flag?(:kelyn_secret) && !flag?(:hellen_orb_word) && !flag?(:summer_ended)
+      set_flag(:hellen_orb_word)
+      say(["HELLEN: The High Speaker's up at the orb again. Every night this week."])
+      side_goal(:kelyn_orb, "The High Speaker goes up to the twin orb at night, alone. Hellen's seen her.", done: [:kelyn_secret, :summer_ended])
+    end
+  end
 
   # The Cycle Pulse: Rootspire's dawn shows where the year has got to.
   def dawn_hue
@@ -223,16 +255,40 @@ module FrostThaw
   def scorch_marks(event_id = nil)
     return say(["Only old soot now, and the faint smell of metal."], event_id) if flag?(:chardalyn_found)
     sayc(["The flagstones by the Echo Gate are scorched in a long, curving drag. Warm to the touch, hours later.",
-          "The smell is wrong: hot metal, and under it something sour and old, like a struck match in a crypt.",
-          "Wedged in a crack, half melted into the stone: a shard of dark crystal, scored with sigils that glow dull red.",
-          cl(:alerion, "Chardalyn. Demon-forged. I haven't seen that since the Dale."),
-          cl(:alberica, "(not touching it) Those sigils. They're hers. The cracked mirror and the A.")].compact, event_id)
+          "The smell is wrong: hot metal, and under it something sour and old.",
+          "Like a struck match in a crypt.",
+          "Wedged in a crack, half melted into the stone: a shard of dark crystal.",
+          "It's scored with sigils that glow dull red.",
+          cl(:alerion, "Chardalyn. Glass a demon breathed on. Nothing good is made of it.")].compact, event_id)
+    # (context 06, M6-7: Meat Meat knows the mark; it places Avarice below, not as Summer)
+    if with_or_is?(:meat_meat)
+      mm = herald?(:meat_meat)
+      if !mm
+        ev = (Stage.summon(:meat_meat) rescue nil)
+        Stage.emote(ev, :exclaim) rescue nil if ev
+      end
+      speak(:meat_meat, "(very still) That mark. The mirror with the A in it. It was on the cold table.",
+                "(very still) ...That mark. The cold table.")
+      say([as(:meat_meat, "On the jars. On the straps. On Meat Meat's arm, once.")])
+      # Meat Meat answers her, so Alberica's line is spoken (WRITING_GUIDE §5)
+      if mm
+        sayc([cl(:alberica, "(not touching it) Whose mark, sweetheart? You've gone grey.")].compact)
+      elsif with_or_is?(:alberica)
+        speak(:alberica, "(not touching it) Whose mark, sweetheart?", "(not touching it) ...Whose mark?")
+      end
+      say([as(:meat_meat, "The lady with books and bones. White hair. Her name starts with it.")])
+      speak(:meat_meat, "Avarice.", "...Avarice.")
+      sayc([cl(:alerion, "Naerth's pale lady. Then she came through the glass too.")].compact)
+    else
+      sayc([cl(:alberica, "(not touching it) Those sigils. They're hers. The cracked mirror and the A.")].compact)
+    end
     give_key(:FT_CHARDALYN)
     set_flag(:chardalyn_found)
     set_switch(SW_SCORCH, false)
     say(["Beyond the scorch, three Rootwarden cloaks lie neatly folded in the dust, as if left for you to find.",
          "No bodies. No footprints. Only a drag mark, going down."])
-    side_goal(:patrol, "Archivist Eirwen wants a private word at the Wind-Glass Library.", done: [:eirwen_audience, :barricade_entered])
+    sayc([cl(:alerion, "(at the drag mark) Down. Eirwen has the oldest maps. She'll know what's under.")].compact)
+    side_goal(:patrol, "Take the chardalyn to Eirwen at the Wind-Glass Library, up on the Canopy-Tier.", done: [:eirwen_audience, :barricade_entered])
     add_counter(:story_beats)
   end
 
@@ -324,6 +380,7 @@ module FrostThaw
   def night_runaway_warden
     sayc(["A crash downstairs. A young Rootwarden has fallen through the Hearth's door, grey-faced, shaking.",
           "The veins in her hands glow a dull red, like coals under ash.",
+          herald?(:wyn) ? "(Til. Two years below you at the Hall. She used to steal your bread.)" : nil,
           "ROOTWARDEN TIL: Don't... don't take me back to the Hall. They'll say I deserted. I just... I touched the crates.",
           "ROOTWARDEN TIL: Black grit. Warm. From the docks. It got in my cuts and now it's in me."])
     if with_or_is?(:reptin)

@@ -80,6 +80,9 @@ module FrostThaw
 
   def arvik_day2(event_id)
     r = herald?(:reptin)
+    say(["ARVIK: Bough circle walks the Wall. Claw holds the Armory. I teach the Bough's young."], event_id) if !herald?(:wyn)
+    # (the loop: Reptin's creed came back round to him. He hasn't written it yet.)
+    say(["ARVIK: Our creed? You wrote it. Or you will. A wolf-bitten druid, the first Wardens said."], event_id) if r
     say(["ARVIK: Shoes off. Stand on the root. Don't talk. Don't think, if you can manage it.",
          r ? "You stand barefoot on the living root of the Trunk-Tier. Arvik says nothing for an hour." :
              "Reptin stands barefoot on the living root of the Trunk-Tier. Arvik says nothing for an hour.",
@@ -446,12 +449,13 @@ module FrostThaw
          "A mechanical dragon, built by experiment, out of some special ore or stone, erupting out of the World Tree's roots.",
          "It spreads its wings over the realm, and everywhere their shadow falls, ice.",
          "It's made of something #{herald?(:glimmer) ? "you can't" : "he can't"} quite name. A word comes, broken: \"Chard... alyn\"?",
-         "And #{herald?(:glimmer) ? 'you are' : 'he is'} facing it. Not alone: the others are beside #{herald?(:glimmer) ? 'you' : 'him'}."])
+         "And #{herald?(:glimmer) ? 'you are' : 'he is'} facing it. Not alone: the others are beside #{herald?(:glimmer) ? 'you' : 'him'}.",
+         "BRIGHTMANE: (fading) There's a fire under all of this. You'll know it when you see it."])
     Stage.overlay_off("O-01", fade: 10) rescue nil
     set_flag(:brightmane_answered)
     set_flag(:chardalyn_vision)
-    sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. Brightmane said I'd know the fire when I saw it."),
-          cl(:alerion, "Chardalyn. Demon-crystal. If it's under the tree, so is she.")].compact)
+    sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. And a fire, under all of it."),
+          cl(:alerion, "Chardalyn. Demon-crystal. If it's under the tree, somebody put it there.")].compact)
     true
   end
 
@@ -580,11 +584,24 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The Lorn Scribe: he works for the World Tree; he can't die (struck, he turns
   # to script and writes himself back); he keeps pages of Alberica's journal.
+  # The four riddles, written down where the player can find them again
+  # (context 15, M15-3): plain, with the place names that answer them.
+  SCRIBE_RIDDLES = [
+    [:scribe_key, :alberica, :key_found, "The Lorn Scribe's riddle for Alberica: a key 'where the year sleeps', in the Library."],
+    [:scribe_blade, :meat_meat, :blade_found, "His riddle for Meat Meat: a blade in the silt where the boats froze. The Split Dock."],
+    [:scribe_staff, :reptin, :staff_found, "His riddle for Reptin: a staff with the first Wardens, in clear sap. The Rootwarden Crypt."],
+    [:scribe_mantle, :alerion, :mantle_found, "His riddle for Alerion: a mantle where the world stops. The edge of the Auroral Wall."]
+  ]
+
   def lorn_scribe(event_id = nil)
     talk(:lorn_scribe, event_id)
+    SCRIBE_RIDDLES.each do |key, who, done, text|
+      next if flag?(done) || !with_or_is?(who)
+      side_goal(key, herald?(who) ? text.sub(/for (Alberica|Meat Meat|Reptin|Alerion)/, "for you") : text, done: done)
+    end
     if !flag?(:lorn_known)
       set_flag(:lorn_known)
-      say(["LORN SCRIBE: (still writing) You wonder who I write for. Not the Council. Not the College. The tree.",
+      say(["LORN SCRIBE: (still writing) I write for the tree. Not the Council. Not the College.",
            "LORN SCRIBE: The World Tree dreams, and I write its dreams down, so it remembers them when it wakes.",
            "LORN SCRIBE: They tried to kill me, once. A Summer zealot with an axe. I became ink, and wrote myself back.",
            "LORN SCRIBE: It took a week. My handwriting has never been the same."])
@@ -648,6 +665,13 @@ module FrostThaw
       say([line])
     end
     dt_step!(:alberica) if dt_ready?(:alberica)
+    # (the Codex day and the carousing are two days: context 15 §5)
+    if state[:rs_day] && respond_to?(:festival_nights_left) && festival_nights_left > 2 && !flag?(:festival_night)
+      state[:rs_day] += 1
+      (state[:dt_day] ||= {})[:alberica] = rs_day if with_or_is?(:alberica)   # (she spent both days)
+      n = festival_nights_left
+      say(["(Two days go by like that. The festival's last night is in #{n} night#{n == 1 ? '' : 's'}.)"])
+    end
   end
 
   #-----------------------------------------------------------------------------
@@ -688,9 +712,8 @@ module FrostThaw
   end
 
   def festival_voices
-    say(["EIRWEN: (quietly, beside you) Something burns beneath us. The Summer Marshal ventured down to inspect it.",
-         "EIRWEN: He has not returned.",
-         "LIRIELLE: (sniffing the air, her fur on end) Heat on the wind. It's like someone trying to rewrite the season."])
+    say(["EIRWEN: (quietly, beside you) Eirwen Solglass, the Library. Something burns beneath us.",
+         "LIRIELLE: (a grey-furred Wennen, fur on end) Heat on the wind. Someone's rewriting it."])
   end
 
   #-----------------------------------------------------------------------------

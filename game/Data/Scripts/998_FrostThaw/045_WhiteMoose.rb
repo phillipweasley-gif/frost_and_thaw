@@ -80,7 +80,7 @@ module FrostThaw
     ["Where is the white moose now?", :moose],
     ["Who awakened it?", :ravisin],
     ["Whose body lies in the tomb with the druid?", :vurnis],
-    ["Who is Sephek Kaltro, really?", :sephek],
+    ["Who is Sephek, really?", :sephek],
     ["Where does Auril live?", :auril],
     ["What did DeGrootz of Ramshackle really die of?", :degrootz],
     ["What's under the Spine of the World?", :spine],
@@ -94,7 +94,8 @@ module FrostThaw
                            { if: { switch: SW_WM_AWAKENED }, lines: ["LOGGER: The moose is dead, but now there's a polar bear that TALKS.",
                                                                      "LOGGER: It knew my name. It said my name and then it laughed."] },
                            ["LOGGER: It waits for us. It knows where we'll be. Moose don't know where you'll be.",
-                            "LOGGER: Hunters can't find it. It finds them."]],
+                            "LOGGER: Hunters can't find it. It finds them.",
+                            "LOGGER: Speaker Huddle's paying for that moose. Ask her."]],
     lonely_forest_hunter: [{ if: { flag: :white_moose_done }, lines: ["HUNTER: You got it? With what, a ballista? Huh. Drinks are on me."] },
                            ["HUNTER: White hide, white snow. It's like hunting a cloud with horns.",
                             "HUNTER: Tracks? Everywhere. Ordinary moose, mostly. Only one in six sets are the right ones, I swear."]],
@@ -162,22 +163,23 @@ module FrostThaw
     if flag?(:white_moose_refused)
       return if !pbConfirmMessage(_INTL("Ask Speaker Huddle about the white moose after all?"))
     else
-      say(["Four halfling children scamper from room to room and up the ladder to the loft, chasing each other with wooden swords.",
-           "NIMSY: Before you go. (She offers the cookie plate again.) Our loggers are being terrorised by a white moose,",
-           "NIMSY: and the beast has eluded the hunters we've sent to kill it. We depend on the forest for our survival.",
-           "NIMSY: I wouldn't be a very good town speaker if I let a dumb moose get the better of us. Will you help?"], event_id)
+      # (the morning after her attic lost Shimmer: grief first, notes 14 E9)
+      say([flag?(:shimmer_taken) ? "NIMSY: I'm so sorry about your friend. (quietly) I'll keep the attic as she left it." :
+                                   "NIMSY: Before you go. (She sets the cookie plate down, and doesn't offer it.)",
+           "NIMSY: And when you can spare an hour... a white moose is killing our loggers.",
+           "NIMSY: Our hunters can't touch it. It sees them coming. Will you help?"], event_id)
     end
     c = pbMessage(_INTL("What do you say?"), [_INTL("\"We'll find your moose.\""), _INTL("\"What's in it for us?\""), _INTL("\"Not now.\"")], 0)
     if c == 2
       set_flag(:white_moose_refused)
-      return say(["NIMSY: Of course, of course. The cookies don't go anywhere. Well. They do. But I bake more."])
+      return say(["NIMSY: Of course. Lonelywood's three days north of Bryn Shander. I'll still be baking."])
     end
     if c == 1
       say(["NIMSY: (unoffended) Cookies aren't enough? They're shaped like halflings!",
-           "NIMSY: Fine. A hundred gold for the moose's head. The butcher will give you ten for the carcass, besides."])
+           "NIMSY: Fine. Ten thousand for its head. The butcher pays a thousand for the carcass."])
       persuade = with_or_is?(:alberica) || rand(100) < 50
-      sayc([cl(:alberica, "A hundred. For a moose that's outsmarted every hunter in Lonelywood. Darling, you can do better than that."),
-            persuade ? "NIMSY: (laughing) ...A hundred and twenty-five. And not a copper more." : "NIMSY: A hundred. I've got four children and a roof that leaks."])
+      sayc([cl(:alberica, "Ten thousand? For a moose that's beaten every hunter in town? Do better."),
+            persuade ? "NIMSY: (laughing) ...Twelve and a half. And not a copper more." : "NIMSY: Ten. I've got four children and a roof that leaks."])
       set_flag(:moose_fee_125) if persuade
       sayc([cl(:shade, "And if we want more than gold?"),
             "NIMSY: Then... there's Ramshackle. The old inn. Closed two years. Nobody wants it.",
@@ -188,7 +190,8 @@ module FrostThaw
       say(["NIMSY: Wonderful! Cookies for the road. Take two. Take three, you're tall.",
            "NIMSY: (with a smile) Of course, if our hunters get the moose first, the glory's theirs!"])
     end
-    say(["NIMSY: The loggers work the woods east of town, on the logging road. Look for tracks.",
+    say(["NIMSY: And my mother's lucky coin, for its head. It's all I've got that shines.",
+         "NIMSY: The loggers work the woods east of town, on the logging road. Look for tracks.",
          "NIMSY: Most of them will be ordinary moose. You'll know the white one's. Or you won't, and that's the trouble."])
     set_flag(:white_moose_taken)
     side_goal(:moose, "The white moose: in the woods east of Lonelywood, on the logging road.", done: :white_moose_done)
@@ -198,13 +201,18 @@ module FrostThaw
     say(["You set the white moose's head down on Speaker Huddle's kitchen table. The children go very quiet.",
          "NIMSY: ...Well. It IS white."], event_id)
     take_key(:FT_MOOSEHEAD)
+    knew = (state[:mirror_topics] || []).include?(:ravisin)
     if !$game_switches[SW_WM_RAVISIN]
-      sayc(["NIMSY: But... you said a druid. A druid who makes them talk.",
-            cl(:alerion, "She'll do it again. Polar bears. Rhinos. Whatever she can find."),
-            "NIMSY: (very quietly) Then this isn't over. Is it."])
+      if knew
+        sayc(["You tell her what the mirror showed: a frost druid, who gave the moose its words.",
+              "NIMSY: A druid. Who makes them talk.",
+              cl(:alerion, "She'll do it again. A polar bear. Something under the lake. Anything."),
+              "NIMSY: (very quietly) Then this isn't over. Is it."])
+      end
       set_switch(SW_WM_AWAKENED, true)
     else
-      sayc(["NIMSY: And the druid. And her poor sister. (She sits down.) Somebody's hunters did that. Ours, maybe.",
+      sayc(["You tell her about the druid in the tomb, and the sister she said hunters shot.",
+            "NIMSY: Her poor sister. (She sits down.) Somebody's hunters did that. Ours, maybe.",
             cl(:reptin, "It doesn't make what she did right. It makes it make sense."),
             "NIMSY: It always makes sense, afterwards. That's the worst of it."])
     end
@@ -223,7 +231,8 @@ module FrostThaw
       give_key(:FT_RAMSHACKLEDEED)
       set_switch(SW_WM_RAMSHACKLE, true)
     end
-    say(["NIMSY: And this. My mother's lucky coin. Pin it on a Pokémon and the purse comes home heavier.",
+    say(["NIMSY: And my mother's lucky coin, as I promised.",
+         "NIMSY: Pin it on a Pokémon and the purse comes home heavier.",
          "NIMSY: Mine never did. But I never fought anything."])
     give(:AMULETCOIN)
     set_flag(:white_moose_done)
@@ -667,7 +676,8 @@ module FrostThaw
       ["The same woman's face, but still, and grey. Her twin. Vurnis. Hunters' arrows near Lonelywood, last autumn.",
        "Ravisin keeps her in the sarcophagus she works on. She talks to her while she grinds her herbs."]
     when :sephek
-      ["A man in a fine coat who never sleeps, never eats, and isn't cold. Inside him, a cold that isn't his.",
+      ["A man in his shirtsleeves who never sleeps, never eats, and isn't cold.",
+       "Inside him, a cold that isn't his.",
        "The glass frosts over before it shows you more."]
     when :auril
       ["An island of ice in the Sea of Moving Ice, far to the north-west. A castle that is also a cloud.",
@@ -705,6 +715,9 @@ module FrostThaw
          "An herbalism kit is spread across the sarcophagus lid like a workbench.",
          "As the door opens, a figure ducks behind the sarcophagus. Then she climbs up onto it: a woman with frost in her hair",
          "and teeth stained blue with berries. Something rustles behind her, trying to hide."], event_id)
+    say(["(A druid. Like you. Gone the other way, the way the cold goes.)"]) if herald?(:wyn)
+    # The villain's case, before the fight (dialogue 14, 14.12-4).
+    say(["RAVISIN: Your towns' hunters shot my sister in these woods. Nobody even looked for her."], event_id)
     if pbTrainerBattle(:FT_FROSTDRUID, "Ravisin", nil, false, 0)
       sayc(["Ravisin falls against the sarcophagus. Her last, gasping breath: \"My beasts will avenge us!\"",
             cl(:alerion, "(after a long moment) ...She was grieving. It doesn't make her less dangerous. It makes her sadder."),
