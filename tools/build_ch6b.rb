@@ -130,7 +130,7 @@ cn.event(31, 5, "Lumen Shard", [{ graphic: "", script: "FT.lumen_shard(@event_id
 cn.door(9, 12, PROMENADE, 29, 44, 8, name: "Leaf-bridge to the Lightfall Promenade")
 shown_on(cn, 21, 25, "Sister Ilse", SW_ORB_HALO, "FT_halo_disciple_female", "FT.twin_orb(@event_id)", dir: 8)
 shown_on(cn, 23, 25, "Brother Vosk", SW_ORB_HALO, "FT_halo_disciple_male", "FT.twin_orb(@event_id)", dir: 8)
-shown_on(cn, 23, 23, "High Speaker at the orb", SW_KELYN_ORB, "BW (30)", "FT.kelyn_orb(@event_id)", dir: 4)
+shown_on(cn, 23, 23, "High Speaker at the orb", SW_KELYN_ORB, "FT_high_speaker_kelyn_of_spring", "FT.kelyn_orb(@event_id)", dir: 4)
 cn.event(24, 21, "Sister Selene Marr", [{ graphic: "BW (107)", direction: 6, script: "FT.selene(@event_id)" }])
 shown_on(cn, 32, 6, "Portal to the Frostfell", SW_FROSTFELL, "Followers/FROSLASS", "FT.frostfell_portal(@event_id)", opacity: 140)
 # (Shade used to keep watch here; Shade became Glimmer at the Rift in Ch6. The twins carry SC 9.02 now.)

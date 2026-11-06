@@ -1779,7 +1779,7 @@ module FrostThaw
     (pbFadeOutIn { Stage.jump(*FANE_SPOT) }) rescue (Stage.jump(*FANE_SPOT) rescue nil)
     pair.transparent = true if pair rescue nil                 # (they're walking with you now)
     px, py = $game_player.x, $game_player.y
-    Stage.actor(:kelyn, px - 1, py, 8, graphic: "BW (30)")
+    Stage.actor(:kelyn, px - 1, py, 8, graphic: "FT_high_speaker_kelyn_of_spring")
     Stage.actor(:selrae, px + 1, py, 8, graphic: "FT_winter_matron_selrae_vorn")
     say(["The Fane. Sovereign Luminara on her throne-cap, and the colony all round her, glowing."])
   end
@@ -2284,7 +2284,7 @@ module FrostThaw
   VOTE_STAGE = [2060, 26, 13, 8]
   # [graphic, line]: one clause of the platform, then what the seat does if Auril comes
   PLATFORMS = {
-    rheven: ["BW (72)", "RHEVEN: Walls, and patrols past the Wall. If she comes, the Skytower griffons fly for us."],
+    rheven: ["FT_captain_rheven_stormbranch", "RHEVEN: Walls, and patrols past the Wall. If she comes, the Skytower griffons fly for us."],
     mira: ["FT_mira_of_the_north_wind", "MIRA: Trade with Ten-Towns. And a ship that can cross the Sea of Moving Ice."],
     eirwen: ["BW (30)", "EIRWEN: Listen to the crystals. And the oldest maps of the north are mine. Every one."],
     phildendrin: ["FT_phildendrin", "PHILDENDRIN: Fair trials. And Duvessa's people hold this city, if you must go."],
@@ -2295,7 +2295,7 @@ module FrostThaw
     px, py = ($game_player.x rescue 26), ($game_player.y rescue 13)
     wall = stage_event("Captain Rheven (wall)")
     wall.transparent = true if wall rescue nil                 # he's on the stage today, not the wall
-    Stage.actor(:kelyn, px, py - 2, 2, graphic: "BW (30)")
+    Stage.actor(:kelyn, px, py - 2, 2, graphic: "FT_high_speaker_kelyn_of_spring")
     row = keys.select { |k| PLATFORMS[k] }
     actors = row.each_with_index.map do |k, i|
       Stage.actor(k, px - row.size + 1 + i * 2, py - 4, 2, graphic: PLATFORMS[k][0])

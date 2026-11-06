@@ -163,9 +163,9 @@ wh, ex = interior(432, [[10, 23], [11, 23], [12, 23], [13, 23]])
 exits_to(wh, ex, ID[:halls], 38, 13)
 person(wh, 12, 13, "BW (71)", :kethan, dir: 2, name: "Captain Kethan Vale")
 person(wh, 6, 6, "BW029", :arvik, dir: 2, name: "Arvik")
-person(wh, 9, 9, "BW (72)", :rheven_hall, dir: 4, name: "Rheven at the Armory",
+person(wh, 9, 9, "FT_captain_rheven_stormbranch", :rheven_hall, dir: 4, name: "Rheven at the Armory",
        pages: [{ graphic: "", through: true },
-               { switch: 3941, graphic: "BW (72)", direction: 4, script: "FT.rheven_hall(@event_id)" }])
+               { switch: 3941, graphic: "FT_captain_rheven_stormbranch", direction: 4, script: "FT.rheven_hall(@event_id)" }])
 wh.sign(2, 9, :armory_targets)
 wh.sign(13, 17, :warden_map)
 wh.event(11, 18, "Oath pillar", [{ graphic: "", script: "FT.oath_pillar(@event_id)" }])

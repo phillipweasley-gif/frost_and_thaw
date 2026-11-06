@@ -394,7 +394,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # SC 11.04 - Four chairs
   #-----------------------------------------------------------------------------
-  COUNCILLOR_LOOKS = { rheven: "BW (72)", mira: "FT_mira_of_the_north_wind", eirwen: "BW (30)", phildendrin: "FT_phildendrin",
+  COUNCILLOR_LOOKS = { rheven: "FT_captain_rheven_stormbranch", mira: "FT_mira_of_the_north_wind", eirwen: "BW (30)", phildendrin: "FT_phildendrin",
                        anduin: "FT_anduin" }
 
   def scene_four_chairs

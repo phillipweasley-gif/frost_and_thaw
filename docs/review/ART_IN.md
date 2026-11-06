@@ -89,3 +89,15 @@ first tries it retried and passed, and Meat Meat's Koran miss came after a lost 
 Mira's mirror stall still uses her own sprite while she's possessed; her possessed variant hasn't come in.
 A New Journey run (244/245) meets both in battle and shows both sprites.
 | `Characters/FT_mira_possessed` | same | the mirror stall (before Gym 6), and every later Mira if you leave her possessed (a `Game_Event#refresh` swap in 033, so map events and scene actors both follow); checked by a probe on the docks |
+
+## Batch 06 (2026-11-06, 0.7.7)
+
+| File (designer's name) | In the game as | Where |
+| --- | --- | --- |
+| `Trainers/FT_MIRA_POSSESSED_TR` | `Trainers/FT_CORSAIR_CAPT_possessed` | Gym 6, if you leave her possessed (004 picks it by `:mira_left_possessed`; probe-checked) |
+| `Characters/FT_torrga_icevein` | same | Torg's camp, Lonelywood (2021) |
+| `Characters/FT_coldlight_walker` | same (full opacity now) | the Frozen Rift ledge (2044) |
+| `Characters/FT_captain_rheven_stormbranch` | same | the square, the festival, the Armory, the Wall, the blight, Ch6 and Ch9 scenes, the Council platforms and chairs, the crossing |
+| `Characters/FT_high_speaker_kelyn_of_spring` | same | the Council Hall, the orb, the Undercanopy, the spores debate, Ch6/9/10 scenes |
+
+Rheven's direwolf is still the Mightyena stand-in (its own follower hasn't come in).

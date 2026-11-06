@@ -82,6 +82,11 @@ module GameData
         if tr_type.to_s == "FT_AVARICE" && $ft_var_mask && (pbResolveBitmap("Graphics/Trainers/FT_VAR_cracked") rescue nil)
           return "Graphics/Trainers/FT_VAR_cracked"
         end
+        # Mira left possessed at Gym 6: the thing wearing her
+        if tr_type.to_s == "FT_CORSAIR_CAPT" && (FrostThaw.flag?(:mira_left_possessed) rescue false) &&
+           (pbResolveBitmap("Graphics/Trainers/FT_CORSAIR_CAPT_possessed") rescue nil)
+          return "Graphics/Trainers/FT_CORSAIR_CAPT_possessed"
+        end
         own = "Graphics/Trainers/#{tr_type}"
         return own if FrostThaw.borrowed_trainer_type(tr_type) && (pbResolveBitmap(own) rescue nil)   # our own picture, if we've drawn one
         borrowed = FrostThaw.borrowed_trainer_type(tr_type)

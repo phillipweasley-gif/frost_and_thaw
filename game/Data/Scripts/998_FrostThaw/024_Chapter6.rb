@@ -554,7 +554,7 @@ module FrostThaw
   # over from their stalls (stand-ins; the stalls' own people step out of sight
   # for the night); Wyn comes in from the east road.
   FESTIVAL_STAND_INS = {
-    "Captain Rheven" => [:rheven, "BW (72)", 4, 1, 4], "Rheven's direwolf" => [:direwolf, "Followers/MIGHTYENA", 5, 1, 4],
+    "Captain Rheven" => [:rheven, "FT_captain_rheven_stormbranch", 4, 1, 4], "Rheven's direwolf" => [:direwolf, "Followers/MIGHTYENA", 5, 1, 4],
     "Lirielle Mossdancer" => [:lirielle, "Followers/BUNEARY", -4, -1, 6], "Hew Talmire" => [:hew, "FT_master_hew_talmire", 6, -1, 4]
   }
 
@@ -562,7 +562,7 @@ module FrostThaw
     cast = { hidden: [] }
     return cast if !Stage.map? || $game_map.map_id != MAPS[:rootspire]
     px, py = $game_player.x, $game_player.y
-    cast[:kelyn]  = Stage.actor(:kelyn, px, py + 2, 8, graphic: "BW (30)")
+    cast[:kelyn]  = Stage.actor(:kelyn, px, py + 2, 8, graphic: "FT_high_speaker_kelyn_of_spring")
     cast[:eirwen] = Stage.actor(:eirwen, px - 2, py + 2, 8, graphic: "BW (30)")
     FESTIVAL_STAND_INS.each do |name, (key, graphic, dx, dy, d)|
       ev = Stage.find(name)
@@ -861,7 +861,7 @@ module FrostThaw
     set_flag(:rheven_oath_told)
     rh = wolf = nil
     if Stage.map?
-      rh = Stage.actor(:rheven, 14, 7, 2, graphic: "BW (72)")
+      rh = Stage.actor(:rheven, 14, 7, 2, graphic: "FT_captain_rheven_stormbranch")
       wolf = Stage.actor(:direwolf, 15, 7, 2, graphic: "Followers/MIGHTYENA")
       Stage.approach(rh) if rh
       Stage.walk_to(wolf, rh.x + 1, rh.y, face: 2) if wolf && rh

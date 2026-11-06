@@ -155,7 +155,7 @@ t.event(35, 17, "Torg's flag", [
   { switch: SW_TORRGA_GONE, graphic: "", tile_id: CRATE, script: "FT.talk(:torgs_camp_gone, @event_id)" }
 ])
 t.event(36, 18, "Torrga", [
-  { graphic: "BW040", direction: 2, script: "FT.torrga(@event_id)" },
+  { graphic: "FT_torrga_icevein", direction: 2, script: "FT.torrga(@event_id)" },
   { switch: SW_TORRGA_GONE, graphic: "", through: true }
 ])
 t.event(37, 20, "Sephek at Torg's", [

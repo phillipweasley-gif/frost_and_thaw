@@ -37,7 +37,7 @@ resave(sw, 2058)
 
 # 2068: Kelyn and Selrae in the Undercanopy, to be taken to the Fane
 uc = reopen(2068)
-during_trials(uc, 11, 41, "Kelyn and Selrae", "BW (30)", "FT.councillors_undercanopy(@event_id)", dir: 4)
+during_trials(uc, 11, 41, "Kelyn and Selrae", "FT_high_speaker_kelyn_of_spring", "FT.councillors_undercanopy(@event_id)", dir: 4)
 resave(uc, 2068)
 
 puts "added the trial week to 2050, 2054, 2055, 2058, 2068"

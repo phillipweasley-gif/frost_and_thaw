@@ -588,7 +588,7 @@ module FrostThaw
     # Rheven and his wardens come down the street; Kelyn after them (WRITING_GUIDE §9a)
     px, py = ($game_player.x rescue 9), ($game_player.y rescue 22)
     rheven = Stage.find("Captain Rheven")
-    rheven ? (rheven.moveto(px + 6, py) rescue nil) : (rheven = Stage.actor(:rheven, px + 6, py, 4, graphic: "BW (72)"))
+    rheven ? (rheven.moveto(px + 6, py) rescue nil) : (rheven = Stage.actor(:rheven, px + 6, py, 4, graphic: "FT_captain_rheven_stormbranch"))
     wardens = [Stage.actor(:rootwarden, px + 6, py - 1, 4, graphic: "BW029"), Stage.actor(:rootwarden_2, px + 6, py + 1, 4, graphic: "BW029")]
     Stage.approach(rheven) if rheven
     wardens.compact.each_with_index { |w, i| Stage.walk_to(w, px + 2, py + (i.zero? ? -1 : 1), face: 4) }
@@ -599,7 +599,7 @@ module FrostThaw
     speak(:meat_meat, "Var was a coat! A coat!", "...Var was a coat.")
     sayc([cl(:reptin, "(hands up, smiling) Let's all be very reasonable. Especially the people with spears."),
           cl(:alerion, "She's right. He was a coat.")])
-    kelyn = Stage.actor(:kelyn, px + 6, py, 4, graphic: "BW (30)")
+    kelyn = Stage.actor(:kelyn, px + 6, py, 4, graphic: "FT_high_speaker_kelyn_of_spring")
     Stage.approach(kelyn) if kelyn
     # Context 09 M9-5: the arrest's real logic (the Speaker heard; the city saw),
     # and its witness (the wardens who carried the child up, part 08 M8-5).

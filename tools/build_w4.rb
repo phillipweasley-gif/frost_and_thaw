@@ -463,7 +463,7 @@ ch = reopen(2054)
 sel = find_event(ch, "Selrae Vorn")
 sel.pages << ch.build_page(sel.pages[0], { switch: SW_FOUR_SEASONS, graphic: "FT_winter_matron_selrae_vorn", direction: 2, script: "FT.selrae_bid(@event_id)" })
 person_when(ch, 12, 13, "Captain Kethan Vale (hearing)", "BW029", "FT.wyn_hearing(@event_id)", SW_WYN_HEARING, dir: 2)
-person_when(ch, 7, 11, "Spring and Winter", "BW (30)", "FT.spores_debate(@event_id)", SW_TRIALS, dir: 6)
+person_when(ch, 7, 11, "Spring and Winter", "FT_high_speaker_kelyn_of_spring", "FT.spores_debate(@event_id)", SW_TRIALS, dir: 6)
 # The stair in the back corner (the base map's closed-off upper floor) climbs the
 # tower to Summer's quarters (2173): sealed until the trial week, and after it.
 st = ch.map.events.values.find { |e| e.x == 6 && e.y == 4 }
@@ -511,7 +511,7 @@ end
 # the Wall out to the Glasswater.
 fl = reopen(2060)
 person_when(fl, 40, 12, "Wall foreman", "BW (72)", "FT.wall_crew(@event_id)", SW_WALL_WORKS, dir: 4)
-person_when(fl, 39, 16, "Captain Rheven (wall)", "BW (72)", "FT.rheven_wall(@event_id)", SW_WALL_WORKS, dir: 4)
+person_when(fl, 39, 16, "Captain Rheven (wall)", "FT_captain_rheven_stormbranch", "FT.rheven_wall(@event_id)", SW_WALL_WORKS, dir: 4)
 person_when(fl, 41, 18, "Winter wolves", "Followers/MIGHTYENA", "FT.wall_wolves(@event_id)", SW_WOLF_RAID, dir: 4)
 wrx, wry = place_near(fl, 38, 14)
 fl.event(wrx, wry, "Wall rubble", [{ graphic: "", through: true }, { switch: SW_WALL_WORKS, tile_id: Builder::SIGNPOST_TILE, script: "FT.talk(:wall_rubble, @event_id)" }])
@@ -561,7 +561,7 @@ uc = reopen(2068)
 in_wall(uc, 6, 31, "Moss curtain", "FT.secret_nursery(@event_id)")
 uc.set(6, 31, 2, GLOWCAP)
 once_trigger(uc, 11, 36, "Root tremor", "FT.garden_tremor(@event_id)", switch: SW_DREAM_OPEN)
-person_when(uc, 13, 26, "Captain Rheven (blight)", "BW (72)", "FT.talk(:rheven_blight, @event_id)", SW_RHEVEN_BLIGHT, dir: 4)
+person_when(uc, 13, 26, "Captain Rheven (blight)", "FT_captain_rheven_stormbranch", "FT.talk(:rheven_blight, @event_id)", SW_RHEVEN_BLIGHT, dir: 4)
 person_when(uc, 28, 20, "Spore games", "Followers/SHROOMISH", "FT.spore_games(@event_id)", 3942)
 person_when(uc, 33, 20, "Market duel", "Followers/BRELOOM", "FT.market_duel(@event_id)", 3942)
 in_wall(uc, 25, 22, "Disused root", "FT.talk(:kobold_hole, @event_id)", tile: 0)

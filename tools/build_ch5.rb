@@ -190,7 +190,7 @@ trigger_row(r, [[19, 22], [19, 23]], "FT.bridge_gust(@event_id)", "Gust")
 trigger_row(r, [[22, 22], [22, 23]], "FT.rift_voices(@event_id)", "Voices")
 # the coldlight walker: a frozen wanderer on the far ledge, lamps for eyes (optional)
 r.event(36, 15, "Coldlight walker", [
-  { graphic: "BWMan1", direction: 4, opacity: 170, step_anime: false, script: "FT.coldlight_walker(@event_id)" },
+  { graphic: "FT_coldlight_walker", direction: 4, step_anime: false, script: "FT.coldlight_walker(@event_id)" },
   { switch: SW_WALKER_DOWN, graphic: "", tile_id: 792, script: "FT.coldlight_walker(@event_id)" }
 ])
 r.event(35, 27, "Campfire", [{ graphic: "", tile_id: 582, script: "FT.chasm_camp(@event_id)" }])

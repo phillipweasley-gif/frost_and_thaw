@@ -108,7 +108,7 @@ rs.event(24, 20, "Nivva Sunwick", [{ graphic: "Followers/BUNEARY", direction: 2,
 rs.npc(46, 21, "Followers/BUNEARY", :lirielle, dir: 4, name: "Lirielle Mossdancer")
 rs.npc(13, 28, "Followers/LOPUNNY", :reva, dir: 6, name: "Reva Mosscut")
 rs.event(32, 29, "Tamsin", [{ graphic: "FT_tamsin", direction: 8, script: "FT.tamsin(@event_id)" }])
-rs.npc(50, 29, "BW (72)", :rheven, dir: 4, name: "Captain Rheven")
+rs.npc(50, 29, "FT_captain_rheven_stormbranch", :rheven, dir: 4, name: "Captain Rheven")
 rs.npc(51, 29, "Followers/MIGHTYENA", :rheven_wolf, dir: 4, name: "Rheven's direwolf")
 rs.event(48, 27, "Hew Talmire", [{ graphic: "FT_master_hew_talmire", direction: 2, script: "FT.hew(@event_id)" }])   # the Guild's ladder comes up beside him
 rs.npc(16, 23, "BWParasolLady", :rs_festival_goer, dir: 2)
@@ -168,7 +168,7 @@ ch, ex = Builder.from_existing(272)
 exits_to(ch, ex, ID[:rootspire], 20, 29)
 [11, 12].each { |x| ch.event(x, 12, "Living pillar", [{ graphic: "", script: "FT.council_pillar(@event_id)" }]) }
 ch.event(14, 13, "Kelyn of Spring", [
-  { graphic: "BW (30)", direction: 2, script: "FT.kelyn(@event_id)" }
+  { graphic: "FT_high_speaker_kelyn_of_spring", direction: 2, script: "FT.kelyn(@event_id)" }
 ])
 # (once he's fallen in the forge (3977) he's gone: notes/09 E6, the dead Autumn
 # Warden no longer stands in the Hall he's charged in)

@@ -156,7 +156,7 @@ module FrostThaw
     when :griffons
       roost = stage_event("Griffon roost")
       x, y = roost ? [roost.x + 1, roost.y] : [px + 1, py]
-      flag?(:council_rheven) ? Stage.actor(:rheven, x, y, 8, graphic: "BW (72)") :
+      flag?(:council_rheven) ? Stage.actor(:rheven, x, y, 8, graphic: "FT_captain_rheven_stormbranch") :
                                Stage.actor(:kethan, x, y, 8, graphic: "BW (98)")
     when :whale, :bell
       bell = stage_event("Wennen bell")
