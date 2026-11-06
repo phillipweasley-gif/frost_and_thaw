@@ -1315,7 +1315,7 @@ module FrostThaw
     set_flag(:sigil_echo)
     # (owner's decision 4: the sigils find the Vault's door and wake it; they don't open it.
     # Context 06 §4: one line ties the name to Selrae's.)
-    say(["(A Frostshard Sigil. One of three that find the White Vault's door, far north beyond the Wall.)"])
+    say(["(A Frostshard Sigil. One of three that find the White Vault's door, far in the north.)"])
     sayc([flag?(:selrae_white_womb) ? cl(:alerion, "The White Vault. The Matron called it the White Womb.") : nil].compact)
     if with_or_is?(:alerion)
       set_flag(:talion_foreshadowed)

@@ -671,7 +671,8 @@ module FrostThaw
          "Then she looks at Shade, tilts her head, and hums four notes.",
          "SHADE: (sitting down in the street) ...Hi.",
          cl(:reptin, "(gently) Take your time."),
-         "LUMIN: (a rabbit-eared Wennen priest, trembling) The Twinned Dragons haven't touched ground in a century.",
+         "A rabbit-eared Wennen in priest's robes comes down the steps, trembling.",
+         "LUMIN: The Twinned Dragons haven't touched ground in a century.",
          "LUMIN: The old texts say they'd wait for their partners. Not masters. Partners.",
          "The dragons lift off together, back toward the Shrine of the Twinned Dragons on the Canopy-Tier."].compact)
     set_flag(:twins_met)
@@ -773,8 +774,9 @@ module FrostThaw
          "KELYN: Every terrace we cut is a root that can't feel the seasons. Grow too fast and the tree forgets what balance is.",
          "SELRAE: Grow too slowly and the cold remembers us. Expansion is a wall, Kelyn. Walls keep winter out.",
          "KELYN: Walls keep winter in, too. ...We'll vote on it after the festival. As we have for six years.",
-         cl(:alberica, "(behind her hand) They've been having this argument since before the coffee was invented, haven't they."),
-         "SELRAE: The Still Sky Shrine holds a rite tonight, the festival's first. Watch it. Closely.",
+         cl(:alberica, "(behind her hand) They've been at this since before coffee was invented."),
+         "SELRAE: There's a rite at the Still Sky Shrine tonight, the festival's first.",
+         "SELRAE: Watch it. Closely.",
          "KELYN: The Wardens' stair down to the Root-Tier is in the woodcarver's workshop, by the old gate."])
     selrae_court if respond_to?(:selrae_court)
     state[:goal] = "The Still Sky Shrine, in the Root-Tier. (The woodcarver's workshop has the stair down.)"

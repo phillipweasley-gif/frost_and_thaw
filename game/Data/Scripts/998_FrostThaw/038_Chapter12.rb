@@ -608,7 +608,8 @@ module FrostThaw
     shortcuts << "Nass's safe way up" if flag?(:skant_freed)
     shortcuts << "Ukuma's back door" if flag?(:ukuma_raced)
     say(lines_for(:grimskalle_jaw), event_id)
-    say(["(Your shortcuts: #{shortcuts.join('; ')}.)", "(Each makes the climb easier. None of them skips a Test.)"]) if !shortcuts.empty?
+    say(["(Your shortcuts up the Crown:)"] + shortcuts.map { |s| "(#{s[0].upcase}#{s[1..]}.)" } +
+        ["(Each makes the climb easier. None of them skips a Test.)"]) if !shortcuts.empty?
     return if !pbConfirmMessage(_INTL("Go into Grimskalle?"))
     set_flag(:grimskalle_entered)
     add_counter(:story_beats)

@@ -322,7 +322,7 @@ module FrostThaw
          "SELRAE: Then I'll stand with them."])
     say(["SELRAE: The Rootwarden Wyn: with leaving the Underdark door, the night the Halo came in."])
     if with_or_is?(:wyn)
-      speak(:wyn, "(very small) ...It's true. I wasn't at my post. I didn't know they'd come in behind me.",
+      speak(:wyn, "(very small) ...It's true. I wasn't at my post. I didn't know they'd come in.",
                   "(very small) ...It's true. I wasn't there.")
     end
     # Owner's decision (M10-3): Alberica's real charge is the Bryn Shander night (Ch2's lottery).
@@ -936,7 +936,7 @@ module FrostThaw
     if pbConfirmMessage(_INTL(with_or_is?(:reptin) ? "Let Reptin ask Eirwen what the leaves saw him do?" :
                                                        "Ask Eirwen what the leaves saw Reptin do?"))
       if with_or_is?(:reptin)
-        speak(:reptin, "(to Eirwen) You saw the Mycolith, darling, and the Forge. Did I ever use it to rule?",
+        speak(:reptin, "(to Eirwen) You saw the Mycolith, and the Forge. Did I ever use it to rule?",
                        "...Did I ever use it to rule?")
       end
       say(["EIRWEN: (looking up, considering) I watched the Mycolith fight from the Fane's ledge. And the Forge, in the leaves."])
@@ -1651,7 +1651,7 @@ module FrostThaw
     if pbConfirmMessage(_INTL("Ask Selrae what she's really afraid of?"))
       say(["SELRAE: (after a long moment) A god in my head. I prayed to one for thirty years.",
            "SELRAE: And blight. In the north, a forest gone black and soft in one season."])
-      speak(:alberica, "(gently) Then come and meet it. Three hundred years, and it's never asked for a prayer.",
+      speak(:alberica, "Then come and meet it. Three hundred years, and it's never asked for a prayer.",
                        "(gently) ...Then come and meet it.")
       set_flag(:knows_winter_fear)
     end
@@ -2092,7 +2092,7 @@ module FrostThaw
     c = 0 if !c || c < 0
     speaker = [2, 1, 1, 0][c] || 0
     # ...and then they do speak (dialogue 10 §3, line 16)
-    who, loud, quiet = [[:reptin, "(to the bench) She wore a good man for thirty years and froze the Dale. We stopped her.",
+    who, loud, quiet = [[:reptin, "She wore a good man for thirty years and froze the Dale. We stopped her.",
                          "...We stopped her."],
                         [:alberica, "(to the gallery) Darlings, she'd have burned your tree to keep her summer. We said no.",
                          "...We said no."],

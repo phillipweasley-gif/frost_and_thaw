@@ -157,7 +157,7 @@ module FrostThaw
     say([as(:meat_meat, "(delighted) He is warm. Inside Meat Meat. Like coffee."),
          as(:meat_meat, "Razzilith is Meat Meat's. Meat Meat watches him. That is the rule now.")])
     reader = with_or_is?(:reptin) ? (herald?(:reptin) ? "You read" : "Reptin reads") : "You read"
-    say(["Round the old stump, half grown over with bark, there's a carving. #{reader} it out loud:",
+    say(["Round the old stump, half grown over with bark: a carving. #{reader} it out loud:",
          "THE TWINNED DRAGONS CHOOSE TWO. NOT RIDERS. DRAGOONS.",
          "GUIDES TO YOUNG DRAGONS. KEEPERS OF FRAGILE SEASONS.",
          "A LIVING VOW THAT THE SKY WILL OPEN AGAIN.",

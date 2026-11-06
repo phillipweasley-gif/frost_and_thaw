@@ -459,7 +459,7 @@ module FrostThaw
     case key
     when :summer
       say(["ATTENDANT: Summer is a coat."])
-      sayc([cl(:alberica, "That's not an answer, sweetheart. That's a riddle. I hate riddles I didn't write.")])
+      sayc([cl(:alberica, "That's not an answer, love. That's a riddle. I hate riddles I didn't write.")])
       set_flag(:knows_summer_coat)
     when :heart  then say(["ATTENDANT: The cold man's heart is in the engine.", "ATTENDANT: The engine is in the hag's old kitchen."])
     when :self   then say(["ATTENDANT: You aren't on her wheel. That's why the glass let you through."]); set_flag(:not_on_wheel)

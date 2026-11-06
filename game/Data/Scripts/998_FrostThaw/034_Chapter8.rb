@@ -178,7 +178,7 @@ module FrostThaw
                   "KELYN: (from the stone) Then keep looking. If he's down there, he's been there a week.",
          "The stone goes cool."])
     if with_or_is?(:alerion)
-      speak(:alerion, "Summer took the Saint's heart. Paid for the sap. Gave Selrae a key to these roots.",
+      speak(:alerion, "Summer took the Saint's heart. Paid for the sap. Gave Selrae a key down here.",
                       "...Summer's in all of it.")
     end
     if with_or_is?(:reptin)
@@ -446,7 +446,8 @@ module FrostThaw
     w2 = Stage.actor(:rootwarden_2, 1, 15, 6, graphic: "BW029")
     Stage.approach(w1)
     Stage.walk_to(w2, ($game_player.x - 2 rescue 5), ($game_player.y + 1 rescue 15), face: 6) if w2
-    say(["ROOTWARDEN: (soot to the knees) The Speaker sent us. Your stone went quiet. Is that a child?"])
+    say(["ROOTWARDEN: (soot to the knees) The Speaker sent us. Your stone went quiet.",
+         "ROOTWARDEN: ...Is that a child?"])
     speak(:meat_meat, "(holding the cocoon tighter) Meat Meat found her. Meat Meat carries her.", "...Mine to carry.")
     say(["ROOTWARDEN: #{a[:who]} came down this way. Where is #{a[:he]}?"])
     Stage.face(w1, 2) if w1                      # he follows her look, over the rail

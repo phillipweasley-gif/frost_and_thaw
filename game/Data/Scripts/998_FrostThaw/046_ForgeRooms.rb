@@ -581,7 +581,7 @@ module FrostThaw
     end
     give_key(:FT_FROSTFIREFLASK)
     set_flag(:frostfire_flask)
-    sayc([cl(:alerion, "Blue at the edges. Red at the core. Frost and fire in one bottle. Somebody's recipe."),
+    sayc([cl(:alerion, "Blue at the edges, red at the core. Frost and fire in one bottle. A recipe."),
           cl(:reptin, "Evidence, darling. The Council likes evidence. Wrap it in something.")])
   end
 
@@ -1041,7 +1041,7 @@ module FrostThaw
   ATTENDANT_VISIONS = {
     alberica:  [:key_found, "Alberica sees a door in the Library with her own handwriting on it, and a lock made of notes.",
                 :canticle_learned, "Alberica sees the Still Sky Shrine at night, and a verse she hasn't sung yet waiting in the rafters.",
-                "Alberica sees her own hand on the Library door, and the lock of notes falling open. Done, then. Kept."],
+                "Alberica sees her own hand on the Library door, and the lock of notes opening. Done. Kept."],
     reptin:    [:staff_found, "Reptin sees petrified druids standing in sap under the Root-Tier, and one with his totem in its hands.",
                 :fields_pulse, "Reptin sees the Blooming Fields, flowers and snow, and two small whirlwinds who won't stop arguing.",
                 "Reptin sees the totem warm in his hand, and the petrified druids nodding, one by one. Done. Carried."],

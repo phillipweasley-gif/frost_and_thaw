@@ -481,7 +481,8 @@ module FrostThaw
     Stage.visit(2060, 18, 14, 8) do
       say(["The glade where the Verdant Reversal began is warm today. Too warm, like a fever under the snow.",
            "Razzilith waits in the clearing, coiled round a stone warmed by the thawed earth. He chirrs, bright as a plucked string.",
-           "But his eyes are troubled. He nudges #{mm_her} shoulder and speaks the way he does: broken words, and painted thoughts.",
+           "But his eyes are troubled. He nudges #{mm_her} shoulder and speaks the way he does:",
+           "broken words, and painted thoughts.",
            "RAZZILITH: (a painted thought: the scorched throne, empty) ...Summer?",
            "(A flicker of orange and warm rain. Then cold.)",
            "RAZZILITH: Gone. No steps. No smell.",
@@ -493,9 +494,11 @@ module FrostThaw
       set_flag(:razzy_summer_warning)
       say(["Then he pulls back, chirping, tail thrashing like a cat's. He crouches, wings half-fanned.",
            "RAZZILITH: Fly?"])
-      say(["Before #{mm_she} can breathe, he's scooped #{herald?(:meat_meat) ? 'you' : 'her'} onto his shoulders. His scales are warm and smooth and alive.",
+      say(["Before #{mm_she} can breathe, he's scooped #{herald?(:meat_meat) ? 'you' : 'her'} onto his shoulders.",
+           "His scales are warm and smooth and alive.",
            "Ground runs first: short sprints, wings beating. Hops that feel like falling upward.",
-           "#{herald?(:meat_meat) ? 'You find' : 'She finds'} the balance point without thinking, and how to hold the ridge of his neck without hurting him.",
+           "#{herald?(:meat_meat) ? 'You find' : 'She finds'} the balance point without thinking,",
+           "and how to hold the ridge of his neck without hurting him.",
            "Then a leap. A real one. His wings snap wide and catch the glade's warm draught,",
            "and for a glowing heartbeat #{mm_name} [[is|are]] riding a dragon.".sub(/\[\[(\w+)\|(\w+)\]\]/) { herald?(:meat_meat) ? $2 : $1 },
            "A small dragon. But a dragon.",
@@ -571,7 +574,8 @@ module FrostThaw
     # Heightened Summer-Sense (rootspire.md 5150-5156): for the next day, the
     # first thing that moves with heat doesn't get past her (048_H uses it).
     state[:summer_sense_day] = rs_day
-    say(["(#{herald?(:meat_meat) ? 'Your' : "Meat Meat's"} skin prickles every time the heat moves. Heightened Summer-Sense: for the next day, the first warm thing that moves won't get past #{herald?(:meat_meat) ? 'you' : 'her'}.)"])
+    say(["(#{herald?(:meat_meat) ? 'Your' : "Meat Meat's"} skin prickles every time the heat moves. Heightened Summer-Sense.)",
+         "(For the next day, the first warm thing that moves won't get past #{herald?(:meat_meat) ? 'you' : 'her'}.)"])
     dt_step!(:meat_meat)
   end
 
