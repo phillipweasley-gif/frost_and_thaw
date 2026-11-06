@@ -1191,6 +1191,12 @@ if __FILE__ == $0 || ENV["STAGE_TRACE"]
                 [/^Talion\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Decide what to do|Accept he's a reflection/ } || 0 }],
                 [/Escape\?/, 0], [/Who speaks for the Heralds/, 0], [/Help with\.\.\./, 0], [/^Sephek\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Rose/ } || c.index { |x| x.to_s =~ /Alerion/ } || 0 }]]
   HL.answers << [/Which Pokémon/, ENV["HL_STARTER"].to_i] if ENV["HL_STARTER"]
+  # HL_PICK="prompt=>option;prompt=>option": extra rules, tried first (a choice that
+  # matches no option falls through to the usual rules), e.g. "What do you do=>^Fight"
+  (ENV["HL_PICK"] || "").split(";").reverse_each do |rule|
+    q, a = rule.split("=>", 2)
+    HL.answers.unshift([Regexp.new(q), Regexp.new(a)]) if q && a
+  end
   HL.answers << [/Which Herald|Who will you be|Which of the Heralds/, ->(t, c) { c.index { |x| x.to_s =~ /#{ENV['HL_HERALD']}/i } || 0 }] if ENV["HL_HERALD"]
   HL.new_game
   HL.frames(200)

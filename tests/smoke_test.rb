@@ -971,5 +971,14 @@ check("the Vault's key items sit on numbers no relic uses") {
       (it = GameData::Item::DATA[n]) && !FT::VAULT_KEY_ITEMS.key?(it.id) }
 }
 
+# Every pose sheet a scene names is in the repo's art (a missing one only logs, so it would fail quietly).
+repo = File.expand_path("..", __dir__)
+pose_sheets = Dir[File.join(repo, "game/Data/Scripts/998_FrostThaw/*.rb")].flat_map { |f|
+  File.read(f, encoding: "UTF-8").scan(/pose\([^,]+,\s*"([A-Z]-[A-Z]{2,3}-\d\d)"/).flatten }.uniq
+missing_poses = pose_sheets.reject { |n|
+  File.exist?(File.join(repo, "build/gfx/Characters/#{n}.png")) || File.exist?(File.join(repo, "build/Characters/#{n}.png")) }
+check("every pose sheet the scenes play is in the art (#{pose_sheets.size} sheets)") { pose_sheets.size > 20 && missing_poses.empty? }
+puts "  missing: #{missing_poses.join(', ')}" if !missing_poses.empty?
+
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

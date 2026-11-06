@@ -539,7 +539,9 @@ module FrostThaw
   def thredra_round(battle, round, script)
     talisman = flag?(:locket_talisman)
     if round == 1
-      battle.pbDisplay(_INTL("Thredra seats herself on her black staff and rises into the air, cackling!"))
+      Stage.battle_pose(battle, "P-THR-03", per: 8) do
+        battle.pbDisplay(_INTL("Thredra seats herself on her black staff and rises into the air, cackling!"))
+      end
       if talisman
         battle.pbDisplay(_INTL("The Order's locket throws a silver light up after her. She can't hide up there."))
       else
@@ -564,7 +566,9 @@ module FrostThaw
         end
       end
     when 1
-      battle.pbDisplay(_INTL("Thredra flickers, and there are three of her, cackling in three voices!"))
+      Stage.battle_pose(battle, "P-THR-05", per: 8) do
+        battle.pbDisplay(_INTL("Thredra flickers, and there are three of her, cackling in three voices!"))
+      end
       if talisman
         battle.pbDisplay(_INTL("The locket shines true. Two of the crones are only frost and light."))
       else
@@ -603,7 +607,9 @@ module FrostThaw
     set_flag(:lunge_done)
     set_flag(:lunge_in_battle)
     battle.pbDisplay(_INTL("THREDRA: No. No, no, no. If I can't have my victory..."))
-    battle.pbDisplay(_INTL("She snatches a knife of black ice out of her rags and throws herself at the chained cub!"))
+    Stage.battle_pose(battle, "P-THR-04", frames: [0, 1, 2], per: 6) do
+      battle.pbDisplay(_INTL("She snatches a knife of black ice out of her rags and throws herself at the chained cub!"))
+    end
     battle.pbDisplay(_INTL("THREDRA: ...then I'll have your despair!"))
     c = battle.pbShowCommands(_INTL("She's going for the cub!"), hag_lunge_options.map(&:last), false) rescue 0
     lunge_outcome(hag_lunge_options[[c.to_i, 0].max][0]).each { |l| battle.pbDisplay(_INTL(l)) }
@@ -701,11 +707,14 @@ module FrostThaw
   def hag_lunge
     if !flag?(:lunge_done)
       set_flag(:lunge_done)
+      thr = Stage.find("Thredra")
       say(["Thredra reels back against the dais, smoking, her Pokémon down.",
-           "THREDRA: No. No, no, no. If I can't have my victory...",
-           "She snatches a knife of black ice out of her rags and throws herself at the chained cub.",
+           "THREDRA: No. No, no, no. If I can't have my victory..."])
+      Stage.pose(thr, "P-THR-04", 0, frames: [0, 1, 2], per: 6) if thr
+      say(["She snatches a knife of black ice out of her rags and throws herself at the chained cub.",
            "THREDRA: ...then I'll have your despair!"])
       c = pbMessage(_INTL("She's going for the cub!"), hag_lunge_options.map(&:last), 0)
+      Stage.unpose(thr) if thr
       say(lunge_outcome(hag_lunge_options[[c.to_i, 0].max][0]))
       hurt_party(0.1) if flag?(:shielded_cub) && !flag?(:locket_caught_wrist)
     end
@@ -1184,8 +1193,10 @@ module FrostThaw
     sayc([cl(:shade, "(hand on a knife) Then let's do this now."),
           "SEPHEK: Here? With the Speaker's little ones two roads over? No. I'm not a monster.",
           with_or_is?(:shimmer) ? "SEPHEK: (to Shimmer, softly) Before the next moon. Come to me, or I pick someone else." : nil,
-          with_or_is?(:shimmer) ? "SEPHEK: You always did come, in the end." : nil,
-          "Frost swirls up round him like a breath. Then he's across the sled, ten paces off.",
+          with_or_is?(:shimmer) ? "SEPHEK: You always did come, in the end." : nil])
+    seph = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
+    sephek_misty_step(seph)
+    sayc(["Frost swirls up round him like a breath. Then he's across the sled, ten paces off.",
           cl(:alerion, "Misty step. He's not running. He's showing us he can."),
           cl(:shimmer, "...I know.")])
     if !flag?(:shimmer_taken)
@@ -1279,8 +1290,23 @@ module FrostThaw
     $game_temp.mart_prices = old if old && $game_temp
   end
 
-  # At the Moon Temple, once Sephek is beaten: what he really is.
-  def sephek_true_nature
+  # P-SEP-05: he goes to frost where he stands and comes back across the sled.
+  def sephek_misty_step(seph)
+    return if !seph || !(pbResolveBitmap("Graphics/Characters/P-SEP-05") rescue nil)
+    Stage.pose(seph, "P-SEP-05", 0, frames: [0, 1, 2, 3], per: 6)
+    spot = [[38, 16], [39, 17], [40, 19], [34, 20]].find do |x, y|
+      ($game_map.passable?(x, y, 0) rescue false) && !($game_map.events.values.any? { |e| e.x == x && e.y == y && !e.through } rescue true) &&
+        !($game_player.x == x && $game_player.y == y)
+    end
+    seph.moveto(*spot) if spot
+    Stage.pose(seph, "P-SEP-05", 0, frames: [3, 2, 1, 0], per: 6)
+    Stage.unpose(seph)
+    Stage.turn_to(seph, $game_player) rescue nil
+  end
+
+  # At the Moon Temple, once Sephek is beaten: what he really is. seph: his
+  # event, for the second face (P-SEP-06) when the other voice speaks.
+  def sephek_true_nature(seph = nil)
     set_flag(:sephek_origin_known)
     # Two voices out of one mouth, tagged from the first box (context 03 M3-8)
     say(["His mouth keeps moving. The voice is younger now, and frightened.",
@@ -1288,9 +1314,12 @@ module FrostThaw
          "SEPHEK: A ship. Her island. We went down off the coast.",
          "Frost creeps up his arms as he talks. He doesn't seem to feel it.",
          "SEPHEK: I swam, and I was dying in the snow.",
-         "SEPHEK: And something cold came and climbed into me, and ate what I was, and stayed.",
-         "Then something older answers, out of the same mouth.",
-         "SEPHEK: (the other voice) A druid of the old winter. Hers. I wear him. I cannot leave him.",
+         "SEPHEK: And something cold came and climbed into me, and ate what I was, and stayed."])
+    two = seph && (pbResolveBitmap("Graphics/Characters/P-SEP-06") rescue nil)
+    Stage.pose(seph, "P-SEP-06", 0, frames: [0], per: 4) if two
+    say(["Then something older answers, out of the same mouth."])
+    Stage.pose(seph, "P-SEP-06", 0, frames: [1], per: 6) if two
+    say(["SEPHEK: (the other voice) A druid of the old winter. Hers. I wear him. I cannot leave him.",
          "SEPHEK: (the other voice) If the vessel dies, so do I.",
          "SEPHEK: (the other voice) So he does not die. So he waits."])
     sayc([cl(:reptin, "A winter druid. We druids tell stories about them, to scare the young."),

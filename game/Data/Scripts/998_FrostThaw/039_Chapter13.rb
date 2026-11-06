@@ -859,12 +859,17 @@ module FrostThaw
     pbFadeOutIn { Stage.jump(*CHASM_CODA) } rescue nil
     say(["Many years later. The Cackling Chasm."])
     px, py = ([$game_player.x, $game_player.y] rescue [0, 0])
-    old = Stage.actor(:old_alberica, px, py, 2, graphic: "FT_green_ghost")
+    own = (pbResolveBitmap("Graphics/Characters/FT_alberica_old") rescue nil)
+    old = Stage.actor(:old_alberica, px, py, 2, graphic: own ? "FT_alberica_old" : "FT_green_ghost")
     hid = old && !$game_player.transparent
     $game_player.transparent = true if hid
-    say(["An old dwarf woman in green robes stands in the hall where a hag once laughed.",
-         "She looks exactly like the ghost.",
-         "At her belt, a silver locket: half sun, half moon."])
+    say(own ? ["An old dwarf woman in a faded beret stands in the hall where a hag once laughed.",
+               "Under the beret, the ghost's face.",
+               "Over her arm, a dark green robe, folded.",
+               "At her belt, a silver locket: half sun, half moon."] :
+              ["An old dwarf woman in green robes stands in the hall where a hag once laughed.",
+               "She looks exactly like the ghost.",
+               "At her belt, a silver locket: half sun, half moon."])
     say(["(It's you. It was always going to be you.)"]) if herald?(:alberica)
     say(["OLD ALBERICA: Time's a wheel, dear. Somebody has to stand where it turns.",
          "OLD ALBERICA: The Order needs one last guardian down here. I've had worse jobs."])

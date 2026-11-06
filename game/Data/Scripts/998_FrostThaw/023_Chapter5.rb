@@ -334,8 +334,18 @@ module FrostThaw
          "One eye is clouded. Her howl is half fury, half agony.",
          "She plants herself over the dead male, roaring, and swings her head toward you."])
     say([herald?(:reptin) ? "She smells the wolf on you. Every bit of her fury swings your way." :
-                            "She smells the wolf on Reptin. Every bit of her fury swings his way.",
-         "But there are tears frozen on her face. Under the roar, she's whimpering."])
+                            "She smells the wolf on Reptin. Every bit of her fury swings his way."])
+    if with_or_is?(:reptin) && (pbResolveBitmap("Graphics/Characters/P-REP-05") rescue nil)
+      Stage.pan_back
+      wolf = Stage.herald(:reptin, 1, 0, 8)
+      Stage.pose(wolf, "P-REP-05", 0, frames: [0, 1], per: 10) if wolf
+      say([herald?(:reptin) ? "The wolf in you answers her. Your eyes flash amber; your teeth bare." :
+                              "The wolf in Reptin answers her. His eyes flash amber; his teeth bare."])
+      Stage.pose(wolf, "P-REP-05", 0, frames: [2], per: 8) if wolf
+      say([herald?(:reptin) ? "(No.) You catch it, and hold it down." : "He catches it, and holds it down."])
+      Stage.unpose(wolf) if wolf
+    end
+    say(["But there are tears frozen on her face. Under the roar, she's whimpering."])
     me = herald?(:alberica)
     opts = [me ? _INTL("Sing.") : _INTL("Ask Alberica to sing."), _INTL("Fight."), _INTL("Back away slowly.")]
     c = pbMessage(_INTL("What do you do?"), opts, 0)
@@ -374,10 +384,18 @@ module FrostThaw
     # She fights to the death: there's no reasoning with her now.
     Stage.pan_back
     return if !boss_battle(named_mon(:YETITAN, 31, "Yeti"))
-    say(["She doesn't fall back. She doesn't run.", "When she can't stand any more, she drags herself to her mate.",
-         "She lies down over him, curled round him, and a last whimper rattles out of her.",
+    mom = Stage.find("Mother yeti")
+    say(["She doesn't fall back. She doesn't run.", "When she can't stand any more, she drags herself to her mate."])
+    if mom && (pbResolveBitmap("Graphics/Characters/K-YET-03") rescue nil)
+      Stage.pan_to(mom.x, mom.y + 1) if !Stage.on_screen?(mom)
+      Stage.walk_to(mom, 16, 21)                      # beside him (he lies at 16,22)
+      Stage.pose(mom, "K-YET-03", 0, frames: [0, 1, 2, 3], per: 12)
+    end
+    say(["She lies down over him, curled round him, and a last whimper rattles out of her.",
          "Then she's still. The snarl goes out of her face.",
          "A whole family, destroyed. Except for one, somewhere ahead."])
+    Stage.release(mom) if mom          # her page goes blank at the switch; "Her body" lies there now
+    Stage.pan_back
     sayc([cl(:alberica, "(after a long moment) ...Give me a minute."),
           cl(:alerion, "Those burns were on her before we came. Somebody hurt her first."),
           cl(:meat_meat, "Meat Meat is sorry, fluffy mama. Meat Meat will find your baby. Meat Meat promises.")])
@@ -742,12 +760,24 @@ module FrostThaw
   end
 
   # The ghost's whereabouts while she waits for you at the bier (between her two beats).
+  # She stands where P-GHO-01's last frame leaves her: just right of the bier.
   def ghost_actor(bier)
     g = ($game_map.events.values.find { |e| e.name == "stage_green_ghost" } rescue nil)
     return g if g
-    g = (bier ? Stage.actor(:green_ghost, bier.x, bier.y + 1, 2, graphic: "FT_green_ghost") : nil) rescue nil
+    g = (bier ? Stage.actor(:green_ghost, bier.x + 1, bier.y, 2, graphic: "FT_green_ghost") : nil) rescue nil
     g.instance_variable_set(:@opacity, 190) if g
     g
+  end
+
+  # The body on the bier (the tile is a bare slab): P-GHO-01's first frame, the
+  # dwarf woman in green, laid out. Gone with the scene once she's dust.
+  def bier_body(bier)
+    b = ($game_map.events.values.find { |e| e.name == "stage_bier_body" } rescue nil)
+    return b if b
+    return nil if !bier || !(pbResolveBitmap("Graphics/Characters/P-GHO-01") rescue nil)
+    b = (Stage.actor(:bier_body, bier.x, bier.y, 2, graphic: "P-GHO-01") rescue nil)
+    Stage.pose(b, "P-GHO-01", 0, frames: [0], per: 1) if b
+    b
   end
 
   # SC 5.07 - The ghost with her face (Alberica's future self; never confirmed in
@@ -768,9 +798,12 @@ module FrostThaw
     say(["The air in here is still and reverent. Silver lichen on the ceiling gives a faint glow.",
          "On a stone bier lies a dwarf woman in dark green robes, kept whole by the cold.",
          "As you step closer, the air warms a few degrees. Your breath stops frosting."], event_id)
+    body = bier_body(bier)
     say(["The corpse's eyes fly open, glowing a soft white."])
     Stage.walk($game_player, [13]) rescue nil         # one step back from the bier
+    Stage.pose(body, "P-GHO-01", 0, frames: [1, 2, 3], per: 10) if body
     say(["A translucent spirit rises out of the body, as if lifted, and steps down onto the floor."])
+    Stage.pose(body, "P-GHO-01", 0, frames: [0], per: 1) if body   # she's her own figure now
     ghost_actor(bier)
     say(["GHOST: Oh. You're early.",
          me ? "When she turns, she has your face, decades older." : "When she turns, she has Alberica's face, decades older.",
@@ -855,6 +888,7 @@ module FrostThaw
     me = herald?(:alberica)
     Stage.overlay("O-03", opacity: 200, fade: 20) if !Stage.overlay?("O-03")
     ghost = ghost_actor(bier)
+    body = bier_body(bier)
     say(["Beside the body lies a silver dagger. You take it. The hilt is warm."])
     give(:FT_ORDERDAGGER)
     set_flag(:order_dagger)
@@ -885,10 +919,20 @@ module FrostThaw
     set_flag(:order_wardens)
     sayc([herald?(:meat_meat) ? "(That face. Meat Meat knows that face. Meat Meat says nothing.)" :
                                 cl(:meat_meat, "(to you, very quietly) Meat Meat knows that face. Meat Meat says nothing.")])
-    Stage.hide(ghost) if ghost
-    say(["She lies back down into the body on the bier, and the body closes its eyes.",
-         "Then it ages in a breath: skin to parchment, parchment to dust. The lichen light dims.",
-         "Behind the bier, on a shelf in the rock, something in oilcloth catches the last light."])
+    if body && (pbResolveBitmap("Graphics/Characters/P-GHO-02") rescue nil)
+      Stage.walk_to(ghost, bier.x - 1, bier.y, face: 6) if ghost      # round to the head of the bier
+      Stage.hide(ghost) if ghost
+      Stage.pose(body, "P-GHO-02", 0, frames: [0, 1], per: 12)
+      say(["She lies back down into the body on the bier, and the body closes its eyes."])
+      Stage.pose(body, "P-GHO-02", 0, frames: [2, 3], per: 18)
+      say(["Then it ages in a breath: skin to parchment, parchment to dust. The lichen light dims.",
+           "Behind the bier, on a shelf in the rock, something in oilcloth catches the last light."])
+    else
+      Stage.hide(ghost) if ghost
+      say(["She lies back down into the body on the bier, and the body closes its eyes.",
+           "Then it ages in a breath: skin to parchment, parchment to dust. The lichen light dims.",
+           "Behind the bier, on a shelf in the rock, something in oilcloth catches the last light."])
+    end
     Stage.overlay_off("O-03", fade: 20)
     Stage.cleanup rescue nil
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
@@ -1100,6 +1144,8 @@ module FrostThaw
     if grab == 1
       say(["You get two steps. Kanan's teeth snap an inch from your face, and you stop."])
     end
+    held = Stage.herald(:reptin, -1, 0, 8) if (pbResolveBitmap("Graphics/Characters/P-REP-06") rescue nil)
+    Stage.pose(held, "P-REP-06", 0, frames: [0, 1, 0, 1], per: 8) if held
     if rep
       say(["Something takes hold of the wolf in you and pulls, like a rope tied round your heart.",
            "For one long moment the wolf is coming out of you by the roots.",
@@ -1155,6 +1201,7 @@ module FrostThaw
           herald?(:shade) ? "She lunges for the cub out of spite. You're already moving. She snatches her claw back." :
                             "She lunges for the cub out of spite. Shade is already moving. She snatches her claw back.",
           cl(:meat_meat, "(very quiet) Touch baby yeti and Meat Meat takes your face.")])
+    Stage.unpose(held) if held
     say(["The frost on #{rep ? 'your' : "Reptin's"} legs cracks and falls away."])
     if state[:heart_grab] == :hold && !rep
       say(["Your fist is still in Reptin's collar."])

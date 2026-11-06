@@ -194,7 +194,7 @@ cr = cave_map(20, 16)
 paint(cr, [3, 3, 14, 10], [8, 13, 3, 2])
 [8, 9, 10].each { |x| cr.warp(x, 14, ID[:hall], 17, 5, 2, name: "Down the stair of ice") }
 cr.cutscene(9, 12, :the_crown)
-cr.event(6, 5, "Iskra", [{ graphic: "Followers/ARTICUNO_fly", direction: 2, step_anime: true, script: "FT.iskra(@event_id)" }])
+cr.event(6, 5, "Iskra", [{ graphic: "FT_iskra", direction: 2, step_anime: true, script: "FT.iskra(@event_id)" }])
 cr.event(5, 4, "Silver egg", [{ tile_id: 792, script: "FT.talk(:silver_egg, @event_id)" }])
 cr.event(12, 4, "Frostina's crystal", [
   { graphic: "FT_frostina_crystal", direction: 2, step_anime: false, walk_anime: false, script: "FT.sephek_crown(@event_id)" },

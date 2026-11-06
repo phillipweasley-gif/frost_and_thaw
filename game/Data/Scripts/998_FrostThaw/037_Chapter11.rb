@@ -240,9 +240,14 @@ module FrostThaw
   # follower sheet, drawn three times over and paled to white (Sprite_Character
   # below), so she reads as a vast white bird, not a follower-sized Articuno.
   #-----------------------------------------------------------------------------
-  ISKRA_ZOOM = 3.0
-  ISKRA_SHADOW_ZOOM = 4.5
-  ISKRA_GRAPHIC = "Followers/ARTICUNO_fly"
+  # Her own sheet (128-pixel frames) when it's there, else the Articuno stand-in (64)
+  def iskra_own?
+    @iskra_own = (pbResolveBitmap("Graphics/Characters/FT_iskra") ? true : false rescue false) if @iskra_own.nil?
+    @iskra_own
+  end
+  def iskra_graphic; iskra_own? ? "FT_iskra" : "Followers/ARTICUNO_fly"; end
+  def iskra_zoom; iskra_own? ? 1.5 : 3.0; end
+  def iskra_shadow_zoom; iskra_own? ? 2.25 : 4.5; end
 
   # Called for every character sprite each frame (cheap: a name check).
   def iskra_sprite(sp)
@@ -251,11 +256,11 @@ module FrostThaw
     name = ch.name.to_s
     return if name !~ /\A(stage_)?iskra(_shadow)?\z/i
     if name =~ /shadow/i
-      sp.zoom_x = sp.zoom_y = ISKRA_SHADOW_ZOOM
+      sp.zoom_x = sp.zoom_y = iskra_shadow_zoom
       sp.color = Color.new(10, 10, 30, 255)
     else
-      sp.zoom_x = sp.zoom_y = ISKRA_ZOOM
-      sp.color = Color.new(240, 248, 255, 120)          # white, not Articuno's blue
+      sp.zoom_x = sp.zoom_y = iskra_zoom
+      sp.color = Color.new(240, 248, 255, 120) if !iskra_own?   # white, not Articuno's blue
     end
   end
 
@@ -264,7 +269,7 @@ module FrostThaw
     $game_screen.start_tone_change(Tone.new(-50, -50, -25, 0), 10) rescue nil
     say(["The sky above the Canopy tears open."])
     # her shadow first: wider than the stump, sliding north to south
-    shadow = Stage.actor(:iskra_shadow, px + 1, py - 9, 2, graphic: ISKRA_GRAPHIC)
+    shadow = Stage.actor(:iskra_shadow, px + 1, py - 9, 2, graphic: iskra_graphic)
     if shadow
       shadow.opacity = 90
       shadow.through = true
@@ -272,7 +277,7 @@ module FrostThaw
       Stage.remove_actor(shadow)
     end
     say(["A shadow slides over the whole Canopy, wide as a sail. Then the wind of her wings."])
-    iskra = Stage.actor(:iskra, px + 3, py - 8, 2, graphic: ISKRA_GRAPHIC)
+    iskra = Stage.actor(:iskra, px + 3, py - 8, 2, graphic: iskra_graphic)
     if iskra
       iskra.instance_variable_set(:@step_anime, true) rescue nil
       Stage.walk(iskra, [PBMoveRoute::ChangeSpeed, 5] + [PBMoveRoute::Down] * 4)

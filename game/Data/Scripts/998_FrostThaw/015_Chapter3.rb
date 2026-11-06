@@ -849,7 +849,7 @@ module FrostThaw
     set_flag(:sephek_won)                # (before anything can re-arm the scene: notes 03 E21)
     say(["SEPHEK: ...So cold. Why is it so cold? The cold never touched me..."])
     st.pose(seph, "P-SEP-02", 0, frames: [0, 1], per: 10) if seph
-    sephek_true_nature                 # what he really is (Rime of the Frostmaiden; 044_ChasmFaithful.rb)
+    sephek_true_nature(seph)           # what he really is (Rime of the Frostmaiden; 044_ChasmFaithful.rb)
     if seph                            # (frost only creeps while he talks; the ice closes after: notes E10)
       pbSEPlay("Ice2") rescue nil
       st.fx("E-04", seph, frames: 10, hold: true, wait: false)

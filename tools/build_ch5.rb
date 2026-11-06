@@ -127,6 +127,11 @@ u.event(16, 18, "Mother yeti", [
     script: "FT.talk(:mother_yeti_after, @event_id)" },
   { switch: SW_MOTHER_DEAD, graphic: "", through: true }      # she lies over her mate now (the dead yeti's lines)
 ])
+u.event(16, 21, "Her body", [                                # where K-YET-03 leaves her, curled over him
+  { graphic: "", through: true },
+  { switch: SW_MOTHER_DEAD, graphic: "K-YET-03", pattern: 3, direction: 2, step_anime: false, walk_anime: false,
+    direction_fix: true, script: "FT.dead_yeti(@event_id)" }
+])
 trigger_row(u, (12..20).map { |x| [x, 24] }, "FT.yeti_notice(@event_id)", "Yeti wakes")
 u.event(11, 21, "Bone pile", [{ graphic: "", tile_id: 792, script: "FT.bone_pile(@event_id)" }])
 u.event(21, 22, "Backpack", [
@@ -233,8 +238,11 @@ hb.door(12, 47, ID[:rift], 31, 2, 2, name: "Exit")
 hb.cutscene(12, 46, :heart_enter)
 trigger_row(hb, (10..14).map { |x| [x, 40] }, "FT.chasm_whisper(4, @event_id)", "Whisper")
 hb.event(10, 7, "Cauldron", [          # the hag's ritual brew, over blue flames
-  { graphic: "BARREL", direction: 2, script: "FT.talk(:heart_cauldron, @event_id)" },
-  { switch: SW_REVERSAL, graphic: "BARREL", direction: 2, script: "FT.talk(:heart_cauldron_after, @event_id)" }
+  { graphic: "FT_thredra_cauldron", direction: 2, step_anime: true, direction_fix: true,
+    script: "FT.talk(:heart_cauldron, @event_id)" },
+  # gone cold: held still on its first frame (a cold frame is on Art List 2)
+  { switch: SW_REVERSAL, graphic: "FT_thredra_cauldron", direction: 2, step_anime: false, walk_anime: false,
+    direction_fix: true, script: "FT.talk(:heart_cauldron_after, @event_id)" }
 ])
 hb.event(12, 5, "Heart of the Chasm", [
   { graphic: "", tile_id: 809, script: "FT.talk(:heart_crystal, @event_id)" },

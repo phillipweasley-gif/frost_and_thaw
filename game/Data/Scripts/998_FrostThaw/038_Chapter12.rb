@@ -178,10 +178,12 @@ module FrostThaw
 
   def voyage_crossing(route)
     tag = voyage_guide_tag(route)
+    Stage.panel("S-12a", fade: 20)                    # the floes, from high up
     say([{ griffons: "Below: the Sea of Moving Ice. Floes the size of towns, grinding past each other.",
            ship: "Round the hull: the Sea of Moving Ice. Floes the size of towns, grinding past each other." }[route] ||
            "Round Angajuk: the Sea of Moving Ice. Floes the size of towns, grinding past each other.",
          "Behind you, the Auroral Wall rings Rootspire like a curtain. From out here, it's thin."])
+    Stage.panel_off(fade: 12)
     # the Wall is why you go (context 12 §2 adhesive; your own goal, Ch6)
     if herald?(:wyn)
       say(["(Your post's in there. Sableye's in there. And it's all inside a wall.)"])
@@ -260,8 +262,10 @@ module FrostThaw
       say(["In your pack, the owl feather stiffens with frost, as if something looked up."])
     end
     Stage.theme(nil) rescue nil
+    Stage.panel("S-12b", fade: 24)                    # Grimskalle's skull in the fog
     say(["The fog parts. An island of ice, shaped like a snowflake. Six jagged arms.",
          "On it, a mountain carved into a giant skull, wearing a crown."])
+    Stage.panel_off(fade: 12)
     # Grimskalle, joined to the skull (Eirwen's plans named it at the Council)
     stair = flag?(:council_eirwen) ? " Eirwen's servants' stair is round the back." : " She moved in."
     say([{ "RHEVEN" => "RHEVEN: Grimskalle. The giants' old fortress.#{stair}",

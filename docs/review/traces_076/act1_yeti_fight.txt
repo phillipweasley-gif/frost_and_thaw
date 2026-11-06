@@ -1,0 +1,3476 @@
+[pick] English  (of English | Français)
+[msg] Which adventure would you like to begin?
+[pick] Pokémon Frost & Thaw  (of Pokémon Infinite Fusion | Pokémon Frost & Thaw)
+[map] Frost & Thaw [2000] at (9,7)
+[stage] overlay off O-01
+[scene] intro
+[music] mountsilver
+[msg] POKÉMON FROST & THAW
+[msg] Four hundred years ago, a winter that would not end gripped Icewind Dale.
+[msg] A few strangers walked into it. They came out the other side with spring.
+[msg] Which version?
+[pick] Pokémon Frost  (of Pokémon Frost | Pokémon Thaw | What's the difference?)
+[msg] How would you like to play?
+[pick] New Journey (start here)  (of New Journey (start here) | Herald Mode | What's the difference?)
+[msg] You're a kid from Rootspire, and today you get your first Pokémon. Who are you?
+[msg] Choose a difficulty.
+[pick] Normal  (of Easy | Normal | Hard | What's the difference?)
+[music] fullmoonIsland
+[msg] Rootspire, the city under the World Tree. Year 400 since the tree grew, all in one night.
+[msg] This morning is the Festival of Returning Light.
+[msg] Every lantern in the city is hung for the Heralds of Dawn and Dusk.
+[flag] pro_card_shown
+[flag] intro_done
+[stage] overlay off O-01
+[music] Ecruteak City
+[map] The Rooted Hearth [2090] at (13,5)
+[scene] pro_morning
+[msg] Gold light through the tavern's knot-window. It's been gold every morning of your life.
+[msg] You fell asleep at the corner table again, halfway through last night's Herald stories.
+[se] Exit Door
+[stage] tamsin appears at (6,11)
+[stage] tamsin(6,11) moves [4, 4]
+[msg] TAMSIN: Up! UP! Tester! Wynsnow said first light, and first light was an hour ago!
+[stage] tamsin(6,9) walks up to you
+[stage] tamsin(13,6) hops
+[msg] Tamsin Brightrun. Hellen's kid, your best friend, set on joining the tree's Rootwardens.
+[stage] you faces up
+[msg] TAMSIN: Don't look at the window. It's ALWAYS first light. The point is POKÉMON.
+[stage] you turns to tamsin(13,6)
+[stage] tamsin(13,6) leads you to (6,6)
+[stage] you walks to (5,6)
+[stage] you faces left
+[stage] tamsin(6,6) faces left
+[stage] Hellen(3,6) turns to you
+[msg] Hellen Brightrun keeps the Rooted Hearth, and nobody has ever left it hungry.
+[msg] HELLEN: Eat first. Heralds didn't save the Dale on an empty stomach.
+[msg] TAMSIN: They saved it on pine-mead and spite. You told us!
+[msg] HELLEN: And I'll tell you again, with toast. Eat. Then College.
+[stage] tamsin(6,6) hops
+[stage] tamsin(6,6) leaves toward (6,12)
+[se] Exit Door
+[msg] Tamsin's gone, toast in their teeth.
+[msg] (Your first Pokémon is at the College, top of the tree. The root-lift's in the market.)
+[flag] intro_started
+[goal] Your first Pokémon is at the College. The root-lift's by the big stair, north.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Azalea Town
+[screen] tone (0,0,0) 12
+[map] Rootspire [2091] at (31,28)
+[scene] pro_market_up
+[flag] pro_led_up
+[stage] tamsin appears at (32,29)
+[stage] tamsin(32,29) exclaim bubble
+[stage] you turns to tamsin(32,29)
+[msg] TAMSIN: (still chewing) Finally. Lift's up by the big stair. Come ON.
+[stage] tamsin(32,29) leads you to (17,12)
+[msg] LIFT-KEEPER: Two for the College? Festival's got the cage running slow.
+[stage] tamsin(17,12) hops
+[msg] TAMSIN: Slow? I'm taking the stairs. Race you to the top!
+[stage] tamsin(17,12) leaves toward (22,12)
+[talk] Lift-keeper at (16,11) on Rootspire [2091]
+[msg] LIFT-KEEPER: Up to the College? Right at the top of the tree. Hold on to the rail.
+[msg] The root-lift creaks up through the branches, past nests and lanterns.
+[stage] overlay off O-01
+[music] Violet City
+[map] College of Auroral Arts [2092] at (13,18)
+[scene] pro_college_arrive
+[stage] tamsin appears at (20,10)
+[stage] tamsin(20,10) walks to (13,15)
+[stage] tamsin(13,15) faces down
+[stage] tamsin(13,15) exclaim bubble
+[msg] TAMSIN: THERE you are! He's put them out already. All three!
+[stage] tamsin(13,15) walks up to you
+[msg] TAMSIN: Wynsnow's lecture room, the east one. Come on, follow me!
+[stage] tamsin(13,17) leads you to (20,9)
+[stage] tamsin(20,9) walks to (22,5)
+[flag] pro_led_to_room
+[goal] Go into Professor Wynsnow's lecture room. Your first Pokémon is on his table.
+[flag] met_wynsnow
+[stage] theme wynsnow
+[music] oak_theme
+[stage] you moves [4]
+[stage] Professor Wynsnow(20,3) exclaim bubble
+[stage] Professor Wynsnow(20,3) turns to you
+[msg] Professor Aldric Wynsnow, Dean of the College. You've run his errands for years.
+[msg] WYNSNOW: Ah. The future Rootwarden, and the errand-runner.
+[stage] Tamsin(22,5) hops
+[msg] TAMSIN: I'M the future Rootwarden. That one's the errand-runner. For now.
+[stage] Professor Wynsnow(20,3) faces down
+[msg] WYNSNOW: A Pokémon in each. Raise it well and it'll fight beside you. Usually for you.
+[msg] WYNSNOW: Three Pokémon, three futures. Choose before I start measuring them.
+[stage] you walks to (20,6)
+[msg] WYNSNOW: Look in each Poké Ball first, then pick one.
+[goal] Look in the three Poké Balls on Wynsnow's table, and choose your first Pokémon.
+[talk] Starter ball 1 at (19,4) on College of Auroral Arts [2092]
+[stage] you faces up
+[stage] cry B7H220
+[se] Cries/SQUIRTLE
+[se] Cries/SWINUB
+[msg] This Poké Ball contains Switle.
+[msg] WYNSNOW: Switle. Ice and Water. Slow to get going, and nothing knocks it over.
+[ask] WYNSNOW: So! Switle? Think carefully. It's already thinking about you.
+[flag] got_starter
+[msg] Tester received Switle!
+[ask] Would you like to give a nickname to Switle?
+[stage] Tamsin(22,5) exclaim bubble
+[stage] theme tamsin
+[music] Pokémon_The_Origins_-_Rival_Encounter_Music_mp3
+[msg] TAMSIN: Then I'll take the one that beats yours. Obviously.
+[stage] Tamsin(22,5) walks to (20,6)
+[stage] cry B330H152
+[se] Cries/PAWNIARD
+[se] Cries/CHIKORITA
+[msg] Tamsin received Chikoiard!
+[stage] Tamsin(20,6) turns to you
+[msg] WYNSNOW: Obviously. Battle in the hall. Not in my lecture room. Never in my lecture room.
+[stage] Tamsin(20,6) walks to (20,11)
+[stage] you walks to (20,9)
+[stage] Professor Wynsnow(20,3) walks to (19,8)
+[stage] Tamsin(20,11) hops
+[msg] TAMSIN: Grass beats Water. Everybody knows that!
+[msg] TAMSIN: Rootwarden against errand-runner. Ready? Doesn't matter. GO!
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Hearth-Kid Tamsin
+[stage] overlay off O-01
+[stage] theme tamsin
+[music] Pokémon_The_Origins_-_Rival_Encounter_Music_mp3
+[stage] Tamsin(20,11) hops
+[msg] TAMSIN: Ha! HA! Rootwarden material. I told you. I told everyone.
+[stage] Professor Wynsnow(19,8) walks up to you
+[msg] WYNSNOW: Lost? Good. Now you know what it hits like. Next time you'll pick your moment.
+[stage] jingle heal
+[me] Pokemon Healing
+[msg] WYNSNOW: There. Patched up. Off you go, both of you. I have measuring to do.
+[msg] WYNSNOW: And these. Five Poké Balls, two Potions. The College's festival gift.
+[msg] You obtained 5 Poké Balls!
+[msg] You put the Poké Balls awayin the <icon=bagPocket3>Poké Balls Pocket.
+[msg] You obtained 2 Potions!
+[msg] You put the Potions awayin the <icon=bagPocket2>Medicine Pocket.
+[msg] WYNSNOW: Wild ones live in long grass. Tire one out, then throw a ball. Bring me notes.
+[stage] Professor Wynsnow(19,9) walks to (20,3)
+[stage] Tamsin(20,11) turns to you
+[msg] TAMSIN: Hearth! Festival cake! And the wall. If it moved this year, I'm telling EVERYONE.
+[msg] TAMSIN: Come ON!
+[stage] Tamsin(20,11) leaves toward (13,19)
+[stage] map music resumes
+[music] Violet City
+[flag] pro_battle_done
+[goal] Head back down to the market. Tamsin's racing you to the Hearth.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Azalea Town
+[screen] tone (0,0,0) 12
+[map] Rootspire [2091] at (16,12)
+[scene] pro_market_lead
+[msg] The lift rattles down to the market. Tamsin's already off it.
+[stage] Tamsin(17,12) exclaim bubble
+[stage] Tamsin(17,12) turns to you
+[msg] TAMSIN: Too slow! The Hearth's this way. Follow me!
+[stage] Tamsin(17,12) leads you to (31,28)
+[stage] Tamsin(31,28) leaves toward (31,27)
+[se] Entering Door
+[stage] you walks to (31,28)
+[flag] pro_led
+[stage] overlay off O-01
+[music] Ecruteak City
+[map] The Rooted Hearth [2090] at (5,11)
+[scene] pro_mural
+[stage] camera pans to (15,7)
+[stage] Tamsin(15,7) exclaim bubble
+[msg] TAMSIN: Over here! Quick, before the cake goes.
+[stage] camera pans back to you
+[stage] you walks to (15,8)
+[stage] Tamsin(15,7) faces right
+[stage] theme heralds
+[music] tintower
+[msg] TAMSIN: Look. Every festival I check if it moved.
+[stage] PANEL S-00
+[msg] Five heroes in the living wood. One wreathed in snow, one in flame, one with a lute.
+[msg] One with a wolf. One half in shadow, with a knife. Two dragons coil above them.
+[stage] panel off
+[stage] Tamsin(15,7) hops
+[msg] TAMSIN: The Heralds of Dawn and Dusk! That's Alberica, with the lute. Reptin, the wolf.
+[stage] Tamsin(15,7) turns to you
+[msg] TAMSIN: They walked into the never-ending winter, fought a hag, and the dragons ate her.
+[stage] camera pans to (9,7)
+[stage] Hellen(3,6) turns to you
+[msg] HELLEN: (from the bar) Nobody ate anybody. They broke her mirrors, that's all.
+[msg] HELLEN: Something in the glass let go. A seed took root, and the tree grew in one night.
+[stage] Tamsin(15,7) faces left
+[msg] TAMSIN: The Verdant Reversal. Year nought. Four hundred years ago today. I KNOW, Hellen.
+[msg] HELLEN: Then you know who that is in the corner.
+[stage] camera pans back to you
+[stage] Tamsin(15,7) faces right
+[stage] you faces right
+[msg] In the corner, half-hidden by a root, a small sixth figure. No face.
+[stage] Tamsin(15,7) turns to you
+[msg] TAMSIN: ...Nobody knows who that is. Not even the carver.
+[stage] camera pans to (9,7)
+[stage] Hellen(3,6) turns to you
+[msg] HELLEN: The carver was my great-great-something. She said the wood grew it.
+[msg] HELLEN: There it is. Your first. Here, it can have a crust. Everyone eats in my house.
+[stage] cry B7H220
+[se] Cries/SQUIRTLE
+[se] Cries/SWINUB
+[stage] camera pans back to you
+[stage] Tamsin(15,7) turns to you
+[msg] TAMSIN: Lanterns! The stall's right outside. Come on, before they sell the good ones.
+[stage] Tamsin(15,7) leaves toward (6,12)
+[se] Exit Door
+[stage] map music resumes
+[music] Ecruteak City
+[flag] saw_sixth_figure
+[goal] Tamsin's at the lantern stall, just outside the Hearth.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Azalea Town
+[screen] tone (0,0,0) 12
+[map] Rootspire [2091] at (31,28)
+[scene] pro_lantern
+[stage] Lantern seller(28,29) turns to Tamsin(29,29)
+[msg] LANTERN SELLER: Real Reversal glass! Dug from the deep roots!
+[msg] LANTERN SELLER: From right where the old hag's mirrors broke!
+[stage] Tamsin(29,29) turns to you
+[msg] TAMSIN: It's not real. Everybody knows it's not real.
+[stage] Lantern seller(28,29) turns to Tamsin(29,29)
+[msg] LANTERN SELLER: Mirror-glass keeps what it sees, little one. That glass saw the Heralds.
+[stage] Tamsin(29,29) turns to Lantern seller(28,29)
+[se] Mart buy item
+[stage] Tamsin(29,29) walks up to you
+[msg] TAMSIN: Here. For your first Pokémon day, Tester.
+[msg] Tamsin gave you a lantern of Reversal glass!
+[stage] cry B7H220
+[se] Cries/SQUIRTLE
+[se] Cries/SWINUB
+[msg] The glass in the lantern is old, with a crack like frost.
+[se] Earth3
+[screen] shake 4 6 20
+[msg] The ground shudders. Once. The lantern swings in your hand.
+[stage] Tamsin(31,29) turns to you
+[msg] TAMSIN: Did you feel that?
+[stage] PANEL S-01
+[msg] Inside the crack in the glass, it's night.
+[msg] A dock in a blizzard. Five figures on a gangplank. One has a lute on her back.
+[screen] shake 2 4 16
+[stage] panel off
+[msg] The crack is bigger than the lantern now. Cold comes out of it, and the smell of the sea.
+[screen] flash (200,230,255) 20
+[screen] flash (200,230,255) 20
+[stage] Tamsin(31,29) exclaim bubble
+[msg] TAMSIN: Hey... Tester? What are you...
+[screen] flash (255,255,255) 30
+[screen] tone (255,255,255) 20
+[msg] The glass pulls like a door in a gale. You fall into the Heralds' winter.
+[msg] TAMSIN: (far away, over the white) Tester!
+[flag] fell_through
+[stage] overlay off O-01
+[screen] tone (0,0,0) 30
+[music] mountsilver
+[map] Targos [2001] at (33,21)
+[scene] targos_arrival
+[stage] you hops
+[msg] You land on frozen planks.
+[msg] Your hand is still closed round something: a shard of the lantern's glass.
+[msg] It's colder than the snow.
+[msg] Behind you, somewhere very far away, Tamsin is still saying your name.
+[msg] You obtained a Lantern Glass!
+[msg] You put the Lantern Glass awayin the <icon=bagPocket8>Key Items Pocket.
+[music] mountsilver
+[stage] you faces up
+[msg] Snow, everywhere. The sky has no sun in it at all.
+[msg] Targos, in Icewind Dale. The winter from Hellen's stories, and you're standing in it.
+[stage] alerion appears at (33,25)
+[stage] alerion(33,25) walks to (33,22)
+[stage] you faces down
+[msg] A pale elf catches your arm. The ring on his hand is white with frost.
+[msg] ALERION: You fell out of the air.
+[msg] ALERION: ...Nobody else saw. Keep it that way.
+[stage] shimmer appears at (37,25)
+[stage] shimmer(37,25) walks to (34,25)
+[stage] shimmer(34,25) exclaim bubble
+[msg] SHIMMER: I saw. Tavern's west, on the docks. Whatever you are, you'll freeze like us.
+[stage] shimmer(34,25) leaves toward (26,25)
+[stage] alberica appears at (37,25)
+[stage] alberica(37,25) walks to (34,25)
+[msg] ALBERICA: (sea-bag, lute on her back) Pretty boy's found a stray! Can we keep it?
+[stage] alberica(34,25) moves [37, 2, 2, 2, 2, 2, 2, 2, 2, 38, {:wait_for=>false}]
+[stage] alerion(33,22) moves [37, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 38, {:wait_for=>false}]
+[flag] arrived_targos
+[goal] Get out of the cold. Three Flags Sailing, west along the docks.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Lostlorn Forest
+[screen] tone (0,0,0) 12
+[map] Three Flags Sailing [2002] at (5,11)
+[scene] tavern_convergence
+[msg] A fire that barely warms. Five strangers at five tables.
+[se] Door exit
+[se] Wind1
+[screen] flash (220,235,255) 10
+[stage] auril_furs appears at (6,12)
+[msg] The door opens and lets the night in. A woman in furs that shine with frost.
+[stage] auril_furs(6,12) moves [3, 4, 4, 4, 4, 3]
+[msg] She doesn't go to the bar. She doesn't go to the fire.
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Alberica(9,8)
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Reptin(10,10)
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Alerion(13,5)
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Shade(13,8)
+[stage] auril_furs(8,8) faces right
+[stage] B-06 balloon over Shimmer(15,10)
+[msg] Alberica's hand goes to her throat. Reptin's medallion fogs.
+[msg] Alerion's ring cracks with rime. Shimmer stops breathing.
+[stage] auril_furs(8,8) faces left
+[stage] B-06 balloon over you
+[se] Ice5
+[msg] Then she looks at you.
+[msg] She tilts her head, like you're a word in a language she almost knows.
+[msg] She smiles at you. Only at you.
+[stage] effect E-01 at auril_furs(8,8)
+[stage] auril_furs(8,8) pose P-AUR-04 row 0
+[stage] auril_furs(8,8) hidden
+[msg] The frost stays on the floor where she stood. The door swings shut on nothing.
+[stage] map music resumes
+[music] Lostlorn Forest
+[stage] Ma Yarbroul(3,6) turns to you
+[msg] The barkeep, a grey-haired woman they call Ma Yarbroul, sets out cups with shaking hands.
+[msg] MA YARBROUL: Drinks are on the house, ducks. Please leave tomorrow.
+[msg] ALBERICA: Free drinks. See? The night's turning around already.
+[msg] REPTIN: (to the barkeep) That's very generous, thank you. We'll be gone by noon.
+[msg] REPTIN: Probably. Ask me again after the drinks.
+[stage] camera pans to (10,8)
+[msg] SHADE: Anyone want to say what that was?
+[msg] SHIMMER: No.
+[stage] Shade(13,8) exclaim bubble
+[msg] SHADE: (to you) You. By the door. Sit down before you fall down.
+[stage] camera pans back to you
+[flag] tavern_woman
+[goal] Meet the strangers at their tables: Alberica, Reptin, Alerion, Shade and Shimmer.
+[talk] Alberica at (9,8) on Three Flags Sailing [2002]
+[msg] GORM: That's my stool you're eyeing, stranger. Fight me for it.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Biker Gorm
+[stage] overlay off O-01
+[flag] tav_alberica
+[stage] Alberica(9,8) turns to you
+[stage] Alberica(9,8) hops
+[msg] ALBERICA: Alberica. I sing, I drink, and I'm told I'm a terrible influence.
+[stage] you exclaim bubble
+[stage] you turns to Alberica(9,8)
+[msg] Alberica. The one with the lute, on Hellen's wall.
+[msg] She sets a pendant of black ice on the table.
+[msg] ALBERICA: I threw this in the sea three weeks ago. It came back.
+[stage] Alberica(9,8) hops
+[msg] ALBERICA: Most things I throw out don't come back. Men, mostly.
+[goal] Meet the strangers at their tables: Reptin, Alerion, Shade and Shimmer.
+[talk] Reptin at (10,10) on Three Flags Sailing [2002]
+[flag] tav_reptin
+[stage] Reptin(10,10) turns to you
+[msg] REPTIN: Reptin. I talk us into places and, now and then, out of them.
+[msg] Reptin. The wolf.
+[msg] He sets a frost-etched medallion on the table.
+[msg] REPTIN: Someone left this for me. No name, no note. Rude, frankly.
+[goal] Meet the strangers at their tables: Alerion, Shade and Shimmer.
+[talk] Alerion at (13,5) on Three Flags Sailing [2002]
+[flag] tav_alerion
+[stage] Alerion(13,5) turns to you
+[msg] A silver ring sits on the table in front of him, rimed white.
+[msg] ALERION: Alerion. It was on a dock rail. It's cold. That's all I know.
+[stage] Alberica(9,8) turns to Alerion(13,5)
+[msg] ALBERICA: That's all? Pretty boy, you have to give us more than that.
+[msg] ALERION: No I don't.
+[goal] Meet the strangers at their tables: Shade and Shimmer.
+[talk] Shade at (13,8) on Three Flags Sailing [2002]
+[flag] tav_shade
+[stage] Shade(13,8) turns to you
+[stage] Shimmer(15,10) turns to you
+[msg] SHADE: Well. That was a terrible omen. I'm Shade.
+[msg] SHADE: This is my sister, Shimmer. We're in shipping.
+[msg] SHIMMER: Smuggling.
+[msg] SHADE: Smuggling is a kind of shipping.
+[msg] SHADE: And this turned up in my boot. I don't own boots this nice.
+[msg] A pale dagger, smoking with cold.
+[msg] SHIMMER: I've got a stone. It's under my ribs. Don't ask.
+[stage] Alberica(9,8) turns to Shimmer(15,10)
+[msg] ALBERICA: Oh, now I have to ask.
+[msg] SHIMMER: Don't.
+[stage] theme heralds
+[music] tintower
+[msg] Old things, cold things. Relics, the Dale calls them.
+[stage] B-06 balloon over Alberica(9,8)
+[stage] B-06 balloon over Reptin(10,10)
+[stage] B-06 balloon over Alerion(13,5)
+[stage] B-06 balloon over Shimmer(15,10)
+[stage] B-06 balloon over Shade(13,8)
+[msg] Four relics on four tables. The stone under Shimmer's ribs makes five.
+[msg] They hum together, like a chord.
+[msg] REPTIN: They know each other. That's either very good news or the start of a ghost story.
+[msg] ALERION: Ghost story.
+[msg] ALBERICA: I don't need it to make sense. I need it to stop.
+[msg] ALBERICA: ...And I need another drink.
+[msg] ...They're the Heralds. And nobody's carved them yet.
+[msg] SHADE: (to you) And you? You came off no ship I saw.
+[msg] What do you do?
+[pick] Show your Pokémon  (of Show your Pokémon | "I'm from somewhere else." | Say nothing)
+[stage] cry B7H220
+[se] Cries/SQUIRTLE
+[se] Cries/SWINUB
+[msg] You hold up Switle. It blinks at the fire, and at all of them.
+[msg] REPTIN: Good instinct. Nobody distrusts someone with a Pokémon that cute.
+[msg] REPTIN: (to your Pokémon) Hello, little ambassador.
+[flag] showed_pokemon
+[msg] SHADE: Relic dealer by the south-west wall. Epheris. He's cheated better people than us.
+[msg] REPTIN: Leave the talking to me. Epheris will love me. Everybody does, eventually.
+[msg] ALERION: Everybody leaves eventually, too.
+[msg] ALBERICA: (raising a mug) To bad omens and free drinks.
+[msg] Shimmer touches her mug to Alberica's, not looking up. Alerion, after a moment, does too.
+[stage] Shade(13,8) hops
+[msg] SHADE: Nobody walks Targos alone tonight. Epheris first, all of us.
+[stage] Alberica(9,8) moves [37, 2, 2, 2, 1, 1, 1, 1, 38, {:wait_for=>false}]
+[stage] Reptin(10,10) moves [37, 2, 2, 2, 2, 1, 1, 38, {:wait_for=>false}]
+[stage] Alerion(13,5) moves [37, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 38, {:wait_for=>false}]
+[stage] Shade(13,8) moves [37, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 38, {:wait_for=>false}]
+[stage] Shimmer(15,10) moves [37, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 38, {:wait_for=>false}]
+[se] Door exit
+[stage] map music resumes
+[music] Lostlorn Forest
+[flag] met_party
+[goal] Ask Epheris the relic dealer about the relics. His shop's by the south-west wall.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (15,18)
+[flag] heralds_tip
+[msg] (Tip: choose Heralds in the menu to hear what your companions think, wherever you are.)
+[flag] boy_spotted
+[stage] cry GROWLITHE
+[se] Cries/GROWLITHE
+[stage] Boy(18,30) exclaim bubble
+[stage] Boy(18,30) walks up to you
+[flag] boy_met
+[msg] A wolf-sized grey sled dog runs at you, a broken harness dragging behind it.
+[msg] He knocks you into the snow, whimpers, and licks your whole face.
+[msg] Then he takes your bootstrap in his teeth and tugs. Hard. That way. THAT way.
+[stage] alberica appears at (21,28)
+[stage] alberica(21,28) walks to (21,29)
+[msg] ALBERICA: Oh! Oh, he's a darling. He's a darling with a job.
+[stage] reptin appears at (21,32)
+[stage] reptin(21,32) walks to (21,31)
+[msg] REPTIN: (kneeling to him) Hello, you. Who sent you running, hm?
+[ask] Follow the dog?
+[stage] Boy(20,30) leads you to (41,35)
+[msg] Boy scratches at the door of a modest house, and barks, and barks.
+[stage] overlay off O-01
+[music] mom_theme
+[map] Velryn House [2124] at (9,10)
+[scene] velryn_arrival
+[msg] The door opens before you can knock. The dog shoots past the man inside, to the fire.
+[stage] Boy (waiting)(9,10) walks to (11,8)
+[stage] Keegan(13,7) exclaim bubble
+[msg] KEEGAN: Boy? Boy! Where's-
+[stage] Keegan(13,7) walks up to you
+[msg] He sees you instead of his husband. His face falls.
+[msg] KEEGAN: Come in out of the cold. He came home without Garret. My husband.
+[msg] KEEGAN: Garret's a guide. He took some hunters up Kelvin's Cairn, days ago.
+[stage] Boy (waiting)(11,8) hops
+[flag] climb_asked
+[msg] KEEGAN: Boy brought you. He picked you. Will you go up the cairn and find Garret?
+[msg] Keegan waits.
+[pick] "We'll find him."  (of "We'll find him." | "What can you pay?" | "Not now.")
+[msg] KEEGAN: (letting out a breath he's held for days) Thank you. Here's what I have.
+[msg] KEEGAN: I've no money. Owenn at the Luskan Arms is a friend. You'd sleep free there.
+[msg] KEEGAN: And I carve. Bring them home, and I'll make your Pokémon a charm.
+[msg] He holds up a half-carved walrus on a cord, then puts it back in his pocket.
+[msg] KEEGAN: Hang it on one, and the rest learn from watching it fight. Garret swears by his.
+[msg] KEEGAN: Go east off the Bryn Shander road, straight across the tundra. Boy knows the way.
+[msg] He looks you over, and something in his face says: young.
+[msg] KEEGAN: The cairn's no place for new trainers. Bryn Shander first, if you're green.
+[stage] alberica appears at (9,11)
+[msg] ALBERICA: Keep the cider warm. We'll want it on the way back.
+[stage] reptin appears at (9,8)
+[stage] reptin(9,8) walks to (9,9)
+[msg] REPTIN: We'll bring him home, Keegan. That's a promise, not a pleasantry.
+[msg] Boy is already at the door.
+[msg] KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him.
+[stage] Boy (waiting)(11,8) walks to (9,11)
+[flag] climb_taken
+[flag] boy_with_you
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (41,35)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] lake_crater
+[screen] tone (0,0,0) 12
+[map] Fisher's Cottage [2008] at (9,11)
+[talk] Widow at (7,6) on Fisher's Cottage [2008]
+[msg] WIDOW: My husband fished near Dougan's Hole. Folk heard laughing on the ice. Then nothing.
+[msg] WIDOW: Take his Spheal. It sits by the door every night. It shouldn't have to wait alone.
+[stage] cry SPHEAL
+[se] Cries/SPHEAL
+[stage] Spheal(11,10) walks up to you
+[msg] Tester obtained Spheal!
+[ask] Would you like to give a nickname to Spheal?
+[flag] widow_spheal
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (34,35)
+[flag] commons_lesson
+[stage] shimmer appears at (31,33)
+[stage] shimmer(31,33) walks to (31,34)
+[msg] SHIMMER: Something's moving in the drifts. Wear it down, then throw. Don't wait.
+[msg] SHIMMER: A ball on a fresh one is a ball wasted. Ask Shade. They've wasted plenty.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Pidgey
+[stage] overlay off O-01
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] sinjoh
+[screen] tone (0,0,0) 12
+[map] Thornweald's Relics [2006] at (9,11)
+[talk] Epheris at (13,7) on Thornweald's Relics [2006]
+[stage] reptin appears at (9,11)
+[stage] reptin(9,11) moves [3, 4, 3, 4, 4, 4, 4, 3, 18, {:wait_for=>false}]
+[stage] alberica appears at (9,11)
+[stage] alberica(9,11) moves [3, 4, 3, 4, 4, 4, 18, {:wait_for=>false}]
+[stage] alerion appears at (9,11)
+[stage] alerion(9,11) moves [3, 4, 3, 4, 4, 18, {:wait_for=>false}]
+[stage] shimmer appears at (9,11)
+[stage] shimmer(9,11) moves [3, 4, 3, 4, 4, 4, 4, 18, {:wait_for=>false}]
+[stage] shade appears at (9,11)
+[stage] shade(9,11) moves [3, 4, 4, 4, 4, 18, {:wait_for=>false}]
+[msg] EPHERIS: Put those down. Not on the counter. On the floor.
+[msg] Reptin sets his medallion on the floor, very gently.
+[msg] REPTIN: Of course. So sorry. Is the floor also cursed?
+[msg] EPHERIS: Five cold trinkets. All found where you'd find them, right when you'd find them.
+[msg] EPHERIS: That's not luck. That's bait.
+[msg] ALBERICA: Bait? I've been called a lot of things, but bait?
+[msg] EPHERIS: Not you. The trinkets are the bait. You're the fish. Somebody wanted you here.
+[msg] He holds a compass needle over the pendant. It swings south-east, and stays there.
+[msg] EPHERIS: And closer still. South-east. Dougan's Hole. I'd go anywhere else.
+[msg] EPHERIS: Nothing in Dougan's Hole but ice, and people who don't like you.
+[msg] REPTIN: The fisher's widow said her husband went out there.
+[msg] ALERION: Five of us, three ships, one night. Someone paid a lot of captains.
+[msg] ALBERICA: Nobody leaves me presents unless they want something back.
+[msg] SHIMMER: Then that's where they collect.
+[flag] glass_read
+[msg] EPHERIS: (to you) And you. You've been holding something since you came in. Show me.
+[msg] You open your hand. The lantern glass hums, very low, and the compass needle swings to it.
+[msg] EPHERIS: ...Hag-glass. Mirror-ice. Nobody makes it but one old woman in the Dale.
+[msg] EPHERIS: South-east. Dougan's Hole. Same as theirs.
+[msg] Ask Epheris...
+[pick] "Can it send me home?"  (of "Can it send me home?" | "Same as theirs?")
+[msg] EPHERIS: Glass that brought you can take you back. If you find the mirror it broke from.
+[msg] EPHERIS: That's not a promise. I don't do promises. I do appraisals.
+[msg] REPTIN: (to your Pokémon) Then we're going the same way, little ambassador.
+[msg] SHADE: Five relics and a stray with a shard. Somebody's collecting.
+[flag] relics_are_lures
+[msg] EPHERIS: Take this. I used to catalogue relics for men in towers.
+[msg] EPHERIS: Catalogue something alive, for a change.
+[me] Key item get
+[msg] You received the Pokédex!
+[msg] EPHERIS: It records every Pokémon you meet. Open it from your menu.
+[flag] got_pokedex
+[msg] He goes back to his ledger.
+[msg] EPHERIS: South-east means out the gate, and the gate means Naerth's say-so.
+[msg] EPHERIS: Speaker of Targos. Runs the town, and most of its debts. Try the Luskan Arms.
+[goal] Get Speaker Naerth's seal to leave Targos. He does business at the Luskan Arms.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (4,35)
+[talk] Trapper at (31,26) on Targos [2001]
+[msg] TRAPPER: You're walking the drifts like that? You'll be all winter getting anywhere.
+[msg] TRAPPER: Here. I carved a spare pair of snowshoes on the boat from Easthaven.
+[msg] TRAPPER: Light as anything. Go on, take them. I've only got the two feet.
+[flag] got_snowshoes
+[me] Key item get
+[msg] You got the Snowshoes!
+[msg] Hold the run button to run: over snow, ice, or anything else.
+[msg] TRAPPER: There's a killer loose in the Dale. Walks through blizzards in his shirtsleeves.
+[msg] TRAPPER: Never shivers, they say. The Frostmaiden's chosen.
+[msg] TRAPPER: If you meet a man who doesn't feel the cold... run.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Pokemon RBY - Team Rocket Hideout -Jazz Arrange-
+[screen] tone (0,0,0) 12
+[map] The Luskan Arms [2004] at (9,11)
+[talk] Naerth at (8,6) on The Luskan Arms [2004]
+[stage] reptin appears at (9,11)
+[stage] reptin(9,11) moves [4, 2, 2, 4, 4, 4, 18, {:wait_for=>false}]
+[stage] shimmer appears at (9,11)
+[stage] shimmer(9,11) moves [4, 2, 2, 4, 4, 4, 2, 4, 18, {:wait_for=>false}]
+[stage] alberica appears at (9,11)
+[stage] alberica(9,11) moves [4, 2, 2, 4, 4, 4, 2, 18, {:wait_for=>false}]
+[msg] REPTIN: Speaker. We'd like to leave Targos. Quietly, and soon.
+[msg] NAERTH: Everyone would. Six strangers in a blizzard. Shall we speak plainly?
+[msg] NAERTH: Here is how Targos works. Everyone owes me something.
+[msg] NAERTH: Each new moon, Targos draws a name. So do Bryn Shander and Easthaven.
+[msg] REPTIN: (to Shimmer) And everyone thanks him for the privilege. Charming.
+[msg] NAERTH: Whoever's drawn walks out onto the ice, for Auril.
+[stage] Naerth(8,6) question bubble
+[msg] NAERTH: (to you) You don't know Auril? Where did you say you were from?
+[msg] You say...
+[pick] "Far away."  (of "Far away." | Nothing.)
+[msg] SHIMMER: Very far. Somewhere warm. Leave it.
+[msg] NAERTH: Auril. The Frostmaiden. Winter's own goddess. She's had two years of names.
+[msg] NAERTH: Some people pay to keep their names off the board. Lately, they get found. Frozen.
+[msg] NAERTH: By a man who doesn't feel the cold.
+[msg] SHIMMER: (very still) Sephek.
+[stage] Naerth(8,6) exclaim bubble
+[msg] NAERTH: ...You know his name. Interesting.
+[msg] NAERTH: My seal says you aren't running. Earn it. Town Hall. I'll be waiting.
+[msg] NAERTH: And the stray wants Dougan's Hole. Everyone wants something.
+[flag] naerth_terms
+[stage] Naerth(8,6) leaves toward (9,12)
+[msg] ALBERICA: Men like him are always waiting. It's the only exercise they get.
+[goal] Win Speaker Naerth's seal at the Town Hall. It opens the south-west gate.
+[flag] black_network_named
+[msg] DASK: Zhentarim. The Black Network. The Speaker likes to know what you're made of.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Dask
+[stage] overlay off O-01
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (25,31)
+[flag] kip_hint
+[stage] Kip(20,27) exclaim bubble
+[msg] KIP: Psst. Three cups, one Poké Ball. Talk to me if you've got sharp eyes.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] gym_kanto
+[screen] tone (0,0,0) 12
+[map] Targos Town Hall [2005] at (10,19)
+[talk] Trainer(1) at (17,17) on Targos Town Hall [2005]
+[msg] ILSA: Nobody sees the Speaker without getting past us first.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Ilsa
+[stage] overlay off O-01
+[talk] Trainer(1) at (2,13) on Targos Town Hall [2005]
+[msg] CORRIN: Naerth said to test anyone who came looking for his seal. This is the test.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Corrin
+[stage] overlay off O-01
+[talk] Trainer(1) at (18,9) on Targos Town Hall [2005]
+[msg] MARA: Care to play a hand? House rules: my Pokémon against yours. The house always wins.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Mara
+[stage] overlay off O-01
+[talk] Naerth at (9,3) on Targos Town Hall [2005]
+[stage] alberica appears at (10,19)
+[stage] alberica(18,6) moves [2, 2, 2, 2, 2, 2, 2, 2, 4, 19, {:wait_for=>false}]
+[stage] reptin appears at (10,19)
+[stage] reptin(16,6) moves [2, 2, 2, 2, 2, 2, 2, 2, 4, 19, {:wait_for=>false}]
+[stage] alerion appears at (10,19)
+[stage] alerion(18,6) moves [2, 2, 2, 2, 2, 2, 2, 2, 2, 19, {:wait_for=>false}]
+[msg] NAERTH: Everyone in this town fights for me. Let's see who you fight for.
+[msg] ALBERICA: Knock his crown off, sweetheart. I'll sing about it after.
+[music] gymleader
+[battle] start vs Speaker Naerth
+[stage] overlay off O-01
+[flag] badge_targos
+[msg] NAERTH: Fine. You're not running. You're walking toward something. That's worse.
+[stage] Naerth(9,3) walks up to you
+[msg] NAERTH: Here. My seal. Any guard on the lake will let you pass.
+[msg] Tester received the Speaker's Seal!
+[msg] REPTIN: Thank you, Speaker. We'll treasure it.
+[msg] REPTIN: (quietly) Right up to the gate.
+[msg] You obtained TM46 Thief!
+[msg] You put the TM46 awayin the <icon=bagPocket4>TMs & HMs Pocket.
+[msg] NAERTH: That TM teaches Thief. Every child in Targos knows it. Now you do.
+[msg] NAERTH: One more thing, free. A lady in a tower pays well for cold trinkets like yours.
+[msg] NAERTH: Pale. Books and bones. If you meet her, you never met me.
+[msg] ALERION: We never met you. That part's easy.
+[msg] NAERTH: My last one was two in one skin. Twinning, the traders call it.
+[msg] NAERTH: You're going into the Dale. Take these. DNA Splicers: two Pokémon in, one out.
+[msg] You obtained 3 DNA Splicers!
+[msg] You put the DNA Splicers awayin the <icon=bagPocket1>Items Pocket.
+[msg] NAERTH: Use them from your Bag, on two of your Pokémon. Splice again to pull them apart.
+[msg] NAERTH: Triglio's shop stocks them now. He'll still charge you.
+[flag] got_splicers
+[goal] Rest at Three Flags Sailing tonight, then take the south-west gate to Bryn Shander.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mountsilver
+[screen] tone (0,0,0) 12
+[map] Targos [2001] at (8,13)
+[stage] overlay off O-01
+[music] Reversal Mountain (White 2)
+[map] Bryn Shander Road [2010] at (1,66)
+[scene] north_road_start
+[msg] The road north is a white line between black pines.
+[msg] Behind you, the lanterns of Targos shrink to sparks.
+[stage] alerion appears at (1,67)
+[msg] ALERION: Single file. The drifts hide holes.
+[stage] shimmer appears at (1,64)
+[stage] shimmer(1,64) walks to (1,65)
+[msg] SHIMMER: My stone's humming. It never hums.
+[stage] shade appears at (0,66)
+[msg] SHADE: You hum all the time.
+[msg] SHIMMER: I'm in tune. It isn't.
+[stage] alberica appears at (0,67)
+[msg] ALBERICA: Nobody's in tune at this temperature, darling.
+[goal] Follow the road north through the pines to Bryn Shander.
+[scene] razzy_appears
+[flag] met_razzy
+[stage] reptin appears at (8,42)
+[stage] reptin(8,42) walks to (7,42)
+[stage] razzy appears at (7,40)
+[stage] effect E-01 at razzy(7,40)
+[se] Ice1
+[stage] razzy(7,40) hops
+[msg] A small goblin bursts out of the snow. Thin. A pale scar across his throat.
+[msg] Green light moves under his skin, like veins.
+[stage] razzy(7,40) walks to (7,42)
+[stage] razzy(7,41) turns to reptin(7,42)
+[stage] reptin(7,42) turns to razzy(7,41)
+[msg] He grabs Reptin's sleeve and pulls.
+[msg] REPTIN: Hello, little one. You're freezing. Here, take my...
+[msg] He opens his mouth. No sound comes out.
+[stage] reptin(7,42) question bubble
+[msg] REPTIN: (very quiet) Someone cut that scar. On purpose.
+[stage] razzy(7,41) walks to (29,28)
+[stage] camera pans to (29,28)
+[msg] He points east, at a crack in the snow glowing blue-white. Then he runs.
+[stage] camera pans back to you
+[stage] shade appears at (6,44)
+[stage] shade(6,44) walks to (6,43)
+[msg] SHADE: Trap or kid. Out here I'd bet trap.
+[stage] alerion appears at (7,43)
+[msg] ALERION: Kid. Traps don't shiver.
+[goal] Follow the little goblin to the glowing crack, north-east of the road.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Seafoam Islands Music
+[screen] tone (0,0,0) 12
+[map] Frost-Light Chasm [2011] at (21,31)
+[scene] frostlight_enter
+[msg] Blue light seeps out of the ice like breath.
+[stage] camera pans to (12,24)
+[msg] Two figures in white robes chip at it with bone picks.
+[msg] SIV: The Frostmaiden's light. Every crumb belongs to her. You don't.
+[stage] camera pans back to you
+[stage] reptin appears at (22,31)
+[msg] REPTIN: (under his breath) Aurilites. They pray to the winter, and it listens.
+[msg] REPTIN: Zealots with picks. My favourite.
+[stage] alberica appears at (21,33)
+[stage] alberica(21,33) walks to (21,32)
+[msg] ALBERICA: Nobody belongs to anybody, sugar. Step aside.
+[talk] Frost-light at (22,6) on Frost-Light Chasm [2011]
+[scene] razzy_falls
+[stage] you turns to Frost-light(22,6)
+[stage] razzy appears at (22,6)
+[stage] razzy(22,6) pose K-RZY-02 row 0
+[msg] Razzy stands at the lip of the crack, where the light is brightest.
+[stage] razzy(22,6) pose K-RZY-02 row 0
+[msg] He looks back at you. Almost smiling.
+[stage] razzy(22,6) pose K-RZY-02 row 0
+[stage] razzy(22,6) moves [14, 0, 0]
+[stage] razzy(22,6) hidden
+[screen] shake 3 6 10
+[msg] Then the ice gives.
+[stage] effect E-03 at [22, 6]
+[msg] He doesn't fall far. The light catches him and closes, like hands.
+[msg] When it stops, a shell of frost sits in the crack.
+[msg] Inside it, slow and green, something beats.
+[stage] reptin appears at (24,7)
+[stage] reptin(24,7) walks to (23,7)
+[msg] REPTIN: He's alive. The light's... keeping him.
+[stage] alberica appears at (20,7)
+[stage] alberica(20,7) walks to (21,7)
+[msg] ALBERICA: Then we get him back. Tell me how, and I'll do it.
+[msg] The medallion on Reptin's chest pulls toward the shell.
+[msg] REPTIN: It wants blood. Mine. Of course it does.
+[msg] What do you say?
+[pick] "Wait..."  (of "Do it." | "Wait...")
+[msg] REPTIN: There's no waiting in this cold.
+[stage] reptin appears at (21,7)
+[stage] reptin(21,7) faces up
+[stage] reptin(21,7) pose P-REP-02 row 0
+[msg] Reptin cuts his palm and presses it to the shell. The frost drinks it.
+[msg] The shell softens. It isn't enough.
+[stage] shade appears at (22,9)
+[stage] shade(22,9) walks to (22,8)
+[msg] SHADE: (digging in a pack) I've carried this since the Saltmarsh job. A unicorn's horn.
+[msg] SHADE: Never knew why I kept it.
+[stage] shimmer appears at (24,9)
+[stage] shimmer(24,9) walks to (23,8)
+[msg] SHIMMER: (very still) ...You kept that.
+[stage] shade appears at (23,7)
+[stage] shade(23,7) pose P-SHA-02 row 0
+[screen] flash (200,255,200) 12
+[stage] egg appears at (22,6) as K-EGG-01
+[stage] egg(22,6) pose K-EGG-01 row 0
+[msg] Shade lays the horn against the shell. It melts in, like snow into a hand.
+[msg] The shell rounds into an egg, warm and green-gold.
+[msg] REPTIN: The old rhymes want a name. Spoken as a promise.
+[msg] ALBERICA: And none of us knows his.
+[stage] alerion appears at (20,9)
+[stage] alerion(20,9) walks to (21,8)
+[msg] ALERION: Then we find whoever cut his throat. They'll know.
+[msg] You obtained a Moon-Touched Egg!
+[msg] You put the Moon-Touched Egg awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] razzy_egg
+[goal] Keep the egg warm, and find someone who knows his name. On to Bryn Shander.
+[msg] The crack is dark now. Only frost, and the shape of a small body pressed into it.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Zubat
+[stage] overlay off O-01
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Gastly
+[stage] overlay off O-01
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Reversal Mountain (White 2)
+[screen] tone (0,0,0) 12
+[map] Bryn Shander Road [2010] at (29,29)
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[map] Bryn Shander [2012] at (10,43)
+[scene] bryn_arrival
+[msg] Bryn Shander sits on its hill inside two walls of logs, thirty feet high.
+[stage] camera pans to (25,23)
+[msg] Bright lanterns twist over the narrow streets. Under them, nobody.
+[msg] In the square, a board lists every name in town. Tonight is the new moon.
+[stage] camera pans back to you
+[stage] gate_guard appears at (10,39) as BWPoliceman
+[stage] gate_guard(10,39) walks up to you
+[msg] GUARD: Draw's at sundown. Speaker says nobody leaves on a draw night. Nobody.
+[msg] GUARD: And they've added travellers. You went on the board when you came through the gate.
+[stage] alberica appears at (11,43)
+[msg] ALBERICA: We're on it?
+[stage] shimmer appears at (8,43)
+[stage] shimmer(8,43) walks to (9,43)
+[msg] SHIMMER: Everyone's on it.
+[stage] reptin appears at (10,45)
+[stage] reptin(10,45) walks to (10,44)
+[msg] REPTIN: How democratic.
+[msg] GUARD: Laugh, then. One name a moon, for the Frostmaiden, and she spares the rest of us.
+[stage] shade appears at (11,44)
+[msg] SHADE: And if you don't give her one?
+[msg] GUARD: Two years of her Everlasting Rime says you don't want to find out.
+[stage] gate_guard(10,42) leaves toward (10,37)
+[flag] bryn_arrived
+[goal] The lottery is drawn at sundown. Wait it out at the Northlook inn.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Lostlorn Forest
+[screen] tone (0,0,0) 12
+[map] The Northlook [2016] at (5,11)
+[talk] Trainer(2) at (10,8) on The Northlook [2016]
+[msg] DORN: You're sitting too close to the back table. Move, or I move you.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Zhentarim Dorn
+[stage] overlay off O-01
+[talk] Scramsax at (3,6) on The Northlook [2016]
+[flag] met_scramsax
+[msg] SCRAMSAX: Scramsax. I own the Northlook. Best place in the Dale for a lead.
+[msg] A grey old sellsword with more scar than face.
+[msg] SCRAMSAX: I know how an adventurer's life goes. Flush one week, eating snow the next.
+[msg] SCRAMSAX: So stay on credit, between jobs. Pay me when you're paid. With a little extra.
+[flag] northlook_pitched
+[stage] reptin appears at (5,4)
+[stage] reptin(5,4) walks to (5,5)
+[msg] REPTIN: (under his breath) He means interest.
+[msg] SCRAMSAX: You'll want to be off the street before the draw. Or on it. Some folk watch.
+[ask] Rest until sundown? ($300, or on his tab)
+[stage] jingle heal
+[me] Pokemon Healing
+[msg] You rest until the light goes. At sundown, the whole town walks to the square.
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[stage] theme mountsilver
+[music] mountsilver
+[screen] tone (-70,-60,-10) 0
+[stage] duvessa appears at (26,21) as BW_Jasmine
+[stage] crowd appears at (22,23) as BW (20)
+[stage] crowd appears at (23,24) as BW (38)
+[stage] crowd appears at (29,23) as BW (54)
+[stage] crowd appears at (30,24) as BW (61)
+[stage] crowd appears at (21,24) as BWOldMan
+[stage] crowd appears at (31,23) as BWOldWoman
+[stage] crowd appears at (28,24) as BW (77)
+[stage] ilda appears at (25,23) as BW (16)
+[stage] ilda_mother appears at (24,23) as BW (62)
+[stage] priestess appears at (20,24) as BW (98)
+[stage] alberica appears at (27,25)
+[stage] reptin appears at (25,25)
+[stage] alerion appears at (28,25)
+[stage] shade appears at (24,26)
+[stage] shimmer appears at (25,26)
+[msg] The square at sundown. Torches. A bowl of wooden tokens.
+[msg] DUVESSA: (reaching into the bowl) For the Frostmaiden. One of us, so the rest wake up.
+[msg] DUVESSA: Ilda Weaverson.
+[stage] B-06 balloon over ilda_mother(24,23)
+[msg] A girl of twelve. Her mother makes a sound like something breaking.
+[msg] The crowd steps back from them. Nobody looks up.
+[msg] ALBERICA: No. Absolutely not.
+[stage] alberica(27,25) moves [4, 4]
+[stage] alberica(27,23) faces down
+[stage] crowd(22,24) turns to alberica(27,23)
+[stage] crowd(23,25) turns to alberica(27,23)
+[stage] crowd(29,24) turns to alberica(27,23)
+[stage] crowd(30,25) turns to alberica(27,23)
+[stage] crowd(21,25) turns to alberica(27,23)
+[stage] crowd(31,24) turns to alberica(27,23)
+[stage] crowd(28,25) turns to alberica(27,23)
+[stage] duvessa(26,21) turns to alberica(27,23)
+[msg] Alberica climbs up where the whole square can see her.
+[msg] Two years without a summer. She sings them one.
+[msg] She pulls the Pendant of Black Ice out of her coat.
+[stage] theme tintower
+[music] tintower
+[msg] ALBERICA: Look at me. All of you. You remember the last summer.
+[msg] ALBERICA: The trout jumping. Bread you didn't have to count.
+[msg] ALBERICA: Your kids asleep in a warm room. Remember it. Hold on to it.
+[screen] flash (255,255,255) 16
+[screen] tone (-30,-25,0) 20
+[stage] B-06 balloon over crowd(22,24)
+[stage] B-06 balloon over crowd(23,25)
+[stage] B-06 balloon over crowd(29,24)
+[stage] B-06 balloon over crowd(30,25)
+[stage] B-06 balloon over crowd(21,25)
+[stage] B-06 balloon over crowd(31,24)
+[stage] B-06 balloon over crowd(28,25)
+[msg] The pendant burns white-hot and cold at once.
+[msg] The square fills with things that aren't there: cut grass, a lullaby, somebody's laugh.
+[msg] Every face in the crowd changes.
+[msg] What do you do?
+[pick] Stand beside Alberica.  (of Stand beside Alberica. | Watch the crowd's edge.)
+[stage] auril_furs appears at (32,25)
+[stage] effect E-01 at auril_furs(32,25)
+[flag] stood_with_alberica
+[stage] you moves [4]
+[msg] You climb up beside her. The crowd moves toward Ilda instead of away.
+[stage] crowd(22,24) walks to (25,22)
+[stage] crowd(23,25) walks to (24,22)
+[stage] crowd(29,24) walks to (26,23)
+[stage] crowd(30,25) walks to (23,23)
+[stage] crowd(21,25) walks to (26,22)
+[stage] crowd(31,24) walks to (23,22)
+[stage] crowd(28,25) walks to (24,24)
+[stage] crowd(25,22) turns to ilda(25,23)
+[stage] crowd(24,22) turns to ilda(25,23)
+[stage] crowd(26,23) turns to ilda(25,23)
+[stage] crowd(23,23) turns to ilda(25,23)
+[stage] crowd(26,22) turns to ilda(25,23)
+[stage] crowd(23,22) turns to ilda(25,23)
+[stage] crowd(24,24) turns to ilda(25,23)
+[stage] B-07 balloon over ilda_mother(24,23)
+[msg] The crowd closes around Ilda and her mother. Nobody gives her up.
+[stage] duvessa(26,21) turns to ilda(25,23)
+[msg] DUVESSA: ...No walk tonight. Go home. All of you.
+[stage] ilda(25,23) hops
+[msg] REPTIN: (quietly) Remind me never to argue with her in public.
+[msg] SHADE: You'd lose. So did the whole town.
+[stage] auril_furs(32,25) faces left
+[stage] theme sealed_chamber
+[music] sealed_chamber
+[msg] At the edge of the torchlight, the woman in frost-furs. She looks only at Alberica.
+[se] Ice1
+[stage] effect E-02 at alberica(27,23)
+[stage] alberica(27,23) pose P-ALB-04 row 0
+[stage] priestess(20,24) turns to auril_furs(32,25)
+[msg] Alberica gasps and claws at her chest.
+[msg] Through her coat, a mark glows blue: a snowflake, cut by a crown.
+[stage] priestess(20,24) exclaim bubble
+[msg] PRIESTESS: (her lantern shaking) That's Her. Auril, the Frostmaiden. The winter, walking.
+[stage] effect E-01 at auril_furs(32,25)
+[stage] auril_furs(32,25) pose P-AUR-04 row 0
+[stage] auril_furs(32,25) hidden
+[msg] What do you do?
+[pick] Go to Alberica.  (of Go to Alberica. | Watch the north gate.)
+[stage] you walks to (27,23)
+[stage] you turns to alberica(27,23)
+[msg] ALBERICA: ...I'm fine. Something's pulling me north, that's all. Don't make a thing of it.
+[msg] ALERION: You're not fine.
+[msg] ALBERICA: Pretty boy, I'm gorgeous. Fine is a step down.
+[flag] lottery_stand
+[flag] alberica_marked
+[flag] auril_named
+[stage] sephek appears at (22,7)
+[stage] sephek(22,7) walks to (26,21)
+[msg] A man walks into the square in shirtsleeves. No coat.
+[msg] Snow doesn't settle on him. His footprints don't stay.
+[stage] sephek(25,21) turns to shimmer(25,26)
+[stage] B-06 balloon over shimmer(25,26)
+[msg] SHIMMER: (very still) Sephek. Nobody move. He wants someone to.
+[msg] SEPHEK: A town that keeps its name owes her one. I'm sorry. She'll take what's hers.
+[msg] He looks past Ilda. Past Alberica. At Shimmer.
+[msg] SEPHEK: The Frostmaiden sends her regards. To the girl with the stone.
+[msg] SHIMMER: Tell her I said no. Again.
+[msg] SEPHEK: Tell her yourself. I'll be in Lonelywood.
+[msg] SEPHEK: Come before the next moon, or I choose someone from this square instead.
+[stage] sephek(25,21) walks to (22,6)
+[stage] camera pans to (22,8)
+[stage] Guard(23,5) moves [37, 3, 17, {:wait_for=>false}]
+[stage] Guard(22,5) moves [37, 3, 17, {:wait_for=>false}]
+[msg] He walks out through the north gate. The guards step aside for him like he's weather.
+[stage] sephek(22,6) leaves toward (22,1)
+[stage] Guard(23,5) moves [2, 16, 38, {:wait_for=>false}]
+[stage] Guard(24,5) moves [2, 16, 38]
+[stage] camera pans back to you
+[stage] B-01 balloon over shimmer(25,26)
+[msg] SHADE: (very quiet) ...Shimmer.
+[msg] SHIMMER: I know.
+[msg] ALBERICA: "Again"? You've said no to her before?
+[msg] SHIMMER: Later. Not in front of the whole town.
+[flag] seen_sephek_bryn
+[msg] In your pocket, the lantern glass tugs south-east. Toward the Hole, not the north gate.
+[msg] ALERION: (to you) Your road's south-east. Ours just walked north.
+[msg] What do you say?
+[pick] "How far is the Hole?"  (of "North, with them." | "How far is the Hole?")
+[msg] ALERION: Past the east gate. Shut till the Speaker says. North's the only road open.
+[msg] REPTIN: Then we need the Speaker's seal either way. Town Hall, in the morning.
+[stage] map music resumes
+[music] Opelucid City (White)
+[screen] tone (0,0,0) 0
+[stage] ilda appears at (34,32) as BW (16)
+[stage] ilda_mother appears at (35,32) as BW (62)
+[msg] Morning. The square is empty. The lottery board is still up.
+[msg] ILDA: (from the Weaver's door, to Alberica) Will you sing the summer one again?
+[stage] alberica appears at (36,33)
+[stage] alberica(36,33) walks to (35,33)
+[msg] ALBERICA: Every night till it comes back.
+[stage] ilda(34,32) moves [37, 4, 38, {:wait_for=>false}]
+[stage] ilda_mother(35,32) moves [37, 2, 4, 38, {:wait_for=>false}]
+[stage] hall_guard appears at (34,37) as BWPoliceman
+[stage] hall_guard(34,37) walks up to you
+[msg] GUARD: Speaker's compliments. Town Hall, when you're ready. She says bring the singer.
+[msg] GUARD: The other Speakers sit with her first, in the Council Hall by the south street.
+[msg] GUARD: You can listen, if you like. Nobody's stopping strangers today.
+[stage] hall_guard(34,34) leaves toward (34,39)
+[map] Bryn Shander [2012] at (34,33)
+[goal] Win Speaker Duvessa's seal at the Town Hall. It opens the north gate to Lonelywood.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] gym_kanto
+[screen] tone (0,0,0) 12
+[map] Bryn Shander Town Hall [2015] at (10,19)
+[talk] Trainer(2) at (2,13) on Bryn Shander Town Hall [2015]
+[msg] GARVIN: Sheriff Southwell's orders. Nobody walks up to the Speaker untested.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Militia Garvin
+[stage] overlay off O-01
+[talk] Duvessa at (10,3) on Bryn Shander Town Hall [2015]
+[msg] CORVIN: My family's kept the Council's papers six generations. I still know how to fight.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Gentleman Corvin
+[stage] overlay off O-01
+[msg] DUVESSA: Ten Speakers signed a bargain with Her. A life a month, or food, or warmth.
+[msg] DUVESSA: I signed it first. A necessary evil, we called it.
+[msg] DUVESSA: Last night you made me break it. Show me it was worth it.
+[stage] reptin appears at (12,4)
+[stage] reptin(12,4) walks to (11,4)
+[msg] REPTIN: (under his breath) That was a compliment. Probably.
+[music] gymleader
+[battle] start vs Speaker Duvessa
+[stage] overlay off O-01
+[flag] badge_bryn
+[msg] DUVESSA: Take the seal. Go after him.
+[msg] Tester received the Palisade Seal!
+[msg] DUVESSA: And if you can end this, I'll owe you every name on that board.
+[msg] You obtained TM118 Steel Wing!
+[msg] You put the TM118 awayin the <icon=bagPocket4>TMs & HMs Pocket.
+[msg] DUVESSA: That TM teaches Steel Wing. You're leaving the walls. Take some steel with you.
+[music] Opelucid City (White)
+[msg] DUVESSA: You're not from here. Ten towns, three lakes, ten Speakers. I lead them.
+[stage] shade appears at (8,4)
+[stage] shade(8,4) walks to (9,4)
+[msg] SHADE: And you're telling strangers this because...?
+[msg] DUVESSA: Because five of those towns are on your road. Each has a trouble it can't mend.
+[msg] DUVESSA: Mend one, and its Speaker writes to me. Mend all five, and the Council pays.
+[stage] alberica appears at (10,5)
+[msg] ALBERICA: A government that pays its debts. I'll start mending, darling.
+[goal] Sephek is in Lonelywood: out the north gate, through Termalaine.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[screen] tone (0,0,0) 12
+[map] Bryn Shander [2012] at (31,20)
+[scene] mishann_steps
+[stage] mishann appears at (33,23) as BW (98)
+[stage] mishann(33,23) walks up to you
+[msg] The priestess from the square hurries up the steps, her lantern still lit.
+[msg] MISHANN: There you are. Mishann. I keep the Morninglord's fire. The dawn's, such as it is.
+[msg] MISHANN: I've looked for your druid since the draw. I had a feeling.
+[msg] MISHANN: You gave blood to something the cold had taken. It's still on your hand.
+[msg] Reptin closes his hand over the cut.
+[stage] reptin appears at (29,20)
+[stage] reptin(29,20) walks to (30,20)
+[msg] REPTIN: A scratch. Nothing.
+[msg] She presses something into Reptin's palm anyway: a golden acorn.
+[msg] MISHANN: A priest in the south gave this to my order. "Carry it north," he said.
+[msg] MISHANN: I think he meant you.
+[msg] REPTIN: How generous. ...What does it do?
+[msg] MISHANN: I don't know. Plant it somewhere the sun can't reach.
+[msg] MISHANN: See what it does out of spite.
+[stage] alberica appears at (33,20)
+[stage] alberica(33,20) walks to (32,20)
+[msg] ALBERICA: Oh, I like her.
+[msg] You obtained a Golden Acorn!
+[msg] You put the Golden Acorn awayin the <icon=bagPocket8>Key Items Pocket.
+[msg] Reptin tucks the Golden Acorn into his pack. (You can check on it in Key Items.)
+[flag] golden_acorn
+[stage] mishann(31,21) leaves toward (33,24)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] sinjoh
+[screen] tone (0,0,0) 12
+[map] House of the Morninglord [2019] at (9,11)
+[talk] Mishann at (13,7) on House of the Morninglord [2019]
+[msg] MISHANN: Back already? Good. The fire's lit.
+[msg] MISHANN: Sit by the fire a moment. Your Pokémon too.
+[stage] jingle heal
+[me] Pokemon Healing
+[msg] MISHANN: There. The dawn comes back, you know. Even here. It always comes back.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Opelucid City (White)
+[screen] tone (0,0,0) 12
+[map] Bryn Shander [2012] at (33,11)
+[stage] overlay off O-01
+[music] route38_39
+[map] Termalaine Path [2121] at (15,46)
+[stage] overlay off O-01
+[music] lake of rage
+[map] Termalaine [2120] at (27,38)
+[scene] termalaine_arrival
+[flag] termalaine_arrived
+[msg] Termalaine spreads along the shore of Maer Dualdon, tall pines north and west.
+[msg] The houses are carved with wizards and homunculi, tigers and smiling djinn.
+[msg] It's the most picturesque town in Icewind Dale.
+[msg] Then the north wind comes down off the lake and finds you.
+[stage] alberica appears at (29,38)
+[stage] alberica(29,38) walks to (28,38)
+[msg] ALBERICA: Oh, it's PRETTY. Why is it pretty? Nothing in this Dale is allowed to be pretty.
+[stage] shade appears at (25,38)
+[stage] shade(25,38) walks to (26,38)
+[msg] SHADE: Give it a minute.
+[stage] Darmo Mazlu(24,23) exclaim bubble
+[stage] Darmo Mazlu(24,23) hops
+[flag] darmo_shouted
+[msg] DARMO: (from his box, at you) The gem mine's closed!
+[msg] DARMO: MONSTERS! The Speaker pays FIVE THOUSAND!
+[stage] overlay off O-01
+[music] Lostlorn Forest
+[map] Lonelywood Road [2020] at (15,58)
+[scene] lonely_road_start
+[stage] camera pans to (15,52)
+[msg] Bare footprints in the snow, running north. They don't sink.
+[stage] camera pans back to you
+[stage] shade appears at (17,58)
+[stage] shade(17,58) walks to (16,58)
+[msg] SHADE: A trapper. Barefoot. People out here do strange things.
+[stage] shimmer appears at (13,58)
+[stage] shimmer(13,58) walks to (14,58)
+[msg] SHIMMER: Those are his. You know they are.
+[msg] Shimmer stops, and turns to face the rest of you.
+[msg] SHIMMER: You should know why he wants me. Before he says it for me.
+[msg] SHIMMER: Saltmarsh. A port, a long way south. A job: a stone in a box.
+[msg] SHIMMER: I opened the box, and the Frostmaiden came in.
+[stage] OVERLAY O-03
+[stage] PANEL S-03a
+[msg] A harbour at night. A ship frozen solid in one breath, rigging and all.
+[msg] On its deck stands a girl with white light where her eyes should be.
+[msg] SHIMMER: One night, she wore me like a coat. Her priests have a word for it. Vessel.
+[stage] panel off
+[stage] overlay off O-03
+[msg] SHADE: (quietly) You told me it was a storm.
+[msg] SHIMMER: It was a storm. Hers. You came into it after me anyway.
+[msg] SHIMMER: Dragged me out by the hair.
+[msg] SHADE: And in the morning there was a horn in the snow. I never knew whose.
+[msg] SHIMMER: I got out. The stone didn't. It's still in here. A door she left open.
+[msg] SHIMMER: She's sent him after me ever since. He always finds me. I always say no.
+[msg] SHADE: Why didn't you tell me?
+[msg] SHIMMER: You'd have tried to fix it.
+[stage] alberica appears at (15,59)
+[msg] ALBERICA: (a hand over the rune) So she wants a coat again. She's trying me on for size.
+[stage] reptin appears at (16,59)
+[msg] REPTIN: Then she's in for a shock. Nobody's ever made you fit anything.
+[stage] map music resumes
+[music] Lostlorn Forest
+[flag] shimmer_confessed
+[goal] Lonelywood, north. Sephek wants Shimmer back as Auril's vessel.
+[msg] NETTLE: I've found a bug nobody's ever named! Want to see it? It bites!
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Bug Catcher Nettle
+[stage] overlay off O-01
+[msg] WYST: Her Chosen walked this road at dawn. Born at Midwinter. The cold can't touch him.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Aurilite Wyst
+[stage] overlay off O-01
+[stage] overlay off O-01
+[music] lake of rage
+[map] Lonelywood [2021] at (42,36)
+[scene] lonelywood_arrival
+[flag] lonelywood_arrived
+[msg] Lonelywood: timber houses in a crescent on the shore of Maer Dualdon.
+[msg] Five piers run out into the ice. The forest presses in behind.
+[stage] camera pans to (15,21)
+[msg] Smoke rises from a green-roofed house. Someone in there is baking.
+[stage] camera pans back to you
+[stage] alberica appears at (42,34)
+[stage] alberica(42,34) walks to (42,35)
+[msg] ALBERICA: Is that... cinnamon? In Icewind Dale? Somebody marry me.
+[stage] alerion appears at (42,37)
+[msg] ALERION: No.
+[stage] reptin appears at (43,36)
+[msg] REPTIN: He means congratulations.
+[stage] shimmer appears at (43,35)
+[msg] SHIMMER: He means no.
+[stage] camera pans to (37,20)
+[msg] Past the fisher's house, a man in shirtsleeves leans on a sled, watching the road.
+[stage] camera pans back to you
+[goal] Find Sephek at the sleds in the clearing, past the fisher's house.
+[talk] Sephek at Torg's at (37,20) on Lonelywood [2021]
+[flag] met_sephek_torgs
+[msg] A man in his thirties leans on Torrga's sled in a stylish vest and nothing warmer.
+[msg] No coat, no hat, no gloves. Olive skin, dark hair in a tail.
+[msg] Snow lands on his shoulders and doesn't melt.
+[msg] His eyes are as blue as a frozen lake.
+[msg] SEPHEK: (smiling, easy) Travellers! Good. So quiet out here. Buying, or just looking?
+[msg] His eyes go past you to Shimmer, and stay there.
+[msg] SEPHEK: (gently) There you are.
+[msg] What do you ask him?
+[pick] "Aren't you cold?"  (of "Aren't you cold?" | "The ice-dagger murders." | Say nothing.)
+[msg] SEPHEK: I was born on Midwinter. The Frostmaiden's blessing keeps the cold off me.
+[msg] SEPHEK: Lucky, in a place like this.
+[stage] shade appears at (36,22)
+[stage] shade(36,22) walks to (36,21)
+[msg] SHADE: (hand on a knife) Then let's do this now.
+[msg] SEPHEK: Here? With the Speaker's little ones two roads over? No. I'm not a monster.
+[msg] SEPHEK: (to Shimmer, softly) Before the next moon. Come to me, or I pick someone else.
+[msg] SEPHEK: You always did come, in the end.
+[stage] Sephek at Torg's(37,20) pose P-SEP-05 row 0
+[stage] Sephek at Torg's(37,20) pose P-SEP-05 row 0
+[stage] Sephek at Torg's(37,20) turns to you
+[msg] Frost swirls up round him like a breath. Then he's across the sled, ten paces off.
+[stage] alerion appears at (36,19)
+[msg] ALERION: Misty step. He's not running. He's showing us he can.
+[stage] shimmer appears at (35,20)
+[msg] SHIMMER: ...I know.
+[msg] SHADE: He won't fight with children in the street. Neither will we. Not tonight.
+[goal] Speaker Huddle's house, the green roof. Somewhere warm, with him out there.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] mom_theme
+[screen] tone (0,0,0) 12
+[map] Speaker Huddle's House [2027] at (9,11)
+[talk] Nimsy Huddle at (13,7) on Speaker Huddle's House [2027]
+[flag] met_nimsy
+[msg] NIMSY: Oh! Visitors! Come in, come in, mind the little ones.
+[msg] NIMSY: Cookie? They're shaped like halflings. Like me. That's the joke.
+[msg] NIMSY: I'm Nimsy Huddle. I speak for Lonelywood, for all the good it does us.
+[stage] alberica appears at (12,6)
+[msg] ALBERICA: Darling, you've just become my favourite Speaker in the Dale.
+[msg] NIMSY: The attic's yours. House rule in Lonelywood: nobody asks about anybody's past.
+[stage] shimmer appears at (10,7)
+[stage] shimmer(10,7) walks to (11,7)
+[msg] SHIMMER: Perfect.
+[stage] shade appears at (10,9)
+[stage] shade(10,9) walks to (11,8)
+[msg] SHADE: Shimmer meant that one. Don't tell her I noticed.
+[msg] NIMSY: And mind the logging road. We've a moose problem. Ask me when you're settled.
+[msg] SHADE: We sleep in shifts. He's out there, and he knows which roof.
+[msg] Who keeps first watch?
+[pick] Shade.  (of Shade. | You. | Shimmer.)
+[flag] watch_shade
+[msg] SHADE: Me, then. I don't sleep anyway. Family trait.
+[ask] Go up to the attic for the night?
+[flag] rested_lonelywood
+[screen] tone (-85,-75,-20) 0
+[stage] alberica appears at (6,8)
+[stage] reptin appears at (7,9)
+[stage] alerion appears at (10,8)
+[stage] shade appears at (9,9)
+[stage] shimmer appears at (9,6)
+[msg] The attic is warm. Below, the fire ticks as it cools.
+[msg] One by one, the party falls asleep.
+[msg] Past midnight, Shimmer takes the watch from Shade. Shade lets her.
+[msg] By the window, Shimmer turns a little carved wooden cat over in her fingers.
+[msg] SHADE: (half asleep) You're doing the cat thing.
+[msg] SHIMMER: I'm not scared. I'm counting.
+[msg] SHIMMER: You carved it when we were kids. Terrible cats. They always wanted to be one.
+[msg] SHIMMER: Cats get nine lives. You've used about six. Go to sleep.
+[stage] jingle lullaby
+[me] lullaby
+[msg] Then she hums. Four notes, very low. The same four, over and over.
+[msg] ALBERICA: (mostly asleep) Louder, sweetheart. I'll learn it.
+[msg] SHIMMER: It isn't a song. The stone hums. I just keep it in tune.
+[stage] shimmer(9,6) walks to (8,8)
+[stage] shimmer(9,8) turns to you
+[msg] Shimmer laces her boots, and stops at your bedroll.
+[pick] "Shimmer?"  (of "Shimmer?" | (Keep your eyes shut.))
+[flag] shimmer_lied
+[msg] SHIMMER: (a whisper) Privy. Go back to sleep.
+[stage] shimmer(9,8) leaves toward (9,11)
+[se] Exit Door
+[screen] tone (-20,-30,-10) 0
+[stage] theme Lavender Town
+[music] Lavender Town
+[msg] Morning. Shimmer's bedroll is empty.
+[msg] On the pillow: a note, and the carved wooden cat.
+[pick] (Read the note.)  (of (Read the note.))
+[stage] shade(9,9) walks to (9,7)
+[msg] SHADE: (reading) "He said before the next moon, or he picks someone else."
+[msg] SHADE: "I'm not letting him pick. Don't follow. Keep the cat. S."
+[stage] shade(9,7) turns to you
+[msg] Shade looks up at you.
+[msg] SHADE: She told you the privy. She told me a storm.
+[msg] SHADE: (very quiet) ...She always does this.
+[msg] What do you do?
+[pick] (Go after her.)  (of (Go after her.))
+[stage] you walks to (9,11)
+[msg] Alberica's pendant flares and cracks.
+[msg] In your pocket, the lantern glass goes cold, as if it's watching too.
+[msg] ALBERICA: (the pendant burning in her fist) That's her. That's now.
+[msg] The room goes white. Then you're all somewhere else, and none of you can move.
+[stage] OVERLAY O-03
+[stage] PANEL S-04
+[msg] A stone circle in the birches. Snow falling without a sound.
+[stage] CUT to map Glade of the Unmade (14,13) [vision]
+[music] newmoonIsland
+[msg] Shimmer lies on a slab older than names, bound in cords of living ice.
+[msg] Above her floats a sphere of black-veined ice: a piece of Auril, waiting for a way in.
+[msg] It beats to someone else's pulse.
+[msg] SEPHEK: She forgives, Shimmer. Take her back into you. Let the Dale breathe.
+[msg] SEPHEK: You won't be a prison this time. You'll be a queen.
+[msg] SHIMMER: A queen. Is that what she calls the coat now?
+[msg] SEPHEK: Then I go back to that square, and I choose. A child, this time.
+[msg] SHIMMER: Two doors, then. Hers, or some child's.
+[msg] SHIMMER: You forgot. There's always a third way.
+[msg] She closes her eyes. In her chest, something cracks like ice on a lake: the stone.
+[msg] SHIMMER: There. The door's shut. She can't come in.
+[screen] shake 4 6 16
+[msg] Above her, the black ice screams.
+[msg] SEPHEK: (the knife up, very sorry) Then she has you the hard way.
+[msg] SHIMMER: Do it. If she needs blood, let it be mine. But not for her.
+[msg] SHIMMER: For them.
+[msg] You can't move.
+[pick] (Shout her name.)  (of (Shout her name.))
+[msg] You open your mouth. No sound comes out.
+[screen] flash (255,255,255) 16
+[msg] The blade falls. White fire. When it fades, there is no body.
+[msg] Only a rose, frozen in bloom, growing out of the stone.
+[msg] Beside it, a heart of ice beats once, and breathes out mist.
+[msg] Sephek reaches for the heart. The frost bites his hand, and he snatches it back.
+[music] mom_theme
+[stage] theme Lavender Town
+[music] Lavender Town
+[msg] Sephek is on his knees, weeping.
+[offstage] SHIMMER absent
+[msg] SHIMMER: (from nowhere, very softly) Not all fire dies. Some of it just learns to freeze.
+[stage] overlay off O-03
+[stage] panel off
+[stage] theme Lavender Town
+[music] Lavender Town
+[screen] tone (0,0,0) 20
+[flag] shimmer_taken
+[msg] Shimmer left the party.
+[msg] You're back in the attic. Alberica's pendant is gone. The rune on her chest isn't.
+[stage] shade appears at (10,11)
+[msg] SHADE: (very quiet) ...No.
+[stage] alerion appears at (9,10)
+[msg] ALERION: She's gone, Shade. She chose it.
+[msg] ALERION: Stone circle. Birches. Someone in this town knows where.
+[stage] reptin appears at (7,9)
+[stage] reptin(7,9) walks to (8,10)
+[msg] REPTIN: (very quietly) She said no to a god. Twice.
+[stage] alberica appears at (11,9)
+[stage] alberica(11,9) walks to (10,10)
+[msg] ALBERICA: Shade. Look at me. We go together. Nobody goes alone.
+[msg] Outside, under the window, a tall figure with long ears and a lantern waits in the snow.
+[music] lake of rage
+[stage] theme Lavender Town
+[music] Lavender Town
+[stage] Jet Sentry(15,25) turns to you
+[stage] Jet Sentry(15,25) exclaim bubble
+[stage] Jet Sentry(15,25) walks up to you
+[msg] Long ears, a lantern, snow thick on her shoulders. She's been out here all night.
+[msg] JET SENTRY: Jet Sentry, of the Wennen. The moon-keepers, in the woods north of here.
+[msg] JET SENTRY: Before dawn she walked to the cold man's sleds. Nobody made her.
+[msg] JET SENTRY: He bound her in ice and carried her east.
+[stage] shade appears at (12,24)
+[stage] shade(12,24) walks to (13,24)
+[msg] SHADE: You watched him take her.
+[msg] JET SENTRY: I followed. I'm fast. He's faster, in the cold.
+[msg] JET SENTRY: The logging road, to the Glade of the Unmade. A stone circle. I'll take you.
+[flag] jet_told
+[stage] Jet Sentry(14,25) leads you to (39,11)
+[map] Lonelywood [2021] at (39,12)
+[goal] Follow the logging road east, through the forest, to the Glade of the Unmade.
+[stage] overlay off O-01
+[music] Lostlorn Forest
+[map] Lonelywood Forest [2129] at (1,18)
+[stage] overlay off O-01
+[music] newmoonIsland
+[map] Glade of the Unmade [2026] at (14,26)
+[scene] glade_aftermath
+[stage] theme Lavender Town
+[music] Lavender Town
+[stage] you walks to (14,12)
+[stage] meat_meat appears at (14,8)
+[stage] effect E-14 at [14, 9]
+[msg] The rose. And beside it, the heart of ice, beating once a minute.
+[stage] shimmer appears at (14,10)
+[stage] shimmer(14,10) pose P-SHI-02 row 0
+[msg] You touch it. For a moment you see a girl in the wind with her arms open, smiling.
+[stage] shimmer(14,10) hidden
+[stage] shade appears at (16,12)
+[stage] shade(16,12) walks to (15,12)
+[msg] SHADE: I'm not leaving her here.
+[msg] You obtained a Heart of Ice!
+[msg] You put the Heart of Ice awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] heart_of_ice
+[stage] jet_sentry appears at (14,26) as Followers/LOPUNNY
+[stage] jet_sentry(14,26) walks to (14,12)
+[stage] jet_sentry(14,13) turns to you
+[msg] JET SENTRY: A heart of ice. It's what's left when she tries to wear someone, and can't.
+[msg] SHADE: (very quiet) ...She couldn't. Good.
+[stage] meat_meat(14,8) exclaim bubble
+[msg] Behind the altar, a bundle of furs sneezes.
+[stage] meat_meat(14,8) walks to (12,12)
+[msg] A goblin, half frozen, chewing mushroom jerky. Long white hair stiff with frost.
+[msg] Cracked goggles. Violet eyes. A pack bigger than she is.
+[msg] MEAT MEAT: Meat Meat followed Razzy's feet from Targos. Snow ate the feet.
+[msg] MEAT MEAT: Meat Meat dreamed Razzy fell into cold light.
+[msg] MEAT MEAT: Meat Meat followed the dream. Dream was wrong place. Rude dream.
+[msg] She sees the egg in Reptin's arms and goes very still.
+[msg] What do you do?
+[pick] (Nudge Reptin toward her.)  (of (Nudge Reptin toward her.))
+[stage] reptin appears at (12,12)
+[stage] reptin(12,12) walks to (13,12)
+[stage] meat_meat(12,12) walks to (13,12)
+[stage] meat_meat(12,12) turns to reptin(13,12)
+[msg] MEAT MEAT: ...Razzy?
+[msg] The egg warms so suddenly it nearly slips.
+[msg] MEAT MEAT: That is Razzy. Razzy not dead. Just very cold. Meat Meat promises.
+[msg] REPTIN: She said his name, and she promised. That's the rite.
+[msg] MEAT MEAT: Razzy and Meat Meat ran away together. From a cold table.
+[msg] MEAT MEAT: From the lady with books and bones. She took Razzy's voice.
+[msg] REPTIN: (quietly) The scar on his throat.
+[stage] alerion appears at (14,14)
+[stage] alerion(14,14) walks to (14,13)
+[msg] ALERION: Pale, books and bones. Naerth's lady in the tower.
+[msg] MEAT MEAT: Meat Meat comes with you now. Meat Meat is not asking.
+[stage] alberica appears at (16,14)
+[stage] alberica(16,14) walks to (15,13)
+[msg] ALBERICA: Oh, I love her. Can we keep her?
+[msg] MEAT MEAT: Meat Meat will bite you. Fondly.
+[msg] REPTIN: She's saying she's grateful.
+[msg] MEAT MEAT: Meat Meat is saying the other thing. Also: who has coffee?
+[msg] SHADE: (very quiet) She'd have liked you.
+[flag] meat_meat_joined
+[msg] Meat Meat joined the party!
+[flag] razzy_named
+[msg] JET SENTRY: The Circle will want that heart.
+[msg] SHADE: The Circle can ask. It's my sister's. It goes where I go.
+[msg] JET SENTRY: Then come with it. The Circle is our council: thirteen Wennen, in our Warren.
+[msg] JET SENTRY: The Warren is under the Moon Temple, north of town. Zenith can keep it safe.
+[msg] JET SENTRY: The cold man knows that. He'll be waiting at the door.
+[msg] SHADE: Let him.
+[stage] jet_sentry(14,13) leaves toward (14,27)
+[stage] map music resumes
+[music] newmoonIsland
+[goal] The Moon Temple, north of town: the Wennen's Warren is under it, and Sephek is waiting.
+[stage] overlay off O-01
+[music] Lostlorn Forest
+[map] Lonelywood Forest [2129] at (24,1)
+[stage] overlay off O-01
+[music] lake of rage
+[map] Lonelywood [2021] at (42,11)
+[stage] overlay off O-01
+[music] sinjoh
+[map] Moon Temple [2023] at (12,29)
+[scene] moon_grounds_arrival
+[msg] The path climbs to a shrine of old stone arches, half buried in snow.
+[msg] Spirals glow faintly on every post.
+[msg] Below the arches, a timber lodge with a root-grown door breathes out warm air.
+[msg] Mint, and earth.
+[stage] meat_meat appears at (14,29)
+[stage] meat_meat(14,29) walks to (13,29)
+[msg] MEAT MEAT: Rabbit Lords live here. Meat Meat will be very polite. Very.
+[stage] reptin appears at (12,31)
+[stage] reptin(12,31) walks to (12,30)
+[msg] REPTIN: Leave the talking to me. Rabbits love me. Everybody—
+[msg] Reptin stops, and doesn't finish it.
+[stage] shade appears at (12,30)
+[msg] SHADE: Talk later. He's here. I can feel it.
+[scene] sephek_moon_temple
+[stage] sephek appears at (14,29)
+[stage] theme sealed_chamber
+[music] sealed_chamber
+[msg] The wind stops. Between the arches, a man in a thin linen shirt is waiting.
+[msg] His eyes are red. He hasn't stopped weeping.
+[msg] SEPHEK: Give me the heart, and the Frostmaiden forgets your names.
+[msg] SEPHEK: I can't take it. It burns me. It has to be given.
+[msg] SHADE: You killed my sister.
+[msg] SEPHEK: (quietly) She killed herself. I only held the knife. I'm sorry. Give it to me.
+[stage] alberica appears at (14,31)
+[stage] alberica(14,31) walks to (13,30)
+[msg] ALBERICA: (a hand on Shade's arm) Not alone. Not this time.
+[music] gymleader
+[battle] start vs Auril's Chosen Sephek
+[stage] overlay off O-01
+[flag] sephek_won
+[msg] SEPHEK: ...So cold. Why is it so cold? The cold never touched me...
+[stage] sephek(14,29) pose P-SEP-02 row 0
+[flag] sephek_origin_known
+[msg] His mouth keeps moving. The voice is younger now, and frightened.
+[msg] SEPHEK: ...I wasn't born at Midwinter. I was born in the water. The day I drowned.
+[msg] SEPHEK: A ship. Her island. We went down off the coast.
+[msg] Frost creeps up his arms as he talks. He doesn't seem to feel it.
+[msg] SEPHEK: I swam, and I was dying in the snow.
+[msg] SEPHEK: And something cold came and climbed into me, and ate what I was, and stayed.
+[stage] sephek(14,29) pose P-SEP-06 row 0
+[msg] Then something older answers, out of the same mouth.
+[stage] sephek(14,29) pose P-SEP-06 row 0
+[msg] SEPHEK: (the other voice) A druid of the old winter. Hers. I wear him. I cannot leave him.
+[msg] SEPHEK: (the other voice) If the vessel dies, so do I.
+[msg] SEPHEK: (the other voice) So he does not die. So he waits.
+[msg] REPTIN: A winter druid. We druids tell stories about them, to scare the young.
+[msg] SHADE: I don't care who's wearing who.
+[se] Ice2
+[stage] effect E-04 at sephek(14,29)
+[stage] sephek(14,29) pose P-SEP-02 row 0
+[msg] Ice closes over him.
+[msg] In his chest, a sliver of blue light still beats. Slow as a sleeper.
+[stage] alerion appears at (13,30)
+[msg] ALERION: He's not dead. He's waiting.
+[msg] SHADE: Then let him wait. Forever, if it's up to me.
+[flag] sephek_defeated
+[flag] sephek_frozen
+[stage] Nova Keeper(9,19) walks up to you
+[msg] NOVA KEEPER: He sleeps in the ice now. Not dead.
+[msg] NOVA KEEPER: The cold doesn't let its chosen die so easily.
+[msg] NOVA KEEPER: We'll watch him. Go below. Zenith is waiting at the Rose.
+[stage] map music resumes
+[music] sinjoh
+[scene] sephek_moon_temple
+[goal] The Wennen's Warren, under the Moon Temple. Zenith Abbott is waiting at the Rose.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[flag] torrga_grudge
+[music] New Bark Town
+[screen] tone (0,0,0) 12
+[map] Wennen's Warren [2022] at (34,44)
+[scene] warren_enter
+[msg] The tunnel widens as it goes down: round halls of pressed clay, ribbed with white roots.
+[msg] Fungal veins glow along the walls. Driftwood lanterns burn amber. It's warm.
+[msg] Tall figures with long ears watch you pass. The Wennen, and their Circle of thirteen.
+[stage] wennen_guard appears at (8,34) as Followers/LOPUNNY
+[stage] wennen_guard appears at (10,34) as Followers/BUNEARY
+[stage] camera pans to (9,34)
+[msg] In a nest of white roots, two Wennen guard an egg of pale blue ice. It's never been warm.
+[stage] camera pans back to you
+[stage] meat_meat appears at (36,44)
+[stage] meat_meat(36,44) walks to (35,44)
+[msg] MEAT MEAT: Big egg. Not Razzy. Meat Meat checked.
+[msg] MEAT MEAT: Meat Meat smells coffee. Rabbit coffee. Meat Meat will find it.
+[stage] reptin appears at (32,44)
+[stage] reptin(32,44) walks to (33,44)
+[msg] REPTIN: Please don't steal from the moon-keepers.
+[msg] MEAT MEAT: Meat Meat borrows.
+[talk] Zenith Abbott at (10,10) on Wennen's Warren [2022]
+[stage] theme Lavender Town
+[music] Lavender Town
+[stage] shade appears at (9,11)
+[msg] Zenith Abbott, who keeps the Rose, speaks only in verse.
+[msg] ZENITH: A heart that chose. A rose that would not close.
+[msg] ZENITH: An egg that fell when winter first arose.
+[stage] Luna Carver(20,6) walks up to you
+[msg] LUNA CARVER: I dream for the Circle. I dreamed this egg.
+[msg] LUNA CARVER: The night the Rime began, the Frostmaiden's roc flew over us.
+[msg] LUNA CARVER: Iskra. A white bird, wide as a sail. Something fell from her.
+[stage] wennen_bearer appears at (9,14) as Followers/LOPUNNY
+[stage] wennen_bearer appears at (10,14) as Followers/BUNEARY
+[stage] wennen_bearer(9,14) walks to (10,8)
+[stage] wennen_bearer(10,14) walks to (11,8)
+[stage] wennen_bearer(10,8) faces down
+[stage] frost_egg appears at (11,9) as K-EGG-02
+[stage] frost_egg(11,9) pose K-EGG-02 row 1
+[msg] Two Wennen carry an ice egg up from the nursery and set it beneath the Rose.
+[msg] LUNA CARVER: An egg, cold all through. It never woke. We kept it anyway.
+[msg] Shade holds out a hand for the heart of ice.
+[pick] (Give Shade the heart.)  (of (Give Shade the heart.))
+[stage] shade(9,11) walks to (11,10)
+[stage] shade(11,10) pose P-SHA-02 row 3
+[msg] Shade lays Shimmer's heart beneath the Rose, beside the pale-blue egg.
+[screen] tone (30,30,50) 30
+[msg] The Wennen thump a slow beat with their feet. The false moon in the ceiling brightens.
+[stage] theme fullmoonIsland
+[music] fullmoonIsland
+[se] Ice2
+[msg] The egg doesn't crack. It warms.
+[msg] Frost-white light moves under the shell.
+[msg] Something inside turns over, the way someone used to in her sleep.
+[stage] B-05 balloon over frost_egg(11,9)
+[stage] jingle lullaby
+[me] lullaby
+[msg] Then, from inside the shell, a hum. Four notes.
+[stage] B-07 balloon over shade(11,10)
+[msg] SHADE: (very quiet) ...She said it wasn't a song.
+[msg] ZENITH: Not her vessel. Her answer.
+[msg] The ring on Alerion's hand warms for the first time.
+[stage] alerion appears at (10,13)
+[stage] alerion(10,13) walks to (10,12)
+[msg] ALERION: ...Frostina.
+[stage] alberica appears at (9,11)
+[msg] ALBERICA: (softly) Frostina. She'd have hated that. She'd have loved it.
+[msg] LUNA CARVER: It has a heart now. It needs time, and the world hasn't got enough.
+[msg] You obtained a Frost Egg!
+[msg] You put the Frost Egg awayin the <icon=bagPocket8>Key Items Pocket.
+[msg] Shade wraps the Frost Egg in their coat. (You can check on it in Key Items.)
+[stage] meat_meat appears at (8,13)
+[stage] meat_meat(8,13) walks to (9,12)
+[msg] MEAT MEAT: (quietly) Razzy heard it too. Razzy wants a song.
+[msg] ZENITH: Come back when the egg is still,
+[msg] ZENITH: and I will ask you, if you will.
+[stage] wennen_bearer(10,8) moves [37, 1, 2, 1, 1, 1, 1, 1, 3, 38, {:wait_for=>false}]
+[stage] wennen_bearer(11,8) moves [37, 1, 2, 2, 1, 1, 1, 1, 1, 3, 38, {:wait_for=>false}]
+[flag] requiem_done
+[flag] frost_egg
+[screen] tone (0,0,0) 30
+[goal] Speak with Luna Carver before you go.
+[talk] Luna Carver at (11,11) on Wennen's Warren [2022]
+[msg] LUNA CARVER: One heart of ice is grief. Two is a burden. Three is a summons.
+[msg] LUNA CARVER: Shimmer's is the first, sung into the egg. The cold man's beats in his chest.
+[msg] LUNA CARVER: Bring a third to the other two, and the Frostmaiden gets a body to walk in.
+[stage] reptin appears at (10,13)
+[stage] reptin(10,13) walks to (10,12)
+[msg] REPTIN: Then nobody brings a third. I'll be very rude about it.
+[msg] LUNA CARVER: (to you) You I can't see at all. Like you're not on her wheel yet.
+[stage] Luna Carver(11,11) turns to shade(11,10)
+[msg] LUNA CARVER: (to Shade) And you. Your house has a spark in it that isn't out.
+[msg] LUNA CARVER: I can see it on you. It's waiting somewhere bright.
+[msg] SHADE: My house is one smuggler and a carved cat. But thanks.
+[msg] LUNA CARVER: The cold man can't stay at our temple with his heart beating.
+[msg] LUNA CARVER: We'll take him south on a sledge, and follow you. At a distance.
+[msg] SHADE: You're bringing him.
+[msg] LUNA CARVER: We keep what the cold leaves. Her egg, for two years. Now him.
+[stage] Luna Carver(11,11) turns to you
+[flag] knows_three_hearts
+[flag] luna_spark
+[flag] wennen_follow
+[stage] theme magma_hideout
+[music] magma_hideout
+[stage] jet_sentry appears at (10,14) as Followers/LOPUNNY
+[stage] jet_sentry(10,14) walks to (10,11)
+[stage] jet_sentry(10,12) turns to you
+[msg] ZENITH: South of the Hole, where the ice holds them all,
+[msg] ZENITH: a crone laughs low, and the laughing's the call.
+[msg] JET SENTRY: Plain words: a hag lives in a chasm south of Dougan's Hole.
+[msg] JET SENTRY: The fishers hear her laughing on the ice. So do your trinkets.
+[msg] JET SENTRY: (to you) She keeps mirrors. Cold glass. Like the shard you carry.
+[stage] alberica appears at (9,11)
+[msg] ALBERICA: A laughing hag who wants our jewellery. I've dated worse.
+[stage] alerion appears at (8,13)
+[stage] alerion(8,13) walks to (9,12)
+[msg] ALERION: You have.
+[flag] hag_named
+[msg] JET SENTRY: Our sledge goes south tonight, with the cold man in his ice. Ride with us.
+[msg] The sledge leaves tonight.
+[pick] (Ride south with the Wennen.)  (of (Ride south with the Wennen.))
+[music] Opelucid City (White)
+[stage] sephek_sledge appears at (40,23) as FT_sephek_frozen
+[stage] wennen_driver appears at (39,23) as Followers/BUNEARY
+[msg] Two nights on the sledge, south past Termalaine. In his ice, Sephek never once blinks.
+[stage] NPC bryn_east_guard_open(43,21) walks up to you
+[msg] GUARD: (staring at the ice) Is that him? The man in the shirt?
+[stage] Jet Sentry(42,21) turns to NPC bryn_east_guard_open(41,22)
+[msg] JET SENTRY: Sleeping. We'll watch him. That's what we're for.
+[msg] GUARD: Board's down in the square. Speaker's word. Nobody drawn since your dwarf sang.
+[msg] GUARD: Gate's open. The Hole's that way. Nobody's come back from it in a month.
+[map] Bryn Shander [2012] at (40,22)
+[goal] South-east to Dougan's Hole: who's calling them, and the hag's mirrors.
+[stage] overlay off O-01
+[music] route38_39
+[map] The Eastway [2030] at (1,14)
+[scene] eastway_start
+[flag] eastway_started
+[msg] Past Bryn Shander's east gate, the Eastway runs out across open snowfields.
+[msg] South-east, past Good Mead, is Dougan's Hole, and the hag's mirrors.
+[stage] shade appears at (1,16)
+[stage] shade(1,16) walks to (1,15)
+[msg] SHADE: A laughing hag. In a chasm. Is anything in this Dale just a nice lake?
+[stage] alerion appears at (1,12)
+[stage] alerion(1,12) walks to (1,13)
+[msg] ALERION: No.
+[stage] alberica appears at (0,14)
+[msg] ALBERICA: He's right. That's the worst part.
+[msg] HADD: Eastway patrol. Nobody passes without proving they can handle themselves.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Pokémon Ranger Hadd
+[stage] overlay off O-01
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Sneaursa
+[stage] overlay off O-01
+[stage] overlay off O-01
+[music] safari - Icirrus City Music (HQ)
+[map] Good Mead [2031] at (16,1)
+[scene] good_mead_arrival
+[flag] good_mead_arrived
+[flag] good_mead_met
+[msg] A day's walk east, and the snow smells of honey.
+[msg] Good Mead: squat houses carved with dinosaurs and serpents.
+[msg] Over them, a two-storey mead hall, its eaves painted like wyverns.
+[msg] Its founders came from the hot south. The beasts on its lintels have never seen snow.
+[stage] olivessa appears at (19,5) as BW (56)
+[msg] A woman with sawdust on her apron comes up the road at a trot, a basket on her arm.
+[stage] olivessa(19,5) walks up to you
+[msg] OLIVESSA: Olivessa. I make casks. Headed to the Hole? Eat first.
+[msg] OLIVESSA: Nobody comes back from there fat.
+[msg] She presses a honey cake into every hand in reach.
+[stage] alberica appears at (16,3)
+[stage] alberica(16,3) walks to (16,2)
+[msg] ALBERICA: Cake first, questions later. My kind of town.
+[stage] meat_meat appears at (16,0)
+[msg] MEAT MEAT: Meat Meat smells honey. Meat Meat does not smell coffee. Suspicious town.
+[msg] OLIVESSA: Cooperage is the low hut on the west side. Come and see me before you go south.
+[stage] olivessa(17,1) leaves toward (7,16)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Ecruteak City
+[screen] tone (0,0,0) 12
+[map] Good Mead Mead Hall [2032] at (5,11)
+[talk] Brewmistress at (3,6) on Good Mead Mead Hall [2032]
+[flag] mead_hall_rested
+[msg] BREWMISTRESS: In you go. Sit by the hive fire. No mead to sell, but the warmth's free.
+[msg] BREWMISTRESS: Some nights you hear it from here. Laughing, out on Redwaters.
+[msg] BREWMISTRESS: The bees go quiet when it starts.
+[msg] Behind the fire, the hives hum. It sounds like summer.
+[stage] alberica appears at (5,4)
+[stage] alberica(5,4) walks to (5,5)
+[msg] ALBERICA: A mead hall with no mead. It's like a bed with no company. Technically works.
+[stage] meat_meat appears at (5,8)
+[stage] meat_meat(5,8) walks to (5,7)
+[msg] MEAT MEAT: Meat Meat asked for coffee. Lady gave Meat Meat hot honey water.
+[msg] MEAT MEAT: Meat Meat is not angry. Meat Meat is disappointed. Three bees out of ten.
+[stage] reptin appears at (7,6)
+[stage] reptin(7,6) walks to (6,6)
+[msg] REPTIN: Thank you, it's lovely. Hot honey water. A classic.
+[stage] alerion appears at (6,5)
+[msg] ALERION: It isn't.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] safari - Icirrus City Music (HQ)
+[screen] tone (0,0,0) 12
+[map] Good Mead [2031] at (15,11)
+[stage] overlay off O-01
+[music] lake_crater
+[map] Redwaters Shore [2034] at (14,1)
+[msg] NELL: Don't look at the ones on the ice. Look at me instead.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Aurilite Nell
+[stage] overlay off O-01
+[msg] BIRK: Wolves took my traps. I'll take it out on you.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Hiker Birk
+[stage] overlay off O-01
+[stage] overlay off O-01
+[music] Lavender Town
+[map] Dougan's Hole [2035] at (41,1)
+[scene] dougans_arrival
+[flag] dh_arrived
+[stage] camera pans to (30,30)
+[msg] Dougan's Hole huddles on the shore of Redwaters.
+[msg] Out on the frozen lake, dark figures stand over fishing holes.
+[msg] Snow has drifted against their legs.
+[msg] Between them, panes of ice stand upright, like mirrors.
+[stage] camera pans back to you
+[msg] In your pocket the lantern glass goes cold. Colder than the snow. Close, now.
+[stage] reptin appears at (39,1)
+[stage] reptin(39,1) walks to (40,1)
+[msg] REPTIN: Those aren't fishers. Fishers fidget.
+[stage] alerion appears at (43,1)
+[stage] alerion(43,1) walks to (42,1)
+[msg] ALERION: They're people. Stopped.
+[stage] alberica appears at (41,0)
+[msg] ALBERICA: Stopped how, pretty boy?
+[msg] ALERION: Like I was.
+[msg] ALBERICA: You were stopped? When?
+[msg] ALERION: Before your grandmother was born.
+[msg] "Don't go out there." "Wolves took the Dejarr kids." "Nobody leaves." "Speaker's orders."
+[msg] (Speaker Edgra Durmoot's lodge is the big house at the west end of town.)
+[goal] Speaker Durmoot's lodge, at the west end of town. Wolves took two children.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] gym_kanto
+[screen] tone (0,0,0) 12
+[map] Speaker Durmoot's Lodge [2036] at (10,15)
+[talk] Durmoot at (10,3) on Speaker Durmoot's Lodge [2036]
+[flag] met_durmoot
+[msg] DURMOOT: Strangers. In Dougan's Hole. In winter. Either you're lost or you're stupid.
+[msg] DURMOOT: Wolves took Hilda Dejarr's kids. Silja and Finn. They're dead.
+[msg] DURMOOT: Wolves don't keep prisoners. They keep dinner.
+[stage] reptin appears at (12,4)
+[stage] reptin(12,4) walks to (11,4)
+[msg] REPTIN: Speaker, you're clearly a practical woman. So humour me. And if they aren't dead?
+[msg] DURMOOT: ...Then bring them home, and I'll fight you for my seal myself.
+[stage] meat_meat appears at (8,4)
+[stage] meat_meat(8,4) walks to (9,4)
+[msg] MEAT MEAT: Lady Speaker. Meat Meat likes her. Meat Meat would still bite her.
+[msg] REPTIN: (aside) Please don't.
+[msg] DURMOOT: The west way's open to you. Freeze where you like. I've told the militia.
+[goal] Find Silja and Finn, west on the tundra. Durmoot will fight you for her seal.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Lavender Town
+[screen] tone (0,0,0) 12
+[map] Dougan's Hole [2035] at (14,11)
+[scene] hilda_at_gate
+[flag] met_hilda
+[stage] hilda appears at (21,12) as BW (56)
+[msg] A woman in a too-thin shawl is waiting outside the lodge. Bare feet in the snow.
+[stage] hilda(21,12) walks up to you
+[msg] HILDA: Hilda Dejarr. Silja and Finn are mine. The Speaker says they're gone.
+[msg] HILDA: They're not. I keep their bowls on the table.
+[msg] HILDA: If you're going out there... please. Please.
+[stage] alberica appears at (14,13)
+[stage] alberica(14,13) walks to (14,12)
+[msg] ALBERICA: (taking both her hands) Keep the bowls out. We'll fill them.
+[stage] hilda(15,11) leaves toward (21,11)
+[goal] Find Silja and Finn. West, out on the tundra.
+[talk] Koran at (5,22) on Dougan's Hole [2035]
+[stage] Koran(5,22) turns to you
+[stage] Koran(5,22) moves [13, 15, 10, 12, 15, 10]
+[stage] Koran(5,22) turns to you
+[stage] you turns to Koran(5,22)
+[msg] A white wolf the size of a pony limps out of the snow, whimpering like a kicked dog.
+[msg] KORAN: Please. Please, travellers. I'm Koran. My master did this. Garagai. A frost giant.
+[msg] KORAN: Mean old Garagai. He kicks me. He kicks me every day.
+[stage] reptin appears at (6,20)
+[stage] reptin(6,20) walks to (6,21)
+[msg] REPTIN: (under his breath) Every day. Poor lamb.
+[msg] KORAN: He took two of the little townsfolk. He keeps them in his lodge, west.
+[msg] KORAN: Help me free them. Let him feel what it's like to lose something.
+[msg] What do you do?
+[pick] "Show us."  (of "Show us." | "Which leg was it, again?" | "No.")
+[msg] KORAN: This way. This way. Quickly, before the snow fills my tracks.
+[msg] REPTIN: (quietly) There's two of them. I can smell the other one.
+[stage] meat_meat appears at (6,24)
+[stage] meat_meat(6,24) walks to (6,23)
+[msg] MEAT MEAT: Meat Meat will walk next to the doggy. Close. Very friendly.
+[flag] followed_koran
+[msg] Koran trots off west. Something else white trots after him, just out of sight.
+[stage] Koran(5,22) leaves toward (1,22)
+[flag] met_wolves
+[goal] Follow the wolves' tracks west across the tundra, to Garagai's lodge.
+[stage] overlay off O-01
+[music] strongWind
+[map] The Western Tundra [2039] at (58,17)
+[scene] tundra_start
+[msg] West of Dougan's Hole, everything is white. The blizzard comes in sideways.
+[msg] Koran and a second white wolf fall in on the windward side, taking the worst of it.
+[stage] reptin appears at (58,15)
+[stage] reptin(58,15) walks to (58,16)
+[msg] REPTIN: (quietly) Very thoughtful of them. Suspiciously thoughtful.
+[stage] shade appears at (58,19)
+[stage] shade(58,19) walks to (58,18)
+[msg] SHADE: Thirteen miles of this. Wonderful.
+[stage] alberica appears at (59,17)
+[msg] ALBERICA: Think of it as a long, cold walk with excellent company.
+[msg] SHADE: I am. That's the problem.
+[msg] Half a mile on, the wolves lope ahead into the white.
+[msg] "We'll go first," Koran calls back. "Make sure the way's clear."
+[talk] Starving wolf at (31,14) on The Western Tundra [2039]
+[msg] Shapes rise out of the snow ahead, low and slow: four wolves, all ribs and eyes.
+[msg] Not winter wolves. Ordinary ones, so thin you can count their ribs.
+[msg] They don't attack. They just watch the packs on your backs.
+[stage] reptin appears at (35,15)
+[stage] reptin(35,15) walks to (35,16)
+[msg] REPTIN: (already unbuckling his food bag) The Dale isn't sparing them. We can.
+[msg] What do you do?
+[pick] Help him.  (of Help him. | Hold him back.)
+[msg] You both put out the rations.
+[stage] meat_meat appears at (35,19)
+[stage] meat_meat(35,19) walks to (35,18)
+[msg] MEAT MEAT: Meat Meat gives the jerky. Not the coffee. Wolves don't deserve the beans.
+[flag] fed_pack
+[stage] reptin(35,16) pose P-REP-01 row 3
+[msg] The pack eats. One lean she-wolf comes close enough to touch.
+[stage] Starving wolf(30,16) walks to (35,16)
+[stage] Starving wolf(34,16) turns to reptin(35,16)
+[msg] Reptin reaches out, and she bites: fast, deep, then gone.
+[stage] cry MIGHTYENA
+[se] Cries/MIGHTYENA
+[screen] flash (255,255,255) 8
+[screen] shake 3 8 8
+[stage] Starving wolf(31,14) leaves toward (19,14)
+[stage] Starving wolf(32,16) leaves toward (20,16)
+[stage] Starving wolf(31,18) leaves toward (19,18)
+[stage] Starving wolf(34,16) leaves toward (22,16)
+[msg] REPTIN: Fair. I'd bite me too. I'm very bitable.
+[msg] The bite doesn't bleed. It burns like fire under snow.
+[stage] alberica appears at (37,17)
+[stage] alberica(37,17) walks to (36,17)
+[msg] ALBERICA: Let me see that, sweetheart.
+[msg] REPTIN: I'm fine. Don't look at it. I'm fine.
+[msg] MEAT MEAT: Wolf bite. Full moon comes, bite wakes up. Everybody knows that story.
+[msg] REPTIN: Then I'll stay indoors at the full moon. Problem solved.
+[stage] alerion appears at (37,15)
+[stage] alerion(37,15) walks to (36,16)
+[msg] ALERION: When is it?
+[msg] REPTIN: (not looking at his hand) Soon.
+[flag] reptin_bitten
+[msg] Two white wolves sit in the snow before the lodge, as if they've been there for hours.
+[msg] KORAN: (sniffing the air, nose high) He's not home. Garagai. Out hunting whales.
+[msg] KORAN: My brother Kanan and I will stand guard. In case he comes back.
+[msg] KORAN: Go in by the corridor. The middle one. It's quickest to the children.
+[flag] kanan_named
+[stage] reptin appears at (23,13)
+[stage] reptin(23,13) walks to (23,14)
+[msg] REPTIN: (pleasantly) How thoughtful. And you won't come in yourselves?
+[msg] KANAN: ...Wolves don't like ice houses.
+[stage] shade appears at (23,17)
+[stage] shade(23,17) walks to (23,16)
+[msg] SHADE: (under their breath) Somebody's home.
+[stage] alerion appears at (25,15)
+[stage] alerion(25,15) walks to (24,15)
+[msg] ALERION: They won't go in.
+[msg] SHADE: Or they're waiting to see what's left of us.
+[flag] lodge_wolves_seen
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Seafoam Islands Music
+[screen] tone (0,0,0) 12
+[map] Garagai's Ice Lodge [2040] at (37,14)
+[scene] lodge_enter
+[flag] lodge_entered
+[msg] Inside, the ice walls rise thirty feet. Everything here was built for giants.
+[msg] From deeper in comes a sound like a bellows: something enormous, breathing slowly.
+[msg] And under it, very faintly, a child coughing.
+[stage] reptin appears at (37,13)
+[msg] REPTIN: Quiet.
+[stage] meat_meat appears at (37,16)
+[stage] meat_meat(37,16) walks to (37,15)
+[msg] MEAT MEAT: (very quiet, very fast) Meat Meat hears it. Meat Meat is going.
+[talk] Whale oil at (17,24) on Garagai's Ice Lodge [2040]
+[msg] The passage is choked with ice.
+[msg] Icicles hang overhead in clusters, points sharp as daggers.
+[msg] How do you go?
+[pick] Creep through, one at a time.  (of Creep through, one at a time. | Hurry.)
+[flag] corridor_crossed
+[msg] You go through in single file, slow as cold syrup, ducking every point.
+[stage] alerion appears at (33,13)
+[msg] ALERION: (barely a breath) Mind your heads.
+[msg] Nothing falls. Nothing wakes.
+[stage] camera pans to (22,15)
+[msg] An oval chamber with high walls of glittering ice, like a sepulchre.
+[msg] The frozen, hacked-up corpse of a frost giant lies on the floor, entombed in clear ice.
+[msg] Standing over it: a woolly mammoth.
+[stage] Norsu(19,12) turns to you
+[stage] cry MAMOSWINE
+[se] Cries/MAMOSWINE
+[msg] It turns, and it stares down at you with hate in its eyes.
+[msg] Something long ago taught this beast to think, and to grieve out loud.
+[stage] Norsu(19,12) angry bubble
+[msg] NORSU: You are to blame for all of this!
+[msg] NORSU: Small ones killed him. Small ones took his axe, his breath. Small ones will pay.
+[msg] NORSU: The wolves bring me the town's food and gold. Soon they'll bring me the town.
+[msg] What do you say?
+[pick] "We'll find who took the axe."  (of "We were his friends." | "We'll find who took the axe." | Stand your ground)
+[msg] NORSU: Find them? Small ones never come back for the dead. Not once.
+[msg] NORSU: ...Swear it. On his ice.
+[stage] reptin appears at (25,17)
+[stage] reptin(25,17) walks to (25,18)
+[msg] REPTIN: I swear it. It comes back to him.
+[stage] meat_meat appears at (25,20)
+[msg] MEAT MEAT: Meat Meat swears too. Meat Meat bites whoever took it.
+[msg] The mammoth lowers his head.
+[flag] garagai_vow
+[msg] NORSU: Honour him, then. A prayer, or a gift. And then go, and let me mourn.
+[msg] Honour Garagai?
+[pick] Say a prayer over him.  (of Say a prayer over him. | Leave a gift. | Just go.)
+[msg] You say what you can about someone you never met.
+[stage] alberica appears at (27,19)
+[stage] alberica(27,19) walks to (26,19)
+[msg] ALBERICA: He kept a whale in his kitchen and a mammoth who loved him. That's a good life.
+[msg] Norsu listens to every word.
+[flag] norsu_calmed
+[flag] norsu_met
+[stage] camera pans back to you
+[msg] A foul smell fills the room: barrels of whale oil, rendered from Garagai's catches.
+[msg] You fill an empty flask. It reeks, and it's slick as anything.
+[stage] shade appears at (18,22)
+[stage] shade(18,22) walks to (18,23)
+[msg] SHADE: Lovely. Now we smell like a dead giant's pantry. Very stealthy.
+[msg] You got a flask of whale oil.
+[flag] whale_oil
+[talk] Holgi at (4,18) on Garagai's Ice Lodge [2040]
+[msg] Three kobolds, white-scaled lizard folk no bigger than children, cower behind the chairs.
+[msg] HOLGI: Don't hurt! We not mean to kill the little spirit! It jump at us! Now it stone!
+[msg] SNORP: We think house empty! House not empty! House have BIG HAIRY ANGRY!
+[msg] ZILBO: Wolves outside! Wolves everywhere! Help us get out? We very small. Very sorry.
+[stage] meat_meat appears at (5,17)
+[msg] MEAT MEAT: Little lizards! Meat Meat will not bite. Meat Meat promises.
+[stage] reptin appears at (5,20)
+[stage] reptin(5,20) walks to (5,19)
+[msg] REPTIN: She's never promised that before. You should feel honoured.
+[ask] Help the kobolds escape?
+[msg] You keep watch on the passage while they creep out, toward the oil store.
+[msg] At the door they bow, until their snouts touch the ice.
+[msg] HOLGI: Kind big ones! Take shiny! Shiny cold! Never melts! We find it, now we give it!
+[msg] You obtained a Never-Melt Ice!
+[msg] You put the Never-Melt Ice awayin the <icon=bagPocket1>Items Pocket.
+[msg] They scurry off in a line, tails held high, and are gone.
+[flag] kobolds_freed
+[talk] Cage gate at (32,22) on Garagai's Ice Lodge [2040]
+[flag] met_kids
+[msg] A huge slatted cage stands against the wall. Garagai built it for Norsu, as a calf.
+[msg] Its gate hangs on rusty hinges as big as your head.
+[msg] Inside, two shivering teenagers look out at you.
+[msg] SILJA: Are you real? Are you from town? Did Mama send you?
+[msg] Silja is spindly, with pointy teeth and snow in her long braids.
+[msg] Her brother works at the brackets that hold the slats, with frostbitten hands.
+[msg] His teeth won't stop chattering.
+[msg] FINN: The slats won't b-bend. Too cold. And the gate screams if you open it.
+[msg] FINN: The hinges scream. Then HE comes.
+[stage] alberica appears at (34,23)
+[stage] alberica(34,23) walks to (33,23)
+[msg] ALBERICA: Hey. Look at me. Big breath, all the way in. There you go. We'll get you out.
+[stage] shade appears at (30,23)
+[stage] shade(30,23) walks to (31,23)
+[msg] SHADE: (already looking at the lock) I've opened worse. Give me a minute.
+[msg] How do you get them out?
+[pick] Oil the hinges and open the gate.  (of Oil the hinges and open the gate. | Heat the slats and pull two apart. | Pick the lock. | Not yet.)
+[msg] You work the whale oil into the rusty hinges, slowly, until they're black and dripping.
+[msg] The gate swings open without a sound.
+[flag] kids_freed
+[stage] silja appears at (31,20) as BW (17)
+[stage] finn appears at (32,20) as BW (16)
+[stage] silja(31,20) walks to (32,23)
+[stage] silja(32,22) turns to you
+[stage] finn(32,20) walks to (32,22)
+[stage] finn(32,21) turns to you
+[msg] Silja is out first, pulling Finn after her. His teeth chatter so hard he can barely speak.
+[msg] SILJA: The wolves watch the big doors. They always watch the big doors.
+[msg] SILJA: There's a tunnel in the oil room. The lizards went out that way.
+[msg] FINN: I c-could've got out myself.
+[msg] SILJA: He couldn't.
+[msg] SHADE: Walk where I walk. All the way home.
+[msg] ALBERICA: And if Finn wants to carry something heroic, he can carry my bag. Very heroic.
+[goal] Take Silja and Finn home, east across the tundra.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] strongWind
+[screen] tone (0,0,0) 12
+[map] The Western Tundra [2039] at (18,20)
+[msg] Two white shapes are waiting at the openings, exactly where they said they'd be.
+[stage] silja appears at (19,20) as BW (17)
+[stage] finn appears at (18,20) as BW (16)
+[msg] They don't wait to be asked. Side by side, they come at you.
+[msg] KANAN: You're bringing back our dinner.
+[msg] KORAN: (no limp at all) Nothing personal. Norsu was supposed to do this part.
+[msg] KORAN: The Dale is very hungry. So are we.
+[stage] reptin appears at (20,22)
+[stage] reptin(20,22) walks to (20,21)
+[msg] REPTIN: (to the kids, not looking back) Behind me. Now.
+[music] ancientbattle
+[battle] start vs Koran, Kanan
+[stage] overlay off O-01
+[msg] Kanan yelps and bolts south, toward the chasm.
+[stage] Koran(21,14) leaves toward (21,24)
+[stage] Kanan(21,16) leaves toward (21,26)
+[msg] Koran stands a moment longer, looking at you. Then, alone now, he follows his brother.
+[stage] shade appears at (20,18)
+[stage] shade(20,18) walks to (20,19)
+[msg] SHADE: South. Toward the laughing.
+[msg] SILJA: They talked to someone at night. Down through the ice. She laughed at everything.
+[msg] SILJA: ...Can we go home now?
+[flag] wolves_beaten
+[stage] overlay off O-01
+[music] Lavender Town
+[map] Dougan's Hole [2035] at (1,20)
+[scene] kids_homecoming
+[flag] kids_home
+[msg] Dusk, by the time the stockade shows. Finn has stopped talking. Silja hasn't.
+[stage] silja appears at (2,20) as BW (17)
+[stage] finn appears at (1,21) as BW (16)
+[msg] Silja doesn't wait for anyone. She's off down the street, braids flying, Finn behind.
+[stage] silja(2,20) walks to (21,12)
+[stage] finn(1,21) walks to (22,12)
+[stage] you walks to (19,13)
+[stage] hilda appears at (21,11) as BW (56)
+[stage] hilda(21,11) hops
+[msg] Hilda runs out barefoot into the snow. She doesn't say anything. She doesn't have to.
+[stage] silja(21,12) leaves toward (21,11)
+[stage] finn(22,13) leaves toward (21,11)
+[msg] Through the open door: two bowls on the table. Somebody is already filling them.
+[stage] hilda(21,11) walks up to you
+[msg] Later, she comes out again with a pair of fur-lined boots.
+[msg] HILDA: These were my husband's. He won them off an adventurer. Drinking contest.
+[msg] HILDA: Passed a few years back. Warmest boots in the Dale.
+[msg] HILDA: Take them. He'd want them walking somewhere.
+[msg] You got the Boots of the Winterlands!
+[msg] You obtained 2 Revives!
+[msg] You put the Revives awayin the <icon=bagPocket2>Medicine Pocket.
+[stage] meat_meat appears at (19,15)
+[stage] meat_meat(19,15) walks to (19,14)
+[msg] MEAT MEAT: Meat Meat not crying. That is snow.
+[stage] alberica appears at (19,11)
+[stage] alberica(19,11) walks to (19,12)
+[msg] ALBERICA: (sniffing loudly) Somebody give me a drink. For the wind.
+[stage] durmoot appears at (14,11) as BWOldWoman
+[stage] camera pans to (14,10)
+[msg] DURMOOT: (from her door, after a while) ...Lodge. Now. I said I'd fight you myself.
+[stage] camera pans back to you
+[goal] Speaker Durmoot's lodge. She'll fight you for her seal.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] gym_kanto
+[screen] tone (0,0,0) 12
+[map] Speaker Durmoot's Lodge [2036] at (10,15)
+[talk] Durmoot at (10,3) on Speaker Durmoot's Lodge [2036]
+[msg] BRANN: The Speaker doesn't see anyone who can't get past her trappers.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Trapper Brann
+[stage] overlay off O-01
+[msg] YSA: Last one before Edgra. Make it count.
+[music] Pokemon HeartGold and SoulSilver - Trainer Battle (Kanto)
+[battle] start vs Trapper Ysa
+[stage] overlay off O-01
+[msg] DURMOOT: You brought them home.
+[msg] DURMOOT: Dougan's Hole keeps its word. Even when it's sorry it gave it.
+[music] gymleader
+[battle] start vs Speaker Durmoot
+[stage] overlay off O-01
+[msg] mYou scurry back to a Pokémon Center, protecting your exhausted Pokémon from any further harm...
+[stage] overlay off O-01
+[music] safari - Icirrus City Music (HQ)
+[stage] overlay off O-01
+[music] safari - Icirrus City Music (HQ)
+[map] Good Mead [2031] at (15,11)
+[note] lost or blocked; training to L34 and trying again
+[stage] overlay off O-01
+[music] lake_crater
+[map] Redwaters Shore [2034] at (14,1)
+[stage] overlay off O-01
+[music] Lavender Town
+[map] Dougan's Hole [2035] at (41,1)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] gym_kanto
+[screen] tone (0,0,0) 12
+[map] Speaker Durmoot's Lodge [2036] at (10,15)
+[talk] Durmoot at (10,3) on Speaker Durmoot's Lodge [2036]
+[msg] DURMOOT: You brought them home.
+[msg] DURMOOT: Dougan's Hole keeps its word. Even when it's sorry it gave it.
+[music] gymleader
+[battle] start vs Speaker Durmoot
+[stage] overlay off O-01
+[flag] badge_dougans
+[msg] DURMOOT: Thruun Seal. Don't lose it.
+[msg] Tester received the Thruun Seal!
+[msg] You obtained TM79 Frost Breath!
+[msg] You put the TM79 awayin the <icon=bagPocket4>TMs & HMs Pocket.
+[msg] DURMOOT: That TM's Frost Breath. Every hit's a deep one. Like a Dougan's Hole winter.
+[msg] DURMOOT: ...Stay in tonight.
+[stage] alberica appears at (12,4)
+[stage] alberica(12,4) walks to (11,4)
+[msg] ALBERICA: Was that concern? She likes us.
+[stage] alerion appears at (8,4)
+[stage] alerion(8,4) walks to (9,4)
+[msg] ALERION: She likes nobody. She said it anyway.
+[goal] Rest at the smokehouse for the night. Durmoot said stay in.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Lavender Town
+[screen] tone (0,0,0) 12
+[map] Dougan's Hole [2035] at (14,11)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] pokecenter
+[screen] tone (0,0,0) 12
+[map] The Knucklehead Smokehouse [2038] at (5,11)
+[talk] Smoker at (3,6) on The Knucklehead Smokehouse [2038]
+[msg] SMOKER: Sit, sit. You brought back Hilda's young'uns.
+[msg] SMOKER: You'll never pay for a trout in this town again.
+[msg] The racks drip. Everything in here smells of smoke and fish.
+[stage] shade appears at (5,4)
+[stage] shade(5,4) walks to (5,5)
+[msg] SHADE: Shimmer liked smoked trout. Hated the smell. Ate it anyway.
+[stage] alberica appears at (5,8)
+[stage] alberica(5,8) walks to (5,7)
+[msg] ALBERICA: (quietly) Then we'll eat it anyway too. For her.
+[stage] meat_meat appears at (7,6)
+[stage] meat_meat(7,6) walks to (6,6)
+[msg] MEAT MEAT: Meat Meat will eat two. One for Shimmer. One for Meat Meat.
+[stage] alerion appears at (6,5)
+[msg] ALERION: That's three you've eaten.
+[msg] Shade sets the Frost Egg by the racks, where it's warm. Reptin sets the green one by it.
+[msg] MEAT MEAT: (to the green egg) Warm spot, Razzy. Best one. Meat Meat saved it.
+[stage] reptin appears at (7,8)
+[stage] reptin(7,8) walks to (6,7)
+[msg] REPTIN: (turning the acorn) "Somewhere the sun can't reach," she said. Take your pick.
+[flag] hag_night_ready
+[screen] tone (-255,-255,-255) 20
+[msg] ...
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[music] Lavender Town
+[map] Dougan's Hole [2035] at (26,22)
+[scene] dh_night
+[screen] tone (-90,-80,-30) 30
+[msg] That night.
+[music] scary_ambient
+[stage] cry MISMAGIUS
+[se] Cries/MISMAGIUS
+[msg] Laughter on the ice. It comes from everywhere at once.
+[msg] Their relics frost over. Under Alberica's coat, the rune glows blue.
+[msg] In your pocket, the lantern glass rings like a struck bell.
+[msg] In Shade's coat, the Frost Egg goes cold.
+[stage] shade appears at (24,22)
+[stage] shade(24,22) walks to (25,22)
+[msg] SHADE: She doesn't like it either.
+[msg] Among the Twenty Stones, south-west of town, stand three tall mirrors of ice.
+[msg] In each one, an old woman in a patchwork cloak is smiling.
+[stage] alberica appears at (28,22)
+[stage] alberica(28,22) walks to (27,22)
+[msg] ALBERICA: Durmoot told us to stay in.
+[msg] SHADE: Durmoot tells everyone to stay in.
+[stage] meat_meat appears at (26,21)
+[msg] MEAT MEAT: Meat Meat never stays in. Meat Meat is already outside.
+[goal] The Twenty Stones: who's calling them, and the mirrors you came through.
+[talk] The Hag at (10,32) on Dougan's Hole [2035]
+[flag] hag_parley
+[se] Ice2
+[msg] THREDRA: Come in, dearies. Mind the cold. Mind your step.
+[msg] THREDRA: Granny Thredra. Everyone's granny, sooner or later.
+[msg] THREDRA: Did you like my little trinkets? A pendant for the daughter of song.
+[stage] cry MISMAGIUS
+[se] Cries/MISMAGIUS
+[msg] Alberica's hand goes to her throat, where the pendant used to hang.
+[msg] THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time.
+[stage] alerion appears at (11,30)
+[stage] alerion(11,30) walks to (11,31)
+[msg] ALERION: ...Boy.
+[msg] THREDRA: A dagger for the one who hides in shadow.
+[msg] THREDRA: And the one who'd been worn before needed no gift. She already carried a door.
+[stage] shade appears at (11,34)
+[stage] shade(11,34) walks to (11,33)
+[msg] SHADE: Her name was Shimmer.
+[msg] THREDRA: Names are for the living, dearie.
+[stage] alberica appears at (13,32)
+[stage] alberica(13,32) walks to (12,32)
+[msg] ALBERICA: You sent them. You sent me that pendant, you dried-up old...
+[msg] THREDRA: Old, dearie. Not dried. My watchers saw each of you onto your ships.
+[msg] ALBERICA: The tall thing on our deck, at the edge of the lamplight. That was yours.
+[msg] THREDRA: She wants a new coat to wear, you see. I'm only her seamstress.
+[msg] ALBERICA: (very plain) Auril. And the coat's me.
+[msg] THREDRA: (squinting at you) And this one fell through my glass. Lost, dearie?
+[msg] THREDRA: Granny could send you home. Granny's very good at sending.
+[stage] reptin appears at (13,30)
+[stage] reptin(13,30) walks to (12,31)
+[msg] REPTIN: (aside) Seamstress. Lovely. Let's not let her take our measurements.
+[flag] hag_bargain_offered
+[msg] THREDRA: This winter. Auril's Rime. Two years of night, and children drawn by lot.
+[msg] THREDRA: Granny knows a place where life and death can be traded, and come out even.
+[msg] THREDRA: And your poor bitten friend. Wait for the full moon. Then ask what bit him.
+[msg] Reptin's hand closes over the bite on his hand.
+[msg] THREDRA: Do a little task for Granny, and I'll end the winter.
+[msg] THREDRA: And I'll take the wolf out of him. Root and all.
+[msg] The hag waits for your answer.
+[pick] "What's the task?"  (of "What's the task?" | "No deals.")
+[flag] asked_hag_task
+[msg] THREDRA: Oh, a little thing. Come to my home in the chasm, south of here. Bring your wolf.
+[msg] THREDRA: There's a door down there only a wolf can open, and a thing I need fetched.
+[msg] REPTIN: (quietly) ...She can do that? Take it out of me?
+[flag] reptin_tempted
+[msg] ALBERICA: Sugar, she's a hag. They lie. It's the only thing they do for free.
+[msg] ALERION: There's a hook. Don't bite.
+[msg] SHADE: (to you) Whatever she's selling, she's selling it twice.
+[msg] THREDRA: My still ones sleep in my glass, dearies. Every fisher on that ice.
+[msg] THREDRA: Break a mirror and one goes free. If you can bear to look in it.
+[msg] THREDRA: (to you) Mind, lost one. One of Granny's mirrors is your way home. Choose well.
+[flag] thredra_sent_relics
+[goal] Break Thredra's three mirrors at the Stones. Is one of them yours?
+[talk] Ice mirror 1 at (7,35) on Dougan's Hole [2035]
+[msg] You look into the mirror. Reptin's reflection has yellow eyes. Reptin doesn't.
+[msg] The glass bulges, and something climbs out of it!
+[music] ancientbattle
+[battle] start vs Mirror-wight
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[se] Ice2
+[stage] Ice mirror 1(7,35) hidden
+[stage] effect E-06 at Ice mirror 1(7,35)
+[stage] cry MISMAGIUS
+[se] Cries/MISMAGIUS
+[flag] hag_mirror_1
+[msg] The mirror cracks top to bottom and falls into the snow in a hundred laughing pieces.
+[msg] Behind you, the crone's laugh catches, just for a moment.
+[talk] Ice mirror 2 at (13,35) on Dougan's Hole [2035]
+[msg] You look into the mirror. At your shoulder, Shimmer turns a carved cat. Shade looks away.
+[msg] The glass bulges, and something climbs out of it!
+[music] ancientbattle
+[battle] start vs Mirror-wight
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[se] Ice2
+[stage] Ice mirror 2(13,35) hidden
+[stage] effect E-06 at Ice mirror 2(13,35)
+[stage] cry MISMAGIUS
+[se] Cries/MISMAGIUS
+[flag] hag_mirror_2
+[msg] The mirror cracks top to bottom and falls into the snow in a hundred laughing pieces.
+[msg] Out on the lake, one of the dark shapes lifts its head.
+[talk] Ice mirror 3 at (10,29) on Dougan's Hole [2035]
+[msg] You look into the mirror. It shows Hellen's tavern, warm. Someone is saving your seat.
+[msg] The glass in your pocket stays quiet. This mirror is wearing your home. It isn't yours.
+[msg] The glass bulges, and something climbs out of it!
+[music] ancientbattle
+[battle] start vs Mirror-wight
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[se] Ice2
+[stage] Ice mirror 3(10,29) hidden
+[stage] effect E-06 at Ice mirror 3(10,29)
+[stage] cry MISMAGIUS
+[se] Cries/MISMAGIUS
+[flag] hag_mirror_3
+[msg] The mirror cracks top to bottom and falls into the snow in a hundred laughing pieces.
+[msg] Behind you, the laughing has stopped.
+[goal] The mirrors are broken. Face Thredra at the centre stone.
+[talk] The Hag at (10,32) on Dougan's Hole [2035]
+[msg] The last mirror lies in pieces. Thredra isn't smiling now.
+[msg] THREDRA: Then let's dance upon the glass, dearies, and see who shatters first.
+[music] gymleader
+[battle] start vs Granny Thredra
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[msg] mYou scurry back to a Pokémon Center, protecting your exhausted Pokémon from any further harm...
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[music] Lavender Town
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[music] Lavender Town
+[note] lost or blocked; training to L38 and trying again
+[talk] The Hag at (10,32) on Dougan's Hole [2035]
+[msg] The last mirror lies in pieces. Thredra isn't smiling now.
+[msg] THREDRA: Then let's dance upon the glass, dearies, and see who shatters first.
+[music] gymleader
+[battle] start vs Granny Thredra
+[screen] tone (-90,-80,-30) 0
+[stage] overlay off O-01
+[flag] hag_defeated
+[flag] hag_fled
+[se] Ice2
+[msg] THREDRA: Clever. Clever, clever. You broke them.
+[msg] THREDRA: Do you know how long it takes to grow a mirror?
+[msg] Her outline flickers, thin as frost on a windowpane.
+[msg] THREDRA: Come and find me in the chasm, dearies. Bring your wolf.
+[msg] THREDRA: Granny keeps her bargains.
+[msg] THREDRA: (to you) And you, lost one. My last glass is in the chasm. Yours too.
+[stage] The Hag(10,32) hidden
+[stage] effect E-06 at The Hag(10,32)
+[msg] She splits into shards, and the wind takes them south.
+[stage] camera pans to (28,34)
+[msg] Out on the lake, the frozen figures breathe. One by one they gasp and fall to their knees.
+[stage] camera pans back to you
+[stage] reptin appears at (11,30)
+[stage] reptin(11,30) walks to (11,31)
+[msg] REPTIN: (hand closing over the bite) ...Bring your wolf. She means me.
+[stage] alerion appears at (11,34)
+[stage] alerion(11,34) walks to (11,33)
+[msg] ALERION: She means all of us. She just started with you.
+[flag] husband_thawed
+[stage] fisherman appears at (15,32) as BW (54)
+[msg] A fisherman with a Spheal-shaped float on his line stumbles up the shore to you.
+[stage] fisherman(15,32) walks up to you
+[msg] FISHERMAN: Targos. Tell my wife I'm coming home. Tell her to keep the lamp lit.
+[msg] (You already have his Spheal. You let it out of its ball.)
+[msg] He laughs until he cries.
+[screen] tone (0,0,0) 0
+[music] Lavender Town
+[msg] Morning.
+[stage] durmoot appears at (14,30) as BWOldWoman
+[msg] Speaker Durmoot comes down from her lodge with a lantern she doesn't need any more.
+[stage] durmoot(14,30) walks up to you
+[msg] DURMOOT: Thank you.
+[msg] DURMOOT: ...Don't tell anyone I said that.
+[stage] alberica appears at (11,34)
+[stage] alberica(11,34) walks to (11,33)
+[msg] ALBERICA: Oh, sugar, I'm writing a song about it.
+[msg] DURMOOT: Chasm's south. Take this. Snarl. It's how this town answers the wind.
+[msg] Durmoot holds out the TM.
+[pick] Take it.  (of Take it.)
+[msg] DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns.
+[msg] DURMOOT: ...Don't tell anyone I said that either.
+[stage] reptin appears at (11,30)
+[stage] reptin(11,30) walks to (11,31)
+[msg] REPTIN: The Chasm's a long way down. If we owe anyone up the road, now's the time to pay.
+[msg] (Still to help: Targos, Bryn Shander, Termalaine, Lonelywood, Good Mead.)
+[msg] You obtained TM95 Snarl!
+[msg] You put the TM95 awayin the <icon=bagPocket4>TMs & HMs Pocket.
+[flag] dh_morning
+[goal] The Cackling Chasm, south of Dougan's Hole. She's there, with the last of her mirrors.
+[talk] Shape on the ice at (22,39) on Dougan's Hole [2035]
+[msg] She sat on the ice and drank tea with us. Every night. Phantom tea.
+[msg] She asked about our children. I told her everything.
+[msg] Gods forgive me, I told her everything.
+[stage] overlay off O-01
+[music] wind
+[map] The Laughing Waste [2041] at (15,1)
+[scene] waste_start
+[flag] waste_started
+[screen] tone (-255,-255,-255) 0
+[msg] ...
+[screen] tone (0,0,0) 30
+[msg] Two days south of Dougan's Hole, the land breaks into ice hills and black stone.
+[msg] Tonight the moon is full. The wind sounds like someone laughing.
+[stage] reptin appears at (16,1)
+[msg] Reptin stops walking. His shoulders roll wrong.
+[stage] reptin(16,1) pose P-REP-04 row 0
+[msg] For one breath there's a wolf where he stood, grey and enormous.
+[msg] Then Reptin again, on his knees.
+[stage] reptin(16,1) pose P-REP-04 row 0
+[msg] REPTIN: The bite. It's the bite.
+[msg] REPTIN: Last night I dreamed of a wolf in chains, on a ring of leaf and bone.
+[msg] REPTIN: And a crone: "Abandon your bond, forsake your curse, and be free."
+[stage] alerion appears at (13,1)
+[stage] alerion(13,1) walks to (14,1)
+[msg] ALERION: Then don't listen to her.
+[stage] meat_meat appears at (17,1)
+[stage] meat_meat(17,1) walks to (16,1)
+[msg] MEAT MEAT: Bite woke up. Meat Meat said. Meat Meat will still sit next to him.
+[msg] REPTIN: (standing) Sit wherever you like. I'm fine. Don't look at me.
+[msg] ALERION: You're not fine.
+[msg] REPTIN: She had more to say. "Poor boy... all that rage and pain inside you."
+[msg] REPTIN: "Give it to me. Let me take it away." (a breath) I woke up facing south.
+[stage] shade appears at (15,0)
+[msg] SHADE: Facing south's fine. Walking south alone isn't.
+[stage] alberica appears at (14,0)
+[msg] ALBERICA: Nobody's taking anything out of you, sugar. Not without asking me first.
+[flag] reptin_wolf
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Houndour
+[stage] overlay off O-01
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] scary_ambient
+[screen] tone (0,0,0) 12
+[map] The Cackling Chasm [2042] at (16,36)
+[scene] cackling_enter
+[flag] chasm_entered
+[flag] cackling_entered
+[msg] Jagged icicles hang from the cave mouth like fangs.
+[msg] A blast of frigid air rolls out, carrying the stench of decay.
+[msg] The chasm laughs. Not echoing: laughing, out of the rock itself.
+[stage] thredra appears at (16,32) as FT_thredra
+[stage] cry MISMAGIUS
+[se] Cries/MISMAGIUS
+[msg] THREDRA: Come in, dearies... come in! Mind the cold, mind your step... Heehee!
+[msg] Deeper in the tunnel stands a hunched crone, stringy-haired, eyes like pale blue embers.
+[msg] She holds a lantern. She beckons with a gnarled hand.
+[msg] THREDRA: So good of you to visit an old woman in her home.
+[msg] THREDRA: I smell the wolf among you. Cold, child? Come warm yourself by Granny's fire.
+[msg] THREDRA: I asked for the wolf. Right this way. The cure for all your troubles lies ahead.
+[msg] The crone waits, smiling.
+[pick] Go in.  (of Go in. | Watch her closely.)
+[msg] THREDRA: This way... if you dare.
+[screen] flash (200,230,255) 10
+[stage] thredra(16,32) hidden
+[msg] She flickers and is gone with a parting giggle. The lantern stays, hanging from nothing.
+[stage] reptin appears at (18,36)
+[stage] reptin(18,36) walks to (17,36)
+[msg] REPTIN: She's lovely. Really. Somebody remind me to never visit again.
+[stage] shade appears at (15,36)
+[msg] SHADE: Free lantern, though.
+[goal] Down through the Cackling Chasm, to the hag's lair.
+[flag] chasm_whisper_1
+[msg] Somewhere in the dark ahead, very faintly, someone whispers your name.
+[msg] When you stop to listen, there's only the wind, and the wind laughing.
+[flag] icefall_fell
+[se] Ice2
+[msg] A crack, high overhead. Then the ceiling comes down: icicles and chunks of heavy ice!
+[screen] shake 5 8 16
+[stage] you hops
+[msg] Your Pokémon throw themselves in front of you. The crash echoes away, deeper and deeper.
+[msg] (Your Pokémon are hurt.)
+[msg] Somewhere ahead, delighted, the crone: "Oops! Mind your heads, dearies!"
+[msg] Out of the crevices swoop ice mephits: small imps of living ice, shrieking with laughter!
+[stage] meat_meat appears at (18,33)
+[stage] meat_meat(18,33) walks to (17,33)
+[msg] MEAT MEAT: Ice goblins. Not real goblins. Meat Meat checked.
+[music] ancientbattle
+[battle] start vs Ice mephit, Ice mephit
+[stage] overlay off O-01
+[msg] The last mephit cracks and bursts into a spray of shards. The tunnel goes quiet.
+[msg] MEAT MEAT: Laughing ice. Meat Meat laughed last. Meat Meat wins.
+[flag] mephits_done
+[talk] Something gleaming at (17,31) on The Cackling Chasm [2042]
+[msg] A silver locket, half sun, half moon. Inside, a portrait of a stern, older dwarf woman.
+[msg] Under it, a name.
+[stage] alberica appears at (16,33)
+[stage] alberica(16,33) walks to (16,32)
+[msg] ALBERICA: (very still) That's my name. That's my face. Older.
+[msg] ALBERICA: I've never been here.
+[stage] alerion appears at (15,32)
+[msg] ALERION: You're sure?
+[msg] ALBERICA: Pretty boy, I'd remember a place this miserable.
+[msg] When you close it, the silver is warm. Warmer than it should be.
+[msg] As if someone still watches over it.
+[msg] You obtained an Order's Locket!
+[msg] You put the Order's Locket awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] order_locket
+[flag] feast_hall_seen
+[msg] The tunnel widens into a chamber of ice and dark. Your light finds carnage, frozen there.
+[msg] Gnawed bones and carcasses everywhere: mountain goats, foxes, hares, gnolls.
+[msg] A trapper's boot with the foot still in it.
+[msg] A dwarf's caravan harness. What looks like a human arm.
+[msg] The walls are smeared brown and red: handprints, claw marks, long frozen.
+[msg] The smell of old blood and rot is thick enough to taste.
+[msg] Reptin stops dead. His breath comes short. When he looks round, his eyes flash amber.
+[stage] reptin appears at (18,29)
+[msg] REPTIN: (baring his teeth, then catching it) ...It smells like dinner.
+[msg] REPTIN: I hate that it smells like dinner.
+[stage] alberica appears at (15,29)
+[stage] alberica(15,29) walks to (16,29)
+[msg] ALBERICA: (a hand on his back) Breathe, sugar. In through the nose. Actually, no. Mouth.
+[stage] alerion appears at (17,31)
+[stage] alerion(17,31) walks to (17,30)
+[msg] ALERION: (stepping between him and the worst of it) Look at me, not at that.
+[flag] reptin_amber
+[ask] Among the smears on the walls, there are shapes. Runes. Look closer?
+[msg] The walls are smeared with dried blood: sweeping handprints, long claw marks.
+[msg] Among them, painted over and over, crude runes in a demon's script.
+[msg] Two words, again and again:
+[msg] HUNGER. FEAST.
+[msg] Over the top of everything, a sign like a hyena's head, cut deep into the stone:
+[msg] the mark of Yeenoghu, the demon lord of gnolls, gouged across an older carving.
+[msg] Under the gouges, what it defaced: a ring of leaf and bone.
+[msg] Life and death, turning.
+[flag] read_blood_runes
+[msg] ALERION: Gnoll script. Somebody carved this first. They didn't like it.
+[msg] REPTIN: That ring under the gouges. Leaf and bone. I've seen it before. In the dream.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Snorunt
+[stage] overlay off O-01
+[msg] A low growl from the far end of the hall. Two pale eyes blink open behind a stalagmite.
+[stage] Mother yeti(16,18) moves [1, 1]
+[stage] cry YETITAN
+[se] Cries/URSARING
+[stage] Mother yeti(16,20) angry bubble
+[msg] With a roar, a massive yeti lunges into view: alive, and out of her mind.
+[msg] Her fur is matted with blood, burned and cut.
+[msg] One eye is clouded. Her howl is half fury, half agony.
+[msg] She plants herself over the dead male, roaring, and swings her head toward you.
+[msg] She smells the wolf on Reptin. Every bit of her fury swings his way.
+[stage] camera pans back to you
+[stage] reptin appears at (15,24)
+[stage] reptin(15,24) pose P-REP-05 row 0
+[msg] The wolf in Reptin answers her. His eyes flash amber; his teeth bare.
+[stage] reptin(15,24) pose P-REP-05 row 0
+[msg] He catches it, and holds it down.
+[msg] But there are tears frozen on her face. Under the roar, she's whimpering.
+[msg] What do you do?
+[pick] Fight.  (of Ask Alberica to sing. | Fight. | Back away slowly.)
+[stage] camera pans back to you
+[music] ancientbattle
+[battle] start vs Yeti
+[stage] overlay off O-01
+[msg] She doesn't fall back. She doesn't run.
+[msg] When she can't stand any more, she drags herself to her mate.
+[stage] Mother yeti(16,20) walks to (16,21)
+[stage] Mother yeti(16,21) pose K-YET-03 row 0
+[msg] She lies down over him, curled round him, and a last whimper rattles out of her.
+[msg] Then she's still. The snarl goes out of her face.
+[msg] A whole family, destroyed. Except for one, somewhere ahead.
+[stage] camera pans back to you
+[stage] alberica appears at (16,24)
+[stage] alberica(16,24) walks to (15,24)
+[msg] ALBERICA: (after a long moment) ...Give me a minute.
+[stage] alerion appears at (12,24)
+[stage] alerion(12,24) walks to (13,24)
+[msg] ALERION: Those burns were on her before we came. Somebody hurt her first.
+[stage] meat_meat appears at (14,26)
+[stage] meat_meat(14,26) walks to (14,25)
+[msg] MEAT MEAT: Meat Meat is sorry, fluffy mama. Meat Meat will find your baby. Meat Meat promises.
+[flag] yeti_fought
+[flag] yeti_mother_dead
+[flag] yeti_faced
+[msg] From everywhere at once, the crone's voice, pleased as a cat:
+[msg] "Ohhh, such violence... tsk, tsk. Hurry along now, dearies. Time is ticking..."
+[goal] Find the yeti's cub. The drag marks go north, deeper in.
+[talk] Bone pile at (11,21) on The Cackling Chasm [2042]
+[msg] A pile of gnawed bones: goat, fox, gnoll. The oldest have crumbled to grey dust.
+[msg] On an impulse, you fold a pinch of the dust into a scrap of cloth and keep it.
+[msg] You obtained a Bone Dust!
+[msg] You put the Bone Dust awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] bone_dust
+[talk] Backpack at (21,22) on The Cackling Chasm [2042]
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Haunbat
+[stage] overlay off O-01
+[msg] Beside a clawed skeleton, too long in the arm to be human: a tattered backpack.
+[msg] Inside: a healing draught, and a journal ruined with blood. A few lines are left:
+[msg] "...met an old woman on the trail. Granny Thredra, she called herself."
+[msg] "She knew things about me. She offered a deal."
+[msg] "I don't trust her. But I'm desperate to save Alberica. Tomorrow, the chasm."
+[msg] "The voices - children laughing? - echo at night. I must keep my wits."
+[msg] It's signed: Glimmer.
+[msg] You obtained a Super Potion!
+[msg] You put the Super Potion awayin the <icon=bagPocket2>Medicine Pocket.
+[msg] You obtained a Glimmer's Journal!
+[msg] You put the Glimmer's Journal awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] thredra_named
+[flag] read_glimmer_journal
+[stage] alberica appears at (23,23)
+[stage] alberica(23,23) walks to (22,23)
+[msg] ALBERICA: ...To save Alberica. That's my name. Again. In a dead stranger's handwriting.
+[stage] shade appears at (19,23)
+[stage] shade(19,23) walks to (20,23)
+[msg] SHADE: Glimmer. Who'd call themselves Glimmer? Terrible name.
+[msg] ALBERICA: I've never met a Glimmer in my life. I'd remember. I'd have written a song.
+[msg] REPTIN: Somebody who came down here hoping. Like us.
+[stage] alerion appears at (21,24)
+[msg] ALERION: Then we keep our wits. Like they didn't.
+[talk] Dead yeti at (16,22) on The Cackling Chasm [2042]
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Sneasel
+[stage] overlay off O-01
+[msg] The two yetis lie together at the centre of the hall now, her body curled over his.
+[msg] A whole family, destroyed. Except for one.
+[flag] found_swaddling
+[msg] You work the frozen fingers open: soft white fur, tied with sinew. A baby's swaddling.
+[msg] Drag marks lead away into the far tunnel, a few days old, half frosted over.
+[msg] Booted footprints beside them.
+[msg] REPTIN: They had a child. She took the child.
+[stage] shade appears at (18,23)
+[stage] shade(18,23) walks to (17,23)
+[msg] SHADE: (very quiet) Then we take it back.
+[msg] You obtained a Yeti Swaddling!
+[msg] You put the Yeti Swaddling awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] chasm_whisper_2
+[msg] Your torchlight shivers in the draught.
+[msg] The shadows on the walls reach like hands, and let go.
+[msg] Ice underfoot. Meat Meat goes down hard, and laughs too loudly getting up.
+[msg] Something watches from the corner of your eye. When you turn, it's your own reflection.
+[scene] illusion_fork
+[flag] seen_illusion_fork
+[msg] The passage curves down into a corridor of ice, melted and frozen glassy as a mirror.
+[msg] Your reflections slide and warp along the walls beside you.
+[msg] One of them lingers a moment after you've moved on.
+[msg] It's grinning. Then it's only you again.
+[msg] Forty feet on, the tunnel forks. The silence breaks.
+[msg] From the left: a soft, quavering voice, and a lantern's glow going round a bend.
+[msg] From the right, black and rimed with frost: an old woman weeping in the dark.
+[msg] It rises, then hushes.
+[offstage] CHILD'S VOICE absent
+[msg] CHILD'S VOICE: H-hello? Is someone there? Please... help me...
+[offstage] CHILD'S VOICE absent
+[msg] CHILD'S VOICE: Shade? Shade, it's me. Shimmer. I'm lost. I'm so cold.
+[stage] shade appears at (17,9)
+[stage] shade(17,9) walks to (16,9)
+[msg] SHADE: (already moving) That's...
+[stage] alerion appears at (15,11)
+[stage] alerion(15,11) walks to (15,10)
+[msg] ALERION: (grabbing their arm) Your sister's gone, Shade. And she was never that small.
+[msg] Your reflections wait for you to choose.
+[pick] Feel the air  (of Feel the air | Study the reflections | Listen to the weeping | Call out: "Who are you?" | Choose a way)
+[msg] You hold up a wet finger. Colder air breathes from the right: somewhere big, and open.
+[msg] The air from the left is stale and still. Dead-end air.
+[msg] Your reflections wait for you to choose.
+[pick] Study the reflections  (of Study the reflections | Listen to the weeping | Call out: "Who are you?" | Choose a way)
+[msg] You watch the lantern glow in the ice. The reflections don't line up with it.
+[msg] The light is wrong in every one of them, like someone painted it on afterwards.
+[msg] ALERION: The light's a lie.
+[msg] Your reflections wait for you to choose.
+[pick] Listen to the weeping  (of Listen to the weeping | Call out: "Who are you?" | Choose a way)
+[msg] You listen to the weeping on the right for a long minute.
+[msg] The same sobs, in the same order, the same catch in the same breath.
+[msg] Over, and over. A loop.
+[msg] Whoever she is, she isn't there either.
+[offstage] REPTIN off_camera
+[msg] REPTIN: So the weeping's a trick too. Then we pick the trick that goes somewhere.
+[msg] Your reflections wait for you to choose.
+[pick] Call out: "Who are you?"  (of Call out: "Who are you?" | Choose a way)
+[offstage] CHILD'S VOICE absent
+[msg] CHILD'S VOICE: (sweet, wobbling) It's me... it's Shimmer... this way... hurry...
+[offstage] CHILD'S VOICE absent
+[msg] CHILD'S VOICE: Please... it hurts... Mama...?
+[msg] Ask it anything else and it only cries louder, as if it knows no other words.
+[msg] SHADE: (very quiet) Shimmer never said please in her life.
+[msg] Your reflections wait for you to choose.
+[pick] Choose a way  (of Choose a way)
+[stage] camera pans to (4,7)
+[msg] Left: the light, and the child's voice. Right: the dark, and the weeping.
+[msg] There's nothing more to learn standing here. You'll have to walk it.
+[stage] camera pans back to you
+[goal] The tunnel forks. Find the true way down.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Cubone
+[stage] overlay off O-01
+[flag] took_left
+[msg] You follow the light down the left passage. It dances just out of reach.
+[msg] The tunnel narrows. You duck under a curtain of icicles, into a small, closed hollow.
+[msg] The lantern light winks out. The sobbing stops. A foul stench fills the air: rotting meat.
+[msg] In the corner, a heap of bones and pelts.
+[msg] An old gnoll's nest. There's no child. This is a dead end.
+[msg] You turn to leave. Then the floor isn't there any more.
+[se] Earth3
+[stage] overlay off O-01
+[music] scary_ambient
+[msg] You land hard on jagged rock and old bones, fifteen feet down. The light above goes out.
+[msg] Something in the dark is moving. Two shapes, starved thin, eyes shining with hunger.
+[msg] (Your Pokémon are hurt.)
+[music] ancientbattle
+[battle] start vs Ghoul, Ghoul
+[stage] overlay off O-01
+[msg] The ghouls collapse into rags and dust.
+[msg] Far above, the crone's laughter rolls through the caves:
+[msg] "Poor little lambs... did you stumble? Heehee!"
+[flag] pit_done
+[map] The Pit [2043] at (6,6)
+[talk] Rope at (7,2) on The Pit [2043]
+[msg] You climb the old rope, hand over hand, back up to the fork.
+[flag] fork_talked
+[stage] shade appears at (9,3)
+[stage] shade(9,3) walks to (8,3)
+[msg] SHADE: She knew to use her name. What else does she know about us?
+[stage] meat_meat appears at (5,3)
+[stage] meat_meat(5,3) walks to (6,3)
+[msg] MEAT MEAT: Hags know everything you're scared of. That is their whole job.
+[stage] alberica appears at (7,5)
+[stage] alberica(7,5) walks to (7,4)
+[msg] ALBERICA: (an arm round Shade, just for a moment) And it's a rotten job.
+[stage] overlay off O-01
+[music] scary_ambient
+[map] The Cackling Chasm [2042] at (12,7)
+[scene] weeping_dark
+[flag] seen_weeping_dark
+[msg] The weeping ahead fades as you walk toward it, then stops dead, like a door shut on it.
+[msg] There's nobody there. There never was.
+[msg] Only the dark, and a colder wind coming up the tunnel.
+[msg] This is the true way. Fresh claw marks run along the walls, deeper in.
+[stage] overlay off O-01
+[music] strongWind
+[map] The Frozen Rift [2044] at (4,28)
+[scene] rift_arrive
+[flag] rift_arrived
+[msg] The passage ends at a ledge over nothing. A chasm cuts down so deep your light gives up.
+[msg] Across it runs a long, narrow bridge, slick with ice. Its old rope railing hangs frayed.
+[msg] The wind howls up out of the dark. The cackling is louder here, rising and fading.
+[msg] Jagged spurs of ice jut from the walls like the ribs of something enormous.
+[msg] Far below in the dark, faint lights flicker. Or your eyes are playing tricks.
+[msg] The wind dies for a moment. In the quiet: chanting, very faint, from the far side.
+[stage] alberica appears at (6,28)
+[stage] alberica(6,28) walks to (5,28)
+[msg] ALBERICA: Lovely. Who's first? Not me. I'm the morale.
+[stage] alerion appears at (2,28)
+[stage] alerion(2,28) walks to (3,28)
+[msg] ALERION: Me.
+[msg] How do you cross?
+[pick] Rope up, one at a time  (of Rope up, one at a time | Single file, slow, low | Just walk across)
+[msg] ALERION: Rope. Round the waist. I go first, anchor the far end. Last one brings the rope.
+[msg] ALBERICA: The old railing?
+[msg] ALERION: Don't touch the old railing.
+[msg] You knot yourselves together and go over one at a time, slowly.
+[goal] Cross the bridge over the rift.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Haunter
+[stage] overlay off O-01
+[flag] walker_woke
+[stage] camera pans to (36,15)
+[msg] On the far ledge, two pinpoints of blue-white light ignite in the dark:
+[msg] the eyes of a gaunt, frozen corpse, standing where nobody should be standing.
+[msg] It raises an arm and moans, long and hollow. Its eyes swing toward you like lanterns.
+[stage] camera pans back to you
+[flag] bridge_cracked
+[stage] green_ghost appears at (18,23) as FT_green_ghost
+[msg] Ahead on the bridge, a woman in dark green, faint as breath on glass. She points up.
+[msg] You look up. You throw yourself flat.
+[stage] green_ghost(18,23) hidden
+[se] Ice2
+[screen] shake 4 8 12
+[msg] CRACK! A chunk of ice breaks off the roof and shatters where you were standing.
+[msg] The whole span shudders. Pebbles skitter off the edge, and you never hear them land.
+[msg] The laughter on the wind rises, as if mocking you.
+[msg] Where the ice hit, new cracks run across the stone. The next stretch is going to be worse.
+[flag] bridge_slipped
+[msg] Two small lights rise out of the dark beside the bridge, like lanterns held by nobody.
+[msg] Something with leathery wings bursts out from under the span, shrieking, and is gone.
+[msg] Shade's foot goes. They're over the side!
+[msg] The rope snaps taut.
+[msg] Shade swings out over nothing, and back. You haul them up hand over hand.
+[msg] Nobody says anything for a long moment. Then everybody breathes.
+[stage] alerion appears at (16,22)
+[msg] ALERION: That's what the rope's for.
+[flag] bridge_gusted
+[msg] A gust tears up out of the abyss. You drop to your knees on the ice, gripping the stone.
+[stage] green_ghost appears at (23,23) as FT_green_ghost
+[msg] The woman in dark green is there again, ahead. She points: keep going.
+[stage] green_ghost(23,23) hidden
+[msg] Then she's gone. The gust passes. You get up. You keep going.
+[goal] Open the Guardian's Gate: a gift of life, a gift of death.
+[flag] rift_voices
+[msg] The laughter on the wind changes. It isn't laughter any more. It's voices.
+[stage] alberica appears at (22,22)
+[msg] ALBERICA: ...Mum? (a breath) No. She's been dead twenty years.
+[stage] reptin appears at (20,23)
+[stage] reptin(20,23) walks to (21,23)
+[msg] REPTIN: Wolves. And Anduin, calling me home. My husband. He can't be here.
+[stage] alerion appears at (21,22)
+[msg] ALERION: (very quiet) A boy. "You said you'd come back."
+[msg] ALBERICA: Who is he?
+[msg] ALERION: My brother. Talion. I didn't.
+[stage] shade appears at (20,23)
+[msg] SHADE: ...That's her. That's her laughing.
+[stage] meat_meat appears at (23,22)
+[msg] MEAT MEAT: Razzy? RAZZY? ...Not Razzy. Wind. Mean wind.
+[msg] Children giggling. Your own name, over and over.
+[msg] Then the wind drops, and it's only wind.
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Cubone
+[stage] overlay off O-01
+[talk] Campfire at (35,27) on The Frozen Rift [2044]
+[msg] A fissure breathes warm air up from far below. Out of the wind, it's almost cosy.
+[msg] You rest a while. The laughing sounds further away from here.
+[flag] camp_disturbed
+[msg] Not that it's restful. Twice a scream drifts up out of the rift. Once, the cave rumbles.
+[msg] Beyond the far tunnel the chanting is clearer: a drone that comes up through the stone.
+[stage] meat_meat appears at (34,29)
+[stage] meat_meat(34,29) walks to (34,28)
+[msg] MEAT MEAT: Warm crack. Meat Meat could make coffee on this crack.
+[msg] MEAT MEAT: Meat Meat has no coffee. Meat Meat will bite this crack. Fondly.
+[stage] alberica appears at (34,25)
+[stage] alberica(34,25) walks to (34,26)
+[msg] ALBERICA: Here, darling. Last of the Good Mead honey cake. Don't tell anyone.
+[stage] shade appears at (32,27)
+[stage] shade(32,27) walks to (33,27)
+[msg] SHADE: Everyone's watching you hand it over.
+[msg] ALBERICA: Then nobody tell anyone.
+[talk] Guardian's Gate at (30,4) on The Frozen Rift [2044]
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Golbat
+[stage] overlay off O-01
+[music] Pokemon HeartGold and SoulSilver - Wild Pokemon Battle (Kanto)
+[battle] start vs Golbat
+[stage] overlay off O-01
+[msg] A massive door of ancient granite, carved in two halves.
+[msg] On one, a great wolf curled round a full moon.
+[msg] On the other, a reaper's scythe cradling a newborn.
+[msg] In the centre of each half, a shallow bowl.
+[msg] The life bowl is stained brown; the death bowl, grey.
+[msg] A whisper, many voices at once: "Only by the blood of the living...
+[msg] ...and the stillness of the dead, shall the passage open."
+[ask] Make an offering?
+[msg] What do you give the wolf and moon?
+[pick] A few drops of your own blood  (of A few drops of your own blood | A handful of snow | A coin)
+[msg] What do you give the scythe and child?
+[pick] Bone dust from the feast hall  (of Bone dust from the feast hall | A handful of snow | Stand in silence | A coin)
+[msg] Before you can move, Reptin holds his bitten hand over the life bowl.
+[msg] The stone drinks the blood as if it were thirsty.
+[msg] You tip the grey dust into the death bowl. It settles, and does not stir.
+[se] Earth3
+[msg] The runes glow red on the wolf's side, grey on the reaper's. The two halves grind apart.
+[msg] Stale, cold air rushes out, and for a moment you see something that isn't there:
+[msg] a robed dwarf woman performing this same rite, long ago, great wolves at her side.
+[msg] The vision fades.
+[msg] Off to one side of the passage, a hairline seam has opened in the ice wall.
+[stage] reptin appears at (32,5)
+[stage] reptin(32,5) walks to (31,5)
+[msg] REPTIN: Wolves. Standing with her. Not chained.
+[stage] alerion appears at (29,5)
+[msg] ALERION: Noted.
+[msg] REPTIN: (looking at his hand) "A door only a wolf can open." She said that, at the Stones.
+[msg] ALERION: Then how is she on the other side?
+[stage] shade appears at (30,7)
+[stage] shade(30,7) walks to (30,6)
+[msg] SHADE: Same way she left the Stones. In pieces.
+[flag] gate_open
+[goal] On through the Guardian's Gate. A seam has opened in the ice beside it.
+[talk] Hollow wall at (34,8) on The Frozen Rift [2044]
+[msg] The ice here sounds hollow. The locket in your pocket grows warm.
+[msg] A hairline seam has opened down the ice.
+[msg] You put your shoulder to it, and a sheet of ice falls away. Behind it, a narrow crevice.
+[stage] overlay off O-01
+[music] sealed_chamber
+[map] Hidden Sanctum [2045] at (6,7)
+[talk] Bier at (6,4) on Hidden Sanctum [2045]
+[stage] OVERLAY O-03
+[msg] The air in here is still and reverent. Silver lichen on the ceiling gives a faint glow.
+[msg] On a stone bier lies a dwarf woman in dark green robes, kept whole by the cold.
+[msg] As you step closer, the air warms a few degrees. Your breath stops frosting.
+[stage] bier_body appears at (6,4) as P-GHO-01
+[stage] bier_body(6,4) pose P-GHO-01 row 0
+[msg] The corpse's eyes fly open, glowing a soft white.
+[stage] you moves [13]
+[stage] bier_body(6,4) pose P-GHO-01 row 0
+[msg] A translucent spirit rises out of the body, as if lifted, and steps down onto the floor.
+[stage] bier_body(6,4) pose P-GHO-01 row 0
+[stage] green_ghost appears at (7,4) as FT_green_ghost
+[msg] GHOST: Oh. You're early.
+[msg] When she turns, she has Alberica's face, decades older.
+[stage] alberica appears at (8,6)
+[stage] alberica(8,6) walks to (7,6)
+[msg] ALBERICA: You have my face.
+[msg] GHOST: I borrowed it. I'll give it back when you're done.
+[msg] GHOST: I am the last guardian of the Order of Life and Death.
+[msg] GHOST: I came to it late, and old. I'd stood here once before. Young, with friends.
+[msg] Her eyes go to the locket in your hand.
+[msg] GHOST: You found it. I dropped it the day the gnolls came. I wondered where it went.
+[msg] GHOST: The Order kept the balance here, between life and death. We kept the Heart.
+[msg] ALBERICA: (very quietly) ...We?
+[msg] GHOST: The Heart is a root. The last living root of a World Tree.
+[msg] GHOST: The Frostmaiden felled that tree long ago. This root is all of it that's left.
+[msg] You think of Rootspire's roots, the ones you climbed as a kid. This one feels the same.
+[stage] reptin appears at (4,6)
+[stage] reptin(4,6) walks to (5,6)
+[msg] REPTIN: (quietly) I can feel it. Under the floor. Like a pulse.
+[msg] GHOST: It can drink life to stave off death. End a curse, or a winter. The cost is dire.
+[msg] GHOST: Then the gnolls came, who pray to a hyena-headed demon. They broke in, laughing.
+[stage] shade appears at (6,8)
+[stage] shade(6,8) walks to (6,7)
+[msg] SHADE: (very quiet) The feast hall.
+[msg] GHOST: The last of the Order died there, old like me.
+[msg] GHOST: I sealed the doors, and gave myself to the wards.
+[msg] Ask the ghost...
+[pick] "Would it end the winter?"  (of "Would it end the winter?" | "She promised to cure Reptin." | "Who was Glimmer?" | "We thought about letting her do it." | "Tell us how to stop her.")
+[msg] GHOST: With that sacrifice? Yes. For a while. Maybe a long while.
+[msg] GHOST: But the price is soul-debt. Death unbalanced. Nature answers that with calamity.
+[msg] GHOST: Or the Heart darkens, and demands more. And more. It never stops at one.
+[msg] Ask the ghost...
+[pick] "She promised to cure Reptin."  (of "She promised to cure Reptin." | "Who was Glimmer?" | "We thought about letting her do it." | "Tell us how to stop her.")
+[msg] GHOST: (her face hardening) Of course she did. That's the hook in it.
+[msg] GHOST: A cure for him is the warden gone. She wants the wolf out of the way, child.
+[msg] GHOST: Her cure is a ploy. It always was.
+[msg] Ask the ghost...
+[pick] "Who was Glimmer?"  (of "Who was Glimmer?" | "We thought about letting her do it." | "Tell us how to stop her.")
+[msg] GHOST: (a look at the journal) Someone who wanted very badly to save someone.
+[msg] GHOST: You'll see. Not yet.
+[msg] Ask the ghost...
+[pick] "We thought about letting her do it."  (of "We thought about letting her do it." | "Tell us how to stop her.")
+[msg] GHOST: (gently) Of course you did. Winter for two years, and a friend with a wolf in him.
+[msg] GHOST: Anyone would think it.
+[msg] REPTIN: (very quietly) I thought it hardest.
+[msg] GHOST: Thinking it isn't doing it, dear.
+[msg] GHOST: You came down here instead. That's the part that counts.
+[msg] ALBERICA: (very quietly) She's right, you know.
+[msg] GHOST: So choose the light now. And then keep choosing it. That's all any of us ever did.
+[msg] Ask the ghost...
+[pick] "Tell us how to stop her."  (of "Tell us how to stop her.")
+[msg] GHOST: (to Reptin) And you. Child of the wolf.
+[msg] GHOST: Wolves were the wardens here. The Children of the Wolf, bound by oath, long ago.
+[msg] GHOST: Their gift was long life and great strength. Its price was the moon.
+[msg] REPTIN: (very still) The bite.
+[msg] GHOST: It didn't find you by chance. It found the warden already in your blood.
+[msg] GHOST: The curse in your blood is no curse at all. It's a sacred charge.
+[msg] REPTIN: A charge. It bit me in a ditch, starving.
+[msg] GHOST: So did they. Every one.
+[msg] GHOST: Only a wolf bound by honour can stand watch over the Heart and not fall to it.
+[stage] alerion appears at (8,8)
+[stage] alerion(8,8) walks to (7,7)
+[msg] ALERION: And the hag knows it.
+[msg] GHOST: She came up the rift with her troll, where my wards are thinnest.
+[msg] GHOST: (to Reptin) The gate was never the door she wanted, child. You are.
+[msg] GHOST: Cut the wolf out of you, and the Heart has no warden. Then it's hers.
+[msg] REPTIN: (very quietly) And she offered to.
+[msg] GHOST: She means to drain the root and become winter herself.
+[msg] ALBERICA: ...Why does that sound like something I already knew?
+[msg] GHOST: She'd end this winter, yes. Then she'd be a blight on life and death both.
+[msg] GHOST: The life she means to spend is a yeti cub. A baby. Stop her. Please.
+[stage] meat_meat appears at (4,8)
+[stage] meat_meat(4,8) walks to (5,7)
+[msg] MEAT MEAT: Nobody is killing baby yeti. Meat Meat has decided.
+[msg] GHOST: (gently, to Reptin) Curing you cuts the bond. The chasm would lose its last warden.
+[msg] GHOST: I won't choose for you. Put it down, or carry it. It has to be your choice.
+[msg] Reptin looks at you.
+[pick] Nod to him.  (of Nod to him. | Wait. It's his to say.)
+[msg] Reptin nods back, once. He doesn't look away.
+[stage] reptin(5,6) pose P-REP-01 row 3
+[msg] REPTIN: I'll keep it. The wolf. The watch. All of it. Not because I can't put it down.
+[msg] REPTIN: Because somebody has to hold it.
+[msg] GHOST: (smiling) I know. I remember.
+[msg] GHOST: We asked this of your forebears too. I'm sorry it's you.
+[msg] GHOST: (pointing to the bier) She left you something. Take it.
+[flag] ghost_beat_one
+[goal] Take what the ghost left you on the bier.
+[talk] Bier at (6,4) on Hidden Sanctum [2045]
+[msg] Beside the body lies a silver dagger. You take it. The hilt is warm.
+[msg] You obtained an Order's Silver Dagger!
+[msg] You put the Order's Silver Dagger awayin the <icon=bagPocket1>Items Pocket.
+[flag] order_dagger
+[msg] GHOST: The dagger was mine. Fey things hate silver. Hags are fey, and so is their glass.
+[msg] GHOST: Now the locket. Give it here a moment.
+[msg] She closes her ghostly hand over it, and it fills with a cold silver light.
+[msg] GHOST: It will shine true in the face of illusion, and keep the worst of the cold off you.
+[msg] ALBERICA: (very quietly) It's warm. Like a hand.
+[flag] locket_talisman
+[msg] GHOST: When you meet her: break her black staff. It focuses her power.
+[msg] GHOST: And the troll she keeps. Only flame can quell the ice-eater.
+[msg] GHOST: If the Heart drinks innocent blood, it wakes all the way. Then nothing stops it.
+[msg] ALERION: And if it drinks nothing?
+[msg] GHOST: It will drink. But a life freely given, or a life not yet begun, may satisfy it.
+[msg] GHOST: The Order needs wardens again. Children of the Wolf, and all who stand with them.
+[stage] reptin appears at (8,5)
+[stage] reptin(8,5) walks to (7,5)
+[msg] REPTIN: (quietly) Wardens. Plural.
+[msg] GHOST: (half singing, an old tune) Wolf's howl and baby's cry, under the crone...
+[msg] GHOST: ...and round the wheel goes.
+[stage] alberica appears at (4,5)
+[stage] alberica(4,5) walks to (5,5)
+[msg] ALBERICA: Who are you?
+[msg] GHOST: (her light thinning) Time is a wheel, dear. Go. She's started.
+[flag] tip_staff
+[flag] tip_flame
+[flag] order_wardens
+[stage] meat_meat appears at (6,7)
+[stage] meat_meat(6,7) walks to (6,6)
+[msg] MEAT MEAT: (to you, very quietly) Meat Meat knows that face. Meat Meat says nothing.
+[stage] green_ghost(7,4) walks to (5,4)
+[stage] green_ghost(5,4) hidden
+[stage] bier_body(6,4) pose P-GHO-02 row 0
+[msg] She lies back down into the body on the bier, and the body closes its eyes.
+[stage] bier_body(6,4) pose P-GHO-02 row 0
+[msg] Then it ages in a breath: skin to parchment, parchment to dust. The lichen light dims.
+[msg] Behind the bier, on a shelf in the rock, something in oilcloth catches the last light.
+[stage] overlay off O-03
+[msg] A soft silver light settles over you and your Pokémon.
+[msg] (It will be there again when you need it most.)
+[flag] reptin_charge
+[flag] ghost_blessing
+[goal] Stop the hag at the Heart. Break her staff; fire for the troll.
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] strongWind
+[screen] tone (0,0,0) 12
+[map] The Frozen Rift [2044] at (33,8)
+[se] Exit Door
+[screen] tone (-255,-255,-255) 12
+[stage] overlay off O-01
+[music] Entrance of the Forbidden Gate [Pokemon B2-W2 Remix]
+[screen] tone (0,0,0) 12
+[map] The Heart of the Chasm [2046] at (12,46)
+[scene] heart_enter
+[msg] The passage climbs into a great cavern. The ceiling is lost in shadow.
+[stage] camera pans to (12,8)
+[msg] On a dais, four spires of ice cradle an orb of blood-red ice. It beats, slow as a heart.
+[msg] Through the red ice, something dark and branching: a root, thick as a man. Alive.
+[msg] A yeti cub hangs in black chains between the pillars, gagged, white fur matted with tears.
+[msg] All round the cavern stand tall mirrors of ice. In every one, a crone is smiling.
+[stage] camera pans back to you
+[flag] heart_entered
+[goal] The hag, at the Heart. The cub is in chains by the dais.
+[talk] Thredra at (11,6) on The Heart of the Chasm [2046]
+[flag] chasm_whisper_4
+[msg] Frost creeps over every buckle and blade you carry. Your breath hangs in front of you.
+[msg] Your name again, closer. Then a giggle.
+[stage] shade appears at (13,40)
+[stage] shade(13,40) walks to (12,40)
+[msg] SHADE: Did everyone hear that, or is it just me?
+[stage] alerion appears at (10,40)
+[msg] ALERION: Everyone.
+[stage] meat_meat appears at (11,42)
+[stage] meat_meat(11,42) walks to (11,41)
+[msg] MEAT MEAT: Meat Meat heard Meat Meat's name. Meat Meat said "what". Nobody answered. Rude.
+[flag] acorn_remembered
+[msg] In Reptin's pack, something is warm. He takes out the golden acorn and looks at it.
+[stage] reptin appears at (13,42)
+[stage] reptin(13,42) walks to (12,41)
+[msg] REPTIN: "Somewhere the sun can't reach." Well. We found it.
+[msg] SHADE: (a hand on their coat) The egg's warm too.
+[flag] thredra_parley
+[stage] camera pans to (11,8)
+[msg] By the Heart stands the hag, bruise-coloured, white hair in a wind you can't feel.
+[msg] A black staff hung with frozen things. At her heel, Kanan. At her side, an ice troll.
+[stage] reptin appears at (9,13)
+[stage] reptin(9,13) walks to (10,13)
+[msg] REPTIN: (very quietly) Kanan. So this is where you ran.
+[msg] KANAN: Granny feeds us better than the giant ever did.
+[stage] theme Lavender_Town_Pokemon_Tower_Remix
+[music] Lavender_Town_Pokemon_Tower_Remix
+[stage] cry MISMAGIUS
+[se] Cries/MISMAGIUS
+[msg] THREDRA: Ssooo, my dearies, you made it after all! I was beginning to worry.
+[msg] THREDRA: And you fetched me my wolf. Good dearies.
+[msg] She gestures with her staff. The chains hoist the cub up off the floor, and it yelps.
+[msg] THREDRA: (the root beats under the red ice) Do you know what this is?
+[msg] THREDRA: The last living piece of the old World Tree.
+[msg] THREDRA: It remembers every winter there ever was. Feed it a life, and they're all mine.
+[msg] Under the red ice, the root beats faster.
+[msg] THREDRA: Not her winter. Mine. I'll be the new Winter, dearies. Not so fickle as Auril.
+[stage] alberica appears at (11,15)
+[stage] alberica(11,15) walks to (11,14)
+[msg] ALBERICA: You said you were her seamstress.
+[msg] THREDRA: (a look at Alberica's rune) And I've cut her a lovely coat. I'll hand it over.
+[msg] THREDRA: Once I'm wearing the winter myself.
+[msg] THREDRA: (to you) And Granny's last glass sends the lost one home. Everybody wins.
+[msg] She points the staff at Reptin. Magic pulses out of it.
+[msg] She's going for Reptin!
+[pick] Grab Reptin.  (of Grab Reptin. | Rush the hag.)
+[stage] reptin appears at (10,13)
+[stage] reptin(10,13) pose P-REP-06 row 0
+[msg] You get a fist in Reptin's collar. He doubles over anyway. Something is tearing at him.
+[msg] Then she stops short, and cackles. Frost climbs his legs to the knee and holds him there.
+[msg] THREDRA: Ah-ah! First, payment. A life for a life, was it not?
+[msg] THREDRA: This sweet babe's blood, to seal our pact.
+[msg] She lays a claw on the cub's head, lovingly. It shivers.
+[msg] THREDRA: One cut... and all your burdens are lifted.
+[msg] THREDRA: Eternal winter, gone. The werewolf's curse, gone.
+[msg] THREDRA: (her eyes sliding to Reptin) I always keep my end of a bargain.
+[msg] The cub sobs behind its gag.
+[msg] THREDRA: Well, dearies... shall we shake on it? Or would you rather haggle?
+[stage] shade appears at (9,15)
+[stage] shade(9,15) walks to (10,14)
+[msg] SHADE: We never shook on anything, Granny. I'd remember. I count my fingers after.
+[msg] SHADE: Name your price for the cub.
+[msg] THREDRA: Oh, it isn't for sale, dearie. It's the price.
+[msg] What do you do?
+[pick] "Never."  (of "Never." | Let Reptin offer himself. | Hold up the golden acorn. | "...Do it.")
+[msg] THREDRA: You'd keep the winter, and his curse, for one little monster? How precious.
+[msg] THREDRA: (sweetly) No? Then you can watch, dearies.
+[msg] She lunges for the cub out of spite. Shade is already moving. She snatches her claw back.
+[stage] meat_meat appears at (9,13)
+[msg] MEAT MEAT: (very quiet) Touch baby yeti and Meat Meat takes your face.
+[msg] The frost on Reptin's legs cracks and falls away.
+[msg] Your fist is still in Reptin's collar.
+[msg] REPTIN: You can let go now. ...Thank you.
+[stage] camera pans back to you
+[stage] camera pans to (11,9)
+[msg] You take a step toward the dais.
+[msg] THREDRA: Don't take another step! Kanan! Troll! Supper!
+[msg] KANAN: Warm blood!
+[msg] The winter wolf and the ice troll lunge!
+[stage] camera pans back to you
+[music] ancientbattle
+[battle] start vs Kanan, Ice troll
+[stage] overlay off O-01
+[stage] camera pans to (11,9)
+[msg] Kanan yelps and slinks behind a pillar, leaving a hank of white pelt on the ice.
+[stage] Kanan(10,10) leaves toward (6,9)
+[screen] shake 4 8 10
+[stage] Ice troll(14,10) faces up
+[msg] The troll crashes down and lies there, steaming.
+[msg] The troll lies steaming. Already, its torn flesh is starting to knit.
+[flag] minions_down
+[stage] camera pans to (11,9)
+[msg] THREDRA: Useless, the both of them. We danced on the glass at the Stones, dearies. Again!
+[stage] camera pans back to you
+[music] gymleader
+[battle] start vs Granny Thredra
+[flag] lunge_done
+[flag] lunge_in_battle
+[flag] shielded_cub
+[stage] overlay off O-01
+[flag] thredra_beaten
+[stage] camera pans to (11,9)
+[flag] lunge_aftermath_said
+[msg] MEAT MEAT: (arriving at a dead run) MINE. Meat Meat's baby now. Back off, granny.
+[msg] REPTIN: (between her and the cub, every hair on end) Not one more step.
+[msg] ALBERICA: Your arm, sugar. Give it here. No, don't argue.
+[msg] Her black staff is still in her claw, crackling blue.
+[msg] "Break her black staff."
+[pick] Break it.  (of Break it.)
+[flag] broke_hag_staff
+[msg] You wrench it out of her claw and bring it down across your knee.
+[msg] It cracks like a frozen lake.
+[stage] Thredra(11,6) pose P-THR-02 row 0
+[msg] Her broken staff falls in two pieces. The hag shrieks and leaps into the grand mirror.
+[stage] Thredra(11,6) walks to (12,11)
+[stage] Thredra(12,11) hidden
+[se] Ice2
+[msg] The glass takes her like water.
+[stage] thredra_reflection appears at (12,12) as FT_thredra_echo
+[msg] Out of the grand mirror steps her reflection, made of frost and spite.
+[msg] THREDRA: Clever, clever! But I am the mirror, dearies. And you're all inside it.
+[msg] The locket burns silver. Her reflection is the only thing in the glass that's real.
+[msg] You don't take your eyes off it.
+[stage] camera pans back to you
+[stage] green_ghost appears at (12,13) as FT_green_ghost
+[msg] For one moment, a dwarf woman in dark green robes stands at your side,
+[msg] silver light spilling from her hands.
+[stage] green_ghost(12,13) hidden
+[msg] Then she's gone, and your Pokémon are on their feet again.
+[music] BW2_Ghetsis Battle
+[battle] start vs Reflection
+[stage] overlay off O-01
+[stage] camera pans to (12,10)
+[stage] thredra_reflection(12,12) hidden
+[stage] thredra_shards appears at (12,12) as FT_thredra_echo
+[msg] Thredra's Reflection cracks. One mirror is left standing.
+[msg] The lantern glass in your pocket answers it, one clear note.
+[msg] In it: Rootspire's market, gold with festival lanterns. Hellen's door.
+[msg] Tamsin, in the doorway, holding a cracked lantern.
+[msg] THREDRA: (from a thousand shards) Go on, lost one. Step through. Leave them to Granny.
+[msg] THREDRA: Home by supper.
+[msg] The last mirror...
+[pick] Step through.  (of Step through. | Break it.)
+[flag] tried_to_leave
+[msg] You put your hand to the glass. It's warm. It gives, like water.
+[msg] Behind you, the cub cries out once in its chains.
+[msg] In the mirror, Tamsin turns to look at you, and smiles with someone else's teeth.
+[msg] ALBERICA: (catching your wrist) Not like that, darling. Not through her door.
+[msg] The glass cracks under both your hands.
+[stage] camera pans back to you
+[msg] The Heart pulses hard. It's still hungry. The root under the ice opens like a mouth.
+[msg] REPTIN: (stepping toward it) It wants a life.
+[msg] ALBERICA: No. Shimmer showed us. There's always a third way.
+[msg] Alberica takes the golden acorn from Reptin's pack.
+[msg] ALBERICA: A life that hasn't started yet.
+[stage] alberica appears at (11,12)
+[stage] alberica(11,12) pose P-ALB-02 row 3
+[msg] The root opens under the ice.
+[pick] Help her press it in.  (of Help her press it in.)
+[msg] You put your hand over hers, and together you press the acorn into the root.
+[se] Ice2
+[stage] Thredra(12,11) hidden
+[stage] Mirror 1(4,9) hidden
+[stage] effect E-06 at Mirror 1(4,9)
+[stage] Mirror 2(20,9) hidden
+[stage] effect E-06 at Mirror 2(20,9)
+[stage] Mirror 3(9,16) hidden
+[stage] effect E-06 at Mirror 3(9,16)
+[stage] Mirror 4(16,21) hidden
+[stage] effect E-06 at Mirror 4(16,21)
+[stage] Mirror 5(4,14) hidden
+[stage] effect E-06 at Mirror 5(4,14)
+[stage] Mirror 6(20,13) hidden
+[stage] effect E-06 at Mirror 6(20,13)
+[stage] Mirror 7(12,12) hidden
+[stage] effect E-06 at Mirror 7(12,12)
+[stage] thredra_shards(12,12) hidden
+[screen] shake 4 8 20
+[msg] Every mirror in the chasm shatters at once.
+[msg] Thredra screams, stretched across a thousand shards:
+[msg] laughing in one, weeping in another, silent in a third.
+[stage] effect E-08 at alberica(11,12)
+[msg] Out of the shards pours everything she stole: hours, nights, winters, frozen moments.
+[msg] The month she took from the fishers on the ice. The years she took from everyone before.
+[msg] A flood of time, with nowhere to go but down into the root. Into the seed.
+[msg] The seed drinks it.
+[se] Saint7
+[stage] razzilith appears at (10,14) as K-EGG-02
+[stage] frostina appears at (10,15) as K-EGG-02
+[stage] razzilith(10,14) pose K-EGG-02 row 0
+[stage] frostina(10,15) pose K-EGG-02 row 1
+[stage] razzilith(10,14) pose K-EGG-02 row 0
+[stage] frostina(10,15) pose K-EGG-02 row 1
+[stage] razzilith(10,14) pose K-EGG-02 row 0
+[stage] frostina(10,15) pose K-EGG-02 row 1
+[stage] razzilith(10,14) pose K-EGG-02 row 0
+[stage] frostina(10,15) pose K-EGG-02 row 1
+[msg] In Reptin's arms the Moon-Touched Egg cracks, and in Shade's the Frost Egg answers it.
+[msg] REPTIN: "It needs time, and the world hasn't got enough." Well. Now it has.
+[msg] Two wyrmlings tumble out together.
+[stage] PANEL S-07
+[msg] One is moss-green, flecked with silver. It grabs a fistful of Meat Meat's white hair.
+[msg] The other is white as new frost, with wings like leaves of ice.
+[msg] She looks at Shade, tilts her head the way someone used to, and hums four notes.
+[msg] SHADE: (very quietly) ...Hi.
+[stage] alerion appears at (10,12)
+[msg] ALERION: (softly) Frostina.
+[stage] panel off
+[stage] B-05 balloon over razzilith(10,14)
+[msg] RAZZILITH: (no voice; a picture in all your heads, of flying) ...Fly?
+[stage] B-07 balloon over meat_meat(9,13)
+[msg] MEAT MEAT: (sobbing and laughing) RAZZY. Meat Meat is not crying. That is sap. RAZZY.
+[flag] razzy_hatched
+[flag] razzilith_hatched
+[flag] frostina_hatched
+[msg] The cub's chains snap in the flood of light.
+[msg] It looks round the cavern for someone who isn't coming.
+[stage] Yeti cub(13,7) walks to (11,13)
+[stage] Yeti cub(11,12) turns to you
+[msg] Then it creeps to you, presses its head against your leg, and makes a small, sad sound.
+[msg] REPTIN: (crouching, very gently) I know. I know. I'm sorry.
+[msg] MEAT MEAT: Meat Meat has no mama either for a long time. It gets better. Slowly. Meat Meat promises.
+[msg] You tuck the swaddling from the feast hall round it. It sniffs it, and goes very still.
+[ask] Take Yetot with you?
+[msg] Tester obtained Yetot!
+[ask] Would you like to give a nickname to Yetot?
+[flag] got_yeti_cub
+[flag] got_yetot
+[flag] cub_home
+[msg] The Heart has gone quiet: pale now, faintly warm. Its light turns, slowly, toward Reptin.
+[msg] Reptin breathes out like he's held that breath for a year.
+[msg] The wolf in him has lain down: still his, no longer pulling at the chain.
+[msg] REPTIN: (wondering) It's still there. It's just... quiet. It knows me now.
+[flag] reptin_wolf_calm
+[msg] Reptin turns toward the tunnel to the sanctum, where she lies, and says a few words.
+[msg] REPTIN: Rest, warden. It's kept.
+[flag] warden_honoured
+[msg] The Heart pulses, slow and warm.
+[pick] Leave it be.  (of Leave it be. | Break it, so nobody ever uses it again.)
+[msg] REPTIN: Somebody has to watch it. Whatever happens next, I'll come back for it. I swear.
+[flag] reptin_warden_vow
+[msg] The two halves of her black staff lie on the ice, still crackling. You take them.
+[msg] You obtained a Black Ice Staff!
+[msg] You put the Black Ice Staff awayin the <icon=bagPocket1>Items Pocket.
+[msg] Kanan left a hank of white pelt on the ice. Thick and warm: it would make a fine cloak.
+[msg] You obtained a Winter Wolf Pelt!
+[msg] You put the Winter Wolf Pelt awayin the <icon=bagPocket1>Items Pocket.
+[msg] Where she went into the glass, her rags lie on the ice.
+[msg] In them, and in her cauldron: opals, a black ice ring, a counterspell. You take it all.
+[msg] You put the hag's things in your bag.
+[msg] A sliver of red ice skitters to your feet. It's beating, very faintly.
+[ask] Pick it up?
+[msg] It beats, once, against your palm.
+[msg] You obtained a Heart Shard!
+[msg] You put the Heart Shard awayin the <icon=bagPocket8>Key Items Pocket.
+[flag] heart_shard
+[msg] Far above, up at the chasm mouth, wolves are howling. Not hungry. Watchful.
+[msg] Reptin tips his head back and answers them, once.
+[msg] REPTIN: (quietly) Keep the watch till I'm back.
+[msg] Alberica's hand is still on the root. She looks up, and her eyes are full of light.
+[msg] ALBERICA: I can see it. A sapling. A forest. A city. Four hundred years, all at once.
+[msg] THREDRA: (from every shard, fading) You think you've won? Mirrors remember, dearies.
+[msg] THREDRA: Mirrors always remember.
+[screen] shake 6 8 30
+[stage] thredra_shards(12,12) hidden
+[stage] alberica(11,12) pose P-ALB-03 row 0
+[stage] meat_meat(9,13) pose P-MM-03 row 0
+[stage] OVERLAY O-06
+[msg] Time comes loose. The floor of the world tips. You all fall into the shards.
+[msg] ALBERICA: (falling) The whole world just turned over.
+[flag] reversal
+[screen] tone (120,140,80) 30
+[stage] OVERLAY O-07
+[stage] theme heralds
+[music] tintower
+[msg] You fall through moments.
+[pick] Keep your eyes open.  (of Keep your eyes open. | Shut them tight.)
+[msg] The chasm mouth at dawn. In a crack in the frost, a single wildflower.
+[msg] Wolves on the ridge above it, howling at nothing. Not hungry. Watchful.
+[msg] Nomad tents ring the chasm mouth, round a post carved with a wolf and a scythe.
+[msg] Dougan's Hole. Durmoot lifts a cup: "To the ones who went down." A pause. "...Don't tell."
+[msg] In Bryn Shander a bard sings "Glimmer in the Chasm": a small light, and an old spirit.
+[stage] shade appears at (9,13)
+[stage] shade(9,13) walks to (10,13)
+[msg] SHADE: (somewhere in the fall) ...Glimmer. That name again.
+[msg] The woman in dark green, and beside her a small light, like a lantern. They smile at you.
+[msg] "Thank you," they whisper, like wind chimes. "Keep the watch."
+[stage] PANEL S-08a
+[msg] A sapling bursts from thawed soil above a frozen town.
+[stage] PANEL S-08b
+[msg] Moon-white Wennen drag a sledge to the sapling: a man frozen in a block of ice.
+[msg] They kneel among the roots, and stay. Settlers lay walkways between the roots.
+[stage] PANEL S-08c
+[msg] Two young dragons, one green and one white, circle a tree that pierces the aurora.
+[stage] PANEL S-08d
+[msg] A tavern-keeper carves heroes into living wood. Her chisel stops at a small sixth figure.
+[msg] Under them she cuts the year it began: YEAR 0 OF THE VERDANT REVERSAL.
+[msg] Deep in the roots, a digger holds a shard of glass up to her lamp. "Hag's glass!"
+[stage] PANEL S-08e
+[msg] A festival. A lantern. Your own face, looking in.
+[msg] Four hundred years, all at once. You know how this story ends. You fell asleep to it.
+[stage] panel off
+[stage] alerion appears at (11,15)
+[stage] alerion(11,15) walks to (11,14)
+[msg] ALERION: (somewhere close, in the fall) Hold on to something.
+[msg] You're falling...
+[pick] Hold on to Alberica.  (of Hold on to Alberica. | Reach for the wyrmlings.)
+[flag] fall_held_on
+[stage] alberica appears at (9,15)
+[stage] alberica(9,15) walks to (10,14)
+[msg] ALBERICA: I'm holding on to you, pretty boy. Don't make it weird.
+[stage] meat_meat appears at (9,13)
+[msg] MEAT MEAT: Holding Razzy! Meat Meat is holding... Razzy? RAZZY!
+[msg] Both wyrmlings are pulled out of your arms, back toward the root.
+[msg] One picture from both of them, fading: Meat Meat's face, Shade's face, and the word WAIT.
+[msg] As the light slows, something cold settles on your collar.
+[msg] A single black feather from a snowy owl, coated in rime.
+[msg] You reached for the way home, and the glass broke in your hands.
+[msg] Far to the north, something felt you choose. Until now she couldn't see you.
+[msg] Now she can. The Frostmaiden has marked you.
+[msg] You obtained a Rimed Owl Feather!
+[msg] You put the Rimed Owl Feather awayin the <icon=bagPocket8>Key Items Pocket.
+[msg] In your pack, a carving that wasn't there before: a wolf and a bloom, twined, in old ice.
+[msg] Nobody saw who left it. It's warm, like the locket was. Like she was.
+[msg] You obtained a Wolf-and-Bloom Carving!
+[msg] You put the Wolf-and-Bloom Carving awayin the <icon=bagPocket8>Key Items Pocket.
+[stage] overlay off O-07
+[screen] tone (0,0,0) 40
+[flag] act1_done
+[msg] END OF ACT I: THE RIME
+[ask] This is a good place to save. Would you like to save your game?
+[flag] cub_is_yetot
+[stage] OVERLAY O-01
+[music] Azalea Town
+[map] Rootspire [2050] at (28,29)
+[scene] rootspire_arrival
+[flag] rootspire_arrived
+[stage] effect E-09 at [28, 28]
+[msg] The cracked lantern on the cobbles bursts like a soap bubble.
+[msg] A tangle of people, one goblin and a great deal of snow tumbles out onto the market stones.
+[stage] PANEL S-09
+[msg] Gold light. Warm air. A tree so tall its crown is lost in the aurora.
+[msg] The wind that once screamed through Icewind Dale hums here: a deep, living note that vibrates in your ribs.
+[msg] Bark veined with light. Branches tangled with frost-glass leaves that catch the aurora and scatter it in a thousand colours.
+[msg] Thawed earth and pine resin. Water dripping, birds crying, distant bells.
+[msg] For the first time in centuries, the air tastes of spring.
+[msg] Welcome to Rootspire, the City of the Verdant Dawn.
+[stage] panel off
+[msg] TAMSIN: (screaming, then grabbing you) WHERE DID YOU GO. You were gone an HOUR.
+[msg] TAMSIN: Who are... (she sees the others) ...who are THEY?
+[stage] alberica appears at (26,29)
+[stage] alberica(26,29) walks to (27,29)
+[msg] ALBERICA: (dusting snow off Tamsin's head) Hello, gorgeous.
+[msg] ALBERICA: We fell out of a lamp. Don't try it at home.
+[msg] ALBERICA: (looking at her empty hands) I was holding it. In the Chasm. It was a seed.
+[stage] reptin appears at (30,29)
+[stage] reptin(30,29) walks to (29,29)
+[msg] REPTIN: (looking up, and up, and up) It isn't a seed any more.
+[stage] meat_meat appears at (28,27)
+[stage] meat_meat(28,27) walks to (28,28)
+[msg] MEAT MEAT: Razzy? Razzy is gone. Razzy was holding on...
+[msg] ALBERICA: (a hand on Meat Meat's shoulder) We'll find him, sweetheart. He can't hide forever.
+[offstage] LANTERN SELLER absent
+[msg] LANTERN SELLER: ...Refunds are at the other stall.
+[stage] shade appears at (26,27)
+[stage] shade(26,27) walks to (27,28)
+[msg] SHADE: Noted.
+[msg] Down the street, the Rooted Hearth's windows are lit.
+[msg] The crowd is already parting toward it.
+[goal] The Rooted Hearth. Hellen will know what happened.

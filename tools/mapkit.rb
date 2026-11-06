@@ -247,7 +247,7 @@ module MapKit
       g.instance_variable_set(:@character_name, pd[:graphic] || "")
       g.instance_variable_set(:@tile_id, pd[:tile_id] || 0)
       g.instance_variable_set(:@direction, pd[:direction] || 2)
-      g.instance_variable_set(:@pattern, 0)
+      g.instance_variable_set(:@pattern, pd[:pattern] || 0)
       g.instance_variable_set(:@character_hue, 0)
       g.instance_variable_set(:@opacity, pd[:opacity] || 255)
       g.instance_variable_set(:@blend_type, pd[:blend_type] || 0)

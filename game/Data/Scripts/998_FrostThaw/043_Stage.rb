@@ -200,6 +200,50 @@ module FrostThaw
       ev.transparent = true if ev
     end
 
+    # Keep a pose for good: forget what to restore, so cleanup leaves it be
+    # (a page change after the scene takes over the graphic).
+    def release(ev)
+      return if !ev
+      @posed.delete(ev.equal?($game_player) ? :player : ev.id)
+    end
+
+    # A pose sheet played over a battle (the overworld is hidden then): the
+    # frames at twice size, standing behind the foe's first Pokemon, held on
+    # the last frame while the block runs (its pbDisplay lines), then gone.
+    def battle_pose(battle, sheet, frames: [0, 1, 2, 3], per: 6, zoom: 2, row: 0)
+      sp = nil
+      begin
+        sc = (battle.scene rescue nil)
+        vp = (sc.instance_variable_get(:@viewport) rescue nil)
+        bmp = vp ? (RPG::Cache.load_bitmap("Graphics/Characters/", sheet) rescue nil) : nil
+        if bmp
+          sprites = (sc.instance_variable_get(:@sprites) rescue nil) || {}
+          foe = sprites["pokemon_1"]
+          fw = bmp.width / 4
+          fh = bmp.height / 4
+          sp = Sprite.new(vp)
+          sp.bitmap = bmp
+          sp.zoom_x = sp.zoom_y = zoom
+          sp.ox = fw / 2
+          sp.oy = fh
+          sp.x = foe ? foe.x + 72 : Graphics.width * 3 / 4
+          sp.y = foe ? foe.y - 8 : Graphics.height / 2
+          sp.z = foe ? foe.z - 1 : 50
+          frames.each do |f|
+            sp.src_rect.set(f * fw, row * fh, fw, fh)
+            per.times { sc.respond_to?(:pbUpdate) ? sc.pbUpdate : Graphics.update }
+          end
+        else
+          log("battle_pose: no #{sheet} or no battle scene")
+        end
+      rescue StandardError => e
+        log("battle_pose #{sheet}: #{e.message}")
+      end
+      yield if block_given?
+    ensure
+      (sp.dispose if sp && !sp.disposed?) rescue nil
+    end
+
     #---------------------------------------------------------------------------
     # Map effects and balloons (updated every frame through the spriteset)
     #---------------------------------------------------------------------------
