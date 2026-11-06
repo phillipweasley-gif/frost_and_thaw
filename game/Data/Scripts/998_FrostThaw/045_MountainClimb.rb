@@ -261,7 +261,7 @@ module FrostThaw
           "Boy is already at the door.",
           "KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him."])
     boy = Stage.find("Boy (waiting)")
-    Stage.walk_to(boy, VELRYN_DOOR[1], VELRYN_DOOR[2] + 1) if boy
+    Stage.walk_to(boy, VELRYN_DOOR[1], VELRYN_DOOR[2] + 1, adjacent: true) if boy
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
@@ -696,8 +696,7 @@ module FrostThaw
     end
     walk_in(:garret, GARRET_GRAPHIC) if !flag?(:garret_sent_home)
     say(["Keegan opens the door, sees Garret, and makes a sound that isn't a word.",
-         "For a while nobody says anything at all.",
-         "Boy runs circles round the both of them until he falls over."], event_id) if !flag?(:garret_sent_home)
+         "For a while nobody says anything. Boy runs circles round them both until he falls over."], event_id) if !flag?(:garret_sent_home)
     say(["Garret is already there, wrapped in three blankets by the fire, Boy across his feet.",
          "Keegan takes both your hands in both of his."], event_id) if flag?(:garret_sent_home)
     if flag?(:perilou_saved)
@@ -708,21 +707,25 @@ module FrostThaw
     say([flag?(:astrix_found) ? "GARRET: And Astrix. We'll tell her people. Somebody must have people." :
                                 "GARRET: Astrix ran up the mountain. Nobody's found her. I'll go back up.",
          "GARRET: And Mokingo. He's still up there. We'll bring him down in the spring. All of us."])
+    # the player answers the oath's last part (an input mid-payout; read back in Alerion's chat)
+    if pbMessage(_INTL("What do you say?"), [_INTL("\"Spring, then. Count us in.\""), _INTL("Say nothing.")], -1) == 0
+      set_flag(:mokingo_promised)
+      say(["GARRET: (a long breath) Spring."])
+    else
+      say(["Garret nods, as if you'd said it anyway."])
+    end
     if has_key?(:FT_ASTRIXBOOK)
       say(["You give Keegan the spellbook from Astrix's coat.",
-           "KEEGAN: Her book. (He wipes the frost off the cover.) Someone will want this.",
-           "KEEGAN: I'll find them."])
+           "KEEGAN: Her book. (He wipes the frost off it.) Someone will want this. I'll find them."])
       take_key(:FT_ASTRIXBOOK)
     end
     say(["KEEGAN: I said I'd carve you something useful. That's coming. First, these.",
          "He gives you a little wooden box. Inside: four scrimshaw figurines.",
          "A spouting whale. A smiling fox. A pair of dancing hares.",
          "And a walrus, with \"BIG LOVE\" carved into its side.",
-         "KEEGAN: And Owenn at the Luskan Arms knows.",
-         "KEEGAN: Your beds there are free, as long as he has beds."])
+         "KEEGAN: Owenn knows. Your beds at the Luskan Arms are free, as long as he has beds."])
     give_key(:FT_SCRIMSHAWBOX)
-    say(["KEEGAN: And this one's not for a shelf.",
-         "KEEGAN: Hang it on one of your Pokémon, and the rest learn by watching.",
+    say(["KEEGAN: This one's not for a shelf. Hang it on one Pokémon; the rest learn by watching.",
          "A walrus-bone charm on a cord, worn smooth from carving."])
     give(:EXPSHARE)
     sayc([cl(:alberica, "(holding up the walrus) Big love. I'm putting this on my tombstone."),

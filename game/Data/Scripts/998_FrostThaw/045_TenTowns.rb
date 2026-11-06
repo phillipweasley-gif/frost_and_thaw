@@ -566,7 +566,6 @@ module FrostThaw
          "A broad half-orc in a Termalaine coat: Speaker Oarus Masthew.",
          "He keeps glancing at the door.",
          "A huge man with a beard like a hedge: Kendrick Rielsbarrow of Good Mead, mug at his elbow.",
-         "Danneth Waylen of Easthaven, a plain, humble man wrapped to the eyes, his furs steaming.",
          "Lonelywood's chair holds a basket of halfling cookies. Dougan's Hole's is just empty."])
     say(["DUVESSA: Last night Bryn Shander drew a name and did not give it up.",
          "DUVESSA: I won't apologise for it. We agreed to do this together, and I broke it alone."])
@@ -577,7 +576,7 @@ module FrostThaw
     say(["NAERTH: Alone? (He smiles at you.) I'd say she had help.",
          "NAERTH: Strangers off my docks. I let them out of Targos. I should be charging them rent."])
     look.(:danneth)
-    say(["DANNETH: Easthaven drew too, last night. A fisher's widow.",
+    say(["DANNETH: Danneth Waylen, Easthaven. We drew too, last night. A fisher's widow.",
          "DANNETH: She walked out onto the ice herself. I let her.",
          "DANNETH: If Bryn Shander stops and we don't, and the storm comes for both of us anyway..."])
     look.(:kendrick)
@@ -585,8 +584,7 @@ module FrostThaw
          "KENDRICK: It's miserable. It doesn't kill anybody.",
          "KENDRICK: I'd sooner do that a hundred nights than draw one name."])
     look.(:oarus)
-    say(["OARUS: Termalaine gives warmth too. And my own militia won't walk the walls for me.",
-         "OARUS: So don't ask me to promise anything."])
+    say(["OARUS: Termalaine gives warmth too. My own militia won't walk my walls. So: no promises."])
     # Alberica's lines are answered, so they're spoken (WRITING_GUIDE §5).
     if with_or_is?(:alberica)
       speak(:alberica, "Excuse me. Speakers. Hello. Who wrote \"necessary\" in that charter?",

@@ -230,7 +230,9 @@ module FrostThaw
     else
       sayc(["You tell her about the druid in the tomb, and the sister she said hunters shot.",
             "NIMSY: Her poor sister. (She sits down.) Somebody's hunters did that. Ours, maybe.",
-            cl(:reptin, "It doesn't make what she did right. It makes it make sense."),
+            nil])
+      speak(:reptin, "It doesn't make what she did right. It makes it make sense.", "(quietly) It makes it make sense. Not right.") if with_or_is?(:reptin)
+      sayc([
             "NIMSY: It always makes sense, afterwards. That's the worst of it."])
     end
     if flag?(:moose_fee)

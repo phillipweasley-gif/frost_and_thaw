@@ -190,6 +190,7 @@ module FrostThaw
       sayc(["GOSSIP: You! You look like you'd go after a giant. Please. Listen.",
             "GOSSIP: A verbeeg came out of the woods. A giant, nine feet, all elbows. It took our mead.",
             "GOSSIP: Speaker Kendrick stood in its way. It put a spear through him. Three times.",
+            "The gossip's voice cracks. Somebody behind her looks at the shrine.",
             flag?(:council_session) ? cl(:alberica, "(very quietly) \"First cask's on me.\" ...He said that. Kendrick said that.") :
                                       cl(:alberica, "(very quietly) Kendrick. Their Speaker. On his own doorstep."),
             "GOSSIP: Lodging and drink for a tenday. And the brewmistress has a pot of royal jelly."], gossip ? gossip.id : event_id)
@@ -214,7 +215,8 @@ module FrostThaw
            "FEF: I was out checking my traps and I found them. Five of the militia. In the woods.",
            "FEF: Their skulls stove in. Their chests.",
            "FEF: Something big, with a club. I came straight home."], event_id)
-      sayc([cl(:shade, "Show us where."),
+      sayc(["He's still shaking.",
+            cl(:shade, "Show us where."),
             "FEF: (backing off) No. No, no. I'm not going back.",
             "FEF: But my tracks are plain enough. Follow those."])
     end
@@ -585,7 +587,7 @@ module FrostThaw
     set_flag(:gahg_met)
     mouth = [$game_player.x, $game_player.y - 2]     # (the trigger row is two below each mouth)
     gahg = Stage.actor(:gahg, $game_player.x + 4, [$game_player.y + 6, $game_map.height - 2].min, 8, graphic: VERBEEG_GRAPHIC) if Stage.map?
-    Stage.walk_to(gahg, $game_player.x + 2, $game_player.y) if gahg
+    (Stage.walk_to(gahg, $game_player.x + 2, $game_player.y) || Stage.approach(gahg)) if gahg
     say(["A verbeeg strides through the snow toward the cave mouth.",
          "Her misshapen face bears a too-wide smile.",
          "She has a spear in one hand, and a wicker basket of shiny bits of metal in the other.",
@@ -627,7 +629,7 @@ module FrostThaw
   # You duck back into the lair to hide. Gahg finds Duhg first, and then she
   # comes looking for whoever was at his door.
   def gahg_hide_and_seek
-    sayc(["You back into the cave mouth, casks and all, into a niche behind the icicles.",
+    sayc(["You back into the cave mouth, casks and all, and press yourselves into a niche.",
           cl(:shade, with_or_is?(:meat_meat) ? "(a breath, no more) Nobody moves. Nobody breathes. Nobody sneezes, Meat Meat." :
                                               "(a breath, no more) Nobody moves. Nobody breathes."),
           "Gahg ducks in past you, calling Duhg's name."])
@@ -782,7 +784,8 @@ module FrostThaw
     if Stage.map?
       [[-1, -3], [0, -4], [1, -3]].each_with_index do |(dx, dy), i|
         t = Stage.actor(:"thug_#{i}", door[0], door[1], 8, graphic: THUG_GRAPHIC) or next
-        Stage.walk_to(t, door[0] + dx, door[1] + dy, wait_for: i == 2)
+        Stage.walk_to(t, door[0] + dx, door[1] + dy, wait_for: i == 2) ||
+          Stage.walk_to(t, door[0] + dx, door[1] + dy, adjacent: true, wait_for: i == 2)
         thugs << t
       end
     end

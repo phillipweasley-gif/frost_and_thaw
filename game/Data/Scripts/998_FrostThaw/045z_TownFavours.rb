@@ -202,6 +202,7 @@ module FrostThaw
                                                                   "I keep thinking about that. A mother, deciding."]],
     [:reptin, :targos, { flag: %i[climb_done mother_yeti_beaten] }, ["We fought a mother in her own den. It was the right call.",
                                                                       "I don't have to like it."]],
+    [:alerion, :targos, { flag: %i[climb_done mokingo_promised] }, ["We told Garret we'd go up for Mokingo in the spring. I'm holding us to it."]],
     [:alerion, :targos, { flag: :climb_done }, ["Garret says spring, for Mokingo. Somebody should hold him to it."]],
     [:shade, :bryn, { flag: %i[mugs_done goblins_kind] }, ["The goblins went home under a blanket, with their lives. Most raids end worse.",
                                                             "I'd know."]],
