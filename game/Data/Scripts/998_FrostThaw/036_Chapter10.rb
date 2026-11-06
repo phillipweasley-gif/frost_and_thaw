@@ -122,7 +122,8 @@ module FrostThaw
     [[:ritual_runes], "The ritual runes", "Auril's snowflake under a crown, cut at the Underdark door.", :wyn],
     [[:pell_testifies], "Ivo, junior Rootwarden", "Cultists dressed as wardens walked past me. Wyn was nowhere near.", :wyn],
     [[:wraith_witness_door], "A Mirror Wraith's vision", "Cultists chanting over the seal. Wyn far away, in the dark.", :wyn],
-    [[:hyphora_alibi], "Hyphora", "Shadow answered my call.", :wyn],
+    [[:hyphora_alibi], "Hyphora", "The one who walks in shadow. I called. Wyn came.", :wyn],
+    [[:wyn_seen_testified], "You, who saw Wyn at the festival", "Out of breath, with a Sableye, the night the door broke.", :wyn],
     [[:blessed_leaf_shown], "Luminara's blessed leaf", "Her spores, breathed into a fallen leaf: greener, not rotten.", :spores],
     [[:tincture_shown], "Yarro's frostbite tincture", "The spores mend frostbite. They don't cause blight.", :spores],
     [[:history_shown], "The Leaf of Old Alliances", "Three world-trees before Hyphora, each sheltered by myconids.", :spores],
@@ -282,26 +283,57 @@ module FrostThaw
   def scene_tribunal
     set_switch(SW_TRIBUNAL, false)
     return if flag?(:trials_open)
-    say(["Outside the Council Hall, snow swirls through the once-warm air.",
-         "Dozens of citizens crowd the plaza, wrapped in furs and cloaks. Some carry baskets of tools; others, banners of the seasons.",
+    say(["That evening. Outside the Council Hall, snow swirls through the once-warm air.",
+         "Dozens of citizens crowd the plaza, wrapped in furs and cloaks. Some carry tools; others, banners.",
          "A CHILD ON A CRATE: Murderers!",
          "HER MOTHER: (a refugee, a hand over the child's mouth) Hush. They brought us out of the snow.",
          "The doors swing open. The seasonal crystals cast long shadows across the floor.",
          "Four chairs wait. Two of them, gold and red, are draped in white."])
-    say(["KELYN: The Heralds of Dawn and Dusk. You slew Summer, who was Avarice, who wore our Marshal thirty years.",
+    say(["KELYN: The Heralds of Dawn and Dusk. You slew Summer, who was Avarice, who wore our Marshal.",
          "KELYN: You did it without this Council's leave. Some call you liberators. Some call you murderers.",
-         "KELYN: Meat Meat is charged separately. The Autumn Warden died by her hand.",
-         "SELRAE: The Rootwarden Wyn: with abandoning the Underdark door the night it broke.",
-         "SELRAE: And Alberica: with carrying the myconids' spores to the surface without leave.",
+         "KELYN: Meat Meat is charged separately. The Autumn Warden died by her hand."])
+    # Owner's decision (2026-11-06, context 10 M10-2): Selrae is in the dock.
+    # She confessed to the party in the Sap Wells (7B); here she says it to the city.
+    selrae = stage_event("Selrae Vorn")
+    Stage.hop(selrae) if selrae
+    say(["SELRAE: (standing) Before I read another name, the court should hear mine.",
+         "SELRAE: I let the Halo into this city. Thirty years. Their candles. My coin."])
+    $game_screen.start_flash(Color.new(255, 255, 255, 90), 12) rescue nil
+    say(["The gallery goes very quiet. Above the bench, the white crystal stays lit.",
+         "KELYN: (very quietly) Still lit. ...She told me, the night she came up."])
+    told = flag?(:selrae_home)
+    c = pbMessage(_INTL(told ? "(Selrae finds you in the Hall. You told her to come home.)" :
+                               "(Selrae finds you in the Hall, and holds your eye.)"),
+                  [_INTL("(Nod to her.)"), _INTL("(Look away.)")], -1)
+    say([c == 0 ? "SELRAE: (a breath) ...Thank you. I'll read the charges, because someone must." :
+                  "SELRAE: (a breath) Fair. I'll read the charges, because someone must.",
+         "SELRAE: Then I'll stand with them."])
+    say(["SELRAE: The Rootwarden Wyn: with leaving the Underdark door, the night the Halo came in."])
+    if with_or_is?(:wyn)
+      speak(:wyn, "(very small) ...It's true. I wasn't at my post. I didn't know they'd come in behind me.",
+                  "(very small) ...It's true. I wasn't there.")
+    end
+    # Owner's decision (M10-3): Alberica's real charge is the Bryn Shander night (Ch2's lottery).
+    say(["SELRAE: And Alberica: with reaching into a hundred heads in Bryn Shander, unasked.",
+         "SELRAE: The leaves say a square full of people forgot to be afraid. All at once.",
+         "SELRAE: And that night the Frostmaiden put her mark on you. The leaves saw that too."])
+    speak(:alberica, "(under her breath) They were about to hand a girl to the snow. You're welcome.",
+                     "(under her breath) ...They were about to hand a girl to the snow.")
+    if selrae
+      Stage.walk_to(selrae, 13, 17, face: 8)               # down to the end of the dock, by the accused
+    end
+    say(["Selrae steps down from the bench and stands at the end of the dock, beside the accused.",
+         cl(:alberica, "(sideways, making room) Room for one more, Matron. It's cosier down here."),
          "KELYN: And Reptin is not charged. But this Council wants to know if he means to be a god over our tree.",
-         as(:alberica, "(under her breath) I sneezed."),
+         cl(:reptin, "(under his breath) I planted an acorn. Once."),
+         "KELYN: You have seven days to bring witnesses and evidence. Then the crystals hear the verdict.",
+         "KELYN: Our justice: service in the sap-channels or at the Echo Gate; exile beyond the Wall.",
          cl(:reptin, "(under his breath) Let me do the talking. Please. I'm begging you."),
          cl(:meat_meat, "(under her breath) Meat Meat would also like to do the talking."),
          cl(:reptin, "(under his breath) Especially not you."),
-         "KELYN: You have seven days to bring witnesses and evidence. Then the crystals hear the verdict.",
-         "KELYN: Our justice: service in the sap-channels or at the Echo Gate; exile beyond the Wall; or, rarely, binding to the roots.",
          "KELYN: An appeal goes only to Hyphora herself, by ritual, in the Heartroot.",
-         "KELYN: And on the seventh day this city fills two empty chairs."].compact)
+         "KELYN: On the seventh day, Selrae Vorn's case is heard with yours. And the city fills two chairs."].compact)
+    court_for_the_outsider
     set_flag(:trials_open)
     set_switch(SW_TRIALS, true)
     set_switch(SW_CRIERS, true)
@@ -311,24 +343,108 @@ module FrostThaw
     trial_week_goal
   end
 
+  # Context 10 M10-1: the court, told to the outsider (who has never seen one),
+  # with the three rules the week runs on, and the adhesive: nobody leaves.
+  def court_for_the_outsider
+    kelyn = stage_event("Kelyn of Spring")
+    Stage.approach(kelyn) if kelyn
+    if journey?
+      say(["KELYN: (to you) And you. Nobody charged you. You're on no list in this city.",
+           "KELYN: You came out of the lantern with them, so the court will ask what you saw."])
+      c = pbMessage(_INTL("(Kelyn waits.)"), [_INTL("I'll tell it straight"), _INTL("I'm on their side"), _INTL("(Say nothing.)")], -1)
+      c = 2 if !c || c < 0
+      set_flag(%i[court_straight court_sides court_silent][c])
+      say([["KELYN: Good. That's all a witness is for.",
+            "KELYN: Then say so, and the court will weigh it like that.",
+            "KELYN: (a long look) The crystals will hear your silence too."][c],
+           cl(:reptin, "(under his breath, to you) Darling. Please be on our side and straight.")].compact)
+    elsif !herald?(:wyn)
+      say(["KELYN: (to you) And you. Charged or not, you stand with them. Speak for yourself."])
+    end
+    say(["KELYN: Every word said under these crystals is kept, on the Library's leaves.",
+         "KELYN: Lie under them, and your season's crystal goes dark. Everyone sees it."])
+    [[60, 200, 90], [230, 200, 60], [220, 70, 60], [230, 240, 255]].each do |r, g, b|
+      $game_screen.start_flash(Color.new(r, g, b, 120), 6) rescue nil
+      pbSEPlay("Saint1") rescue nil
+      Stage.wait(8)
+    end
+    say(["The four crystals pulse, one by one: green, gold, red, white.",
+         "KELYN: So bring people who'll stand here and say what they saw. Bring things, too.",
+         "KELYN: The more who speak, the more the crystals see. On the seventh day, they decide.",
+         cl(:meat_meat, "Meat Meat will bring the whole camp. Meat Meat will bring the wolves."),
+         "KELYN: Until then, none of you leaves Rootspire. The Wall's thin. I'd find you."].compact)
+    return if !with_or_is?(:meat_meat)
+    if herald?(:meat_meat)
+      say(["KELYN: (to you) Meat Meat. You sleep in the root-cells. By day you walk with them, on their word."])
+      speak(:meat_meat, "Meat Meat will be good. Mostly good. Meat Meat will try very hard.", "...Mostly good.")
+      say([cl(:alerion, "(to Kelyn) She'll be at the bars by sundown. I'll bring her myself.")].compact)
+      return
+    end
+    say(["KELYN: Meat Meat sleeps in the root-cells. By day she walks with you, on your word."])
+    mm = Stage.summon(:meat_meat)
+    warden = mm ? Stage.actor(:rootwarden, mm.x + 1, mm.y, 4, graphic: "BW029") : nil
+    Stage.turn_to(warden, mm) if warden
+    say(["A Rootwarden takes Meat Meat's elbow. She looks back once.",
+         "MEAT MEAT: (going) Meat Meat will be good. Mostly good. Meat Meat will try very hard."])
+    Stage.leave_all([warden, mm], 17, 6) if mm
+    say([cl(:alerion, "(to Kelyn) She'll be at the bars by sundown. I'll bring her myself.")].compact)
+  end
+
   # Q6: "The morning after their return... town criers ring bells... Moments
   # later, a carpenter asks them to help reinforce a section of the new wall."
   def scene_trial_morning
     set_switch(SW_CRIERS, false)
     return if flag?(:criers_heard)
     set_flag(:criers_heard)
-    sayc(["Bells, up and down the Bazaar's walkways.",
-          "TOWN CRIER: Hear ye, hear ye! All are summoned to the Council Hall on the seventh day,",
-          "TOWN CRIER: to witness the trial of the slayers of Summer! And to fill two empty chairs!",
-          "Heads turn. Some nod at you. Some look away.",
-          "CARPENTER: (catching your sleeve, sawdust in his beard) You. Heralds. You've got arms.",
-          "CARPENTER: We're walling the city in. Root-timber and ice, out past the Blooming Fields. The wolves are already sniffing.",
-          "CARPENTER: Come and lift something. People remember who lifted something.",
-          cl(:alberica, "Sugar, I've lifted a great many things. Most of them were drinks.")])
+    px, py = ($game_player.x rescue 0), ($game_player.y rescue 0)
+    crier = Stage.actor(:town_crier, px - 3, py - 2, 2, graphic: "BW (75)")
+    say(["Bells, up and down the Bazaar's walkways.",
+         "TOWN CRIER: Hear ye, hear ye! All are summoned to the Council Hall on the seventh day,",
+         "TOWN CRIER: to witness the trial of the slayers of Summer! And to fill two empty chairs!",
+         "Heads turn. Some nod at you. Some look away."])
+    Stage.leave(crier, px - 8, py - 2) if crier
+    reptin_worshipped
+    carpenter = Stage.actor(:carpenter, px + 3, py, 4, graphic: "BW (54)")
+    Stage.approach(carpenter) if carpenter
+    sayc(["CARPENTER: (catching your sleeve, sawdust in his beard) You. Heralds. You've got arms.",
+          "CARPENTER: The Wall's going thin. Whatever's out there is getting in. Wolves, for a start.",
+          "CARPENTER: So we're walling the city in, out past the Blooming Fields. Come and lift something.",
+          cl(:alberica, "Sugar, I've lifted a great many things. Most of them were drinks."),
+          outsider? ? cl(:alberica, "(to you, quietly) Your Wall's coming down, you know. This is what it looks like.") : nil])
+    Stage.leave(carpenter, px + 8, py) if carpenter
     set_switch(SW_WALL_WORKS, true)
     set_switch(SW_REFUGEE_CAMP, true)
     set_switch(SW_DEBATES, true)
     set_switch(SW_PETITIONS, true)
+  end
+
+  # Context 10 M10-4: the trial asks whether Reptin "means to be a god over our
+  # tree"; this shows the city treating him as one, and puts Anduin at the
+  # fountain the goal sends you to.
+  def reptin_worshipped
+    return if !with_or_is?(:reptin)
+    me = herald?(:reptin)
+    rep = me ? $game_player : Stage.summon(:reptin)
+    warden = rep ? Stage.actor(:rootwarden, rep.x - 3, rep.y + 1, 6, graphic: "BW029") : nil
+    Stage.approach(warden, rep) if warden
+    say([me ? "A young Rootwarden pushes through, kneels to you, and sets a cup of sap at your feet." :
+              "A young Rootwarden pushes through, kneels to Reptin, and sets a cup of sap at his feet.",
+         "ROOTWARDEN: Warden of Life and Death. The tree grew from your hand. Bless my spear?"])
+    speak(:reptin, "(lifting her up by the elbow) Darling, stand up. I'm a druid. We bless salad.",
+                   "(lifting her up by the elbow) ...Stand up. Please.")
+    say(["ROOTWARDEN: (backing away, still bowing) They said you'd say that. That's how we know."])
+    Stage.leave(warden, warden.x - 6, warden.y) if warden
+    anduin = stage_event("Anduin")
+    if anduin
+      Stage.pan_to(anduin.x, anduin.y)
+      Stage.turn_to(anduin, rep) if rep
+    end
+    say(["By the fountain, a tall elf with an iron ring saw all of it. He looks away first."])
+    if anduin
+      Stage.face(anduin, 8)
+      Stage.pan_back
+    end
+    say([as(:reptin, "(very quietly) ...Anduin.")])
   end
 
   # A trial day passes when you rest at the Hearth during the week.
@@ -339,6 +455,17 @@ module FrostThaw
     t[:done_today] = false
     t[:day] = [t[:day] + 1, 7].min
     pbMessage(_INTL("(Day {1} of the trial week.)", t[:day])) rescue nil
+    # Meat Meat sleeps in the root-cells and walks with you by day (M10-1)
+    if with_or_is?(:meat_meat) && !flag?(:verdict_heard)
+      say([herald?(:meat_meat) ? "You come up from the root-cells, yawning. #{with_or_is?(:alerion) ? 'Alerion signs' : 'Somebody signs'} for you." :
+           herald?(:alerion) ? "Meat Meat comes up from the root-cells, yawning. You sign for her." :
+                               "Meat Meat comes up from the root-cells, yawning. Alerion signs for her."])
+    end
+    # Context 11 M11-3: one plant between Luna's word on Iskra (Ch3) and Iskra herself (Ch11)
+    if t[:day] >= 2 && !flag?(:frostina_sang_north)
+      set_flag(:frostina_sang_north)
+      say(["Last night, up at the crown of the tree, Frostina sang at the north for an hour. Nobody knows why."])
+    end
     trial_week_goal
   end
 
@@ -566,7 +693,7 @@ module FrostThaw
          "ANDUIN: ...but what have you become?",
          "ANDUIN: They leave you offerings in the Rootwardens' hall. Reptin, you couldn't keep a houseplant alive."], event_id)
     speak(:reptin, "(his best smile) The houseplant had it coming. ...I'm still him, Anduin.", "...I'm still him.")
-    say(["ANDUIN: Are you? This tree is a god. Hyphora: a seed of Erato. Young, and frightened.",
+    say(["ANDUIN: Are you? This tree is a god, Reptin. Young, and frightened.",
          "ANDUIN: And you stand next to it like a second sun. Will you be more than her? Or are you the man I married?"])
     # The reconciliation (Q1.1): each honest answer deepens his understanding.
     score = 0
@@ -683,7 +810,7 @@ module FrostThaw
     if passed && reconciled
       say(["Anduin is crying.",
            "ANDUIN: You're protecting it. Not replacing it.",
-           "There and then, they ask the Rootwardens to make them stewards of the Heartroot. Both of them.",
+           "There and then, Anduin asks the roots, out loud, to keep them both as the Heartroot's stewards.",
            cl(:alberica, "(sniffing loudly) I'm not crying. It's spores. This whole city is spores.")].compact)
       set_flag(:anduin_reconciled)
       add_support(:eirwen, 1)
@@ -770,25 +897,42 @@ module FrostThaw
     if flag?(:eirwen_restraint) && flag?(:naerth_ledger)
       return say(["EIRWEN: I'll say it at the trial. I'll say it on a leaf, too, so it's said forever."], event_id)
     end
-    say(["Eirwen Solglass sits barefoot by the scorched throne, frost-dust in their hair, writing on a crystal leaf.",
-         "EIRWEN: Heralds. The leaves are full of you this week. Half of them say 'murderer'."], event_id)
+    # Context 10 M10-8: Sephek's ice, all week (Ch11's "The Halo carried it up
+    # while the city voted" is paid here, on the path: Reptin's trial calls here).
+    say(["Eirwen Solglass sits barefoot by the scorched throne, frost-dust in their hair, writing on a crystal leaf."], event_id)
+    if !flag?(:saint_candles_seen)
+      set_flag(:saint_candles_seen)
+      Stage.pan_to(13, 21)
+      say(["On the altar, Sephek still stands in his old blue ice. Someone has lit new candles round him."])
+      Stage.pan_back
+      say(["EIRWEN: (not looking up) Every night I put them out. Every morning they're lit again.",
+           "EIRWEN: Nobody comes in. I'd see. ...I think I'd see.",
+           cl(:alerion, "(to the ice) Four hundred years. You'd think he'd be tired of standing.")].compact, event_id)
+    end
+    say(["EIRWEN: Heralds. The leaves are full of you this week. Half of them say 'murderer'."], event_id)
     # Naerth's last ledger (rootspire.md, Eirwen: kept in the oldest roots; never shown to anyone)
     if !flag?(:naerth_ledger) && pbConfirmMessage(_INTL("Ask Eirwen: \"Naerth's last ledger. Will you show it to the court?\""))
       say(["EIRWEN: (very still) I've kept it twelve years. I never knew who to show it to.",
-           "EIRWEN: Every page: Targos's sap money, its fish money, its lamp-oil, going north to a summer that never came.",
+           "EIRWEN: Every page: Targos's sap money, its fish, its lamp-oil, going south to a summer that never came.",
            "EIRWEN: \"A.\", in the margin, in Naerth's hand. Over and over. He knew. He was afraid to say.",
            "EIRWEN: ...Yes. The crystals should read it. He'd have wanted someone braver than him to carry it."])
       set_flag(:naerth_ledger)
       add_support(:eirwen, 1)
     end
     return if flag?(:eirwen_restraint)
-    if pbConfirmMessage(_INTL("Ask Eirwen: \"Have you seen Reptin abuse his powers?\""))
+    if pbConfirmMessage(_INTL(with_or_is?(:reptin) ? "Let Reptin ask Eirwen what the leaves saw him do?" :
+                                                       "Ask Eirwen what the leaves saw Reptin do?"))
+      if with_or_is?(:reptin)
+        speak(:reptin, "(to Eirwen) You saw the Mycolith, darling, and the Forge. Did I ever use it to rule?",
+                       "...Did I ever use it to rule?")
+      end
       say(["EIRWEN: (looking up, considering) I watched the Mycolith fight from the Fane's ledge. And the Forge, in the leaves."])
       ok = challenge("Persuade Eirwen.", ["Ask them to read what the leaves actually recorded", "Remind them Reptin planted the tree",
                                          "Tell them they owe you"], [0, 1])
       if ok
         say(["EIRWEN: (reading) \"The god of the wild raised his gift only as a wall. Never as a crown.\"",
              "EIRWEN: I'll testify. Restraint is rarer than power. The leaves should say so."])
+        speak(:reptin, "I'd like that on my headstone. Much later.", "...Thank you.") if with_or_is?(:reptin)
         set_flag(:eirwen_restraint)
         add_support(:eirwen, 1)
       else
@@ -852,16 +996,18 @@ module FrostThaw
         set_flag(:mm_cooperated)
       end
     end
-    say(["During the first hearing, a hooded figure pushes through the crowd in the gallery.",
+    say(["Footsteps on the cell stair. A hooded figure comes down, past the sleeping guard.",
          "She's the hooded goblin woman from Bryn Shander.",
-         "HOODED WOMAN: (her voice cracking) They told me V-7 died. In the cold room.",
+         "HOODED WOMAN: (her voice cracking) The Forge's keepers told me V-7 died. In the cold room.",
          "HOODED WOMAN: They told me my baby died.",
          "She pulls her hood back.",
          as(:meat_meat, "(very small) ...Mama?"),
          "PHILDENDRIN: (both hands through the bars, on her daughter's face) Phildendrin. My name is Phildendrin.",
          "PHILDENDRIN: I'm your mama. And I am not losing you to another cell.",
-         "PHILDENDRIN: (turning on the Council) Autumn was a tyranny. #{autumn_hand[:full]} had children in pens. Hang me next to my daughter, or let her go.",
-         cl(:reptin, "(quietly, to the guard) Give them a minute. Please. I'll owe you one.")].compact)
+         mm ? "You hold on to her hands through the bars." : "Meat Meat holds on to her hands through the bars.",
+         "PHILDENDRIN: (turning to the stair, and the Hall above it) Autumn was a tyranny.",
+         "PHILDENDRIN: #{autumn_hand[:full]} had children in pens. Hang me next to my daughter, or let her go.",
+         cl(:reptin, "(very quietly, to the rest of you) Let's give them a minute.")].compact)
     set_flag(:phildendrin_found)
     # Reconcile through heartfelt apology (Q2.2)
     ok = challenge("Phildendrin is waiting for something.",
@@ -883,7 +1029,7 @@ module FrostThaw
       say(["The rescued child's parents push through to the bars. \"She saved our girl.\""])
       set_flag(:child_parents)
     end
-    say(["PHILDENDRIN: The Council's offered something other than the roots. A mission, to earn mercy.",
+    say(["PHILDENDRIN: Kelyn found me in the camp. The Council will take a mission instead of the roots.",
          "PHILDENDRIN: There's a mirror in the Heartroot's wells. Autumn's spying mirror. Autumn watched the whole city through it.",
          "She looks at Razzilith, and then back at her daughter.",
          "PHILDENDRIN: Break it. Free the faces trapped inside.",
@@ -910,7 +1056,8 @@ module FrostThaw
     say(["A tall mirror in a frame of red-lacquered root.",
          "Faces press against the glass from the inside: dozens. People Autumn watched. People it kept.",
          "For one moment, at the very back, a woman with white hair turns and looks out at you. Then she's gone.",
-         as(:meat_meat, "No more deals with mirrors."),
+         as(:meat_meat, "(very still) ...White hair. Meat Meat knows white hair."),
+         flag?(:avarice_doubt) ? "(You think of the arms in the glass. No sigils.)" : nil,
          cl(:wyn, "(barely a whisper) ...They're so tired. Let them out.")].compact, event_id)
     return if !pbConfirmMessage(_INTL("Break Autumn's mirror?"))
     mspot = stage_spot(stage_event(event_id))
@@ -947,7 +1094,7 @@ module FrostThaw
         say(["RHEVEN: (lowering his voice) Autumn kept lists. Refugees, by name and by weight.",
              flag?(:heist_exposed) ? "RHEVEN: Darrus drew them up. When he ran, Maera Vell carried them below. For the Frostmaiden, or for Summer, I never learned which." :
                                      "RHEVEN: Darrus meant to turn them into sacrifices. For the Frostmaiden, or for Summer, I never learned which.",
-             "RHEVEN: I'll say it at the trial. I should have said it thirty years ago."])
+             "RHEVEN: I'll say it at the trial. I should have said it the day Darrus drew them up."])
         set_flag(:rheven_testimony)
       else
         say(["RHEVEN: Threats? To a Rootwarden captain? Come back when you've learned manners."])
@@ -1003,16 +1150,50 @@ module FrostThaw
       return if !pbConfirmMessage(_INTL("Go down to the Underdark Door now?"))
       return transfer(2077, 9, 30, 8)
     end
-    say(["The Council Hall, the crystals dim. Captain Kethan Vale, grey at the temples, reads the charge.",
-         "KETHAN: You left your post, Rootwarden. The night the Underdark door broke. Cultists came through.",
-         "KETHAN: Explain, or don't. I'll judge your silence too."], event_id)
-    c = pbMessage(_INTL("Wyn's account."), [_INTL("Hyphora called me"), _INTL("I had a prophetic dream"), _INTL("Say nothing")], 0)
+    say(["The Council Hall, the crystals dim. At the bench, a captain grey at the temples.",
+         "KETHAN: Kethan Vale, captain of the Rootwardens. I'll read the charge myself.",
+         "KETHAN: You left your post, Rootwarden: the Sap Gate, over the old door to the Underdark.",
+         "KETHAN: The night it broke, cultists came through. Explain, or don't. I'll judge your silence too."], event_id)
     believed = 0
-    if c == 0 || c == 1
+    spoke = false
+    if herald?(:wyn)
+      # Context 10 §6: in Wyn Mode the account is what the prologue showed: a mirror took you.
+      c = pbMessage(_INTL("Wyn's account."), [_INTL("A mirror took me"), _INTL("Hyphora called me"), _INTL("Say nothing")], 0)
+      if c == 0
+        say(["(You say...) A mirror took me. In the Sap Gate. I fell four hundred years.",
+             "KETHAN: (flat) Four hundred years.",
+             "SELRAE: A mirror, a god-spark and a sapling that sings. How convenient.",
+             "KELYN: (to the room) Four Heralds came back out of that night with Wyn. Ask them."])
+        believed += 1
+        spoke = true
+      end
+    else
+      c = pbMessage(_INTL("Wyn's account."), [_INTL("Hyphora called me"), _INTL("I had a prophetic dream"), _INTL("Say nothing")], 0)
+    end
+    if spoke
+      believed += 1 if flag?(:godspark_shadow)
+    elsif c == 0 || c == 1
       speak(:wyn, c == 0 ? "(at the bar of the court) Hyphora called me. That night. The spores sang my name, and I went." :
                            "(at the bar of the court) I dreamed the roots were burning. I went to see. They were.",
             "...She called me. And I went.")
       believed += 1 if flag?(:godspark_shadow)
+      # Context 10 M10-5: the player saw half of that night (Ch6, the festival): they're a witness.
+      if !herald?(:wyn)
+        say(["WYN: The spores at the Sap Gate went quiet. They never go quiet. So I ran up.",
+             "WYN: To the festival, to tell the Captain. ...They saw me. Ask them."])
+        kethan = stage_event("Captain Kethan Vale (hearing)")
+        Stage.turn_to(kethan) if kethan
+        say(["KETHAN: (turning) You. Did you?"])
+        s = pbMessage(_INTL("Did you see Wyn at the festival?"), [_INTL("Yes. Out of breath, with a Sableye"), _INTL("I don't remember")], -1)
+        if s == 0
+          $game_screen.start_flash(Color.new(60, 200, 90, 110), 10) rescue nil
+          say(["KETHAN: (the green crystal brightens) Then the door broke after the Rootwarden left it."])
+          set_flag(:wyn_seen_testified)
+          believed += 1
+        else
+          say(["KETHAN: Then the door will have to tell us itself."])
+        end
+      end
       say(["SELRAE: A god-spark, and a sapling that sings. Convenient."])
       if with_or_is?(:alberica) && flag?(:fungal_liaison)
         say([as(:alberica, "As the Council's Fungal Liaison, darling, I can tell you the spores do sing. Constantly. It's exhausting.")])
@@ -1031,7 +1212,7 @@ module FrostThaw
       believed -= 1
     end
     if believed >= 1
-      say(["KELYN: (slowly) ...At least one of us is willing to think there's another explanation."])
+      say(["KELYN: (slowly) ...I'm willing to think there's another explanation. Kethan?"])
     else
       say(["KETHAN: Then the door will tell us. Wardens: take Wyn down."])
     end
@@ -1102,8 +1283,10 @@ module FrostThaw
         say(["The circle flares when you step in it, and frost bites your boots. You learn nothing but that it's still working."])
       end
     end
-    say([cl(:alberica, "(touching the rune on her own chest) Same mark. Halo work."),
+    say([cl(:alberica, "(touching the rune on her own chest) Same mark as mine."),
          as(:wyn, "They broke the seal themselves. If I'd stayed, I'd be in that circle."),
+         cl(:alberica, "(very plainly) Selrae said it to the whole Hall. She didn't say which door."),
+         with_or_is?(:alberica) ? as(:wyn, "(barely) ...Then she knew which door they'd come in by.") : nil,
          cl(:meat_meat, "Then mushroom friend was right to go. Meat Meat says so. Meat Meat is a witness now.")].compact)
     set_flag(:underdark_door_seen)
   end
@@ -1116,13 +1299,13 @@ module FrostThaw
     return say(["IVO: (not meeting anyone's eye) I've got nothing to say."], event_id) if flag?(:pell_refused)
     say(["A young Rootwarden, barely shaving, guards the tunnel mouth with a spear he holds like a broom.",
          "IVO: I was on the door that night. After Wyn went. They left me there alone."], event_id)
-    if pbConfirmMessage(_INTL("Ask Ivo: \"What did you see when the breach occurred?\""))
+    if pbConfirmMessage(_INTL("Ask Ivo what he saw that night?"))
       ok = challenge("Ivo is frightened.", ["Promise Wyn will clear his name too", "Tell him it's his fault if he lies", "Offer him money"], 0)
       if ok
         speak(:wyn, "I'll tell them you held. Alone. That's more than I did.", "...You held. Alone.")
         say(["IVO: (in a rush) Rootwardens came. Our cloaks, our spears. But wrong. Their breath didn't fog.",
              "IVO: They walked past the wards like the wards were nothing, and I let them, because they were us.",
-             "IVO: I'll testify. If Wyn clears my name."])
+             "IVO: I'll testify. For both of us."])
         set_flag(:pell_testifies)
       else
         say(["IVO: (going red) It was Wyn's door. Ask Wyn. I've nothing to say."])
@@ -1145,11 +1328,13 @@ module FrostThaw
     say(lines) if !lines.empty?
     boost = flag?(:fungal_liaison) && with_or_is?(:alberica)
     if have >= 1 || boost || flag?(:wyn_hearing_believed)
-      say(["The green crystal flickers, and a whisper fills the hall:", "HYPHORA: Shadow answered my call."])
+      say(["The green crystal flickers, and a whisper fills the hall:",
+           "HYPHORA: ...the one who walks in shadow. I called. Wyn came."])
       if flag?(:godspark_shadow)
         say(["KETHAN: And you came back with a god's spark. Rootwardens have been promoted for less."])
       end
       say(["KETHAN: Reprimanded. The post is yours, Rootwarden, if you want it."])
+      speak(:wyn, "(very small) ...I want it. Thank you, Captain.", "...I want it.")
       set_flag(:hyphora_alibi)
       set_flag(:wyn_cleared)
     else
@@ -1219,6 +1404,12 @@ module FrostThaw
     end
   end
 
+  # Context 10 §4: the case's best evidence names a man nobody has described.
+  def gold_man_named
+    herald?(:alerion) ? cl(:reptin, "(quietly) Var. The Marshal. He means the Marshal.") :
+                        cl(:alerion, "(quietly) Var. The Marshal. He means the Marshal.")
+  end
+
   def talion_resolve(event_id = nil)
     al = herald?(:alerion)
     say(["What is he? What does Alerion do?"])
@@ -1237,6 +1428,7 @@ module FrostThaw
       Stage.overlay_off("O-03", fade: 20)
       say(["On his way out, through every mirror in the Bazaar, Talion gives the court his testimony:",
            "\"The tall gold man had no reflection. None. For years.\"",
+           (cl(:reptin, "(quietly) Var. The Marshal. He means the Marshal.") || gold_man_named),
            cl(:wyn, "(sitting down beside him) ...You don't have to talk."),
            with_or_is?(:wyn) ? as(:alerion, "I know. That's why I can.") : nil,
            as(:alerion, "...He was nine. He'd have liked all of you. Even the loud ones.")].compact)
@@ -1260,7 +1452,8 @@ module FrostThaw
       Stage.balloon(quiet, "B-01", frames: 60) if quiet
       say(["#{al ? 'You say' : 'Alerion says'} nothing for an hour.",
            "The testimony still comes, from the wraiths, through the Bazaar's mirrors:",
-           "\"The tall gold man had no reflection. None. For years.\""])
+           "\"The tall gold man had no reflection. None. For years.\"",
+           gold_man_named].compact)
       Stage.cleanup rescue nil
       set_flag(:talion_chased)
       add_counter(:story_beats)
@@ -1296,7 +1489,8 @@ module FrostThaw
         say(["TALION: It's all right. Go back to them. I'll be at the window. I'm always at the window.",
              "He walks into the glass, and the glass goes clear, and the lake gives back the right stars.",
              "On his way through, he gives the court his testimony, in every mirror in Rootspire:",
-             "\"The tall gold man had no reflection. None. For years.\""])
+             "\"The tall gold man had no reflection. None. For years.\"",
+           gold_man_named].compact)
         set_flag(:talion_released)
         wheel(1)
       else
@@ -1304,7 +1498,8 @@ module FrostThaw
              "He coughs. He shivers. He is fourteen years old and cold and furious.",
              "TALION: You said you'd come back! You said! ...You came back.",
              al ? "(You can't speak. You don't have to.)" : "ALERION: (he can't speak. He doesn't have to.)",
-             "He tells the crystals what the lake showed him: \"The tall gold man had no reflection.\""])
+             "He tells the crystals what the lake showed him: \"The tall gold man had no reflection.\"",
+           gold_man_named].compact)
         set_flag(:talion_restored)
       end
     else
@@ -1419,17 +1614,21 @@ module FrostThaw
     if flag?(:spores_debated)
       return say(["KELYN: We're waiting at the Sap Gate, Alberica. Show us these mushrooms of yours."], event_id)
     end
+    # Owner's decision (M10-3): the charge is the Bryn Shander night; the spores are the comic half.
     say(["Selrae of Winter, frost on her shoulders, and Kelyn of Spring, flowers in her hair, are waiting.",
-         "SELRAE: Spores in the refugee camp. Children sneezing glowing dust.",
+         "SELRAE: A mind is a house. In Bryn Shander you walked into a hundred without knocking.",
+         "SELRAE: Now the camp's children breathe spores that do the same. Glowing dust, in their beds.",
          "SELRAE: The Council never sanctioned a fungal colony under the city. Explain yourself.",
          "The Spring crystal pulses green."], event_id)
-    if pbConfirmMessage(_INTL("Ask Selrae: \"Why do you fear the spores?\""))
-      say(["SELRAE: (after a long moment) Because I've seen blight. In the north, before any of you were born.",
-           "SELRAE: A forest gone black and soft in one season. I won't watch it happen to this tree."])
-      set_flag(:knows_winter_fear)
-    end
     speak(:alberica, "It's been here three hundred years, darlings. Come and meet it. Bring a hanky.",
                      "...It's been here three hundred years. Come and meet it.")
+    if pbConfirmMessage(_INTL("Ask Selrae what she's really afraid of?"))
+      say(["SELRAE: (after a long moment) A god in my head. I prayed to one for thirty years. I know the cost.",
+           "SELRAE: And blight. In the north, a forest gone black and soft in one season."])
+      speak(:alberica, "(gently) Then come and meet it. Three hundred years, and it's never asked for a prayer.",
+                       "(gently) ...Then come and meet it.")
+      set_flag(:knows_winter_fear)
+    end
     adv = with_or_is?(:wyn) ? 1 : 0
     if with_or_is?(:wyn)
       say([as(:wyn, "(very small, but out loud) I kept the door under those spores for three years. They kept me.")])
@@ -1485,8 +1684,8 @@ module FrostThaw
     end
     say(["Halfway across the gardens, the ceiling groans.",
          "It comes down in a slide of rock and roots. You get everyone through.",
-         "Kelyn's cloak doesn't make it.",
-         cl(:alberica, "Lose the cloak, Councillor. You look ten years younger.")].compact)
+         "Kelyn's cloak doesn't make it."])
+    speak(:alberica, "Lose the cloak, Councillor. You look ten years younger.", "...Leave the cloak.") if with_or_is?(:alberica)
     skirmish(named_mon(:BRELOOM, 53, "Breloom"))
     say(["LUMINARA: (to the councillors) Surface. Sap-takers.",
          "LUMINARA: Our spores feed her. Hyphora. They knit her roots. They let us speak, all of us, to all of us.",
@@ -1510,7 +1709,7 @@ module FrostThaw
     say(["(Selrae turns Yarro's tincture over in her hands. \"It cures frostbite?\" She's quiet a long time.)"]) if flag?(:tincture_shown)
     say(["(Kelyn reads the Leaf of Old Alliances aloud: three world-trees before this one, each sheltered by myconids.)"]) if flag?(:history_shown)
     if score >= 2
-      say(["SELRAE: (slowly, to Luminara) ...I was wrong about the blight. I'd like to learn the difference.",
+      say(["SELRAE: (slowly, to Luminara) ...I was wrong. Not every voice in a head is hers.",
            "KELYN: (sitting down on the floor of the Fane) A partnership, then. If you'll have us.",
            "LUMINARA: We have had you for three hundred years. Now you may have us."])
       memory_bubble_offer
@@ -1518,9 +1717,9 @@ module FrostThaw
       set_flag(:fungal_liaison)
       add_support(:eirwen, 1)
       add_counter(:story_beats)
-      say(["(Alberica is named the Council's Fungal Liaison.)",
-           as(:alberica, "Fungal Liaison. At last, a title that matches my reputation."),
-           cl(:reptin, "Please don't put that on a business card.")].compact)
+      say(["(Alberica is named the Council's Fungal Liaison.)"])
+      speak(:alberica, "Fungal Liaison. At last, a title that matches my reputation.", "...Fungal Liaison.")
+      say([cl(:reptin, "Please don't put that on a business card.")].compact)
     else
       say(["SELRAE: (standing) No. Spores in the city, spores in the children. The colony goes. Before the snows.",
            "LUMINARA: (very still) Then we go. As we came. Quietly.",
@@ -1537,7 +1736,7 @@ module FrostThaw
   # The memory bubble (Q6): the day Avarice tried to fuse Mirror Wraith essence with spores.
   def memory_bubble_offer(asked = false)
     return if flag?(:memory_bubble)
-    say(["LUMINARA: And you want to know about the summer. The one who wore the Marshal."]) if !asked
+    say(["LUMINARA: (to you) You smell of the summer. The one who wore the Marshal. You want to know."]) if !asked
     if asked || challenge("Ask Luminara for the memory.", ["Ask for the day she came into the roots", "Demand it as evidence", "Leave it"], 0)
       say(["LUMINARA: We do not show our young what we saw. But you have earned it.",
            "She lifts a glowing memory bubble."])
@@ -1606,18 +1805,20 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def selrae_bid(event_id = nil)
     if flag?(:badge_selrae)
-      return say(["SELRAE: Auril is still out there, on her island.",
+      return say(["SELRAE: Auril is still out there, on Solstice. Her island, on the Sea of Moving Ice.",
                   "SELRAE: She'll have felt the summer end. She'll come for what she thinks is hers."], event_id)
     end
     if flag?(:seasons_debated)
-      say(["SELRAE: The crystals are waiting. They'll show you all four seasons. Pass three, and the Canopy stays free."], event_id)
+      say(["SELRAE: The crystals are waiting. They'll show you all four seasons.",
+           "SELRAE: Pass three, and the Canopy stays free. Fail, and my wardens hold it."], event_id)
       return seasons_enter if pbConfirmMessage(_INTL("Enter the crystals' dream?"))
       return
     end
     say(["The four crystals hang over the Council Hall: green, red, white and gold, each pulsing in time with a season.",
          "Voices rise and fall like wind through leaves. Today a white-robed matron stands, her breath frosting the air.",
-         "SELRAE: The Rift has been opening. Ice-angels at the Canopy's crown. We must seize the Canopy for the good of the city.",
-         "SELRAE: Martial law. Rootwardens on every walkway. Until the cold is over.",
+         "SELRAE: The Halo aren't gone. They're in this city tonight. I know their candles.",
+         "SELRAE: Give my wardens the Canopy and the Shrine. Until the Saint's ice is guarded.",
+         "SELRAE: Rootwardens on every walkway. Martial law, until the Halo are found.",
          "Opposite her, a verdant-clad druid shakes his head.",
          "DRUID OF THE SPRING SEAT: Balance. Always balance.",
          "The room turns to you, the Heralds of Dawn and Dusk, for judgment."], event_id)
@@ -1630,7 +1831,7 @@ module FrostThaw
     end
     [["Sway the undecided councillors.", ["Remind them the Canopy is everyone's", "Promise them safety", "Tell them they're cowards"], 0],
      ["Read the room.", ["Notice the druids are afraid too, not just Selrae", "Notice nobody likes Selrae", "Notice nothing"], 0],
-     ["Selrae says the Heralds let the Rift open.", ["Counter it: you closed the Frostfell rifts", "Admit it", "Lie"], flag?(:rifts_closed) ? 0 : [0, 1]],
+     ["Selrae says the Halo came back because you ended the summer.", ["Counter it: she let them in, and said so", "Admit it", "Lie"], [0, 1]],
      ["Call out the fearmongering.", ["Ask her what she's really afraid of", "Shout her down", "Laugh"], 0],
      ["One last word to the room.", ["Winter has a place. Not the whole year", "Let her have it", "Say nothing"], 0]].each do |prompt, opts, right|
       break if ok >= 4 || bad >= 2
@@ -1639,7 +1840,7 @@ module FrostThaw
     state[:seasons_debate] = ok >= 4 ? :won : :lost
     say(ok >= 4 ? ["The undecided councillors are nodding. Selrae's mouth goes thin."] :
                   ["Two councillors side with Selrae. She has the room, for now."])
-    say(["SELRAE: Words. Winter judges the old way. Not by what you say.",
+    say(["SELRAE: Words. The court can judge me after. Winter judges the old way: in the cold.",
          "SELRAE: The crystals will show you every season. Stand in the cold and don't let go of each other.",
          "SELRAE: Pass three of the four, and I'll yield the Canopy. Fail, and it's mine."])
     set_flag(:seasons_debated)
@@ -1721,16 +1922,18 @@ module FrostThaw
       set_flag(:canopy_free)
       add_opinion(1)
     elsif debate || trial_ok
-      say(["KELYN: A compromise, then. The Canopy under watch, until the Rift is quiet. Not under law.",
+      say(["KELYN: A compromise, then. The Canopy under watch, until the Halo are found. Not under law.",
            "SELRAE: ...Watch. Very well."])
       set_flag(:canopy_watched)
     else
-      say(["SELRAE: Martial law, until the cold is over. Rootwardens on every walkway.",
+      say(["SELRAE: Martial law, until the Halo are found. Rootwardens on every walkway.",
            "SELRAE: You'll find my wardens watching you, Heralds. Don't take it personally."])
       set_flag(:canopy_martial_law)
       trial[:mud] += 1
     end
-    say(["SELRAE: Auril is still out there, you know. On her island.",
+    say(["Selrae looks up at the white crystal for a long moment.",
+         "SELRAE: Auril is still out there, you know.",
+         "SELRAE: On Solstice. Her island, out on the Sea of Moving Ice. North, past the Dale.",
          "SELRAE: She'll have felt the summer end. She'll come for what she thinks is hers.",
          cl(:alerion, "She can try."),
          cl(:alberica, "(a hand over her rune) ...Let's not dare her, pretty boy.")].compact)
@@ -1773,35 +1976,87 @@ module FrostThaw
   def kelyn_trials(event_id = nil)
     return say(["KELYN: Four chairs. Four seasons. All of them filled."], event_id) if flag?(:ch10_done)
     n = witnesses.size
-    say(["KELYN: Witnesses and evidence so far: #{n}. Day #{trial[:day]} of seven. The crystals hear them on the seventh day."], event_id)
+    say(["KELYN: Witnesses and evidence so far: #{n}. Day #{trial[:day]} of seven."], event_id)
     wyn_alibi if flag?(:underdark_door_seen) && !flag?(:wyn_cleared)
     if !flag?(:badge_selrae)
-      return say(["KELYN: Selrae has put her bid for the Canopy before the Council. The crystals will judge it first.",
+      return say(["KELYN: Selrae's own trial comes first: her bid for the Canopy, before the crystals.",
                   "KELYN: She's waiting by the pillar."])
     end
+    open = TRIAL_STEPS.count { |flags, _| flags.none? { |f| flag?(f) } }
+    say([open > 0 ? "KELYN: Call it now, and the #{open == 1 ? 'trial' : 'trials'} you haven't finished go unheard." :
+                    "KELYN: Every trial's been heard. The more who speak, the more the crystals see.",
+         "KELYN: The same day, the city fills two chairs. Whoever sits will help decide what comes next."])
     return if !pbConfirmMessage(_INTL("Call for the verdict? (The trial week ends.)"))
     trial[:day] = 7
     scene_verdict
     scene_vote
   end
 
+  # Context 14 M14-9 C: each Ten-Towns favour you finished puts a face among the refugees who testify.
+  REFUGEE_FACES = [[:climb_done, "Keegan and Garret Velryn, with Boy"], [:mugs_done, "Hruna, under a Battlehammer banner"],
+                   [:mine_done, "Oarus Masthew, still talking about moss"], [:white_moose_done, "Nimsy Huddle and four children"],
+                   [:mead_returned, "Olivessa, with a hive"]]
+
+  def refugee_faces
+    faces = REFUGEE_FACES.select { |f, _| flag?(f) }.map(&:last)
+    return if faces.empty?
+    boxes = [+"Among the refugees who speak:"]
+    faces.each do |f|
+      boxes << +"" if (boxes.last + " " + f + ".").length > 88
+      boxes[-1] = boxes.last.empty? ? "#{f}." : "#{boxes.last} #{f}."
+    end
+    say(boxes)
+  end
+
   def scene_verdict
     t = trial
     all = witnesses
-    say(["The seventh day. The Council Hall is packed: Rootspire, the refugees, Rootwardens on the walls.",
-         "Winter and Spring preside. The empty chairs of Summer and Autumn are draped in white cloth."])
-    say(["The crystals hear every witness: " + all.map { |_, who, _, _| who }.join(", ") + "."]) if !all.empty?
+    pbFadeOutIn { } rescue nil
+    say(["The seventh day.",
+         "The Council Hall is packed: Rootspire, the refugees, Rootwardens on the walls.",
+         "Kelyn presides alone. Selrae stands with the accused. Two chairs are draped in white.",
+         "KELYN: The court sits. The accused stand. Witnesses, when I call you, come forward."])
+    # The witnesses (context 10 M10-6, beat 3): a few step forward and say it; the crystals hear the rest.
+    if all.empty?
+      say(["KELYN: ...Nobody? Then the crystals hear only the accused."])
+    else
+      short = all.select { |_, who, what, _| witness_line(what).length <= 86 && who.length <= 70 }
+      shown = %i[summer autumn wyn spores reptin].map { |ch| short.find { |_, _, _, c| c == ch } }.compact.first(3)
+      shown.each { |_, who, what, _| say(["(#{who}.)", "\"#{witness_line(what)}\""]) }
+      rest = all.size - shown.size
+      say(["(And #{rest} more. The crystals hear every one.)"]) if rest > 0
+      refugee_faces if flag?(:refugees_testify)
+    end
     say(["(Luminara kept her memory bubble. The crystals can only hear what you bring them.)"]) if flag?(:bubble_declined) && !flag?(:memory_bubble)
     neglect = [t[:neglected] - t[:helped], 0].max
     say(["(#{t[:helped]} day#{t[:helped] == 1 ? '' : 's'} on the wall and in the camp; the city remembers it.)"]) if t[:helped] > 0
     say(["(Days you didn't help: the city remembers those too.)"]) if neglect > 0
+    # Your own testimony, read back (M10-1's choice)
+    readback = { court_straight: "KELYN: You said you'd tell it straight. You did. The crystals are lit.",
+                 court_sides: "KELYN: You said you were on their side. The court weighed it so.",
+                 court_silent: "KELYN: You said nothing all week. The court noticed." }.find { |f, _| flag?(f) }
+    if readback
+      say(["KELYN: And the one who came out of the lantern with them.", readback[1]])
+    end
     # Who speaks, and how: DC 15, eased by goodwill, raised by neglect and unanswered rumours
     c = pbMessage(_INTL("Who speaks for the Heralds?"), [_INTL("Reptin, persuading"), _INTL("Alberica, performing"),
                                                          _INTL("Alerion, plainly"), _INTL("Meat Meat, glaring")], 0)
+    c = 0 if !c || c < 0
     speaker = [2, 1, 1, 0][c] || 0
+    # ...and then they do speak (dialogue 10 §3, line 16)
+    who, loud, quiet = [[:reptin, "(to the bench) She wore a good man for thirty years and froze the Dale. We stopped her.",
+                         "...We stopped her."],
+                        [:alberica, "(to the gallery) Darlings, she'd have burned your tree to keep her summer. We said no.",
+                         "...We said no."],
+                        [:alerion, "She'd have killed this city to stay warm. We didn't ask leave. I'd do it again.",
+                         "...I'd do it again."],
+                        [:meat_meat, "(glaring at the whole Hall) Meat Meat would bite her again.",
+                         "...Meat Meat would bite her again."]][c]
+    speak(who, loud, quiet) if with_or_is?(who)
     summer = witnesses(:summer).size
     strength = summer * 2 + (summer >= 3 ? 2 : 0) + (t[:opinion] - t[:mud]) + speaker - neglect
-    say(["KELYN: (reading) The death of Summer: Avarice, who wore our Marshal thirty years."])
+    say(["KELYN: (reading) The death of Summer: Avarice, who wore our Marshal thirty years.",
+         flag?(:avarice_doubt) ? "(You think of the arms in the glass. No sigils. You don't say anything.)" : nil].compact)
     if strength >= 8
       say(["KELYN: The crystals have heard what she was. A traitor to this city, and to every season.",
            "KELYN: Her death was necessary. Not guilty.",
@@ -1841,6 +2096,7 @@ module FrostThaw
            "PHILDENDRIN: (from the gallery) Then I'll go with her."])
       set_flag(:mm_outlaw)
     end
+    verdict_other_charges
     if flag?(:verdict_geas) || flag?(:mm_outlaw) || flag?(:verdict_fine)
       say(["(An appeal goes to Hyphora, by ritual, in the Heartroot's seal circle.)"])
       set_switch(SW_APPEAL, true)
@@ -1849,14 +2105,45 @@ module FrostThaw
     add_counter(:story_beats)
   end
 
+  # Context 10 M10-6: every charge read at the Tribunal gets its ruling, and
+  # Selrae (owner's decision: she's in the dock) gets the one she asks for.
+  def verdict_other_charges
+    wyn = if flag?(:wyn_barred) then "KELYN: The Underdark door. The Rootwarden Wyn serves at the Echo Gate, as Kethan ruled."
+          elsif flag?(:wyn_cleared) then "KELYN: The Underdark door. The Rootwarden Wyn is cleared. The post is Wyn's."
+          else "KELYN: The Underdark door. Unheard this week. The charge lies on the table."
+          end
+    alb = if flag?(:colony_recognised) then "KELYN: Bryn Shander, and the spores. The Council has a Fungal Liaison now. That will do."
+          elsif flag?(:colony_exiled) then "KELYN: Bryn Shander, and the spores. The colony's gone. The court asks nothing more."
+          else "KELYN: Bryn Shander, and the spores. Unheard. The charge lies on the table."
+          end
+    rep = if flag?(:anduin_reconciled) then "KELYN: Reptin. The Heartroot says he stands beside her, not over her. So noted."
+          elsif flag?(:anduin_leaving) then "KELYN: Reptin. The Heartroot wasn't sure. Neither is this court. We'll watch."
+          elsif flag?(:anduin_doubtful) then "KELYN: Reptin. The Heartroot trusts him. His husband is still deciding. So noted."
+          else "KELYN: Reptin. The Heartroot was never asked. This court will keep asking."
+          end
+    say([wyn, alb])
+    say([cl(:wyn, flag?(:wyn_barred) ? "(very small) ...I'll take the Gate." : "(very small) ...Thank you."), rep].compact)
+    selrae = stage_event("Selrae Vorn")
+    Stage.hop(selrae) if selrae
+    say(["Selrae steps forward to the bar of the court, on her own.",
+         "KELYN: Selrae Vorn. Thirty years of the Halo's candles, in this city.",
+         "SELRAE: Service, at the Echo Gate. Where the cold comes in. I ask it.",
+         "KELYN: (a long breath) So ordered.",
+         "KELYN: ...This court is done. Out in the Blooming Fields, the city is waiting."])
+    set_flag(:selrae_sentenced)
+  end
+
   def scene_vote
+    # Context 10 §5 and M10-7: a cut to the Fields, and each candidate says what
+    # their seat would do, and what it would do if Auril comes.
+    (pbFadeOutIn { Stage.jump(*VOTE_STAGE) }) rescue (Stage.jump(*VOTE_STAGE) rescue nil)
     say(["Out in the Blooming Fields, the candidates stand on a stage of braided roots.",
          "Flowers and snow grow side by side at their feet."])
+    keys = CANDIDATES.keys.select { |k| nominated?(k) }
+    vote_platforms(keys)
     # Endorse, stand, or stay out of it (Tab 8 Q6.3); asked now if Kelyn never asked in the week.
     stance = election_stance(true)
     stance = :endorse if stance == :stand && !nominated?(:heralds)
-    keys = CANDIDATES.keys.select { |k| nominated?(k) }
-    keys.each { |k| say(["#{CANDIDATES[k][0]}: #{CANDIDATES[k][1]}"]) }
     picks = []
     case stance
     when :neutral
@@ -1909,6 +2196,16 @@ module FrostThaw
         say(["#{CANDIDATES[picks[0]][0].split.first.upcase}: (finding you in the crowd) You spoke first for me. I won't forget it."])
       end
     end
+    # A pick that lost, and a petition that fell short, each get a line (M10-7)
+    lost = picks.compact.find { |k| k != :heralds && !winners.include?(k) && CANDIDATES[k] }
+    if lost
+      say(["#{CANDIDATES[lost][0].split.first.upcase}: (shrugging, from the stage) Not this year. Next year, then."])
+    end
+    %i[phildendrin anduin].each do |k|
+      next if !flag?(:"petition_#{k}") || nominated?(k)
+      short = [(SIGNATURES_NEEDED[k] || 0) - (trial[:signatures][k] || 0), 1].max
+      say(["#{k.to_s.upcase}: (from the crowd) #{short} #{short == 1 ? 'name' : 'names'} short. Next year, then."])
+    end
     if !(winners & %i[mira rheven anduin heralds]).any?
       say(["LUMIN: (later) Nobody's got a ship, or a griffon, or a whale-bell.",
            "LUMIN: Then I'll ring Angajuk's bell myself. It'll be a longer voyage."])
@@ -1919,9 +2216,36 @@ module FrostThaw
     set_switch(SW_TRIALS, false)
     set_switch(SW_ACT2_DONE, true)
     add_counter(:story_beats)
+    Stage.cleanup rescue nil
     say(["END OF ACT II"])
-    state[:goal] = "Auril is on her island. The Council will send you north."
+    state[:goal] = "Auril is on Solstice, her island. The Council will send you north."
     act3_start if respond_to?(:act3_start)
+  end
+
+  VOTE_STAGE = [2060, 26, 13, 8]
+  # [graphic, line]: one clause of the platform, then what the seat does if Auril comes
+  PLATFORMS = {
+    rheven: ["BW (72)", "RHEVEN: Walls, and patrols past the Wall. If she comes, the Skytower griffons fly for us."],
+    mira: ["BW (33)", "MIRA: Trade with Ten-Towns. And a ship that can cross the Sea of Moving Ice."],
+    eirwen: ["BW (30)", "EIRWEN: Listen to the crystals. And the oldest maps of the north are mine. Every one."],
+    phildendrin: ["FT_phildendrin", "PHILDENDRIN: Fair trials. And Duvessa's people hold this city, if you must go."],
+    anduin: ["FT_anduin", "ANDUIN: Serve the tree. And the Wennen's bell calls something huge from the sea."]
+  }
+
+  def vote_platforms(keys)
+    px, py = ($game_player.x rescue 26), ($game_player.y rescue 13)
+    Stage.actor(:kelyn, px, py - 2, 2, graphic: "BW (30)")
+    row = keys.select { |k| PLATFORMS[k] }
+    actors = row.each_with_index.map do |k, i|
+      Stage.actor(k, px - row.size + 1 + i * 2, py - 4, 2, graphic: PLATFORMS[k][0])
+    end
+    say(["KELYN: Two chairs. Each of them, tell the city what you'd do with one. And if she comes."])
+    row.each_with_index do |k, i|
+      a = actors[i]
+      Stage.walk(a, PBMoveRoute::Down) if a
+      say([PLATFORMS[k][1]])
+      Stage.walk(a, PBMoveRoute::Up, 16) if a       # back into the row, facing the crowd
+    end
   end
 
   # The trial week's Goal: a short hub line, kept current (review Ch10 E4: the
@@ -1933,7 +2257,7 @@ module FrostThaw
     [%i[wyn_cleared], "Wyn: the summons at the Echo Gate"],
     [%i[talion_released talion_chased talion_restored talion_haunted], "Alerion: Talion, in the Blooming Fields"],
     [%i[colony_recognised colony_exiled], "Alberica: her hearing, in the Council Hall"],
-    [%i[badge_selrae], "Selrae's bid for the Winter seat, in the Council Hall"]
+    [%i[badge_selrae], "Selrae's own trial: her bid for the Canopy, in the Council Hall"]
   ]
 
   def trial_week_goal
