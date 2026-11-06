@@ -280,7 +280,8 @@ module FrostThaw
                        "It's the only statue with snacks at its feet. The snacks are always gone by morning."],
     # --- the Canopy-Tier ------------------------------------------------------------------
     canopy_sign: ["THE CANOPY-TIER. Shrine of the Twinned Dragons, the Aerie Markets, the Celestial Rift.",
-                  "East: the Wind-Glass Library. South: the College of Auroral Arts."],
+                  "East: the Wind-Glass Library. South: the College of Auroral Arts.",
+                  "West, over the leaf-bridge: the Lightfall Promenade."],
     aerie_merchant: ["AERIE MERCHANT: Air-fruit! Wing-leaf sails! Stones with a bit of sky in them!",
                      "AERIE MERCHANT: Everything up here is lighter. Even the prices. Some of the prices."],
     aarakocra_seer: -> {
@@ -355,13 +356,19 @@ module FrostThaw
          "EIRWEN: And the chronal leaves are yours to read, all of you, whenever you like. The ones that remember days. Ask me."].compact
       end
     },
-    lorn_scribe: [{ if: { flag: :key_found }, lines: ["LORN SCRIBE: (writing backwards) .ti dah syawla uoY .yek eht dnuof uoy taht nwod etorw I"] },
-                  ["An old dwarf draped in frost-paper scrolls writes without looking.", "His eyes are milky, inked with runes.",
-                   "LORN SCRIBE: Riddles, Herald? One for each of you.",
+    # (context 15 M15-3: the four riddles go in the Goal menu; dialogue 06 §3.7:
+    # he says why he has them, and who they're for, to the Journey kid too)
+    lorn_scribe: -> {
+      next ["LORN SCRIBE: (writing backwards) .ti dah syawla uoY .yek eht dnuof uoy taht nwod etorw I"] if T.flag?(:key_found)
+      T.scribe_side_goals
+      ["An old dwarf draped in frost-paper scrolls writes without looking.", "His eyes are milky, inked with runes.",
+                   T.journey? ? "LORN SCRIBE: Four riddles, kept for the Heralds. You'll do to carry them, Herald's friend." :
+                                "LORN SCRIBE: Four riddles, kept four hundred years for the Heralds. One for each of you.",
                    "LORN SCRIBE: The blade sleeps in the silt where the boats were frozen.",
                    "LORN SCRIBE: The staff stands with the first Wardens, in sap clear as glass.",
                    "LORN SCRIBE: The mantle waits where the world stops at the wall of light.",
-                   "LORN SCRIBE: The key is in this room. It always was. Begin where the year sleeps."]],
+                   "LORN SCRIBE: The key is in this room. It always was. Begin where the year sleeps."]
+    },
     wennen_scholar: ["A Wennen scholar copies old carvings onto leaf-paper.",
                      "WENNEN SCHOLAR: Old Wennen. 'Dragon Warriors,' it says. Partners of dragons. Never masters.",
                      "WENNEN SCHOLAR: And this: 'the wyrm cannot turn the wheel alone, but it may, with a guide.'",
@@ -805,10 +812,12 @@ module FrostThaw
       say(["A half-elf in an ink-stained coat looks up from three books at once, and drops all of them.",
            "WYNSNOW: The Heralds. In my lab. Hold still. I've waited my whole life to measure you."], event_id)
     end
-    sayc([cl(:alerion, "No."),
+    sayc([journey? && with_or_is?(:alerion) ? "WYNSNOW: (turning the rule on Alerion) And you next. The frosty one." : nil,
+          cl(:alerion, "No."),
           (with_or_is?(:alerion) ? cl(:reptin, "He means he'd rather not. He's shy. Measure me instead, Professor, I'm very measurable.") : nil),
           "WYNSNOW: You'll want this. A licence. Grafting: two Pokémon merged in a cocoon of sap.",
           "WYNSNOW: The old way. One gives itself to the other and comes out part of it.",
+          "WYNSNOW: Splicers fuse two for a while. A graft is for keeps.",
           "WYNSNOW: The rules are the lore. No cocoon holds a stranger: they must be close in level.",
           "WYNSNOW: And seedlings remember: eggs keep their parent's growth.",
           "WYNSNOW: Never into a person. That's Joining, and it's forbidden.",
@@ -871,14 +880,17 @@ module FrostThaw
     return if respond_to?(:orb_halo_scene) && !orb_halo_scene   # the Halo splinter at the orb first (048)
     sayc(["LUMIN: You came. Good. They landed in the market, and the whole Canopy felt it.",
           "LUMIN: Put your hands to the orb. It shows the guides what they're guiding.",
+          "LUMIN: Two roads for each of you. Not what will be. What might.",
           "LUMIN: That's the old teaching. I've never once seen it work."], event_id)
     pbSEPlay("Saint7") rescue nil
     bloom_guard_visions
     sayc(["The light lets you go.",
           "LUMIN: ...It worked. Oh, it worked. Dragon Warriors. Partners. Never masters.",
+          "LUMIN: Two roads each. The wyrms will follow whichever one you walk.",
           "LUMIN: The wyrms can't turn the wheel of the seasons alone. They may, with a guide.",
           "LUMIN: Take this: a moon-charm of the Circle. Zenith Abbott's line made it.",
           "LUMIN: For whoever woke the wyrms.",
+          cl(:shade, "(very quietly) Her eyes. In the street, when she hummed. I knew."),
           cl(:meat_meat, "Meat Meat saw a meadow. Razzy was in it. Meat Meat is keeping that one."),
           cl(:alerion, "I saw a forest with no dawn. ...It was quiet. I liked it. Don't tell anyone."),
           (with_or_is?(:alerion) && with_or_is?(:alberica) ? cl(:alberica, "Everyone heard you, pretty boy. We're all going to tell everyone.") : nil)].compact)
@@ -935,7 +947,9 @@ module FrostThaw
                  "And she's in Bryn Shander's square again, pouring warmth and memory out of the pendant into a frightened crowd.",
             "Two paths, and the snow falls on both.",
             "On one: she bears the white rune, and her hand turns a key, and the whole Dale is locked in winter forever. Safe. Still.",
-            "On the other: she sings the tender and the terrible both, and the vault shatters, and every face inside it remembers its name."])
+            "On the other: she sings the tender and the terrible both, and the vault shatters, and every face inside it remembers its name.",
+            # (context 06 §6, 15 §6: Herald Alberica notices; the price stays unsaid)
+            me ? as(:alberica, "A key. A vault. The family's bargain had a key in it. Nobody ever said what it opened.") : nil].compact)
     end
     if with_or_is?(:glimmer) || with_or_is?(:shade)
       me = herald?(:glimmer) || herald?(:shade)
@@ -970,6 +984,23 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The Wind-Glass Library: Alberica's sub-vault, and the Cycle Canticle
   #-----------------------------------------------------------------------------
+  # The Lorn Scribe's four riddles, written down (context 15 M15-3). The place
+  # names are the answers on purpose: the riddle is flavour, the way is plain.
+  SCRIBE_RIDDLES = [
+    [:scribe_key, :alberica, "a key 'where the year sleeps', in the Wind-Glass Library", :key_found],
+    [:scribe_blade, :meat_meat, "a blade in the silt where the boats froze: the Split Dock", :blade_found],
+    [:scribe_staff, :reptin, "a staff with the first Wardens, in clear sap: the Rootwarden Crypt", :staff_found],
+    [:scribe_mantle, :alerion, "a mantle where the world stops at the wall of light: the Wall's edge", :mantle_found]
+  ]
+
+  def scribe_side_goals
+    SCRIBE_RIDDLES.each do |key, who, what, done|
+      next if flag?(done) || !with_or_is?(who)
+      whose = herald?(who) ? "your" : HERALD_NAMES[who] ? "#{HERALD_NAMES[who]}'s" : "a Herald's"
+      side_goal(key, "The Lorn Scribe's riddle, #{whose}: #{what}.", done: done)
+    end
+  end
+
   def subvault(event_id = nil)
     if flag?(:key_found)
       return say(["The instrument case lies open and empty. Its lock of two interlocking notes still hums faintly."], event_id)

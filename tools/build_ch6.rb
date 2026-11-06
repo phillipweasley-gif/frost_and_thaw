@@ -171,7 +171,12 @@ ch.event(14, 13, "Kelyn of Spring", [
   { graphic: "BW (30)", direction: 2, script: "FT.kelyn(@event_id)" }
 ])
 ch.event(8, 13, "Darrus Fell", [{ graphic: "BW (55)", direction: 2, script: "FT.darrus(@event_id)" }])
-ch.event(17, 12, "Selrae Vorn", [{ graphic: "BWOldWoman", direction: 4, script: "FT.selrae_hall(@event_id)" }])
+# (after the rite (3936) Selrae goes down after Var: her seat is empty, her
+# cloak on it, until you've found her below (3939); context 06 M6-10. The
+# trial week's page is added by build_w4.)
+ch.event(17, 12, "Selrae Vorn", [{ graphic: "BWOldWoman", direction: 4, script: "FT.selrae_hall(@event_id)" },
+                                 { switch: 3936, graphic: "BWOldWoman", direction: 4, opacity: 0, script: "FT.selrae_hall(@event_id)" },
+                                 { switch: 3939, graphic: "BWOldWoman", direction: 4, script: "FT.selrae_hall(@event_id)" }])
 ch.event(14, 11, "Speaker's alcove", [{ graphic: "", script: "FT.talk(:kelyn_mural, @event_id)" }])
 ch.event(9, 16, "Petitioners' bench", [{ graphic: "", script: "FT.petition_bench(@event_id)" }])
 # the Heralds' statues along the side aisles (each with their partner Pokémon carved at their feet)

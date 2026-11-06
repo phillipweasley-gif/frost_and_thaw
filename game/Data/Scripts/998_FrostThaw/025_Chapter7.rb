@@ -175,7 +175,7 @@ module FrostThaw
       say(["Four colours of sap meet in the hollow at the centre.",
            "They climb the thread of aurora like ivy up a wall, in order, round and round.",
            "The circle sighs. Below you, the braided-root door unknots itself, root by root.",
-           cl(:meat_meat, "Puzzle beaten. Meat Meat would like that on the wall too.")].compact)
+           cl(:meat_meat, "Puzzle beaten. Meat Meat would like that carved on Hellen's wall too.")].compact)
       open_seal
     elsif !flag?(:sap_wraith_fought)
       say(["The sap runs into the hollow in the wrong order. It boils. It rises. It stands up.",
