@@ -845,7 +845,7 @@ module FrostThaw
     say(["In the silver pool beneath the dead engine, something floats free, gathering ice and auroral light: the Frost Saint Shard.",
          "Sephek's heart, veined with frost-light. It whispers prayers in a voice that isn't his."])
     lines = []
-    lines << "(The labyrinth's lab notes: a goddess poured into a drowned man's heart. It went too right.)" if flag?(:knows_shard_origin)
+    lines << "(The lab notes: a goddess poured into a drowned man's heart. It went too right.)" if flag?(:knows_shard_origin)
     lines << "(The ghost in the Antechapel: cleanse me, leave me whole, or break me. None of them clean.)" if flag?(:shard_echo_heard)
     lines << "(The whispering attendant's price, still owing: #{state[:attendant_promise] == :free ? 'free the heart' : 'burn the forge'}.)" if state[:attendant_promise]
     say(lines) if !lines.empty?
