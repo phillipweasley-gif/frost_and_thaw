@@ -44,10 +44,18 @@ module FrostThaw
   LAKE_ARRIVAL   = [2069, 4, 4, 2]
   HOLLOW_ARRIVAL = [2070, 4, 21, 6]
   CHAPEL_ARRIVAL = [2071, 9, 12, 8]
+  SAP_GATE_TOP   = [2055, 9, 21, 2]     # beside the Sap Gate, in the Root-Tier
 
   # The five domains on the Hollow's door: [carving, Herald, domain]
   DOMAINS = [[:mask, :alerion, "Illusion"], [:fist, :meat_meat, "Force"], [:hourglass, :alberica, "Time"],
              [:paw, :reptin, "Wild"], [:shadow, :wyn, "Shadow"]]
+
+  # Kelyn's sending-stone, given at the Council's summons (024 council_summons;
+  # context 08 M8-1). Defined here because the item table (027) loads after 024.
+  RELIC_ITEMS.merge!(
+    FT_SENDSTONE: ["Sending-Stone", "Sending-Stones", 8, 0,
+      "A flat grey stone, Kelyn's. Its twin is Var's. Speak into it and the other one hears.", 0, 0, 6]
+  )
 
   TEXT.merge!(
     tainted_lake_sign: ["The water shines like oil on a puddle. Where it laps the stone, the stone has gone soft."],
@@ -117,13 +125,27 @@ module FrostThaw
   def sap_gate(event_id = nil)
     return say(["The Sap Gate stands open. Warm, spore-sweet air drifts up from below."], event_id) if flag?(:sap_gate_open)
     return talk(:sap_gate_shut, event_id) if !flag?(:ch7_started)
+    # Context 07 M7-1 read-back: Hew's road came first.
+    if flag?(:hew_down)
+      sayc([as(:wyn, flag?(:road_first_b) ? "You let Hew go first. ...That's fair. His people are louder than mine." :
+                                              "Hew's ladder first after all. ...That's fair. His people are louder than mine.")], event_id)
+    end
+    # Context 07 M7-2: what the Gate is, and the night the curtain tore.
     if herald?(:wyn)
       say(["Your post. Your Gate. The bench where you sat every night for three years.",
-           "The place on the root you wore smooth with your thumb."], event_id)
+           "The place on the root you wore smooth with your thumb.",
+           "The knot of bark where the old mirror shard sat is empty. It's in your pocket.",
+           as(:wyn, "It brought me back. It took four hundred years and a hag to do it."),
+           "At the Gate's foot the spore-curtain hangs torn and grey. Boot-prints go down through it."], event_id)
       speak(:wyn, "(to the Gate) I'm back. I'm sorry I was gone.", "...")
     else
       say(["WYN: My post. I sat here every night for three years.",
-           "WYN: (a hand on the root) ...And the one night it mattered, I wasn't here."], event_id)
+           "WYN: (to you) The Sap Gate. It's the myconids' door, and theirs is the door to the deep.",
+           "WYN: The Underdark. Everything under the tree that isn't the tree. We keep it shut.",
+           "At the Gate's foot the spore-curtain hangs torn and grey. Boot-prints go down through it.",
+           "WYN: Festival night the spores went quiet. I ran up to tell the Captain.",
+           "WYN: I left it open behind me. Somebody went down while I was gone.",
+           "WYN: (a hand on the root) ...The one night it mattered, I wasn't here."], event_id)
     end
     sayc([cl(:alberica, "You're here now, sweetheart. That counts double.")])
     stage_act(:wyn, :reach, dx: 0, dy: -1, dir: 8)    # a hand on the root, the knot
@@ -148,8 +170,8 @@ module FrostThaw
          "Its voice arrives inside your head, like a cold creek running over stones.",
          "EIRA: Halt. Declare your purpose."])
     speak(:wyn, "They're with me, Eira. The roots are burning.", "...The roots are burning.")
-    say([herald?(:wyn) ? "EIRA: You left your post. The night the door broke. Hyphora noticed." :
-                         "EIRA: (to Wyn) You left your post. The night the door broke. Hyphora noticed."])
+    say([herald?(:wyn) ? "EIRA: You left your post. The night the curtain tore. The tree noticed." :
+                         "EIRA: (to Wyn) You left your post. The night the curtain tore. The tree noticed."])
     speak(:wyn, "I know. I'm here to answer for it.", "...I know.")
     sayc([cl(:reptin, "(gently) And we're here to stand next to them while they do."),
           cl(:meat_meat, "Anyone pokes mushroom friend with a spear, Meat Meat pokes back."),
@@ -168,8 +190,8 @@ module FrostThaw
     if flag?(:hyphora_leave)
       return say(["EIRA: The tree breathes. The spore-guard owes you. We don't forget a debt."], event_id)
     end
-    say(["EIRA: The Sovereign holds court in the Fane, east, past the water.",
-         "EIRA: The Mnemosyne keeps to her chamber above the gardens.",
+    say(["EIRA: Sovereign Luminara holds court in the Fane, east, past the water.",
+         "EIRA: Myr, our Mnemosyne, keeps her chamber above the gardens. She keeps our memories.",
          "EIRA: Touch nothing that sings."], event_id)
   end
 
@@ -358,7 +380,7 @@ module FrostThaw
           "VOICE IN THE WATER: The lake remembers. The lake remembers.",
           cl(:glimmer, "(a hand on the dagger at his hip) The Rimefang's gone cold. It knows that voice."),
           cl(:alerion, "Sephek."),
-          as(:wyn, "Not him. His heart. They're burning it, somewhere below us."),
+          as(:wyn, "(a hand out to the spores) Not him. The spores taste it. His heart, burning."),
           as(:wyn, "The sap carries the echo up here."),
           cl(:meat_meat, "Meat Meat hates this lake. Meat Meat is not drinking this lake.")])
   end
@@ -502,9 +524,11 @@ module FrostThaw
     if herald?(:wyn)
       say(["When it falls, a spark of shadow rises from it like a moth, and settles on your hand."])
       speak(:wyn, "Oh. That's... mine now. Isn't it.", "...Oh.")
+      say([as(:wyn, "A god's last spark. It doesn't want to hide any more. ...Neither do I.")])
     else
       say(["When it falls, a spark of shadow rises from it like a moth, and settles on Wyn's hand.",
-           "WYN: (quiet) Oh. That's... mine now. Isn't it."])
+           "WYN: (quiet) Oh. That's... mine now. Isn't it.",
+           "WYN: A god's last spark. The part of it that hid. It doesn't want to hide any more."])
     end
     if with_or_is?(:meat_meat)
       sayc([cl(:meat_meat, "Mushroom friend is a god now. Meat Meat is still the bodyguard."),
@@ -529,6 +553,11 @@ module FrostThaw
           "HYPHORA: (no words at first; only the feeling of being held)",
           "HYPHORA: You planted me. You came back.",
           "HYPHORA: Below me: fire. The cold man's heart. A woman who counts.",
+          "HYPHORA: It burns his heart to keep me in summer. My leaves forget how to fall.",
+          "HYPHORA: Thirty summers. No winter, no spring. The wheel can't turn on one season.",
+          flag?(:promised_their_time) || flag?(:herald_wall_vow) ?
+            "HYPHORA: (to you) You want the light-wall gone. Then help me let go of summer." : nil,
+          cl(:reptin, "(very quietly) I only planted an acorn. I didn't know it would be someone."),
           "HYPHORA: I will open my roots to the burning place.", "HYPHORA: Go carefully. I am only four hundred years old.",
           cl(:alberica, "Only four hundred? Sweetheart, I've got shoes older than that."),
           cl(:reptin, "You do not."),
@@ -544,8 +573,10 @@ module FrostThaw
     else
       sayc(["The roots part, but a door of iron and mirror glass blocks the far side.",
             cl(:alerion, "Locked. From the city side."),
-            as(:wyn, "The Guild Dig. Hew's tunnels touch it.")])
-      state[:goal] = "The other road: Hew's Guild Dig and the Split Dock. The door of iron and glass is locked from that side."
+            as(:wyn, "The Guild Dig. Hew's tunnels touch it."),
+            "Hyphora's roots carry you up, slow and warm, to the Sap Gate. It's dusk when you come out."])
+      state[:goal] = "The other road: Hew's ladder, east of the market. The door of iron and glass is locked from that side."
+      transfer(*SAP_GATE_TOP)
     end
   end
 
@@ -570,7 +601,9 @@ module FrostThaw
       end
       set_switch(SW_FORGE_OPEN, true)
       say(["The roots know you. They open. Heat and hammering pour up the shaft."], event_id)
-      return transfer(*FORGE_ARRIVAL)
+      return transfer(*FORGE_ARRIVAL) if forge_door_talk
+      pbMoveRoute($game_player, [PBMoveRoute::Backward]) rescue nil
+      return
     elsif side == :a
       say(lines_for(:forge_door_glass) + ["It's locked from the other side: the Guild Dig."], event_id)
     else
@@ -580,6 +613,35 @@ module FrostThaw
       state[:goal] = "The other road: the Sap Gate in the Root-Tier, and Hyphora."
     end
     pbMoveRoute($game_player, [PBMoveRoute::Backward]) rescue nil
+  end
+
+  # Context 07 M7-8: both roads done, at the door. Who's below, what waiting
+  # costs, and the walk-away test (Bell pp. 33-37). Returns true to go down now.
+  def forge_door_talk
+    return true if flag?(:forge_door_talk)
+    set_flag(:forge_door_talk)
+    pbSEPlay("Earth3") rescue nil
+    $game_screen.start_shake(2, 4, 12) rescue nil
+    sayc(["Far below: hammers, in time. And under them, something like a heartbeat, too slow.",
+          cl(:reptin, "Hyphora's leave, and Selrae's key. That's both locks."),
+          cl(:alerion, "Var's down there. Or what she left of him."),
+          cl(:meat_meat, "And her. The lady. Meat Meat can smell the cold table from here."),
+          cl(:glimmer, "(a hand on the Rimefang) Cold since the stair. It knows where it's going.")])
+    if with_or_is?(:wyn)
+      speak(:wyn, "(very quietly) We could go up. Tell the Council. Let the Rootwardens come.", "...We could go up.")
+    end
+    if with_or_is?(:alberica)
+      speak(:alberica, "And every night we wait, the tree burns a bit more. You heard her, sweetheart.",
+            "...Every night we wait, it burns.")
+    end
+    c = pbMessage(_INTL("Go down now?"), [_INTL("Now."), _INTL("(Go back up and rest first.)")], 1)
+    if c == 0
+      sayc([herald?(:alerion) ? cl(:reptin, "Single file, then. Mind your heads.") : cl(:alerion, "Single file.")])
+      return true
+    end
+    sayc([herald?(:reptin) ? cl(:alberica, "An hour, then, darling. One. The hammers won't wait longer.") :
+                             cl(:reptin, "An hour, then. One. The hammers won't wait longer than that.")])
+    false
   end
 
   def apply_road_a_switches

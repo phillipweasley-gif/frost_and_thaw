@@ -460,6 +460,8 @@ FT::PARTY_CHAT.each { |c, areas| areas.each_value { |v| r = FT.resolve(v); ok &&
 check("all party chat resolves") { ok }
 saved_goal = FT.state[:goal]
 FT.state[:goal] = nil
+saved_sides = FT.state[:side_goals]          # (the Council gives every mode the Wall goal now: start this check without it)
+FT.state[:side_goals] = {}
 $menu_ret = [3, 4]
 cmds = ["  <icon=menuIcons/POKEMON>  Pokémon", "  <icon=menuIcons/BAG>  Bag", "  <icon=menuIcons/PLAYER>  Name", "Save", "Options"]
 $next_choice = 99
@@ -475,6 +477,7 @@ check("with a goal, the pause menu shows Goal, then Heralds, after the trainer e
 check("choosing Goal shows it; later choices still map back correctly") {
   r == 3 && $messages.any? { |m| m.to_s.include?("Get to the College") } }
 FT.state[:goal] = saved_goal
+FT.state[:side_goals] = saved_sides
 
 # bag
 bag = PokemonBag.new

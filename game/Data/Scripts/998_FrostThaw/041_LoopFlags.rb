@@ -101,3 +101,11 @@ end
 # auril_saw_you / auril_answered_*, the Vault's vault_eye_open,
 # vault_door_unlocked, pendant_returned), after the last loop skip point, so
 # they replay with the story and stay out of these lists on purpose.
+
+# Builder d, context pass 06-07 (2026-11-06): Hellen's districts, Rheven's oath
+# at the Shrine, the first road picked at the summons, the
+# door at the bottom of both roads
+module FrostThaw
+  LOOP_ACT2_FLAGS.concat(%i[hellen_districts rheven_oath_told road_first_a
+                            forge_door_talk]).uniq!
+end

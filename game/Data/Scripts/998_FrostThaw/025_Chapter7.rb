@@ -116,6 +116,18 @@ module FrostThaw
     say(["The Rootwardens' willow seal lies cut on the ground.",
          "Warm air rises out of the well: sap, and old ice.",
          "A stair of living root spirals down into the dark. You climb over the fence and go down."], event_id)
+    root_gate_hook
+  end
+
+  # Context 07 §5: nothing on the spine points at the boy in the Bazaar; a
+  # Rootwarden at the fence does, once (a hook, not a goal).
+  def root_gate_hook
+    return if flag?(:boy_mirror_hook) || flag?(:boy_mirror_taken) || flag?(:mirror_child_free)
+    set_flag(:boy_mirror_hook)
+    w = Stage.actor(:rootwarden, $game_player.x + 1, $game_player.y, 4, graphic: "BW (72)") if Stage.map?
+    say(["A Rootwarden at the fence calls after you.",
+         "ROOTWARDEN: A Bazaar kid's got a mirror stuck to his hands. Says it talks."])
+    Stage.remove_actor(w) if w
   end
 
   #-----------------------------------------------------------------------------
@@ -175,7 +187,7 @@ module FrostThaw
       say(["Four colours of sap meet in the hollow at the centre.",
            "They climb the thread of aurora like ivy up a wall, in order, round and round.",
            "The circle sighs. Below you, the braided-root door unknots itself, root by root.",
-           cl(:meat_meat, "Puzzle beaten. Meat Meat would like that on the wall too.")].compact)
+           cl(:meat_meat, "Puzzle beaten. Meat Meat would like that carved on Hellen's wall too.")].compact)
       open_seal
     elsif !flag?(:sap_wraith_fought)
       say(["The sap runs into the hollow in the wrong order. It boils. It rises. It stands up.",

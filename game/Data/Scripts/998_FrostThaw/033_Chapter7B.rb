@@ -91,6 +91,8 @@ module FrostThaw
     if flag?(:hew_down)
       say(["The Guild's ladder goes down into the dark. Hew's down there already, with a lamp."], event_id)
     else
+      # Context 07 M7-1 read-back: the mushrooms came first.
+      say(["HEW: You went down the mushrooms first? Huh. My lads waited. They're good at waiting."], event_id) if flag?(:sap_gate_open)
       sayc(["HEW: You're going down? Then you're going down MY ladder.",
             "HEW: Twelve of mine went down that dig. I'm not sending anybody else alone.",
             cl(:meat_meat, "Ladder man is loud. Meat Meat likes ladder man.")], event_id)
@@ -210,7 +212,8 @@ module FrostThaw
           cl(:reptin, "(quietly) Thank you for telling us. That can't have been easy."),
           "HEW: I'll say it again at any trial you like. I'll say it to the tree.",
           "HEW: My last ladder runs past the south cache, to a door I was told never to open.",
-          "HEW: Iron and glass. Summer's people again."])
+          "HEW: Iron and glass. Summer's people again.",
+          "HEW: They had the only key, and took it down the Root-Gate. Find them, you'll find it."])
     # Hew's gift (rootspire.md 1174): mechanical assistance, and, though he
     # doesn't know it, a dormant fragment of Avarice's code in the works.
     sayc(["HEW: Here. You'll want this down there. Built it from Prototype 3's spare parts, the batch Summer's people paid for.",
@@ -221,14 +224,16 @@ module FrostThaw
     set_flag(:hew_gift)
     if flag?(:beat_digger_gant) && flag?(:beat_digger_hobb) && !flag?(:hew_thanked)
       set_flag(:hew_thanked)
-      say(["HEW: And Gant. And Hobb. You brought two of them back to me.",
-           "HEW: Take the Guild's dig money. Take the light. Take anything."])
+      sayc(["HEW: And Gant. And Hobb. You brought two of them back to me.",
+            cl(:reptin, "(gently) And the other ten?"),
+            "HEW: Further down. Past anywhere I've dug. If you find them... tell them I'm still here.",
+            "HEW: Take the Guild's dig money. Take the light. Take anything."])
       $Trainer.money += 6000 rescue nil
       pbMessage(_INTL("\\me[Item get]{1} received $6,000 from the Guild!", $Trainer.name)) rescue nil
       give(:FT_AURORALMOTE, 2)
     end
     state[:goal] = flag?(:root_key) ? "The door of iron and glass, at the bottom of Hew's last ladder." :
-                   "The door at the bottom of Hew's ladder is locked. Someone below has a key: the Root Gate, the Sap Wells."
+                   "Hew's door is locked, and Summer's people took the key below: down the Root-Gate in the market."
   end
 
   #-----------------------------------------------------------------------------
@@ -313,8 +318,8 @@ module FrostThaw
       sayc(["Mira stands at the wheel in a ring of mirrors. Her daughter runs to her.",
             "Mira doesn't look down.",
             "MIRA: (two voices at once, one of them colder) We know you. The Heralds. Our little failures.",
-            herald?(:meat_meat) ? "(You stop dead. You know that voice. From the cold table.)" :
-                                  cl(:meat_meat, "(stopping dead) ...Meat Meat knows that voice. From the cold table."),
+            herald?(:meat_meat) ? "(You stop dead. The voice from the boy's mirror. The cold table's voice.)" :
+                                  cl(:meat_meat, "(stopping dead) ...The voice from the boy's mirror. The cold table's voice."),
             cl(:reptin, "(stepping between the girl and her mother) Behind me, sweetheart. Now."),
             "MIRA: (the cold voice) You found my nest, didn't you? Come down and see it. We'll be waiting.",
             "Below, in the hold, something hums: a mirror-core, wired into the ship's ribs.",
@@ -415,9 +420,12 @@ module FrostThaw
             cl(:alerion, "Plans.")])
       if !flag?(:vault_map_2)
         say(["In the third basin, where the visions overlapped, the sap has set into something flat and pale:",
-             "a second fragment of the frost-drawn map. A glacier. A door. A dragon's eye."])
+             flag?(:vault_map_1) ? "a second fragment of the frost-drawn map. A glacier. A door. A dragon's eye." :
+                                   "a fragment of a frost-drawn map. A glacier. A door. A dragon's eye."])
         set_flag(:vault_map_2)
-        sayc([cl(:alberica, "Two pieces, darling. Told you there'd be more."), cl(:alerion, "One to go.")])
+        sayc([flag?(:vault_map_1) ? cl(:alberica, "Two pieces, darling. Told you there'd be more.") :
+                                    cl(:alberica, "One piece, darling. There'll be more. There always are."),
+              cl(:alerion, "Keep it dry.")])
       end
     end
   end
@@ -449,7 +457,10 @@ module FrostThaw
     asked << key
     set_flag(:attendant_spoke)
     case key
-    when :summer then say(["ATTENDANT: Summer is a coat."]); set_flag(:knows_summer_coat)
+    when :summer
+      say(["ATTENDANT: Summer is a coat."])
+      sayc([cl(:alberica, "That's not an answer, sweetheart. That's a riddle. I hate riddles I didn't write.")])
+      set_flag(:knows_summer_coat)
     when :heart  then say(["ATTENDANT: The cold man's heart is in the engine.", "ATTENDANT: The engine is in the hag's old kitchen."])
     when :self   then say(["ATTENDANT: You aren't on her wheel. That's why the glass let you through."]); set_flag(:not_on_wheel)
     end
@@ -467,12 +478,28 @@ module FrostThaw
           "SELRAE: I thought a little winter would balance this endless summer. That's all I wanted.",
           cl(:reptin, "(gently) Go on, Matron. We're listening."),
           "SELRAE: They gave the Frost Saint's heart to Summer. I knew it was wrong.",
-          "SELRAE: The Halo had a friend down here too. White hair. Lovely manners.",
-          herald?(:alberica) ? "(Avarice.)" : (with_or_is?(:alberica) ? "ALBERICA: (very plainly) Avarice." : "Avarice."),
-          "SELRAE: (closing her eyes) I've read that name in the oldest ledgers. I hoped it was a story.",
+          "SELRAE: The Halo had a friend down here too. White hair. Lovely manners."], event_id)
+    # Context 07 M7-3, 08 M8-2 part one: the name joined to the face the
+    # player has met (Naerth's pale lady, Ch1; the cold table, Ch2-3); and the
+    # fire below tied to the stuck summer and the Wall (the player's own goal).
+    if with_or_is?(:alberica)
+      speak(:alberica, "(very plainly) Avarice. Naerth's pale lady in the tower. Books and bones.", "(very plainly) ...Avarice.")
+    else
+      say(["Avarice."])
+    end
+    if with_or_is?(:meat_meat)
+      speak(:meat_meat, "(very still) The lady with books and bones. The cold table lady.", "...The cold table lady.")
+    end
+    vow = flag?(:promised_their_time) || flag?(:herald_wall_vow)
+    sayc(["Selrae closes her eyes.",
+          "SELRAE: I've read that name in the oldest ledgers. I hoped it was a story.",
           cl(:meat_meat, "Not a story. Meat Meat has the scars."),
+          "SELRAE: Whatever burns down here, it's what keeps us in summer. Thirty years of it.",
+          "SELRAE: (to the Heralds) And a stuck summer is a stuck wheel. That's your Wall, holding.",
+          vow ? (herald?(:alerion) ? as(:alerion, "So it's one fire. Put it out, and the Wall comes down.") :
+                                     cl(:alerion, "(to you) So it's one fire. Put it out, and the Wall comes down.")) : nil,
           "SELRAE: She wants a vault. Far north, under the glacier, where the goddess keeps what she can't bear to look at.",
-          "SELRAE: (softly, like a prayer) The White Womb. That's what the old priests called it. I never thought I'd say it aloud."], event_id)
+          "SELRAE: (softly, like a prayer) The White Womb. That's what the old priests called it. I never thought I'd say it aloud."].compact)
     c = pbMessage(_INTL("What do you tell Selrae?"), [_INTL("\"Come home. Tell the Council.\""), _INTL("\"Come with us.\"")], 0)
     if c == 1
       set_flag(:selrae_ahead)
