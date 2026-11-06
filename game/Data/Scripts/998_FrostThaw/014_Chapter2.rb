@@ -841,12 +841,29 @@ module FrostThaw
       set_switch(3913, true)                                    # the north gate opens
       say(["DUVESSA: Take the seal. Go after him.",
            "DUVESSA: And if you can end this, I'll owe you every name on that board."], event_id)
+      duvessa_favours(event_id)
       pbMessage(_INTL("\\me[Badge get]{1} received the Palisade Seal!", $Trainer.name))
       pbReceiveItem(:TM118) rescue nil
       say(["DUVESSA: That TM teaches Steel Wing. Fitting for a town that's all walls and watchmen."], event_id)
       state[:goal] = "Sephek is in Lonelywood: out the north gate, through Termalaine."
       mishann_on_the_steps
     end
+  end
+
+  # The Ten-Towns favours, said before they pay (context 14, M14-1 A; owner's
+  # call 2026-11-05: the favours pay well). The first time the spine says what
+  # Ten-Towns is, to strangers, from the woman who leads its Council.
+  def duvessa_favours(event_id = nil)
+    pbBGMPlay("Opelucid City (White)") rescue nil
+    if flag?(:council_session)
+      say(["DUVESSA: What I said at the Council stands. Five towns. Mend them, and I'll pay."], event_id)
+    else
+      say(["DUVESSA: You're not from here. Ten towns, three lakes, ten Speakers. I lead them.",
+           "DUVESSA: Five of those towns are on your road, and each has a trouble it can't mend.",
+           "DUVESSA: Mend one, and its Speaker writes to me. Mend all five, and the Council pays."], event_id)
+    end
+    sayc([cl(:alberica, "Darling, a government that pays its debts. I'll start mending.")])
+    favours_goal if respond_to?(:favours_goal)
   end
 
   #-----------------------------------------------------------------------------

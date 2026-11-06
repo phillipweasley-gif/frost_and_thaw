@@ -65,7 +65,7 @@ module FrostThaw
     FT_ASTRIXBOOK: ["Astrix's Spellbook", "Astrix's Spellbooks", 8, 0,
       "A leather-bound wizard's spellbook, frozen stiff. Its owner swore a lot, Garret said. She also wrote very neatly.", 0, 0, 6],
     FT_OOBOKHEAD: ["Oobok's Remains", "Oobok's Remains", 8, 0,
-      "Wrapped in a cloak. Oobok the dwarf, who died bringing iron to Bryn Shander. His friends should have him back.", 0, 0, 6]
+      "Wrapped in a cloak: a dwarf with a foaming-mug clasp, from the yeti's cave on Kelvin's Cairn. Somebody should take him home.", 0, 0, 6]
   )
 
   TEXT.merge!(
@@ -178,6 +178,7 @@ module FrostThaw
                   "KEEGAN: Boy knows the way. He'll take you straight to the camp. Please hurry."], event_id)
     end
     return keegan_after_garret(event_id) if flag?(:garret_found)
+    return keegan_ask(event_id) if flag?(:climb_asked)
     say(["A handsome man in his thirties opens the door. The dog races past him inside.",
          "When he sees you instead of his husband, his smile fades.",
          "KEEGAN: ...Come in. Come in out of the cold. You'll want cider. Everyone wants cider. Sit.",
@@ -191,14 +192,29 @@ module FrostThaw
          "KEEGAN: Boy would never leave Garret's side. Not unless something terrible had happened."], event_id)
     sayc([cl(:shimmer, "(quietly) Unless someone sent him."),
           cl(:alerion, "Or unless he chose to go for help.")])
-    say(["KEEGAN: It's a lot to ask. Could I persuade you to go up there and find Garret and his companions?",
-         "KEEGAN: I don't have money. But the proprietor of the Luskan Arms is a friend of mine. I could get you free rooms there.",
-         "KEEGAN: And I'm a scrimshander. Bring them home, and I'll carve you something that earns its keep.",
-         "KEEGAN: The quick way is straight across the tundra: east, off the Bryn Shander road."])
-    if !pbConfirmMessage(_INTL("Go up Kelvin's Cairn to find Garret?"))
-      return say(["KEEGAN: ...Of course. It's a mountain. I'm sorry I asked. (He sits down very carefully.)",
+    say(["KEEGAN: (a hand on the dog's head) Sent, or ran. Either way, he came to me."]) if with_or_is?(:shimmer) || with_or_is?(:alerion)
+    keegan_ask(event_id)
+  end
+
+  # The ask itself, with the moose's three answers (context 14, M14-2): help,
+  # what can you pay, not now. "Not now" never locks it: a second talk comes
+  # straight back here. The reward is said up front, in Keegan's words.
+  def keegan_ask(event_id = nil)
+    set_flag(:climb_asked)
+    say(["KEEGAN: It's a lot to ask. Would you go up there and find Garret and the others?"], event_id)
+    c = pbMessage(_INTL("Keegan waits."), [_INTL("\"We'll find him.\""), _INTL("\"What can you pay?\""), _INTL("\"Not now.\"")], -1)
+    if c == 2 || c < 0
+      return say(["KEEGAN: ...Of course. It's a mountain. (He sits down very carefully.) The door's open.",
                   "Boy whines and looks at you."])
     end
+    say([c == 0 ? "KEEGAN: (letting out a breath he's held for days) Thank you. Here's what I have." :
+                  "KEEGAN: Fair. You've come a long way, by the look of you. Here's what I have.",
+         "KEEGAN: No money. But Owenn at the Luskan Arms is a friend. He'll give you rooms.",
+         "KEEGAN: And I carve. Bring them home, and I'll make your Pokémon a charm.",
+         "KEEGAN: Hang it on one, and the rest learn from watching it fight. Garret swears by his.",
+         "KEEGAN: The quick way is straight across the tundra: east, off the Bryn Shander road.",
+         # the side job against the main stakes (context 14, M14-2 suggestion)
+         "KEEGAN: I asked the Speaker for two militia. Naerth said his men don't climb for free."])
     sayc([cl(:alberica, "Sweetheart, we'd love to. Keep the cider warm."),
           cl(:reptin, "We'll bring him home, Keegan. That's a promise, not a pleasantry."),
           "KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him.",
@@ -206,7 +222,9 @@ module FrostThaw
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
     set_switch(SW_MC_TAKEN, true)
-    side_goal(:climb, "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn.", done: :climb_done)
+    side_goal(:climb, flag?(:badge_targos) ? "Kelvin's Cairn: east off the Bryn Shander road, across the tundra. Find Garret Velryn." :
+                                             "Kelvin's Cairn: east off the Bryn Shander road, once you can leave Targos. Find Garret Velryn.",
+              done: :climb_done)
   end
 
   # You found Garret on the mountain before anyone asked you to. Keegan already
@@ -232,7 +250,8 @@ module FrostThaw
     if !pbConfirmMessage(_INTL("Go back up Kelvin's Cairn for the others?"))
       return say(["KEEGAN: ...Of course. You've done more than enough. (He looks at the window, at the mountain, for a long time.)"])
     end
-    sayc([cl(:reptin, "All three. We swore it on the mountain and we'll swear it here."),
+    sayc([cl(:reptin, flag?(:climb_sworn) ? "All three. We swore it on the mountain and we'll swear it here." :
+                                            "All three. We'll swear it here, if he needs it sworn."),
           "KEEGAN: Take Boy. He knows the way up better than anyone now."])
     set_flag(:climb_taken)
     set_flag(:boy_with_you)
@@ -352,9 +371,9 @@ module FrostThaw
     set_flag(:garret_found)
     set_switch(SW_MC_GARRET, true)
     say(["GARRET: There were three more. I need to find them. They're still up there. I know they are.",
-         "GARRET: Mokingo Growling Bear. A goliath. Wanted to find Oyaminartok and test himself against her.",
-         "GARRET: Perilou Fishfinger. A halfling. Follows Yondalla. Stuck to Mokingo like his shadow.",
-         "GARRET: And Astrix. A tiefling. Mumbles. Swears a lot. I never did learn her story."])
+         "GARRET: Mokingo Growling Bear. A goliath, seven feet of him. Came to fight a legend.",
+         "GARRET: Perilou Fishfinger. A little halfling, prays to Yondalla. Mokingo's shadow.",
+         "GARRET: And Astrix. A tiefling. Horns. Swears a lot. I never did learn her story."])
     c = pbMessage(_INTL("What do you say?"), [_INTL("\"Go home. We'll find them.\""), _INTL("\"Then come with us.\"")], 0)
     if c == 0
       if ($PokemonBag.pbHasItem?(:SUPERPOTION) rescue false) || ($PokemonBag.pbHasItem?(:POTION) rescue false)
@@ -362,7 +381,10 @@ module FrostThaw
         $PokemonBag.pbDeleteItem(item) rescue nil
         say(["You use a #{GameData::Item.get(item).name} on his wounds until he can stand on his own.",
              "GARRET: ...You'll search for all three? You swear it?"])
-        speak(:reptin, "We swear it. All three. Go home to your husband.", "...We swear it.") if with_or_is?(:reptin)
+        if with_or_is?(:reptin)
+          speak(:reptin, "We swear it. All three. Go home to your husband.", "...We swear it.")
+          set_flag(:climb_sworn)
+        end
         say(["GARRET: Then I'll go. Keegan will kill me if I don't. Come on, Boy. Home."])
         say(["Boy looks at you, then at Garret, and goes with Garret. Of course he does."]) if flag?(:boy_with_you)
         set_flag(:boy_with_you, false)
@@ -440,11 +462,20 @@ module FrostThaw
   def yeti_trophies(event_id = nil)
     say(lines_for(:yeti_trophies), event_id)
     return if flag?(:oobok_found)
-    say(["One head belongs to a dwarf, his beard braided with iron rings. A Battlehammer clasp. Oobok.",
-         "Another, older, wears the frost of a month: a dwarf with a miner's look. Barthoom."])
-    sayc([cl(:alberica, "(very quietly) Oh, you poor lads."),
-          cl(:alerion, "We take the dwarf home. His friends will want him.")])
-    if pbConfirmMessage(_INTL("Wrap Oobok's remains and take them back to his friends?"))
+    met = flag?(:mugs_taken) || flag?(:mugs_refused) || flag?(:mugs_done)   # (Hruna told you his name)
+    if met
+      say(["One head belongs to a dwarf, his beard braided with iron rings. A Battlehammer clasp. Oobok.",
+           "Another, older, wears the frost of a month: a dwarf with a miner's look. Barthoom."])
+      sayc([cl(:alberica, "(very quietly) Oh, you poor lads."),
+            cl(:alerion, "We take the dwarf home. His friends will want him.")])
+    else
+      say(["One head belongs to a dwarf, his beard braided with iron rings. A clasp: a foaming mug.",
+           "Another, older, wears the frost of a month: a dwarf with a miner's look."])
+      sayc([cl(:alberica, "(very quietly) Oh, you poor lads."),
+            cl(:alerion, "A clan mark. Somebody in Bryn Shander will know him. We take him with us.")])
+    end
+    if pbConfirmMessage(met ? _INTL("Wrap Oobok's remains and take them back to his friends?") :
+                              _INTL("Wrap the dwarf's remains and take them with you?"))
       give_key(:FT_OOBOKHEAD)
       set_flag(:oobok_found)
     end
@@ -555,7 +586,8 @@ module FrostThaw
     end
     if !flag?(:perilou_saved) && !flag?(:astrix_found)
       return say(["KEEGAN: Garret's home. Garret's HOME. (He can't stop touching his husband's sleeve.)",
-                  "GARRET: The others, though. Perilou. Astrix. You swore."], event_id)
+                  flag?(:climb_sworn) ? "GARRET: The others, though. Perilou. Astrix. You swore." :
+                                        "GARRET: The others, though. Perilou. Astrix. They're still up there."], event_id)
     end
     say(["Keegan opens the door, sees Garret, and makes a sound that isn't a word.",
          "For a while nobody says anything at all. Boy runs circles round the both of them until he falls over."], event_id) if !flag?(:garret_sent_home)
@@ -564,7 +596,7 @@ module FrostThaw
     if flag?(:perilou_saved)
       say(lines_for(:perilou_home))
     end
-    say(["KEEGAN: I told you it wasn't worth much. It's worth something to me.",
+    say(["KEEGAN: I said I'd carve you something useful. That's coming. First, these.",
          "He gives you a little wooden box. Inside: four scrimshaw figurines.",
          "A spouting whale. A smiling fox. A pair of dancing hares. And a walrus, with \"BIG LOVE\" carved into its side.",
          "KEEGAN: And Owenn at the Luskan Arms knows. Your beds there are free, as long as he has beds."])

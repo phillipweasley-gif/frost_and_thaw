@@ -163,6 +163,7 @@ module FrostThaw
     return if !flag?(:met_hellen) || flag?(:auril_whisper)    # Chapter 11 begins with the Whisper at the Hearth
     if !state[:rs_day]                 # the night you arrive is Day 1
       state[:rs_day] = 1
+      act1_jobs_goodbye if respond_to?(:act1_jobs_goodbye)   # the Dale's unfinished favours (context 14, M14-9 B)
       return
     end
     state[:rs_day] += 1

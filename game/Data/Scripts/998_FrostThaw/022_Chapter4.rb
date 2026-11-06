@@ -775,6 +775,12 @@ module FrostThaw
           "DURMOOT: Chasm's south. Take this. It's the only thing in this town that cuts the wind.",
           "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns.",
           "DURMOOT: ...Don't tell anyone I said that either."])
+    # The last chance at Act I's favours, said before the door (context 14, M14-9 A).
+    if respond_to?(:town_quests_done) && town_quests_done < 5 && !flag?(:ten_towns_thanked)
+      sayc([cl(herald?(:reptin) ? :alerion : :reptin,
+               "The Chasm's a long way down. If we owe anyone up the road, now's the time to pay.")] +
+           favours_count_lines)
+    end
     pbReceiveItem(:TM95) rescue nil
     Stage.cleanup rescue nil
     set_flag(:dh_morning)

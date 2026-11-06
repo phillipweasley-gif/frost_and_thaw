@@ -72,16 +72,25 @@ module FrostThaw
       return say(["HRUNA: Halfway to Kelvin's Cairn, on the open tundra. Straight east off the Bryn Shander road.",
                   "STORN: (glancing at the sky) Watch for dragons. White ones. I'm just saying. Watch."], event_id)
     end
+    # "Not yet" never loses them (context 14, M14-3; notes 14 E7): a second talk
+    # goes straight to the ask.
+    return mugs_ask(event_id) if flag?(:mugs_asked)
     say(["Three stocky figures bundled in cold-weather gear stumble toward you, snowshoes slung on their backs, ice picks at their belts.",
          "Two have thick beards. The third holds up a gloved hand and speaks through a thick wool scarf, in a smoker's rasp.",
-         "HRUNA: Well met! I'm Hruna, and these are my friends, Korux and Storn. We need help, and ye look capable.",
-         "She's lost her right ear and two fingers to frostbite. Korux stares in silence: three fingers, two toes and his nose, gone.",
+         "HRUNA: Well met! I'm Hruna, and these are my friends, Korux and Storn. We need help, and ye look capable."], event_id)
+    # Oobok, found before you met his friends (M14-4): they read the bundle.
+    if ($PokemonBag.pbHasItem?(:FT_OOBOKHEAD) rescue false)
+      say(["Hruna's eyes go to the cloak-wrapped bundle on your pack, and the foaming-mug clasp on it.",
+           "HRUNA: ...That's Oobok's clasp. Where did ye find him?",
+           "You tell her: the yeti's cave on Kelvin's Cairn. Korux turns away."])
+    end
+    say(["She's lost her right ear and two fingers to frostbite. Korux stares in silence: three fingers, two toes and his nose, gone.",
          "Storn keeps glancing up at the sky, as if a white dragon might drop out of it any moment.",
          "HRUNA: We're what's left of a group bringing a sled of iron ingots to Bryn Shander. Battlehammer iron, from the mines under Kelvin's Cairn.",
          "HRUNA: A yeti surprised us. Killed Oobok. The rest of us ran while it tore him limb from limb.",
          "HRUNA: Now we need someone to go back and get the sled. A gemstone each for ye, fifty gold apiece.",
-         "HRUNA: And a piece from Garn's forge, made to fit. Dwarf work's a boon, in times like these.",
-         "HRUNA: Ye'll need snowshoes to make the trip in good time."], event_id)
+         "HRUNA: And Garn the Hammer's forge, down the street, will make ye a piece to fit.",
+         "HRUNA: Ye'll need snowshoes to make the trip in good time."])
     if ($Trainer.has_running_shoes rescue false)
       say(["KORUX: (pointing at your feet, wordlessly, and nodding once.)"])
     else
@@ -89,19 +98,28 @@ module FrostThaw
       $Trainer.has_running_shoes = true rescue nil
       set_flag(:got_snowshoes)
     end
-    sayc([cl(:shade, "Iron's heavy. Goblin raiders love heavy things they didn't have to carry."),
-          cl(:reptin, "A yeti, a sled, and a blizzard season. Of course we'll help. Somebody has to.")])
-    if pbConfirmMessage(_INTL("Go and fetch the dwarves' sled?"))
-      say(["HRUNA: Straight toward Kelvin's Cairn. The sled's halfway between here and the mountain, out on the tundra.",
-           "HRUNA: East off the Bryn Shander road. Ye'll see the mountain. Walk at it."])
+    sayc([cl(:shade, "Iron's heavy. Goblin raiders love heavy things they didn't have to carry.")])
+    mugs_ask(event_id)
+  end
+
+  def mugs_ask(event_id = nil)
+    set_flag(:mugs_asked)
+    # The guard said nobody leaves on a draw night (M14-3 box 2).
+    say(["HRUNA: Not tonight, aye. Draw night. The sled'll keep till morning. The goblins won't."], event_id) if !flag?(:lottery_stand)
+    c = pbMessage(_INTL("Go and fetch the dwarves' sled?"), [_INTL("Yes"), _INTL("Not yet")], -1)
+    if c == 0
+      sayc([cl(:reptin, "A yeti, a sled, and a blizzard season. Of course we'll help. Somebody has to."),
+            "HRUNA: Straight toward Kelvin's Cairn. The sled's halfway between here and the mountain, out on the tundra.",
+            "HRUNA: East off the Bryn Shander road. Ye'll see the mountain. Walk at it."], event_id)
       set_flag(:mugs_taken)
+      set_flag(:mugs_refused, false)
       set_switch(SW_FM_TAKEN, true)
       set_switch(SW_FM_DWARVES, false)
+      side_goal(:mugs, "The Battlehammer sled: out on the tundra, east off the Bryn Shander road, toward Kelvin's Cairn.",
+                done: :mugs_done)
     else
-      say(["HRUNA: Hmph. Suit yerselves. We'll find someone with spine.",
-           "They stump away in a huff toward the Bryn Shander road, looking for somebody with spine. You don't see them again."])
+      say(["HRUNA: Hmph. We'll be right here, drinking to Oobok. Find yer spine, come find us."], event_id)
       set_flag(:mugs_refused)
-      set_switch(SW_FM_DWARVES, true)
     end
   end
 
@@ -213,8 +231,10 @@ module FrostThaw
   def goblin_kindness
     say(["You walk down into plain sight with your hands where they can see them. The goblins freeze.",
          "IZOBAI: STOP! Who you? What you want? This our sled! We found it!"])
-    sayc([cl(:meat_meat, "(stepping forward) Meat Meat was cold like goblins once. Very cold. In a cage."),
-          cl(:alberica, "Darlings, you look frozen to the bone. Here.")])
+    # Izobai answers, so Meat Meat's line is spoken (context 14 §6).
+    speak(:meat_meat, "(stepping forward) Meat Meat was cold like goblins once. Very cold. In a cage.",
+                      "(quietly) Meat Meat was cold once. In a cage.") if with_or_is?(:meat_meat)
+    sayc([cl(:alberica, "Darlings, you look frozen to the bone. Here.")])
     gift = if ($PokemonBag.pbHasItem?(:MOOMOOMILK) rescue false) then :MOOMOOMILK
            elsif ($PokemonBag.pbHasItem?(:FRESHWATER) rescue false) then :FRESHWATER
            elsif ($PokemonBag.pbHasItem?(:LEMONADE) rescue false) then :LEMONADE
@@ -262,8 +282,13 @@ module FrostThaw
     say(["HRUNA: A bloodstone each, as promised. And Garn's to knock a tenth off anything ye buy at Blackiron Blades. Forever."])
     pbReceiveItem(:FT_BLOODSTONE, 5) rescue nil
     favour_forge
-    sayc([cl(:alberica, "A tenth off swords nobody wants. Generous. I'm genuinely touched."),
-          cl(:alerion, "They're cheap swords. A tenth off a cheap sword is nearly free.")])
+    # (only if you've seen Garn's swords: Blackiron Blades, down the street)
+    if flag?(:met_garn)
+      sayc([cl(:alberica, "A tenth off swords nobody wants. Generous. I'm genuinely touched."),
+            cl(:alerion, "They're cheap swords. A tenth off a cheap sword is nearly free.")])
+    else
+      sayc([cl(:alberica, "A tenth off, forever. Darling, I've had proposals that offered less.")])
+    end
     set_flag(:mugs_done)
     set_switch(SW_FM_DONE, true)
     town_quest_finished

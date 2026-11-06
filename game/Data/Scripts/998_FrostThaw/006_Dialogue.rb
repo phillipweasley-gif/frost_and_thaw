@@ -236,6 +236,7 @@ module FrostThaw
       when :area     then Array(v).include?(AREAS[$game_map.map_id])
       when :with     then Array(v).all? { |c| companions.include?(c) }
       when :time     then (v == :night) == (PBDayNight.isNight? rescue false)
+      when :switch   then Array(v).all? { |sw| $game_switches && $game_switches[sw] }
       else true
       end
     end

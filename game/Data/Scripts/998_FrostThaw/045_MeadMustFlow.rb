@@ -157,12 +157,17 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def mead_quest_offer(event_id = nil)
     return if flag?(:mead_taken)
+    # Told by somebody, with the word before the prompt uses it, and the jelly
+    # promised up front (context 14, M14-8; notes 14 E11).
     sayc(["The townsfolk crowd round as soon as they see you might be the sort who'd go after a giant.",
-          "\"It took three casks! Off the sled! Kendrick stood in its way and it put a spear through him three times!\"",
-          "\"We can't pay much. Lodging and drink for a tenday. All the drink you like. Once we HAVE drink.\"",
-          cl(:alberica, "Free drink for a tenday. Darling, I'd fight a dragon for that.")], event_id)
+          "GOSSIP: You! You look like you'd go after a giant. Please. Listen.",
+          "GOSSIP: A verbeeg came out of the woods. A giant, nine feet, all elbows. It took our mead.",
+          "GOSSIP: Speaker Kendrick stood in its way. It put a spear through him. Three times.",
+          flag?(:council_session) ? cl(:alberica, "(very quietly) Kendrick. He promised us the first cask.") : nil,
+          "GOSSIP: Lodging and drink for a tenday. And the brewmistress has a pot of royal jelly."], event_id)
     return if !pbConfirmMessage(_INTL("Go after the verbeeg and bring back Good Mead's casks?"))
-    say(["\"It went west! Into the woods! Fef the trapper went that way this morning, checking his lines...\""])
+    say([flag?(:met_fef) ? "GOSSIP: It went west! Into the woods! Follow Fef's tracks, he came back that way." :
+                           "GOSSIP: It went west! Into the woods! Fef the trapper's out that way, checking his lines."])
     set_flag(:mead_taken)
     side_goal(:mead, "Track the verbeeg west into the woods from Good Mead, and bring back the stolen casks of mead.", done: :mead_returned)
   end
@@ -318,7 +323,7 @@ module FrostThaw
     say(["The ogre lurches up and grabs its greatclub. OGRE: ME FRIEND!"])
     return if !boss_battle(named_mon(:B524H57, 25, "Friend"))
     sayc(["The ogre goes down with a crash that shakes icicles off the ceiling.",
-          cl(:shade, "\"Friend.\" It couldn't remember its own name. The verbeeg named it for it.")])
+          cl(:shade, "\"Friend.\" It couldn't remember its own name. Somebody taught it that one.")])
     set_flag(:friend_down)
     $game_map.events.each_value { |e| set_self_switch(e.id, "A") if e.name == "Friend" } rescue nil
   end
@@ -602,17 +607,20 @@ module FrostThaw
           "\"The MEAD! The mead's back!\"",
           "Within the hour the mead hall is full, the bees are humming, and somebody is already singing about you, badly."])
     if !flag?(:duhg_down) || flag?(:gahg_vengeful) || flag?(:verbeegs_both_alive)
-      sayc(["Later, when the singing stops, the brewmistress finds you by the hive fire.",
+      sayc(["Later, when the singing stops, the brewmistress finds you in the street.",
             "BREWMISTRESS: The giant. You left it alive. (Or its mate.) What's to stop it coming back?",
             cl(:alerion, "Nothing. Keep the militia on the treeline. And keep the bees inside.")])
     end
     say(["The town keeps its word: lodging and drink for a tenday. The brewmistress presses three flasks into your hands",
          "(honey mead, stoppered tight: they restore like Berry Juice)."])
     pbReceiveItem(:BERRYJUICE, 3) rescue nil
-    say(["BREWMISTRESS: And a pot from the queen hive. Royal jelly. It's what turns a worker into a queen.",
-         "BREWMISTRESS: Kendrick swears a spoonful teaches any creature a new trick. Kendrick swears a lot."])
+    say(["BREWMISTRESS: And the royal jelly. It's what turns a worker bee into a queen.",
+         "BREWMISTRESS: Kendrick swore a spoonful changed a creature's nature. ...He swore a lot."])
     give(:ABILITYCAPSULE)
-    say(["(The royal jelly works like an Ability Capsule.)"])
+    say(["(The royal jelly changes a Pokémon's Ability, like an Ability Capsule.)",
+         # Good Mead has no Speaker now: who to see (notes 14 E12)
+         "BREWMISTRESS: Now the town needs a Speaker. Olivessa at the cooperage wants a word with you."])
+    side_goal(:election, "Good Mead needs a Speaker. Olivessa Untapoor wants a word, at the cooperage.", done: :election_asked)
     side_goal_done(:mead)
     town_quest_finished
     add_counter(:story_beats)
@@ -626,8 +634,8 @@ module FrostThaw
     return say(["OLIVESSA: Shandar's off to Targos, they say. Funny time to take a walk."], event_id) if flag?(:election_asked) && $game_switches[SW_GM_SHANDAR_AWAY]
     return say(["OLIVESSA: Whatever you decide. I'll back it."], event_id) if flag?(:election_asked)
     set_flag(:election_asked)
-    say(["A middle-aged woman takes off her thick wool scarf so she can speak clearly.",
-         "OLIVESSA: My name's Olivessa. I make the casks for the mead. Some friends of mine don't want Shandar Froth",
+    say(["Olivessa takes off her thick wool scarf so she can speak clearly.",
+         "OLIVESSA: The honey-cake strangers. Sit. I've a favour to ask. Some friends of mine don't want Shandar Froth",
          "OLIVESSA: to become our next town speaker. They say he's untrustworthy. I don't know him that well,",
          "OLIVESSA: but I've been urged to run against him. I have no interest in the speakership.",
          "OLIVESSA: But you seem to be a good leader, and this town could use one. What do you say?"], event_id)
@@ -686,8 +694,8 @@ module FrostThaw
     say(["You catch him on the edge of the woods. He turns, swearing, and whistles up his Pokémon."])
     if pbTrainerBattle(:FT_ZHENTARIM, "Varro", nil, false, 0)
       sayc(["THUG: All right! All right! It was a job. Scare the town, get chased out by the dwarf. Easy money.",
-            "THUG: Naerth Maxildanarr hired us. Speaker of Targos. He wants his dwarf in charge here.",
-            "THUG: The dwarf's wanted for murder in Mirabar. The Black Network found him. Now he does what he's told.",
+            "THUG: Naerth Maxildanarr hired us. Speaker of Targos. He wants his man Froth in charge here.",
+            "THUG: Froth's wanted for murder in Mirabar. The Black Network found him. Now he does what he's told.",
             cl(:alberica, "Well. That's going to make a lovely speech, darling.")])
       set_flag(:shandar_exposed)
     else

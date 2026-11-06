@@ -152,7 +152,7 @@ module FrostThaw
     path_skier_esk_after: ["ESK: Lean into the wind. It's the only way to stay up."],
     path_aurilite_rho_after: ["RHO: Termalaine's pretty. The Frostmaiden likes pretty things. She keeps them."],
     miner_jory_after: [{ if: { flag: :mine_done }, lines: ["JORY: Back to work tomorrow! Thanks to you. Don't let it go to your head."] },
-                       ["JORY: Fifty gold from the Speaker, they say. The militia won't touch it. Wonder why."]],
+                       ["JORY: Five thousand from the Speaker, they say. The militia won't touch it. Wonder why."]],
     tm_officer_varn_after: ["STENNIS: Masthew won by a hair. Hairs get cut."],
     tm_kobold_worker: ["KOBOLD: Termalaine! Warm! Work! The big ones laugh at our tails. Then they share chowder.",
                        "KOBOLD: Good town. Trex is quiet now. Trex is just Trex. That is fine. We like just Trex."]
@@ -205,7 +205,7 @@ module FrostThaw
                   "DARMO: (quieter) That's you. I'm shouting about you."], event_id)
     end
     say(["A boy wrapped in heavy winter clothes stands on a box, shouting the news at people who don't stop.",
-         "DARMO: The gemstone mine is closed because of MONSTERS! Speaker Masthew is offering FIFTY GOLD to anyone who clears it out!",
+         "DARMO: The gem mine's closed! MONSTERS! Speaker Masthew pays FIVE THOUSAND to clear it!",
          "He sees you've stopped. He looks delighted.",
          "DARMO: You want the mine? It's north-east, half an hour up the trail into the woods. It's very important for Termalaine.",
          "DARMO: Without the mine, nobody has any money. The Speaker's at the Blue Clam, on the docks. Go! Go!"], event_id)
@@ -225,9 +225,11 @@ module FrostThaw
          "A broad half-orc with a sharp, tired face. Speaker Oarus Masthew.",
          "OARUS: A gang of kobolds crept into the gem mine a few days back. Came in from the surface. The miners ran.",
          "OARUS: Nobody's been killed. But kobolds are too much for miners with picks.",
-         "OARUS: And a miner went missing the week before. Hessa. Some of them think something's crawled up from the Underdark.",
+         "OARUS: And a miner went missing the week before. Hessa. Some think something's crawled up from below.",
+         "OARUS: From the Underdark. The dark under the world.",
          "OARUS: I think she fell down the central shaft. It goes down so far you'd never find a body.",
-         "OARUS: Fifty gold to whoever clears the mine. It matters, more than I can say. No mine, no money. No money..."], event_id)
+         "OARUS: Five thousand to whoever clears it. And the miners' pick of the first new stones.",
+         "OARUS: It matters more than I can say. No mine, no money. No money..."], event_id)
     sayc([cl(:alerion, "Your militia can't deal with kobolds?"),
           "OARUS: (a pause that goes on a little too long) ...They're busy.",
           cl(:shade, "(aside) He asked them. They said no. That's a speaker with a problem.")])
@@ -235,7 +237,7 @@ module FrostThaw
       say(["OARUS: Good. Good. North-east, the trail into the woods. Bring a light. Bring two."])
       set_flag(:mine_taken)
       set_switch(SW_TM_MINE_OPEN, true)
-      side_goal(:mine, "Termalaine's gem mine, north-east of town: kobolds. (Speaker Masthew pays fifty gold.)", done: :mine_done)
+      side_goal(:mine, "Termalaine's gem mine, north-east of town: kobolds. (Speaker Masthew pays well.)", done: :mine_done)
     else
       say(["OARUS: Then enjoy Termalaine. It's very pretty. Until you have to live in it."])
     end
@@ -417,7 +419,7 @@ module FrostThaw
               cl(:reptin, "Wings like a dragon, and a deal in mind. Let's go and hear it.")])
         set_flag(:kobold_questioned)
       else
-        say(["They flee north, down the tunnel to level three."])
+        say(["They flee north, down the tunnel, deeper in."])
       end
       set_flag(:grek_fled)
       set_switch(SW_TM_GREK, true)
@@ -554,24 +556,26 @@ module FrostThaw
            "Termalaine has no speaker."])
       sayc([cl(:alerion, "...The thing in the dark. We left it there."),
             cl(:reptin, "(very quietly) We should have gone back for it.")])
+      # An honest failure (context 14, M14-6): nobody pays, and the counter says why.
+      say(["SHAELEN: (at the Blue Clam door) There's no one to pay you. There's no one to pay anyone."])
       set_flag(:oarus_dead)
       set_switch(SW_TM_OARUS_GONE, true)
       set_flag(:mine_done)
-      town_quest_finished
+      town_quest_finished("Termalaine's mine is open. Its Speaker is gone.")
       return mine_finish
     end
     if ghost_loose
       say(["Oarus comes back up the trail the next day, smiling, a clump of lichen in his hand.",
            "OARUS: All clear! Perfectly safe. And the FLORA down there, have you ever really looked at it?",
            "OARUS: Crustose, foliose, fruticose... (He stops. He blinks.) ...I'm sorry. What was I saying?",
-           "He pays you fifty gold. His handwriting on the receipt is beautiful, and nothing like a half-orc's."])
+           "He pays you five thousand. His handwriting on the receipt is beautiful, and nothing like a half-orc's."])
       sayc([cl(:alerion, "(very low) That isn't him. Not all of him."),
             cl(:shade, "The ghost. We left it down there, and it found someone who matters. Just like it wanted.")])
       set_flag(:oarus_possessed)
     else
       say(["Oarus comes back up the trail the next day, filthy and grinning.",
            "OARUS: Not a kobold, not a monster, not a sound but the river. The miners are already going back in.",
-           "OARUS: Fifty gold, as promised. And Termalaine's thanks. The militia's too, whether they like it or not."])
+           "OARUS: Five thousand, as promised. And Termalaine's thanks. The militia's too, whether they like it or not."])
     end
     if flag?(:kobolds_to_town)
       say(["Within the week the kobolds have jobs: hauling, sweeping, carrying tools. The townsfolk tease them about their tails.",
@@ -591,7 +595,7 @@ module FrostThaw
     say(lines_for(:oarus_after), event_id)
     sayc([cl(:alerion, "(his ring ice-cold) Janth. We know you're in there."),
           "OARUS: (the half-orc's face goes still, and an old man looks out of it) ...I only need a little longer. My samples...",
-          "A threadbare satchel sits on the desk beside him, full of moss and lichen."])
+          "A threadbare satchel hangs at his hip, full of moss and lichen."])
     return if !pbConfirmMessage(_INTL("Destroy Janth's satchel?"))
     sayc(["You take the satchel out into the wind and shake its moss and lichen out over the lake. The gusts take it all.",
           "Behind you, Oarus sits down hard in the snow.",

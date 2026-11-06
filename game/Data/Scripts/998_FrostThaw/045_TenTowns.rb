@@ -56,28 +56,32 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # The Ten-Towns Rumors table (RotF p. 18), and who's already been dealt with.
   #-----------------------------------------------------------------------------
-  # [rumour, flag that means it's old news (nil: never)]
+  # [rumour, follow-up, flag that means it's old news (nil: never), flag(s) it
+  # waits for (nil: from the start)]. Every lead is to something in the game
+  # (notes 14 E6); none tells what hasn't happened yet (E28).
   TEN_TOWNS_RUMORS = [
-    ["In Bremen, fishers are being terrorised by a monster that lives in Maer Dualdon.",
-     "Strange that none of the other towns on that lake have been harangued by it.", nil],
+    ["Speaker Shane pays her debts, they say. Help a town, and she hears of it.",
+     "Five towns on the road to the Hole. Help all five, and the Council pays well.", :ten_towns_thanked, :badge_bryn],
     ["In Bryn Shander, some dwarves will pay good money to anyone who can find a lost shipment for them.",
-     "Iron ingots, on a sled. Somewhere out toward Kelvin's Cairn.", :mugs_done],
-    ["In Caer-Dineval, no one's seen Speaker Crannoc for a long time. Fallen ill, they say.",
-     "But sinister figures go in and out of the castle at odd hours.", nil],
-    ["In Caer-Konig, the shops are beset by vandals and thieves nobody ever sees.",
-     "Speaker Trovus could really use some help catching them.", nil],
+     "Iron ingots, on a sled. Somewhere out toward Kelvin's Cairn.", :mugs_done, nil],
+    ["In Bryn Shander, there's a gnome in a bear suit up in the Morninglord's attic.",
+     "Swears his friend's out in the wilds, building a thing to end the winter.", :copper_asked, nil],
+    ["In Termalaine, the Eastside girl sings about a woman in red.",
+     "Says her gran met her. Ask nicely.", :marta_ring, nil],
     ["In Dougan's Hole, people live in fear of winter wolves that haunt the outskirts of town.",
-     "As big as horses, they are, and smarter than normal wolves.", :kids_home],
-    ["In Easthaven they caught an evil wizard who killed some adventurers. They mean to burn him at the stake.",
-     "The captain of the guard wants adventurers for another job. Might be related. Might not.", nil],
+     "As big as horses, they are, and smarter than normal wolves.", :kids_home, nil],
+    ["In Bryn Shander, the speakers sit at the Council Hall when there's call to.",
+     "Shane's broken the charter. They'll sit the morning after the draw.", :council_session, :lottery_stand],
     ["In Good Mead, the speaker was killed by a nine-foot-tall giant. It stole a shipment of honey mead.",
-     "Without that mead, half the taverns in Ten-Towns might go dry!", :mead_returned],
+     "Without that mead, half the taverns in Ten-Towns might go dry!", :mead_returned, [:council_session, :termalaine_arrived]],
     ["In Lonelywood, beware the dreaded white moose! It attacks loggers and trappers on sight.",
-     "The town's best hunters can't catch it. They could use some help.", :white_moose_done],
-    ["In Targos, a band of adventurers set off up Kelvin's Cairn, hunting Oyaminartok.",
-     "She's a goliath who turns into a polar bear. Hurry, you might catch them up!", :climb_done],
+     "Speaker Huddle's hunters can't catch it. She'd pay anyone who could.", :white_moose_done, nil],
+    ["In Targos, Keegan Velryn's man led some adventurers up Kelvin's Cairn.",
+     "Days ago. His dog came back alone. Keegan's beside himself.", :climb_done, nil],
     ["In Termalaine, Speaker Masthew has closed one of the gem mines. A gang of kobolds crept in.",
-     "Anyone who clears out the mine can expect to be well paid.", :mine_done]
+     "Anyone who clears out the mine can expect to be well paid.", :mine_done, nil],
+    ["In Lonelywood, nobody's run Ramshackle since the owner hanged.",
+     "Folk say he didn't do it himself.", :white_moose_done, nil]
   ]
 
   TEXT.merge!(
@@ -127,11 +131,12 @@ module FrostThaw
                       "BRYN SHANDER. TARGOS. TERMALAINE. LONELYWOOD. BREMEN.",
                       "EASTHAVEN. GOOD MEAD. DOUGAN'S HOLE. CAER-DINEVAL. CAER-KONIG.",
                       "Dougan's Hole's chair is dusty. Lonelywood's has cookie crumbs on it."],
-    council_charter: ["A charter on the wall, signed by ten speakers a little over a year ago:",
+    council_charter: -> { ["A charter on the wall, signed by ten speakers a little over a year ago:",
                       "\"On the night of each new moon, every town shall make its offering to the Frostmaiden,",
                       "as each town's speaker judges it can bear: a life, or its food, or its warmth.",
                       "We judge this a necessary evil, and will end it in a heartbeat when she is appeased.\"",
-                      "Under it, in smaller writing: \"or dealt with in some other way.\""],
+                      "Under it, in smaller writing: \"or dealt with in some other way.\""] +
+                     (T.herald?(:alberica) ? ["(Another bargain with Her. Your family made one too. Nobody ever said what it cost.)"] : []) },
     # --- the sacrifices, in each town -------------------------------------------------
     sacrifice_warmth_gm: ["New moon nights, Good Mead gives the Frostmaiden its warmth.",
                           "No fires from dusk to dawn. Not the hive fire. Not the hearths. Not a candle.",
@@ -163,7 +168,8 @@ module FrostThaw
     council_hall: ["Naerth's chair is nearest the door. Of course it is."]
   )
   PARTY_CHAT[:shimmer].merge!(
-    council_hall: ["\"A necessary evil.\" That's what they always call it. Right before it's you."]
+    council_hall: ["That charter on the wall says \"a necessary evil\". That's what they always call it.",
+                   "Right before it's you."]
   )
 
   module_function
@@ -172,8 +178,12 @@ module FrostThaw
   # Rumours (taverns: Three Flags Sailing, the Northlook, the Blue Clam...)
   #-----------------------------------------------------------------------------
   def ten_towns_rumor(who, event_id = nil)
-    fresh = TEN_TOWNS_RUMORS.reject { |_a, _b, done| done && flag?(done) }
-    fresh = TEN_TOWNS_RUMORS if fresh.empty?
+    # (the Lucky Liar in Lonelywood is tagged by its own event's name, notes 14 E6)
+    ev = event_id && $game_map ? $game_map.events[event_id] : nil
+    who = ev.name.to_s.split(" (").first.upcase if ev && who == "LIAR"
+    ready = lambda { |need| need.nil? || Array(need).any? { |f| flag?(f) } }
+    fresh = TEN_TOWNS_RUMORS.reject { |_a, _b, done, need| (done && flag?(done)) || !ready.(need) }
+    fresh = TEN_TOWNS_RUMORS.select { |_a, _b, _d, need| need.nil? } if fresh.empty?
     state[:rumor_i] = ((state[:rumor_i] || -1) + 1) % fresh.size
     a, b, = fresh[state[:rumor_i]]
     say(["#{who}: #{a}", "#{who}: #{b}"], event_id)
@@ -198,7 +208,8 @@ module FrostThaw
     say(["OWENN: Owenn Tarsenel. I keep the Arms. Oldest public house in Ten-Towns.",
          "A quiet, balding man. He polishes the same glass the whole time he talks.",
          "OWENN: Mind the floorboards. And the rats. And the Speaker's guests.",
-         "OWENN: It'll be summer again one day, they tell me. (He doesn't believe it. You can see he doesn't.)"], event_id)
+         "OWENN: It'll be summer again one day, they tell me. (He doesn't believe it. You can see he doesn't.)"] +
+        (flag?(:climb_taken) ? [] : ["OWENN: Keegan Velryn's man went up the Cairn a tenday back. His dog came home alone."]), event_id)
     sayc([cl(:alberica, "(softly) Oh, sweetheart. Somebody hug this man."),
           cl(:reptin, "(aside) Please don't hug the innkeeper.")])
   end
@@ -240,6 +251,7 @@ module FrostThaw
                   "GARN: ...Good swords. I meant good. Elza, tell them I meant good.",
                   "GARN: You get a tenth off anything in this shop, forever. Don't argue. Elza already wrote it down."], event_id)
     end
+    set_flag(:met_garn)
     say(["GARN: Garn the Hammer! Cheapest blades in Ten-Towns!",
          "A shield dwarf with forearms like hams, beaming at you over a rack of very dull swords.",
          "GARN: The sellswords laugh. \"An' 'e was carryin' a Blackiron blade, to boot!\" Ha! They come back, though.",
@@ -248,6 +260,8 @@ module FrostThaw
           cl(:alerion, "It's a sword. It's pointy. It's enough.")])
     if !flag?(:mugs_done) && flag?(:mugs_taken)
       say(["GARN: Hruna's lot lost my iron out on the tundra? Bah. No iron, no blades. No blades, no jokes about my blades."])
+    elsif !flag?(:mugs_done)
+      say(["GARN: Hruna's lot lost my iron on the tundra. Help them, and I'll owe ye. They're in the street."])
     end
   end
 
@@ -423,7 +437,8 @@ module FrostThaw
          "Danneth Waylen of Easthaven, a plain, humble man wrapped to the eyes, steam coming off his furs.",
          "Lonelywood's chair is empty, except for a basket of halfling-shaped cookies. Dougan's Hole's chair is empty, full stop.",
          "DUVESSA: Last night Bryn Shander drew a name and did not give it up.",
-         "DUVESSA: I won't apologise for it. I'm telling you because we agreed to do this together, and I broke it alone."])
+         "DUVESSA: I won't apologise for it. I'm telling you because we agreed to do this together, and I broke it alone.",
+         "DUVESSA: (a hand toward the charter behind her) We called it a necessary evil. We all signed."])
     say(["NAERTH: Alone? (He smiles at you.) I'd say she had help.",
          "NAERTH: Strangers off my docks. I let them out of Targos. I'm starting to think I should be charging them rent.",
          "DANNETH: Easthaven drew too, last night. A fisher's widow. She walked out onto the ice herself. I let her.",
@@ -431,20 +446,30 @@ module FrostThaw
          "KENDRICK: Good Mead gives its warmth. Our people sleep in a heap round the hive like bees, one night a month.",
          "KENDRICK: It's miserable. It doesn't kill anybody. I'd sooner do that a hundred nights than draw one name.",
          "OARUS: Termalaine gives warmth too. And my own militia won't walk the walls for me, so don't ask me to promise anything."])
-    sayc([as(:alberica, "Excuse me. Speakers. Hello. Who wrote \"necessary\" in that charter?"),
-          "NAERTH: All of us, my dear. Unanimously.",
-          as(:alberica, "Then you can all unwrite it."),
-          "DUVESSA: (quietly) We'd end it in a heartbeat. It says so. If She were appeased.",
-          "DUVESSA: Or dealt with some other way."])
-    sayc([cl(:reptin, "(gently) Speaker, what would \"some other way\" look like, to this council?"),
-          "OARUS: Like somebody walking out of that door and doing something none of us can.",
-          "KENDRICK: (raising his mug to you) Like that, maybe.",
-          "NAERTH: Or like five strangers getting themselves killed and the storm coming anyway. We'll see which."])
+    # Alberica's and Reptin's lines are answered, so they're spoken (WRITING_GUIDE §5).
+    if with_or_is?(:alberica)
+      speak(:alberica, "Excuse me. Speakers. Hello. Who wrote \"necessary\" in that charter?",
+                       "(quietly) ...Who wrote \"necessary\"?")
+      say(["NAERTH: All of us, my dear. Unanimously."])
+      speak(:alberica, "Then you can all unwrite it.", "(quietly) Then unwrite it.")
+    end
+    say(["DUVESSA: (quietly) We'd end it in a heartbeat. It says so. If She were appeased.",
+         "DUVESSA: Or dealt with some other way."])
+    if with_or_is?(:reptin)
+      speak(:reptin, "(gently) Speaker, what would \"some other way\" look like, to this council?",
+                     "(quietly) What would \"some other way\" look like?")
+      say(["OARUS: Like somebody walking out of that door and doing something none of us can."])
+    end
+    say(["KENDRICK: (raising his mug to you) Like that, maybe.",
+         "NAERTH: Or like five strangers getting themselves killed and the storm coming anyway. We'll see which."])
     say(["DUVESSA: Then the charter stands, for every town that wants it. Bryn Shander draws no more names on my word...",
          "DUVESSA: ...until the next storm comes. And then I'll be back in this chair, eating this.",
          "She takes a halfling-shaped cookie out of Lonelywood's basket, looks at it, and bites its head off.",
          "The speakers file out. Kendrick claps you on the shoulder hard enough to hurt.",
-         "KENDRICK: Come to Good Mead when this is done. First cask's on me."])
+         "KENDRICK: Come to Good Mead when this is done. First cask's on me.",
+         # The favours, heard first from the whole table (context 14, M14-1 B).
+         "OARUS: (at the door) If those strangers fix my mine, Masthew writes to Shane. Mark it.",
+         "DUVESSA: Then I'll be reading a lot. Five towns, five letters. The Council pays on five."])
     Stage.cleanup rescue nil
     set_switch(SW_TT_COUNCIL_DONE, true)
     add_counter(:story_beats)
