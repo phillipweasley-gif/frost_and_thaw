@@ -165,12 +165,15 @@ module FrostThaw
     musher_toma_after: ["Sled dogs howl different when winter wolves are about. Mine haven't stopped all week."],
     zhent_grisk_after: ["Shandar Froth in Good Mead keeps an eye on things for us. You didn't hear it from me."],
     # --- Good Mead -------------------------------------------------------------------
-    sign_good_mead: ["GOOD MEAD", "Home of the finest honey mead in Ten-Towns.", "(Someone has scrawled underneath: \"OUT OF STOCK.\")"],
+    sign_good_mead: [{ if: { flag: :mead_returned }, lines: ["GOOD MEAD", "Home of the finest honey mead in Ten-Towns.",
+                                                             "(Under it, \"OUT OF STOCK\" has been scrubbed out. Somebody drew a bee.)"] },
+                     ["GOOD MEAD", "Home of the finest honey mead in Ten-Towns.", "(Someone has scrawled underneath: \"OUT OF STOCK.\")"]],
     gm_beekeeper: ["The hives are in the mead hall, by the big fire. Bees hate the Rime as much as we do.",
                    "Listen. Hear that? Still humming. Stubborn little things. Like this town."],
     shandar_froth: [{ if: { flag: :badge_dougans }, lines: ["SHANDAR: Back from the Hole, are you? See anything interesting?",
                                                              "SHANDAR: Asking for a friend. In Targos."] },
-                    ["SHANDAR: Shandar Froth. Logger. Candidate for Speaker, as it happens.",
+                    ["A stocky shield dwarf with a logger's shoulders and a politician's smile.",
+                     "SHANDAR: Shandar Froth. Logger. Candidate for Speaker, as it happens.",
                      "SHANDAR: Good Mead needs a strong hand. Where are you bound? No reason. Just neighbourly."]],
     gm_townsfolk: ["The verbeeg came out of the woods three days back. Speaker Kendrick stood in its way.",
                    "Kendrick was a big man. The verbeeg was bigger. He's lying in the shrine now."],
@@ -178,9 +181,7 @@ module FrostThaw
                            "Inside, under a blanket on the long table, lies Speaker Kendrick Rielsbarrow.",
                            "The town keeps a candle burning for him. (You don't go in.)"],
     gm_door_closed: ["The door is barred. Someone inside calls, \"We're not buying!\""],
-    fef_moryn: ["FEF: Fef Moryn. Trapper. Five of the militia went after that verbeeg.",
-                "FEF: I found what was left. Something big did it, with a club. Not the verbeeg.", "FEF: Something dumber.",
-                "FEF: I'm not going back in those woods."],
+    # (fef_moryn's lines live in 045_MeadMustFlow's FT.fef_moryn: notes/14 E31)
     fef_fox: ["A white fox sits by Fef's boots, ears flat, watching the treeline."],
     mead_drinker: ["The last cask in Good Mead. We're drinking it slowly. In memory.",
                    "Mostly in memory."],
@@ -828,6 +829,13 @@ module FrostThaw
     sayc([
           "DURMOOT: And make sure she never comes back up out of it. Not for us. For Ten-Towns.",
           "DURMOOT: ...Don't tell anyone I said that either."])
+    # (notes/14 E14 (4): a Speaker on the spine names a favour you finished)
+    done_word = [[:climb_done, "You brought the Velryn boy down off Kelvin's Cairn."],
+                 [:mead_returned, "Good Mead has its mead back. Even we heard."],
+                 [:mine_done, "Termalaine's mine is open again."],
+                 [:white_moose_done, "Lonelywood's loggers are back in the woods."],
+                 [:mugs_done, "The Battlehammers brought their dead home."]].find { |f, _| flag?(f) }
+    say(["DURMOOT: Word walks faster than you do. #{done_word[1]}", "DURMOOT: ...Fine. You're useful."]) if done_word
     # The last chance at Act I's favours, said before the door (context 14, M14-9 A).
     if respond_to?(:town_quests_done) && town_quests_done < 5 && !flag?(:ten_towns_thanked)
       sayc([cl(herald?(:reptin) ? :alerion : :reptin,

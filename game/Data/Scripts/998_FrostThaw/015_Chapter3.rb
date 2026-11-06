@@ -329,7 +329,9 @@ module FrostThaw
            cl(:alberica, "Darling, you've just become my favourite Speaker in the Dale."),
            "NIMSY: The attic's yours. House rule in Lonelywood: nobody asks about anybody's past.",
            as(:shimmer, "Perfect."),
-           cl(:shade, "Shimmer meant that one. Don't tell her I noticed.")].compact, event_id)
+           cl(:shade, "Shimmer meant that one. Don't tell her I noticed."),
+           # (notes/14 E9: the moose seeded on the first visit, no ask yet)
+           "NIMSY: And mind the logging road. We've a moose problem. Ask me when you're settled."].compact, event_id)
     end
     # the morning after, the house knows (notes 03 E14)
     if flag?(:shimmer_taken) && !flag?(:nimsy_sorry)

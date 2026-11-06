@@ -50,8 +50,13 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def hilda(event_id = nil)
     if flag?(:kids_home)
+      # (notes/14 E33: her open door is a real bed)
       say(["HILDA: Every time I look at them I have to count. One, two. One, two.",
-           "HILDA: Whatever you need from Dougan's Hole, you come to this door first."], event_id)
+           "HILDA: There's a bed here. Always. Come to this door first."], event_id)
+      if pbConfirmMessage(_INTL("Rest at Hilda's?"))
+        pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+        say(["Silja falls asleep against your Pok\u00e9mon. Finn counts them twice."])
+      end
     elsif flag?(:met_hilda)
       say(["HILDA: The bowls are still on the table. Go on. Please."], event_id)
     else
