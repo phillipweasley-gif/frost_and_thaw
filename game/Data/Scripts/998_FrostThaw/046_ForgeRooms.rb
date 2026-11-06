@@ -249,7 +249,7 @@ module FrostThaw
     end
     if flag?(:traitor_met)
       return say([flag?(:barricade_passed) ? "SOOTY DUERGAR: You're through. Good. Go and do it. Kill her." :
-                                             "SOOTY DUERGAR: The lever. By the machinery. Pull it, and the Rootgate's yours."], event_id)
+                                             "SOOTY DUERGAR: The lever. By the machinery. Pull it, and the Barricade gate's yours."], event_id)
     end
     set_flag(:traitor_met)
     add_counter(:story_beats)
@@ -265,7 +265,7 @@ module FrostThaw
          "SOOTY DUERGAR: Then she told the rest of us her name was Xardorok, our old king's name, and burned the sigils in.",
          "SOOTY DUERGAR: She talks about the Great Unchaining. When the dragon flies, she says, the seasons come off their chains.",
          "SOOTY DUERGAR: Summer forever, she says. Then the Dale goes down into the Hells, still warm, and she goes up.",
-         "SOOTY DUERGAR: The lever by the machinery opens the Rootgate. Pull it. Go down. End her."])
+         "SOOTY DUERGAR: The lever by the machinery opens the Barricade gate. Pull it. Go down. End her."])
     sayc([cl(:meat_meat, "Meat Meat will end her. Meat Meat has been practising."),
           cl(:alberica, "The Great Unchaining. She does love a title."),
           cl(:reptin, "(gently) What's your name, friend?"),
@@ -274,7 +274,7 @@ module FrostThaw
   end
 
   def gate_lever(event_id = nil)
-    return say(["The lever stands down. Far off, the Rootgate stands open."], event_id) if flag?(:barricade_passed)
+    return say(["The lever stands down. Far off, the Barricade gate stands open."], event_id) if flag?(:barricade_passed)
     say(["Sap-fed machinery, grown as much as built. A lever of black iron sticks out of a root like a bone."], event_id)
     if !flag?(:traitor_met)
       return say(["It's locked with a burning sigil. Somebody who knows the machinery could free it."])
@@ -282,12 +282,12 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Pull the lever?"))
     pbSEPlay("Door exit") rescue nil
     say(["The sooty duergar puts his hand over yours and pulls with you.",
-         "Far off, iron grinds. The Rootgate's bar slides back."])
+         "Far off, iron grinds. The Barricade gate's bar slides back."])
     set_flag(:barricade_passed)
     set_flag(:traitor_lever)
     ($game_switches[SW_BARRICADE_OPEN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    state[:goal] = "Down, into the hag's old lair."
+    state[:goal] = "Back to the Barricade gate. It's open now: east, and down into the hag's old lair."   # (notes 08 F15)
   end
 
   #=============================================================================
@@ -434,7 +434,7 @@ module FrostThaw
   def umber_hulk(event_id = nil)
     return if flag?(:umber_hulk_done)
     say(["The scratching stops.", "Then the floor explodes.",
-         "A beetle big as a cart heaves out of the earth: an umber hulk, its eyes grown over with sap.",
+         "A beetle big as a cart heaves out of the earth: an umber hulk, eyes grown over with sap.",
          "Two duergar shapes at the far end of the chamber flicker and vanish, invisible, fleeing."])
     return if !boss_battle(named_mon(:B208H51, 48, "Umber hulk"))
     set_flag(:umber_hulk_done)

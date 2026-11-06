@@ -1040,7 +1040,7 @@ module FrostThaw
          "VAR: The Council argues for a living. I keep the peace for one. Go on, before somebody sober sees.",
          "He leans on a glaive with a blade of melted mirror-shard. It hums when he isn't touching it.",
          "Alone, he looks out at the Wall, and talks to nobody:",
-         "VAR: My line carried spears for Naerth Maxildanarr. Gold-sick, the lot of them. Greed in the blood.",
+         "VAR: My line carried spears for Naerth Maxildanarr. Gold-sick. Greed in the blood.",
          "VAR: Every bit of peace I keep pays a bit of it back. Never enough. Never enough.",
          "VAR: When the Heralds come home, and they will, I want the frost-one. The necromancer. I want to see if a man can hold winter in his hands and not let it eat him.",
          "A mirror on a crate catches the lantern. Something steps out of it as if out of a doorway.",

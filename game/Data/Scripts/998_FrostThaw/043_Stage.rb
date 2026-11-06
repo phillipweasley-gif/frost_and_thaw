@@ -834,7 +834,7 @@ module FrostThaw
       return nil if !map? || FrostThaw.herald?(key)
       g = @summoned[key]
       return g[0] if g && $game_map.events[g[0].id].equal?(g[0])
-      slot = free_slot or return nil
+      slot = free_slot || near_slot or return nil    # (a crowded bridge: a step or two further off)
       x, y, fx, fy = slot
       ge = actor(key, fx, fy, $game_player.direction)
       return nil if !ge

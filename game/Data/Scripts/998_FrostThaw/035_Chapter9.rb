@@ -126,7 +126,7 @@ module FrostThaw
     if !flag?(:summer_ended) || flag?(:mounted_up)
       return talk(which == :frostina ? :frostina_shrine : :razzilith_shrine, event_id)
     end
-    say(["Frostina waits at the Shrine, frost still smoking off her wings. Razzilith paces the stump.",
+    say(["Frostina waits at the Shrine, frost still smoking off her wings. Razzilith paces.",
          "Frostina looks past all of you, at the steps, for someone who isn't there.",
          "Then she looks at the golden dagger."], event_id)
     say([as(:meat_meat, "(holding out Dawnfang) Glimmer said to tell you. It was a better fire."),
@@ -175,7 +175,7 @@ module FrostThaw
       set_flag(:rides_frostina)
       set_switch(SW_RIDES_FROSTINA, true)
       say([herald?(:alerion) ? "Frostina lowers her wing. You take the front, at the base of her neck, where a Dragoon sits." :
-                               "Frostina lowers her wing. Alerion takes the Dragoon's place at her neck. You climb up behind."])
+                               "Frostina lowers her wing. Alerion takes the Dragoon's place. You climb up behind him."])
     else
       set_flag(:rides_razzilith)
       say([herald?(:meat_meat) ? "Razzilith lowers his neck. You take the front, where a Dragoon sits." :
@@ -196,7 +196,7 @@ module FrostThaw
   def shrine_prophecy
     lumin = Stage.find("Lumin Weavemoss")
     Stage.approach(lumin) if lumin
-    say(["LUMIN: (walking over, a Wennen priest with his head bowed) The Sparkbearer isn't with you."])
+    say(["LUMIN: (the Wennen priest, his head bowed) The Sparkbearer isn't with you."])
     c = pbMessage(_INTL("Lumin waits."), [_INTL("\"He's gone.\""), _INTL("Say nothing")], 0)
     say([c == 0 ? "Lumin's ears go flat." : "You don't have to. Lumin's ears go flat."])
     say([as(:meat_meat, "(holding up Dawnfang) He's in here now. And up there."),
@@ -403,8 +403,16 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # SC 9.05 - The trap; 9.06 - The green light on the horizon
   #-----------------------------------------------------------------------------
+  # Someone this chapter puts on screen for their lines (WRITING_GUIDE §9a),
+  # found again if they're already standing there.
+  def ch9_actor(key, x, y, dir, graphic)
+    Stage.find("stage_#{key}") || Stage.actor(key, x, y, dir, graphic: graphic)
+  end
+
   def scene_bryn_trap
     return if flag?(:dragon_down)
+    px, py = ($game_player.x rescue 17), ($game_player.y rescue 12)
+    ch9_actor(:duvessa, px, py - 3, 2, "BW_Jasmine")        # on the wall
     say(["Bryn Shander's square is packed. Every town that saw the dragon has sent its people here.",
          "Behind walls that can't stop anything with wings.",
          "DUVESSA: (on the wall) You. You left with my seal a month ago. Where have you...",
@@ -414,6 +422,8 @@ module FrostThaw
          cl(:wyn, "(very quietly) ...There are so many children."),
          cl(:alberica, "Then nobody's dying today, sweetheart. Stay close to me.")].compact)
     if with_or_is?(:reptin)
+      anduin = ch9_actor(:anduin, px + 4, py + 2, 4, "FT_anduin")
+      Stage.turn_to(anduin) if anduin
       say(["In the crowd, a tall elf in travelling clothes turns at #{herald?(:reptin) ? 'your' : "Reptin's"} voice.",
            "He has an iron ring on his finger. #{herald?(:reptin) ? 'You wear' : 'Reptin wears'} its twin.",
            "ANDUIN: ...Reptin?",
@@ -438,7 +448,7 @@ module FrostThaw
          "The runes are Avarice's sigils. They hold the heart in place the way a nail holds a picture.",
          "Every rune is drinking from the crowd. You can feel it pulling, a thread from every chest in the square, toward the dragon.",
          cl(:alerion, "It isn't here to burn Bryn Shander. It's here to collect it."),
-         cl(:alberica, "(a hand on her rune, pulled toward it) A soul harvest. Everyone at once, and all of it for her.")].compact)
+         cl(:alberica, "(a hand on her rune) A soul harvest. Everyone at once, and all of it for her.")].compact)
     if seams > 0
       dragon.hp = [(dragon.totalhp * (1.0 - 0.2 * seams)).floor, 1].max
       say([seams >= 2 ? "(Its chardalyn seams are cracked all over where you hit them in the air. It's badly hurt.)" :
@@ -491,8 +501,12 @@ module FrostThaw
   end
 
   def scene_green_light
+    px, py = ($game_player.x rescue 17), ($game_player.y rescue 12)
+    duv = ch9_actor(:duvessa, px, py - 3, 2, "BW_Jasmine")
     say(["The square is quiet. Snow falls on the black glass."])
     if with_or_is?(:reptin)
+      anduin = ch9_actor(:anduin, px + 4, py + 2, 4, "FT_anduin")
+      Stage.approach(anduin) if anduin
       say(["#{herald?(:reptin) ? 'You and Anduin are' : 'Reptin and Anduin are'} holding each other. Anduin is shaking.",
            "ANDUIN: Five weeks I waited. You said a month, at most. You always say a month.",
            "ANDUIN: And you come down out of the sky on a dragon. What happened to you? You look..."])
@@ -512,11 +526,16 @@ module FrostThaw
          "DUVESSA: If there's warm ground out there, I'm done drawing names.",
          "DUVESSA: (to the whole square) Bryn Shander! Pack what you can carry!"].compact)
     if flag?(:husband_thawed)
+      widow = Stage.actor(:widow, px - 4, py + 2, 6, graphic: "BWOldWoman")
+      Stage.walk_to(widow, px - 1, py + 1, face: 8) if widow
       say(["The Targos widow and her husband walk past, arm in arm.",
            "WIDOW: You! The Spheal people!"])
+      Stage.leave(widow, px + 6, py + 2) if widow
     end
     say(["At the back of the crowd, a hooded goblin woman can't stop looking at #{herald?(:meat_meat) ? 'you' : 'Meat Meat'}.",
          "When #{herald?(:meat_meat) ? 'you look' : 'Meat Meat looks'} back, she pulls her hood lower."])
+    # (the square's own Anduin stands in for these from here on)
+    [Stage.find("stage_anduin"), Stage.find("stage_duvessa")].compact.each { |ge| Stage.remove_actor(ge) }
     set_flag(:refugees_follow)
     set_flag(:anduin_found)
     set_flag(:saw_hooded_woman)
@@ -589,7 +608,7 @@ module FrostThaw
     end
     say(["SOMEONE IN THE CROWD: Murderers!",
          "SOMEONE ELSE: Liberators!",
-         "KELYN: There will be a trial. The Trials of the Roots. (quieter) Bring witnesses. Bring me anything."])
+         "KELYN: There will be a trial. The Trials of the Roots. Bring witnesses. Bring me anything."])
     set_flag(:heralds_arrested)
     add_counter(:story_beats)
     say(["END OF CHAPTER 9"])
