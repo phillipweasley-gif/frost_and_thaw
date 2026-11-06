@@ -578,7 +578,8 @@ module FrostThaw
     var = stage_event(VAR_EVENT)
     Stage.pan_to(10, 15) if var                 # Var at the engine and you at the door, both in view
     say(["The enormous cavern of glowing roots opens round a pool of silver sap.",
-         flag?(:var_portrait_seen) ? "At the engine stands the man from the portrait: big, scarred, in the Marshal's gold. Var." :
+         # (the portrait over his seat plays at the first Council, 024 kelyn on main: M8-3)
+         (flag?(:wardens_sworn) || flag?(:wardens_refused)) ? "At the engine stands the man from the portrait: big, scarred, in the Marshal's gold. Var." :
                                      "A big, scarred man in the Summer Marshal's gold stands at the engine, his back to you.",
          "Over the pool hangs the engine, beating slowly, unnaturally, like something refusing to die.",
          "In your pack, the sending-stone warms.",
