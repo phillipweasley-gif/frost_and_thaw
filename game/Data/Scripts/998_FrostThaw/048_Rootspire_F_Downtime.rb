@@ -558,7 +558,7 @@ module FrostThaw
   end
 
   def meat_meat_day5
-    say(["Dawn over Rootspire, and #{mm_name} [[watches|watch]] it, because something's wrong with it.".sub(/\[\[(\w+)\|(\w+)\]\]/) { herald?(:meat_meat) ? $2 : $1 },
+    say(["Out on the walkway, #{mm_name} [[watches|watch]] the dawn, because something's wrong with it.".sub(/\[\[(\w+)\|(\w+)\]\]/) { herald?(:meat_meat) ? $2 : $1 },
          "The light holds a deep summer gold for several breaths too long. Long enough to squint at.",
          "Leaves near the walkways are curled at the edges. Not with cold. With heat.",
          "The air's heavy. A storm that never arrives. \"Humidity spike,\" a local says. \"Happens.\"",
