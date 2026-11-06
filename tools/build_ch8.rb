@@ -152,7 +152,7 @@ hc.event(15, 14, "The engine", [{ tile_id: 809, script: "FT.talk(:engine_dead, @
 [[11, 7], [20, 7], [21, 9], [22, 11], [21, 13], [19, 15], [17, 16], [14, 16], [12, 15], [10, 13], [9, 11], [10, 9]].each_with_index do |(x, y), i|
   hc.event(x, y, "Root-spire #{i + 1}", [{ tile_id: 792, script: "FT.breaking_spire(#{i + 1}, @event_id)" }])
 end
-hc.event(16, 18, "Var Rime-Breaker", [
+hc.event(16, 18, "Var Rime-Breaker (Avarice)", [   # (both names: VAR: and AVARICE: lines find him)
   { graphic: "FT_var", direction: 8 },
   { switch: SW_CIRCLE_PHASE, graphic: "FT_var_cracked", direction: 4, script: "FT.avarice_phase_two(@event_id)" },
   { switch: SW_ENGINE_DEAD, graphic: "", through: true }

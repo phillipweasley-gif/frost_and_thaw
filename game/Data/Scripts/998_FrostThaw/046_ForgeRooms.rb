@@ -206,7 +206,8 @@ module FrostThaw
       say(["ALBERICA: (very quietly) Somebody screamed my name. Down here. Before I was ever down here."])
     end
     sayc([cl(:meat_meat, "Raz-MKIII. Razzy. \"Showed resilience.\" Razzy showed TEETH."),
-          cl(:reptin, "A frost-born subject. Something of Auril's she cut open, and it knew Alberica."),
+          with_or_is?(:alberica) ? cl(:reptin, "(to #{herald?(:alberica) ? 'you' : 'Alberica'}, gently) Something of Auril's she cut open. And it knew you.") :
+                                   cl(:reptin, "A frost-born subject. Something of Auril's she cut open, and it knew Alberica."),
           cl(:alerion, "Fire replacing the rime. That's her whole plan, written small.")])
   end
 
@@ -319,7 +320,7 @@ module FrostThaw
          "Then it's only you, a half-second late."])
     sayc([flag?(:read_overlook) ? cl(:alerion, "Nearly the same words as the overlook. \"She will take the heart if we don't.\"") :
                                   cl(:alerion, "Whoever you are in there, you sound tired."), cl(:glimmer, "Everybody down here keeps warning us about a heart."),
-          cl(:alberica, "Then we keep it, kitten. Whatever it costs.")])
+          cl(:alberica, "Then we find out whose heart, kitten. Before she does.")])
   end
 
   # A10: the abandoned guest quarters. Meat Meat's past.
@@ -433,7 +434,7 @@ module FrostThaw
   def umber_hulk(event_id = nil)
     return if flag?(:umber_hulk_done)
     say(["The scratching stops.", "Then the floor explodes.",
-         "A pale, root-burrowed thing heaves itself out of the earth: an umber hulk, blind, its eyes grown over with sap.",
+         "A beetle big as a cart heaves out of the earth: an umber hulk, its eyes grown over with sap.",
          "Two duergar shapes at the far end of the chamber flicker and vanish, invisible, fleeing."])
     return if !boss_battle(named_mon(:B208H51, 48, "Umber hulk"))
     set_flag(:umber_hulk_done)
@@ -479,7 +480,10 @@ module FrostThaw
       return say(["Translucent root-pods hang from the ceiling, each with a prisoner suspended in amber like a trapped insect.",
                   "Some twitch. Some weep. Some stare blankly.",
                   "One Rootwarden lifts his head as you pass, and whispers:",
-                  "ROOTWARDEN: She's burning the seasons away... please... stop her..."], event_id)
+                  "ROOTWARDEN: She's burning the seasons away... please... stop her...",
+                  # (context 08 §6: what the Rootwardens think Reptin is, before Ch9 leans on it)
+                  with_or_is?(:reptin) ? "ROOTWARDEN: (seeing #{herald?(:reptin) ? 'you' : 'Reptin'}) ...Warden. You came. The Hall said you would." : nil].compact,
+                 event_id)
     end
     key = :"prison_pod_#{n}"
     return say(["The pod hangs open and empty."], event_id) if flag?(key)
@@ -574,7 +578,7 @@ module FrostThaw
     end
     give_key(:FT_FROSTFIREFLASK)
     set_flag(:frostfire_flask)
-    sayc([cl(:alerion, "Blue at the edges. Red at the core. Like his heart in her engine."),
+    sayc([cl(:alerion, "Blue at the edges. Red at the core. Frost and fire in one bottle. Somebody's recipe."),
           cl(:reptin, "Evidence, darling. The Council likes evidence. Wrap it in something.")])
   end
 
@@ -607,7 +611,8 @@ module FrostThaw
       say(["The Lumen Shard in Glimmer's chest flares so bright it lights the balcony. He presses a hand over it.",
            "GLIMMER: (through his teeth) It's resonating. With that. It wants to go out and meet it."])
     end
-    sayc([cl(:alerion, "Built on what she learned from Razzy. From Meat Meat. It's the cold table, with wings.")])
+    sayc([cl(:alerion, "Chardalyn. Demon-forged. Black as a bad tooth."),
+          cl(:alerion, "Built on what she learned from Razzy. From Meat Meat. It's the cold table, with wings.")])
   end
 
   # A25: the east vantage: its guards would rain bolts on the forge fight.
@@ -761,7 +766,7 @@ module FrostThaw
     give(:MAXREVIVE)
     give(:PPMAX)
     give(:RARECANDY, 2)
-    sayc([cl(:meat_meat, "Tonight. She wrote TONIGHT."), cl(:alerion, "Then it's tonight.")])
+    sayc([cl(:meat_meat, "First light. The devil wasn't lying. Meat Meat hates that.")])   # (context 08 M8-6: the clock is on the spine now)
   end
 
   VAULT_RELICS = {
@@ -1048,6 +1053,15 @@ module FrostThaw
                 "Wyn sees the mushroom ring again, quiet now, and herself sitting in it, not afraid."]
   }
 
+  # A vision meant for the Herald you are, in the second person (context 08
+  # §6: "You see her own hand", "whispering her name").
+  def herald_vision(v)
+    v.sub(/\A\w+(?: \w+)? sees/, "You see")
+     .gsub(/\b(he|she) hasn't\b/, "you haven't").gsub(/\b(he|she) stands\b/, "you stand")
+     .gsub(/\b(himself|herself)\b/, "yourself").gsub(/\b(from|to) (him|her)\b/, '\1 you')
+     .gsub(/\b(his|her)\b/, "your").gsub(/\band hears\b/, "and hear")
+  end
+
   def attendant_vision(who)
     first_flag, first, second_flag, second, done = ATTENDANT_VISIONS[who]
     return first if !flag?(first_flag)
@@ -1058,19 +1072,19 @@ module FrostThaw
   # H26: the World Tree's prophecy about the wyrmlings and the seasons.
   def world_tree_echo(event_id = nil)
     say(["You put your hand on the heartroot. Under your palm, very faint, the tree speaks, in a voice made of a great many leaves:"], event_id)
+    # (context 09 M9-2: the riders and the third season are told on the spine
+    # now, by Lumin at the Shrine; the tree keeps a shorter echo for the finder)
     say(["TREE: Two eggs in a dark place. Two seasons, curled small. One green and one white.",
-         "TREE: The white will carry the cold in, when it is time for cold. The green will carry it away, when it is time for green.",
-         "TREE: Each needs a rider who is not afraid of falling. Each will choose one.",
-         "TREE: And a third season walks among you on two feet, with a song, and a mark on her chest. She will be asked to hold the cold still.",
-         "TREE: She must not. Seasons are not held. Seasons are turned."])
+         "TREE: The white carries the cold in, when it's time for cold.",
+         "TREE: The green carries it away, when it's time for green.",
+         "TREE: Seasons are not held. Seasons are turned."])
     return if flag?(:tree_prophecy)
     set_flag(:tree_prophecy)
     add_counter(:story_beats)
-    sayc([cl(:alberica, "(her hand on her rune) ...Well. That's not ominous at all."),
-          cl(:alerion, "A rider who isn't afraid of falling."),
-          cl(:meat_meat, "Meat Meat is afraid of falling. Meat Meat will do it anyway. That counts.")])
+    sayc([cl(:meat_meat, "Razzy and Frostina. The tree remembers them small."),
+          cl(:alberica, "(her hand on her rune) Not held. Turned. ...Hm.")])
     lines = ATTENDANT_VISIONS.keys.select { |k| with_or_is?(k) }
-                             .map { |k| v = attendant_vision(k); herald?(k) ? "(#{v.sub(/\A\w+(?: \w+)? sees/, 'You see')})" : v }
+                             .map { |k| v = attendant_vision(k); herald?(k) ? "(#{herald_vision(v)})" : v }
     if !lines.empty?
       say(["Then the tree's voice goes quiet, and one by one, each of you sees something meant only for you."] + lines)
       set_flag(:personal_visions)
