@@ -78,7 +78,9 @@ module FrostThaw
     root_gate_sealed: ["A well of living root drops into the dark. Warm air rises out of it: sap, and old ice.",
                        "A Rootwarden's willow seal is tied across the mouth.",
                        "THE ROOT-GATE IS CLOSED. BY ORDER OF THE VERDANT COUNCIL."],
-    kurt_door: [{ if: { flag: :wardens_emeritus }, lines: ["WOODCARVER: Wardens! The Rootwardens' stair to the Root-Tier is through my workshop.",
+    kurt_door: [{ if: { flag: :wardens_refused }, lines: ["WOODCARVER: Heralds! Speaker's word: the stair to the Root-Tier's open to you.",
+                                                          "WOODCARVER: It's through my workshop. Mind the third step. It bites."] },
+                { if: { flag: :wardens_emeritus }, lines: ["WOODCARVER: Wardens! The Rootwardens' stair to the Root-Tier is through my workshop.",
                                                            "WOODCARVER: Mind the third step. It bites."] },
                 ["WOODCARVER: Festival masks. Dragons, mostly: Razzilith the Verdant and Frostina the Pale.",
                  "WOODCARVER: Every year somebody orders a Herald mask. Every year I carve you wrong.",
@@ -88,12 +90,15 @@ module FrostThaw
                         "WOODCARVER: The Wardens' stair to the Root-Tier. Council business only, I'm afraid."],
     split_dock_fisher: ["FISHER: Water's warm as breath down here. Always has been.",
                         "FISHER: Then last month it froze round two Corsair boats in a single night.",
-                        "FISHER: Crews still at the oars. Glass all through. Mirror-glass, not lake ice: the Frost Saint's kind, my gran would've said.",
-                        "FISHER: Somebody's been praying for cold. And somebody's been answered."],
-    corsair_sailor: ["CORSAIR: Auroral Corsairs. We run the outer lakes when nobody else will. And the tunnels under the Split Dock, when the Council isn't looking.",
+                        "FISHER: Crews still at the oars. Glass all through. Mirror-glass, not lake ice.",
+                        "FISHER: The Frost Saint's kind, my gran would've said.",
+                        "FISHER: My gran'd have said somebody prayed for cold. Gran was usually right."],
+    corsair_sailor: ["CORSAIR: Auroral Corsairs. We run the outer lakes when nobody else will.",
+                     "CORSAIR: And the tunnels under the Split Dock, when the Council isn't looking.",
                      "CORSAIR: Those were our people out there. Whoever froze them did it from the shore.",
-                     "CORSAIR: The ice came off the land. Mirror-ice. You could see your own face in a dead man's cheek.",
-                     "CORSAIR: Old Ivran swears he saw a barefoot man on the shingle that night, walking away north. No coat. Breath like smoke off a lake."],
+                     "CORSAIR: The ice came off the land. Mirror-ice. You could see your face in a dead man's cheek.",
+                     "CORSAIR: Old Ivran swears he saw a barefoot man on the shingle that night, walking north.",
+                     "CORSAIR: No coat. Breath like smoke off a lake."],
     halo_vigil_after: ["The Matron is at the Still Sky Shrine. Tonight she makes the sky hold still.",
                        "You'll see. Everyone will see."],
     halo_ascetic_after: ["Go on, then. Go and stop her. I hope you can. I hope you can't.", "I don't know anymore."],
@@ -146,6 +151,11 @@ module FrostThaw
                    "DARRUS: A decree turned up in the Council's own hand, ordering a dig under the Heartroot.",
                    "DARRUS: None of us signed it."]],
     selrae_vorn: [{ if: { flag: :rite_stopped }, lines: ["The Winter Matron's seat is empty.", "Her fur-trimmed cloak still hangs on it, stiff with frost."] },
+                  # (scene pass: your answer at the Council read back; notes 06 E27: no "Wardens" if you refused)
+                  { if: { flag: :terrace_walls }, lines: ["SELRAE: Walls, you said. I'll remember it at the vote.", "SELRAE: Watch the rite tonight."] },
+                  { if: { flag: :terrace_roots }, lines: ["SELRAE: Roots, you said. Kelyn will love you for it. I'll forgive you eventually.",
+                                                          "SELRAE: Watch the rite tonight."] },
+                  { if: { flag: :wardens_refused }, lines: ["SELRAE: Winter keeps what spring forgets, Heralds.", "SELRAE: I hope you remember that tonight."] },
                   { if: { flag: :wardens_emeritus }, lines: ["SELRAE: Winter keeps what spring forgets, Wardens.", "SELRAE: I hope you remember that tonight."] },
                   ["SELRAE: Winter Matron Selrae Vorn. Defense and faith.",
                    "SELRAE: You have the look of people who've been very cold for a very long time.",
@@ -244,7 +254,7 @@ module FrostThaw
   def echo_gate(event_id = nil)
     if !flag?(:wall_thinning)
       say(["The road ends at the Auroral Wall: a curtain of green-gold light from the ground to the sky.",
-           "Beyond it, snow. It isn't falling. Every flake hangs in the air,", "as if time out there were holding its breath."], event_id)
+           "Beyond it, snow. It isn't falling.", "Every flake hangs in the air, as if time out there were holding its breath."], event_id)
       return if respond_to?(:echo_wraiths) && echo_wraiths
       say([cl(:alerion, "Weeks out there. Four hundred years in here. I'm not walking through to find out.")].compact)
       pbMoveRoute($game_player, [PBMoveRoute::Right]) rescue nil
@@ -273,16 +283,15 @@ module FrostThaw
     rootspire_sky
     Stage.panel("S-09", fade: 20)
     say(["Gold light. Warm air. A tree so tall its crown is lost in the aurora.",
-         "The wind that once screamed through Icewind Dale hums here: a deep, living note that vibrates in your ribs.",
-         "Bark veined with light. Branches tangled with frost-glass leaves that catch the aurora and scatter it in a thousand colours.",
-         "Thawed earth and pine resin. Water dripping, birds crying, distant bells.",
+         "The wind that screamed through Icewind Dale hums here, a deep, living note in your ribs.",
+         "Bark veined with light. Frost-glass leaves catch the aurora and scatter it into colours.",
          "For the first time in centuries, the air tastes of spring.",
          "Welcome to Rootspire, the City of the Verdant Dawn."])
     Stage.panel_off(fade: 20)
     if journey?
       say(["TAMSIN: (screaming, then grabbing you) WHERE DID YOU GO. You were gone an HOUR.",
            "TAMSIN: Who are... (she sees the others) ...who are THEY?",
-           cl(:alberica, "(dusting snow off Tamsin's head) Hello, gorgeous."), cl(:alberica, "We fell out of a lamp. Don't try it at home.")].compact)
+           cl(:alberica, "(dusting snow off Tamsin's head) Hello, trouble."), cl(:alberica, "We fell out of a lamp. Don't try it at home.")].compact)
     end
     say([cl(:alberica, "(looking at her empty hands) I was holding it. In the Chasm. It was a seed."),
          cl(:reptin, "(looking up, and up, and up) It isn't a seed any more.")].compact)
@@ -323,12 +332,17 @@ module FrostThaw
       set_flag(:met_hellen)
       ($game_switches[SW_HEARTH] = true; $game_map.need_refresh = true if $game_map) if $game_switches
       add_counter(:story_beats)
+      Stage.emote(stage_event(event_id), :exclaim) rescue nil
       say(["HELLEN: (dropping a tray) No.",
            herald?(:alberica) ? "She looks at the mural. At you. At the mural again." : "She looks at the mural. At Alberica. At the mural again.",
            "HELLEN: No. You're the Heralds of Dawn and Dusk. You're on my wall. You're in my BAR.",
            cl(:shade, "We've been called worse. Usually in bars."),
            cl(:alberica, "And we've been in worse bars. This one has a mural of me. I love it here."),
            "HELLEN: Sit. All of you. Eat. You've snow in your hair that fell four hundred years ago."].compact, event_id)
+      # (scene pass: the player's input in the welcome. Hellen feeds you before she lets you talk.)
+      c = pbMessage(_INTL("Hellen puts a bowl in front of you."), [_INTL("Eat."), _INTL("\"What happened to us?\"")], 0)
+      say([c == 0 ? "Mutton stew. You'd forgotten you were hungry. You'd forgotten a lot of things, in the snow." :
+                    "HELLEN: Eat first. Then I'll tell you. ...Fine. Both. Eat while I talk."])
       # Context 06 M6-1 and §6: the hour answered, the Wall shown as a thing
       # you can see, and why nobody walks out of it. Herald Wyn comes home.
       if herald?(:wyn)
@@ -363,7 +377,8 @@ module FrostThaw
       say([with_or_is?(:shade) ? "In the corner, the bard starts up \"The Shade and the Shimmer\". Shade gets up and walks out." : nil,
            with_or_is?(:shade) ? cl(:alberica, "(watching the door) ...I'll go after them. In a minute. Give them the minute.") : nil,
            "HELLEN: The Council will want to see you. The round hall with the four crystals.",
-           "HELLEN: And the root-lift goes up to the Canopy, if you want to see the top of the world."].compact)
+           "HELLEN: The root-lift goes up to the Canopy, if you want to see the top of the world.",
+           "HELLEN: And the cellar's where the Hearth's regulars fight. Come down when you're fed."].compact)
       set_flag(:heard_wall_rule)
       state[:goal] = "The Council Hall of Seasons wants to see you."
     elsif festival_ready?
@@ -371,9 +386,14 @@ module FrostThaw
       return if !pbConfirmMessage(_INTL("Stay for the festival night?"))
       pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
       set_switch(SW_FESTIVAL, true)            # the market plays the night (SC 6.09) when you arrive
-      return transfer(2050, 31, 28, 2)
+      return transfer(*FESTIVAL_SPOT)            # the Festival Circle, at the Council Hall's steps (notes 06 E4)
     else
-      say(["HELLEN: Back again! Sit, sit. Your rooms are aired and the soup's on."], event_id)
+      # (notes 06 E11: a different welcome each night, not the same three boxes)
+      say([hellen_greeting], event_id)
+      if flag?(:beat_tamsin) && !flag?(:hellen_on_tamsin)
+        set_flag(:hellen_on_tamsin)                 # (notes 06 E32: the rival battle, read back)
+        say(["HELLEN: Tamsin says you went easy on them. They're furious. Thank you."])
+      end
       if !flag?(:badge_hearth)
         say(["HELLEN: And when you want to know the city? Fight the people who feed it.", "HELLEN: Cellar's behind the bar."])
       end
@@ -383,16 +403,19 @@ module FrostThaw
           # (context 06 §5, 15 M15-2: when the festival started, and where the city is)
           set_flag(:hellen_districts)
           say(["HELLEN: The festival opened the morning you fell, love. Its last night's the seventh.",
-               "HELLEN: #{n == 1 ? 'Tomorrow' : "#{n} more nights"}. Nobody rushes the seventh night.",
+               "HELLEN: #{n == 1 ? 'Tomorrow' : "#{number_word(n).capitalize} more nights"}. Nobody rushes the seventh night.",
                "HELLEN: Spend the days. The city's been waiting four hundred years to show you round.",
                "HELLEN: Halls up the north stair, the Promenade over the leaf-bridge. Go and be looked at."])
         else
-          say(["HELLEN: The festival's last night is the seventh. #{n == 1 ? 'Tomorrow' : "#{n} more nights"}, love. Nobody rushes the seventh night.",
-               "HELLEN: Spend the days. The city's been waiting four hundred years to show you round."])
+          say(["HELLEN: The last night's the seventh. #{n == 1 ? 'Tomorrow' : "#{number_word(n).capitalize} more"}, love. Nobody rushes the seventh night."])
         end
         state[:goal] = g
       end
       hellen_business(event_id) if respond_to?(:hellen_business)     # her own errands and the old passages (048_H)
+      # (scene pass: a rest is the player's call, the way a Pokémon Center asks)
+      if !pbConfirmMessage(_INTL("Stay the night at the Hearth?"))
+        return say(["HELLEN: Suit yourself, love. The bed'll keep."])
+      end
     end
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     set_rest_at(HEARTH_REST)
@@ -400,9 +423,29 @@ module FrostThaw
     hearth_night(event_id) if respond_to?(:hearth_night)   # a night in Rootspire (048)
   end
 
+  HELLEN_GREETINGS = [
+    "HELLEN: Back again! Sit, sit. Your rooms are aired and the soup's on.",
+    "HELLEN: There you are. Boots off the bench, love. Soup's on.",
+    "HELLEN: Corrie's been telling your stories wrong all night. Sit down and glare at him.",
+    "HELLEN: Bread's still warm. Don't tell the regulars.",
+    "HELLEN: You look half asleep. Good. Eat, then upstairs with you.",
+    "HELLEN: The whole street's hanging lanterns. Sit. Eat. Look at them later."
+  ]
+
+  def hellen_greeting
+    n = (state[:hellen_welcome] ||= 0)
+    state[:hellen_welcome] = n + 1
+    HELLEN_GREETINGS[n % HELLEN_GREETINGS.size]
+  end
+
+  NUMBER_WORDS = %w[no one two three four five six seven eight nine ten eleven twelve]
+  def number_word(n) = NUMBER_WORDS[n] || n.to_s
+
   # The festival's last night is the seventh night in the city (rootspire.md
   # 5545-5560, 5784-5792): the downtime week comes first.
   FESTIVAL_NIGHT = 7
+  FESTIVAL_SPOT = [2050, 20, 30, 8]
+  FESTIVAL_TONE = Tone.new(-68, -60, -10, 30) rescue nil      # lantern-lit night (notes 06 E4)
 
   def festival_ready?
     festival_business_done? && rs_day >= FESTIVAL_NIGHT && !flag?(:festival_night)
@@ -463,7 +506,7 @@ module FrostThaw
          herald?(:alberica) ? "You rest your chin on your hand and look round the table at all of them." :
                               "Alberica rests her chin on her hand and looks round the table at all of them."])
     speak(:alberica, "...Look at us. Two years ago I'd have been drinking alone. To the people who stay.",
-          "(quietly, lifting her cup) To the people who stay.")
+          "(quietly) To the people who stay.")
     say([as(:meat_meat, "To coffee."),
          as(:alberica, "That's what I said."),
          cl(:glimmer, "(curled in the warm spot by the hearth, eyes shut) Wake me when there's milk."),
@@ -477,6 +520,8 @@ module FrostThaw
     set_flag(:festival_night)
     add_counter(:story_beats)
     cast = festival_cast
+    ($game_screen.start_tone_change(FESTIVAL_TONE, 20) if FESTIVAL_TONE) rescue nil
+    pbBGMPlay("meloetta_song") rescue nil                     # the festival's own tune (notes 06 E9)
     festival_opening if respond_to?(:festival_opening)
     say(["The seventh night. Lanterns on every root, pine-mead in every hand, the whole city in the market.",
          "Beside the Heralds stands the Summer Throne, carried out for the night: empty, and scorched black.",
@@ -492,11 +537,13 @@ module FrostThaw
               elsif herald?(:wyn) then "The ground shudders. Once. The same shudder as the night you fell."
               else "The ground shudders. Once. Deep, like something heavy set down below."
               end
-    say([shudder, "The music falters. Everyone goes silent."])
+    pbBGMFade(0.6) rescue nil
+    say([shudder, "The pipes falter. Everyone goes silent."])
     festival_shudder_extras if respond_to?(:festival_shudder_extras)
     Stage.overlay("O-01", scroll_x: 0.25, opacity: 210, pulse: :hard, fade: 8)
     say(["Overhead, the aurora flickers in a hard, even rhythm. Like a pulse. Like something built.",
-         cl(:glimmer, "(a hand on his chest, head cocked) Something under us is burning. ...And hammering. Deep in the roots. Can none of you hear that?"),
+         cl(:glimmer, "(a hand on his chest) Something under us is burning."),
+         cl(:glimmer, "And hammering. Deep in the roots. Can't you hear it?"),
          herald?(:meat_meat) ? "(You know that sound. Hammers. The cold table had hammers under it.)" :
                                cl(:meat_meat, "(gone white) Meat Meat knows that sound. Hammers. The cold table had hammers under it."),
          with_or_is?(:meat_meat) ? cl(:alerion, "(low, to #{herald?(:meat_meat) ? 'you' : 'Meat Meat'}) Then we go down and break them.") : nil,
@@ -545,6 +592,8 @@ module FrostThaw
       pbMessage(_INTL("Wyn joined the party."))
     end
     festival_cast_off(cast)
+    ($game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 20)) rescue nil
+    ($game_map.autoplay) rescue nil
     restore_sky
     state[:goal] = "The festival's over. Rest at the Hearth: the Council will send for you."
   end
@@ -558,12 +607,20 @@ module FrostThaw
     "Lirielle Mossdancer" => [:lirielle, "Followers/BUNEARY", -4, -1, 6], "Hew Talmire" => [:hew, "FT_master_hew_talmire", 6, -1, 4]
   }
 
+  FESTIVAL_CROWD = [["BW (29)", -4, 0, 6], ["BWParasolLady", -3, 2, 8], ["BW (30)", 2, 2, 8], ["BW (38)", 4, 2, 8],
+                    ["BW (62)", -1, 3, 8], ["BW (35)", 1, 3, 8]]
+
   def festival_cast
     cast = { hidden: [] }
     return cast if !Stage.map? || $game_map.map_id != MAPS[:rootspire]
     px, py = $game_player.x, $game_player.y
-    cast[:kelyn]  = Stage.actor(:kelyn, px, py + 2, 8, graphic: "FT_high_speaker_kelyn_of_spring")
-    cast[:eirwen] = Stage.actor(:eirwen, px - 2, py + 2, 8, graphic: "FT_eirwen_solglass")
+    # Kelyn on the Hall's steps, Eirwen by the Throne, the city in a ring round
+    # the Circle (you stand facing the Hall: FESTIVAL_SPOT)
+    cast[:kelyn]  = Stage.actor(:kelyn, px, py - 1, 2, graphic: "FT_high_speaker_kelyn_of_spring")
+    cast[:eirwen] = Stage.actor(:eirwen, px - 2, py - 1, 2, graphic: "FT_eirwen_solglass")
+    FESTIVAL_CROWD.each_with_index do |(g, dx, dy, d), i|
+      cast[:"crowd#{i}"] = Stage.actor(:"townsfolk#{i}", px + dx, py + dy, d, graphic: g)
+    end
     FESTIVAL_STAND_INS.each do |name, (key, graphic, dx, dy, d)|
       ev = Stage.find(name)
       (ev.transparent = true; cast[:hidden] << ev) if ev
@@ -655,27 +712,63 @@ module FrostThaw
     end
   end
 
-  # SC 6.03 - They waited (autorun in the market, once you've met Hellen)
+  # SC 6.03 - They waited (autorun in the market, once you've met Hellen).
+  # Purpose: the twins come home to their partners; Lumin names them, and the
+  # player sees them land (notes 06 E3, E21; dialogue 06 §4: Lumin names
+  # Frostina here, so Alerion's "Frostina" at the orb follows).
   def scene_twins_land
     return if flag?(:twins_met)
+    px, py = ($game_player ? [$game_player.x, $game_player.y] : [31, 28])
+    # Shade walked out of the Hearth when the bard started: Alberica gave them the minute (notes 06 E21)
+    shade = nil
+    if with_or_is?(:shade) && Stage.map?
+      shade = Stage.actor(:shade, px + 1, py, 2)
+      say(["Outside, Shade is sitting on the Hearth's step, very still."])
+      sayc([cl(:alberica, "(sitting down beside them) Budge up. ...I'm not saying anything. I'm sitting.")])
+    end
     pbSEPlay("Saint7") rescue nil
-    say(["Shadows fall across the market. Two dragons come down out of the gold sky.",
-         "They're bigger than houses now: one green-gold, one silver-white.",
-         herald?(:meat_meat) ? "The green one lands so hard the cobbles crack. He shoves his enormous head into your chest." :
-                               "The green one lands so hard the cobbles crack. He shoves his enormous head into Meat Meat's chest.",
-         "RAZZILITH: (a painted thought: a goblin's face, over and over, four hundred years of it) ...WAITED.",
-         herald?(:meat_meat) ? "(Meat Meat is here. Meat Meat is here now.)" : "MEAT MEAT: (arms round as much of him as she can reach) Meat Meat is here. Meat Meat is here now.",
-         cl(:alberica, "(wiping her eyes) Oh, look at the size of him. Who's a big boy? Who waited?"),
-         herald?(:alerion) ? "The white one lands like snow. She looks at you and lowers her head." :
+    raz = fro = lumin = nil
+    if Stage.map?
+      raz = Stage.actor(:razzilith, px - 2, py - 7, 2, graphic: "FT_razzilith")
+      fro = Stage.actor(:frostina, px + 3, py - 8, 2, graphic: "FT_frostina")
+    end
+    say(["Shadows fall across the market. Two dragons come down out of the gold sky."])
+    Stage.walk(raz, [37] + [1] * 6, wait_for: false) if raz
+    Stage.walk(fro, [37] + [1] * 6, wait_for: true) if fro
+    Stage.wait(10)
+    $game_screen.start_shake(5, 8, 16) rescue nil
+    pbSEPlay("Earth3") rescue nil
+    Stage.cry(:FLYGON)
+    say(["They're bigger than houses now: one green-gold, one silver-white.",
+         herald?(:meat_meat) ? "The green one lands so hard the cobbles crack. He shoves his head into your chest." :
+                               "The green one lands so hard the cobbles crack. He shoves his head into Meat Meat's chest.",
+         "RAZZILITH: (a painted thought: a goblin's face, four hundred years of it) ...WAITED.",
+         herald?(:meat_meat) ? "(Meat Meat is here. Meat Meat is here now.)" : "MEAT MEAT: (arms round as much of him as she can reach) Meat Meat is here now.",
+         cl(:alberica, "(wiping her eyes) Oh, look at the size of him. Who's a big boy? Who waited?")].compact)
+    Stage.cry(:ALTARIA)
+    say([herald?(:alerion) ? "The white one lands like snow. She looks at you and lowers her head." :
                              "The white one lands like snow. She looks at Alerion and lowers her head to him.",
          herald?(:alerion) ? "Your ring frosts and warms at once." : "His ring frosts and warms at once.",
          "Then she looks at Shade, tilts her head, and hums four notes.",
          "SHADE: (sitting down in the street) ...Hi.",
-         cl(:reptin, "(gently) Take your time."),
-         "A rabbit-eared Wennen in priest's robes comes down the steps, trembling.",
-         "LUMIN: The Twinned Dragons haven't touched ground in a century.",
-         "LUMIN: The old texts say they'd wait for their partners. Not masters. Partners.",
-         "The dragons lift off together, back toward the Shrine of the Twinned Dragons on the Canopy-Tier."].compact)
+         cl(:reptin, "(gently) Take your time.")].compact)
+    if Stage.map?
+      lumin = Stage.actor(:lumin, px - 5, py + 2, 6, graphic: "FT_wennen_lumin")
+      Stage.walk(lumin, [3, 3]) if lumin
+      Stage.emote(lumin, :exclaim) if lumin
+    end
+    say(["A rabbit-eared Wennen in priest's robes hurries over, trembling.",
+         "LUMIN: I'm Lumin, from their shrine up top. Four hundred years we've sung their names.",
+         "LUMIN: Razzilith. Frostina. They haven't touched ground in a century. They waited for you."])
+    say(["The dragons lift off together, back toward the Shrine of the Twinned Dragons on the Canopy-Tier."])
+    if raz || fro
+      Stage.walk(raz, [4] * 9, wait_for: false) if raz
+      Stage.walk(fro, [4] * 9, wait_for: true) if fro
+      Stage.remove_actor(raz) if raz
+      Stage.remove_actor(fro) if fro
+    end
+    Stage.leave(lumin, px - 7, py + 2) if lumin
+    Stage.remove_actor(shade) if shade
     set_flag(:twins_met)
     ($game_switches[SW_TWINS_MET] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
@@ -712,21 +805,28 @@ module FrostThaw
     end
     # Context 06 M6-2: the four seats named by the seats, and the man in
     # Summer's; 08 M8-3: Var's face, and "thirty years" said twice at once.
+    # Scene pass (dialogue 06 §4, Top 5 #3): Darrus has charm and a secret
+    # (the Marshal's absence is "routine"); Reptin's "Let me do the talking"
+    # pays off at the oath; Kelyn's fear is shown, not spilled.
+    selrae_ev = Stage.find("Selrae Vorn")
+    darrus_ev = Stage.find("Darrus Fell")
     say(["Four crystals pulse over four chairs: green Spring, gold Summer, red Autumn, white Winter.",
          "Three seats are filled. The fourth is gold-leafed and vine-draped, and scorched black.",
          "KELYN: Four hundred years late. Or right on time. Welcome home.",
-         "KELYN: Kelyn, of Spring. I speak for the Council of Seasons. One chair each.",
-         "SELRAE: (not unkindly) We'd hoped you'd be taller.",
+         "KELYN: Kelyn, of Spring. I speak for the Council of Seasons. One chair each."].compact, event_id)
+    Stage.turn_to(selrae_ev) if selrae_ev
+    say(["SELRAE: (not unkindly) We'd hoped you'd be taller.",
          cl(:alerion, "We'd hoped you'd be warmer."),
          "SELRAE: Selrae Vorn. Winter's chair. Defence, and the old faiths.",
-         with_or_is?(:alerion) ? cl(:reptin, "(under his breath) Let me do the talking. Please. I'm begging.") : nil,
-         "DARRUS: (chewing clove bark) Spare us the poetry. Darrus Fell, Autumn. Law and trade.",
+         with_or_is?(:alerion) ? cl(:reptin, "(under his breath) Let me do the talking. Please. I'm begging.") : nil].compact, event_id)
+    Stage.turn_to(darrus_ev) if darrus_ev
+    say(["DARRUS: (chewing clove bark) Charming. Truly. Darrus Fell, Autumn. Law and trade.",
          "DARRUS: The scorched one's Summer's. Our Marshal's: Var Rime-Breaker.",
-         "DARRUS: He went down to check the heat in the roots. Seven days ago.",
+         "DARRUS: Var went down to look at the roots a week ago. Routine. He's resting, I'm sure.",
          "Over the scorched seat hangs a portrait: a big, scarred man in gold, grinning.",
          "KELYN: Var. Our Marshal thirty years. He took the seat the spring the summer stuck.",
          "DARRUS: Loudest man in Rootspire. Never once missed a vote. Until now.",
-         "DARRUS: He hasn't come back. And this arrived the next morning.",
+         "DARRUS: And this arrived the morning after he went down.",
          "A decree: \"Begin excavation beneath the Heartroot.\" Signed with Summer's seal.",
          "In the wax there's a tiny mark: a cracked mirror.",
          cl(:alerion, "That's the hag's sign."),
@@ -735,9 +835,11 @@ module FrostThaw
          "KELYN: Rootspire has been stuck in this summer for thirty years. I need people the tree trusts.",
          "KELYN: (very quietly, and only to you) And if the cold comes back... the old cold. Hers.",
          "Her hand has gone white on the arm of her seat. She doesn't seem to notice.",
-         "KELYN: We have stories about what she does to cities that forget her. I grew up on them. I still can't sleep in a cold room.",
-         "KELYN: Swear to defend Rootspire from the old cold gods, and the Council will name you Wardens Emeritus. Officially. With seals.",
-         "KELYN: Will you swear the Wardens' oath?"].compact, event_id)
+         "KELYN: I still can't sleep in a cold room.",
+         "KELYN: Swear to defend Rootspire from the old cold gods, and you'll be Wardens Emeritus.",
+         "KELYN: Officially. With seals."].compact, event_id)
+    speak(:reptin, "Speaker, we'd be honoured. We'd also like to know what we're swearing to. Both, ideally.",
+          "...What are we swearing to, exactly?") if with_or_is?(:reptin)
     c = pbMessage(_INTL("Swear the Wardens' oath?"), [_INTL("\"We'll guard the pulse.\""), _INTL("\"We just got here.\"")], 0)
     if c == 1
       set_flag(:wardens_refused)
@@ -747,7 +849,7 @@ module FrostThaw
     else
       set_flag(:wardens_sworn)
       say(["You put your hands on the living pillar. It's warm, and it beats.",
-           "KELYN: Then welcome home, Wardens Emeritus of Rootspire. Sworn against the old cold gods.",
+           "KELYN: Then you're Wardens Emeritus of Rootspire. Sworn against the old cold gods.",
            "KELYN: Take this: sap from the Heart of Spring's first root.",
            "KELYN: It heals what it touches. Slowly and stubbornly, like the tree.",
            cl(:alberica, "Slow and stubborn. Story of my love life. ...Thank you, Speaker.")].compact)
@@ -760,27 +862,56 @@ module FrostThaw
     set_flag(:wardens_emeritus)      # the Root-Tier stair opens either way (switch 3935)
     ($game_switches[SW_WARDENS] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    say(["Over the Council's seats, carved in the living wood: a ring of four leaves, each a different season, round a single drop of sap.",
+    # (notes 06 E20, dialogue 06 §3: no "Glimmer" before there is one, and no "you three" to five)
+    founders = flag?(:glimmer_joined) ? "KELYN: Growth, Memory, Balance. Reptin's, Alberica's, and Glimmer's." :
+                                        "KELYN: Growth, Memory, Balance. Reptin's, Alberica's, and the one the songs call Glimmer."
+    say(["Over the seats, carved in the living wood: four leaves, each a different season, round a drop of sap.",
          "Under it the motto: BALANCE IS SURVIVAL.",
-         "KELYN: Growth, Memory, Balance. Reptin's legacy, Alberica's line, Glimmer's faith. We were founded on you three.",
+         founders,
+         flag?(:glimmer_joined) ? nil : cl(:shade, "(under their breath) ...Who's Glimmer?"),
+         "KELYN: Rootspire was founded on what you left behind.",
          "KELYN: (quieter) And a season too long. Thirty years of summer. I want to know why.",
-         herald?(:wyn) ? "KELYN: Kethan Vale says it was no accident. Your captain, Wyn. He'll want you back." :
-                         "KELYN: Kethan Vale says it was no accident. He keeps the Rootwarden Hall's watch.",
-         "KELYN: The Hall's in the Verdant Halls, up the north stair. Hear him out.",
+         # (notes 06 E19: one Rootwarden captain, Rheven; Kethan keeps the civic watch)
+         "KELYN: Kethan Vale, of the civic watch, says it was no accident.",
+         "KELYN: His hall's in the Verdant Halls, up the north stair. Hear him out.",
          "SELRAE: The Fractured Halo want the old winter back. They'll move tonight.",
          "SELRAE: If they do, I want the Canopy under martial law, Kelyn. My wardens, at the Rift.",
          "KELYN: No.",
          "SELRAE: (to you, mildly) She always says no. Then something burns, and she says yes.",
-         "DARRUS: And while we're saying no to things: the Guild wants the lower terraces. More roots cut, more halls, more trade.",
-         "KELYN: Every terrace we cut is a root that can't feel the seasons. Grow too fast and the tree forgets what balance is.",
+         "DARRUS: While we're saying no to things: the Guild wants the lower terraces. More halls, more trade.",
+         "KELYN: Every terrace we cut is a root that can't feel the seasons.",
+         "KELYN: Grow too fast and the tree forgets what balance is.",
          "SELRAE: Grow too slowly and the cold remembers us. Expansion is a wall, Kelyn. Walls keep winter out.",
          "KELYN: Walls keep winter in, too. ...We'll vote on it after the festival. As we have for six years.",
-         cl(:alberica, "(behind her hand) They've been at this since before coffee was invented."),
-         "SELRAE: There's a rite at the Still Sky Shrine tonight, the festival's first.",
+         cl(:alberica, "(behind her hand) Four hundred years, and they're still on the same argument.")].compact)
+    council_terrace_vote
+    say(["SELRAE: There's a rite at the Still Sky Shrine tonight, the festival's first.",
          "SELRAE: Watch it. Closely.",
          "KELYN: The Wardens' stair down to the Root-Tier is in the woodcarver's workshop, by the old gate."])
     selrae_court if respond_to?(:selrae_court)
     state[:goal] = "The Still Sky Shrine, in the Root-Tier. (The woodcarver's workshop has the stair down.)"
+  end
+
+  # Scene pass: the Council's old argument, put to the player (an input in the
+  # Council's second half). Read back by Selrae's repeat line and the Hall's
+  # summons.
+  def council_terrace_vote
+    say([flag?(:wardens_refused) ? "KELYN: (to you) Sworn or not, the city will ask you. Walls, or roots?" :
+                                   "KELYN: (to you) You're Wardens now. You'll have a voice at that vote. Walls, or roots?"])
+    c = pbMessage(_INTL("Walls, or roots?"), [_INTL("\"Roots. Let the tree grow.\""), _INTL("\"Walls. Keep the cold out.\""),
+                                                _INTL("\"We'll listen first.\"")], 2)
+    case c
+    when 0
+      set_flag(:terrace_roots)
+      say(["KELYN: (very quietly) Thank you.", "SELRAE: (mildly) Noted. Everything in this Hall is noted."])
+    when 1
+      set_flag(:terrace_walls)
+      say(["SELRAE: Well. Somebody in this city listens.", "KELYN: (tightly) Noted."])
+    else
+      set_flag(:terrace_listen)
+      say(["SELRAE: The first sensible thing anyone's said in this Hall all year."])
+      sayc([cl(:reptin, "(under his breath) I did say let me do the talking. This is the talking.")])
+    end
   end
 
   #-----------------------------------------------------------------------------
@@ -837,10 +968,14 @@ module FrostThaw
     return if !trainer(:eline, event_id)
     set_flag(:rite_stopped)
     set_flag(:heart_given_summer)
-    ($game_switches[SW_RITE_STOPPED] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    say(["ELINE: It doesn't matter. Summer has the heart. Summer keeps promises.",
-         "She slips out through a back door you didn't see.",
+    say(["ELINE: It doesn't matter. Summer has the heart. Summer keeps promises."], event_id)
+    # (notes 06 E6: she and her disciples leave on screen, through the back of the
+    # Shrine, before their events go for good with the switch)
+    leavers = [stage_event(event_id), stage_event("Disciple 1"), stage_event("Disciple 2")].compact
+    Stage.leave_all(leavers, 14, 26) if !leavers.empty?
+    ($game_switches[SW_RITE_STOPPED] = true; $game_map.need_refresh = true if $game_map) if $game_switches
+    say(["She slips out through a back door you didn't see. Her disciples go with her.",
          "Outside, the aurora flickers, and the gold steadies.",
          "On the altar, beside the frozen man, someone has left two Full Restores.",
          cl(:alerion, "Bait."),

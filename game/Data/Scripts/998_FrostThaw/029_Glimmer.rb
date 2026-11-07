@@ -63,9 +63,18 @@ module FrostThaw
     glimmer_arrives(event_id)
   end
 
-  # SC 6.08 - The spark that wasn't out
+  # SC 6.08 - The spark that wasn't out.
+  # Purpose: Shade goes through the Rift to get back what they gave away, and
+  # comes back as Glimmer, older, with the Shard in his chest and the Rimefang
+  # still cursed. The player sends them (the choice, read back by Glimmer).
+  # Scene pass (notes 06 E7, E23; dialogue 06 §4): Shade walks into the light
+  # and Glimmer walks back out on screen; Frostina drops down; the Heralds'
+  # theme when he names himself; the recaps cut.
   def glimmer_arrives(event_id = nil)
+    rift = stage_event(event_id)
+    rx, ry = stage_spot(rift, 0, -2)
     Stage.overlay("O-01", scroll_x: 0.6, opacity: 255, fade: 30)   # the aurora pours down
+    pbBGMPlay("sky pillar") rescue nil
     sayc(["Above the crown of the tree, the sky opens. No clouds: only aurora, pouring down in a curtain.",
           "In the middle of it a shard of light turns slowly.",
           "Behind it the curtain goes smooth and bright as a mirror.",
@@ -75,48 +84,61 @@ module FrostThaw
           cl(:shade, "It's been you since Saltmarsh, hasn't it."),
           "Shade looks down at their own empty hands.",
           cl(:shade, "That night in the white, I pulled Shimmer out. And something pulled back."),
-          cl(:shade, "In the morning there was a unicorn's horn in the snow. I carried it for years."),
-          cl(:shade, "Then I gave it to an egg."),
+          cl(:shade, "In the morning there was a horn in the snow. Then I gave it to an egg."),
           "BRIGHTMANE: (a voice like a bell, heard through warm water) You gave away the last of me...",
           "BRIGHTMANE: ...to save a child you had never met. Come and get it back."])
     if flag?(:luna_spark)
       say([cl(:shade, "The Wennen said our house had a spark that wasn't out. Waiting somewhere bright."),
            cl(:shade, "Subtle, Luna.")].compact)
     end
+    fro = Stage.actor(:frostina, rx + 3, ry - 6, 2, graphic: "FT_frostina") if Stage.map?
+    Stage.walk(fro, [37] + [1] * 5) if fro
+    Stage.cry(:ALTARIA)
     sayc(["Frostina drops down past the Rift, close enough to stir everyone's hair.",
           "She looks at Shade and hums four notes.",
           cl(:shade, "(very quietly) Shimmer told me to keep going. I think this is what she meant."),
           cl(:meat_meat, "Shade comes back. Meat Meat promises for Shade.")])
     speak(:alberica, "You'd better come back, sugar. I haven't finished teasing you.",
           "...Come back. That's all.") if with_or_is?(:alberica)
-    sayc([cl(:reptin, "We'll hold the door. Diplomatically. With teeth, if it comes to that."),
+    sayc([cl(:reptin, "We'll hold the door. With teeth, if it comes to that."),
           cl(:alerion, "Go.")])
     c = pbMessage(_INTL("Shade looks at you last."), [_INTL("\"Go.\""), _INTL("\"Come back.\"")], -1)
-    set_flag(:told_shade_go) if c == 0
+    set_flag(c == 1 ? :told_shade_back : :told_shade_go)
+    # Shade walks into the light, and is gone
+    shade = Stage.speaker("SHADE") || Stage.summon(:shade)
+    Stage.walk_to(shade, rx, ry, face: 8) if shade && rift
     pbSEPlay("Saint7") rescue nil
-    Stage.fx("E-07", $game_player, frames: 8, oy: 40) rescue nil
+    Stage.fx("E-07", [rx, ry], frames: 8, oy: 40) rescue nil
     $game_screen.start_flash(Color.new(255, 240, 200, 200), 20) rescue nil
+    Stage.remove_actor(shade) if shade
     sayc(["Shade steps into the mirror. The glass takes them like warm water.",
-          "Stars move on the other side. For one breath, nothing at all.",
-          "Then the glass bulges. A tall cat-man steps out, and for a moment stars come with him, caught in his fur.",
+          "Stars move on the other side. For one breath, nothing at all."])
+    # Glimmer steps out, and walks back to you
+    gl = Stage.actor(:glimmer, rx, ry, 2, graphic: "FT_glimmer") if Stage.map?
+    $game_screen.start_flash(Color.new(255, 240, 200, 160), 16) rescue nil
+    sayc(["Then the glass bulges. A tall cat-man steps out, and for a moment stars come with him, caught in his fur.",
           "A midnight-blue coat. The cursed dagger at his hip. In his hand, a unicorn's horn.",
-          "He reaches for the Lumen Shard. As his hand closes, a shadow of him forms in the aurora beside him: his own shape, eyes black as void.",
+          "He reaches for the Lumen Shard. A shadow of him forms in the aurora beside him, eyes black as void.",
           "SHADOW: Will you bear hope when even the sun freezes?",
           "He doesn't look away from it.",
           "???: ...Yes. Somebody has to.",
           "The shadow steps back into him. The Shard sinks into his chest like a coal into snow, and beats.",
           "Round the Rift's inner ring, letters light up that weren't there a moment ago:",
-          "FROM THE SPARK WAS BORN THE LUMEN SHARD, HOPE CRYSTALLIZED. MAY ITS BEARER LIGHT PATHS THAT NEVER KNEW DAWN.",
-          "???: ...That took longer than Brightmane promised. Unicorns are terrible at time.",
-          cl(:alberica, "...Shade?"),
-          "GLIMMER: Glimmer, now. Brightmane says a name should fit what you carry.",
+          "FROM THE SPARK WAS BORN THE LUMEN SHARD, HOPE CRYSTALLIZED.",
+          "MAY ITS BEARER LIGHT PATHS THAT NEVER KNEW DAWN."])
+    Stage.approach(gl) if gl
+    sayc(["???: ...That took longer than Brightmane promised. Unicorns are terrible at time.",
+          flag?(:told_shade_back) ? "???: (to you) You said come back. So I did." : "???: (to you) You said go. So I went.",
+          cl(:alberica, "...Shade?")].compact)
+    Stage.theme(:heralds)                # he names himself (the design: Thaw, then Heralds)
+    sayc(["GLIMMER: Glimmer, now. A name should fit what you carry. She was firm about that.",
           "GLIMMER: Seven years on her side of the glass. About a minute on yours.",
           "He turns the horn over in his hands.",
           "GLIMMER: She gave it back. She says I'm a fire now. I'm still deciding how I feel about the fur.",
           cl(:meat_meat, "(poking his arm) Shade came back. Meat Meat promised. ...Shade is fluffy now."),
           with_or_is?(:meat_meat) ? "GLIMMER: Please don't." : nil])
     if flag?(:heard_of_glimmer)
-      sayc(["He takes Shimmer's little carved wooden cat out of his coat and holds it up beside his own face.",
+      sayc(["He takes Shimmer's little carved wooden cat out of his coat and holds it up beside his face.",
             "He laughs. Then he isn't laughing.",
             "GLIMMER: She always said I'd end up a cat. I hate that she was right."])
     end
@@ -127,35 +149,46 @@ module FrostThaw
     # The dead Glimmer's journal from the Cackling Chasm (044): the ghost said
     # "You'll see. Not yet." This is the seeing.
     if ($PokemonBag.pbHasItem?(:FT_GLIMMERJOURNAL) rescue false) || flag?(:glimmer_journal_read)
-      sayc([cl(:alberica, "(very slowly, taking the journal out of the pack) Darling. ...Read this. The chasm. The skeleton with claws.") ||
+      sayc([cl(:alberica, "(very slowly, taking the journal out of the pack) Read this. The chasm. The skeleton with claws.") ||
               "You take the bloodstained journal from the Chasm out of the pack, and hold it out to him.",
-            "He reads it standing very still. \"...desperate to save Alberica... Tomorrow, I venture into the chasm.\" Signed: Glimmer.",
+            "He reads it standing very still: \"...desperate to save Alberica... Tomorrow, I venture into the chasm.\"",
+            "It's signed Glimmer.",
             "He turns to the last page. Then back to the first. Then he holds his own hand out beside the writing.",
-            "GLIMMER: (hoarse) That's my hand. That's how I make my G. I've never written this. ...I haven't written it yet. Or I wrote it last time.",
+            "GLIMMER: (hoarse) That's my hand. That's how I make my G. I've never written this.",
+            "GLIMMER: ...I haven't written it yet. Or I wrote it last time.",
             "GLIMMER: Brightmane said the wheel turns. She didn't say it turns with me on it. Every time.",
             "GLIMMER: (to #{herald?(:alberica) ? 'you' : 'Alberica'}, very quietly) I went into that chasm for you once. I died in it.",
             "GLIMMER: ...I'm still trying. Apparently I always am.",
-            cl(:alberica, "(not quite managing her voice) Then this time, sweetheart, you're going to try alive.")].compact)
+            cl(:alberica, "(not quite managing her voice) Then this time you're going to try alive.")].compact)
       set_flag(:glimmer_knows_journal)
     end
     sayc(["Frostina hums four notes at him. He hums them back, off-key, the way Shade always did.",
-          "GLIMMER: Brightmane said Shimmer gave the ice of her heart so others could live.",
           "GLIMMER: Somebody had to carry her torch. I said it wasn't fair that it was mine.",
           "GLIMMER: She said that's what torches are like.",
           "He draws the Rimefang. The blade still smokes with cold.",
-          "GLIMMER: And this is still cursed. Still marks me for Auril. Still killing me slowly, since Saltmarsh.",
+          "GLIMMER: And this still thinks it's Auril's. It's been killing me slowly since Saltmarsh.",
           "GLIMMER: Brightmane says I'll find it a better fire."])
-    speak(:alerion, "Then we'll find it one together.", "...Together.") if with_or_is?(:alerion)
+    speak(:alerion, "Then we look.", "...We look.") if with_or_is?(:alerion)
     state[:companions] = ((state[:companions] || []) - [:shade] + [:glimmer]).uniq
     set_flag(:glimmer_joined)
     set_flag(:shade_became_glimmer)
     set_flag(:glimmer_has_rimefang)
     ($game_switches[SW_GLIMMER] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
+    if fro
+      Stage.walk(fro, [4] * 7)
+      Stage.remove_actor(fro)
+    end
+    Stage.remove_actor(gl) if gl
     restore_sky
+    ($game_map.autoplay) rescue nil
     pbMessage(_INTL("Shade is Glimmer now. Glimmer joined the party."))
-    state[:goal] = flag?(:rite_stopped) && flag?(:badge_hearth) ? "The festival's last night. Rest at the Hearth." :
-                   "Finish the festival's business: the Still Sky Shrine's rite, and Hellen's cellar."
+    # (notes 06 E16: the goal names only what's left)
+    left = []
+    left << "the Still Sky Shrine's rite" if !flag?(:rite_stopped)
+    left << "Hellen's cellar" if !flag?(:badge_hearth)
+    state[:goal] = left.empty? ? ((respond_to?(:festival_wait_goal) && festival_wait_goal) || "The festival's last night. Rest at the Hearth.") :
+                                 "Finish the festival's business: #{left.join(', and ')}."
   end
 
   def apply_glimmer_switches
