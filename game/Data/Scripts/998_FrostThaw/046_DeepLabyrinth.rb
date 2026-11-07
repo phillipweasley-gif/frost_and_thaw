@@ -914,7 +914,7 @@ module FrostThaw
   # H21: the sealed crystal: the glass half of the forge door.
   def scriptory_crystal(event_id = nil)
     return say(["An empty socket in the root, still warm."], event_id) if flag?(:glass_sigil)
-    say(["A fist-sized crystal sealed in the root. A sigil turns slowly inside it, like a fish in ice."], event_id)
+    say(["A fist-sized crystal sealed in the root. Inside, a sigil turns like a fish in ice."], event_id)
     if flag?(:root_key)
       say(["That sigil. The same one is etched in the glass of Hew's door."])   # (notes 07 E16)
     end

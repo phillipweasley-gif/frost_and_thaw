@@ -101,6 +101,10 @@ module FrostThaw
       say(["A kid with Hellen's chin catches one.",
            "TAMSIN: It's brown. Why is it brown? Is it sick?"])
     end
+    # (an input in the market's first quiet minute)
+    c = pbMessage(_INTL("Tamsin holds the leaf out to you."), [_INTL("Take it"), _INTL("Tuck it behind her ear")], 0)
+    say([c == 0 ? "You take it. It's dry and light, and smells of something you can't name." :
+                  "You tuck it behind her ear. She keeps very still, so it won't fall."])
     rheven = Stage.find("Captain Rheven")
     Stage.approach(rheven) if rheven             # he walks over from the Council stair
     say(["RHEVEN: (looking up at the crown) It's not sick, kid. Summer's over.",

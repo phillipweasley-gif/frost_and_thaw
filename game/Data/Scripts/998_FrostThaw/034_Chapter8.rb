@@ -1316,6 +1316,9 @@ module FrostThaw
     say(["The Heart Chamber starts to come apart. Roots slough off the walls.",
          "Part of the cavern folds into a tunnel of cooling sap.",
          cl(:reptin, "That's our way out. GO!")].compact)
+    # (the player's last look, a beat for Glimmer before the run)
+    c = pbMessage(_INTL("The roof is coming down."), [_INTL("Run"), _INTL("Look back once")], 0)
+    say([c == 0 ? "You run." : "You look back once: the engine's dark cage, sliding into the silver. Then you run."])
     state[:goal] = "Out through the Sloughing Veins, before the Heart Chamber comes down."
     transfer(*VEINS_ARRIVAL)
   end
