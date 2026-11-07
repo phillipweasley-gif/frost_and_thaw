@@ -142,3 +142,15 @@ end
 module FrostThaw
   LOOP_ACT1_FLAGS.concat(%i[mead_hall_rested fall_eyes_shut]).uniq!
 end
+
+# scene2 h: Rootspire's side content in Act II (2026-11-06): what a Journey run
+# now sets by the end of Chapter 10 from the part-15 build (the Codex over two
+# mornings, Hellen's words, the watchers' masters, the Wheel's note).
+module FrostThaw
+  LOOP_ACT2_FLAGS.concat(%i[amb_reflection amber_asked amber_tested codex_fragment_1 codex_fragment_2 codex_fragment_3
+                            codex_fragment_4 codex_fragments codex_given eirwen_audience eline_named_selrae fields_pulse
+                            frozen_run_asked hellen_board_word hellen_lantern_word ledger_found ledger_trail met_mirror_child
+                            root_mirror_sigil rootwardens_favour rumour_bryn rumour_heat rumour_lirielle rumour_mirrors
+                            rumour_robes rumour_secrets rumour_spores scribe_met selrae_courted selrae_halo_known
+                            staff_attuned tree_leans_verdant wheel_explained]).uniq!
+end
