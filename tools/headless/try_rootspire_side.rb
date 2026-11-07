@@ -256,7 +256,7 @@ begin
   unset(:pilgrim_dream)
   go(2053, 4, 7, 8)
   n = logpos; T.pilgrim_dream
-  check(said?(/Last night, you all dreamed the same dream/, n) && said?(/who listen for the cold/, n), "the pilgrim dream, past tense, to Alerion")
+  check(said?(/That night, you all dream the same dream/, n) && said?(/who listen for the cold/, n), "the pilgrim dream, at night, to Alerion")
   set(:council_support, :rootwardens_favour, :darrus_redeemed); T.state[:council_ally] = :rheven
   unset(:council_heralds, :council_uncertain, :council_support_paid, :darrus_paid)
   set(:council_rheven)

@@ -136,12 +136,15 @@ module FrostThaw
   def omen_check
     return false if !with_or_is?(:alberica) || flag?(:auril_whisper)
     state[:omens] ||= {}
+    # (notes/09 E15: one omen a day, so they don't stack and flatten each other)
+    return false if state[:omens][:day] == rs_day
     OMENS.each do |key, (who, triggers, tiers)|
       next if who != :alberica && !with_or_is?(who) && !(key == :spark && flag?(:glimmer_gone))
       t = (0..2).find { |i| !state[:omens][[key, i]] }
       next if !t || t + 1 > omen_tier
       next if triggers[t..].flatten.none? { |f| flag?(f) }
       state[:omens][[key, t]] = true
+      state[:omens][:day] = rs_day
       play_omen(key, tiers[t])
       return true
     end
@@ -212,7 +215,10 @@ module FrostThaw
     return if investigation_night               # past midnight: the night carries on from the knock
     morning = (respond_to?(:hearth_morning_due?) && hearth_morning_due?) ||
               MORNING_VIGNETTES.include?(next_vignette)   # a morning vignette keeps its place in the queue
-    night = (respond_to?(:lantern_rumours) && lantern_rumours) ||       # late in the common room: first in line, as before
+    # (notes/10 E16: in the trial week Sephek's dream is the night, before the dawn and the day count)
+    dreamt = flag?(:trials_open) && !flag?(:ch10_done) && !flag?(:pilgrim_dream) && respond_to?(:pilgrim_dream) && pilgrim_dream
+    night = dreamt ||
+            (respond_to?(:lantern_rumours) && lantern_rumours) ||       # late in the common room: first in line, as before
             (!morning && (omen_check || hearth_vignette(:night) || night_event))
     dawn_hue
     downtime_morning if respond_to?(:downtime_morning)
@@ -738,6 +744,9 @@ module FrostThaw
       sayc(["Your hand brushes something sharp in your pocket: a shard of mirror. It wasn't there.",
             "In it, your reflection blinks a moment out of sync."])
       give(:FT_STILLSHARD)
+      # (notes/10 E34: a hook for it)
+      sayc([cl(:alberica, "(very still) ...Throw that in the lake, darling. Please."),
+            "(It goes cold when something hidden is watching. Jast on the Root-Tier buys them, too.)"].compact)
     }],
     [:halo_stillness, ROOT_MAPS, -> { flag?(:wardens_emeritus) }, -> {
       sayc(["Sound drops away for a heartbeat: no footsteps, no breath, no rustle.",
