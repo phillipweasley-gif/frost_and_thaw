@@ -142,3 +142,11 @@ end
 module FrostThaw
   LOOP_ACT1_FLAGS.concat(%i[mead_hall_rested fall_eyes_shut]).uniq!
 end
+
+# scene2 e: Chapters 8-9 scene pass (2026-11-06): Hew's diggers wake whichever
+# way the gate opened, what you did on the bridge while Meat Meat chose, the
+# lift told after a rest, the fourth pod left asleep, Shimmer's rose given back
+module FrostThaw
+  LOOP_ACT2_FLAGS.concat(%i[diggers_woken you_took_cocoon you_called_mm lift_told core_left
+                            rose_to_frostina]).uniq!
+end
