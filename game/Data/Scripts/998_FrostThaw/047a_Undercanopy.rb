@@ -43,9 +43,9 @@ module FrostThaw
   )
   TRAINER_INTROS.merge!(
     kobold_snik: "SNIK: Back! Back! These are ours now, finders keepers!",
-    kobold_grub: "GRUB: Grub's turn! Grub bites!",
+    kobold_grub: "GRUB: Grub's turn! Grub nibbles!",
     fane_cultist: "\"WARDEN\" VOSK: (dropping the vial) ...Ah.",
-    eira_trial: "EIRA: Mercy and fury, Wyn. Show me you can hold both."
+    eira_trial: "EIRA: Show me."
   )
 
   RELIC_ITEMS.merge!(
@@ -76,7 +76,7 @@ module FrostThaw
   # The Vision Table (Council Fane): [vision, effect]
   VISION_TABLE = [
     ["A sapling splitting a glacier, green pushing through white.", :hope],
-    ["A tree on fire, its screams echoing across planes. Beyond it, a construct of iron and flame.", :fire],
+    ["A tree on fire, screaming across the planes. Beyond it, a construct of iron and flame.", :fire],
     ["A pair of wyrmlings circling a branch: one green, one white.", :twins],
     ["A mirror cracking under auroral light. Behind the crack, a cold man's face.", :mirror],
     ["Shadowed figures tapping a tree, like you'd tap a cask.", :greed],
@@ -84,18 +84,18 @@ module FrostThaw
   ]
 
   TEXT.merge!(
-    fane_thrones: ["Eight root thrones in a ring round the sap pool, each carved with a season, a memory, or a balance."],
+    fane_thrones: ["Eight root thrones ring the sap pool, each carved with a season, a memory, or a balance."],
     memory_niche: ["Behind the thrones: an alcove of spore scrolls. Lysella's knot is tied across it."],
     nursery_curtain: ["A curtain of moss, very soft. Behind it, someone is singing."],
     kobold_hole: ["A disused root, hollow as a pipe. Something small has been dragging shiny things in here."],
-    rift_quiet: ["The Celestial Rift: the aurora pours down into a ring of stone. It's quiet now. Only light."],
+    rift_quiet: ["The Celestial Rift: the aurora pours into a ring of stone. It's quiet now. Only light."],
     tether_threads: ["Thin silver threads hang from the ceiling and vanish into the floor, humming."],
     rheven_blight: -> {
-      with_or_is?(:reptin) ? ["CAPTAIN RHEVEN: (frost on his cloak, kneeling by the black caps) Reptin. Good. The sap's gone black up top too.",
+      with_or_is?(:reptin) ? ["CAPTAIN RHEVEN: (by the black caps) Reptin. Good. The sap's gone black up top too.",
                               "CAPTAIN RHEVEN: Look at it with me. You planted her. You can hear her; I can't."] :
                              ["CAPTAIN RHEVEN: (kneeling by the black caps) The sap's gone black in the Root-Tier.",
                               "CAPTAIN RHEVEN: I'd hoped your warden would come. Reptin. He can hear the tree."] },
-    run_hatch_shut: ["At the Run's far end, a crack in the rock breathes cold spore-mist. It's too dark to see how deep it goes.",
+    run_hatch_shut: ["At the Run's far end, a crack in the rock breathes cold spore-mist. Too dark to see down.",
                      "Something down there is whispering. (It wants someone who speaks spore.)"],
     attunement_way: ["Roots older than the city, breathing. Carved in one: WALK BESIDE, NOT ABOVE."],
     dream_stumps: ["A stump, cut flat. The rings in it are counting down."]
@@ -108,35 +108,40 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Called from yarro_blight once the scene is set. Returns true if it's cleansed.
   def verdant_sickness_ritual
-    sayc(["Captain Rheven Stormbranch comes down the root-stair, cloak white with frost, and kneels at the black caps.",
-          "RHEVEN: The sap's gone black up top too. Clotted. The tree's heartbeat's muffled, like a drum under a blanket.",
+    sayc(["Captain Rheven Stormbranch comes down the root-stair, cloak white with frost.",
+          "He kneels at the black caps.",
+          "RHEVEN: The sap's gone black up top too. Clotted.",
+          "RHEVEN: The tree's heartbeat's muffled, like a drum under a blanket.",
           herald?(:reptin) ? "RHEVEN: (gripping your shoulder) Reptin. You planted her. You can hear her." :
                              "RHEVEN: (gripping Reptin's shoulder) Reptin. You planted her. You can hear her.",
           "RHEVEN: Cleanse it, or do we cut away the rot?"])
     set_flag(:rheven_met_blight)
     c = pbMessage(_INTL("The blight..."), [_INTL("Cleanse it (Reptin's ritual)"), _INTL("Cut away the rot (burn it)")], 0)
     return nil if c != 0
-    say([as(:reptin, "(a hand flat on the root, eyes closed) ...There. Under the gardens. The sap's running sick from one place.")])
+    say([as(:reptin, "(a hand flat on the root) ...There. Under the gardens. It's running sick from one place.")])
     # Sense the blight: follow the sick sap to its source
     if !challenge("Follow the sick sap.", ["The warm, sour trickle downhill", "The cold clear one", "The loudest drip"], 0)
-      say(["The trail runs into a patch of toxic mould. Everyone coughs; your lead Pokémon is poisoned."])
+      say(["The trail runs into toxic mould. Everyone coughs; your lead Pokémon is poisoned."])
       lead = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? }
       lead.status = :POISON if lead rescue nil
     end
-    say(["At the source: a root thick as a barrel, bulging with black sap, furred with red-black caps."])
+    say(["At the source: a root as thick as a barrel, bulging with black sap, furred with red caps."])
     ok = 0
     ok += 1 if challenge("The poultice.", ["Moss and warm sap, packed close", "Snow, to cool it", "Ash from the brazier"], 0)
     ok += 1 if challenge("What is it?", ["A necrotic fungus, cooked from below", "Frostbite", "Ordinary rot"], 0)
     ok += 1 if challenge("Soothe the root's spirit.", [herald?(:reptin) ? "Speak to it softly, as to a hurt animal" : "Reptin speaks to it softly, as to a hurt animal",
                                                        "Command it to heal", "Leave it be"], 0)
     if ok >= 2
-      say(["The black drains out of the sap like ink out of water. The heartbeat comes back, loud and steady under your feet.",
+      say(["The black drains out of the sap like ink out of water.",
+           "The heartbeat comes back under your feet, loud and steady.",
            "RHEVEN: (letting out a breath) ...I've been listening for that for a month."])
       return true
     end
-    say(["The ritual falters. The fungus heaves up out of the root and stands: a spore blight, red-black and dripping."])
+    say(["The ritual falters. The fungus heaves up out of the root: a spore blight, dripping."])
     if skirmish(named_mon(:B47H45, 44, "Spore Blight"))
-      say(["The blight falls apart. Reptin finishes the ritual over its pieces. The heartbeat comes back, quieter than it should."])
+      say([herald?(:reptin) ? "The blight falls apart. You finish the ritual over its pieces." :
+                              "The blight falls apart. Reptin finishes the ritual over its pieces.",
+           "The heartbeat comes back, quieter than it should."])
       set_flag(:blight_scarred)                # (the rot spread a little first: the Council remembers)
       true
     else
@@ -149,7 +154,7 @@ module FrostThaw
   # H1: the Secret Nursery; Yarro's lake errand
   #-----------------------------------------------------------------------------
   def secret_nursery(event_id = nil)
-    return say(["Yarro, humming over the white mycelia. A new myconid, no bigger than your thumb, is asleep in it."], event_id) if blessing?(:nursery)
+    return say(["Yarro, humming over the white mycelia. A new myconid, thumb-sized, is asleep in it."], event_id) if blessing?(:nursery)
     say(lines_for(:nursery_curtain), event_id)
     gentle = flag?(:blight_cleansed) || with_or_is?(:wyn) || with_or_is?(:reptin)
     if !gentle
@@ -157,7 +162,8 @@ module FrostThaw
     end
     say(["Behind the moss: a warm chamber, and Yarro singing over a bed of delicate white mycelia.",
          "YARRO: (a voice like warm rain) Hush. Come and see. You only get to see this once.",
-         "The mycelia gather, and swell, and stand up: a sporeling, wobbling, its cap still wet. It looks at you.",
+         "The mycelia gather, and swell, and stand up: a sporeling, wobbling, its cap still wet.",
+         "It looks at you.",
          cl(:wyn, "(barely breathing) ...Hello. Hello, you."),
          cl(:meat_meat, "(whispering, for once) Meat Meat will protect this one. Forever. Meat Meat has decided.")])
     grant_blessing(:nursery, "Sporeling's Wonder", "Having seen the miracle, your Pokémon won't flinch.")
@@ -166,14 +172,15 @@ module FrostThaw
   def yarro_errand(event_id = nil)
     return say(["YARRO: The sample's in my jars. The lake is telling me its story now. Slowly."], event_id) if flag?(:yarro_errand_done)
     if !flag?(:lake_open_any)
-      return say(["YARRO: (fussing over his beds) Someone should fetch me a sample of the lake water. Not today. Not until it's safe."], event_id)
+      return say(["YARRO: (fussing over his beds) Someone should fetch me a sample of the lake water.",
+                  "YARRO: Not today. Not until it's safe."], event_id)
     end
-    say(["YARRO: Walk with me to the lake? I need a sample of the bad water, to learn what it's sick with."], event_id)
+    say(["YARRO: Walk with me to the lake? I need a sample of the bad water, to learn its sickness."], event_id)
     return if !pbConfirmMessage(_INTL("Walk Yarro down to the lake?"))
     say(["Down the root-tunnel, Yarro humming. Halfway down, the humming stops.",
-         "Something big and pale and many-legged comes out of the wall, drawn by the blight on Yarro's hands."])
+         "Something big, pale and many-legged comes out of the wall, after the blight on his hands."])
     return if !boss_battle(named_mon(:B48H98, 45, "Carrion Crawler"))
-    say(["YARRO: (filling a jar at the slicked edge, perfectly calm) There. Thank you. I'll have its story in a week."])
+    say(["YARRO: (filling a jar, perfectly calm) There. Thank you. I'll have its story in a week."])
     set_flag(:yarro_errand_done)
     give(:FT_SAPSALVE, 2)
   end
@@ -181,11 +188,12 @@ module FrostThaw
   # The root tremor (H1): hold the beam while the sporelings get out.
   def garden_tremor(event_id = nil)
     return if flag?(:tremor_done)
-    say(["A root tremor shakes the gardens. Dust and spores pour from the ceiling, and a beam of root cracks.",
+    say(["A root tremor shakes the gardens. Dust and spores pour down, and a beam of root cracks.",
          "Under it, a crowd of sporelings, bumbling in circles."], event_id)
     strong = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && (pk.hasType?(:FIGHTING) || pk.hasType?(:ROCK) || pk.attack >= 120) }
     if strong
-      say(["#{strong.name} puts its shoulder under the beam and holds it. The sporelings trundle out, one by one, unharmed."])
+      say(["#{strong.name} puts its shoulder under the beam and holds it.",
+           "The sporelings trundle out, one by one, unharmed."])
       set_flag(:sporelings_saved)
     elsif challenge("The beam is coming down.", ["Brace it with everyone at once", "Grab a sporeling and run", "Shout"], 0)
       say(["You all hold the beam together until the last sporeling is out."])
@@ -203,13 +211,14 @@ module FrostThaw
     if flag?(:spore_games_won)
       return say(["The myconid youths are puzzling each other with illusions. They wave a cap at you."], event_id)
     end
-    say(["A raised platform of shelf-fungus. Myconid youths project illusory puzzles into the air above it:",
-         "spores making shapes, and the shapes asking questions."], event_id)
+    say(["A raised platform of shelf-fungus. Myconid youths throw puzzles into the air above it.",
+         "Spores make shapes, and the shapes ask questions."], event_id)
     return if !pbConfirmMessage(_INTL("Try a puzzle?"))
-    say(["The spores make three mushrooms: one glowing, one dark, one half and half. Then they rearrange: dark, half, glowing.",
+    say(["The spores make three mushrooms: one glowing, one dark, one half and half.",
+         "Then they rearrange: dark, half, glowing.",
          "Then: half, glowing, ..."])
     if challenge("What comes next?", ["Dark", "Glowing", "Half and half"], 0)
-      say(["The youths puff spores in delight. One of them gives you a little knotted charm that smells of rain."])
+      say(["The youths puff spores in delight. One gives you a knotted charm that smells of rain."])
       give(:FT_SPORECHARM, 2)
       set_flag(:spore_games_won)
     else
@@ -219,12 +228,12 @@ module FrostThaw
 
   def faria_theft(event_id = nil)
     if flag?(:amulets_returned)
-      return say(["FARIA: My rapport amulets, home! Every one. Stories for life, you've earned. Discounts, too."], event_id)
+      return say(["FARIA: My amulets, home! Every one. You've earned stories for life. Discounts too."], event_id)
     end
     if flag?(:theft_tracking)
       return say(["FARIA: Find them! Small feet, shiny-lovers, they went toward the disused roots."], event_id)
     end
-    say(["FARIA: (her toadstool cap wobbling) Thief! Thief! A whole basket of rapport amulets, gone in the night!",
+    say(["FARIA: (cap wobbling) Thief! Thief! A whole basket of rapport amulets, gone in the night!",
          "FARIA: No coin here. I'll pay in stories. And favours. Good ones. Track them?"], event_id)
     return if !pbConfirmMessage(_INTL("Track the thief?"))
     found = 0
@@ -246,7 +255,6 @@ module FrostThaw
       amulets_home
     elsif !flag?(:amulets_returned) && flag?(:undercanopy_entered) && flag?(:blight_cleared)
       faria_theft(event_id)
-      return if !flag?(:amulets_returned)
     else
       talk(:faria, event_id)
       faria_wand if respond_to?(:faria_wand)      # (the Wand of Spores: 047d)
@@ -256,7 +264,7 @@ module FrostThaw
 
   def kobold_nest(event_id = nil)
     return say(["An empty nest of moss and stolen string."], event_id) if flag?(:amulets_returned) || flag?(:amulets_found)
-    say(["A nest of moss, string, buttons, spoons, and, right in the middle, a basket of wooden rapport amulets.",
+    say(["A nest of moss, string, buttons and spoons. In the middle, a basket of rapport amulets.",
          "Three kobolds sit on it like eggs."], event_id)
     return if !trainer(:kobold_snik, nil)
     return if !trainer(:kobold_grub, nil)
@@ -266,7 +274,7 @@ module FrostThaw
 
   def amulets_home
     return if !flag?(:amulets_found) || flag?(:amulets_returned)
-    say(["FARIA: (hugging the basket) Mine, all mine! Here. One for you. Wear it, and we'll always hear you."])
+    say(["FARIA: (hugging the basket) Mine, all mine! One for you. Wear it; we'll always hear you."])
     give_key(:FT_RAPPORTAMULET)
     set_flag(:amulets_returned)
   end
@@ -280,7 +288,8 @@ module FrostThaw
     case c
     when 0
       if challenge("Mediate.", ["Ask each of them to tell the story the way they heard it", "Tell them both to calm down", "Take a side"], 0)
-        say(["The two stories come out side by side. They're the same story. One of them was told backwards. Spores turn pink."])
+        say(["The two stories come out side by side. They're the same story, one of them told backwards.",
+             "Their spores turn pink."])
         set_flag(:duel_settled)
       else
         say(["Both of them glare at you now. That's progress, of a sort."])
@@ -292,11 +301,11 @@ module FrostThaw
       end
     else
       if flag?(:niche_read)
-        say(["You bring Lysella's answer from the root archives: \"A story told backwards is still owed forwards.\"",
+        say(["You bring Lysella's law: \"A story told backwards is still owed forwards.\"",
              "Both myconids bow to the law. The quarrel's over."])
         set_flag(:duel_settled)
       else
-        say(["LYSELLA: (from her stall) The law's in the memory niche, in the Fane. I'll lend you my knot."])
+        say(["LYSELLA: (from her stall) The law's in the Fane's memory niche. I'll lend you my knot."])
         set_flag(:lysella_knot)
       end
     end
@@ -312,14 +321,16 @@ module FrostThaw
       return say(["(The Sovereign hasn't given you leave to drink.)"])
     end
     if flag?(:pool_poisoned) && !flag?(:pool_cured)
-      say(["The pool runs cold, a skin of blue frost on it. The frost-venom the false warden poured in is still there."])
+      say(["The pool runs cold under a skin of blue frost: the false warden's frost-venom."])
       if flag?(:yarro_errand_done) || flag?(:lake_cleansed)
-        say(["YARRO: (padding up with a jar) The lake told me its story. This is the end of it. Clean water, and moss, and patience.",
-             "Yarro tips the tincture in, a drop at a time, humming. The frost cracks, and melts, and the pool warms."])
+        say(["YARRO: (padding up with a jar) The lake told me its story. This is the end of it.",
+             "YARRO: Clean water, and moss, and patience.",
+             "Yarro tips it in a drop at a time, humming. The frost cracks, and the pool warms."])
         set_flag(:pool_cured)
         say(["(The three sick myconids sit up in their beds. The pool is clean.)"])
       else
-        return say(["YARRO: (sadly) It needs a tincture. The lake knows how, but I haven't heard the lake's story yet. Walk me down there?"])
+        return say(["YARRO: (sadly) It needs a tincture. The lake knows how, but I haven't heard its story.",
+                    "YARRO: Walk me down there?"])
       end
     end
     if flag?(:vision_today)
@@ -351,7 +362,7 @@ module FrostThaw
     c = pbMessage(_INTL("Which throne?"), [_INTL("The one carved with a balance"), _INTL("The one carved with summer"),
                                           _INTL("The one carved with a memory")], 0)
     if c == 0
-      say(["The throne of balance takes your weight like it was made for you. The council's empty seats hum, approving.",
+      say(["The throne of balance takes your weight like it was made for you. The empty seats hum.",
            "LUMINARA: (from her throne) Hm. You know where to sit. Few surface-folk do."])
       set_flag(:sat_balance)
     else
@@ -370,8 +381,9 @@ module FrostThaw
       return say(["(It isn't yours to untie. Ask Lysella.)"])
     end
     say(["LYSELLA: (her shelf-cap in the doorway) Read. Gently. They're older than your city.",
-         "The scrolls unspool memories: the first loggers; the first tenders; a law, \"A story told backwards is still owed forwards\";",
-         "and the year the Rootwardens and the myconids swore never to take more sap than the tree could spare."])
+         "The scrolls unspool memories: the first loggers, the first tenders, and a law:",
+         "\"A story told backwards is still owed forwards.\"",
+         "And the year Rootwardens and myconids swore to take no more sap than the tree could spare."])
     set_flag(:niche_read)
   end
 
@@ -380,9 +392,11 @@ module FrostThaw
     return say(["The delegation's gone back up. The sap is shared, by the old oath."], event_id) if flag?(:sap_settled)
     return say(["The delegation's gone back up, angry. There's talk in the Root-Tier of a sap raid."], event_id) if flag?(:sap_grudge)
     say(["A Rootwarden delegation in the Fane, frost on their boots, facing the myconid council.",
-         "WARDEN LIS: Frostburn in the Root-Tier. Children. The healers need sap, and the Council says the myconids hoard it.",
+         "WARDEN LIS: Frostburn in the Root-Tier. Children. The healers need sap.",
+         "WARDEN LIS: And the Council says the myconids hoard it.",
          "LUMINARA: (wind through reeds) We take what she spares. Not more.",
-         "The council is divided. Everyone looks at the Heralds."], event_id)
+         outsider? ? "The council is divided. Everyone looks at you, and at the Heralds." :
+                     "The council is divided. Everyone looks at the Heralds."], event_id)
     ok = 0
     ok += 1 if challenge("Read the room.", ["The myconids are afraid of being bled; the wardens of children dying", "Everyone's being greedy", "It's about money"], 0)
     ok += 1 if challenge("Make the case.", [flag?(:niche_read) ? "Recite the old oath from the memory niche: never more than the tree can spare" :
@@ -427,7 +441,7 @@ module FrostThaw
     return say(["The stone circle glows faintly. It remembers you."], event_id) if flag?(:circle_shared)
     say(["A circle of stones inlaid with sap, glowing faintly. You step inside before you mean to.",
          "Something takes a memory from you, gently, the way you'd take a cup from a sleeping hand.",
-         "MYR: (many voices) ...a tavern. A fire. Someone laughing, missing teeth. Thank you. I'll keep it warm."], event_id)
+         "MYR: (many voices) ...a tavern. A fire. Someone laughing, gap-toothed. I'll keep it warm."], event_id)
     set_flag(:circle_shared)
   end
 
@@ -436,11 +450,12 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Read one?"))
     if challenge("The tablet's spores rise to meet you.", ["Read slowly, and let it come", "Breathe it in all at once", "Skim"], 0)
       say(["A memory: a priestess of the Frostmaiden, very old, on an island shaped like a snowflake.",
-           "PRIESTESS: (in the memory) She doesn't hate the world. She loves it. She loves it so much she can't bear for it to change.",
+           "PRIESTESS: (in the memory) She doesn't hate the world. She loves it.",
+           "PRIESTESS: She loves it so much she can't bear for it to change.",
            "(Something true about Auril.)"])
       set_flag(:knows_auril_love)
     else
-      say(["A stranger's memory jams into yours: a lifetime of mending nets in a town you've never seen.",
+      say(["A stranger's memory jams into yours: a lifetime of mending nets, in a town you never saw.",
            "For a day, you'll know the knots."])
     end
   end
@@ -449,7 +464,7 @@ module FrostThaw
   def tether_threads(event_id = nil)
     return say(lines_for(:tether_threads), event_id) if flag?(:threads_defended) || !flag?(:hyphora_named)
     say(lines_for(:tether_threads) +
-        ["Two of them go slack. In the dark at the ceiling, shapes like torn shadows are chewing on the threads.",
+        ["Two of them go slack. Up in the dark, shapes like torn shadows are chewing on the threads.",
          "MYR: (many voices, sharp) Shadows! They cut her from the others! Keep them off!"], event_id)
     return if !boss_battle(named_mon(:B94H200, 46, "Shadow Demon"), named_mon(:B94H200, 46, "Shadow Demon"))
     say(["The shadows tear apart into dark spores. The threads hum again, taut."])
@@ -460,19 +475,20 @@ module FrostThaw
 
   def memory_heist(event_id = nil)
     return if flag?(:heist_thwarted)
-    say(["Someone is moving among the archive shelves. A cloak, a sack, and a bark tablet in a gloved hand.",
-         "MYR: (from her chamber, very faint) ...a prophecy tablet... stop them... don't break the others..."], event_id)
+    say(["Someone moves among the archive shelves: a cloak, a sack, a bark tablet in a gloved hand.",
+         "MYR: (very faint) ...a prophecy tablet... stop them... don't break the others..."], event_id)
     if challenge("Through the archive, quietly.", ["Edge round the shelves, never touching them", "Run straight at the thief", "Shout a warning"], 0)
-      say(["You come up behind the thief silently. She drops the tablet, and you catch it before it hits the floor.",
+      say(["You come up behind the thief silently. She drops the tablet; you catch it before it lands.",
            "She runs. She leaves the sack. In it: a Halo prayer-token, mirror-glass."])
     else
-      say(["The thief bolts. A shelf rocks. You catch the tablet, but three others shatter on the floor.",
+      say(["The thief bolts. A shelf rocks. You catch the tablet, but three others shatter.",
            "MYR: (a long sigh from many mouths) ...Lifetimes. Gone."])
       set_flag(:tablets_broken)
     end
     set_flag(:heist_thwarted)
     set_switch(SW_MEMORY_HEIST, false)
-    say(["The prophecy on the tablet: \"Two wyrmlings turn the wheel; a third heart is the key; a fourth season waits under the ice.\""])
+    say(["The prophecy on the tablet: \"Two wyrmlings turn the wheel; a third heart is the key;",
+         "\"...and a fourth season waits under the ice.\""])
   end
 
   # The Memory Trade: lore about Auril's cult, for a cherished memory.
@@ -488,24 +504,26 @@ module FrostThaw
       return
     end
     return say(["MYR: I have nothing more to trade. Go carefully."], event_id) if flag?(:memory_traded)
-    say(["MYR: (many voices) You want to know the Frostmaiden's cult. Who they are. Where they kneel.",
-         "MYR: I know. A memory of yours, for it. A cherished one. You'll miss it, until it comes back."], event_id)
+    say(["MYR: (many voices) You want the Frostmaiden's cult. Who they are. Where they kneel.",
+         "MYR: I know. A memory of yours for it. A cherished one. You'll miss it till it comes back."], event_id)
     keys = %i[alberica reptin alerion meat_meat wyn].select { |k| with_or_is?(k) }
     return if keys.empty? || !pbConfirmMessage(_INTL("Trade a memory?"))
     c = pbMessage(_INTL("Whose memory?"), keys.map { |k| _INTL(COMPANION_NAMES[k].to_s.capitalize.sub("Meat_meat", "Meat Meat")) }, 0)
     who = keys[[c, 0].max]
     state[:memory_traded_by] = who
-    say(["MYR: (to #{COMPANION_NAMES[who].to_s.split.map(&:capitalize).join(' ')}) The first time you laughed after the cold came. Give it to me.",
-         "It goes out of them like a breath. They look puzzled, for a second, about something they can't name.",
-         "MYR: The Halo kneel at the Still Sky Shrine; they carry her relics in the dark; they want a third heart, and they'll take it from a songbird.",
-         "MYR: And they have friends in the Council."])
+    say(["MYR: The first time you laughed after the cold came, #{COMPANION_NAMES[who].to_s.split.map(&:capitalize).join(' ')}. Give it to me.",
+         "It goes out of them like a breath. For a second they look puzzled, and can't say why.",
+         "MYR: The Halo kneel at the Still Sky Shrine. They carry her relics in the dark.",
+         "MYR: They want a third heart, and they'll take it from a songbird.",
+         cl(:alberica, "(very plainly) Songbird. That's me, then."),
+         "MYR: And they have friends in the Council."].compact)
     set_flag(:memory_traded)
     set_flag(:knows_halo_plan)
   end
 
   # Myr, once she's named the tree: the trade, the dreamwalk, her counsel.
   def myr_after(event_id = nil)
-    say(["MYR: (many voices at once, slow as roots) Hyphora is afraid. Go carefully. And ask, if you need to ask."], event_id)
+    say(["MYR: (many voices, slow as roots) Hyphora is afraid. Go carefully. Ask, if you need to."], event_id)
     opts = []
     opts << [:trade, _INTL("\"Tell us about the Frostmaiden's cult.\"")] if !flag?(:memory_traded) || (flag?(:dream_rescued) && !flag?(:memory_returned))
     opts << [:dream, _INTL("\"Is something wrong?\"")] if !flag?(:dream_rescued)
@@ -533,7 +551,7 @@ module FrostThaw
     return if flag?(:dream_entered)
     set_flag(:dream_entered)
     sayc(["A forest of stumps under a red sky. Sawdust falls like snow.",
-          "Somewhere, a small voice is crying. Somewhere else, an axe is ringing on wood, enormous and steady.",
+          "Somewhere a small voice is crying. Somewhere else an axe rings on wood, huge and steady.",
           cl(:wyn, "(very small) ...This is what they're all afraid of. Every one of them. Oh.")])
   end
 
@@ -569,7 +587,8 @@ module FrostThaw
       say(["The logger falls like a felled pine, and is sawdust, and is gone.",
            "The red sky goes green. The stumps put out shoots."])
     else
-      say(["The axe comes down. You wake gasping in Myr's chamber, the sporeling still in your arms. It's awake too."])
+      say(["The axe comes down. You wake gasping in Myr's chamber, the sporeling in your arms.",
+           "It's awake too."])
     end
     set_flag(:dream_rescued)
     add_counter(:story_beats)
@@ -583,8 +602,8 @@ module FrostThaw
   def eira_development(event_id = nil)
     if !flag?(:eira_lore)
       say(["EIRA: (a cold creek over stones) You've helped the spore-guard. So: the signs.",
-           "EIRA: There are things at the Echo Gate you'll never see. Invisible stalkers, bound by old pacts. Mirror-wraiths.",
-           "EIRA: Don't run past a still patch of air. Don't stare at your own reflection when it's late. Don't steal sap.",
+           "EIRA: Things at the Echo Gate you'll never see. Stalkers, bound by old pacts. Wraiths.",
+           "EIRA: Don't run past still air. Don't stare at your reflection late. Don't steal sap.",
            "EIRA: Remnants of the Rime. They serve the Dawn now. They keep thieves off her."], event_id)
       set_flag(:eira_lore)
       return
@@ -597,7 +616,7 @@ module FrostThaw
     c = pbMessage(_INTL("Eira..."), opts.map(&:last), opts.size - 1)
     case opts[[c, 0].max][0]
     when :patrols
-      say(["EIRA: Two of my patrols walked to the Auroral Wall in the spring. And a Rootwarden of the Bough with them.",
+      say(["EIRA: Two of my patrols walked to the Auroral Wall in the spring, with a Bough Rootwarden.",
            "EIRA: They didn't come back. The wind there sounds like someone counting.",
            "EIRA: When the Wall can be crossed, look for them. Please."])
       set_flag(:eira_patrols)
@@ -622,15 +641,15 @@ module FrostThaw
       say(["As the seal cracks, the black water round the platforms heaves.",
            "A Shadow Quipper Swarm boils up out of it, straight at you."])
       return false if !boss_battle(named_mon(:B318H92, 44, "Shadow Quipper Swarm"))
-      say(["A wave of shadow rolls over the platforms. Someone goes into the water,",
-           "and the lake-weed under the platform wraps their ankle and pulls."])
+      say(["A wave of shadow rolls over the platforms, and #{with_or_is?(:wyn) && !herald?(:wyn) ? 'Wyn goes' : 'you go'} into the water.",
+           "Lake-weed wraps an ankle and pulls."])
       if challenge("Something's dragging them under.", ["Grab their hand, and cut the weed", "Jump in after them", "Wait"], 0)
         say(["You haul them out, coughing. The weed slides back under the ice."])
       else
         return false if !boss_battle(named_mon(:B114H72, 45, "Spore-Lash Creeper"))
       end
     else
-      say(["The enraged god thrashes. Shadow tentacles; spores; and the swarms come again, smelling blood."])
+      say(["The enraged god thrashes. Shadow tentacles, spores, and the swarms again, smelling blood."])
       return false if !boss_battle(named_mon(:B318H92, 46, "Shadow Quipper Swarm"))
     end
     true
@@ -638,14 +657,13 @@ module FrostThaw
 
   def mycolith_hoard
     return if flag?(:mycolith_hoard)
-    say(["Under the tangled roots where the Mycolith stood, cold light falls on a hoard:",
-         "carved fungal idols, crystalline spores in amber, flasks of strange colours.",
+    say(["Under the roots where the Mycolith stood: a hoard of fungal idols, amber, strange flasks.",
          "Not treasure. A reliquary."])
     [[:FT_FROSTBAR, 2], [:FT_MOONOPAL, 4], [:FT_FUNGALRELIEF, 3], [:FT_ROOTKNOT, 2], [:FT_AURORALCRYSTAL, 1],
      [:POTION, 2], [:SUPERPOTION, 1], [:FT_CLEARMIND, 1], [:FT_SAPSALVE, 1], [:FT_SPORECHARM, 1]].each do |item, n|
       give(item, n)
     end
-    say(["(Frost-stamped bars, black-ice coins, opals, reliefs and totems: the Bazaar's merchants will buy them.)"])
+    say(["(Bars, opals, reliefs and totems: the Bazaar's merchants will buy them.)"])
     $Trainer.money += 5000 rescue nil
     pbMessage(_INTL("You found 500 black-ice coins. (+$5000)")) rescue nil
     set_flag(:mycolith_hoard)
@@ -656,11 +674,11 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def frostfell_rifts(event_id = nil)
     return say(lines_for(:rift_quiet), event_id) if flag?(:rifts_closed)
-    say(["The sky opens above you: no stars, no sun, only the living aurora pouring down in bands of green and gold.",
+    say(["The sky opens above you: no stars, no sun, only the aurora pouring down in green and gold.",
          "Standing in its beam is like wading through sunlight made of cold.",
-         "Beyond the shimmer, figures stir: winged silhouettes of ice, their eyes bright with malice.",
+         "Beyond the shimmer, figures stir: winged shapes of ice, their eyes bright with malice.",
          "On their breastplates, a mark you know. Avarice's.",
-         "The aurora crackles, splitting open like a wound. A voice like shattering glass whispers: \"The Frostfell wakes.\""], event_id)
+         "The aurora splits open like a wound. A voice like shattering glass: \"The Frostfell wakes.\""], event_id)
     sayc([cl(:glimmer, "(the Lumen Shard in his chest blazing) Brightmane's light knows this. Stand near me.")])
     return if !pbConfirmMessage(_INTL("Close the rifts?"))
     sealed = 0
@@ -698,7 +716,7 @@ module FrostThaw
       add_counter(:story_beats)
       grant_blessing(:riftwarden, "Rift-Warden's Light", "Your Pokémon's accuracy can no longer be lowered.")
     else
-      say(["A horde of angels at the edge of the light. You have to fall back. The rifts are still open.",
+      say(["A horde of angels at the edge of the light. You fall back. The rifts are still open.",
            "(Come back and try again.)"])
     end
   end

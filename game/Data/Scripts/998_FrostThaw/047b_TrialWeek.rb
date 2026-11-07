@@ -56,7 +56,7 @@ module FrostThaw
   TEXT.merge!(
     smuggler_dockworker: -> {
       flag?(:undercity_done) ? ["DOCKWORKER: I sleep now. Right through. Thank whatever you did down there."] :
-        ["DOCKWORKER: (shaking) There's a fungus down the Smuggler's Run. It sprouts eyes. It whispers.",
+        ["DOCKWORKER: (shaking) A fungus down the Smuggler's Run. It sprouts eyes. It whispers.",
          "DOCKWORKER: It showed me things I shouldn't know. Now my dreams are full of shadows.",
          "DOCKWORKER: The hatch by the Split Dock barrels. Wyn knows it. The wardens won't go down."] },
     run_glowworms: ["Lanterns of bottled glow-worms swing from root arches. The light is green and sick.",
@@ -99,14 +99,14 @@ module FrostThaw
     if !with_or_is?(:reptin)
       return say(["Reptin's pack. It isn't yours to rummage in."], event_id)
     end
-    say([herald?(:reptin) ? "Your pack. At the very bottom, wrapped in a sock: the cedar charm. You'd forgotten. You'd never forgotten." :
+    say([herald?(:reptin) ? "Your pack. At the bottom, in a sock: the cedar charm. Forgotten. Never forgotten." :
                             "REPTIN: (rummaging) It'll be at the bottom. It's always at the bottom. ...There.",
          "A little charm carved from cedar, worn smooth. Four hundred years old, and a few weeks."], event_id)
     give_key(:FT_CEDARCHARM)
   end
 
   def fallen_leaves(event_id = nil)
-    say(["Hyphora's leaves, falling for the first time anyone here remembers. Brown, gold, a few still green."], event_id)
+    say(["Hyphora's leaves, falling for the first time anyone remembers. Brown, gold, a few green."], event_id)
     return if ($PokemonBag.pbHasItem?(:FT_CEDARCHARM) rescue false) || !flag?(:anduin_talked) && !flag?(:trials_open)
     return if !with_or_is?(:reptin)
     return if !pbConfirmMessage(_INTL("Carve a charm from a fallen leaf, the way Anduin carved the cedar one?"))
@@ -127,7 +127,7 @@ module FrostThaw
          "SLAUDI: Caer-Konig. Was. Before the Rime ate it."], event_id)
     return if !pbConfirmMessage(_INTL("Ask Slaudi about the food caravans."))
     if challenge("Slaudi doesn't trust anyone from south of the Wall.", ["Ask about Caer-Konig, and listen", "Tell him you're Heralds", "Pay him"], 0)
-      say(["SLAUDI: (after a long time) The caravans. Every one that came up the Eastway, the last two winters.",
+      say(["SLAUDI: (after a long time) The caravans. Every one up the Eastway, the last two winters.",
            "SLAUDI: Turned round at the Wall. Food, furs, lamp-oil. Went south, into the light.",
            "SLAUDI: We ate our dogs. Then we ate... Never mind what we ate.",
            "He doesn't look up from the net.",
@@ -146,7 +146,7 @@ module FrostThaw
     return say(["The oldest shelf. You've taken the leaf you needed."], event_id) if ($PokemonBag.pbHasItem?(:FT_HISTORYSCROLL) rescue false)
     say(["The oldest shelf, very high up. Crystal leaves, dim with age, humming low."], event_id)
     if challenge("Find the right leaf.", ["Listen for the oldest hum", "Take the brightest", "Take one at random"], 0)
-      say(["It's a history. A world-tree in the south, long ago, and the myconids who sheltered its roots.",
+      say(["It's a history: a world-tree in the south, long ago, and the myconids who sheltered it.",
            "Then another, in the east. Then another. Three times before Hyphora, the same alliance."])
       give_key(:FT_HISTORYSCROLL)
     else
@@ -227,7 +227,7 @@ module FrostThaw
       else
         st[:bad] += 1
         if st[:bad] >= 2
-          say(["The corridors turn, and turn again, and fold up like a letter. You're back where you came in.",
+          say(["The corridors turn, and turn again, and fold up like a letter. You're back at the start.",
                cl(:alerion, "(breathing hard) It's still in there. It'll wait. It's very good at waiting. So am I.")].compact)
           state[:maze] = { ok: 0, bad: 0, done: [] }
           return
@@ -315,13 +315,13 @@ module FrostThaw
         say(["(You'll need a way to carry it: a memory vial from Mira, or Wyn's rapport.)"])
       end
     when :dead
-      say(["THE WRAITHS: (in all your voices) Echoes fade when embraced. Reflections devour when chased."])
+      say(["THE WRAITHS: (in your voices) Echoes fade when embraced. Reflections devour when chased."])
       if challenge("What does it mean?", ["Accept him; don't try to hold him", "Fight for him", "Run from him"], 0)
         say(["(Acceptance, not control. That's the key.)"])
         set_flag(:wraith_riddle_understood)
       end
     when :lake
-      say(["THE WRAITHS: A reflection. Made when a living hand reached into the lake, under the aurora.",
+      say(["THE WRAITHS: A reflection, made when a living hand reached into the aurora-lit lake.",
            "THE WRAITHS: Not a boy. The shape of a boy. A boy-shaped echo."])
       set_flag(:wraith_called_reflection)
     when :avarice
@@ -339,7 +339,7 @@ module FrostThaw
         say(["The wraiths turn their backs. Every one of them."])
       end
     when :sigil
-      say(["The ring opens. In its centre, on a pedestal of ice, a crystal that hums toward the Heartroot.",
+      say(["The ring opens. In its centre, on ice, a crystal that hums toward the Heartroot.",
            "THE WRAITHS: Take it. It was never ours. We only kept it from her."])
       give(:FT_FROSTSIGIL)
       set_flag(:sigil_echo)
@@ -354,8 +354,8 @@ module FrostThaw
   def scene_smugglers_run
     return if flag?(:undercity_entered)
     set_flag(:undercity_entered)
-    sayc(["Below the Smuggler's Run, the crack opens into the Undercity: older tunnels, dripping caverns.",
-          "Moss-steam rises off the dark water. Glow-worm lanterns sway from root arches, sickly green.",
+    sayc(["Below the Smuggler's Run, the crack opens on the Undercity: older tunnels, dripping caves.",
+          "Moss-steam rises off dark water. Glow-worm lanterns sway from root arches, sickly green.",
           cl(:wyn, "(sniffing) ...Spores. Old ones. Hungry ones. This way.")])
   end
 
@@ -366,7 +366,7 @@ module FrostThaw
     fork = [["The spore-cloud thickens. It splits two ways.",
               "(sniffing, then pointing) That way. Where it's cold. Breathe through your sleeve.",
               ["Follow Wyn, sleeve over your mouth", "Go the other way"], ["Where it's thickest and coldest", "Where it's thinnest"]],
-             ["Water drips from the roof. One way is wet and dark; the other's dry, and lit by glow-worms.",
+             ["Water drips from the roof. One way is wet and dark; the other dry, lit by glow-worms.",
               "(coughing) ...The wet way. Sorry. The lanterns are what it wants you to follow.",
               ["The wet, dark way, with Wyn", "The dry way, by the lanterns"], ["The wet, dark way", "The dry way, by the lanterns"]],
              ["Whispering, from both ways at once. One way it's soft. The other way it's loud.",
@@ -401,11 +401,11 @@ module FrostThaw
     ok = challenge("Commune with it.", ["Listen to what it wants", "Push your mind into it", "Ask it to stop"], 0)
     if ok && flag?(:undercity_spored)
       # (W1: breathing the spores is disadvantage on the commune.)
-      say(["The spores in your lungs answer it before you do. The colony's whispers come back in your own voice."])
+      say(["The spores in your lungs answer it first. Its whispers come back in your own voice."])
       ok = challenge("Hold on to your own voice.", ["Breathe out slowly, and listen for Wyn's", "Shout over it", "Let it talk"], 0)
     end
     if ok
-      say([as(:wyn, "(very softly) ...It's hungry. For stories. It eats them, and dreams them back out bent."),
+      say([as(:wyn, "(very softly) ...It's hungry. For stories. It eats them, and dreams them out bent."),
            as(:wyn, "It doesn't mean to frighten anyone. It just doesn't know what else to do with them.")])
       c = pbMessage(_INTL("Pacify it?"), [_INTL("Offer it a memory of Wyn's"), _INTL("Feed it your Pokémon's strength"), _INTL("No")], 0)
       if c == 0
@@ -473,7 +473,7 @@ module FrostThaw
 
   def lake_ghost
     if !with_or_is?(:wyn)
-      return say(["Mist on the water, and something in it. It won't come out for you. It's waiting for someone who walks in shadow."])
+      return say(["Mist on the water, and something in it. It's waiting for someone who walks in shadow."])
     end
     wyn_me = herald?(:wyn)
     say(["Nights pass at the shore. Then the new moon.",
@@ -534,7 +534,7 @@ module FrostThaw
   # Library all week while she's also at the Shrine).
   def library_eirwen
     ev = stage_event("Eirwen Solglass")
-    return ev if ev && !ev.transparent && Stage.on_screen?(ev)
+    return ev if ev && !ev.transparent && !ev.instance_variable_get(:@erased) && Stage.on_screen?(ev)
     ev = Stage.actor(:eirwen, $game_player.x - 3, $game_player.y + 1, 6, graphic: "FT_eirwen_solglass")
     Stage.approach(ev) if ev
     ev
@@ -603,7 +603,7 @@ module FrostThaw
     elsif !challenge("The pressure of time on the far side.", ["Breathe slow, and keep walking", "Run", "Hold your breath"], 0)
       al = herald?(:alberica)
       say(["The time-freeze slams into you. Your Pokémon stagger.",
-           al ? "(For a breath you're back in the Chasm, hand on the root. Four hundred years, all at once.)" :
+           al ? "(For a breath you're back in the Chasm, hand on the root. Four hundred years at once.)" :
                 "ALBERICA: (gasping) ...I was back in the Chasm. My hand on the root. Four hundred years."])
       $Trainer.party.each { |pk| pk.hp = [pk.hp - (pk.totalhp / 6), 1].max if !pk.egg? && pk.hp > 0 } rescue nil
     end
@@ -662,7 +662,7 @@ module FrostThaw
     fire = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && pk.moves.any? { |m| m && (%i[FIRE FAIRY].include?(GameData::Move.get(m.id).type) rescue false) } }
     token = ($PokemonBag.pbHasItem?(:FT_FIELDSPIRITS) rescue false)
     if !fire && !token
-      return say(["(The ice is old and hard. It would need fire, or radiant light: a Fire- or Fairy-type move.)",
+      return say(["(The ice is old and hard. It needs fire, or radiant light: a Fire- or Fairy-type move.)",
                   "(Or a summer that owes you a favour.)"])
     end
     if fire
@@ -767,7 +767,7 @@ module FrostThaw
     end
     say(["Behind you the aurora flickers. The Wall is closing."], event_id)
     if !challenge("Get back to the Wall!", ["Run together, holding hands", "Every one for themselves", "Wait for it to steady"], 0)
-      say(["You're too slow. The world stops round you, and something stands up out of the stopped snow."])
+      say(["Too slow. The world stops round you, and something stands up out of the stopped snow."])
       skirmish(named_mon(:B92H429, 57, "Ice Wight"))
       beyond_trapped
     end
