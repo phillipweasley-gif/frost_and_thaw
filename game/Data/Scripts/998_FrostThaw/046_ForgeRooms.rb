@@ -13,7 +13,7 @@
 #     future self: "Don't let her take the heart"), A12 the training hall's sap
 #     golems, A13 the sap-lift (Root, Deep, Forge), A14 the Rootwatch and its
 #     Infernal Rootbreaker, A15 the sap-gate controls (once a winter altar),
-#     A16 the Umbound Chasm, A17 the rust-feast tunnels, A18 the root-keep gate.
+#     A16 the Scratching Hollow, A17 the rust-feast tunnels, A18 the root-keep gate.
 #   Level 3 (2150-2152, and the pens): the womb of iron; A19 the Root-Throne
 #     (the quaggoth and the myconid that begs to die), A20 the broken
 #     root-works, A21 the heart-fuel, A22 the root-shaft elevator, A23 the
@@ -40,7 +40,7 @@ module FrostThaw
               forge_sanctum: 2152, antechapel: 2153, sloughing: 2154, echo_vault: 2155)
   MAP_NAMES.merge!(
     2146 => "The Barricade: the inner rooms", 2147 => "The Hag's Domain: the Deep Root Shaft", 2148 => "The Hag's Domain: the Rootwatch",
-    2149 => "The Hag's Domain: the Umbound Chasm", 2150 => "The Dragonforge: the Root-Throne", 2151 => "The Dragonforge: the vantage towers",
+    2149 => "The Hag's Domain: the Scratching Hollow", 2150 => "The Dragonforge: the Root-Throne", 2151 => "The Dragonforge: the vantage towers",
     2152 => "The Dragonforge: Avarice's sanctum", 2153 => "Heartroot: the Auroral Antechapel", 2154 => "Heartroot: the Sloughing Veins",
     2155 => "Heartroot: the Echo Vault"
   )
@@ -443,7 +443,7 @@ module FrostThaw
     end
   end
 
-  # A16: the Umbound Chasm.
+  # A16: the Scratching Hollow.
   def scene_umbound_enter
     return if flag?(:umbound_entered)
     set_flag(:umbound_entered)

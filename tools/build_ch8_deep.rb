@@ -8,7 +8,7 @@
 #        the Warden's root-bunker
 #   2148 Level 2: A12 the Rootward training hall, A13 the sap-lift station, A14
 #        the Rootwatch post, A15 the sap-gate controls
-#   2149 Level 2: A16 the Umbound Chasm, A17 the rust-feast tunnels, A18 the
+#   2149 Level 2: A16 the Scratching Hollow, A17 the rust-feast tunnels, A18 the
 #        sap-bridge over boiling sap
 #   2150 Level 3: the womb of iron (intro), A19 the Root-Throne of Thruun, A20
 #        the broken root-works, A21 the heart-fuel stores, A22 the root-shaft
@@ -31,7 +31,7 @@ require_relative "cavekit"
 ID = { inner_rooms: 2146, deep_shaft: 2147, training_hall: 2148, umbound: 2149, forge_upper: 2150,
        vantage: 2151, sanctum: 2152, antechapel: 2153, sloughing: 2154, echo_vault: 2155 }
 NAMES = { inner_rooms: "The Barricade: the inner rooms", deep_shaft: "The Hag's Domain: the Deep Root Shaft",
-          training_hall: "The Hag's Domain: the Rootwatch", umbound: "The Hag's Domain: the Umbound Chasm",
+          training_hall: "The Hag's Domain: the Rootwatch", umbound: "The Hag's Domain: the Scratching Hollow",
           forge_upper: "The Dragonforge: the Root-Throne", vantage: "The Dragonforge: the vantage towers",
           sanctum: "The Dragonforge: Avarice's sanctum", antechapel: "Heartroot: the Auroral Antechapel",
           sloughing: "Heartroot: the Sloughing Veins", echo_vault: "Heartroot: the Echo Vault" }
@@ -152,16 +152,16 @@ th.trainer(35, 15, nil, :duergar_watch_brod, :FT_DUERGAR, dir: 6, sight: 3)
 gone_after(th, 41, 15, "Infernal Rootbreaker", "Followers/METAGROSS", "FT.rootbreaker(:watch, @event_id)", dir: 4, left: 582)
 thing(th, 30, 21, "Heartroot of command", "FT.sapgate_controls(@event_id)", tile: 809)
 [36, 37, 38].each { |x| barrier(th, x, 18, "Root levers", "FT.talk(:rootwatch_levers, @event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward])", SW_ROOTWATCH) }
-[22, 23].each { |y| th.warp(42, y, ID[:umbound], 4, 6, 6, name: "On toward the chasm") }
+[22, 23].each { |y| th.warp(42, y, ID[:umbound], 4, 6, 6, name: "On toward the hollow") }
 save(th, :training_hall)
 
 # ---------------------------------------------------------------------------
-# 2149: Level 2, the Umbound Chasm, the rust-feast tunnels and the root-keep
+# 2149: Level 2, the Scratching Hollow, the rust-feast tunnels and the root-keep
 # gate over boiling sap.
 um = cave_map(46, 32)
 paint_rooms(um, [
   [2, 4, 6, 5],                         # in from the sap-gate controls
-  [8, 3, 16, 8],                        # A16: the Umbound Chasm
+  [8, 3, 16, 8],                        # A16: the Scratching Hollow
   [24, 4, 3, 14], [14, 15, 10, 3],      # A17: the rust-feast tunnels
   [14, 18, 3, 6], [17, 21, 14, 3],
   [31, 18, 4, 10], [41, 18, 3, 10]      # A18: the sap-bridge (west bank, east bank)

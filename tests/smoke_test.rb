@@ -992,6 +992,16 @@ check("every boss with its own battle picture has one in the art") {
   (FT::BOSS_PICTURES.values + ["FT_AVARICE_BODY"]).all? { |n| File.exist?(File.join(repo, "build/gfx/Battlers/FrostThaw/bosses/#{n}.png")) } }
 check("every pose sheet the scenes play is in the art (#{pose_sheets.size} sheets)") { pose_sheets.size > 20 && missing_poses.empty? }
 puts "  missing: #{missing_poses.join(', ')}" if !missing_poses.empty?
+check("the Hearth coffee: four cups, each a real stat, picked once in the scene, and it wears off") {
+  ok = FT::COFFEES.size == 4 && FT::COFFEES.values.all? { |_l, st, _s, _w| %i[ATTACK DEFENSE SPECIAL_ATTACK SPECIAL_DEFENSE SPEED].include?(st) } &&
+       File.read(File.join(repo, "game/Data/Scripts/998_FrostThaw/024_Chapter6.rb"), encoding: "UTF-8").scan(/^\s*pick_coffee\b/).size == 1
+  old_c = FT.state[:coffee]
+  FT.state[:coffee] = [:black, 1]
+  a = FT.coffee_active
+  FT.coffee_battle_done
+  b = FT.coffee_active
+  FT.state[:coffee] = old_c
+  ok && a == [:SPEED, 1] && b.nil? }
 
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

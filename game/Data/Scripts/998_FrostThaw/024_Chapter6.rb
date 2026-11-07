@@ -501,8 +501,10 @@ module FrostThaw
          as(:reptin, "...And that's the working on it."),
          as(:alberica, "Pour it somewhere useful, sweetheart. Like in me."),
          as(:wyn, "(very quietly) Um. There's... a second pot. I made it. It's mushroom."),
-         as(:wyn, "Root-chicory and cap. It's good for you."),
-         mm ? "You squint at it." : "Meat Meat squints at it.",
+         as(:wyn, "Root-chicory and cap. It's good for you.")])
+    # (owner, 2026-11-07: one choice in the scene: your own cup, and a small lift for your team)
+    pick_coffee
+    say([mm ? "You squint at it." : "Meat Meat squints at it.",
          as(:meat_meat, "Mushroom coffee."),
          as(:wyn, "It's very gentle."),
          as(:meat_meat, "Meat Meat does not want gentle. Meat Meat wants to hear colours."),

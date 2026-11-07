@@ -598,7 +598,7 @@ module Story
       beat("  A15 the sap-gate controls (once a winter altar)", :winter_altar_known)
       travel(2149); HL.frames(20); HL.settle(3000)
       until_flag(:umber_hulk_done, 3) { travel(2149); step_on(/Soft earth/) }
-      beat("  A16 the Umbound Chasm", :umber_hulk_done)
+      beat("  A16 the Scratching Hollow", :umber_hulk_done)
       until_flag(:rust_feasters_done, 3) { travel(2149); talk(/Rust-feasters/) }
       beat("  A17 the rust-feast tunnels", :rust_feasters_done)
       clear_trainers
