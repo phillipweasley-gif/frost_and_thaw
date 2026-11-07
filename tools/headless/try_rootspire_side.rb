@@ -149,6 +149,7 @@ begin
   $game_map.need_refresh = true; HL.settle(300)
   $Trainer.party.each { |pk| pk.level = 100; pk.calc_stats; pk.heal }
   n = logpos; talk("Trainer(3)")
+  talk("Trainer(3)") if !flag(:ash_exposed)          # (the driver loses a battle now and then: once more)
   check(said?(/Pull on the rope, Kethan\. See who pulls back\./, n) || flag(:ash_exposed), "Ash denies, then Kethan comes for him")
   check(flag(:ash_exposed), "Ash is exposed (ash_exposed)")
 
