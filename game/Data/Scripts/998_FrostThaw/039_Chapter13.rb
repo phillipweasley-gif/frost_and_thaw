@@ -149,6 +149,8 @@ module FrostThaw
     if flag?(:"test_#{key}_faced")
       say(["The door of #{t[2]}. Its tablet is still whole. The vision is waiting behind it."], event_id)
       return if !pbConfirmMessage(_INTL("Face the test again?"))
+      id = state[:"test_#{key}_event"]
+      set_self_switch(id, "A", false, MAPS[:"test_#{key}"]) if id          # the vision plays again
     elsif !flag?(:"test_#{key}_door_seen")
       set_flag(:"test_#{key}_door_seen")
       say(["A door of ice, carved #{t[2]}."], event_id)
@@ -214,9 +216,10 @@ module FrostThaw
            tl(t[1], TEST_LOSS_LINES[key]),
            "(While it stands, #{AURIL_FORM_NAMES[key]}, fights at full strength.)",
            "(You can face the test again: its door in the Hall is still open.)"])
-      # the vision plays again next time you come in
+      # (the Hall's door clears the vision's switch when you go back in: not
+      # here, or it would start again before you've left)
       ev = $game_map.events.values.find { |e| e.name == "Test #{key}" } rescue nil
-      set_self_switch(ev.id, "A", false) if ev
+      state[:"test_#{key}_event"] = ev.id if ev
     end
     Stage.cleanup rescue nil
     if tests_faced >= 4

@@ -96,7 +96,7 @@ module FrostThaw
     badges = act == :act1 ? (0..2) : (0..7)
     badges.each { |i| $Trainer.badges[i] = true } rescue nil
     if act == :act1
-      say(["The days go by like pages turning: Targos, Bryn Shander, Lonelywood, Dougan's Hole, the Chasm.",
+      say(["The days go by like pages: Targos, Bryn Shander, Lonelywood, Dougan's Hole, the Chasm.",
            "You remember every one. And then the fall."])
       transfer(*ARRIVAL_POINT)
     elsif act == :act3
