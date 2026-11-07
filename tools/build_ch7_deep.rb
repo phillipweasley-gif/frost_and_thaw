@@ -49,6 +49,12 @@ end
 def being(b, x, y, name, graphic, script, dir: 2, step: false)
   b.event(x, y, name, [{ graphic: graphic, direction: dir, step_anime: step, script: script }])
 end
+# The last event made gets a page for once it has left on screen: self switch B,
+# set on every visit after by 033 deep_gone_sync from the story flag.
+def gone_after(b)
+  ev = b.map.events.values.max_by(&:id)
+  ev.pages << b.send(:build_page, ev.pages[0], { self_switch: "B", graphic: "", through: true })
+end
 # blocks a passage until a switch turns on (then it's gone)
 def barrier(b, x, y, name, script, switch, graphic: "", tile: 0)
   b.event(x, y, name, [
@@ -103,8 +109,10 @@ hu.trainer(22, 6, nil, :sapwarden_irrel, :FT_ROOTWARDEN, dir: 4, sight: 1)   # s
 [[25, 11], [31, 9]].each { |x, y| step_trigger(hu, x, y, "Frost vines", "FT.frost_vines(@event_id)") }
 hu.trainer(29, 8, nil, :sapwarden_vesk, :FT_ROOTWARDEN, dir: 4, sight: 3)
 being(hu, 23, 9, "Root-construct", "Followers/TREVENANT", "FT.crossways_construct(@event_id)", dir: 6)
+gone_after(hu)       # (it fell apart: gone for good, notes 07 E4; 033 deep_gone_sync)
 [[21, 19], [28, 19], [35, 19]].each_with_index { |(x, y), i| thing(hu, x, y, "Cocoon #{i + 1}", "FT.gallery_cocoon(#{i + 1}, @event_id)", tile: i == 1 ? 808 : 809) }
 being(hu, 33, 23, "Pale sovereign", "Followers/SHIINOTIC", "FT.gallery_sovereign(@event_id)", dir: 4, step: true)
+gone_after(hu)       # (it sank into the root)
 [37, 38].each { |x| hu.warp(x, 26, ID[:hollow_lower], 4, 4, 2, name: "Down the Frozen Drop") }
 save(hu, :hollow_upper)
 
@@ -167,6 +175,7 @@ being(av, 40, 12, "Cataloguer construct", "Followers/GOLETT", "FT.cataloguer(@ev
 thing(av, 43, 15, "Root-table", "FT.dissectory_notes(@event_id)", tile: 581)
 thing(av, 37, 16, "Sealed crates", "FT.autumn_crates(@event_id)", tile: 809)
 being(av, 41, 16, "Hammer-arm construct", "Followers/GOLURK", "FT.dissectory_golem(@event_id)", dir: 8)
+gone_after(av)       # (it came apart)
 being(av, 7, 12, "Torturer construct", "Followers/KLINKLANG", "FT.suffering_pods(@event_id)", dir: 2)
 [[4, 11], [10, 11]].each_with_index { |(x, y), i| thing(av, x, y, "Pain-pod #{i + 1}", "FT.pain_pod(#{i + 1}, @event_id)", tile: 808) }
 [23, 24].each { |x| av.warp(x, 23, ID[:mirror_root], 13, 4, 2, name: "Down to the Mirror-Root Vault") }

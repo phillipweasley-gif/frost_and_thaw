@@ -256,8 +256,20 @@ module FrostThaw
       say(["The road ends at the Auroral Wall: a curtain of green-gold light, ground to sky.",
            "Beyond it, snow. It isn't falling.", "Every flake hangs in the air, as if time out there were holding its breath."], event_id)
       return if respond_to?(:echo_wraiths) && echo_wraiths
+      # (scene pass, from builder e: a person holds the edge, the Pokémon way, and says why)
+      w = Stage.actor(:warden, $game_player.x + 2, $game_player.y - 1, 4, graphic: "BW029") if Stage.map?
+      Stage.walk_to(w, $game_player.x + 1, $game_player.y, face: 4) if w
+      if flag?(:echo_warden_met)
+        say(["WARDEN: Still no, friend. The Wall doesn't open. For anyone."])
+      else
+        set_flag(:echo_warden_met)
+        say(["WARDEN: (stepping in) Not through there, friend. Rootwarden watch.",
+             "WARDEN: Nobody crosses the Wall. Four hundred years of trying. It's always one step off."])
+      end
       say([cl(:alerion, "Weeks out there. Four hundred years in here. I'm not walking through to find out.")].compact)
+      Stage.walk(w, [3]) if w
       pbMoveRoute($game_player, [PBMoveRoute::Right]) rescue nil
+      Stage.remove_actor(w) if w
       return
     end
     return geas_turns_back(event_id) if respond_to?(:geas_binds?) && geas_binds?

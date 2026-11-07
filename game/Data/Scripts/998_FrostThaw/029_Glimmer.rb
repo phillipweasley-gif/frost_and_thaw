@@ -24,6 +24,10 @@ module FrostThaw
   TEXT.merge!(
     shade_watch: ["The Shrine is quiet. Frostina circles the crown of the tree, humming to herself."],
     razzilith_shrine: -> {
+      # (notes 11 Top 5 #4, from builder f: after the roc takes Frostina, and once she's home)
+      next ["RAZZILITH: (a painted thought: white wings, the sky over the Spire empty) ...SISTER.",
+            "He won't eat. He keeps his head turned north."] if flag?(:frostina_taken) && !flag?(:frostina_freed)
+      next ["RAZZILITH: (a painted thought: two dragons, nose to nose, the sky full again) ...BOTH."] if flag?(:frostina_freed)
       flag?(:dragon_down) ? ["RAZZILITH: (a painted thought: Meat Meat, laughing, on his back over the snow) ...AGAIN."] :
                             ["Razzilith rumbles, low, like a meadow full of bees.", "A painted thought: a goblin's face, and a sunrise."]
     },

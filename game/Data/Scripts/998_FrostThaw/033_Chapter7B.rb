@@ -241,7 +241,7 @@ module FrostThaw
       say(["HEW: (gruff, not looking at you) ...Don't. I'll cry on the Guild's good anvil."])
     end
     sayc(["HEW: My last ladder runs past the south cache, to a door I was told never to open.",
-          "HEW: Iron and glass. Summer's people again.",
+          "HEW: Iron and glass. A keyhole in the iron, a sigil etched in the glass. Summer's people.",
           cl(:reptin, "(dryly) They do get about.") || "Hew spits into the dust.",
           "HEW: They had the only key, and took it down the Root-Gate. Find them, you'll find it.",
           "You're halfway to the door when he calls after you.",
@@ -263,7 +263,7 @@ module FrostThaw
       give(:FT_AURORALMOTE, 2)
     end
     state[:goal] = flag?(:root_key) ? "The door of iron and glass, at the bottom of Hew's last ladder." :
-                   "Hew's door is locked, and Summer's people took the key below: down the Root-Gate in the market."
+                   "Hew's door: a keyhole in the iron, a sigil in the glass. Summer's people took the key down the Root-Gate."
   end
 
   #-----------------------------------------------------------------------------
@@ -663,6 +663,21 @@ module FrostThaw
     say(["(Your Pokémon are rested. If you black out down here, you'll wake at this camp.)"])
   end
 
+  # Creatures in the deep zones that leave on screen (046 fades them) stay gone
+  # on later visits: their events have a self-switch-B page (build_ch7_deep).
+  DEEP_GONE = { 2141 => { "Root-construct" => :crossways_construct, "Pale sovereign" => :sovereign_freed },
+                2143 => { "Hammer-arm construct" => :dissectory_golem } }
+  def deep_gone_sync
+    return if !active? || !$game_map || !$game_self_switches
+    (DEEP_GONE[$game_map.map_id] || {}).each do |name, fl|
+      next if !flag?(fl)
+      ev = $game_map.events.values.find { |e| e.name == name } or next
+      next if $game_self_switches[[$game_map.map_id, ev.id, "B"]]
+      $game_self_switches[[$game_map.map_id, ev.id, "B"]] = true
+      $game_map.need_refresh = true
+    end
+  end
+
   def apply_road_b_switches
     return if !active? || !$game_switches
     sync_switch(SW_HEW_DOWN, flag?(:hew_down))
@@ -674,6 +689,7 @@ end
 Events.onMapSceneChange += proc { |_sender, _e|
   begin
     FrostThaw.apply_road_b_switches
+    FrostThaw.deep_gone_sync
   rescue StandardError => err
     FrostThaw.log("Road B switches failed: #{err.message}")
   end

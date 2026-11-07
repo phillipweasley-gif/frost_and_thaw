@@ -165,6 +165,8 @@ module FrostThaw
           ["LIFT-KEEPER: Canopy again? It's quiet up there, without the white one circling."]
       elsif T.flag?(:dragon_launched) && !T.flag?(:dragon_down)
         ["LIFT-KEEPER: Canopy? Something black tore out of the roots. The twins went mad."]
+      elsif T.flag?(:dragon_down)
+        ["LIFT-KEEPER: Canopy? The twins are back on their roost. The whole city's still staring."]
       elsif T.flag?(:twins_met)
         ["LIFT-KEEPER: Canopy? The dragons have circled low since you came.",
          "LIFT-KEEPER: Whole city's got a crick in its neck from looking up."]
