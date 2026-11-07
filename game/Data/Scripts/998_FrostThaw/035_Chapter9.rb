@@ -799,7 +799,7 @@ module FrostThaw
     end
     # (notes 08 E3: what you did on the bridge, read back)
     if flag?(:stood_by_mm_arrest) && !herald?(:meat_meat)
-      say(["MEAT MEAT: (behind you, very quietly) ...Meat Meat saw that."])
+      say(["MEAT MEAT: (behind you, very quietly) You stood in front of the spears. Meat Meat saw."])
     end
     if flag?(:you_took_cocoon)
       say(["MEAT MEAT: (to you) You held the child. Meat Meat let go of him. Say that, at the trial."])
