@@ -706,8 +706,8 @@ module FrostThaw
     # (notes 07 E8: three boxes of reading and one exchange; her plan is hers to say, at the Heart)
     say(["Lab notes on a lectern of root, in a neat white hand:",
          "\"The dragon: the soul-echo method. The wyrmling (Raz) and the goblin (V-7) proved it.\"",
-         "\"Its heart: an old wyrm's, from the ice. Chardalyn for bones. Mirror-glass for skin.\"",
-         "\"The engine burns the saint's heart. Summer without end. They'll love it. Then not.\""], event_id)
+         "\"Its heart: an old wyrm's, from the ice. Chardalyn for bones. Mirror-glass for skin.\""], event_id)
+    # (the engine burning the saint is the dissectory's to tell: one telling of each fact)
     if !flag?(:stasis_notes_read)
       set_flag(:stasis_notes_read)
       add_counter(:story_beats)
@@ -735,20 +735,24 @@ module FrostThaw
     say(["A lone researcher-construct, all thin brass arms, still dutifully cataloguing specimens.",
          "It turns its lamp-face toward you and begins to write."], event_id)
     # (dialogue 07 §4: a live threat gets an answer, and the record gets one too)
-    lines = ["CATALOGUER: NEW SPECIMENS. RECORDING."]
-    if with_or_is?(:meat_meat)
-      lines << "CATALOGUER: SPECIMEN: GOBLIN, V-SERIES, SEVEN. ESCAPED. RECAPTURE PRIORITY: HIGHEST."
-      lines << as(:meat_meat, "(very quiet, very fast) Recapture. Come and try.")
+    # (notes 07 E8: a lore read is three entries and one answer. The player's own entry
+    # comes first, then the goblin it wants back, then whoever else is in the room.)
+    entries = [
+      [:meat_meat, ["CATALOGUER: SPECIMEN: GOBLIN, V-SERIES, SEVEN. ESCAPED. RECAPTURE PRIORITY: HIGHEST.",
+                    as(:meat_meat, "(very quiet, very fast) Recapture. Come and try.")]],
+      [:reptin,    ["CATALOGUER: SPECIMEN: ELF, LUPINE TAINT. EARLIER ATTEMPT: POD THREE. SUPERIOR."]],
+      [:alberica,  ["CATALOGUER: SPECIMEN: DWARF, MARKED. THE RUNE ON HER CHEST IS NOT OURS. DO NOT TOUCH."]],
+      [:alerion,   ["CATALOGUER: SPECIMEN: ELADRIN, NECROMANTIC. NOTE: HE IS COLD ALREADY. INTERESTING.",
+                    as(:alerion, "Eladrin.")]],
+      [:glimmer,   ["CATALOGUER: SPECIMEN: FELINE, LIGHT-BEARING. NOTE: INCOMPATIBLE. BURN ON SIGHT."]],
+      [:wyn,       ["CATALOGUER: SPECIMEN: MYCONID-TOUCHED. NOTE: CANNOT BE FOUND WHEN NOT LOOKED FOR."]]
+    ].select { |who, _| with_or_is?(who) }
+    own = entries.find { |who, _| herald?(who) }
+    entries = ([own] + entries).compact.uniq
+    if journey?
+      entries.unshift([:you, ["CATALOGUER: SPECIMEN: UNKNOWN. NOT ON THE WHEEL. CANNOT BE CATALOGUED. ERROR. ERROR."]])
     end
-    lines << "CATALOGUER: SPECIMEN: ELF, LUPINE TAINT. EARLIER ATTEMPT: POD THREE. SUPERIOR." if with_or_is?(:reptin)
-    lines << "CATALOGUER: SPECIMEN: DWARF, MARKED. THE RUNE ON HER CHEST IS NOT OURS. DO NOT TOUCH." if with_or_is?(:alberica)
-    if with_or_is?(:alerion)
-      lines << "CATALOGUER: SPECIMEN: ELADRIN, NECROMANTIC. NOTE: HE IS COLD ALREADY. INTERESTING."
-      lines << as(:alerion, "Eladrin.")
-    end
-    lines << "CATALOGUER: SPECIMEN: FELINE, LIGHT-BEARING. NOTE: INCOMPATIBLE. BURN ON SIGHT." if with_or_is?(:glimmer)
-    lines << "CATALOGUER: SPECIMEN: MYCONID-TOUCHED. NOTE: CANNOT BE FOUND WHEN NOT LOOKED FOR." if with_or_is?(:wyn)
-    lines << "CATALOGUER: SPECIMEN: UNKNOWN. NOT ON THE WHEEL. CANNOT BE CATALOGUED. ERROR. ERROR." if journey?
+    lines = ["CATALOGUER: NEW SPECIMENS. RECORDING."] + entries.first(3).map { |_, l| l }.flatten
     say(lines, event_id)
     say(["It finishes its page, files it into a slot in the root, and goes back to waiting."])
   end
@@ -1100,7 +1104,10 @@ module FrostThaw
     echo.opacity = 200 if echo
     corsair = pit ? Stage.actor(:corsair, pit.x + 1, pit.y, 4, graphic: "BW054") : nil
     corsair.opacity = 200 if corsair
-    say(["You step in, and fall upward, into a warm night thirty years gone.",
+    # (dialogue 07 4b, 7B.32: before 8.06 the night isn't dated, so a missing Marshal is no sum to do)
+    long_ago = unmasked ? "thirty years" : "a long time"
+    say([unmasked ? "You step in, and fall upward, into a warm night thirty years gone." :
+                    "You step in, and fall upward, into a warm night long gone.",
          "The Split Dock, at night. A big, scarred man in Marshal's gold counts crates off a skiff.",
          "VAR: Thirty blades, forty bows, no Council stamp, no Council questions. That's the deal.",
          "CORSAIR: And the Council never knows.",
@@ -1111,10 +1118,11 @@ module FrostThaw
          "VAR: My line carried spears for Naerth Maxildanarr. Gold-sick. Greed in the blood.",
          "VAR: Every bit of peace I keep pays a bit of it back. Never enough. Never enough.",
          "VAR: When the Heralds come home, I want the frost-one. To see if a man can hold winter.",
-         "A mirror on a crate catches the lantern. Something steps out of it as if out of a doorway."].compact)
+         unmasked ? "A mirror on a crate catches the lantern. Something steps out of it as if out of a doorway." :
+                    "A mirror on a crate catches the lantern. Something moves in it."].compact)
     # (notes 07 E6: one input in the vision, though it can't change a night thirty years gone)
     w = pbMessage(_INTL("Something is behind him."), [_INTL("Shout a warning"), _INTL("Watch")], 0)
-    say([w == 0 ? "You shout. Thirty years too late; he can't hear you." : "You watch. There's nothing else to do.",
+    say([w == 0 ? "You shout. Far too late; he can't hear you." : "You watch. There's nothing else to do.",
          unmasked ? "AVARICE: Marshal. Loud, scarred, beloved. The city trusts your face." : nil,
          "VAR: (the glaive coming up) Who in the Nine Hells are you?",
          unmasked ? "AVARICE: Close. I need a coat, Marshal. Yours will do." : nil,
@@ -1124,10 +1132,10 @@ module FrostThaw
     say(["In the dark, Var is still standing in the mirror, glaive in his hands, looking out at you."])
     target = with_or_is?(:alerion) ? :alerion : nil
     if target == :alerion && herald?(:alerion)
-      say(["VAR: (to you) The frost-one, from the carvings. Thirty years I've waited to see you."])
+      say(["VAR: (to you) The frost-one, from the carvings. I've waited #{long_ago} to see you."])
       speak(:alerion, "Then look. I'm standing.", "...I'm here.")
     elsif target == :alerion
-      say(["VAR: (to Alerion) The frost-one, from the carvings. Thirty years I've waited to see you.",
+      say(["VAR: (to Alerion) The frost-one, from the carvings. I've waited #{long_ago} to see you.",
            "ALERION: Then look. I'm standing."])
     else
       say(["VAR: Heralds. Where's the frost-one? ...Never mind. Somebody show me winter can be held."])
@@ -1152,7 +1160,7 @@ module FrostThaw
     set_flag(:var_glaive)
     set_flag(:corsair_arms_deal)
     add_counter(:story_beats)
-    sayc([cl(:alerion, "(after a long while) He waited thirty years for that."),
+    sayc([cl(:alerion, "(after a long while) He waited #{long_ago} for that."),
           cl(:alberica, "Then we owe him the rest of the story, pretty boy. Out loud, at the Council."),
           cl(:reptin, "A Corsair arms deal behind the Council's back. Kelyn's going to love that.")])
   end
