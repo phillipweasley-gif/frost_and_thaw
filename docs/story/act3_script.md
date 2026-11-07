@@ -218,13 +218,13 @@ Each elected councillor commits their help; lines run by `council_<name>`.
 
 - **Map:** 2055 Root-Tier, the Split Dock (ship), 2061 Canopy (griffons) or the Wennen bell pier (whale). **Trigger:** go to your departure point. **Present:** Tamsin; Hellen. **Music:** rival theme.
 
-**TAMSIN** *(blocking the way, her Rootwarden cloak on crooked)* Hold it. HOLD it.
+**TAMSIN** *(blocking the way, their Rootwarden cloak on crooked)* Hold it. HOLD it.
 
 **TAMSIN** You're going to fight a GOD. With THAT team? Not without one more battle first.
 
-**ALBERICA** Look at her. All grown up and threatening people. I could cry.
+**ALBERICA** Look at them. All grown up and threatening people. I could cry.
 
-**REPTIN** She means she'll miss us. That's how Tamsin says it.
+**REPTIN** They mean they'll miss us. That's how Tamsin says it.
 
 **TAMSIN** I mean I'll WIN.
 
