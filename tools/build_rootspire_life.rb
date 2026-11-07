@@ -91,11 +91,12 @@ def person(b, x, y, graphic, fn, dir: 2, name: nil, pages: nil)
 end
 
 # A door in a cave floor or a wall that only opens once a story switch is on.
-def gated(b, x, y, switch, closed_script, to, name, tile: nil)
+# (bump: false when the script steps the player back itself, or opens the door on the same press)
+def gated(b, x, y, switch, closed_script, to, name, tile: nil, bump: true)
   se = MapKit.deep_copy(b.instance_variable_get(:@door_template).pages[0].list[0].parameters[0])
   cmds = [b.send(:command, 250, [se]), b.send(:command, 223, [Tone.new(-255, -255, -255, 0), 6]), b.send(:command, 106, [8]),
           b.send(:command, 201, [0, *to, 1]), b.send(:command, 223, [Tone.new(0, 0, 0, 0), 6])]
-  closed = { trigger: 1, script: "#{closed_script}\npbMoveRoute($game_player, [PBMoveRoute::Backward])" }
+  closed = { trigger: 1, script: bump ? "#{closed_script}\npbMoveRoute($game_player, [PBMoveRoute::Backward])" : closed_script }
   open = { switch: switch, trigger: 1, commands: cmds }
   if tile
     closed[:tile_id] = tile; open[:tile_id] = tile
@@ -120,14 +121,17 @@ HALL_DOORS.each { |(x, y), (key, ix, iy)| vh.door(x, y, ID[key], ix, iy, 8, name
 gated(vh, 33, 45, SW_CELLAR_FOUND, "FT.talk(:brewery_shut, @event_id)", [ID[:frozen_cellar], 25, 24, 8], "Door old brewery")
 (39..41).each { |y| vh.warp(63, y, ROOTSPIRE, 17, 9, 2, name: "Root-stair down to the market") }
 vh.sign(58, 32, :halls_sign)
+# (notes/15 F1: someone at the top of the root-stair says what's up here)
+person(vh, 61, 38, "BWClerk_male2", :halls_greeter, dir: 2, name: "Clerk at the stair",
+       pages: [{ graphic: "BWClerk_male2", direction: 2, script: "FT.talk(:halls_greeter, @event_id)" }])
 vh.sign(36, 14, :armory_sign)
 # people of the civic ring (the dossier's Trunk-Tier, and the 20 new NPCs)
 person(vh, 22, 31, "BW (28)", :talwyn, dir: 2, name: "Talwyn Frostrill")
 person(vh, 41, 31, "BW (52)", :harget, dir: 2, name: "Harget Flinttoe")
-person(vh, 30, 31, "BW (84)", :pellar, dir: 4, name: "Pellar Wicket")
+person(vh, 30, 31, "BW (31)", :pellar, dir: 4, name: "Pellar Wicket")
 person(vh, 16, 31, "BW (67)", :yorin, dir: 2, name: "Old Yorin")
 person(vh, 45, 32, "BW (133)", :rilka, dir: 8, name: "Rilka Dawnshard")
-person(vh, 52, 31, "BW (115)", :gurk, dir: 2, name: "Gurk Thistlebane")
+person(vh, 52, 31, "BW (111)", :gurk, dir: 2, name: "Gurk Thistlebane")
 # a sapling between the planks (Spring's "Whispering Sapling")
 person(vh, 35, 32, "", :whispering_sapling, name: "Sapling", pages: [{ graphic: "Followers/SEEDOT", direction: 2, step_anime: false,
                                                                       walk_anime: false, opacity: 200, script: "FT.whispering_sapling(@event_id)" }])
@@ -170,7 +174,7 @@ wh.sign(2, 9, :armory_targets)
 wh.sign(13, 17, :warden_map)
 wh.event(11, 18, "Oath pillar", [{ graphic: "", script: "FT.oath_pillar(@event_id)" }])
 wh.event(13, 21, "Eren Frostborn", [{ graphic: "", through: true },
-                                    { switch: SW_EREN_TROUBLED, graphic: "BW029", direction: 8, script: "FT.eren_armory(@event_id)" }])
+                                    { switch: SW_EREN_TROUBLED, graphic: "BW (15)", direction: 8, script: "FT.eren_armory(@event_id)" }])
 wh.trainer(6, 12, nil, :warden_claw, :FT_ROOTWARDEN, dir: 6, sight: 3)
 wh.trainer(17, 10, nil, :warden_seed, :FT_ROOTWARDEN, dir: 4, sight: 3)
 save(wh, :warden_hall)
@@ -179,7 +183,7 @@ save(wh, :warden_hall)
 gt, ex = interior(280, [[5, 13], [6, 13], [7, 13]])
 exits_to(gt, ex, ID[:halls], 25, 28)
 s = spots(280)
-person(gt, *s[0][0, 2], "BW (104)", :arvoss, dir: s[0][2], name: "Arvoss Ember-Scale")
+person(gt, *s[0][0, 2], "BW (106)", :arvoss, dir: s[0][2], name: "Arvoss Ember-Scale")
 gt.event(13, 8, "Humming gem", [{ graphic: "", script: "FT.humming_gem(@event_id)" }])
 save(gt, :gem_thorn)
 
@@ -237,15 +241,22 @@ PROM_DOORS = {
   [38, 28] => [:frost_thread, 9, 7]
 }
 PROM_DOORS.each { |(x, y), (key, ix, iy)| pm.door(x, y, ID[key], ix, iy, 8, name: "Door #{NAMES[key]}") }
-[31].each { |x| gated(pm, x, 37, SW_SUNCLEFT_OPEN, "FT.suncleft_door(@event_id)", [ID[:suncleft], 11, 14, 8], "Door Suncleft Emporium") }
+# (suncleft_door opens the door on the same press, or steps you back itself)
+[31].each { |x| gated(pm, x, 37, SW_SUNCLEFT_OPEN, "FT.suncleft_door(@event_id)", [ID[:suncleft], 11, 14, 8], "Door Suncleft Emporium", bump: false) }
 [[37, 37], [52, 37], [47, 37], [66, 19], [65, 20], [66, 21], [60, 34], [60, 35]].each do |x, y|
   pm.event(x, y, "Closed", [{ trigger: 1, script: "FT.talk(:promenade_closed, @event_id)\npbMoveRoute($game_player, [PBMoveRoute::Backward])" }])
 end
 (28..31).each { |x| pm.warp(x, 45, CANOPY, 9, 13, 2, name: "Down the leaf-bridge to the Canopy") }
 pm.sign(34, 40, :promenade_sign)
+# (notes/15 F1: a doorman at the top of the leaf-bridge)
+person(pm, 26, 43, "BWGateway_male", :promenade_greeter, dir: 6, name: "Doorman at the bridge",
+       pages: [{ graphic: "BWGateway_male", direction: 6, script: "FT.talk(:promenade_greeter, @event_id)" }])
+# Lumea's escaped illusion, out on the Promenade (notes/15 E6: she tells you it's there)
+pm.event(24, 40, "Escaped illusion", [{ graphic: "Followers/VULPIX", direction: 2, opacity: 140, step_anime: true, script: "FT.atelier_fox(@event_id)" },
+                                      { self_switch: "A", graphic: "", through: true }])
 pm.sign(30, 37, :sunwalk_sign)
 # the Canopy's people (dossier: Autumn's Artisan Promenade, the Lightfall walk)
-person(pm, 41, 33, "BW (107)", :elitha, dir: 2, name: "Elitha Snowmere")
+person(pm, 41, 33, "BW (105)", :elitha, dir: 2, name: "Elitha Snowmere")
 pm.event(42, 32, "Frost sculpture", [{ graphic: "Followers/FROSLASS", direction: 2, opacity: 150, step_anime: false, walk_anime: false,
                                        script: "FT.elitha_sculpture(@event_id)" }])
 person(pm, 24, 32, "BW (88)", :mira_thynelight, dir: 2, name: "Mira Thynelight")
@@ -264,8 +275,6 @@ exits_to(at, ex, ID[:promenade], 22, 38)
 watcher(at, 6, 8, :rune_beetle, "Followers/LEDYBA_fly")
 s = spots(385)
 person(at, *s[0][0, 2], "BW (64)", :lumea, dir: s[0][2], name: "Lumea Keth")
-at.event(14, 8, "Escaped illusion", [{ graphic: "Followers/VULPIX", direction: 2, opacity: 140, step_anime: true, script: "FT.atelier_fox(@event_id)" },
-                                      { self_switch: "A", graphic: "", through: true }])
 save(at, :atelier)
 
 # 2191 Shrine of Balance: Ysera Dorn
@@ -377,6 +386,11 @@ fr.cutscene(2, 9, :frozen_run_start)
 fr.trainer(12, 9, nil, :revenant_hask, :SAILOR, dir: 4, sight: 4)
 fr.trainer(24, 10, nil, :revenant_moirin, :SAILOR, dir: 4, sight: 4)
 fr.trainer(33, 9, nil, :revenant_tobe, :SAILOR, dir: 4, sight: 4)
+# Ivran's sledge-ship (stand-in: Ivran himself, until it has art), moved on by
+# FT.frozen_run_ship_step as the revenants fall; and
+# FT.frozen_run_shape: the dark ice in the last hull (pressed from beside it)
+fr.event(4, 11, "Ivran on his sledge-ship", [{ graphic: "BW (54)", direction: 6, through: true, script: "FT.talk(:frozen_run_ship, @event_id)" }])
+fr.event(40, 14, "Dark ice", [{ graphic: "", script: "FT.frozen_run_shape(@event_id)" }])
 fr.event(45, 9, "The far shore", [{ graphic: "", script: "FT.frozen_run_end(@event_id)" }])
 fr.event(45, 10, "The far shore", [{ graphic: "", script: "FT.frozen_run_end(@event_id)" }])
 # (each stands on the ice just below a frozen hull)

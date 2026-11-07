@@ -30,6 +30,11 @@ module FrostThaw
   )
 
   TEXT.merge!(
+    # Ivran at the tiller of his sledge-ship on the Frozen Run (2199)
+    frozen_run_ship: -> {
+      next ["IVRAN: Across, and whole. I'll stand you a drink for every hull we passed."] if T.flag?(:frozen_run_done)
+      ["Ivran stands at the tiller, the runners creaking under him.",
+       "IVRAN: Walk beside her. Keep the dead off. I'll keep her moving."] },
     kelyn_mural: [{ if: { flag: :kelyn_secret }, lines: ["Kelyn's alcove. The old mural: an elf with a wolf's shadow, a cat-shaped figure in gold.",
                                                          "The first proof the Heralds were real. Kelyn has hung fresh green over it."] },
                   ["Behind the High Speaker's seat, an alcove with an old, old mural on the bark.",
