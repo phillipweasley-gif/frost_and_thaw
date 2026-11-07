@@ -260,7 +260,23 @@ module FrostThaw
       talk(:faria, event_id)
       faria_wand if respond_to?(:faria_wand)      # (the Wand of Spores: 047d)
     end
-    mart(:faria, event_id) if respond_to?(:mart)
+    faria_mart(event_id)
+  end
+
+  # (notes 07 E25: "Discounts too." A tenth off once her amulets are home.)
+  def faria_mart(event_id = nil)
+    return if !respond_to?(:mart)
+    if flag?(:amulets_returned) && $game_temp
+      $game_temp.mart_prices = {} if $game_temp.mart_prices.nil?
+      (MARTS[:faria] || []).each do |item|
+        price = (GameData::Item.get(item).price rescue 0)
+        $game_temp.mart_prices[item] = [(price * 9 / 10.0).round, -1] if price > 0
+      end
+      say(["FARIA: A tenth off. Every story you've earned!"]) if first_time?(:faria_discount_told)
+    end
+    mart(:faria, event_id)
+  ensure
+    $game_temp.clear_mart_prices if $game_temp && $game_temp.respond_to?(:clear_mart_prices)
   end
 
   def kobold_nest(event_id = nil)
@@ -603,10 +619,10 @@ module FrostThaw
   def eira_development(event_id = nil)
     if !flag?(:eira_lore)
       say(["EIRA: (a cold creek over stones) You've helped the spore-guard. So: the signs.",
-           "EIRA: Things at the Echo Gate you'll never see. Stalkers, bound by old pacts. Wraiths.",
-           "EIRA: Don't run past still air. Don't stare at your reflection late. Don't steal sap.",
-           "EIRA: Remnants of the Rime. They serve the Dawn now. They keep thieves off her."], event_id)
+           "EIRA: At the Echo Gate, stalkers you'll never see. Rime-remnants. They serve the Dawn now.",
+           "EIRA: Don't run past still air. Don't stare at your reflection late. Don't steal sap."], event_id)
       set_flag(:eira_lore)
+      eira_pointers
       return
     end
     opts = []
@@ -632,6 +648,31 @@ module FrostThaw
         give(:FT_ROOTWRAP)
       end
     end
+  end
+
+  # (notes 07 E22: after the badge, Eira names what's still open in the city)
+  EIRA_POINTERS = [
+    [:amulets_returned, "Faria's lost her amulets."],
+    [:circle_shared, "Myr wants to see you."],
+    [:sap_settled, "The Fane has visitors.", :sap_grudge],
+    [:duel_settled, "Two myconids are duelling in the Bazaar."],
+    [:poisoner_caught, "Someone's been at the sap pool.", nil, :hyphora_named]
+  ]
+
+  def eira_pointers
+    open = EIRA_POINTERS.select { |done, _t, alt, need| !flag?(done) && !(alt && flag?(alt)) && (!need || flag?(need)) }
+    return if open.empty?
+    c = pbMessage(_INTL("Ask Eira..."), [_INTL("\"Who else needs a hand?\""), _INTL("Nothing")], 1)
+    return if c != 0
+    boxes = []
+    open.first(3).each do |p|
+      if boxes.empty? || (boxes.last + " " + p[1]).length > 90
+        boxes << "EIRA: #{p[1]}"
+      else
+        boxes[-1] += " #{p[1]}"
+      end
+    end
+    say(boxes)
   end
 
   #-----------------------------------------------------------------------------
