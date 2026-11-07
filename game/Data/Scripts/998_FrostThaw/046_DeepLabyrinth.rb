@@ -68,8 +68,6 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   TRAINER_TYPES.merge!(
     FT_MARSHAL:     ["Summer Marshal", :ROUGHNECK, 0, 160, :LEADER_Brock],
-    # Var as he was before Avarice wore him, in the mirror (his own battle picture, art batch 09)
-    FT_VAR_ECHO:    ["Summer Marshal", :ROUGHNECK, 0, 160, :LEADER_Brock],
     FT_MIRRORCLONE: ["Mirror Clone", :CHANNELER, 0, 0, :LEADER_Pryce]
   )
   TRAINERS.merge!(
@@ -85,7 +83,7 @@ module FrostThaw
                          "We dug her a road to the deep. She paid us in fire."],
     duergar_spy_ossk: [:FT_DUERGAR, "Ossk", [[:B262H338, 45], [:B215H229, 45], [:B338H262, 46]],
                        "You weren't supposed to see me. Nobody's ever supposed to see me."],
-    var_echo: [:FT_VAR_ECHO, "Var", [[:B227H327, 44], [:B59H217, 44], [:B68H208, 45], [:B329H59, 46]],
+    var_echo: [:FT_MARSHAL, "Var", [[:B227H327, 44], [:B59H217, 44], [:B68H208, 45], [:B329H59, 46]],
                "Ha! There it is. Winter in a man's hands, and the man still standing.", [:HYPERPOTION]]
   )
   TRAINER_INTROS.merge!(
@@ -1144,7 +1142,7 @@ module FrostThaw
     end
     say(["VAR: Come on, then. Show me winter can be held."])
     Stage.overlay_off("O-03", fade: 10) rescue nil
-    won = pbTrainerBattle(:FT_VAR_ECHO, "Var", nil, false, 0) ? true : false
+    won = pbTrainerBattle(:FT_MARSHAL, "Var", nil, false, 0) ? true : false
     return if !won
     # (notes 07 §3: not the battle's own defeat line again; someone answers him)
     say(["VAR: (laughing, leaning on the glaive) Ha! Held. You held it."])

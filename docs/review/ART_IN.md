@@ -149,11 +149,14 @@ row 73. Colour counts (26–45) run over the guide's 24, as every sheet in the g
 | `FT_avarice_mirror_crystal_with_brass_ribs` | `FT_avarice_reforged` | her cradle in the Seraph Cradle (2170), in place of `FT_avarice` at opacity 200; 34 of its 45 colours are her Reforged battle picture's |
 | `FT_avarice_duergar_priest` | `FT_devil_priest` | Vexmortis at the Dragonforge altar (2075), before he turns; afterwards the stand-in stays (he's a devil by then) |
 | `FT_keegan_velryn` | same | Keegan in the Velryn house, Targos (2124) |
-| `Trainers/FT_VAR_ECHO_BATTLE` | `Trainers/FT_VAR_ECHO` | the echo's fight in the liquid mirror (046): a new trainer class `FT_VAR_ECHO` (same title, "Summer Marshal") so it has its own picture |
-| `Trainers/FT_STILL_KEEPER_ICE_ALBERICA_TR` | `Trainers/FT_STILL_KEEPER` | the Still Keeper (the Test of Preservation; it speaks in Alberica's voice) |
+| `Trainers/FT_VAR_ECHO_BATTLE` | **taken out again** | against the owner's Var sheet (P1 17): grey all over, it loses his dark skin, black-and-silver hair and gold coat; the echo battle keeps Var's own picture |
+| `Trainers/FT_STILL_KEEPER_ICE_ALBERICA_TR` | **taken out again** | against the owner's Alberica sheet (P1 01): she's a short, stocky dwarf with long red hair; this one is slim and tall with ginger hair |
 | `Trainers/FT_AVARICE_DUERGAR_PRIEST_BATTLE` | **not used** | the battle starts after "a devil all hooks and barbs" turns round; a duergar priest there would contradict it. A devil picture is on Art List 2 |
 | `FT_avarice_half_dropped_disguise` | **not used** | the four frames are speckle over a hooded shape: no face shows through and no wings unfold (the scene: "wings unfold … a devil all hooks and barbs"). A redraw is on Art List 2 |
 | `Pictures/S-brightmane` (redraw) | **not used yet** | now a unicorn, as asked, but the figure at the mirror has a pale braid and a teal fur cloak; Shade wears a black hood and a green scarf. Owner's call |
 
-Checks: smoke 235/235 (new: the Var echo and the Still Keeper use their own pictures), maps 159/159, New Journey
-244/245.
+The designer then put every Character Proposal and Art List 2 draft on hold (`ART-DELIVERY-HOLD.md`, Nov 7):
+none is approved until checked against the owner's P1 reference sheets. Batch 09 was checked against them
+here; earlier batches are the owner's call.
+
+Checks: smoke 235/235, maps 159/159, New Journey 244/245.
