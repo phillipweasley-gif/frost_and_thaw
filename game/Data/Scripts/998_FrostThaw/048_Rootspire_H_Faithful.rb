@@ -140,7 +140,7 @@ module FrostThaw
                    _INTL("The pilgrim in grey by the door")], 0)
     case c
     when 0
-      say(["The lantern-carver's apprentice is fourteen and frightened, and talks once someone's kind.",
+      say_staged(["The lantern-carver's apprentice is fourteen and frightened, and talks once someone's kind.",
            "APPRENTICE: They paid in old coin. Asked for runes cut on the inside of the glass.",
            "APPRENTICE: Master said they were blessing-runes for the aurora. They looked like hooks.",
            "APPRENTICE: Hooks, for catching the light when it comes down to touch the tree."])
@@ -243,7 +243,7 @@ module FrostThaw
 
   def cycle_day_foiled
     set_flag(:effigy_saved)
-    sayc(["The last rune goes dark. The aurora touches the Tree and lifts away. Nothing comes down.",
+    say_staged(["The last rune goes dark. The aurora touches the Tree and lifts away. Nothing comes down.",
           "Rheven's wardens drag the effigy off. Mostly nobody notices. That's the point.",
           "RHEVEN: (passing, very low) The Rootwardens owe you one. I'll remember. So will the Bough.",
           cl(:reptin, "Nobody noticed. Best kind of saving. Nobody has to be frightened tomorrow.")].compact)
@@ -262,7 +262,7 @@ module FrostThaw
       sayc(["The Still Sky Shrine. The cracked statue of Auril has stepped down off its plinth.",
             "It's taller than it was. Its face is ice. Its breath is a roar that freezes to needles.",
             "Festival-goers who followed the light down are frozen where they stood, mid-step.",
-            "AVATAR: (a voice like a whole winter at once) Still. Be still. You were meant to be still.",
+            "A voice like a whole winter at once: \"Still. Be still. You were meant to be still.\"",
             cl(:alerion, "Get between it and them. Now.")].compact)
       $game_screen.start_shake(5, 6, 20) rescue nil
       won = boss_battle(named_mon(:B124H144, 46, "Auril's Icy Avatar"))
@@ -272,7 +272,7 @@ module FrostThaw
     end
     set_flag(:icy_avatar_fought)
     set_flag(:festival_casualties)
-    sayc(["In the Festival Circle the lanterns are out. Families count heads. Some come up short.",
+    say_staged(["In the Festival Circle the lanterns are out. Families count heads. Some come up short.",
           "KELYN: (white-faced, to nobody) Eleven. Eleven, on the seventh night.",
           cl(:alberica, "(very quietly) Sing for them, someone. I can't. Not yet.")].compact)
     wheel(2)
@@ -286,8 +286,9 @@ module FrostThaw
     set_flag(:envoy_judged)
     pbSEPlay("Saint7") rescue nil
     $game_screen.start_flash(Color.new(255, 240, 200, 200), 20) rescue nil
-    sayc(["The orb between the spires goes white, then gold, then a colour that has no name.",
-          "Out of it steps a figure of dawn-light, six wings folded close, a face like a struck bell.",
+    say(["The orb between the spires goes white, then gold, then a colour that has no name."], event_id)
+    envoy = walk_on("ENVOY", "Followers/TOGEKISS_fly")       # (it steps out of the light, beside you)
+    sayc(["Out of it steps a figure of dawn-light, six wings folded close, a face like a struck bell.",
           "Lumin falls to his knees. Nobody else can move.",
           "ENVOY: Sparkbearer. Brightmane sends me, and Brightmane is afraid.",
           "ENVOY: The frost in this valley is learning to shine. Auril's light is being born here.",
@@ -312,19 +313,22 @@ module FrostThaw
       set_flag(:glimmer_hope)
       sayc(["GLIMMER: Hope. I'll carry it in. Whatever's down there gets the chance Shimmer gave us.",
             "ENVOY: (its face rings once, softly) Then her light will heal where it lands. At a cost.",
-            "It touches the Lumen Shard in his chest. The Shard goes warm and gold, like a hearth.",
-            "Then the envoy is gone. Lumin gets up off his knees. The orb is green and white again."])
+            "It touches the Lumen Shard in his chest. The Shard goes warm and gold, like a hearth."])
+      Stage.remove_actor(envoy) if envoy
+      say(["Then the envoy is gone. Lumin gets up off his knees. The orb is green and white again."])
       give(:SHELLBELL)
       say(["(Hope's light: the Shell Bell heals its holder a little every time it strikes.)"])
     else
       set_flag(:glimmer_judgment)
       sayc(["GLIMMER: Judgment. If her light comes back, I'll put it out. Every spark.",
             "ENVOY: (its face rings once, low) Then her light will burn true. Mind what you set it on.",
-            "It touches the Lumen Shard in his chest. The Shard flares white, so hot the air shakes.",
-            "Then the envoy is gone. Lumin gets up off his knees. The orb is green and white again."])
+            "It touches the Lumen Shard in his chest. The Shard flares white, so hot the air shakes."])
+      Stage.remove_actor(envoy) if envoy
+      say(["Then the envoy is gone. Lumin gets up off his knees. The orb is green and white again."])
       give(:CHARCOAL)
       say(["(Judgment's fire: Charcoal makes its holder's Fire-type moves stronger.)"])
     end
+    Stage.remove_actor(envoy) if envoy
     wheel(1)
     add_counter(:story_beats)
     true
@@ -342,6 +346,7 @@ module FrostThaw
   # (dialogue 15 §5: she answers the humming key, not a question nobody asked)
   def canticle_research(event_id = nil)
     say(["EIRWEN: That key's humming like a song with no words. The words are in my leaves.",
+         "In your pack the key hums louder, as if it heard.",
          "EIRWEN: The Cycle Canticle. What's left is on crystal leaves, all through the catalogue.",
          "EIRWEN: Sung whole, it gives back what the city forgot. Names. Faces. Even yours."], event_id)
     way = pbMessage(_INTL("EIRWEN: How do you want to look?"), [_INTL("By history: when each verse was sung"), _INTL("By faith: what each verse is for")], 0)
@@ -369,6 +374,7 @@ module FrostThaw
   def eirwen_dilemma(event_id = nil)
     say(["EIRWEN: (at a table deep in leaves, glowing) I've finished it. Naerth's ledger.",
          "EIRWEN: Avarice was in the Speaker's ear before the Rime. His debts, his lottery: hers.",
+         "She turns the ledger round so you can see the hand: small, tidy, frightened.",
          "EIRWEN: The Frostmaiden's curse didn't make Ten-Towns cruel. Avarice taught it, for years.",
          "EIRWEN: I'm going to put it on the open shelves. Tomorrow. Everyone should know.",
          "EIRWEN: ...Why are you all looking at me like that?"], event_id)
@@ -432,7 +438,8 @@ module FrostThaw
     end
     if flag?(:badge_hearth) && !flag?(:hellen_passages)
       set_flag(:hellen_passages)
-      say(["HELLEN: (low, wiping a clean glass) You beat me in my own cellar. So: the secret.",
+      say(["Hellen glances at the cellar door, then back at you.",
+           "HELLEN: (low, wiping a clean glass) You beat me in my own cellar. So: the secret.",
            "HELLEN: The cask by the cellar wall with the sun chalked on it. Push it from the left.",
            # (notes/06 6.16)
            "HELLEN: My great-great-gran ran ale down it when the Council taxed the stair.",
@@ -444,7 +451,8 @@ module FrostThaw
       set_flag(:hellen_note_given)
       # (dialogue 15 §3: the Halo's ears are in the room)
       cloak = (Stage.actor(:grey_cloak, $game_player.x + 2, $game_player.y, 4, graphic: "FT_halo_disciple_male") rescue nil)
-      say(["HELLEN: Would you carry something for me? Nothing dangerous. Probably nothing dangerous.",
+      say(["Hellen leans across the bar and lowers her voice.",
+           "HELLEN: Would you carry something for me? Nothing dangerous. Probably nothing dangerous.",
            "HELLEN: A note for Captain Ivran, on the Split Dock. The Corsairs owe my family a debt.",
            "HELLEN: This calls it in. A berth north, if the Heralds ever need one."], event_id)
       say(["Down the bar, a man in a grey cloak puts down his cup."])
@@ -457,7 +465,8 @@ module FrostThaw
     end
     if flag?(:hellen_note_delivered) && !flag?(:hellen_note_thanked)
       set_flag(:hellen_note_thanked)
-      say(["HELLEN: \"The Requiem remembers the Brightruns.\" Ha! Then it does. Good.",
+      say(["Hellen's laughing before you've finished telling her.",
+           "HELLEN: \"The Requiem remembers the Brightruns.\" Ha! Then it does. Good.",
            "HELLEN: Here: for the walk. Corsair coin. It's all I've got that isn't soup."], event_id)
       $Trainer.money += 2000 rescue nil
       say(["(Hellen pressed $2000 into your hand.)"])
@@ -465,7 +474,8 @@ module FrostThaw
     end
     if flag?(:hellen_note_thanked) && !flag?(:shrine_frost_asked)
       set_flag(:shrine_frost_asked)
-      say(["HELLEN: (not smiling, for once) Someone's been in my cellar. At night.",
+      say(["Hellen isn't smiling when she sets your bowls down.",
+           "HELLEN: Someone's been in my cellar. At night.",
            "HELLEN: Every morning, frost on my family's shrine to you. Frost. In this city.",
            "HELLEN: I don't want anyone hurt. I want to know who. Sit up with the shrine one night?"], event_id)
       side_goal(:hellen, "Sit up with the Heralds' shrine in Hellen's cellar. Who's leaving frost?", done: :shrine_frost_solved)
@@ -473,7 +483,8 @@ module FrostThaw
     end
     if flag?(:shrine_frost_solved) && !flag?(:shrine_frost_thanked)
       set_flag(:shrine_frost_thanked)
-      say([flag?(:tobin_turned) ? "HELLEN: Tobin. Little Tobin from the bakery. ...I'll put a cup out for him." :
+      say(["Hellen listens to all of it with a cloth forgotten in her hands.",
+           flag?(:tobin_turned) ? "HELLEN: Tobin. Little Tobin from the bakery. ...I'll put a cup out for him." :
            flag?(:tobin_arrested) ? "HELLEN: (quietly) The frost's stopped. I'll sleep. I keep seeing that boy on my stair." :
                                     "HELLEN: Gone, and not coming back, the frost. I'll sleep tonight.",
            flag?(:tobin_turned) ? "HELLEN: He can come and pray to you properly, in daylight, like everyone else." : nil,
@@ -505,7 +516,8 @@ module FrostThaw
       Stage.remove_actor(cloak) if cloak
       say(["IVRAN: (looking down the dock) Halo Silencer. They don't talk. They listen for a living."], event_id)
     end
-    say(["IVRAN: (breaking the seal with his thumb, and reading twice) Brightrun. Well, well.",
+    say(["He holds out a hand for the note. You give it to him.",
+         "IVRAN: (breaking the seal with his thumb, and reading twice) Brightrun. Well, well.",
          "IVRAN: My great-grandad owed hers his ship and his neck. Tell her: the Requiem remembers.",
          "IVRAN: And you've a berth north, any night. Corsairs pay their debts. Eventually. Loudly."], event_id)
     $PokemonBag.pbDeleteItem(:FT_HELLENNOTE) rescue nil
@@ -523,7 +535,7 @@ module FrostThaw
     pbFadeOutIn { $game_screen.start_tone_change(Tone.new(-80, -70, -20, 40), 0) rescue nil }
     say(["You put the lantern out and wait among the casks. The cellar's warm. The tree breathes.",
          "Past midnight, very quietly, the stair door opens."])
-    tob = (Stage.actor(:tobin, $game_player.x + 2, $game_player.y - 1, 2, graphic: "FT_halo_disciple_male") rescue nil)
+    tob = (Stage.actor(:novice_tobin, $game_player.x + 2, $game_player.y - 1, 2, graphic: "FT_halo_disciple_male") rescue nil)
     say(["A boy in a grey novice's robe, fifteen at most, kneels at the shrine.",
          "From his sleeve, a jar of frost-paste. He starts painting the four carved figures white.",
          "He's crying. He's praying while he does it. He's praying to you."])
@@ -654,7 +666,7 @@ module FrostThaw
         rival = FACTION_RIVAL[patron] || :winter
         favour(rival, -1, quiet: true)
         boon_lines, item = FACTION_BOONS[patron][0], FACTION_BOONS[patron][1]
-        sayc(boon_lines)
+        say_staged(boon_lines)
         give(item[0], item[1])
         say(["(#{FACTION_FRIEND_LINES[patron]} #{faction_name(rival)} has noticed.)"])
         return true
@@ -662,7 +674,7 @@ module FrostThaw
     end
     if patron && (f[patron] || 0) >= 4 && !flag?(:"favour_trusted_#{patron}")
       set_flag(:"favour_trusted_#{patron}")
-      sayc(FACTION_BOONS[patron][2])
+      say_staged(FACTION_BOONS[patron][2])
       give(FACTION_BOONS[patron][3])
       return true
     end
@@ -685,7 +697,7 @@ module FrostThaw
     when :winter
       say(["In the morning a Winter inspector waits in the common room, papers in hand."])
       trainer(:rival_balance_inspector)
-      say(["HALDIS: (picking herself up) Noted. All of it. The Matron will be informed. Unfavourably."])
+      say_staged(["HALDIS: (picking herself up) Noted. All of it. The Matron will be informed. Unfavourably."])
     when :summer
       say(["Outside the Hearth, the air over the cobbles is shimmering, though the sun isn't up."])
       trainer(:rival_summer_zealot)

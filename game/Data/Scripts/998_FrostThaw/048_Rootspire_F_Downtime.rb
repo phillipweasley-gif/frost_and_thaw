@@ -457,6 +457,9 @@ module FrostThaw
     return true if flag?(:brightmane_answered)
     say(["#{herald?(:glimmer) ? 'You kneel' : 'Glimmer kneels'} at the orb with the mane-braid in both hands.",
          herald?(:glimmer) ? nil : "GLIMMER: Brightmane. It's me. Still the cat. Three questions, and no manners."].compact, event_id)
+    # (she answers as light in the orb: a pale lion's shape beside it, there and not)
+    bm = walk_on("BRIGHTMANE", "Followers/SOLGALEO")
+    bm.instance_variable_set(:@opacity, 110) if bm
     left = BRIGHTMANE_QUESTIONS.dup
     until left.empty?
       c = pbMessage(_INTL(herald?(:glimmer) ? "(What do you ask?)" : "Glimmer asks..."), left.map { |q| _INTL(q[1]) }, -1)
@@ -469,6 +472,7 @@ module FrostThaw
         brightmane_vision
       end
     end
+    Stage.remove_actor(bm) if bm
     set_flag(:brightmane_answered)
     set_flag(:chardalyn_vision)
     sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. And a fire, under all of it."),
@@ -507,6 +511,7 @@ module FrostThaw
 
   def meat_meat_day2
     Stage.visit(2060, 18, 14, 8) do
+      razz = walk_on("RAZZILITH")      # (he's at the Shrine by day; he flew down to meet her)
       say(["The glade where the Verdant Reversal began is warm today. Too warm. A fever under snow.",
            "Razzilith waits in the clearing, coiled round a warm stone, chirring like a harp-string.",
            "But his eyes are troubled. He nudges #{mm_her} shoulder and speaks the way he does:",
@@ -515,6 +520,7 @@ module FrostThaw
            "(A flicker of orange and warm rain. Then cold.)",
            "RAZZILITH: Gone. No steps. No smell.",
            "RAZZILITH: (red leaves, covering something) Autumn... hides.",
+           "His tail lashes. The picture in the bond changes.",
            "RAZZILITH: Summer is... a shape. (Heat-shimmer, a long coat. No face.)",
            "RAZZILITH: No one ever sees Summer's face. All feel... chills. Like bad winter.",
            "His wings shiver. He presses his forehead to #{mm_her}s, scales warm.",
@@ -538,6 +544,7 @@ module FrostThaw
            "A small dragon. But a dragon.",
            "He lands laughing, wyrmling laughter, bright as bells, and it echoes through the bond.",
            "#{herald?(:meat_meat) ? 'You are' : 'She is'} the first rider he has ever allowed on his back. And he likes it."])
+      walk_off(razz)
     end
     set_flag(:razzy_first_flight)
     dt_step!(:meat_meat)
@@ -548,7 +555,8 @@ module FrostThaw
   def meat_meat_day3
     Stage.visit(2055, 20, 14, 2) do
       say(["Below the Trunk-Tier's hum, the undercity is a lung half breathed out: thin air, cold.",
-           "#{herald?(:meat_meat) ? 'You slip' : 'Meat Meat slips'} between fungal lanterns and crooked doorways. Roots curve overhead like ribs.",
+           "#{herald?(:meat_meat) ? 'You slip' : 'Meat Meat slips'} between fungal lanterns and crooked doorways.",
+           "Roots curve overhead like ribs.",
            "The lake-wind whistles through the planks. Something down here watches. It always does.",
            "A tunnel mouth in frost-bitten stone, moaning. Locals say it whispers passers-by's names."])
       c = pbMessage(_INTL("The tunnel mouth..."), [_INTL("Stop and listen."), _INTL("Keep walking.")], 0)
@@ -563,10 +571,10 @@ module FrostThaw
       c = pbMessage(_INTL("The dockworker is sweeping..."), [_INTL("\"That's not ore.\""), _INTL("Let it go.")], 0)
       if c == 0
         set_flag(:dock_ore_seen)
-        say(["DOCKWORKER: It fell off a boat from the south! It did NOT come from the sap-mines!",
+        say_staged(["DOCKWORKER: It fell off a boat from the south! It did NOT come from the sap-mines!",
              "He's lying. Badly. His name's stitched on his apron: JORIK."])
       end
-      say(["Between lantern posts, a shadow peels off someone walking ahead. It lingers. Snaps back.",
+      say_staged(["Between lantern posts, a shadow peels off someone walking ahead. It lingers. Snaps back.",
            "The person never notices.",
            "The Still Sky Shrine's door, ajar. A sign: CLOSED FOR VEIL OBSERVANCE. Too quiet inside.",
            "Two Rootwarden initiates whisper by a pier: some of the Bough went missing by the Wall.",

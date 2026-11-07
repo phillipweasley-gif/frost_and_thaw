@@ -148,6 +148,59 @@ module FrostThaw
   module_function
 
   #-----------------------------------------------------------------------------
+  # Walk-ons (WRITING_GUIDE §9a: whoever speaks is on screen). A side scene's
+  # passer-by who has no event of their own steps up beside you to say their
+  # piece, and goes again after. Heralds summon themselves (say does that).
+  #-----------------------------------------------------------------------------
+  WALK_ON_LOOKS = {
+    "APPRENTICE" => "BWSchoolKid_male", "RHEVEN" => "FT_captain_rheven_stormbranch", "KELYN" => "FT_high_speaker_kelyn_of_spring",
+    "SELRAE" => "FT_winter_matron_selrae_vorn", "LUMEA" => "BW (64)", "RENEWAL WARDEN" => "BW (62)", "CLERK" => "BWClerk_male2",
+    "COURIER" => "BWRichboy", "HALDIS" => "BW (62)", "SPRING WARDEN" => "BW (62)", "BALANCE WARDEN" => "BW (62)",
+    "AUTUMN COURIER" => "BWRichboy", "AUTUMN COURTIER" => "BWSocialite", "OLD LOYALIST" => "BW_oldman-drunk",
+    "PILGRIM" => "FT_sephek", "CORSAIR RUNNER" => "BW_Sailor", "INITIATE" => "BW (22)", "DOCKWORKER" => "BW (19)",
+    "RAZZILITH" => "FT_razzilith", "KETHAN" => "BW (71)", "HELLEN" => "FT_hellen", "EIRWEN" => "FT_eirwen_solglass"
+  }
+
+  def walk_on(tag, graphic = nil)
+    return nil if !$game_map
+    if (sp = Stage.speaker(tag))
+      # already in the scene: off camera, they come over (and stay where they stop)
+      Stage.walk_to(sp, $game_player.x, $game_player.y, adjacent: true) if !Stage.on_screen?(sp)
+      return nil
+    end
+    slot = Stage.near_slot or return nil
+    a = Stage.actor(tag.downcase.gsub(/[^a-z]+/, "_").to_sym, slot[0], slot[1], 2, graphic: graphic || WALK_ON_LOOKS[tag])
+    Stage.turn_to(a) if a
+    a
+  rescue StandardError => e
+    log("walk_on #{tag}: #{e.message}")
+    nil
+  end
+
+  # Everyone named in these lines who isn't here and isn't a Herald steps up.
+  def walk_on_for(lines)
+    mates = defined?(COMPANION_NAMES) ? COMPANION_NAMES.values : []
+    me = ($Trainer.name.to_s.upcase rescue "")
+    tags = Array(lines).flatten.compact.map { |l| l[/\A([A-Z][A-Z'\- ]*[A-Z]):/, 1] }.compact.uniq
+    tags.reject { |t| mates.include?(t) || t == me }.map { |t| walk_on(t) }.compact
+  end
+
+  def walk_off(actors)
+    actors = Array(actors).compact
+    return if actors.empty?
+    Stage.leave_all(actors, $game_player.x, $game_player.y + 7)
+  rescue StandardError
+    actors.each { |a| Stage.remove_actor(a) rescue nil }
+  end
+
+  # say, with the walk-ons staged round it.
+  def say_staged(lines, event_id = nil)
+    actors = walk_on_for(lines)
+    say(lines, event_id)
+    walk_off(actors)
+  end
+
+  #-----------------------------------------------------------------------------
   # Downtime after the Heartroot: Council Petitions (present what you found and
   # win the Council's support) and the Festival of Balance (accept, and
   # Rootspire is your safe haven).

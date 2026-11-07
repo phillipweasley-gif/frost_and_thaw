@@ -418,7 +418,6 @@ module FrostThaw
           cl(:reptin, "Guard the pulse, Ash. You were supposed to guard the pulse.")].compact, event_id)
     return if !pbTrainerBattle(:FT_TURNCOAT, "Ash", nil, false, 0)
     set_flag(:ash_exposed)
-    set_switch(SW_ASH_EXPOSED, true)
     add_counter(:story_beats)
     # (notes/15 E10: Kethan walks in, so he's there when he speaks)
     ash = $game_map.events[event_id] rescue nil
@@ -432,6 +431,7 @@ module FrostThaw
           cl(:alerion, "The Rite of the Long Gold. Somebody's still holding the rope."),
           cl(:alberica, "Then we cut the rope, sweetheart. And pull them up with it.")].compact, event_id)
     Stage.leave_all([ket, ash].compact, $game_player.x, $game_player.y + 8) if ket
+    set_switch(SW_ASH_EXPOSED, true)            # (gone from his post once he's been led off)
   end
 
   #-----------------------------------------------------------------------------
@@ -556,7 +556,7 @@ module FrostThaw
     set_flag(:chronal_debt_done)
     names = [:alberica, :glimmer].select { |k| with_or_is?(k) }.map { |k| herald?(k) ? nil : HERALD_NAMES[k] }.compact
     say(["WYNSNOW: (lowering his voice) #{names.empty? ? 'You' : names.join('. ')}. A private word.",
-         "WYNSNOW: Very private. Shut the door. No, the other door.",
+         "He shuts the door himself. Then, after some thought, the other door.",
          "WYNSNOW: Four hundred years happened while you were falling. I can let you see them.",
          "WYNSNOW: The price is a small anchoring. Your life-threads, tied to Rootspire's.",
          "He polishes his spectacles on his sleeve, not looking at you.",
@@ -691,10 +691,16 @@ module FrostThaw
     if flag?(:frozen_run_done)
       return say(["The far shore. The sledge-ship's runners rest on rock again. Behind you, the ice is still."], event_id)
     end
+    ship = $game_map.events.values.find { |e| e.name == "Ivran on his sledge-ship" }
     if [:revenant_hask, :revenant_moirin, :revenant_tobe].count { |k| trainer_beaten?(k) } < 3
-      return say(["The far shore is close, but revenants are still walking the ice toward Ivran's ship.",
-                  "IVRAN: (from the rail) Not yet, Heralds! The ones behind us!"], event_id)
+      say(["The far shore is close, but revenants are still walking the ice toward Ivran's ship."], event_id)
+      Stage.pan_to(ship.x, ship.y) if ship                    # (he calls from back down the lane: show him)
+      say(["IVRAN: (from the rail) Not yet, Heralds! The ones behind us!"], event_id)
+      Stage.pan_back if ship
+      return
     end
+    # the ship comes up the last of the lane to meet you before it grinds ashore
+    Stage.walk_to(ship, FROZEN_RUN_STOPS.last[0], FROZEN_RUN_STOPS.last[1]) if ship && ship.x < FROZEN_RUN_STOPS.last[0]
     set_flag(:frozen_run_done)
     set_switch(SW_FROZEN_RUN, false)
     wheel(1)
