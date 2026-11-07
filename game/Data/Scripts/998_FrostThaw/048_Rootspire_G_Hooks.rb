@@ -171,12 +171,23 @@ module FrostThaw
       return nil
     end
     slot = Stage.near_slot or return nil
-    a = Stage.actor(tag.downcase.gsub(/[^a-z\-]+/, "_").to_sym, slot[0], slot[1], 2, graphic: graphic || WALK_ON_LOOKS[tag])
+    key = tag.downcase.gsub(/[^a-z\-]+/, "_")
+    look = graphic || WALK_ON_LOOKS[tag] || walk_on_look(key, tag)
+    a = Stage.actor(key.to_sym, slot[0], slot[1], 2, graphic: look)
     Stage.turn_to(a) if a
     a
   rescue StandardError => e
     log("walk_on #{tag}: #{e.message}")
     nil
+  end
+
+  # A look for someone not in the table: their own sheet if there is one, else a plain townsperson.
+  def walk_on_look(key, tag)
+    own = "FT_#{key.tr('-', '_')}"
+    return own if (pbResolveBitmap("Graphics/Characters/#{own}") rescue nil)
+    return "BW (62)" if tag =~ /WARDEN|GUARD/
+    return "BW_Sailor" if tag =~ /CORSAIR|MATE|SAILOR/
+    "BW (22)"
   end
 
   # Everyone named in these lines who isn't here and isn't a Herald steps up.
