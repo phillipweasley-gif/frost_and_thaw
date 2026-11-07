@@ -509,6 +509,11 @@ module FrostThaw
          "SELRAE: The goddess needs no throne. Only a heart that can hold light and cold together.",
          "SELRAE: Yours, perhaps.",
          "SELRAE: There's a vault in the ice, far north. The White Womb. They'd make a saint there."], event_id)
+    # (check 48: the player's hand on the beat; as that Herald, how you say it is the choice)
+    if !me
+      c = pbMessage(_INTL("She holds the dagger out to {1}, hilt first.", name), [_INTL("Step between them."), _INTL("Let {1} answer.", name)], 0)
+      say(["You step in front of #{name}. Selrae smiles at you as if that were an answer too."]) if c == 0
+    end
     if who == :shade
       speak(:shade, "My sister was somebody's vessel. I carried her out. Put the knife away, Matron.",
             "...Put the knife away.")

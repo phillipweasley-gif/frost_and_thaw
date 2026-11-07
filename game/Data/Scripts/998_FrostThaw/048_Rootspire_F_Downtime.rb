@@ -709,15 +709,17 @@ module FrostThaw
     me = herald?(:alberica)
     if flag?(:codex_fragment_1) && !flag?(:codex_fragment_2)
       # (the morning after she stopped at the first fragment)
-      say(["The Codex is warm on the bark floor, where #{me ? 'you' : 'Alberica'} left it. It opens by itself.",
-           "#{me ? 'You pick' : 'Alberica picks'} up the quill again."])
+      say(["The Codex is warm on the bark floor, where #{me ? 'you' : 'Alberica'} left it. It opens by itself."])
+      return if !codex_quill?(me)
+      say(["#{me ? 'You pick' : 'Alberica picks'} up the quill again."])
       Stage.overlay("O-03", above_panels: true, fade: 20) rescue nil
       codex_fragment_two
       return
     end
     if !flag?(:codex_fragment_2)
-      say(["Morning, through the Hearth's leaf-glass. #{me ? 'You sit' : 'Alberica sits'} cross-legged with the Codex.",
-           "The moment ink touches the first blank page, the room shifts, like a slow wheel turning.",
+      say(["Morning, through the Hearth's leaf-glass. #{me ? 'You sit' : 'Alberica sits'} cross-legged with the Codex."])
+      return if !codex_quill?(me)
+      say(["The moment ink touches the first blank page, the room shifts, like a slow wheel turning.",
            "The hum of the tree deepens, almost a voice:",
            "\"You have been here before... and not yet... and again still...\""])
       Stage.overlay("O-03", above_panels: true, fade: 20) rescue nil
@@ -735,8 +737,9 @@ module FrostThaw
       codex_fragment_two
       return
     end
-    say(["The next morning, the Codex opens on its own at the third blank page.",
-         "#{me ? 'You pick' : 'Alberica picks'} up the quill. It's already wet."])
+    say(["The next morning, the Codex opens on its own at the third blank page."])
+    return if !codex_quill?(me)
+    say(["#{me ? 'You pick' : 'Alberica picks'} up the quill. It's already wet."])
     Stage.overlay("O-03", above_panels: true, fade: 20) rescue nil
     say(["FRAGMENT THREE. The Council's missing pages.",
          "The quill moves on its own. A circle, cracked. Three names crossed out. A fourth, blank.",
@@ -755,6 +758,13 @@ module FrostThaw
     wheel(1)
     add_counter(:story_beats)
     alberica_rumours
+  end
+
+  # The morning's choice (check 48: the player's hand on it): write today, or let it wait.
+  def codex_quill?(me)
+    return true if pbConfirmMessage(_INTL(me ? "Pick up the quill?" : "Let Alberica pick up the quill?"))
+    say(["#{me ? 'You leave' : 'Alberica leaves'} it closed on the table. It hums, patiently. Another morning."])
+    false
   end
 
   def codex_fragment_two
