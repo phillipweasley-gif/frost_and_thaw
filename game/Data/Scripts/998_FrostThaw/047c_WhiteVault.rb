@@ -90,10 +90,12 @@ module FrostThaw
   TEXT.merge!(
     auril_relic_gone: ["Black ice, smashed. The frost-runes round it have gone to water."],
     vault_gate_shut: ["A door of white ice set into the glacier, three times the height of a giant.",
-                      "Carved across it: wings spread over a frozen eye. Three hollows in the eye, each the shape of a sigil."],
+                      "Carved across it: wings spread over a frozen eye.",
+                      "Three hollows in the eye, each the shape of a sigil."],
     vault_gate_open: ["The door of wings stands open. Cold breathes out, and under the cold, the hum of machinery."],
     vault_circuit_dead: ["The mirror circuit is dark. The reflections in it are only yours."],
-    vault_cradle_empty: ["The cradle is empty. Crystal dust, a broken mirror, the smell of hot metal on ice."]
+    vault_cradle_empty: ["The cradle is empty. Crystal dust, a broken mirror, the smell of hot metal on ice."],
+    vault_case: ["A case of ice behind the cradle. Inside it, something green catches the light."]
   )
 
   module_function
@@ -305,11 +307,17 @@ module FrostThaw
       sayc([cl(:alberica, "Last one, darlings. Then he stays down.")])
     end
     return if !pbConfirmMessage(_INTL("Smash Auril's relic?"))
-    say(["The runes flare. The cold stands up out of the shard and takes a shape: a woman of rime, faceless."])
+    # the warden rises on the map before the fight (notes 12 E11)
+    rel = event_id ? $game_map.events[event_id] : nil
+    Stage.fx("E-04", rel || $game_player, frames: 10, oy: 16) rescue nil
+    Stage.cry(:B429H215)
+    say(["The runes flare. The cold stands up out of the shard: a woman of rime, faceless."])
     return if !boss_battle(named_mon(:B429H215, 62, "Relic-Warden"))
     pbSEPlay("Ice8") rescue nil
-    say(["The shard cracks, and cracks again, and goes to black water on the root."])
+    Stage.fx("E-06", rel, frames: 10, oy: 16) rescue nil if rel
     set_flag(f)
+    relic_tiles
+    say(["The shard cracks, and cracks again, and goes to black water on the root."])
     left = relics_left
     if left == 0
       sayc(["Far away, north, a breath that was being held runs out.",
@@ -322,11 +330,27 @@ module FrostThaw
     end
   end
 
+  # A smashed relic's black ice is gone from the root (notes 12 E11): its event
+  # stays to be read ("smashed"), but shows nothing.
+  def relic_tiles
+    return if !$game_map
+    $game_map.events.values.each do |e|
+      next if e.name.to_s !~ /\AAuril's relic/
+      k = e.name[/\((\w+)\)/, 1]
+      f = k == "seal" ? :relic_seal : k.to_sym
+      next if !flag?(f)
+      e.instance_variable_set(:@tile_id, 0)
+      e.instance_variable_set(:@character_name, "")
+    end
+  rescue StandardError => e
+    log("relic tiles: #{e.message}")
+  end
+
   #-----------------------------------------------------------------------------
   # Sephek, the Major Avatar (SC 13.07, at the Crown) - the fight
   #-----------------------------------------------------------------------------
   def sephek_major_fight
-    say(["SEPHEK: Then let's see whose cold is colder."])
+    say(["SEPHEK: (quietly) Then I'm sorry. Again."])     # (dialogue 13: quietly sorry, not a stock taunt)
     ok = trainer(:crown_druid_ansel, nil)
     ok = trainer(:crown_druid_ilse, nil) && ok
     return false if !ok
@@ -380,8 +404,23 @@ module FrostThaw
       vault_pendant_returns
     end
     return if !flag?(:vault_door_unlocked) && !vault_pendant_turns
+    # the sentinels step out of the door on the map (notes 12 E11)
+    door = event_id ? $game_map.events[event_id] : nil
+    dx, dy = door ? [door.x, door.y] : [$game_player.x, $game_player.y - 2]
+    sents = [-1, 1].map { |o| Stage.actor(:mirror_sentinel, dx + o, dy, 2, graphic: "Followers/AEGISLASH") }.compact
+    sents.each { |e| e.opacity = 0 }
+    8.times { |i| sents.each { |e| e.opacity = 25 * (i + 1) }; Stage.wait(2) }
+    sents.each { |e| Stage.walk(e, PBMoveRoute::Down, wait_for: false) }
+    Stage.wait(16)
     say(["Behind the door, two things of mirror and iron stir: Mirror Sentinels, helmed and hollow."])
-    return if !boss_battle(named_mon(:B449H227, 72, "Mirror Sentinel"), named_mon(:B449H227, 72, "Mirror Sentinel"))
+    won = boss_battle(named_mon(:B449H227, 72, "Mirror Sentinel"), named_mon(:B449H227, 72, "Mirror Sentinel"))
+    if !won
+      sents.each { |e| Stage.remove_actor(e) }
+      return
+    end
+    sents.each { |e| Stage.fx("E-06", e, frames: 10, oy: 16, wait: false) rescue nil }
+    Stage.wait(20)
+    sents.each { |e| Stage.remove_actor(e) }
     say(["The sentinels come apart into plates of glass and lie still.", "The door of wings stands open."])
     set_flag(:vault_door_open)
     set_self_switch(event_id, "A") rescue nil
@@ -421,18 +460,32 @@ module FrostThaw
   # The Mirror Circuits: Avarice, only in the mirrors; three circuits feed her cradle.
   VAULT_CIRCUITS = %i[circuit_north circuit_east circuit_west]
 
+  AVARICE_BGM = "Powerplant & Pokemon Mansion Remix"    # the lab under the ice: her music
+  VAULT_PANES = [[14, 9], [18, 9], [14, 15], [18, 15]]     # the maze-panes on the Circuits map
+
+  # Avarice in every mirror (notes 12 E4, dialogue 12 Top 1): the light goes
+  # cold, her face fills the panes, her music comes in, and each whisper gets
+  # its Herald's answer. Her case is aimed at the ending you chose.
   def scene_vault_circuits
     return if flag?(:circuits_seen)
     set_flag(:circuits_seen)
     al = herald?(:alberica)
-    sayc(["Machinery under the ice: pipes of mirror-glass, brass wheels the size of houses, all of it humming.",
-          "Every mirror shows you. Then, one by one, every mirror shows her.",
-          "White hair. Infernal sigils. A smile like arithmetic.",
+    say(["Machinery under the ice: mirror-glass pipes, brass wheels the size of houses, humming."])
+    $game_screen.start_tone_change(Tone.new(-30, -15, 25, 140), 20) rescue nil
+    pbBGMFade(1.0) rescue nil
+    say(["Every mirror shows you. Then, one by one, every mirror shows her."])
+    # (the nearer panes first, so her bubble lands on one you can see; the camera lifts to take them in)
+    panes = VAULT_PANES.sort_by { |_x, y| -y }.map { |x, y| Stage.actor(:avarice, x, y, 2, graphic: "FT_avarice") }.compact
+    Stage.pan_to($game_player.x, [$game_player.y - 4, 15].max)
+    panes.each { |e| e.opacity = 0; Stage.turn_to(e) }
+    8.times { |i| panes.each { |e| e.opacity = 18 * (i + 1) }; Stage.wait(2) }
+    pbBGMPlay(AVARICE_BGM) rescue nil
+    sayc(["White hair. Infernal sigils. A smile like arithmetic.",
           "AVARICE: (from every mirror at once) Variables that refused to die. How untidy.",
           cl(:alberica, "(very still) We froze you. At her throne. We watched it hold."),
           al ? "AVARICE: You froze a mirror, songbird. Did you think I kept only one?" :
                "AVARICE: You froze a mirror, Alberica. Did you think I kept only one?",
-          "AVARICE: A little of me lived in every mirror I ever made. A little is all I've ever needed."])
+          "AVARICE: A little of me lived in every mirror I made. A little is all I've ever needed."])
     if with_or_is?(:meat_meat)
       say([herald?(:meat_meat) ? "(She says your number. V-7. Then, softly, the sound you made the day you were born.)" :
                                  "AVARICE: (to Meat Meat) V-7. I still have the sound you made the day you were made."])
@@ -450,16 +503,26 @@ module FrostThaw
       say(["AVARICE: (to Wyn) Little shadow. You'd make a lovely lens."])
       cline(:wyn, "(very quietly) ...Sableye doesn't like you. He's usually right.")
     end
-    sayc(["AVARICE: Draconic essence, and divine. Razzy's scale core and V-7's blood, and a season I can wind like a clock.",
-          "AVARICE: The Seraph-Draco: a living god of ordered seasons. No more wheel. Just the schedule.",
+    say(["AVARICE: Razzy's scale core. V-7's blood. And a season I can wind like a clock."])
+    cline(:meat_meat, "Razzy's OLD scales. From the lab. Razzy is a DRAGON now.", "...Razzy's old scales. Razzy is a dragon now.")
+    # her case, against the ending you chose (dialogue 12 §1a)
+    sayc([flag?(:ending_shatter) ? "AVARICE: You broke a god for a sunrise. I'll build you a better one." :
+          flag?(:ending_third_way) ? "AVARICE: You let winter go round again. Sloppy. I'd have put it on a schedule." : nil,
+          "AVARICE: The Seraph-Draco. A god of ordered seasons. No Rime, no Summer. Just the schedule.",
           "AVARICE: Come to the cradle. You were always going to.",
           cl(:meat_meat, "Meat Meat is coming. Meat Meat is bringing her teeth.")])
+    8.times { |i| panes.each { |e| e.opacity = 144 - 18 * (i + 1) }; Stage.wait(2) }
+    panes.each { |e| Stage.remove_actor(e) }
+    Stage.pan_back
+    $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 20) rescue nil
+    Stage.theme(nil)
+    # what the circuits do, always (notes 12 E9): the map pieces only say where
     if vault_map_pieces >= 3
-      say(["(The three map fragments fit together in your head: three circuits feed the cradle. North, east and west.)",
-           "(Break them, and whatever's waiting in the cradle will be weaker for it.)"])
+      say(["(The three map pieces fit together: three circuits feed the cradle. North, east, west.)"])
     else
       say(["(The machinery runs in three great circuits. Each one hums toward the far door.)"])
     end
+    say(["(Break them, and whatever's waiting in the cradle will be weaker for it.)"])
   end
 
   def vault_circuit(key, event_id = nil)
@@ -467,83 +530,132 @@ module FrostThaw
     say(["A ring of mirror-glass turning inside a ring of brass. In every pane, her face, smiling."], event_id)
     return if relic_stops_circuit(key)
     return if !pbConfirmMessage(_INTL("Break the circuit?"))
+    ring = event_id ? $game_map.events[event_id] : nil
+    wr = ring ? Stage.actor(:wraith, ring.x, ring.y + 1, 2, graphic: "Followers/MISMAGIUS_fly") : nil
+    wr.opacity = 170 if wr
     say(["The panes turn toward you. Ink runs out of them and stands up: a Mirror-Ink Wraith."])
-    return if !boss_battle(named_mon(:B429H200, 71, "Mirror-Ink Wraith"))
-    say(["The wraith spatters across the ice. The ring grinds to a stop, and the mirrors go dark one by one."])
+    won = boss_battle(named_mon(:B429H200, 71, "Mirror-Ink Wraith"))
+    Stage.fx("E-09", wr, frames: 9, oy: 16) rescue nil if wr && won
+    Stage.remove_actor(wr) if wr
+    return if !won
+    say(["The wraith spatters across the ice. The ring grinds to a stop. The mirrors go dark one by one."])
     set_flag(key)
     left = VAULT_CIRCUITS.count { |k| !flag?(k) }
     say([left == 0 ? "(All three circuits are dark. Far off, something in a cradle stops humming.)" :
                      "(#{left} circuit#{left == 1 ? '' : 's'} still turning.)"])
   end
 
-  def scene_vault_cradle
+  # The Seraph Cradle (notes 12 E10, E16, E17, E22): Avarice is the event on
+  # the map, so her lines bubble on her; the needle, the ward and the crack are
+  # shown; the core is given after the moment that gives it; a retry is short.
+  def scene_vault_cradle(event_id = nil)
     return if flag?(:avarice_body_broken)
     mm = herald?(:meat_meat)
-    if flag?(:mira_left_possessed)
-      # rootspire.md 1079: left possessed, Mira becomes Avarice's new body.
-      sayc(["A cradle of brass and mirror at the heart of the glacier.",
-            "In it, Mira of the North Wind sits up. Her black hair has gone white. Her skin is turning to crystal from the fingertips in.",
-            "AVARICE: (in Mira's voice, only one voice now) You left her to me. On her own ship. With her daughter watching.",
-            herald?(:meat_meat) ? "(You remember. You said you would.)" : cl(:meat_meat, "(white to the lips) Meat Meat said. Meat Meat SAID she would remember.")])
+    av = event_id ? $game_map.events[event_id] : stage_event("Avarice")
+    av.character_name = "FT_mira_possessed" if av && flag?(:mira_left_possessed) rescue nil
+    if flag?(:cradle_seen)
+      say(["AVARICE: Again? I do love a repeatable experiment."], event_id)
+    else
+      if flag?(:mira_left_possessed)
+        # rootspire.md 1079: left possessed, Mira becomes Avarice's new body.
+        sayc(["A cradle of brass and mirror at the heart of the glacier.",
+              "In it, Mira of the North Wind sits up. Her black hair has gone white.",
+              "Her skin is turning to crystal, from the fingertips in.",
+              "AVARICE: (in Mira's voice) You left her to me. On her own ship. Her daughter watching.",
+              herald?(:meat_meat) ? "(You remember. You said you would.)" : cl(:meat_meat, "(white to the lips) Meat Meat said. Meat Meat SAID she would remember.")], event_id)
+        Stage.hop(av) if av
+        sayc(["Mira's body stands. Machinery unfolds around it like a dress being fitted."], event_id)
+      else
+        say(["A cradle of brass and mirror at the heart of the glacier."], event_id)
+        Stage.hop(av) if av
+        say(["In it, a woman of crystal sits up, framed in machinery. She's smiling like a sum."], event_id)
+      end
+      case_ev = stage_event("Case of ice")
+      Stage.pan_to(case_ev.x, case_ev.y + 2) if case_ev
+      sayc(["Behind her, in a case of ice, a crystal grown round green scales: RAZ-MKIII.",
+            "AVARICE: (stretching, with a sound like a chandelier) There you are. Right on time."], event_id)
+      Stage.pan_back if case_ev
+      if with_or_is?(:meat_meat)
+        mev = mm ? $game_player : Stage.summon(:meat_meat)
+        Stage.fx("E-07", mev, frames: 8, oy: 16, wait: false) rescue nil if mev   # the needle's glint
+        sayc([mm ? "A needle of mirror-glass slides out of the cradle toward your arm." :
+                   "A needle of mirror-glass slides out of the cradle toward Meat Meat's arm.",
+              "AVARICE: A drop. Only a drop, V-7. You owe me at least that.",
+              mm ? "(You bite the needle in half.)" : "MEAT MEAT: (biting the needle in half) Meat Meat owes you NOTHING."], event_id)
+        if with_or_is?(:reptin) && !herald?(:reptin) && mev
+          rep = Stage.summon(:reptin)
+          Stage.walk_to(rep, mev.x, mev.y - 1, face: 8) if rep && !mm
+        end
+      end
+      sayc([cl(:reptin, "(stepping in front of her) No. Not her. Ask me instead."),
+            cl(:alerion, "You faked your death to hide in an icebox. Come out."),
+            "AVARICE: Oh, I'll come out."], event_id)
+      verdant_blade_cuts_ward
+      # what the rings did (notes 12 E9): the player sees the circuits pay
+      dark = VAULT_CIRCUITS.count { |k| flag?(k) }
+      if dark > 0
+        say(["(#{dark == 3 ? 'All three' : dark == 2 ? 'Two' : 'One'} of her rings #{dark == 1 ? 'is' : 'are'} dark. " \
+             "Her body flickers where #{dark == 1 ? 'it' : 'they'} fed it.)"])
+      end
+      set_flag(:cradle_seen)
+      trainer_intro(:avarice_vault, event_id)
     end
-    sayc([flag?(:mira_left_possessed) ? nil : "A cradle of brass and mirror at the heart of the glacier.",
-          flag?(:mira_left_possessed) ? "Mira's body stands. Machinery unfolds around it like a dress being fitted." :
-                                        "In it, a woman made of crystal sits up. Her body mirrors the Mirror Mother's, framed in machinery.",
-          "Behind her, in a case of ice, a crystal grown round one green scale: RAZ-MKIII.",
-          "AVARICE: (stretching, with a sound like a chandelier) There you are. Right on time."])
-    if with_or_is?(:meat_meat)
-      sayc([mm ? "A needle of mirror-glass slides out of the cradle toward your arm." :
-                 "A needle of mirror-glass slides out of the cradle toward Meat Meat's arm.",
-            "AVARICE: A drop. Only a drop, V-7. You owe me at least that.",
-            mm ? "(You bite the needle in half.)" : "MEAT MEAT: (biting the needle in half) Meat Meat owes you NOTHING."])
-    end
-    sayc([cl(:reptin, "(stepping in front of her, as he did at the Forge) No. Not her. Not ever."),
-          cl(:alerion, "You faked your death to hide in an icebox. Come out."),
-          "AVARICE: Oh, I'll come out."])
-    circuits = VAULT_CIRCUITS.count { |k| flag?(k) } + verdant_blade_cuts_ward
+    circuits = VAULT_CIRCUITS.count { |k| flag?(k) } + (flag?(:blade_cut_ward) ? 1 : 0)
     type, name = TRAINERS[:avarice_vault]
     $ft_avarice_circuits = circuits
     won = pbTrainerBattle(type, name, nil, false, 0) ? true : false
     $ft_avarice_circuits = 0
     return if !won
+    Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
     say(["Her crystal body cracks across, from the crown down.",
-         "Something pours out of it that isn't light: her, a smear of mirror, fleeing into the glass."])
+         "Something pours out of it that isn't light: her, a smear of mirror, fleeing into glass."])
     if flag?(:mira_left_possessed)
       sayc(["What's left in the cradle is Mira, or most of her: crystal to the elbows, breathing.",
             "MIRA: (one voice, very small) ...Is my girl warm? Somebody tell me she's warm.",
-            cl(:alberica, "(kneeling, taking her crystal hands) She's warm, darling. She's on the ship. She's waiting."),
-            "Mira never sails again. But she lives."])
+            cl(:alberica, "(taking her crystal hands) She's warm. She's on the ship. She's waiting."),
+            "Mira never sails again. But she lives."], event_id)
       set_flag(:mira_freed_late)
+    elsif av
+      av.opacity = 110                                   # (what stands there now is her reflection)
     end
     soul = named_mon(AVARICE_SOUL, 76, "Avarice's Reflection")
     broken = circuits
     if flag?(:chapel_avarice)
       # (the Silent Chapel: you answered the fire, and a door you open stays open)
-      say(["AVARICE'S REFLECTION: (warmly) You answered me once, in my little chapel. Leave the engine running, I said. You listened.",
-           "AVARICE'S REFLECTION: A door you open for me stays open, darlings."])
+      say(["AVARICE'S REFLECTION: (warmly) You answered me once, in my little chapel.",
+           "AVARICE'S REFLECTION: Leave the engine running, I said. You listened.",
+           "AVARICE'S REFLECTION: A door you open for me stays open, failures."])
       broken = [circuits - 1, 0].max
     end
     soul.hp = [(soul.totalhp * (1.0 - 0.2 * broken)).floor, 1].max
     caught = boss_battle(soul)
     if caught
+      Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
+      av.opacity = 0 if av && !flag?(:mira_left_possessed)
       sayc(["Her reflection shatters, and every splinter of it goes dark.",
             "AVARICE: (very small, from no mirror at all) ...Recalculating..."])
     else
+      av.opacity = 0 if av && !flag?(:mira_left_possessed)
       sayc(["Her reflection slides deep into the glacier, laughing. Frostina breathes after it,",
             "and the ice closes over it a mile thick. It doesn't thaw."])
     end
+    case_ev = stage_event("Case of ice")
+    Stage.fx("E-06", case_ev, frames: 10, oy: 16) rescue nil if case_ev
+    case_ev.opacity = 0 if case_ev
     if flag?(:scale_core_given)
-      sayc(["The case of ice cracks open. Empty, except for a label in the neat white hand: RAZ-MKIII CORE. RECOVER FROM THE CORSAIRS.",
+      sayc(["The case of ice cracks open. Empty, but for a label in a neat white hand:",
+            "RAZ-MKIII CORE. RECOVER FROM THE CORSAIRS.",
             cl(:meat_meat, "(patting her pack) Mira gave it to Meat Meat. She never got it back. Ha.")])
     else
+      say(["The case of ice cracks open. A crystal core drops into your hands.",
+           "Green wyrmling scales, grown into crystal. RAZ-MKIII. It's warm."])
       give_key(:FT_SCALECORE)
-      sayc(["The case of ice cracks open. A crystal core grown round a cluster of green wyrmling scales drops into your hands. RAZ-MKIII. It's warm.",
-            cl(:meat_meat, "(holding it against her chest) Razzy's. From the cold table. Meat Meat keeps this. Forever.")])
+      sayc([cl(:meat_meat, "(hugging it) Razzy's. From the cold table. Meat Meat keeps this. Forever.")])
       set_flag(:scale_core_given)
     end
-    sayc([
-          cl(:alberica, "Why do the clever ones never stay dead?"),
-          cl(:wyn, "...It's quiet down here now. She's stopped counting.")])
+    sayc([cl(:alberica, "Why do the clever ones never stay dead?"),
+          caught ? cl(:wyn, "...It's quiet down here now. She's stopped counting.") :
+                   cl(:wyn, "(very quietly) ...Like spores. You never get all of them.")])
     set_flag(:avarice_revealed)
     set_flag(:avarice_body_broken)
     set_flag(:avarice_soul_shattered) if caught
@@ -558,15 +670,16 @@ module FrostThaw
   def avarice_at_the_throne
     return if flag?(:avarice_ended)
     if flag?(:avarice_body_broken)
-      sayc(["In the throne room's ice wall, a splinter of mirror catches the diamond's light. A face moves in it.",
-            "AVARICE: (thin as a draught under a door) A god in a gem. The last variable. Give it to me, failures.",
+      sayc(["In the ice wall, a splinter of mirror catches the diamond's light. A face moves in it.",
+            "AVARICE: (thin as a draught) A god in a gem. The last variable. Give it to me, failures.",
             "The splinter strains toward the diamond. It has nothing left to strain with."])
       sayc([herald?(:meat_meat) ? "(You walk over, and step on it.)" : (with_or_is?(:meat_meat) ? "Meat Meat walks over, and steps on it." : "You walk over, and step on it."),
             "It goes out like a spark in snow.",
-            cl(:meat_meat, "That is for Razzy's voice. Meat Meat stamped. Meat Meat is DONE.")])
+            cl(:meat_meat, "That is for Razzy's voice. Meat Meat is DONE.")])
     else
       sayc(["Behind the throne the ice wall turns to a mirror, and she steps out of it."])
-      av = (Stage.actor(:avarice, $game_player.x + 1, $game_player.y - 4, 2) rescue nil)
+      av = (Stage.actor(:avarice, $game_player.x + 1, $game_player.y - 4, 2, graphic: "FT_avarice_reforged") rescue nil)
+      Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
       sayc(["A woman of crystal in machinery: white hair, infernal sigils, a smile like arithmetic.",
             herald?(:alberica) ? "You're on your knees. You don't believe it. (No. No, we watched you burn.)" :
                                  cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
@@ -580,13 +693,17 @@ module FrostThaw
       won = pbTrainerBattle(type, name, nil, false, 0, true) ? true : false
       pbFadeOutIn { $Trainer.heal_party } rescue nil
       if won
-        say(["Her crystal body cracks across, from the crown down, and her reflection runs out of it into the ice.",
+        Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
+        say(["Her crystal body cracks across, from the crown down. Her reflection runs out of it into the ice.",
              "Frostina breathes on the ice. It freezes solid, with the reflection inside it, and doesn't thaw."])
       else
-        say(["She reaches for the diamond. Razzilith gets there first, and bites her hand off at the wrist.",
+        say(["She reaches for the diamond. Razzilith gets there first and bites her hand off at the wrist.",
              "Frostina breathes on the ice wall, and the mirror freezes solid with her in it."])
       end
+      Stage.fx("E-04", av, frames: 10, oy: 16) rescue nil if av
       Stage.remove_actor(av) if av
+      # Razzy's voice, paid at last (dialogue 12 §1a: the short branch can't play on the main path now)
+      sayc([cl(:meat_meat, "(to the ice) That is for Razzy's voice. Meat Meat is DONE.")])
       set_flag(:avarice_revealed)
     end
     set_flag(:avarice_ended)
@@ -598,6 +715,7 @@ module FrostThaw
     $game_switches[SW_AURIL_RELICS] = flag?(:sephek_risen) && !flag?(:auril_relics_destroyed) && !flag?(:frostina_freed)
     $game_switches[SW_SIGILS_MERGED] = flag?(:sigils_merged)
     $game_switches[SW_VAULT_BROKEN] = flag?(:avarice_body_broken)
+    relic_tiles
   end
 end
 
@@ -641,14 +759,16 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   CIRCUIT_RELICS = {
     circuit_west:  [:FT_HEARTWARDENSTAFF, :reptin,
-                    "The Heartwarden's Staff wakes in your hands. Its roots reach for the brass, find it, and close.",
-                    "The ring grinds, strains, and stops, held fast in living wood. Somewhere a tree four hundred years away leans, very slightly, toward you."],
+                    ["The Heartwarden's Staff wakes. Its roots reach for the brass, find it, and close.",
+                     "The ring grinds, strains, and stops, held fast in living wood.",
+                     "Somewhere a tree four hundred years away leans, very slightly, toward you."]],
     circuit_east:  [:FT_RIMEMANTLE, :alerion,
-                    "The Rime Mantle's frost answers the mirror-frost. Cold to cold: the panes fog over, white, blind.",
-                    "Her face goes out of every pane at once. A ring of mirrors that can't see itself doesn't know which way to turn."],
+                    ["The Rime Mantle's frost answers the mirror-frost. Cold to cold: the panes fog white.",
+                     "Her face goes out of every pane at once.",
+                     "A ring of mirrors that can't see itself doesn't know which way to turn."]],
     circuit_north: [:FT_WHISPERKEY, :alberica,
-                    "The Whisper Key hums in its tuning, then fits the ring's empty heart as if it was cut for it.",
-                    "A turn. A note like a held breath. The ring remembers it was only brass and glass once, and stops."]
+                    ["The Whisper Key hums, then fits the ring's empty heart as if it was cut for it.",
+                     "A turn, a held note. The ring remembers it was only brass and glass once, and stops."]]
   }
 
   def relic_owned?(item)
@@ -657,12 +777,13 @@ module FrostThaw
   end
 
   def relic_stops_circuit(key)
-    item, who, line1, line2 = CIRCUIT_RELICS[key]
+    item, who, lines = CIRCUIT_RELICS[key]
     return false if !item || !relic_owned?(item)
     name = (GameData::Item.get(item).name rescue item.to_s)
-    say(["#{name} stirs. It knows this ring."])
+    owner = herald?(who) ? "Your" : "#{COMPANION_NAMES[who].to_s.split.map(&:capitalize).join(' ')}'s"
+    say(["#{owner} #{name} stirs. It knows this ring."])      # (whose it is: first-time player 11)
     return false if !pbConfirmMessage(_INTL("Hold the {1} to the circuit?", name))
-    say([line1, line2])
+    say(lines)
     sayc([cl(who, who == :reptin ? "(very quietly) Steady. Hold. That's all a root ever does." :
                   who == :alerion ? "Let her look for herself in the fog." :
                                     "(turning the key) Keys open. They also lock. A goddess told me that.")].compact)
@@ -677,8 +798,8 @@ module FrostThaw
   # The Verdant Blade at the cradle: Meat Meat's relic cuts one ward.
   def verdant_blade_cuts_ward
     return 0 if !relic_owned?(:FT_VERDANTBLADE)
-    sayc(["The Verdant Blade is warm in #{herald?(:meat_meat) ? 'your' : "Meat Meat's"} hand. Its mirrored steel shows no face at all, not even hers.",
-          "#{herald?(:meat_meat) ? 'You cut' : 'Meat Meat cuts'} one of the mirror-wards round the cradle. It falls like a sheet of water and doesn't get up.",
+    sayc(["The Verdant Blade warms in #{herald?(:meat_meat) ? 'your' : "Meat Meat's"} hand. Its mirrored steel shows no face at all.",
+          "#{herald?(:meat_meat) ? 'You cut' : 'Meat Meat cuts'} a mirror-ward round the cradle. It falls like water and stays down.",
           cl(:meat_meat, "Meat Meat's blade. Meat Meat's rules. No mirrors.")].compact)
     set_flag(:blade_cut_ward)
     1
@@ -742,12 +863,21 @@ module FrostThaw
         set_flag(:eline_final_foe)
       end
     elsif stage == :after && flag?(:eline_spared)
-      eline_actor rescue nil
-      say(["Cold rolls out under the throne-room door in one last wave, at all of you, at him.",
-           "Eline steps into it. She doesn't say anything at all.",
-           "When it passes, she's kneeling where she stood, frosted white from her hair to her open hands, and she doesn't get up.",
-           "SEPHEK: (on his knees beside her) ...Eline. Eline, you didn't have to. You never had to.",
-           cl(:wyn, "(very quietly) She chose. Somebody let her, once.")].compact)
+      # the wave comes from the throne-room door, and she walks into it on screen (notes 13 E4)
+      el = (eline_actor rescue nil)
+      say(["Cold rolls out under the throne-room door in one last wave, at all of you, at him."])
+      $game_screen.start_flash(Color.new(230, 245, 255, 220), 16) rescue nil
+      Stage.walk(el, PBMoveRoute::Up) if el
+      say(["Eline steps into it. She doesn't say anything at all."])
+      if el
+        Stage.fx("E-04", el, frames: 10, oy: 16) rescue nil
+        el.opacity = 150
+      end
+      sayc(["When it passes, she's kneeling where she stood, frosted white to her open hands.",
+            "She doesn't get up.",
+            "SEPHEK: (on his knees beside her) ...Eline. Eline, you didn't have to. You never had to.",
+            cl(:wyn, "(very quietly) She chose. Somebody let her, once."),
+            cl(:alberica, "(quietly) ...Somebody should sit with her. After.")])
       set_flag(:eline_fate)
       set_flag(:eline_martyred)
     end

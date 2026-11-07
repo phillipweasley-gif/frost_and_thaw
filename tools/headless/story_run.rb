@@ -886,7 +886,7 @@ module Story
       travel(2169); HL.frames(20); HL.settle(3000)
       %w[west east north].each { |k| until_flag(:"circuit_#{k}", 2) { travel(2169); talk(/Circuit #{k}/) } }
       fit(66)
-      until_flag(:avarice_body_broken, 3) { travel(2170); talk(/Avarice's cradle/) }
+      until_flag(:avarice_body_broken, 3) { travel(2170); talk(/^Avarice$/) }
       beat("side: Avarice Reforged, in the Seraph Cradle (#{FrostThaw.flag?(:avarice_soul_shattered) ? 'shattered' : 'fled north'})", :avarice_revealed)
       travel(2163); ev = find_event(/The Wall, closing/)
       if ev then HL.walk_to(ev.x + 1, ev.y); HL.step(4); HL.settle(3000) end
