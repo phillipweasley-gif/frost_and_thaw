@@ -105,6 +105,16 @@ module FrostThaw
       "Tirena's compass. Its needle ignores north and points at the nearest place where the world is thin.", 2, 0, 6]
   )
 
+  # Two key items the scene pass added (notes/15 E6, E19), registered on their
+  # own numbers after the Vault's key so no other item's number moves.
+  SCENE2H_ITEMS = {
+    FT_WARMORE: ["Lump of Warm Ore", "Lumps of Warm Ore", 8, 0,
+      "Black ore from the Smuggler's Run, warm as a hand, smelling of smoke shut up in stone. The tag said SAP-SMITH.", 0, 0, 6],
+    FT_WAXMAP: ["Viessa's Wax Map", "Viessa's Wax Maps", 8, 0,
+      "Viessa's map of Rootspire, spattered with wax wherever her candles went sideways. Six places. Read it to see them.", 2, 0, 6]
+  }
+  SCENE2H_ITEM_NUMBER = 9620
+
   MARTS.merge!(
     # 1. Run & Bloom Apothecary (Trunk-Tier, Spring; Bryn of Spring, Nivva at the annex stand)
     run_bloom:   [:POTION, :SUPERPOTION, :HYPERPOTION, :FT_SANGUINETONIC, :FT_VITALITYPHIAL, :FT_RENEWALDRAUGHT,
@@ -238,4 +248,33 @@ module FrostThaw
     homunculus: [2055, 20, 23], weasel: [2189, 26, 39], wraithling: [2050, 43, 18], rune_beetle: [2190, 6, 8],
     raven: [2055, 15, 6], lurker: [2053, 12, 9]
   }
+end
+
+# The scene pass's two key items, on their own numbers (see SCENE2H_ITEMS).
+module GameData
+  class << self
+    alias ft_scene2h_load_all load_all unless method_defined?(:ft_scene2h_load_all)
+    def load_all
+      ft_scene2h_load_all
+      begin
+        n = FrostThaw::SCENE2H_ITEM_NUMBER
+        FrostThaw::SCENE2H_ITEMS.each do |id, (name, plural, pocket, price, desc, field, battle, type)|
+          it = GameData::Item.new(id: id, id_number: n, name: name, name_plural: plural, pocket: pocket,
+                                  price: price, description: desc, field_use: field, battle_use: battle, type: type)
+          it.define_singleton_method(:name) { name }
+          it.define_singleton_method(:name_plural) { plural }
+          it.define_singleton_method(:description) { desc }
+          GameData::Item::DATA[id] = it
+          GameData::Item::DATA[n] = it
+          n += 1
+        end
+      rescue StandardError => e
+        FrostThaw.log("Scene-pass key items failed: #{e.message}")
+      end
+    end
+  end
+end
+
+if defined?(ItemHandlers::UseInField)
+  ItemHandlers::UseInField.add(:FT_WAXMAP, proc { |_item| FrostThaw.wax_map_use; next 1 })
 end
