@@ -102,7 +102,7 @@ sw.event(20, 20, "Selrae Vorn", [
   { switch: SW_SELRAE, graphic: "", through: true }
 ])
 # the two Rootwardens standing over Selrae, "unsure who they're guarding" (notes 07 E5); they go up with her
-[[19, 19, "Rootwarden"], [21, 19, "Rootwarden 2"]].each do |x, y, n|
+[[19, 19, "Selrae's warden 1"], [21, 19, "Selrae's warden 2"]].each do |x, y, n|
   sw.event(x, y, n, [{ graphic: "BW (72)", direction: 2, script: "FT.talk(:selrae_guard, @event_id)" },
                      { switch: SW_SELRAE, graphic: "", through: true }])
 end

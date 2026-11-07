@@ -375,6 +375,7 @@ module FrostThaw
          "EIRWEN: I've never known who to show it to. And there's a sub-vault. Alberica's.",
          "EIRWEN: Her students wrote it into the founding charter: a case only she may open.",
          "EIRWEN: A lovely, safe, symbolic thing to write. Until about an hour ago.",
+         T.cl(:alberica, "(very quietly) A case. Of mine. ...Huh.") || "Somewhere in the shelves, a leaf rustles.",
          T.with_or_is?(:alberica) ? "EIRWEN: (to #{T.herald?(:alberica) ? 'you' : 'Alberica'}, shy) I've read every verse you wrote. Here they're scripture." : nil,
          T.with_or_is?(:alberica) ? "EIRWEN: I never thought I'd have to stand in front of the author and be sensible about it." : nil,
          "EIRWEN: The chronal leaves are yours to read, whenever you like. They remember days."].compact
@@ -391,7 +392,8 @@ module FrostThaw
                    "LORN SCRIBE: The staff stands with the first Wardens, in sap clear as glass.",
                    "His pen doesn't stop.",
                    "LORN SCRIBE: The mantle waits where the world stops at the wall of light.",
-                   "LORN SCRIBE: The key is in this room. It always was. Begin where the year sleeps."]
+                   "LORN SCRIBE: The key is in this room. It always was. Begin where the year sleeps.",
+                   "He dips his pen. He hasn't looked up once."]
     },
     wennen_scholar: ["A Wennen scholar copies old carvings onto leaf-paper.",
                      "WENNEN SCHOLAR: Old Wennen. 'Dragon Warriors.' Partners of dragons. Never masters.",
@@ -866,6 +868,7 @@ module FrostThaw
           "WYNSNOW: Never into a person. That's Joining, and it's forbidden.",
           cl(:meat_meat, "...Why forbidden?"),
           "WYNSNOW: Because the last person who tried it made monsters. A pale woman. Long ago.",
+          cl(:alerion, "(very quietly) Naerth's pale lady."),
           herald?(:meat_meat) ? "(You don't say anything. Your hands have gone cold.)" : (with_or_is?(:meat_meat) ? "Meat Meat doesn't say anything else. She puts her hands in her pockets." : nil),
           # (dialogue 06 §4: the subtext stays subtext)
           (with_or_is?(:meat_meat) && with_or_is?(:alberica) && !herald?(:meat_meat) ?

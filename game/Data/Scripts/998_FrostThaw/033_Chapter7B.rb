@@ -148,7 +148,7 @@ module FrostThaw
     end
     ce = stage_event(event_id)
     cx, cy = stage_spot(ce)
-    halo = Stage.actor(:"halo#{n}", $game_player.x + (cx <=> $game_player.x), $game_player.y - 1, 2,
+    halo = Stage.actor(n == 1 ? :tarn : :odile, $game_player.x + (cx <=> $game_player.x), $game_player.y - 1, 2,
                        graphic: n == 1 ? "FT_halo_disciple_male" : "FT_halo_disciple_female") if Stage.map?
     sayc(["A Guild sap cache: amber fuel bricks stacked to the ceiling.",
           "A fuse of oiled cord runs into it. The cord is smoking.",
@@ -242,6 +242,7 @@ module FrostThaw
     end
     sayc(["HEW: My last ladder runs past the south cache, to a door I was told never to open.",
           "HEW: Iron and glass. Summer's people again.",
+          cl(:reptin, "(dryly) They do get about.") || "Hew spits into the dust.",
           "HEW: They had the only key, and took it down the Root-Gate. Find them, you'll find it.",
           "You're halfway to the door when he calls after you.",
           "HEW: Wait. Take this down with you.",
@@ -626,7 +627,7 @@ module FrostThaw
          "SELRAE: The Root-Key. Summer gave Winter a copy. To keep me quiet, I think."])
     give_key(:FT_ROOTKEY)
     sel = stage_event(event_id)
-    guards = [Stage.find("Rootwarden"), Stage.find("Rootwarden 2")].compact
+    guards = [Stage.find("Selrae's warden 1"), Stage.find("Selrae's warden 2")].compact
     if c == 1
       set_flag(:selrae_ahead)
       sayc(["SELRAE: I'll only slow you. No. I'll go ahead.",

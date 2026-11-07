@@ -207,7 +207,7 @@ cave_bridge_h(rt, 31, 37, 8)                                   # the Split Dock'
 rt.warp(6, 2, ID[:rootspire], 14, 10, 2, name: "Stair up")
 rt.cutscene(4, 3, :root_tier_arrival)
 rt.npc(28, 9, "BW (38)", :split_dock_fisher, dir: 6, name: "Fisher")
-rt.event(37, 8, "Boreal Requiem gangplank", [{ graphic: "BW_Sailor", direction: 4, script: "FT.boreal_requiem(@event_id)" }])
+rt.event(37, 8, "Boreal Requiem gangplank (Corsair)", [{ graphic: "BW_Sailor", direction: 4, script: "FT.boreal_requiem(@event_id)" }])
 # SC 7B.04: once she's herself again, Mira and her daughter stand on the pier
 npc_when(rt, 36, 9, "FT_mira_of_the_north_wind", :mira_after, 3974, dir: 8, name: "Mira of the North Wind")
 npc_when(rt, 35, 9, "BW (17)", :mira_daughter, 3974, dir: 8, name: "Mira's daughter")

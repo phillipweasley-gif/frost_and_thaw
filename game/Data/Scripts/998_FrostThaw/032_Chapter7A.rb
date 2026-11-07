@@ -437,6 +437,8 @@ module FrostThaw
   def lake_purification
     return if flag?(:lake_ritual_done)
     yarro = flag?(:yarro_errand_done)
+    ya = Stage.actor(:yarro, $game_player.x - 3, $game_player.y, 6, graphic: "FT_myconid_yarro") if Stage.map?
+    Stage.walk_to(ya, $game_player.x - 1, $game_player.y, face: 6) if ya     # (he comes down on screen: notes 07 E5)
     say([yarro ? "Yarro comes padding down the root-tunnel with his jars, humming. He knows how this ends." :
                  "Yarro comes padding down the root-tunnel with his jars, out of breath.",
          yarro ? nil : "YARRO: The lake! Don't let it scar!",
@@ -454,6 +456,7 @@ module FrostThaw
     end
     say(["YARRO: (tipping the jar into the water) Now. Ask her for the rain."])
     set_flag(:lake_ritual_done)
+    Stage.leave(ya, $game_player.x - 4, $game_player.y) if ya
   end
 
   #-----------------------------------------------------------------------------

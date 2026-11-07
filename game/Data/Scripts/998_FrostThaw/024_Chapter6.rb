@@ -296,7 +296,8 @@ module FrostThaw
     say([cl(:alberica, "(looking at her empty hands) I was holding it. In the Chasm. It was a seed."),
          cl(:reptin, "(looking up, and up, and up) It isn't a seed any more.")].compact)
     speak(:meat_meat, "Razzy? Razzy is gone. Razzy was holding on...", "...Razzy?") if with_or_is?(:meat_meat)
-    say([cl(:alberica, "(a hand on #{herald?(:meat_meat) ? 'your' : "Meat Meat's"} shoulder) We'll find him, sweetheart. He can't hide forever."),
+    Stage.actor(:lantern_seller, px + 2, py + 1, 4, graphic: "BW (30)") if Stage.map?   # (the stall the lantern came from)
+    say([cl(:alberica, "(a hand on #{herald?(:meat_meat) ? 'your' : "Meat Meat's"} shoulder) We'll find him, sweetheart."),
          "LANTERN SELLER: ...Refunds are at the other stall.",
          cl(:shade, "Noted."),
          "Down the street, the Rooted Hearth's windows are lit.", "The crowd is already parting toward it."].compact)
@@ -402,11 +403,11 @@ module FrostThaw
         if !flag?(:hellen_districts)
           # (context 06 §5, 15 M15-2: when the festival started, and where the city is)
           set_flag(:hellen_districts)
-          say(["HELLEN: The festival opened the morning you fell, love. Its last night's the seventh.",
+          say(["At the bar, a regular starts a song about the Heralds. It's mostly wrong.",
+               "HELLEN: The festival opened the morning you fell, love. Its last night's the seventh.",
                "HELLEN: #{n == 1 ? 'Tomorrow' : "#{number_word(n).capitalize} more nights"}. Nobody rushes the seventh night.",
-               "At the bar, a regular starts a song about the Heralds. It's mostly wrong.",
-               "HELLEN: Spend the days. The city's been waiting four hundred years to show you round.",
-               "HELLEN: Halls up the north stair, the Promenade over the leaf-bridge. Go and be looked at."])
+               "HELLEN: Spend the days. Halls up the north stair, the Promenade over the leaf-bridge.",
+               "She tops up your cup without asking."])
         else
           say(["(The festival's last night is #{n == 1 ? 'tomorrow' : "in #{number_word(n)} nights"}.)"])
         end
@@ -546,7 +547,12 @@ module FrostThaw
     Stage.overlay("O-01", scroll_x: 0.25, opacity: 210, pulse: :hard, fade: 8)
     say(["Overhead, the aurora flickers in a hard, even rhythm. Like a pulse. Like something built.",
          cl(:glimmer, "(a hand on his chest) Something under us is burning."),
-         cl(:glimmer, "And hammering. Deep in the roots. Can't you hear it?"),
+         cl(:glimmer, "And hammering. Deep in the roots. Can't you hear it?")].compact)
+    if with_or_is?(:glimmer) && !herald?(:glimmer)
+      c = pbMessage(_INTL("Glimmer's looking at you."), [_INTL("\"I hear it.\""), _INTL("\"Hear what?\"")], 0)
+      say([c == 0 ? "GLIMMER: (very quietly) Good. Then I'm not mad. That's worse." : "GLIMMER: ...Lucky you. Keep it that way."])
+    end
+    say([
          herald?(:meat_meat) ? "(You know that sound. Hammers. The cold table had hammers under it.)" :
                                cl(:meat_meat, "Meat Meat knows that sound. Hammers. The cold table had hammers under it."),
          with_or_is?(:meat_meat) ? cl(:alerion, "(low, to #{herald?(:meat_meat) ? 'you' : 'Meat Meat'}) Then we go down and break them.") : nil,
@@ -957,8 +963,7 @@ module FrostThaw
            "ELINE: The Frost Saint. You know him. Your hand froze him. Ours kept him.",
            "ELINE: His heart was the holiest thing we had.",
            cl(:alberica, "Was?"),
-           "ELINE: We gave it to Summer. Summer has promised us a winter.", "ELINE: Not death. Stillness, at last.",
-           "ELINE: The way the Dale was meant to be.",
+           "ELINE: We gave it to Summer. Summer has promised us a winter.", "ELINE: Not death. Stillness, at last. The way the Dale was meant to be.",
            "ELINE: Tonight we cool the tree. A little. Just enough to start."].compact, event_id)
       # Context 06 M6-6: the Act I mark, seen by someone who'd care.
       if outsider? && has_key?(:FT_OWLFEATHER)
