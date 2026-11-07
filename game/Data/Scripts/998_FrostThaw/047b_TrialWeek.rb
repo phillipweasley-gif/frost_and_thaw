@@ -222,7 +222,7 @@ module FrostThaw
       say(["(A step closer.)"])
     else
       say(["Something in the ice notices you. A Mirror Wraith steps out, wearing your face, cracked."], event_id)
-      if skirmish(named_mon(:B122H429, flag?(:trials_open) ? 54 : 41, "Mirror Wraith"))
+      if skirmish(named_mon(:B122H429, flag?(:trials_open) ? 54 : 42, "Mirror Wraith"))
         st[:ok] += 1                                   # (defeating a wraith counts as a success)
       else
         st[:bad] += 1

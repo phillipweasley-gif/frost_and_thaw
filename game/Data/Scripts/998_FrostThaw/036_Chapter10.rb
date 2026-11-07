@@ -2534,6 +2534,12 @@ module FrostThaw
         say(["(You tell the court: you caught the cocoon at the rail. She let go of #{autumn_hand[:him]}.)",
              as(:meat_meat, "(in the dock, very quietly) ...Thank you.")])
       end
+    elsif flag?(:you_called_mm)
+      say(["KELYN: A warden says you shouted her name at the rail, and she took the cocoon."])
+    end
+    # (notes 09: the player stepped in front of the spears at the arrest)
+    if flag?(:stood_by_mm_arrest) && !herald?(:meat_meat)
+      say([as(:meat_meat, "(in the dock, to you) You stood in front of the spears. Meat Meat remembers.")])
     end
     call_witnesses(:autumn, "Who do you call for Meat Meat?")
     refugee_faces if flag?(:refugees_testify)
