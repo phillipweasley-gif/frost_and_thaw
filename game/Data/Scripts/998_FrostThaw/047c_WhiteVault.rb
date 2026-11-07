@@ -460,7 +460,7 @@ module FrostThaw
     if flag?(:mira_left_possessed)
       # rootspire.md 1079: left possessed, Mira becomes Avarice's new body.
       sayc(["A cradle of brass and mirror at the heart of the glacier.",
-            "In it, Mira of the North Wind sits up. Her silver hair has gone white. Her skin is turning to crystal from the fingertips in.",
+            "In it, Mira of the North Wind sits up. Her black hair has gone white. Her skin is turning to crystal from the fingertips in.",
             "AVARICE: (in Mira's voice, only one voice now) You left her to me. On her own ship. With her daughter watching.",
             herald?(:meat_meat) ? "(You remember. You said you would.)" : cl(:meat_meat, "(white to the lips) Meat Meat said. Meat Meat SAID she would remember.")])
     end

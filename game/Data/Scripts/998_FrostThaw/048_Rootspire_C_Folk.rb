@@ -647,7 +647,7 @@ module FrostThaw
     if !flag?(:met_mira_stall)
       set_flag(:met_mira_stall)
       say(["A stall of frost-glass mirrors, every one tilted to catch the aurora.",
-           "Behind them, an elegant half-elf with silver hair. She's warm, and distracted, and always surrounded by reflections.",
+           "Behind them, an elegant half-elf with black hair. She's warm, and distracted, and always surrounded by reflections.",
            "MIRA: Mira of the North Wind. Captain of the Auroral Corsairs, when I'm at sea. Merchant, when I'm not.",
            "MIRA: Frost-glass, straight from the permafrost. Look into one at midnight. We- I find it's best at midnight."], event_id)
     end
