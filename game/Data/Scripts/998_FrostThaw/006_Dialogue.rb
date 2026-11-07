@@ -169,8 +169,8 @@ module FrostThaw
 
   PARTY_CHAT = {
     alberica: {
-      targos:  ["Everyone here's counting coins or counting days. I could write a very sad song about Targos.",
-                "...I might. Somebody should remember this place kindly. Then a rude one, to cheer us up."],
+      targos:  ["Everyone here's counting coins or days. I could write Targos a very sad song.",
+                "...I might. Somebody should remember it kindly. Then a rude one, to cheer us up."],
       tavern:  ["The fire's dying and nobody's feeding it. That's the Dale in one picture.",
                 "Barkeep! Another log, and another drink. In that order. Or the other order."],
       luskan:  [{ if: { flag: :met_party }, lines: ["Marek keeps looking at my pendant. I keep looking at his hands.",
@@ -181,12 +181,12 @@ module FrostThaw
     },
     reptin: {
       targos:  ["The frost here crawls in patterns. Like handwriting.",
-                "My medallion pulses every time I try to read it. Whatever this winter is, it isn't weather."],
+                "My medallion pulses every time I try to read it. This winter isn't weather."],
       tavern:  ["Five strangers, one fire. The Sacred Flame would call it an omen.",
                 "I call it a cold night, and an excellent excuse for another round."],
       luskan:  ["Naerth's people look at me like a tool they haven't found a use for yet.",
                 "(under his breath) They'll find I'm the kind that cuts."],
-      hall:    ["A ruler who keeps everyone in debt. That's just another way to freeze a town in place.",
+      hall:    ["A ruler who keeps everyone in debt. Another way to freeze a town in place.",
                 "Leave the talking to me. You stand behind me and look expensive."]
     },
     alerion: {

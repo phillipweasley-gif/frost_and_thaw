@@ -38,14 +38,14 @@ module FrostThaw
   )
 
   TEXT.merge!(
-    korun_scorn: ["Korun looks at your Pokémon, then at your bag, and releases a long, scornful puff of spores.",
+    korun_scorn: ["Korun looks at your Pokémon, then at your bag. A long, scornful puff of spores.",
                   "KORUN: (Neglect. Made things remember who neglected them.)"],
-    sap_raid_after: ["The sap vats on the Root-Tier stand under a fresh lock. Rootwarden and myconid guards share the watch now. Mostly they glare."],
+    sap_raid_after: ["The sap vats on the Root-Tier stand under a fresh lock.", "Rootwarden and myconid guards share the watch now. Mostly they glare."],
     canopy_guard: -> {
       T.flag?(:canopy_martial_law) ?
-        ["WARDEN ON THE WALKWAY: Papers, Herald. ...Martial law. Selrae's orders. I don't like it either.",
+        ["WARDEN ON THE WALKWAY: Papers, Herald. Martial law. Selrae's orders. I hate it too.",
          "WARDEN ON THE WALKWAY: Go on. And don't run. Running looks like something."] :
-        ["WARDEN ON THE WALKWAY: Just watching, Herald. Kelyn's compromise. Watch the Rift, watch the walkways.",
+        ["WARDEN ON THE WALKWAY: Just watching, Herald. Kelyn's compromise. The Rift, the walkways.",
          "WARDEN ON THE WALKWAY: (lower) Watch you, too. Sorry."] }
   )
 
@@ -82,15 +82,15 @@ module FrostThaw
       end
       $Trainer.money -= cost
       $Trainer.party.each { |pk| pk.moves.each { |m| m.pp = m.total_pp if m } if !pk.egg? } rescue nil
-      say(["He takes each Poké Ball in turn, breathes spores over it, and taps it with his hammer, once.",
-           "Something in every one of your Pokémon settles, like a strap pulled tight. (Every move's PP is restored.)",
+      say(["He takes each Poké Ball, breathes spores over it, and taps it once with his hammer.",
+           "Something in every one of your Pokémon settles, like a strap pulled tight.", "(Every move's PP is restored.)",
            "KORUN: (Mended. Respect it.)"])
     when :craft
       korun_craft
     when :toy
       set_flag(:korun_toy)
       say(["At the word 'sporeling', the big myconid goes very still. Then he sets down the hammer.",
-           "His thick fingers pull a strand of hyphae off the bench and twist it, and twist it, and it's a little wolf.",
+           "His thick fingers pull a strand of hyphae off the bench and twist it, and twist it.", "And it's a little wolf.",
            "KORUN: (For the small one in the nursery. Small ones should have things.)"])
       give_key(:FT_SPORELINGTOY)
     end
@@ -105,7 +105,7 @@ module FrostThaw
     opts << [:lash, _INTL("The Hyphal Lash (${1})", lash_cost)] if !($PokemonBag.pbHasItem?(:FT_HYPHALLASH) rescue false)
     opts << [:band, _INTL("The Rootbond Armlet (${1})", band_cost)] if !($PokemonBag.pbHasItem?(:FT_ROOTBONDARMLET) rescue false)
     opts << [:bye, _INTL("Nothing")]
-    say(["On the bench: a whip grown from a vine, still twitching. Amber stones, sticky to the touch. A thick bracelet of bark."])
+    say(["On the bench: a whip grown from a vine, still twitching. Amber stones, sticky.", "And a thick bracelet of bark."])
     c = pbMessage(_INTL("Buy..."), opts.map(&:last), opts.size - 1)
     case opts[[c, 0].max][0]
     when :stones
@@ -139,7 +139,7 @@ module FrostThaw
     end
     if flag?(:hyphora_sworn) && flag?(:colony_recognised) && !flag?(:hyphora_crown_given)
       set_flag(:hyphora_crown_given)
-      say(["LUMINARA: You swore to protect her. And you brought the surface down to sit on our floor and listen.",
+      say(["LUMINARA: You swore to protect her. You brought the surface to our floor. To listen.",
            "LUMINARA: This is grown, not made. It is given only to the sworn.",
            "A living circlet of rootlets, still growing, settles into your hands."])
       give_key(:FT_HYPHORACROWN)
@@ -326,11 +326,11 @@ module FrostThaw
   TEXT.merge!(
     sap_raid_after: -> {
       T.flag?(:sap_raided) ?
-        ["The sap vats stand half empty. A myconid guard watches the ramp up to the Root-Tier, and doesn't look at you."] :
-        ["The sap vats on the Root-Tier stand under a fresh lock. Rootwarden and myconid guards share the watch now. Mostly they glare.",
-         "ROOTWARDEN ON WATCH: (grudging) A barrel a week, carried by the Heralds. That's the deal. ...Lis says it's working."] },
+        ["The sap vats stand half empty. A myconid guard watches the ramp, and doesn't look at you."] :
+        ["The sap vats on the Root-Tier stand under a fresh lock.", "Rootwarden and myconid guards share the watch now. Mostly they glare.",
+         "ROOTWARDEN ON WATCH: (grudging) A barrel a week, carried by the Heralds. That's the deal.", "ROOTWARDEN ON WATCH: ...Lis says it's working."] },
     tower_stair_shut: ["A narrow stair winds up the Council tower toward the Summer Marshal's quarters.",
-                       "A Rootwarden sits on the bottom step, spear across his knees. \"Sealed,\" he says. \"Thirty years, sealed.\""],
+                       "A Rootwarden sits on the bottom step, spear across his knees.", "\"Sealed,\" he says. \"Thirty years, sealed.\""],
     summer_quarters_sealed: ["The tower stair. A Council seal on the door at the top now, the wax still soft.",
                              "CLERK: (from below) The Marshal's quarters are the Council's evidence now. Nobody goes up."]
   )
@@ -350,7 +350,7 @@ module FrostThaw
   def election_stance(at_vote = false)
     return state[:election_stance] if state[:election_stance]
     say(["KELYN: Two empty chairs, Heralds. The city wants to know what you'll do about them.",
-         "KELYN: Speak for someone. Stand for a chair yourselves. Or stay out of it, and let the city choose without you."])
+         "KELYN: Speak for someone. Stand for a chair yourselves. Or let the city choose alone."])
     opts = [[:endorse, _INTL("Speak for candidates")]]
     opts << [:stand, _INTL("Stand for a chair ourselves")] if !at_vote || nominated?(:heralds)
     opts << [:neutral, _INTL("Stay out of it")]
@@ -362,7 +362,7 @@ module FrostThaw
       speak(:alberica, "Darlings, I've been on a stage my whole life. Let's sit in a chair for once.",
             "...We'll stand. Somebody should sit in Summer's chair who isn't wearing anybody.")
       if flag?(:wardens_sworn) || flag?(:oath_of_roots)
-        say(["KELYN: You'll need five names, or a faction behind you. ...You swore the Wardens' oath under this roof.",
+        say(["KELYN: You'll need five names, or a faction. ...You swore the Wardens' oath here.",
              "KELYN: Spring stands behind you. That's a faction. Your name goes forward."])
         set_flag(:petition_heralds)
         set_flag(:nominated_heralds)
@@ -373,10 +373,10 @@ module FrostThaw
       end
     when :neutral
       say(["KELYN: (slowly) ...Neutral. The city will notice that, too. Some will call it wisdom.",
-           "KELYN: Some will call it washing your hands. The Council won't know what you are. Neither will I."])
+           "KELYN: Some will call it washing your hands. The Council won't know what you are. Nor I."])
       set_flag(:election_neutral)
     else
-      say(["KELYN: Then speak where people can hear you: the debate stages, in the Bazaar and the Fields."])
+      say(["KELYN: Then speak where people can hear: the debate stages, in the Bazaar and the Fields."])
     end
     stance
   end
@@ -396,24 +396,24 @@ module FrostThaw
     %i[spring winter autumn].each do |fac|
       w = favour_word(f[fac] || 0)
       if w == :cold
-        say(["People in #{fac.to_s.capitalize}'s colours turn their backs when you pass. Somebody hisses \"murderers\" from a doorway."])
+        say(["People in #{fac.to_s.capitalize}'s colours turn their backs when you pass.", "Somebody hisses \"murderers\" from a doorway."])
         trial[:mud] += 1
         next
       end
       next if w == :neutral
       case fac
       when :spring
-        say(["A warden in Spring's green presses a basket into your hands as you cross the Bazaar.",
-             "SPRING WARDEN: Seeds from the Spring Seat's own beds. Kelyn's people remember their friends. We'll speak for you this week."])
+        say_staged(["A warden in Spring's green presses a basket into your hands as you cross the Bazaar.",
+             "SPRING WARDEN: Seeds from the Spring Seat's own beds.", "SPRING WARDEN: Kelyn's people remember their friends. We'll speak for you."])
         give(:REVIVALHERB, w == :trusted ? 3 : 2)
         add_opinion(1)
       when :winter
-        say(["A Rootwarden in Winter's white falls in beside you, and stays there.",
-             "BALANCE WARDEN: Ysera's word. The Order watches over its friends this week. Nobody throws anything while I'm here."])
+        say_staged(["A Rootwarden in Winter's white falls in beside you, and stays there.",
+             "BALANCE WARDEN: Ysera's word. The Order watches its friends this week.", "BALANCE WARDEN: Nobody throws anything while I'm here."])
         trial[:mud] = [trial[:mud] - 1, 0].max
         give(:FULLRESTORE, 1) if w == :trusted
       when :autumn
-        say(["A courier in Autumn's gold leaf bows far too low.",
+        say_staged(["A courier in Autumn's gold leaf bows far too low.",
              "AUTUMN COURIER: With the Court's compliments. Splendor rewards its admirers. Discreetly."])
         ($Trainer.money += (w == :trusted ? 4000 : 2000)) rescue nil
         say(["(The purse is heavy. The Court's rivals will hear of it.)"])
@@ -423,9 +423,9 @@ module FrostThaw
     friends.each do |fac|
       rival = FACTION_RIVAL[fac]
       next if friends.include?(rival)
-      say([{ spring: "AUTUMN COURTIER: (loudly, to nobody) Spring's darlings. On trial for murder. Spring never could pick its friends.",
-             autumn: "SPRING WARDEN: (not quite to you) Gilded by the Court of Splendor. The tree knows what bought gold smells like.",
-             winter: "AN OLD SUMMER LOYALIST: (spitting in the snow at your feet) The Order's pets. The Marshal kept this city warm thirty years." }[fac]])
+      say_staged([{ spring: "AUTUMN COURTIER: (loudly, to nobody) Spring's favourites. On trial for murder.",
+             autumn: "SPRING WARDEN: (not quite to you) Gilded by the Court. The tree knows bought gold's smell.",
+             winter: "OLD LOYALIST: (spitting) The Order's pets. The Marshal kept this city warm thirty years." }[fac]])
       trial[:mud] += 1
     end
   end
@@ -453,7 +453,7 @@ module FrostThaw
     return if !flag?(:reptin_warden_vow) || flag?(:chasm_wolf_came) || !with_or_is?(:reptin)
     set_flag(:chasm_wolf_came)
     rp = herald?(:reptin)
-    say(["In the morning there's a grey wolf sitting in the snow outside the Hearth. Thin, scarred, patient. Not a Rootwarden's.",
+    say(["In the morning a grey wolf sits in the snow outside the Hearth. Thin, scarred, patient.", "Not a Rootwarden's.",
          rp ? "It's waiting for you. You know it. You saw it last at the Chasm, answering your howl." :
               "It's waiting for Reptin. He knows it before he's halfway down the steps."])
     seen = ["The wolf puts its nose in #{rp ? 'your' : "Reptin's"} hand, and you all see it, the way wolves see things: the Chasm, quiet."]
@@ -463,7 +463,7 @@ module FrostThaw
     seen << "The ghost's candle, still lit, in the sanctum." if flag?(:ghost_blessing)
     seen << "Wolves on the ridge above the lodge, fat for once, watching the road for him." if flag?(:reptin_wolf_calm) || flag?(:fed_pack)
     say(seen)
-    speak(:reptin, "(to the wolf, low) I said I'd come back. I will. When the winter's done. Tell them.",
+    speak(:reptin, "(to the wolf, low) I said I'd come back. I will. When winter's done. Tell them.",
           "(to the wolf) ...I'll come back. Tell them.")
     say(["The wolf turns and lopes off toward the Wall, and the snow closes behind it."])
     set_flag(:chasm_watch_kept)
@@ -482,40 +482,45 @@ module FrostThaw
   def pilgrim_dream
     return if flag?(:pilgrim_dream)
     set_flag(:pilgrim_dream)
-    say(["That night you all dream the same dream.",
-         "A road of packed snow, and a hooded pilgrim walking it beside you, staff tapping the ice.",
-         "PILGRIM: (gently) It's so warm in that city. Doesn't it tire you? All that summer. All that hurry.",
+    say(["Last night, you all dreamed the same dream."])
+    pbFadeOutIn { $game_screen.start_tone_change(Tone.new(-40, -30, 10, 80), 0) rescue nil }
+    pil = walk_on("PILGRIM")
+    say(["A road of packed snow, and a hooded pilgrim walking it beside you, staff tapping the ice.",
+         "PILGRIM: (gently) It's so warm in that city. Doesn't it tire you? All that hurry.",
          "PILGRIM: Take a little cold with you. A blessing. It keeps things the way they are.",
          "He holds out a hand. In it, a snowflake that doesn't melt."])
     if with_or_is?(:meat_meat)
-      say(["PILGRIM: (to Meat Meat, softer still) And you. Prototype Verdant. Your blood remembers the cold table. So do I.",
+      say(["PILGRIM: (to Meat Meat, softer) And you. Prototype Verdant.", "PILGRIM: Your blood remembers the cold table. So do I.",
            herald?(:meat_meat) ? "(Nobody calls you that. Only the cold table did. Your skin crawls.)" :
                                  "MEAT MEAT: (very small) Nobody calls Meat Meat that. Only the cold table did.",
            herald?(:meat_meat) ? nil : "MEAT MEAT: (smaller still) ...Meat Meat does not like this man."].compact)
     end
     if with_or_is?(:alerion)
-      say(["PILGRIM: (not looking at Alerion) And the other one who listens for her. Two of us is one too many."])
+      say(["PILGRIM: (not looking at Alerion) And you, who listen for the cold. One of us is enough."])
     end
     c = pbMessage(_INTL("The pilgrim's cold blessing..."), [_INTL("Refuse it"), _INTL("Take it")], 0)
+    wake = -> { walk_off(pil); pbFadeOutIn { $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil } }
     if c == 1
-      say(["The snowflake settles on your palm. It's lovely. It's very, very cold.",
-           "You wake with frost in your hair. Your lead Pokémon is frozen stiff in its ball."])
+      say(["The snowflake settles on your palm. It's lovely. It's very, very cold."])
+      wake.call
+      say(["You wake with frost in your hair. Your lead Pokémon is frozen stiff in its ball."])
       lead = $Trainer.party.find { |pk| !pk.egg? && pk.hp > 0 }
       (lead.status = :FROZEN) if lead rescue nil
       set_flag(:took_cold_blessing)
       wheel(-1)
     else
-      say(["The pilgrim smiles, as if refusing were a kind of yes, and walks on into the snow.",
-           "You wake. Somebody says \"Sephek\" out loud in the dark, and nobody answers."])
+      say(["The pilgrim smiles, as if refusing were a kind of yes, and walks on into the snow."])
+      wake.call
+      say(["You wake. Somebody says \"Sephek\" out loud in the dark, and nobody answers."])
     end
   end
 
   # rootspire.md Tab 5, the Fane's sap delegation: "Then we'll take it ourselves, one night."
   def sap_raid
     set_flag(:sap_raid_done)
-    say(["Past midnight, a sporeling hammers on the Hearth's door, out of breath and glowing with fear.",
+    say_staged(["Past midnight, a sporeling hammers on the Hearth's door, breathless and glowing with fear.",
          "SPORELING: (in your head) Wardens! At the sap vats! With carts!",
-         "Down in the Root-Tier: lanterns, Warden Lis and a dozen Rootwardens, and carts already half full of Hyphora's sap."])
+         "Down in the Root-Tier: lanterns, Warden Lis and a dozen Rootwardens.", "And carts, already half full of Hyphora's sap."])
     c = pbMessage(_INTL("The sap raid..."), [_INTL("Stand between them and the vats"), _INTL("Talk them down"), _INTL("Let them take it")], 0)
     case c
     when 0
@@ -526,12 +531,12 @@ module FrostThaw
         GameData::Trainer::DATA[key] ||= GameData::Trainer.new({ id: key, id_number: 9894, trainer_type: :FT_ROOTWARDEN, name: "Lis", version: 1,
           items: [:SUPERPOTION], lose_text: "...Fine. The sap stays. Carry it yourselves, then. Like you said.",
           pokemon: [{ species: :B59H221, level: 55 }, { species: :STANTLER, level: 55 }, { species: :URSARING, level: 56 }] })
-        say(["WARDEN LIS: You said you'd carry the sap yourselves. You didn't. So we're carrying it."])
+        say_staged(["WARDEN LIS: You said you'd carry the sap yourselves. You didn't. So we're carrying it."])
         won = pbTrainerBattle(:FT_ROOTWARDEN, "Lis", nil, false, 1, true) ? true : false
       end
       pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
       if won
-        say(["The carts go back down the ramp. Lis stands in the dark with her arms folded, furious, and then just tired.",
+        say_staged(["The carts go back down the ramp. Lis stands in the dark, arms folded. Furious. Then tired.",
              "WARDEN LIS: ...Carry it yourselves, then. Like you said. Every week. I'll be counting."])
         set_flag(:sap_raid_stopped)
         set_flag(:sap_settled)
@@ -543,12 +548,12 @@ module FrostThaw
     when 1
       if challenge("Warden Lis has her hand on the cart.", ["\"Carry it with us. Tonight. By the tree's leave, so much a week.\"",
                                                             "\"The Council will hear about this.\"", "\"Take it and go.\""], 0)
-        say(["WARDEN LIS: (a long breath) ...By the tree's leave. You'll carry the first barrel. Now. In your nightclothes.",
-             "You carry the first barrel. In your nightclothes. Luminara's spore-guard watch from the dark, and nod."])
+        say_staged(["WARDEN LIS: (a long breath) ...By the tree's leave. You carry the first barrel. Now.", "WARDEN LIS: In your nightclothes.",
+             "You carry the first barrel. In your nightclothes. Luminara's spore-guard watch, and nod."])
         set_flag(:sap_settled)
         set_flag(:rootwarden_diplomacy)
       else
-        say(["WARDEN LIS: Threats. From people on trial for murder. Good night, Heralds."])
+        say_staged(["WARDEN LIS: Threats. From people on trial for murder. Good night, Heralds."])
         set_flag(:sap_raided)
       end
     else
@@ -573,10 +578,10 @@ module FrostThaw
     return say(lines_for(:summer_quarters_sealed), event_id) if flag?(:ch10_done)
     return say(lines_for(:tower_stair_shut), event_id) if !flag?(:trials_open)
     return transfer(*SUMMER_QUARTERS) if flag?(:quarters_door_open)
-    say(["A narrow stair winds up the Council tower to the Summer Marshal's quarters. Thirty years, and nobody up there but him.",
+    say(["A narrow stair winds up the Council tower to the Summer Marshal's quarters.", "Thirty years, and nobody up there but him.",
          "Her. Whatever wore him.",
-         "The warden on the bottom step is asleep. At the top: a door of red-lacquered root, with a lock like a closed fist."], event_id)
-    say([cl(:alberica, "\"Ledger to the tower.\" Her note, under the Forge. This is the tower, darlings.")].compact) if flag?(:ledger_trail) && !flag?(:ledger_found)
+         "The warden on the bottom step is asleep.", "At the top: a door of red-lacquered root, with a lock like a closed fist."], event_id)
+    say([cl(:alberica, "\"Ledger to the tower.\" ...I did wonder which tower.")].compact) if flag?(:ledger_trail) && !flag?(:ledger_found)
     return if !pbConfirmMessage(_INTL("Creep up, and get through that door?"))
     opts = []
     opts << [:badge, _INTL("Press the Marshal's badge into the lock")] if ($PokemonBag.pbHasItem?(:FT_MARSHALBADGE) rescue false)
@@ -586,10 +591,10 @@ module FrostThaw
     c = pbMessage(_INTL("The lock..."), opts.map(&:last), 0)
     ok = case opts[[c, 0].max][0]
          when :badge
-           say(["The badge's gold is warm against the lock. Something in the root remembers its Marshal, and lets go."]); true
+           say(["The badge's gold is warm on the lock. The root remembers its Marshal, and lets go."]); true
          when :pick
            say([herald?(:meat_meat) ? "(Small fingers. Clever fingers. The tumblers are root-knots, and knots are just puzzles.)" :
-                                      "Meat Meat kneels at the lock with her tongue between her teeth. Small fingers. Clever fingers."])
+                                      "Meat Meat kneels at the lock, tongue between her teeth. Small fingers. Clever fingers."])
            challenge("The last knot.", ["Ease it round, don't pull", "Yank it", "Bite it"], 0)
          when :feel
            challenge("The root-lock.", ["Find the knot that's warm, and loosen it", "Find the coldest and break it", "Pull everything"], 0)
@@ -597,7 +602,7 @@ module FrostThaw
            say(["The door shudders, and holds. Below you, the warden on the step is very much awake."]); false
          end
     if !ok
-      say(["WARDEN ON THE STAIR: Oi! That's sealed for the trial! Down! Down, or I fetch the Captain!",
+      say_staged(["WARDEN ON THE STAIR: Oi! That's sealed for the trial! Down! Down, or I fetch the Captain!",
            "(Word gets round. You'll have to try again, more quietly.)"])
       trial[:mud] += 1
       return
@@ -611,10 +616,10 @@ module FrostThaw
     return if flag?(:quarters_entered)
     set_flag(:quarters_entered)
     sayc(["The Summer Marshal's quarters. Thirty years of somebody very tidy.",
-          "Gold-leaf maps of the Dale on every wall, with pins in them. Ten towns. A pin for every name.",
-          "Glyphs glow faintly on the floorboards between you and the desk: alarms, in a neat white hand.",
+          "Gold-leaf maps of the Dale on every wall, with pins in. Ten towns. A pin for every name.",
+          "Glyphs glow faintly on the floor between you and the desk: alarms, in a neat white hand.",
           "And in the alcove by the desk, something of bone and ice stands very, very still.",
-          cl(:alberica, "Mind your feet, darlings. She was always so particular about who walked on her floors."),
+          cl(:alberica, "Mind your feet. A woman who glyphs her own floor doesn't like guests."),
           cl(:wyn, "(very quietly) Don't look at it. Things like that know when you look.")])
   end
 
@@ -626,7 +631,7 @@ module FrostThaw
     say(["Your foot comes down on a glyph in her neat white hand. It brightens."], event_id)
     ok = challenge("The alarm glyph.", ["Trace it backwards, and unwrite it", "Jump clear", "Smudge it with your boot"], 0)
     return say(["The glyph unwrites itself, line by line, and goes dark."]) if ok
-    say(["The glyph flares white. Out of the corner unfolds a shape of bone and ice, Avarice's sigil burned into its skull."])
+    say(["The glyph flares white. Out of the corner unfolds a shape of bone and ice.", "Avarice's sigil is burned into its skull."])
     if !skirmish(named_mon(:B105H124, 56, "Bone-and-Ice Construct"))
       say(["It herds you back to the door, and folds itself back into its corner to wait."])
       transfer(*TOWER_STAIR_FOOT)
@@ -635,12 +640,12 @@ module FrostThaw
 
   def quarters_construct(event_id = nil)
     return say(["Bone and ice in a heap, and a burnt sigil on the skull."], event_id) if flag?(:quarters_construct)
-    say(["The construct stands across the alcove by the desk. Avarice's sigil is burned into its skull.",
+    say(["The construct stands in the alcove by the desk. Avarice's sigil is burned in its skull.",
          "Its head turns. Not all the way. Not yet."], event_id)
     c = pbMessage(_INTL("The construct..."), [_INTL("Slip past while it's still turning"), _INTL("Break it")], 0)
     if c == 0 && challenge("Its head is still turning.", ["Move when it moves, and stop when it stops", "Run for it", "Throw something to distract it"], 0)
-      say(["You move when it moves. It stops. You stop. Its empty eyes slide over you, and back to the door.",
-           "You're past. Behind you it folds itself down into the corner, a heap of bone and ice, waiting for somebody else."])
+      say(["You move when it moves. It stops. You stop. Its empty eyes slide over you, to the door.",
+           "You're past. Behind you it folds down into the corner, a heap of bone and ice.", "Waiting for somebody else."])
     else
       say(["Its jaw opens on frost."])
       if !skirmish(named_mon(:B105H124, 57, "Bone-and-Ice Construct"), named_mon(:B105H124, 57, "Bone-and-Ice Construct"))
@@ -660,7 +665,7 @@ module FrostThaw
     say(["Under the desk, one floorboard sits a finger higher than the rest."], event_id)
     return if !pbConfirmMessage(_INTL("Lift it?"))
     say(["Under it, wrapped in oilcloth: a leather ledger.",
-         "Payments from Frostmaiden cultists, in Halo script. Lists of Ten-Towners, town by town, a little cross beside each name.",
+         "Payments from Frostmaiden cultists, in Halo script.", "Lists of Ten-Towners, town by town, a little cross beside each name.",
          "And on the first page, underlined twice: \"Project Rime: reforge the Everlasting Summer.\""])
     give_key(:FT_CORRUPTLEDGER)
     set_flag(:ledger_found)
@@ -673,8 +678,8 @@ module FrostThaw
   end
 
   def quarters_wardrobe(event_id = nil)
-    say(["A wardrobe of a man's clothes, thirty years out of fashion, pressed and folded and never worn.",
-         "A Rootwarden's old cloak at the back, moth-eaten. A child's drawing of a bear, pinned inside the door."], event_id)
+    say(["A wardrobe of a man's clothes, thirty years out of fashion, pressed, folded, never worn.",
+         "A Rootwarden's old cloak at the back, moth-eaten. A child's drawing of a bear on the door."], event_id)
     if flag?(:var_story_known)
       sayc([cl(:alerion, "Var's. From before. She kept his things the way you'd keep the lining of a coat."),
             cl(:reptin, "(very quietly) Somebody drew him a bear.")])
@@ -686,7 +691,7 @@ module FrostThaw
 
   def quarters_mirror(event_id = nil)
     say(["A tall mirror in a frame of gold leaf, turned to face the wall.",
-         "When you turn it back the glass is dark. Then something at the very back of it moves, like a smile in a crowd."], event_id)
+         "When you turn it back the glass is dark.", "Then something at the very back of it moves, like a smile in a crowd."], event_id)
     return if !flag?(:avarice_faked_death) || flag?(:avarice_revealed)
     set_flag(:avarice_doubt)
     sayc([cl(:meat_meat, "(very still) ...Meat Meat saw that."),
@@ -709,7 +714,7 @@ module FrostThaw
       say(["CHECKPOINT WARDEN: (reading it, embarrassed) ...Wardens. Right. Go on, then. Sorry."])
       set_flag(:checkpoint_done)
     elsif c == 0
-      say(["CHECKPOINT WARDEN: An oath? You've never sworn anything under this roof. Papers, or turn round."])
+      say(["CHECKPOINT WARDEN: An oath? You've sworn nothing under this roof. Papers, or turn round."])
     else
       won = pbTrainerBattle(:FT_ROOTWARDEN, "Checkpoint Warden", nil, false, 0, true) ? true : false
       pbFadeOutIn { $Trainer.heal_party } rescue nil if !won
@@ -725,18 +730,18 @@ module FrostThaw
 
   def geas_turns_back(event_id = nil)
     say(["At the Wall your feet stop on their own. The geas: a cold hand flat on your chest.",
-         "KELYN'S VOICE, in your head: Not without the Council's leave, Heralds."], event_id)
+         "Kelyn's voice, in your head: \"Not without the Council's leave, Heralds.\""], event_id)
     pbMoveRoute($game_player, [PBMoveRoute::Right]) rescue nil
   end
 
   # Eira's missing patrols (Tab 5), found beyond the Wall (GQ4): she hears it.
   def eira_patrol_report
     set_flag(:eira_patrols_reported)
-    say(["You tell Eira about the warden in the ice beyond the Wall, and the wight with a face like a stopped clock.",
+    say(["You tell Eira about the warden in the ice beyond the Wall.", "And the wight with a face like a stopped clock.",
          flag?(:leaf_shattered) ? "And the leaf, shattered in her fist." : "And Brisa, breathing again, with the chronal leaf whole in her hand.",
          "EIRA: (a cold creek, very quiet) ...And my two? The spore-guard who walked with her?",
-         "You tell her what Brisa told you: they walked into the stopped snow ahead of her, and didn't come out.",
-         "EIRA: Then they're keeping watch out there still. We'll leave a light at the Echo Gate for them.",
+         "You tell her what Brisa told you: they walked into the stopped snow, and didn't come out.",
+         "EIRA: Then they're keeping watch out there still. We'll leave a light at the Echo Gate.",
          "EIRA: You looked. Nobody else would. The spore-guard owes you twice."])
     ($PokemonBag.pbHasItem?(:FT_SPORELANTERN) rescue false) ? give(:REVIVALHERB, 3) : give_key(:FT_SPORELANTERN)
     wheel(1)
@@ -793,41 +798,53 @@ Events.onMapSceneChange += proc { |_sender, _e|
 # The Council's first session (SC 11.04): what the week bought
 #===============================================================================
 module FrostThaw
+  # (notes/11 11.09, dialogue/10 §2: no "darlings" outside Alberica; one box each;
+  # notes/15 E5: Rheven remembers the festival he said he'd remember)
   ALLY_GIFTS = {
-    rheven: ["RHEVEN: You spoke for me in the Fields. I don't forget who stood on the wall with me. Take these. Skytower steel.", :MAXREVIVE, 2],
-    mira: ["MIRA: You spoke for me. The Corsairs pay their debts, darlings. In coin, usually. Today, in this.", :FULLRESTORE, 3],
-    eirwen: ["EIRWEN: You spoke for me. The leaves told me you would. These are from the Shrine's stores.", :MAXREVIVE, 2],
-    phildendrin: ["PHILDENDRIN: You spoke for a goblin, in public, in front of everyone. Here. Every apothecary in the Bazaar owes me now.", :FULLRESTORE, 3],
-    anduin: ["ANDUIN: You spoke for me. For us. Take this to him, wherever he goes. ...And this, for you.", :MAXREVIVE, 2]
+    rheven: [-> { ["RHEVEN: You spoke for me in the Fields. Take these, from the Rootwardens' stores.",
+                   FrostThaw.flag?(:rootwardens_favour) ? "RHEVEN: The festival, and now this. That's two the Rootwardens owe you." : nil].compact },
+             :MAXREVIVE, 2],
+    mira: [["MIRA: You spoke for me. The Corsairs pay their debts. In coin, usually. Today, in this."], :FULLRESTORE, 3],
+    eirwen: [["EIRWEN: You spoke for me. The leaves said you would. These are from the Shrine's stores."], :MAXREVIVE, 2],
+    phildendrin: [["PHILDENDRIN: You spoke for a goblin, in public, in front of everyone.",
+                   "PHILDENDRIN: Here. Every apothecary in the Bazaar owes me now."], :FULLRESTORE, 3],
+    anduin: [["ANDUIN: You spoke for me. For us. Take this to him, wherever he goes. And this, for you."], :MAXREVIVE, 2]
   }
 
   module_function
 
   def four_chairs_consequences
     if flag?(:wyn_barred) && !flag?(:wyn_bar_lifted)
-      say(["KETHAN: (from the Rootwardens' bench) And the Council's first act, by my asking: the Rootwardens' stores are open to Wyn again.",
-           "KETHAN: Whatever she did or didn't do at that door, she's going north for us now."])
+      say_staged(["KETHAN: (from the Rootwardens' bench) The Council's first act, by my asking:", "KETHAN: The Rootwardens' stores are open to Wyn again.",
+           "KETHAN: Whatever they did or didn't do at that door, they're going north for us now."])
       set_flag(:wyn_bar_lifted)
     end
     if flag?(:canopy_martial_law)
-      say(["SELRAE: Martial law on the Canopy ends today. My wardens are needed on the Wall more than on the walkways."])
+      say_staged(["SELRAE: Martial law on the Canopy ends today. My wardens are needed on the Wall."])
     elsif flag?(:canopy_watched)
-      say(["KELYN: And the watch on the Canopy is lifted. Not one Halo candle lit all week."])
+      say_staged(["KELYN: And the watch on the Canopy is lifted. Not one Halo candle lit all week."])
     end
     if flag?(:council_heralds)
-      say(["KELYN: And Summer's chair, for the first time in thirty years, holds somebody who isn't wearing anybody.",
+      say_staged(["KELYN: For the first time in thirty years, Summer's chair holds nobody in disguise.",
            "KELYN: The Heralds sit with us. Their word goes north with them. Choose how you'll go."])
       heralds_pick_route
       give(:MAXREVIVE, 2)
       say(["(The Council's stores are yours to draw on, councillors.)"])
     elsif flag?(:council_uncertain)
-      say(["The new councillors look at you, and then at each other. Nobody thanks you. Nobody knows who to thank.",
-           "KELYN: (carefully) You didn't speak for any of us. We'll send you north. We don't know what you'll be when you come back."])
+      say_staged(["The new councillors look at you, then at each other. Nobody thanks you. Nobody knows how.",
+           "KELYN: (carefully) You didn't speak for any of us. We'll send you north.", "KELYN: We don't know what you'll be when you come back."])
     elsif (ally = state[:council_ally]) && ALLY_GIFTS[ally]
       text, item, n = ALLY_GIFTS[ally]
-      say([text])
+      say_staged(text.respond_to?(:call) ? text.call : text)
       give(item, n)
       set_flag(:council_ally_gift)
+    end
+    # (notes/15 E5: the Council's "whatever you need", read back where it's needed)
+    if flag?(:council_support) && !flag?(:council_support_paid)
+      set_flag(:council_support_paid)
+      say(["KELYN: Before the trial this Council said \"whatever you need.\" It meant it.",
+           "KELYN: Furs, lamp-oil, the Shrine's stores. Take what the north will want."])
+      give(:FULLRESTORE, 2)
     end
     darrus_pays
   end
@@ -839,9 +856,9 @@ module FrostThaw
             [:whale, _INTL("By the old way: the Wennen bell, and Angajuk")]]
     c = pbMessage(_INTL("The Heralds will go north..."), opts.map(&:last), 0)
     state[:voyage_pick] = opts[[c, 0].max][0]
-    say([{ ship: flag?(:mira_left_possessed) ? "CORSAIR FIRST MATE: (from the gallery) The Requiem sails. The captain's... not herself. I'll take you." :
+    say_staged([{ ship: flag?(:mira_left_possessed) ? "FIRST MATE: (from the gallery) The Requiem sails. The captain's not herself. I'll steer." :
                                              "MIRA: (from the gallery) The Requiem's been provisioned for thirty years. It's about time.",
-           griffons: "KETHAN: Skytower owes your Skytower a debt. Griffons. You fly at dawn.",
+           griffons: "KETHAN: Skytower remembers who carried its wounded down the mountain. Griffons. Dawn.",
            whale: "LUMIN: (both paws on the bell rope already) He'll come. He always comes for the bell." }[state[:voyage_pick]]])
   end
 
@@ -851,21 +868,21 @@ module FrostThaw
     return if !flag?(:darrus_redeemed) || flag?(:darrus_paid)
     set_flag(:darrus_paid)
     chartered = !%i[council_mira council_rheven council_anduin council_heralds].any? { |f| flag?(f) }
-    say(["As the Council rises, a Corsair runner pushes through the gallery with a crate on her shoulder.",
-         "CORSAIR RUNNER: From a tiefling who counts barrels. He says: for the voyage, and for the vault after it.",
+    say_staged(["As the Council rises, a Corsair runner pushes through, a crate on her shoulder.",
+         "CORSAIR RUNNER: From a man in a borrowed coat who counts barrels.", "CORSAIR RUNNER: He says: for the voyage, and for the vault after it.",
          "Inside: a purse of sap-scrip, furs, lamp-oil, and a note in a very neat hand.",
-         "DARRUS'S NOTE: Every coin in Rootspire is buried somewhere. I knew where. Some of it was mine. Most of it was hers.",
-         "DARRUS'S NOTE: Spend it on the north. It's the only good thing her money will ever have done."])
+         "\"Every coin in Rootspire is buried somewhere. I knew where.\"", "\"Some of it was mine. Most of it was hers.\"",
+         "\"Spend it on the north. The only good thing her money will ever have done.\""])
     ($Trainer.money += 10000) rescue nil
     give(:FULLRESTORE, 2)
     give(:MAXREVIVE, 1)
     if chartered
-      say(["DARRUS'S NOTE: P.S. Nobody you elected has a ship. So I bought you one. The Requiem sails when you're ready.",
-           "LUMIN: (lowering the bell rope, a little disappointed) ...Then nobody rings it the long way."])
+      say(["\"P.S. Nobody you elected has a ship. So I bought you one.\"", "\"The Requiem sails when you're ready.\"",
+           "(Down at the dock, the Wennen bell won't be rung the long way after all.)"])
       state[:flags].delete(:long_voyage) if state[:flags]
       set_flag(:darrus_chartered)
     end
-    sayc([cl(:reptin, "(reading over your shoulder) He signed it. With his real name. I think that's the bravest thing he's ever done."),
+    sayc([cl(:reptin, "He signed it. With his real name. Bravest thing he's ever done."),
           cl(:meat_meat, "Meat Meat will bring him a coffee. When we are back. A small one.")])
   end
 end
