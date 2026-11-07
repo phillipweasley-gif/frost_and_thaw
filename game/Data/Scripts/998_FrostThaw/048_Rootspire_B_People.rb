@@ -325,55 +325,12 @@ module FrostThaw
   end
 
   #-----------------------------------------------------------------------------
-  # 7. The Still Sky Shrine's black market: Eira Voss (the Frozen Flame)
+  # 7. The Still Sky Shrine's black market is cut (story/15 §3, 15.31; owner's call
+  # 2026-11-07): Eira Voss is met once, in the Frozen Cellar (048_D). Her stall's
+  # event is gone from the Shrine (build_rootspire_life); this answers an old save.
   #-----------------------------------------------------------------------------
   def eira_black_market(event_id = nil)
-    if flag?(:cellar_cleared)
-      say(["A Halo acolyte minds Eira Voss's stall now. The Rootwardens took her. The prices stayed."], event_id)
-      return black_market
-    end
-    if first_time?(:met_eira_voss)
-      say(["Cold grips your lungs. Blue flame in cracked sconces. A dozen eyes watch from the dark.",
-           "A bone-thin woman with frost-burn scars stands where Eline's disciples knelt.",
-           "Her white fur cloak is stained with soot. She tilts her head too far, like a bird.",
-           "EIRA VOSS: Perfect stillness. Perfect silence. ...And very reasonable prices.",
-           "Her voice echoes as if she's in a cathedral. She smiles without moving her lips.",
-           "EIRA VOSS: Stillness costs extra. Everything else is honest. ...Mostly."], event_id)
-      watcher_glimpse("On the sconce above her, a white-eyed raven turns its head to follow you.") if flag?(:rite_stopped)
-      set_flag(:met_eira)
-    elsif flag?(:watcher_raven) && !flag?(:eira_raven_owned)
-      set_flag(:eira_raven_owned)
-      say(["EIRA VOSS: (to the empty sconce) My raven. Auril's bird. It came back to me in pieces.",
-           "EIRA VOSS: It told me who carries the wyrmlings' warmth. Now it tells me nothing.",
-           "EIRA VOSS: Buy something. Grief's bad for trade."], event_id)
-    else
-      say(["EIRA VOSS: Cursed? Only one in ten. The goddess keeps a tithe."], event_id)
-    end
-    black_market
-  end
-
-  # A quarter of the price, one chance in ten of something else in the parcel.
-  def black_market
-    loop do
-      names = BLACK_MARKET.map { |id, price| _INTL("{1} (${2})", (GameData::Item.get(id).name rescue id.to_s), price) }
-      c = pbMessage(_INTL("EIRA VOSS: What will you take?"), names + [_INTL("Nothing")], names.size)
-      break if !c || c < 0 || c >= names.size
-      id, price = BLACK_MARKET[c]
-      if $Trainer.money < price
-        say(["EIRA VOSS: Coin first. The cold doesn't give credit."])
-        next
-      end
-      $Trainer.money -= price
-      if rand(10) == 0 && id != :FT_STILLSHARD
-        say(["She wraps it in black cloth. When you unwrap it, the thing you paid for is gone.",
-             "In its place: a sliver of mirror. Your reflection in it blinks a beat late.",
-             "EIRA VOSS: (without moving her lips) The goddess kept her tithe."])
-        give(:FT_STILLSHARD)
-        add_counter(:stillshards_cursed)
-      else
-        give(id)
-      end
-    end
+    say(["Frost on the sconces where somebody used to sell things. Nobody sells anything here now."], event_id)
   end
 
   #-----------------------------------------------------------------------------

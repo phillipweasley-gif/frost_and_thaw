@@ -943,9 +943,12 @@ check("the downtime week and the GM outline end at the Forge's door") {
   FT.set_flag(:barricade_entered); a = !FT.dt_ready?(:alberica) && !FT.eirwen_audience_due?; FT.set_flag(:barricade_entered, false); a }
 check("the Cycle Canticle has three verses (hope, loss, endurance), matching Ch13") {
   FT::CANTICLE_VERSES.map(&:first) == %i[spring autumn winter] && File.read(File.join(FT_DIR, "039_Chapter13.rb")).include?("three verses. Hope, loss, endurance") }
-check("each Herald's downtime days are written (Arvik 2-7, Alerion 2-7, Glimmer 2-7, Meat Meat 2-5)") {
-  (2..7).all? { |d| FT.respond_to?(:"arvik_day#{d}") && FT.respond_to?(:"glimmer_day#{d}") } &&
-    [2, 3, 4, 6, 7].all? { |d| FT.respond_to?(:"alerion_day#{d}") } && (2..5).all? { |d| FT.respond_to?(:"meat_meat_day#{d}") } }
+# (story/15 §3, owner's call 2026-11-07: Glimmer's rite cut to two days, Meat Meat's four mornings merged into two)
+check("each Herald's downtime days are written (Arvik 2-7, Alerion 2-7, Glimmer's two-day rite, Meat Meat's two days)") {
+  (2..7).all? { |d| FT.respond_to?(:"arvik_day#{d}") } &&
+    FT::GLIMMER_RITE.size == 2 && FT::GLIMMER_RITE.all? { |m| FT.respond_to?(m) } &&
+    [2, 3, 4, 6, 7].all? { |d| FT.respond_to?(:"alerion_day#{d}") } &&
+    FT::MM_DAYS.size == 2 && FT::MM_DAYS.all? { |m| FT.respond_to?(m) } }
 check("the Verdant Heist has four wards and three endings") {
   FT::HEIST_WARDS.size == 4 && FT.method(:heist_delivery) && w5_src.include?(":heist_delivered") &&
     w5_src.include?(":heist_exposed") && w5_src.include?(":heist_destroyed") }

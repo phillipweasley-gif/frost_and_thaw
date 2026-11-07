@@ -395,7 +395,7 @@ module FrostThaw
     s.call(SW_ASH_EXPOSED, flag?(:ash_exposed))
     s.call(SW_DARRUS_HIDING, flag?(:heist_exposed))
     s.call(SW_SCORCH, flag?(:rootwardens_at_door) && !flag?(:chardalyn_found))
-    s.call(SW_FROSTFELL, flag?(:auroral_storm_seen) && !flag?(:frostfell_seen))
+    s.call(SW_FROSTFELL, false)          # (the Frostfell portal is cut: story/15 15.34)
     s.call(SW_TALWYN_FIELDS, (state[:talwyn] || 0) >= 1)
     s.call(SW_HALDEN, flag?(:met_halden) && flag?(:ch7_started) && !flag?(:halden_done))
     s.call(SW_FROZEN_RUN, false) if flag?(:frozen_run_done)

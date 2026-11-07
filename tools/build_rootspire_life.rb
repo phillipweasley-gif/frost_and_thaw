@@ -401,5 +401,12 @@ end
 seal_edges(fr)
 save(fr, :frozen_run)
 
+# Eira Voss's black market at the Still Sky Shrine is cut (story/15 §3, 15.31,
+# owner's call 2026-11-07): she is met once, in the Frozen Cellar (2188). Her stall
+# event on the Shrine (build_ch6.rb) comes off here, after that map is built.
+sh = reopen(2056)
+sh.map.events.delete_if { |_id, e| e.name == "Eira Voss" }
+resave(sh, 2056)
+
 merge_infos(ID.map { |k, v| [v, NAMES[k]] })
 puts "built #{ID.size} maps into #{OUT}"
