@@ -149,10 +149,7 @@ module FrostThaw
     frost_thread: [:SILKSCARF, :CHOICESCARF, :EXPERTBELT, :BLACKBELT, :FOCUSBAND, :SHEDSHELL, :REDSCARF, :BLUESCARF, :PINKSCARF, :GREENSCARF]
   )
 
-  # The Still Sky Shrine's black market (7) and the Suncleft's untouched shelves
-  # (16) don't run like shops: [item, price].
-  BLACK_MARKET = [[:NEVERMELTICE, 1500], [:ICYROCK, 1500], [:FOCUSSASH, 3000], [:LIFEORB, 6000], [:BLACKSLUDGE, 2500],
-                  [:TOXICORB, 2000], [:KINGSROCK, 3000], [:FT_STILLSHARD, 600]]
+  # The Suncleft's untouched shelves (16) don't run like a shop.
   SUNCLEFT_SHELVES = [:FIRESTONE, :CHARCOAL, :HEATROCK, :FLAMEORB, :MAGMARIZER, :FIREGEM]
 
   #-----------------------------------------------------------------------------

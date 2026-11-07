@@ -6,10 +6,10 @@
 #     Reptin   - Arvik's Rootwarden training (Rootwarden Hall), Days 2-7, the Loop-Band
 #     Alerion  - the Wind-Glass Library (his desk there), Days 2-7, and Day 5's
 #                six potions from Nivva at Run & Bloom
-#     Glimmer  - the seven-day rite with Lumin at the twin orb, the Brightmane
+#     Glimmer  - the two-day rite with Lumin at the twin orb, the Brightmane
 #                Acceptance, his three questions and the "Chard...alyn" vision
-#     Meat Meat- Razzilith's warning and her first flight; the undercity walk;
-#                the rooftop drills; the summer-growth imbalance
+#     Meat Meat- two days: Razzilith's warning and her first flight (the roof
+#                drills that night); the undercity walk out into a wrong dawn
 #     Alberica - waking to "Remember..."; the Memory Codex (the Lorn Scribe keeps
 #                her old pages) and its four fragments; the seven rumours
 #   And the city's other downtime: the Festival's missing beats, the Halo's
@@ -60,7 +60,7 @@ module FrostThaw
     end
     if with_or_is?(:alberica) && flag?(:codex_given) && !flag?(:codex_fragments) && dt_ready?(:alberica)
       memory_codex_day
-    elsif with_or_is?(:meat_meat) && dt_ready?(:meat_meat) && dt_done(:meat_meat) < 4 && flag?(:twins_met)
+    elsif with_or_is?(:meat_meat) && dt_ready?(:meat_meat) && dt_done(:meat_meat) < MM_DAYS.size && flag?(:twins_met)
       meat_meat_day
     end
   end
@@ -343,8 +343,12 @@ module FrostThaw
   end
 
   #-----------------------------------------------------------------------------
-  # Glimmer: Lumin's seven-day rite (at the twin orb), and Brightmane's answers
+  # Glimmer: Lumin's rite (at the twin orb), and Brightmane's answers
   #-----------------------------------------------------------------------------
+  # (story/15 §3, 15.12: the rite cut from seven days to two, owner's call 2026-11-07:
+  # the Severance, with the mane-braid at dusk; then the Acceptance and Brightmane's answers)
+  GLIMMER_RITE = %i[glimmer_severance glimmer_acceptance]
+
   def lumin_rite(event_id = nil)
     return false if !flag?(:glimmer_joined) || flag?(:glimmer_gone) || !flag?(:orb_visions) || !with_or_is?(:glimmer)
     return false if flag?(:glimmer_rite_done) && flag?(:brightmane_answered)
@@ -353,76 +357,39 @@ module FrostThaw
       say(["LUMIN: Tomorrow, Sparkbearer. The rite keeps the sun's hours. Sleep, and come at sun-up."], event_id)
       return true
     end
-    send(:"glimmer_day#{dt_done(:glimmer) + 2}", event_id)
+    send(GLIMMER_RITE[[dt_done(:glimmer), GLIMMER_RITE.size - 1].min], event_id)
     true
   end
 
   def g_name = herald?(:glimmer) ? "you" : "Glimmer"
   def g_poss = herald?(:glimmer) ? "your" : "his"
 
-  def glimmer_day2(event_id)
+  def glimmer_severance(event_id)
     if dt_done(:glimmer) == 0 && !flag?(:lumin_rite_offered)
       set_flag(:lumin_rite_offered)
       say(["LUMIN: (looking at #{herald?(:glimmer) ? 'you' : 'Glimmer'} a long time) Brightmane brought you back. Tangled.",
            "LUMIN: Some of you tastes of winter. The knife. The old pact. It's still tied to her.",
-           "LUMIN: There's a rite. Seven days, sun-up to sundown. It unties what can be untied."], event_id)
+           "LUMIN: There's a rite. Two days, sun-up to sundown. It unties what can be untied."], event_id)
       return if !pbConfirmMessage(_INTL("Begin the rite with Lumin?"))
     end
-    say(["DAY 2. THE SEVERANCE OF FROST.",
-         "From sun-up to sundown, #{g_name} #{verb_for(:glimmer, 'stands', 'stand')} in a circle of sun-thread cloth.",
+    say(["THE FIRST DAY. THE SEVERANCE OF FROST.",
+         "From sun-up, #{g_name} #{verb_for(:glimmer, 'stands', 'stand')} in a circle of sun-thread cloth.",
          "LUMIN: This one. Does it taste of winter, or does it glow inward? ...And this one?",
          "One by one, every power #{g_name} #{verb_for(:glimmer, 'carries', 'carry')}, sorted, like seeds.",
          "At sundown Lumin burns a single strand of frost-silk. It hisses like a voice cut off.",
          "LUMIN: That was her whisper. One of them.",
          herald?(:glimmer) ? "(You feel it: the tether to Auril, weakening. The first fibre parting.)" : "GLIMMER: (very quietly) ...I felt that. Like a rope going slack."])
-    dt_step!(:glimmer)
-  end
-
-  def glimmer_day3(event_id)
-    say(["DAY 3. THE DAWN EMBER MEDITATION.",
-         "Under sap-lanterns charged with the day's sun, #{g_name} #{verb_for(:glimmer, 'sits', 'sit')} with empty hands.",
-         "A Wennen pulse-drum keeps the beat. Lumin chants Brightmane's Names of Courage, slow.",
-         "No spell. No pact. Just asking.",
-         "At the last name, a tiny gold ember sits in #{g_poss} palms, warm as a held hand."], event_id)
-    dt_step!(:glimmer)
-  end
-
-  def glimmer_day4(event_id)
-    say(["DAY 4. THE SUNCALL PURIFICATION.",
-         "At the Suncall brazier, Lumin bathes the pact-mark in #{g_poss} fur in auroral light.",
-         "A trickle of radiant fire runs down through the bloodline like a warm river.",
-         "The frostburn scars shift toward warmth. The warlock's features begin, slowly, to fade.",
-         "And the unicorn's horn Brightmane gave back, that #{g_name} #{verb_for(:glimmer, 'has', 'have')} carried all week,",
-         "sets itself to #{g_poss} brow, and grows in. It isn't coming off again. #{herald?(:glimmer) ? 'You know' : 'He knows'} it."], event_id)
-    dt_step!(:glimmer)
-  end
-
-  def glimmer_day5(event_id)
-    say(["DAY 5. THE LITANY OF THE MANE.",
-         "Brightmane's hymns, sung in the chapel arch where the roots twist upward like a mane.",
-         "LUMIN: The four heroic virtues. Say them with me.",
-         "Compassion. Courage. Persistence. Dawn-Love."], event_id)
-    speak(:glimmer, "Compassion. Courage. Persistence. Dawn-love.", "...Compassion. Courage. Persistence. Dawn-love.")
-    say(["Lumin ties a mane-braid of gold thread round #{g_poss} neck, warm as a hand.",
-         "LUMIN: For the holy symbol. A leaf-woven one, for now. Channel into it."])
+    say(["At dusk Lumin ties a mane-braid of gold thread round #{g_poss} neck, warm as a hand.",
+         "LUMIN: For the holy symbol. Channel into it. Not a pact. Will."])
     give_key(:FT_MANEBRAID)
-    say(["#{herald?(:glimmer) ? 'You hold' : 'Glimmer holds'} the leaf-woven symbol and wills it. Not a pact. Will.",
-         "Light, small and clear, blooms in it. The first prayer answered by will, not pact."])
+    say(["Light, small and clear, blooms in it. The first prayer answered by will, not pact."])
     dt_step!(:glimmer)
   end
 
-  def glimmer_day6(event_id)
-    say(["DAY 6. THE DAWNSTRIDE RITE.",
-         "A walking rite over the Canopy's bridges at sunrise. Dawnlight on shut eyes.",
-         "Healing prayers spoken on the move. Brightmane's courage breathed in with the cold air.",
-         "Lumin teaches the stances for channelling, one per bridge.",
-         "By the last bridge, the light in #{g_name} has stopped flickering. The pact is an ember."], event_id)
-    dt_step!(:glimmer)
-  end
-
-  def glimmer_day7(event_id)
-    say(["DAY 7. THE BRIGHTMANE ACCEPTANCE.",
+  def glimmer_acceptance(event_id)
+    say(["THE SECOND DAY. THE BRIGHTMANE ACCEPTANCE.",
          "A circle of Wennen priests in the chapel, weaving light round #{g_name} like a loom.",
+         "The unicorn's horn Brightmane gave back sets itself to #{g_poss} brow, and grows in.",
          "LUMIN: (her voice carrying to the treetop) Hope has found you worthy. Step into dawn."], event_id)
     pbSEPlay("Saint7") rescue nil
     $game_screen.start_flash(Color.new(255, 220, 120, 220), 30) rescue nil
@@ -494,22 +461,24 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Meat Meat's days
   #-----------------------------------------------------------------------------
+  # (story/15 §3, 15.06: four mornings merged into two, owner's call 2026-11-07:
+  # the glade, with the roof drills that night; the undercity, out into a wrong dawn)
+  MM_DAYS = %i[meat_meat_glade meat_meat_undercity]
+
   def meat_meat_day
-    n = dt_done(:meat_meat)
+    n = [dt_done(:meat_meat), MM_DAYS.size - 1].min
     mm = herald?(:meat_meat)
-    prompt = ["Meat Meat's going to see Razzilith in the glade.", "Meat Meat's going down to the undercity alone.",
-              "Meat Meat's up on the roof, very early.", "Meat Meat's going out to watch the dawn."][n]
+    prompt = ["Meat Meat's going to see Razzilith in the glade.", "Meat Meat's going down to the undercity alone."][n]
     return if !mm && !pbConfirmMessage(_INTL("{1} Go with her?", prompt))
-    return if mm && !pbConfirmMessage(_INTL("{1}", ["Go and see Razzilith in the glade?", "Go down to the undercity alone?",
-                                                    "Go up on the roof before dawn?", "Go out and watch the dawn?"][n]))
-    send(:"meat_meat_day#{n + 2}")
+    return if mm && !pbConfirmMessage(_INTL("{1}", ["Go and see Razzilith in the glade?", "Go down to the undercity alone?"][n]))
+    send(MM_DAYS[n])
   end
 
   def mm_she = herald?(:meat_meat) ? "you" : "she"
   def mm_her = herald?(:meat_meat) ? "your" : "her"
   def mm_name = herald?(:meat_meat) ? "you" : "Meat Meat"
 
-  def meat_meat_day2
+  def meat_meat_glade
     Stage.visit(2060, 18, 14, 8) do
       razz = walk_on("RAZZILITH")      # (he's at the Shrine by day; he flew down to meet her)
       say(["The glade where the Verdant Reversal began is warm today. Too warm. A fever under snow.",
@@ -547,12 +516,19 @@ module FrostThaw
       walk_off(razz)
     end
     set_flag(:razzy_first_flight)
+    # (that night, on the Hearth's roof: the drills from the old fourth morning)
+    say(["That night, on the Hearth's roof: drills. Rolls, drops, the silent ones.",
+         "Then sitting very still, thinking about Razzy. About his laugh. About a meadow.",
+         "The fear doesn't go. It sits down beside #{herald?(:meat_meat) ? 'you' : 'her'}, which is different.",
+         "(#{herald?(:meat_meat) ? 'You feel' : 'Meat Meat feels'} sharp: quick, quiet, steady. First cut, true cut.)"])
+    give(:QUICKCLAW)
+    give(:RAZORCLAW)
     dt_step!(:meat_meat)
     wheel(1)
     add_counter(:story_beats)
   end
 
-  def meat_meat_day3
+  def meat_meat_undercity
     Stage.visit(2055, 20, 14, 2) do
       say(["Below the Trunk-Tier's hum, the undercity is a lung half breathed out: thin air, cold.",
            "#{herald?(:meat_meat) ? 'You slip' : 'Meat Meat slips'} between fungal lanterns and crooked doorways.",
@@ -584,38 +560,14 @@ module FrostThaw
            "It never comes close enough to see. Only close enough to promise it'll be back."])
     end
     set_flag(:mm_undercity_walk)
-    dt_step!(:meat_meat)
-  end
-
-  def meat_meat_day4
-    say(["Before dawn, on the Hearth's roof. Drills: rolls, drops, the silent ones.",
-         "Then sitting very still, thinking about Razzy. About his laugh. About a meadow.",
-         "The fear doesn't go. It sits down beside #{herald?(:meat_meat) ? 'you' : 'her'}, which is different.",
-         "Back inside, the Rootwardens at the bar are trading rumours:",
-         "Blue lights pulsing under the Trunk-Tier's floor at night. \"Like something signalling up.\"",
-         "A Warden found walking the civic ring at dawn, empty-eyed, frost on her lashes. No memory.",
-         "And somebody's forging Council decrees: a dig under the Heartroot. Nearly the right seal."])
-    set_flag(:blue_lights_heard)
-    say(["(#{herald?(:meat_meat) ? 'You feel' : 'Meat Meat feels'} sharp: quick, quiet, steady. First cut, true cut.)"])
-    give(:QUICKCLAW)
-    give(:RAZORCLAW)
-    dt_step!(:meat_meat)
-  end
-
-  def meat_meat_day5
-    say(["Out on the walkway, #{mm_name} #{verb_for(:meat_meat, 'watches', 'watch')} the dawn, because something's wrong with it.",
+    # (out of the undercity into the wrong dawn: the old fifth morning)
+    say(["#{herald?(:meat_meat) ? 'You come' : 'Meat Meat comes'} up out of the undercity at dawn, and the dawn is wrong.",
          "The light holds a deep summer gold for several breaths too long. Long enough to squint at.",
          "Leaves near the walkways are curled at the edges. Not with cold. With heat.",
-         "The air's heavy. A storm that never arrives. \"Humidity spike,\" a local says. \"Happens.\"",
-         "The sap-lines are warmer than yesterday. Not alarming. Strange.",
-         "A glade bird sings a midsummer mating call. At dawn. Another paces, fluffed at nothing.",
-         "Flowers pop open too early in the heat, and by noon they're sagging, exhausted.",
-         "A vendor wipes her brow: \"Feels like summer's holding its breath.\"",
-         "A Rootwarden on the steps: \"The cycle's dragging. A hot day that won't roll over.\""])
+         "A vendor wipes her brow: \"Feels like summer's holding its breath.\""])
     sayc([herald?(:meat_meat) ? "(Rootspire's acting weird again. You file it away. Growth slow. Heat too strong.)" :
                                 cl(:meat_meat, "Rootspire is acting weird again. Growing slow. Too hot. Meat Meat files it."),
           cl(:reptin, "(quietly) The pulse is wrong. She's right.")].compact)
-    set_flag(:summer_imbalance_seen)
     # Heightened Summer-Sense (rootspire.md 5150-5156): for the next day, the
     # first thing that moves with heat doesn't get past her (048_H uses it).
     state[:summer_sense_day] = rs_day

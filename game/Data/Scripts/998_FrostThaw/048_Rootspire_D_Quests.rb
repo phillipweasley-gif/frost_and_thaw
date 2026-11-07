@@ -1224,10 +1224,22 @@ module FrostThaw
     if flag?(:cellar_cleared)
       return
     end
-    sayc(["EIRA VOSS: (her whisper filling the cellar like a cathedral) You found our little church.",
+    # (story/15 §3, 15.31: her Shrine market is folded in here, where she's met: who she is,
+    # her raven, her trade in stillness)
+    sayc(["Cold grips your lungs. Blue flame in cracked sconces.",
+          "A bone-thin woman with frost-burn scars, her white fur cloak stained with soot.",
+          "EIRA VOSS: (her whisper filling the cellar like a cathedral) You found our little church.",
           "She tilts her head too far, like a bird. Her eyes glitter. Her lips don't move.",
           "EIRA VOSS: Eline wanted the cold. The forge wants fire. I want what comes after. Silence.",
-          "EIRA VOSS: Every soul I send down brings the forge closer. Yours would bring it close."], event_id)
+          "EIRA VOSS: I sold stillness at the Shrine, a shard at a time. Down here I send souls."], event_id)
+    if flag?(:watcher_raven)
+      set_flag(:eira_raven_owned)
+      say(["She glances up at an empty cask, where something used to perch.",
+           "EIRA VOSS: You broke my raven. Auril's bird. It told me who carries the wyrmlings' warmth."], event_id)
+    elsif flag?(:rite_stopped)
+      watcher_glimpse("On a cask above her, a white-eyed raven turns its head to follow you.")
+    end
+    say(["EIRA VOSS: Every soul I send down brings the forge closer. Yours would bring it close."], event_id)
     return if !pbTrainerBattle(:FT_HALO_F, "Eira Voss", nil, false, 0)
     set_flag(:cellar_cleared)
     set_self_switch(event_id, "A")

@@ -273,6 +273,33 @@ begin
   check(said?(/That's two the Rootwardens owe you/, n), "Rheven remembers the festival")
   check(flag(:council_support_paid) && said?(/whatever you need/, n), "the Council's support is read back")
   check(said?(/a man in a borrowed coat/, n), "Darrus's crate: a man in a borrowed coat")
+
+  # --- owner's cuts (story/15, 2026-11-07): the two-day rite, Meat Meat's two days, Eira ---
+  unset(:glimmer_rite_done, :brightmane_answered, :lumin_rite_offered, :envoy_judged)
+  T.state[:dt] = {}; T.state[:dt_day] = {}
+  answer([/Begin the rite with Lumin/, 0])
+  go(2061, 20, 24, 8)
+  n = logpos; talk("Lumin Weavemoss")
+  check(said?(/Two days, sun-up to sundown/, n) && said?(/THE FIRST DAY/, n) && ($PokemonBag.pbHasItem?(:FT_MANEBRAID) rescue false),
+        "the rite's first day: the Severance, and the mane-braid at dusk")
+  T.state[:rs_day] = T.rs_day + 1
+  n = logpos; talk("Lumin Weavemoss")
+  check(flag(:glimmer_rite_done) && said?(/THE SECOND DAY/, n) && flag(:brightmane_answered), "the second day: the Acceptance, and Brightmane answers")
+  unset(:razzy_first_flight, :mm_undercity_walk); T.state[:summer_sense_day] = nil
+  answer([/Razzilith in the glade|undercity alone/, 0], [/climb on/i, 0])
+  go(2053, 4, 7, 8)
+  T.meat_meat_day; HL.settle(3000)
+  check(flag(:razzy_first_flight) && ($PokemonBag.pbHasItem?(:QUICKCLAW) rescue false), "Meat Meat's first day: the glade, and the roof drills that night")
+  T.state[:rs_day] = T.rs_day + 1
+  go(2053, 4, 7, 8)
+  n = logpos; T.meat_meat_day; HL.settle(3000)
+  check(flag(:mm_undercity_walk) && said?(/the dawn is wrong/, n) && T.state[:summer_sense_day], "her second: the undercity, out into a wrong dawn")
+  go(2056, 12, 14, 8)
+  check(!ev("Eira Voss"), "Eira's stall is gone from the Shrine")
+  unset(:cellar_cleared)
+  go(2188, 16, 12, 8)
+  n = logpos; talk("Eira Voss")
+  check(said?(/I sold stillness at the Shrine/, n), "Eira, met in the Frozen Cellar, says what she sold")
 rescue StandardError => e
   check(false, "#{e.class}: #{e.message} #{e.backtrace.first(4).join(' | ')}")
 end

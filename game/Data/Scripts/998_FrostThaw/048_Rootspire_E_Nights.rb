@@ -106,7 +106,7 @@ module FrostThaw
     ]]
   }
 
-  SW_FROSTFELL = 4177     # the Celestial Rift's portal to the Frostfell is open
+  SW_FROSTFELL = 4177     # the Celestial Rift's portal to the Frostfell (cut: always off)
 
   module_function
 
@@ -122,11 +122,11 @@ module FrostThaw
   end
 
   # Choices that lean toward the Frostmaiden: looking for her in Bryn Shander's
-  # crowd, the hag's bargain, buying Still Shards from Eira Voss, answering the
-  # frost sigil in the Silent Chapel, leaving the goddess whole in the Shard.
+  # crowd, the hag's bargain, answering the frost sigil in the Silent Chapel,
+  # leaving the goddess whole in the Shard. (Eira's Shrine market, and its cursed
+  # Still Shards, are cut: story/15 15.31.)
   def alberica_strayed
-    %i[saw_auril_bryn hag_bargain_taken chapel_auril shard_preserved tree_leans_frost].count { |f| flag?(f) } +
-      ((counter(:stillshards_cursed) rescue 0).to_i > 0 ? 1 : 0)
+    %i[saw_auril_bryn hag_bargain_taken chapel_auril shard_preserved tree_leans_frost].count { |f| flag?(f) }
   end
 
   # One omen, if one is due. Only for Alberica (in the party, or you). The
@@ -572,10 +572,7 @@ module FrostThaw
          "A vault in the ice, a door with wings spread over a frozen eye.",
          "Two dragons over a city, one green, one white, and a rider on each."])
     set_flag(:auroral_storm_seen)
-    set_switch(SW_FROSTFELL, true)
-    say(["HELLEN: (at the broken window, pale) Look at the Rift. At the crown. It never does that.",
-         "High above, where the Celestial Rift pours down, a door of white light has torn open."])
-    side_goal(:frostfell, "A door of white light hangs open at the Celestial Rift, up at the crown.", done: :frostfell_seen)
+    say(["By morning the light has lifted. Glass in every bed, and the aurora back where it belongs."])
   end
 
   def night_yeti_child
@@ -629,24 +626,12 @@ module FrostThaw
     set_flag(:verdant_storm_seen)
   end
 
-  # The Celestial Rift's portal to the Frostfell, after an auroral storm: the
-  # ice-winged angels bearing Avarice's mark the Rootwardens have seen.
+  # The Frostfell portal is cut (story/15 §3, 15.34; owner's call 2026-11-07). Its
+  # event on the Canopy (build_ch6b) never shows now (SW_FROSTFELL stays off); this
+  # only answers an old save that saw the door open, and shuts it.
   def frostfell_portal(event_id = nil)
-    return say(["The air where the portal was still smells of snow."], event_id) if flag?(:frostfell_seen)
-    say(["At the Celestial Rift a door of white light hangs open in the aurora.",
-         "Through it: a plain of perfect ice under a black sky, and nothing moving. Ever."], event_id)
-    # (notes/15 F7: what the Frostfell is, said by someone who'd know)
-    sayc([cl(:alerion, "The Frostfell. Auril's own country. The cold behind the cold."),
-          "Something is moving. Winged, white, coming through."].compact, event_id)
-    sayc(["An angel of ice, wings like knives of frost-glass. On its brow: a cracked mirror and an A.",
-          cl(:alberica, "(a hand on her chest) They're working together. The goddess and Avarice.")].compact)
-    return if !boss_battle(named_mon(:B227H124, 44, "Ice-Winged Angel"))
-    set_flag(:frostfell_seen)
     set_switch(SW_FROSTFELL, false)
-    add_counter(:story_beats)
-    say(["The angel shatters. The door folds shut behind it, like a frozen lake settling.",
-         "In the snow on the platform: one long feather of ice. It's still beating, faintly."])
-    give(:SNOWBALL)
+    say(["The air at the Rift smells of snow. Whatever was open here has closed."], event_id)
   end
 
   def night_tree_dream
