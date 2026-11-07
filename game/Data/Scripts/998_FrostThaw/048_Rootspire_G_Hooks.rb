@@ -122,7 +122,8 @@ module FrostThaw
                ["Mira Thynelight", 4, -> { thynelight_ready? }]],
       2055 => [["Shivven Pearlbite", 3, -> { flag?(:met_shivven) && !flag?(:shivven_told) }],
                ["Viessa Arialune", 3, -> { flag?(:met_viessa) && !flag?(:viessa_map) }],
-               ["Captain Ivran Solmar", 4, -> { ivran_ready? && !(respond_to?(:hellen_note_due?) && hellen_note_due?) }]],
+               ["Captain Ivran Solmar", 4, -> { ivran_ready? && !(respond_to?(:hellen_note_due?) && hellen_note_due?) &&
+                                        state[:hellen_note_day] != rs_day }]],
       2050 => [["Krolf the Mossback", 3, -> { flag?(:met_krolf) && !flag?(:krolf_boy) }],
                ["Mistress Felka", 3, -> { felka_ready? && !flag?(:felka_offered) }],
                ["Guild assessor", 3, -> { !flag?(:amber_asked) && !flag?(:amber_tested) }]],

@@ -663,6 +663,7 @@ module FrostThaw
       end
       say(["LORN SCRIBE: (still writing) The tree. Not the Council. Not the College.",
            "LORN SCRIBE: The World Tree dreams, and I write its dreams down, so it remembers them.",
+           "He dips the quill without looking up.",
            journey? ? "LORN SCRIBE: Four riddles, kept for the Heralds. You'll do to carry them, Herald's friend." :
                       "LORN SCRIBE: (not looking up) Four of you. Four riddles. One at a time. The ink is slow."], event_id)
     elsif flag?(:key_found) && !flag?(:scribe_backwards)
@@ -855,6 +856,7 @@ module FrostThaw
          "In a room of crystal leaves nobody else may enter, they unroll the oldest map of all.",
          "EIRWEN: Look. The Twenty Stones of Thruun. The old circle. Here.",
          "EIRWEN: And Rootspire, drawn over it. The Stones lie right under us. Under the Heartroot.",
+         "Their finger follows a line of faded ink, down, and down.",
          "EIRWEN: A passage, sealed since the Reversal. Under the Root-Gate, past the Guild Dig.",
          "EIRWEN: The old maps end it at a door. Iron and glass.",
          "EIRWEN: It began humming two nights ago. The leaves lining it are writing down hammers."], event_id)

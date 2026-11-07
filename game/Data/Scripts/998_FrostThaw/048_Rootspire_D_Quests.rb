@@ -534,6 +534,7 @@ module FrostThaw
     if who
       me = herald?(who)
       say(["ELINE: (turning, with a terrible gentleness) And you. #{who == :glimmer ? 'Sparkbearer' : 'Knife-bearer'}.",
+           "Behind her the chant drops to a hum, waiting.",
            "ELINE: The cold in your blade knows the way home. You've felt it since Saltmarsh.",
            "ELINE: Kneel with us. Let her finish what the knife began.",
            "ELINE: You'd never grieve again. Nothing that is still can grieve."])

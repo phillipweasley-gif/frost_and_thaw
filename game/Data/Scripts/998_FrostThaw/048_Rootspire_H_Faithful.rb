@@ -452,6 +452,7 @@ module FrostThaw
       say(["Hellen glances at the cellar door, then back at you.",
            "HELLEN: (low, wiping a clean glass) You beat me in my own cellar. So: the secret.",
            "HELLEN: The cask by the cellar wall with the sun chalked on it. Push it from the left.",
+           "She sets the glass down, finally.",
            # (notes/06 6.16)
            "HELLEN: My great-great-gran ran ale down it when the Council taxed the stair.",
            "HELLEN: It comes out under a barrel on the Split Dock. Don't you write it down."], event_id)
@@ -533,6 +534,7 @@ module FrostThaw
          "IVRAN: And you've a berth north, any night. Corsairs pay their debts. Eventually. Loudly."], event_id)
     $PokemonBag.pbDeleteItem(:FT_HELLENNOTE) rescue nil
     set_flag(:hellen_note_delivered)
+    state[:hellen_note_day] = rs_day          # (Ivran's own errand waits for another day)
     set_flag(:corsair_berth)
     side_goal(:hellen, "Back to Hellen at the Rooted Hearth.", done: :hellen_note_thanked)
     true
