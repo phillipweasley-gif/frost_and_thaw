@@ -645,13 +645,17 @@ module Story
       talk(/Pedestal/)
       5.times { talk(/Vault relic/) }
       beat("  A37 Avarice's root-vault", :vault_looted)
+      until_flag(:hammer_heart_done, 2) { travel(2152); talk(/Hanging root-golem/) }   # (H33, in her rooms now)
       fit(52)
       travel(2153); HL.frames(20); HL.settle(3000)
       talk(/Ghost of the Shard/)
       beat("  H22 the ghost of the Shard", :shard_echo_heard)
       until_flag(:antechapel_cleared, 3) { travel(2153); talk(/Aurora-lit guardian/) }
       talk(/Shrine of two sigils/)
-      until_flag(:hammer_heart_done, 2) { travel(2153); talk(/Hanging root-golem/) }
+      # (the Echo Vault's gifts wait in the Antechapel now, before the Heart)
+      until_flag(:echo_guardian_done, 2) { travel(2153); talk(/Drifting guardian/) }
+      talk(/Seed-pods/); talk(/Chardalyn fragments/)
+      until_flag(:aurora_treasury_done, 2) { travel(2153); talk(/Auroral roots/) }
       beat("  H22/H33/H37 the Antechapel", :antechapel_cleared)
       fit(53)
       travel(2076); HL.frames(30); HL.settle(8000)
@@ -672,9 +676,7 @@ module Story
       beat("  H25 the Sloughing Veins", :veins_entered)
       travel(2155); HL.frames(20); HL.settle(3000)
       beat("  H26 the Echo Vault", :echo_vault_entered)
-      until_flag(:echo_guardian_done, 2) { talk(/Drifting guardian/) }
-      talk(/Seed-pods/); talk(/Chardalyn fragments/); talk(/The tree's whisper/)
-      until_flag(:aurora_treasury_done, 2) { talk(/Auroral roots/) }
+      talk(/The tree's whisper/)
       beat("  H26/H36 the tree's prophecy and the Aurora Treasury", :tree_prophecy)
       beat("  H26 the Mirror Lens and the charm (tailored relics)", :mirror_lens)
       beat("  the personal-quest visions", :personal_visions)
@@ -698,7 +700,9 @@ module Story
       beat("SC 9.04 malevolent presence (air battle: pursuit)", :air_pursuit)
       beat("SC 9.05 the trap (the chardalyn dragon, #{FrostThaw.state[:seams] || 0} seams cracked)", :dragon_down)
       beat("SC 9.06 the green light on the horizon", :refugees_follow)
-      HL.frames(30); HL.settle(5000)
+      # (the square is yours to walk now: notes 09 E5, E17; Anduin asks to lead them out)
+      talk(/Refugee 1/); talk(/Olivessa \(with her bees\)/); talk(/Hooded woman/)
+      until_flag(:heralds_arrested, 2) { travel(2012); talk(/^Anduin$/); HL.frames(30); HL.settle(5000) }
       beat("SC 9.07 slayers of summer", :heralds_arrested)
       chapter10 if FrostThaw.flag?(:heralds_arrested) && ENV["STOP_AT"] != "9"
     end
@@ -1038,8 +1042,9 @@ module Story
       beat("H18 the Vault of Amber Dreams", :amber_vault_entered)
       until_flag(:amber_sentries_down, 3) { travel(2143); talk(/Amber pod$/) }
       talk(/Lab notes/)
-      until_flag(:core_destroyed, 3) { travel(2143); talk(/Amber pod 4/) }
-      beat("H19 the Stasis Gallery: the Homunculus Core and the lab notes", :core_destroyed)
+      # (the fourth pod offers "Leave it be" first now: notes 07 E18; either answer is the beat)
+      until_flag(:core_left, 3) { travel(2143); talk(/Amber pod 4/) } if !FrostThaw.flag?(:core_destroyed)
+      beat("H19 the Stasis Gallery: the Homunculus Core and the lab notes", FrostThaw.flag?(:core_destroyed) ? :core_destroyed : :core_left)
       talk(/Catalogu(ing|er) construct/); talk(/Root-table/); talk(/Sealed crates/)
       beat("H20 the Dissectory Annex (Autumn's crates)", :autumn_labs_seen)
       until_flag(:dissectory_golem, 2) { travel(2143); talk(/Hammer-arm construct/) }

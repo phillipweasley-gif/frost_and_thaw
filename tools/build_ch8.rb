@@ -52,6 +52,9 @@ end
 # A2-A7: the inner rooms, up from the north alcove (build_ch8_deep.rb, 2146)
 [22, 23].each { |x| ba.warp(x, 8, 2146, 18, 21, 8, name: "Into the inner rooms") }
 # A13: the sap-lift's Root stop, once the Rootwatch is cleared
+# Hew's diggers wake when you come back after the traitor's lever opened the gate
+# (034_Chapter8.rb diggers_wake, notes 08 E13)
+ba.event(0, 1, "Cutscene diggers wake", [{ graphic: "" }, { switch: 4091, trigger: 3, script: "FT.diggers_wake" }])
 ba.event(28, 15, "Sap-lift", [{ tile_id: 582, script: "FT.sap_lift(:root, @event_id)" },
                               { switch: 4087, tile_id: 582, script: "FT.sap_lift(:root, @event_id)" }])
 save(ba, :barricade)
@@ -75,9 +78,10 @@ save(hd, :hag_domain)
 # Selrae in the last cocoon (if she went ahead); Garagai's axe-head.
 cp = cave_map(28, 20)
 paint(cp, [2, 2, 4, 4], [4, 5, 20, 10], [22, 14, 3, 4], [6, 15, 10, 4])
-[2, 3, 4].each { |x| cp.warp(x, 1, 2149, 42, 25, 8, name: "Up to the root-keep gate") }
+[2, 3, 4].each { |x| cp.warp(x, 1, 2149, 42, 25, 8, name: "Up to the sap-bridge") }
 # A27: the rootbeast pens (failed prototypes for Razzy); A28: the prison root-cocoons
-cp.event(10, 17, "Rootbeasts", [{ graphic: "Followers/MAMOSWINE", direction: 8, script: "FT.rootbeast_pens(@event_id)" }])
+cp.event(10, 17, "Rootbeasts", [{ graphic: "Followers/MAMOSWINE", direction: 8, script: "FT.rootbeast_pens(@event_id)" },
+                                 { self_switch: "A", graphic: "", through: true }])   # (freed: gone, notes 08 E7)
 cp.event(13, 16, "Cage", [{ tile_id: 809, script: "FT.talk(:rootbeast_cage, @event_id)" }])
 [[8, 13], [16, 13], [20, 12]].each_with_index { |(x, y), i| cp.event(x, y, "Prison pod #{i + 1}", [{ tile_id: 808, script: "FT.prison_pod(#{i + 1}, @event_id)" }]) }
 cp.cutscene(3, 4, :cocoon_pens)
@@ -121,10 +125,10 @@ df.sign(17, 3, :twenty_stones)
 df.event(0, 0, "Cutscene dragonforge", [{ switch: SW_AUTUMN_FELL, trigger: 3, script: "FT.scene(:dragonforge, @event_id)" },
                                          { self_switch: "A" }])
 df.trainer(20, 20, nil, :duergar_thane, :FT_DUERGAR, dir: 6, sight: 3)
-df.event(26, 6, "Devil-priest", [
+df.event(26, 6, "Vexmortis the Devil-priest", [                  # (his name: VEXMORTIS: lines find him)
   { graphic: "BW (40)", direction: 2, script: "FT.devil_priest(@event_id)" },
   { switch: SW_FORGE_CLEARED, graphic: "BW (40)", direction: 4, script: "FT.devil_priest(@event_id)" },
-  { self_switch: "B", graphic: "", through: true }                # (fled, outnumbered: 034_Chapter8.rb)
+  { self_switch: "B", tile_id: 582, through: true, script: "FT.devil_priest(@event_id)" }   # (fled: the scorch-mark)
 ])
 [25, 26, 27].each do |x|
   df.event(x, 4, "Black-glass stair", [
@@ -152,7 +156,7 @@ hc.event(15, 14, "The engine", [{ tile_id: 809, script: "FT.talk(:engine_dead, @
 [[11, 7], [20, 7], [21, 9], [22, 11], [21, 13], [19, 15], [17, 16], [14, 16], [12, 15], [10, 13], [9, 11], [10, 9]].each_with_index do |(x, y), i|
   hc.event(x, y, "Root-spire #{i + 1}", [{ tile_id: 792, script: "FT.breaking_spire(#{i + 1}, @event_id)" }])
 end
-hc.event(16, 18, "Var Rime-Breaker (Avarice)", [   # (both names: VAR: and AVARICE: lines find him)
+hc.event(16, 14, "Var Rime-Breaker (Avarice)", [   # (both names: VAR: and AVARICE: lines find him; at the engine)
   { graphic: "FT_var", direction: 8 },
   { switch: SW_CIRCLE_PHASE, graphic: "FT_var_cracked", direction: 4, script: "FT.avarice_phase_two(@event_id)" },
   { switch: SW_ENGINE_DEAD, graphic: "", through: true }
