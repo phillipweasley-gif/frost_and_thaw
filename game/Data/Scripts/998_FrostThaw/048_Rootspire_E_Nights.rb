@@ -136,15 +136,17 @@ module FrostThaw
   def omen_check
     return false if !with_or_is?(:alberica) || flag?(:auril_whisper)
     state[:omens] ||= {}
-    # (notes/09 E15: one omen a day, so they don't stack and flatten each other)
-    return false if state[:omens][:day] == rs_day
+    # (notes/09 E15: never two close together, so they don't stack and flatten each other:
+    # at least three maps walked between one omen and the next)
+    last = state[:omens][:visit]
+    return false if last && (state[:map_visits] || 0) - last < 3
     OMENS.each do |key, (who, triggers, tiers)|
       next if who != :alberica && !with_or_is?(who) && !(key == :spark && flag?(:glimmer_gone))
       t = (0..2).find { |i| !state[:omens][[key, i]] }
       next if !t || t + 1 > omen_tier
       next if triggers[t..].flatten.none? { |f| flag?(f) }
       state[:omens][[key, t]] = true
-      state[:omens][:day] = rs_day
+      state[:omens][:visit] = state[:map_visits] || 0
       play_omen(key, tiers[t])
       return true
     end
@@ -923,6 +925,7 @@ if Events.respond_to?(:onStepTaken) && Events.respond_to?(:onMapChange)
   Events.onMapChange += proc { |_sender, _e|
     FrostThaw.instance_variable_set(:@rs_step_pending, true)
     FrostThaw.instance_variable_set(:@rs_scene_here, false)
+    FrostThaw.state[:map_visits] = (FrostThaw.state[:map_visits] || 0) + 1 rescue nil
   }
   Events.onStepTaken += proc { |_sender, _e|
     begin
