@@ -753,7 +753,7 @@ module Story
       travel(2060); 3.times { talk(/^Talion$/) unless FrostThaw.talion_resolved? }
       beat("SC 10.05 brother from beyond (#{%i[talion_released talion_restored talion_chased talion_haunted].find { |f| FrostThaw.flag?(f) }})", :talion_met)
       # Q5: Alberica's spores
-      travel(2054); talk(/Spring and Winter/)
+      travel(2054); talk(/Spring and Winter|Court clerk/)
       travel(2068); talk(/Kelyn and Selrae/)
       beat("SC 10.06 spores of contention (#{FrostThaw.flag?(:colony_recognised) ? 'recognised' : 'exiled'})", :spores_debated)
       trial_week_side unless ENV["NO_SIDE"]
@@ -1188,8 +1188,12 @@ if __FILE__ == $0 || ENV["STAGE_TRACE"]
                 [/scythe and child/, /Bone dust|silence/],
                 [/And which one, for loss/, 1], [/(sings|You sing)\.\.\.$/, ->(t, c) { c.first.to_s =~ /Stand still/ ? 1 : 0 }],
                 [/Weapon, or seed/, 0], [/What do you do about Selrae/, 0], [/Swear the Wardens/, 0], [/endorse first|And second/, 0], [/What do we do with a god/, 1], [/Iskra lowers/, 0],
-                [/^Talion\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Decide what to do|Accept he's a reflection/ } || 0 }],
+                [/^Talion\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Decide what to do|Accept he's a reflection|^Let him go$/ } || 0 }],
                 [/Escape\?/, 0], [/Who speaks for the Heralds/, 0], [/Help with\.\.\./, 0], [/^Sephek\.\.\./, ->(t, c) { c.index { |x| x.to_s =~ /Rose/ } || c.index { |x| x.to_s =~ /Alerion/ } || 0 }]]
+  # A skill challenge shows its options in a new order each time (036 challenge):
+  # pick the answer the scene told you, wherever it landed. Tried before the
+  # rules above; HL_PICK, added below, still comes first.
+  HL.answers.unshift([/./, ->(_t, _c) { FrostThaw.challenge_pick rescue nil }])
   HL.answers << [/Which Pokémon/, ENV["HL_STARTER"].to_i] if ENV["HL_STARTER"]
   # HL_PICK="prompt=>option;prompt=>option": extra rules, tried first (a choice that
   # matches no option falls through to the usual rules), e.g. "What do you do=>^Fight"
