@@ -154,6 +154,17 @@ module FrostThaw
     true
   end
 
+  # Several things picked up at once: one box naming the haul, not two boxes
+  # an item (notes 07 E11's way; a stack of item boxes is a run with nothing in it).
+  def give_haul(items, line)
+    items.each do |item, qty|
+      ok = ($PokemonBag.pbStoreItem(item, qty || 1) rescue false)
+      give(item, qty || 1) if !ok                  # (a full pocket: the usual route to the PC)
+    end
+    pbMEPlay("Item get") rescue nil
+    say([line])
+  end
+
   def hurt_lead(fraction, line = nil)
     lead = $Trainer.first_able_pokemon rescue nil
     return if !lead
@@ -806,11 +817,8 @@ module FrostThaw
     return if flag?(:vault_looted)
     set_flag(:vault_looted)
     add_counter(:story_beats)
-    say(["Among the stolen goods, things worth taking back."])
-    give(:FULLRESTORE, 2)
-    give(:MAXREVIVE)
-    give(:PPMAX)
-    give(:RARECANDY, 2)
+    give_haul([[:FULLRESTORE, 2], [:MAXREVIVE, 1], [:PPMAX, 1], [:RARECANDY, 2]],
+              "Things worth taking back: two Full Restores, a Max Revive, a PP Max, two Rare Candies.")
     sayc([cl(:meat_meat, "First light. The devil wasn't lying. Meat Meat hates that.")])   # (context 08 M8-6: the clock is on the spine now)
   end
 
@@ -841,7 +849,7 @@ module FrostThaw
       end
     when :scale
       if with_or_is?(:meat_meat)
-        speak(:meat_meat, "(holding it against her cheek) Razzy's. Razzy's first. Meat Meat is taking it home.", "...Razzy's.")
+        speak(:meat_meat, "(cheek to it) Razzy's. Razzy's first. Meat Meat is taking it home.", "...Razzy's.")
       end
       set_flag(:razzy_scale)
     when :rose
@@ -939,7 +947,7 @@ module FrostThaw
 
   # H32: the Thorn-Run Hall.
   def thorn_run(event_id = nil)
-    say(["Thorned roots thrust from the walls, and a pulse of light makes it all happen a beat early!"])
+    say(["Thorned roots lash from the walls; a pulse of light makes it all happen a beat early!"])
     hurt_lead(0.08, "A thorn catches {1}.")
     set_flag(:thorn_run_crossed)
   end
@@ -1064,8 +1072,7 @@ module FrostThaw
     return say(["The seed-pods are empty now, split like opened hands."], event_id) if flag?(:echo_pods_taken)
     say(["Seed-pods in the root like eggs in a nest, left for whoever gets this far. One glows."], event_id)
     set_flag(:echo_pods_taken)
-    give(:FT_GREATVERDANTSEED)
-    give(:FT_VERDANTSEED, 2)
+    give_haul([[:FT_GREATVERDANTSEED, 1], [:FT_VERDANTSEED, 2]], "You take a Greater Verdant Seed, and two Verdant Seeds.")
   end
 
   def echo_vault_items(event_id = nil)
@@ -1078,8 +1085,7 @@ module FrostThaw
     say(["Among the chardalyn: a charm of verdant fire, a bark scroll, and a lens of mirror-glass.",
          "Through the lens, the air is full of drifting shapes you couldn't see before."], event_id)
     set_flag(:echo_items_taken)
-    give(:FT_VERDANTFIRECHARM)
-    give(:FT_CYCLEOFROOTS)
+    give_haul([[:FT_VERDANTFIRECHARM, 1], [:FT_CYCLEOFROOTS, 1]], "You take the Verdant Fire Charm and the Cycle of Roots.")
     give_key(:FT_MIRRORLENS)
     set_flag(:mirror_lens)
     sayc([cl(:alberica, "(peering through it) Oh, they're everywhere. Little ghosts. Shy ones."),
@@ -1154,10 +1160,8 @@ module FrostThaw
          "As you reach in, the roots unclench. They were never roots."], event_id)
     return if !boss_battle(named_mon(:B439H290, 51, "Root-mimic"))
     set_flag(:aurora_treasury_done)
-    say(["The root-mimic sags and lets go of everything it was holding."])
-    give(:TM58) rescue nil
-    give(:PPMAX)
-    give(:FT_AURORALMOTE, 3)
+    give_haul([[:TM58, 1], [:PPMAX, 1], [:FT_AURORALMOTE, 3]],
+              "The root-mimic lets go of everything it held: TM58, a PP Max, three Auroral Motes.")
   end
 
   # The way up, and out, to Rootspire: Chapter 9.

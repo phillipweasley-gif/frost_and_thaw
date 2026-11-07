@@ -693,7 +693,9 @@ module FrostThaw
     heart_lair_actions
     return avarice_fight if flag?(:circle_done)
     if !flag?(:heart_opening_won)
+      Stage.pan_to(*HEART_VIEW) if stage_event(VAR_EVENT)
       say([TRAINER_INTROS[:avarice_opening]])          # (notes 08 E26: her intro, shown)
+      Stage.pan_back
       $ft_var_mask = true                       # she's still in Var's cracked face for the opening
       won = begin
         pbTrainerBattle(:FT_AVARICE, "Avarice", nil, false, AVARICE_OPENING) ? true : false
@@ -984,7 +986,11 @@ module FrostThaw
          "The engine goes dark."])
     Stage.face(gl, 2) if gl
     say(["Glimmer is kneeling where it was. Light is coming out of him, through his fur, his coat.",
-         "He's smiling.",
+         "He's smiling. He looks at you last."])
+    # (a farewell the player gives: WRITING_GUIDE §3, losses leave room for one)
+    c = pbMessage(_INTL("Glimmer looks at you."), [_INTL("Nod"), _INTL("Say his name")], 0)
+    say([c == 0 ? "You nod. He nods back, as if you'd agreed on something." : "You say his name. He hears it."])
+    say([
          "GLIMMER: The cold's gone. Years of it.",
          "GLIMMER: ...Tell Frostina it was a better fire. She'll know what I mean."])
     $game_screen.start_flash(Color.new(255, 250, 220, 200), 40) rescue nil
@@ -1294,7 +1300,7 @@ module FrostThaw
          "Far above, Razzilith panics. A picture in all your heads: every scale on end, then rage."])
     lines = []
     lines << cl(:alerion, "(already running) That's old frostcraft. Older than her. ...Frostina.")
-    lines << (herald?(:meat_meat) ? "In your hands, and in your friend's, the golden dagger hums, and won't stop." :
+    lines << (herald?(:meat_meat) ? "In your hands, the golden dagger hums, and won't stop." :
               with_or_is?(:meat_meat) ? "In your hands, and Meat Meat's, the golden dagger hums, and won't stop." :
                                         "In your pack, the golden dagger hums, and won't stop.")
     lines << "Far above, two dragons are already diving after it."

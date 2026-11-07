@@ -166,12 +166,12 @@ module FrostThaw
     mm = herald?(:meat_meat) ? nil : Stage.summon(:meat_meat)
     Stage.walk_to(mm, frostina.x, frostina.y, adjacent: true) if mm && frostina
     say([as(:meat_meat, herald?(:meat_meat) ? "(holding out Dawnfang) Glimmer said to tell you. It was a better fire." :
-                                              "(holding Dawnfang out, with you) Glimmer said to tell you. It was a better fire."),
+                                              "(holding Dawnfang out with you) Glimmer said to tell you. It was a better fire."),
          "Frostina lowers her head to the blade and hums four notes.",
          "She stops halfway, like a song with a voice missing."])
     if $PokemonBag && ($PokemonBag.pbHasItem?(:FT_FROZENROSE) rescue false)
       # (notes 08 E16: the rose Glimmer carried, given to the one who'd want it)
-      say([as(:meat_meat, "(setting a jar of black ice at her feet) And Shimmer's rose. He carried it last."),
+      say([as(:meat_meat, "(setting a black-ice jar at her feet) And Shimmer's rose. He carried it last."),
            "Frostina breathes on the jar, and the black ice goes clear."])
       set_flag(:rose_to_frostina)
     end
@@ -268,7 +268,7 @@ module FrostThaw
          "LUMIN: \"She will be asked to hold the cold still. She must not. Seasons are turned.\""])
     # (dialogue 08 §4.35: her voice, and she knows it's her)
     if herald?(:alberica)
-      speak(:alberica, "(your hand on your rune) Plenty of girls have a mark on their chest. Don't all look.", "...Hm.")
+      speak(:alberica, "Plenty of girls have a mark on their chest. Don't all look.", "...Hm.")
       say(["(Hold the cold still. That's what she's been asking me.)"])
     elsif with_or_is?(:alberica)
       say(["ALBERICA: (a hand on her rune) Plenty of girls have a mark on their chest. Don't all look."])
@@ -768,6 +768,13 @@ module FrostThaw
     say(["Rootwardens close in with spears lowered. Rheven leads them. He looks unhappy.",
          "RHEVEN: (not meeting your eyes) In the name of the Verdant Council, you're under arrest.",
          "RHEVEN: For the Summer Marshal. And for #{autumn_hand[:title]}."])
+    # (the player's input on the arrest: what you do when the spears come down)
+    if !herald?(:meat_meat)
+      c = pbMessage(_INTL("The spears come down toward Meat Meat."), [_INTL("Step in front of her"), _INTL("Put your hands up")], 0)
+      set_flag(:stood_by_mm_arrest) if c == 0
+      say([c == 0 ? "You step in front of her. Two spear-points stop a hand from your chest." :
+                    "You put your hands up. So does everyone else, slowly."])
+    end
     speak(:meat_meat, "Var was a coat! A coat!", "...Var was a coat.")
     sayc([cl(:reptin, "(hands up, smiling) Let's all be reasonable. Especially the people with spears."),
           cl(:alerion, "She's right. He was a coat.")])
@@ -787,11 +794,17 @@ module FrostThaw
       speak(:meat_meat, "Meat Meat said it. Meat Meat will say it again.", "...Meat Meat will say it again.")
     end
     # (notes 08 E3: what you did on the bridge, read back)
+    if flag?(:stood_by_mm_arrest) && !herald?(:meat_meat)
+      say(["MEAT MEAT: (behind you, very quietly) ...Meat Meat saw that."])
+    end
     if flag?(:you_took_cocoon)
       say(["MEAT MEAT: (to you) You held the child. Meat Meat let go of him. Say that, at the trial."])
     elsif flag?(:you_called_mm)
       say(["MEAT MEAT: (to you) You called Meat Meat's name. Meat Meat heard. Meat Meat chose anyway."])
     end
+    # (two voices from the crowd that's been staring, on screen for their lines)
+    Stage.actor(:someone_in_the_crowd, px - 2, py - 2, 2, graphic: "BW (38)")
+    Stage.actor(:someone_else, px - 2, py + 2, 8, graphic: "BW (29)")
     say(["SOMEONE IN THE CROWD: Murderers!",
          "SOMEONE ELSE: Liberators!",
          "KELYN: There will be a trial. The Trials of the Roots. Bring witnesses. Bring me anything."])

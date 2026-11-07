@@ -148,5 +148,5 @@ end
 # lift told after a rest, the fourth pod left asleep, Shimmer's rose given back
 module FrostThaw
   LOOP_ACT2_FLAGS.concat(%i[diggers_woken you_took_cocoon you_called_mm lift_told core_left
-                            rose_to_frostina]).uniq!
+                            rose_to_frostina stood_by_mm_arrest]).uniq!
 end

@@ -92,7 +92,7 @@ module FrostThaw
     sapwarden_irrel: "SAP-WARDEN IRREL: Loose! Loose! ...Why won't my hands loose?",
     sapwarden_vesk: "SAP-WARDEN VESK: The vines are hungry. Feed them a hero.",
     duergar_miner_gelt: "GELT: Topsiders in the deep mouth? Turn round. The dark's already spoken for.",
-    duergar_spy_ossk: "OSSK: (stepping out of the roots, a knife of black glass in each hand) Ah. Inconvenient.",
+    duergar_spy_ossk: "OSSK: (a knife of black glass in each hand) Ah. Inconvenient.",   # (notes 07 E4: he was standing there already)
     var_echo: "VAR: Come on, then. Show me winter can be held.",
     rootkin_sleepers: "SAP-SOLDIER: (groggy, swinging wild) Wha... who... GET THEM!",
     rootkin_soldiers: "SAP-SOLDIER: Awake. All of us. Good. Let's do this properly."
@@ -376,7 +376,7 @@ module FrostThaw
       sayc(["A scent you know: the perfume stalls in the Verdant Bazaar, where the moss-dancer sells.",
             # (dialogue 07 §4: she asks; Wyn answers)
             cl(:alberica, "Lirielle's. Ten gold a bottle and worth twelve. ...What's it doing down here?"),
-            cl(:wyn, "(breathing in) ...She dreams of roots burning. Maybe she dreamed this. Somewhere safe."),
+            cl(:wyn, "...She dreams of roots burning. Maybe she dreamed this place. Somewhere safe."),
             "(Rested in the grotto, nothing in the Heartroot can frighten your party: once.)"])
     end
   end
@@ -748,7 +748,7 @@ module FrostThaw
     lines << "CATALOGUER: SPECIMEN: FELINE, LIGHT-BEARING. NOTE: INCOMPATIBLE. BURN ON SIGHT." if with_or_is?(:glimmer)
     lines << "CATALOGUER: SPECIMEN: MYCONID-TOUCHED. NOTE: CANNOT BE FOUND WHEN NOT LOOKED FOR." if with_or_is?(:wyn)
     lines << "CATALOGUER: SPECIMEN: UNKNOWN. NOT ON THE WHEEL. CANNOT BE CATALOGUED. ERROR. ERROR." if journey?
-    say(lines)
+    say(lines, event_id)
     say(["It finishes its page, files it into a slot in the root, and goes back to waiting."])
   end
 
@@ -914,7 +914,7 @@ module FrostThaw
   # H21: the sealed crystal: the glass half of the forge door.
   def scriptory_crystal(event_id = nil)
     return say(["An empty socket in the root, still warm."], event_id) if flag?(:glass_sigil)
-    say(["A crystal sealed in the root, the size of a fist. A sigil turns slowly inside it, like a fish in ice."], event_id)
+    say(["A fist-sized crystal sealed in the root. A sigil turns slowly inside it, like a fish in ice."], event_id)
     if flag?(:root_key)
       say(["That sigil. The same one is etched in the glass of Hew's door."])   # (notes 07 E16)
     end
@@ -953,27 +953,27 @@ module FrostThaw
     if c == 0
       say(["EMISSARY: A duke of the cold circle. He's promised her the Frostmaiden's own throne.",
            "EMISSARY: In exchange: the Dale, all of it, delivered warm. He hates a cold meal.",
-           "EMISSARY: Now you know a secret. Mine costs a drop of blood: a glimpse of your future."])
+           "EMISSARY: Now you know a secret. Mine costs a drop of blood: a glimpse of your future."], event_id)
       c2 = pbMessage(_INTL("A drop of blood..."), [_INTL("Refuse, politely"), _INTL("Pay it")], 0)
       if c2 == 1
         set_flag(:bloom_bargain)
         wheel(-1)
         say(["You prick your thumb on a petal. The emissary breathes in the drop like perfume.",
              "EMISSARY: (delighted) Under the ice, in a white room, they'll hand you something cold.",
-             "EMISSARY: Everyone always is. Do say hello to her for me."])
+             "EMISSARY: Everyone always is. Do say hello to her for me."], event_id)
       else
-        say(["EMISSARY: Wise. Dull, but wise. I'll stay. I'm very good at staying."])
+        say(["EMISSARY: Wise. Dull, but wise. I'll stay. I'm very good at staying."], event_id)
         sayc([cl(:reptin, "(under his breath) Finally, manners. Naturally it's a devil.")])   # (dialogue 07 §4)
       end
       set_flag(:bloom_done)
       return
     elsif c == 1
-      say(["EMISSARY: Pity. I'd have liked the walk."])
+      say(["EMISSARY: Pity. I'd have liked the walk."], event_id)
       set_flag(:bloom_done)
       return
     end
     say(["You grip a black-glass petal. The emissary's smile widens past the edges of its face.",
-         "EMISSARY: Oh, NOW we're talking."])
+         "EMISSARY: Oh, NOW we're talking."], event_id)
     return if !boss_battle(named_mon(:B229H352, 48, "Root-bound fiend"))
     set_flag(:bloom_broken)
     set_flag(:bloom_done)
@@ -1092,6 +1092,13 @@ module FrostThaw
          "Stepping in would be stepping across time."], event_id)
     return if !pbConfirmMessage(_INTL("Step into the liquid mirror?"))
     Stage.overlay("O-03", fade: 20) rescue nil
+    # (the night is shown on the pit: Var, and the Corsair he deals with, on screen)
+    pit = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
+    echo = (pit && (pbResolveBitmap("Graphics/Characters/FT_var_echo") rescue nil)) ?
+             (Stage.actor(:var_echo, pit.x, pit.y, 2, graphic: "FT_var_echo") rescue nil) : nil
+    echo.opacity = 200 if echo
+    corsair = pit ? Stage.actor(:corsair, pit.x + 1, pit.y, 4, graphic: "BW054") : nil
+    corsair.opacity = 200 if corsair
     say(["You step in, and fall upward, into a warm night thirty years gone.",
          "The Split Dock, at night. A big, scarred man in Marshal's gold counts crates off a skiff.",
          "VAR: Thirty blades, forty bows, no Council stamp, no Council questions. That's the deal.",
@@ -1110,13 +1117,8 @@ module FrostThaw
          "VAR: (the glaive coming up) Who in the Nine Hells are you?",
          unmasked ? "AVARICE: Close. I need a coat, Marshal. Yours will do." : nil,
          "The lantern goes out."].compact)
-    pit = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
-    echo = (pit && (pbResolveBitmap("Graphics/Characters/FT_var_echo") rescue nil)) ?
-             (Stage.actor(:var_echo, pit.x, pit.y, 2, graphic: "FT_var_echo") rescue nil) : nil
-    if echo
-      echo.opacity = 200
-      Stage.turn_to(echo, $game_player) rescue nil
-    end
+    Stage.remove_actor(corsair) if corsair
+    Stage.turn_to(echo, $game_player) rescue nil if echo
     say(["In the dark, Var is still standing in the mirror, glaive in his hands, looking out at you."])
     target = with_or_is?(:alerion) ? :alerion : nil
     if target == :alerion && herald?(:alerion)
