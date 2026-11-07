@@ -995,6 +995,23 @@ check("every boss with its own battle picture has one in the art") {
   (FT::BOSS_PICTURES.values + ["FT_AVARICE_BODY"]).all? { |n| File.exist?(File.join(repo, "build/gfx/Battlers/FrostThaw/bosses/#{n}.png")) } }
 check("every pose sheet the scenes play is in the art (#{pose_sheets.size} sheets)") { pose_sheets.size > 20 && missing_poses.empty? }
 puts "  missing: #{missing_poses.join(', ')}" if !missing_poses.empty?
+check("an autosave before the god choice, and loading it asks the question again") {
+  t = File.read(File.join(repo, "game/Data/Scripts/998_FrostThaw/039_Chapter13.rb"), encoding: "UTF-8")
+  static = t.include?("autosave_before_choice\n    scene_what_do_we_do")
+  # loading the autosave re-runs the throne cutscene's script: it must come back to the question
+  asked = []
+  FT.singleton_class.send(:alias_method, :ft_smoke_wdwd, :scene_what_do_we_do)
+  FT.define_singleton_method(:scene_what_do_we_do) { asked << :asked }
+  had = %i[auril_down ending_shatter ending_third_way ending_still_keeper].map { |f| [f, FT.flag?(f)] }
+  FT.set_flag(:auril_down)
+  %i[ending_shatter ending_third_way ending_still_keeper].each { |f| FT.state[:flags]&.delete(f) }
+  FT.scene_throne
+  first = asked.size
+  FT.set_flag(:ending_third_way)
+  FT.scene_throne
+  FT.singleton_class.send(:alias_method, :scene_what_do_we_do, :ft_smoke_wdwd)
+  had.each { |f, v| v ? FT.set_flag(f) : FT.state[:flags]&.delete(f) }
+  static && first == 1 && asked.size == 1 }
 check("the Hearth coffee: four cups, each a real stat, picked once in the scene, and it wears off") {
   ok = FT::COFFEES.size == 4 && FT::COFFEES.values.all? { |_l, st, _s, _w| %i[ATTACK DEFENSE SPECIAL_ATTACK SPECIAL_DEFENSE SPEED].include?(st) } &&
        File.read(File.join(repo, "game/Data/Scripts/998_FrostThaw/024_Chapter6.rb"), encoding: "UTF-8").scan(/^\s*pick_coffee\b/).size == 1

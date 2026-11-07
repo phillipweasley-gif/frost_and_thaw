@@ -613,7 +613,12 @@ module FrostThaw
   # it; she sees the one who isn't on her wheel. Then four forms, each weaker
   # for the test that was broken.
   def scene_throne
-    return if flag?(:auril_down)
+    if flag?(:auril_down)
+      # (owner, 2026-11-07: an autosave before the god choice. Loading it re-runs this
+      # cutscene's script, so it comes back here and asks the question again.)
+      return if ending_chosen?
+      return scene_what_do_we_do
+    end
     throne = stage_event("Auril")
     if !flag?(:throne_entered)
       set_flag(:throne_entered)
@@ -792,7 +797,23 @@ module FrostThaw
     set_flag(:auril_down)
     ($game_switches[SW_AURIL_DOWN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
+    autosave_before_choice
     scene_what_do_we_do
+  end
+
+  def ending_chosen?
+    flag?(:ending_shatter) || flag?(:ending_third_way) || flag?(:ending_still_keeper)
+  end
+
+  # One of the game's autosave slots, written just before the choice, so each ending can be
+  # seen without replaying Grimskalle (owner, 2026-11-07).
+  def autosave_before_choice
+    return if !defined?(Game) || !Game.respond_to?(:auto_save)
+    ok = (Game.auto_save rescue false)
+    pbMessage(ok ? _INTL("\\me[GUI save game](The game autosaved here, before the choice.)") :
+                   _INTL("(The autosave didn't work. Save from the menu if you'd like to.)")) rescue nil
+  rescue StandardError => e
+    log("autosave_before_choice: #{e.message}")
   end
 
   #-----------------------------------------------------------------------------

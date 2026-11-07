@@ -35,6 +35,14 @@ module HL
   end
 end
 
+# --- saving: the driver never writes save files; an autosave is logged instead ---------
+module Game
+  def self.auto_save
+    HL.say("save", "autosave")
+    true
+  end
+end
+
 # --- messages: logged, answered by rules -----------------------------------------
 def pbMessage(message, commands = nil, cmdIfCancel = 0, skin = nil, defaultCmd = 0, &block)
   HL.say("msg", message)

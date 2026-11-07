@@ -850,4 +850,5 @@ Your answers are now in the script. Nothing is left open.
 - **The coffee scene gets one choice:** "What kind of coffee for you?" Four cups (Hellen's black, Wyn's mushroom coffee, honey and cream, Corsair-style with salt), each lifting one stat of every Pokémon you send out for the next three battles (050_Coffee.rb). The rest of the scene stays word for word.
 - **Rootspire's cut-and-merge verdicts (story/15) are approved:** Glimmer's rite down to two days, Meat Meat's days merged, the portal and Eira's market cut.
 - **The Umbound Chasm is renamed the Scratching Hollow** (Ch8, the Hag's Domain): named for the umber hulk under its floor.
+- **An autosave before the god choice** ("What do we do with a god?"): one of the game's autosave slots is written just before it; loading it brings you back to the question (039 `autosave_before_choice`).
 
