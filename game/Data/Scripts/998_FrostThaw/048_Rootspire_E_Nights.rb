@@ -231,6 +231,8 @@ module FrostThaw
   # The city's news (notes/15 E5): each ending gets Hellen's word at the next
   # rest, one a night, oldest first. [flag, line] (or a lambda for the line).
   CITY_NEWS = [
+    # (story/15 §3, 15.05: Tobin comes back)
+    [:tobin_turned, "HELLEN: Little Tobin came in at noon. Lit a candle at your shrine. In daylight. Loudly."],
     [:sliver_freed, "HELLEN: The Bazaar says you pulled a sliver of Auril out of Elitha's ice. Is that true?"],
     [:ash_exposed, "HELLEN: Ash. Ash, of all of them. He used to carry my barrels for nothing. ...Eat."],
     [:cellar_cleared, "HELLEN: Rootwardens marched a Halo preacher up the south steps today. Your doing, I hear."],

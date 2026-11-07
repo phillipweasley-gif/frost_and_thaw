@@ -8,6 +8,10 @@ $stdout.sync = true
 require_relative "driver"
 
 HL.start_up
+# the as-played trace's hooks ([offstage], [stage], [screen]...), without its story run
+def clean_binding = binding     # (its own locals: the trace's closures mustn't share ours)
+eval(File.read(File.expand_path("script_trace.rb", __dir__)).split(/^at_exit do/).first, clean_binding, "script_trace.rb")
+$after_start_up&.call
 HL.quiet = !ENV["HL_VERBOSE"]
 HL.answers = [[/Which adventure/, 1], [/How would you like to play/, 0], [/Choose a difficulty/, 1],
               [/What will you take/, ->(_t, c) { c.size - 1 }]]
@@ -36,7 +40,7 @@ def flag(f) = T.flag?(f)
 def set(*fs) = fs.each { |f| T.set_flag(f) }
 def unset(*fs) = fs.each { |f| T.set_flag(f, false) }
 def said?(re, from = 0) = HL.log[from..].any? { |l| l.start_with?("[msg]") && l =~ re }
-def mark = HL.log.size
+def logpos = HL.log.size
 def offstage_since(n) = T.offstage_speakers.drop(n)
 
 T.state[:companions] = [:alberica, :reptin, :alerion, :glimmer, :meat_meat]
@@ -52,10 +56,10 @@ off0 = T.offstage_speakers.size
 begin
   # --- greeters at the top of each new tier (notes/15 F1) ----------------------
   go(2180, 62, 40, 4)
-  n = mark; talk("Clerk at the stair")
+  n = logpos; talk("Clerk at the stair")
   check(said?(/\ACLERK: |\[msg\] CLERK: /, n) || said?(/CLERK:/, n), "a clerk at the top of the root-stair says what the Halls hold")
   go(2189, 27, 43, 8)
-  n = mark; talk("Doorman at the bridge")
+  n = logpos; talk("Doorman at the bridge")
   check(said?(/DOORMAN:/, n), "a doorman at the leaf-bridge says what the Promenade holds")
 
   # --- Lumea's fox is out on the Promenade (notes/15 E6) -----------------------
@@ -65,7 +69,7 @@ begin
 
   # --- a master shows their watcher at the first meeting (notes/15 E3) ----------
   go(2181, 8, 8, 8)
-  n = mark; talk("Bryn of Spring")
+  n = logpos; talk("Bryn of Spring")
   check(flag(:met_bryn) && said?(/twiggy ducks out of sight/, n), "Bryn's first meeting shows his watcher in the doorway")
 
   # --- the Suncleft opens on the same press, no bump (notes/15 E9) --------------
@@ -80,7 +84,7 @@ begin
   set(:met_gorran)
   answer([/warm ore on Gorran's anvil/, 0])
   go(2052, 8, 8, 8)
-  n = mark; talk("Gorran Ashal-Forge")
+  n = logpos; talk("Gorran Ashal-Forge")
   check(flag(:gorran_confronted) && !T.has_key?(:FT_WARMORE), "the warm ore goes on Gorran's anvil, and he owns up")
   check(said?(/Same boat Jorik's fell off\. Busy boat\./, n), "Alerion: \"Same boat Jorik's fell off. Busy boat.\"")
 
@@ -109,7 +113,7 @@ begin
   check(ship && ship.x >= 40, "the ship comes up the lane to meet you at the shore (x #{ship && ship.x})")
   check(flag(:frozen_run_done), "across the Frozen Run")
   go(2199, 40, 13, 2)
-  n = mark; talk("Dark ice")
+  n = logpos; talk("Dark ice")
   HL.settle(4000)
   check(said?(/Home\. Now\. Please\./, n), "the dark ice: Alberica's \"Home. Now. Please.\"")
   check($game_map.map_id == 2055, "and you're back on the Split Dock (map #{$game_map.map_id})")
@@ -127,7 +131,7 @@ begin
   answer([/What do you tell Kelyn/, 1])
   set(:autumn_note, :orb_visions, :halo_orb_cleared); T.state[:rs_day] = 4   # (Kelyn's at the orb from the third night)
   go(2061, 23, 24, 8)
-  n = mark; talk("High Speaker at the orb")
+  n = logpos; talk("High Speaker at the orb")
   check(said?(/I come up here to think/, n) && said?(/You don't believe me/, n), "Kelyn denies it before she owns up")
   check(flag(:kelyn_secret), "Pellar's note turns her (kelyn_secret)")
   HL.frames(40)
@@ -144,7 +148,7 @@ begin
   ash = ev("Trainer(3)"); $game_self_switches[[2050, ash.id, "A"]] = true if ash   # (beaten once, as a trainer)
   $game_map.need_refresh = true; HL.settle(300)
   $Trainer.party.each { |pk| pk.level = 100; pk.calc_stats; pk.heal }
-  n = mark; talk("Trainer(3)")
+  n = logpos; talk("Trainer(3)")
   check(said?(/Pull on the rope, Kethan\. See who pulls back\./, n) || flag(:ash_exposed), "Ash denies, then Kethan comes for him")
   check(flag(:ash_exposed), "Ash is exposed (ash_exposed)")
 
@@ -152,7 +156,7 @@ begin
   set(:grafting, :lecture_done)
   answer([/Wynsnow waits/, /Anchor us/])
   go(2063, 13, 6, 8)
-  n = mark; talk("Professor Wynsnow")
+  n = logpos; talk("Professor Wynsnow")
   check(flag(:chronal_anchored), "Anchor us: the full vision, at a price (chronal_anchored)")
 
   # --- Halden: kick the chair over (notes/15 E12) -------------------------------
@@ -167,25 +171,25 @@ begin
   set(:root_tier_arrived, :hellen_passages)
   unset(:hellen_note_given)
   go(2053, 4, 7, 8)
-  n = mark; talk("Hellen Brightrun")
+  n = logpos; talk("Hellen Brightrun")
   check(flag(:hellen_note_given) && said?(/a man in a grey cloak puts down his cup/, n), "Hellen's note, with the grey cloak at the bar")
   answer([/You're being followed/, /Turn round/])
   go(2055, 25, 7, 8)
-  n = mark; talk("Captain Ivran Solmar")
+  n = logpos; talk("Captain Ivran Solmar")
   check(flag(:hellen_note_delivered) && said?(/the Requiem remembers/, n), "the note reaches Ivran; the follower is faced on the dock")
 
   # --- the shrine in Hellen's cellar: Tobin (048_H) -----------------------------
   set(:hellen_note_thanked, :shrine_frost_asked)
   answer([/Sit up with the shrine/, 0], [/The novice/, 0])
   go(2059, 3, 23, 8)
-  n = mark; talk("Sign herald_shrine")
+  n = logpos; talk("Sign herald_shrine")
   check(flag(:tobin_turned) && flag(:lantern_runes_known), "Tobin, at the shrine at night, tells you about the hooks")
 
   # --- Eirwen: the ledger to the Council, and Kelyn comes up (notes/15 E10) -----
   set(:met_eirwen)
   answer([/Naerth's ledger/, /Take it to the Council/])
   go(2062, 7, 6, 8)
-  n = mark; talk("Eirwen Solglass")
+  n = logpos; talk("Eirwen Solglass")
   check(flag(:naerth_ledger_council), "the ledger goes to the Council")
   check(said?(/has had a great many things it decided the city wasn't ready for/, n) ||
         said?(/a lot of things it decided we weren't ready for/, n) || said?(/aren't ready for a lot/, n), "and someone says what the Council does with things")
@@ -194,7 +198,7 @@ begin
   set(:key_found); unset(:key_attuned, :canticle_learned, :canticle_researched, :canticle_partial)
   answer([/How do you want to look/, 0], [/sung for hope/, /Spring/], [/for loss/, /Autumn/])
   go(2062, 7, 6, 8)
-  n = mark; talk("Eirwen Solglass")
+  n = logpos; talk("Eirwen Solglass")
   check(said?(/humming like a song with no words/, n), "Eirwen answers the humming key")
   check(flag(:canticle_researched), "the three verses come back")
 
@@ -202,7 +206,7 @@ begin
   set(:glimmer_rite_done, :orb_visions); unset(:envoy_judged)
   answer([/What do you tell him\?/, /yours to choose/])
   go(2061, 20, 24, 8)
-  n = mark; talk("Lumin Weavemoss"); talk("Lumin Weavemoss") if !flag(:envoy_judged)
+  n = logpos; talk("Lumin Weavemoss"); talk("Lumin Weavemoss") if !flag(:envoy_judged)
   check(flag(:envoy_judged) && said?(/Hope's slow, Reptin\./, n), "the envoy; Alerion answers Reptin")
   check(said?(/rolled her eyes about it\./, n) && said?(/But she'd have said it\./, n), "Glimmer's line, word for word, in two boxes")
 
@@ -210,7 +214,7 @@ begin
   T.give_key(:FT_UNBONDEDSTAFF)
   answer([/Rest the night here/, 0])
   go(2060, 45, 9, 6)
-  n = mark; talk("Sign auroral_wall")
+  n = logpos; talk("Sign auroral_wall")
   check(flag(:staff_attuned), "the staff is bonded at the edge of the light")
   check(($game_screen.tone.red rescue 0).zero?, "and the night tone clears")
 
@@ -218,10 +222,10 @@ begin
   set(:eline_named_selrae, :selrae_courted); unset(:selrae_halo_known, :ch7_started)
   set(:glasswater_recap); T.state[:favour] = {}
   go(2053, 4, 7, 8)
-  n = mark; talk("Hellen Brightrun")
+  n = logpos; talk("Hellen Brightrun")
   check(flag(:selrae_halo_known) && said?(/Better a cult I can see/, n), "Selrae owns up at the back door after the Rite")
   T.state[:favour] = { spring: 2 }; T.state[:patron_faction] = nil
-  n = mark; talk("Hellen Brightrun")
+  n = logpos; talk("Hellen Brightrun")
   check(T.state[:patron_faction] == :spring && said?(/Renewal Wardens of Spring count you as friends now/, n),
         "Spring's boon names the faction, and its rival notices (#{T.state[:favour].inspect})")
   check((T.state[:favour][:autumn] || 0) < 0, "the rival is Autumn, from the one rival table (047d)")
@@ -232,17 +236,27 @@ begin
   T.cycle_day_conspiracy; HL.settle(3000); heal
   check(flag(:cycle_day_done) && flag(:effigy_saved), "the festival hunt: each step its own question, the effigy saved")
 
+  # --- ...and lost: Auril's Icy Avatar, the music cut, the dead counted ---------
+  unset(:lantern_runes_known, :cycle_day_done, :effigy_saved, :festival_casualties)
+  answer([/Follow her how|Which lanterns|Break the rune how|Get past the ring how|Who isn't looking up|The last string|The kneelers/, 1])
+  go(2050, 31, 28, 2)
+  n = logpos; T.cycle_day_conspiracy; HL.settle(3000); heal
+  check(flag(:icy_avatar_fought) && flag(:festival_casualties), "three misses: the avatar at the Still Sky Shrine")
+  check(HL.log[n..].any? { |l| l =~ /Eleven\. Eleven, on the seventh night/ }, "Kelyn counts the dead in the Circle")
+  check(HL.log[n..].any? { |l| l =~ /^\[music\].*Lavender/ }, "the music goes quiet for it")
+  HL.answers.shift
+
   # --- the trial week and the Council (047d) ------------------------------------
   unset(:pilgrim_dream)
   go(2053, 4, 7, 8)
-  n = mark; T.pilgrim_dream
+  n = logpos; T.pilgrim_dream
   check(said?(/Last night, you all dreamed the same dream/, n) && said?(/who listen for the cold/, n), "the pilgrim dream, past tense, to Alerion")
   set(:council_support, :rootwardens_favour, :darrus_redeemed); T.state[:council_ally] = :rheven
   unset(:council_heralds, :council_uncertain, :council_support_paid, :darrus_paid)
   set(:council_rheven)
   go(2054, 12, 15, 8)
   FrostThaw::Stage.actor(:rheven, 10, 13, 2, graphic: "FT_captain_rheven_stormbranch")    # (seated, as scene_four_chairs seats him)
-  n = mark; T.four_chairs_consequences
+  n = logpos; T.four_chairs_consequences
   check(said?(/That's two the Rootwardens owe you/, n), "Rheven remembers the festival")
   check(flag(:council_support_paid) && said?(/whatever you need/, n), "the Council's support is read back")
   check(said?(/a man in a borrowed coat/, n), "Darrus's crate: a man in a borrowed coat")

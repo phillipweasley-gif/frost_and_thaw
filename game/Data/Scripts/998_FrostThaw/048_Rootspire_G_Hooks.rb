@@ -107,6 +107,7 @@ module FrostThaw
    [:alberica, :college, :chronal_anchored, ["I can hear the tree in my pulse, darling. It hums flat. I'm learning harmony."]],
    [:alberica, :college, :wynsnow_confessed, ["The Professor meant to sew us into his tapestry. Sweet man. Dangerous needle."]],
    [:reptin, :warden_hall, :oath_of_roots, ["I took my own oath, from Rheven. My hands still feel it."]],
+   [:meat_meat, :hearth, :blade_seed, ["The blade said Meat Meat is a seed. Seeds do not stay in jars."]],
    [:meat_meat, :promenade, :sliver_freed, ["Ice lady's statue is just a statue now. Meat Meat licked it to check. Cold."]]
   ].each { |who, area, f, lines| party_react(who, area, f, lines) }
 
@@ -158,7 +159,8 @@ module FrostThaw
     "COURIER" => "BWRichboy", "HALDIS" => "BW (62)", "SPRING WARDEN" => "BW (62)", "BALANCE WARDEN" => "BW (62)",
     "AUTUMN COURIER" => "BWRichboy", "AUTUMN COURTIER" => "BWSocialite", "OLD LOYALIST" => "BW_oldman-drunk",
     "PILGRIM" => "FT_sephek", "CORSAIR RUNNER" => "BW_Sailor", "INITIATE" => "BW (22)", "DOCKWORKER" => "BW (19)",
-    "RAZZILITH" => "FT_razzilith", "KETHAN" => "BW (71)", "HELLEN" => "FT_hellen", "EIRWEN" => "FT_eirwen_solglass"
+    "RAZZILITH" => "FT_razzilith", "KETHAN" => "BW (71)", "HELLEN" => "FT_hellen", "EIRWEN" => "FT_eirwen_solglass",
+    "LANTERN-CARVER" => "FT_halo_disciple_male", "DRUM-KEEPER" => "FT_halo_disciple_female", "MASKED DEVOTEE" => "FT_halo_disciple_female"
   }
 
   def walk_on(tag, graphic = nil)
@@ -169,7 +171,7 @@ module FrostThaw
       return nil
     end
     slot = Stage.near_slot or return nil
-    a = Stage.actor(tag.downcase.gsub(/[^a-z]+/, "_").to_sym, slot[0], slot[1], 2, graphic: graphic || WALK_ON_LOOKS[tag])
+    a = Stage.actor(tag.downcase.gsub(/[^a-z\-]+/, "_").to_sym, slot[0], slot[1], 2, graphic: graphic || WALK_ON_LOOKS[tag])
     Stage.turn_to(a) if a
     a
   rescue StandardError => e
@@ -287,6 +289,8 @@ module FrostThaw
   def festival_of_balance(event_id = nil)
     say(["KELYN: The city wants to thank you. A Festival of Balance, in the Hall of Seasons.",
          "KELYN: And if you'll take it, Rootspire as your home. A bed. A door that's never locked."], event_id)
+    # (story/15 §3, 15.33: the Council remembers the orb)
+    say(["KELYN: (quieter, to you) You stopped me at the orb. I haven't forgotten. I won't."], event_id) if flag?(:kelyn_warned)
     c = pbMessage(_INTL("Accept the city's thanks?"), [_INTL("\"We accept.\""), _INTL("\"Not yet. When it's finished.\"")], 0)
     set_flag(:festival_of_balance)
     if c == 0

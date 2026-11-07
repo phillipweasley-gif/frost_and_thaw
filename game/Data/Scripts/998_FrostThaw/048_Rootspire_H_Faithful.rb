@@ -229,7 +229,10 @@ module FrostThaw
         say([bad_line])
         foe = fights[[misses - 1, fights.size - 1].min]
         say(["A Frost Cultist comes at you out of the crowd, cold-light on her fingertips."])
+        tag = TRAINER_INTROS[foe].to_s[/\A([A-Z][A-Z'\- ]*[A-Z]):/, 1]
+        cultist = tag && walk_on(tag)
         trainer(foe)
+        walk_off(cultist)
       end
     end
     if hits >= 5 || misses < 3
@@ -255,6 +258,7 @@ module FrostThaw
   # Half the lanterns are carved: Auril's Icy Avatar manifests at the Still Sky
   # Shrine. The Heralds have to defeat it while the crowd runs.
   def cycle_day_avatar
+    pbBGMFade(1.0) rescue nil               # (WRITING_GUIDE §9a: the music cuts for the shock)
     say(["The drum stops. Every carved lantern flares white at once.",
          "The aurora doesn't lift away. It pours down the tree, into the roots, and out far below.",
          "From the Root-Tier, a sound like a frozen lake splitting. Someone screams: STILL SKY."])
@@ -266,16 +270,19 @@ module FrostThaw
             cl(:alerion, "Get between it and them. Now.")].compact)
       $game_screen.start_shake(5, 6, 20) rescue nil
       won = boss_battle(named_mon(:B124H144, 46, "Auril's Icy Avatar"))
+      Stage.theme("Lavender Town")          # (after: the dead, counted)
       say([won ? "The avatar comes apart into hail and fog. The statue's only a statue, face down." :
                  "You fall back, and the Rootwardens come down the stair, and between you all, it breaks.",
            "Not everyone it touched gets up again."])
     end
     set_flag(:icy_avatar_fought)
     set_flag(:festival_casualties)
+    Stage.theme("Lavender Town")            # (back in the Circle, the same quiet)
     say_staged(["In the Festival Circle the lanterns are out. Families count heads. Some come up short.",
           "KELYN: (white-faced, to nobody) Eleven. Eleven, on the seventh night.",
           cl(:alberica, "(very quietly) Sing for them, someone. I can't. Not yet.")].compact)
     wheel(2)
+    Stage.theme(nil)
   end
 
   #-----------------------------------------------------------------------------
@@ -285,6 +292,7 @@ module FrostThaw
     return false if flag?(:envoy_judged) || !flag?(:glimmer_rite_done) || flag?(:glimmer_gone) || !with_or_is?(:glimmer)
     set_flag(:envoy_judged)
     pbSEPlay("Saint7") rescue nil
+    Stage.theme(:heralds)                   # (the old hymn, quietly, while the envoy stands there)
     $game_screen.start_flash(Color.new(255, 240, 200, 200), 20) rescue nil
     say(["The orb between the spires goes white, then gold, then a colour that has no name."], event_id)
     envoy = walk_on("ENVOY", "Followers/TOGEKISS_fly")       # (it steps out of the light, beside you)
@@ -329,6 +337,7 @@ module FrostThaw
       say(["(Judgment's fire: Charcoal makes its holder's Fire-type moves stronger.)"])
     end
     Stage.remove_actor(envoy) if envoy
+    Stage.theme(nil)
     wheel(1)
     add_counter(:story_beats)
     true
@@ -430,10 +439,12 @@ module FrostThaw
   def hellen_business(event_id = nil)
     if flag?(:festival_casualties) && !flag?(:hellen_mourned)     # GQ3 lost: the avatar's dead (rootspire.md 8494-8513)
       set_flag(:hellen_mourned)
+      Stage.theme("Lavender Town")
       say(["The common room is full, and nobody's talking. Eleven candles on the bar, one a name.",
            "HELLEN: (setting a bowl down, gently) Eat. You fought it. Half this room saw you.",
            "HELLEN: The Moss-Hatter's girl was one. She used to bring me the morning bread."], event_id)
       sayc([cl(:alberica, "(very quietly) Tell me their names, Hellen. All eleven. I'll keep them.")].compact)
+      Stage.theme(nil)
       return
     end
     if flag?(:badge_hearth) && !flag?(:hellen_passages)

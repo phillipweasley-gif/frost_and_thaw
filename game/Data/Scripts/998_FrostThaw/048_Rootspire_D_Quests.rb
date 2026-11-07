@@ -724,6 +724,7 @@ module FrostThaw
       return say(["Blue-black ice. Nothing moves in it. You don't look for long."], event_id)
     end
     set_flag(:frozen_run_shape)
+    pbBGMFade(2.0) rescue nil               # (the music goes out as you look down; the dock brings it back)
     say(["You kneel at the edge of the black ice and look down, where it goes blue-black.",
          "Far below: a shape. A woman, tall as a house, arms raised.",
          "For a moment her head seems to turn."], event_id)
