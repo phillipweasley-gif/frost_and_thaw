@@ -399,7 +399,7 @@ sc = ice_map(19, 17)
 ice_paint(sc, floor_of([3, 3, 13, 11], [8, 14, 3, 3]))
 [8, 9, 10].each { |x| sc.warp(x, 16, 2169, 16, 3, 2, name: "Back to the circuits") }
 sc.event(9, 5, "Avarice's cradle", [
-  { graphic: "FT_avarice", direction: 2, opacity: 200, script: "FT.scene_vault_cradle" },
+  { graphic: "FT_avarice_reforged", direction: 2, script: "FT.scene_vault_cradle" },   # (her mirror-crystal body, art batch 09)
   { switch: SW_VAULT_BROKEN, graphic: "", tile_id: ICE_CRYSTAL, script: "FT.talk(:vault_cradle_empty, @event_id)" }
 ])
 save_map(sc, 2170, "Lavender Town")

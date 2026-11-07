@@ -73,7 +73,7 @@ end
 # 2124: the Velryn house in Targos (Keegan and Garret)
 v, ex = Builder.from_existing(644)
 exits_to(v, ex, TARGOS, 41, 35)
-v.event(13, 7, "Keegan", [{ graphic: "BW (54)", direction: 4, script: "FT.climb_homecoming(@event_id)" }])
+v.event(13, 7, "Keegan", [{ graphic: "FT_keegan_velryn", direction: 4, script: "FT.climb_homecoming(@event_id)" }])
 v.event(1, 1, "Cutscene velryn_arrival", [
   {},
   { switch: SW_MC_BOY_TAKEN, trigger: 3, script: "FT.scene(:velryn_arrival, @event_id)" },

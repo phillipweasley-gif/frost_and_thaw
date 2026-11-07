@@ -126,7 +126,7 @@ df.event(0, 0, "Cutscene dragonforge", [{ switch: SW_AUTUMN_FELL, trigger: 3, sc
                                          { self_switch: "A" }])
 df.trainer(20, 20, nil, :duergar_thane, :FT_DUERGAR, dir: 6, sight: 3)
 df.event(26, 6, "Vexmortis the Devil-priest", [                  # (his name: VEXMORTIS: lines find him)
-  { graphic: "BW (40)", direction: 2, script: "FT.devil_priest(@event_id)" },
+  { graphic: "FT_devil_priest", direction: 2, script: "FT.devil_priest(@event_id)" },   # (the duergar disguise, before he turns)
   { switch: SW_FORGE_CLEARED, graphic: "BW (40)", direction: 4, script: "FT.devil_priest(@event_id)" },
   { self_switch: "B", tile_id: 582, through: true, script: "FT.devil_priest(@event_id)" }   # (fled: the scorch-mark)
 ])
