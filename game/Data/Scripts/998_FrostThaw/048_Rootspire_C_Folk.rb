@@ -57,7 +57,7 @@ module FrostThaw
                                  "TALWYN: One of you is hers. Her chosen. I know it.",
          "TALWYN: I'm going to be there when you find out."], event_id)
     sayc([herald?(:alerion) ? "(Your ring goes cold. Then warm.)" : cl(:alerion, "(a hand on his ring) She landed for me. She's particular."),
-          cl(:alberica, "Sweetheart, being somebody's chosen mostly means getting shouted at by dragons. Ask him.")].compact)
+          cl(:alberica, "Sweetheart, being somebody's chosen mostly means dragons shout at you. Ask him.")].compact)
   end
 
   #-----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ module FrostThaw
       say(["JORIK: The hatch by the split crate. I'll... I'll leave it unbarred. Don't tell Gorran.",
            "JORIK: He gets warm when he's angry. Properly warm."], event_id)
       set_switch(SW_RUN_OPEN, true)
-      sayc([cl(:meat_meat, "Meat Meat saw that ore before. On these planks. Dock man swept it. Dock man was lying."),
+      sayc([cl(:meat_meat, "Meat Meat saw that ore before. On these planks. Dock man swept it. He lied."),
             "JORIK: (as you go) Ash meets the barrels himself. Nobody checks a Rootwarden."].compact, event_id)
       side_goal(:smugglers_run, "The Smuggler's Run: the hatch by the split crate, on the Split Dock. Jorik's opened it.",
                 done: [:ore_found, :summer_ended])
@@ -189,7 +189,7 @@ module FrostThaw
            "REVA: Lumea asked. For the Court. It listens, and tells her what you say to each other."], event_id)
       say(["REVA: I didn't think it was hurting anyone. It's so pretty. The best thing I ever grew.",
            "REVA: I'll... I'll plant it out in the Fields. Somewhere nobody talks."], event_id)
-      sayc([cl(:reptin, "Plant it where it can grow into something that isn't a spy, Reva. That's all we want."),
+      sayc([cl(:reptin, "Plant it where it can grow into something that isn't a spy, Reva. That's all."),
             cl(:meat_meat, "Meat Meat said rude things near the flowers. Meat Meat does not regret it.")].compact)
       return
     end
@@ -446,7 +446,7 @@ module FrostThaw
     say(["SELENE: (reading) The Book of the Heralds, verse #{i + 1}:"] + SELENE_VERSES[i % SELENE_VERSES.size], event_id)
     state[:selene_verse] = i + 1
     if i == 0
-      sayc([cl(:alberica, "Darling, I've been called a lot of things. 'Demigod' is going straight on my door."),
+      sayc([cl(:alberica, "Darling, I've been called a lot of things. 'Demigod' is going on my door."),
             # (dialogue 15 §4: the joke is "again" only if she's heard Eirwen's book)
             flag?(:winter_returns_leaf) ? cl(:meat_meat, "Meat Meat is in a book again. Meat Meat wants a copy. With pictures.") :
                                           cl(:meat_meat, "Meat Meat is in a book. Meat Meat wants a copy. Alerion can read it to her.")].compact)
@@ -509,7 +509,7 @@ module FrostThaw
            "The old brewery in the civic ring. The Council Hall.",
            "And a cluster under the Hearth, the drips run together, thick as a swarm.",
            "VIESSA: Under the Hearth is the worst. Something there is very warm and very patient."], event_id)
-      sayc([cl(:alberica, "Under the Hearth. Hellen's cellar. Our shrine. ...Somebody's in for a very rude talk."),
+      sayc([cl(:alberica, "Under the Hearth. Hellen's cellar. Our shrine. ...Somebody's in for a rude talk."),
             cl(:reptin, "Under the Hearth is the tree. Under the tree, the forge. Rude all the way down.")].compact)
       # (notes/15 E19: the map's yours)
       say(["VIESSA: Take it. The map. I don't want it in the shop."], event_id)
@@ -712,9 +712,9 @@ module FrostThaw
     # (notes/15 E7: three different answers)
     c = pbMessage(_INTL("What do you do?"), [_INTL("\"No.\""), _INTL("Talk him out of it."), _INTL("Kick the chair over.")], 0)
     if c == 1
-      speak(:alberica, "Halden, darling. Every book in here was on the wrong shelf once. That's how it grows.",
+      speak(:alberica, "Halden, darling. Every book here was on the wrong shelf once. That's growth.",
             "...Some books belong where they ended up.") if with_or_is?(:alberica)
-      sayc([cl(:reptin, "We're not out of place, Professor. We're the place. The tree grew round us. Ask it.")].compact)
+      sayc([cl(:reptin, "We're not out of place, Professor. We're the place. The tree grew round us.")].compact)
       halden_finish
       wheel(1)
       return say(["HALDEN: (spiralling, then circling back, very slowly) ...The tree grew round them.",
@@ -763,7 +763,7 @@ module FrostThaw
         say(["RILKA: I was sent to see you all survive. I failed one. He would not let me not.",
              "RILKA: He said it was what torches are like."], event_id)
         sayc([cl(:alberica, "(very quiet) ...Of course he did. Of course he bloody did."),
-              cl(:meat_meat, "Fluffy one has a church. Meat Meat will go. Meat Meat will bring snacks for the candle."),
+              cl(:meat_meat, "Fluffy one has a church. Meat Meat will go. Meat Meat will bring snacks."),
               cl(:alerion, "Four notes. He never got them right. ...Tell your children to sing them wrong.")].compact)
         return
       end

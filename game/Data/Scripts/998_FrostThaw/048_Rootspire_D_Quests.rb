@@ -203,11 +203,11 @@ module FrostThaw
                        _INTL("\"I don't know. Let's find out together.\"")], 0)
         case c
         when 0
-          speak(:reptin, "We cleanse it. You don't cut out a heart because it's sick. You find what's poisoning it.",
+          speak(:reptin, "We cleanse it. You don't cut out a sick heart. You find what's poisoning it.",
                 "...We cleanse it. You don't cut out a heart.")
           set_flag(:rheven_mercy)
         when 1
-          speak(:reptin, "Sometimes you cut. I've cut. But never first, Rheven. Not while there's a pulse to guard.",
+          speak(:reptin, "Sometimes you cut. I've cut. Never first, Rheven. Not while there's a pulse.",
                 "...Sometimes you cut. Never first.")
           set_flag(:rheven_balance)
         else
@@ -444,7 +444,7 @@ module FrostThaw
          "EREN: Every winter there ever was. Everything my family forgot. All I have to say is yes.",
          herald?(:alerion) ? "As he says it, something pulls at you, behind your ribs. A thread drawn out of a coat." :
                              "As he says it, Alerion puts a hand to his chest, as if something had pulled."], event_id)
-    speak(:alerion, "Don't. Whatever she gives you, she takes from somewhere. I think she'd take it from me.",
+    speak(:alerion, "Don't. Whatever she gives, she takes from somewhere. She'd take it from me.",
           "...Don't take it. It's mine she'd give you.")
     c = pbMessage(_INTL("What do you tell Eren?"), [_INTL("\"Refuse her. Learn it the slow way, with us.\""), _INTL("\"It's your choice.\"")], 0)
     if c == 0
@@ -587,7 +587,7 @@ module FrostThaw
     end
     sayc([cl(:alberica, c == 2 ? "(rubbing her wrist) I can hear the tree in my pulse, darling. It hums flat." :
                                  "Darling, I've been tied to a lot of places. I'd rather choose the knots myself."),
-          cl(:glimmer, "I've had enough of other people's anchors. Brightmane's is the only one I'm keeping.")].compact)
+          cl(:glimmer, "I've had enough of other people's anchors. Brightmane's is the one I'm keeping.")].compact)
     true
   end
 
@@ -794,7 +794,7 @@ module FrostThaw
     Stage.overlay_off("O-03", fade: 20) rescue nil
     sayc(["The Library comes back. Eirwen is holding your wrist, counting your pulse.",
           "EIRWEN: You were gone a day. Here, it was a breath. The leaves wrote all of it down.",
-          cl(:alberica, "(wiping her eyes) I'd forgotten how frightened they were. I'd forgotten I wasn't."),
+          cl(:alberica, "I'd forgotten how frightened they were. I'd forgotten I wasn't."),
           cl(:reptin, "You were magnificent. You still are. The past has excellent taste.")].compact, event_id)
     wheel(1)
   end
@@ -997,8 +997,8 @@ module FrostThaw
       say(["DARRUS: The vault's under the Root-Tier docks. The Smuggler's Run. Wards. Traps.",
            "DARRUS: Nothing a professional can't manage."], event_id)
       sayc([herald?(:meat_meat) ? "(Mirror Mother. You know that name. From under the table. From the dark.)" :
-                                  cl(:meat_meat, "(very still) Mirror Mother. Meat Meat knows that name. From under the cold table."),
-            cl(:alberica, "If he's offering you a job, sweetheart, he's decided what you are. Let's decide otherwise.")].compact)
+                                  cl(:meat_meat, "(very still) Mirror Mother. Meat Meat knows that name. From the cold table."),
+            cl(:alberica, "If he's offering you a job, sweetheart, he's decided what you are. Let's not.")].compact)
       side_goal(:reliquary, "Darrus wants the Guild's reliquary from the vault in the Smuggler's Run.",
                 done: [:darrus_paid, :darrus_chartered, :darrus_redeemed, :summer_ended, :heist_done])
       return
@@ -1218,7 +1218,7 @@ module FrostThaw
           "When the Rootwardens come down to take her, she's still whispering. Backwards.",
           "\".sgniht lla dne dna ,sgniht lla ezeerf dna ,sgniht lla gnirb\"",
           "Wyn writes it down and reads it the right way round, and goes grey.",
-          cl(:wyn, "'Bring all things, and freeze all things, and end all things.' That's their whole creed."),
+          cl(:wyn, "'Bring all things, and freeze all things, and end all things.' Their whole creed."),
           cl(:reptin, "Then it's a very short creed. And it just lost its preacher.")].compact)
   end
 

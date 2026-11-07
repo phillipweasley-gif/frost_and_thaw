@@ -4,20 +4,20 @@
 #===============================================================================
 module FrostThaw
   TEXT.merge!(
-    timeline_wall: ["A long panel of living bark, carved with the city's years: FROM DOUGAN'S HOLE TO ROOTSPIRE.",
-                    "YEAR 0 VR. The Heralds shatter the hag's mirrors. A sapling bursts from the thawed soil above Dougan's Hole.",
-                    "YEAR 57 VR. The roots lace the valley. Druids, exiles and fisherfolk build walkways among them, and name the tree the Heart of Spring.",
-                    "YEAR 113 VR. Two wyrmlings, Razzilith the Verdant and Frostina the Pale, circle the valley. Their breath quickens the tree.",
-                    "YEAR 250 VR. The trunk hardens to crystal-oak. The canopy pierces the aurora. Dougan's Hole is gone beneath the roots. Rootspire is named.",
+    timeline_wall: ["A long panel of living bark, carved with the city's years.", "FROM DOUGAN'S HOLE TO ROOTSPIRE.",
+                    "YEAR 0 VR. The Heralds shatter the hag's mirrors.", "A sapling bursts from the thawed soil over Dougan's Hole.",
+                    "YEAR 57 VR. The roots lace the valley. Druids, exiles and fishers build walkways.", "They name the tree the Heart of Spring.",
+                    "YEAR 113 VR. Two wyrmlings circle the valley: Razzilith the Verdant, Frostina the Pale.", "Their breath quickens the tree.",
+                    "YEAR 250 VR. The trunk hardens to crystal-oak. The canopy pierces the aurora.", "Dougan's Hole is gone beneath the roots. Rootspire is named.",
                     "YEAR 400 VR. The Heralds of Dawn and Dusk return.",
                     "Someone has scratched underneath, more recently: AND THE SUMMER NEVER ENDED."],
-    prophecy_leaf: [{ if: { flag: :summer_ended }, lines: ["A crystal leaf that used to whisper. It's gone quiet now. The roots bled, and you were there."] },
+    prophecy_leaf: [{ if: { flag: :summer_ended }, lines: ["A crystal leaf that used to whisper. It's quiet now. The roots bled, and you were there."] },
                     ["A single frost-glass leaf in a case of its own, labelled DO NOT READ ALOUD.",
                      "It whispers anyway, to anyone who leans close:",
                      "\"The Frost Saint will climb the Spire when the roots bleed.\""]],
-    dock_hatch_barred: ["A hatch in the dock planks, barred from below. Fish-oil and smoke seep up through the cracks.",
+    dock_hatch_barred: ["A hatch in the dock planks, barred from below. Fish-oil and smoke seep up through it.",
                         "Somebody's using whatever's under the Split Dock. Somebody with a key."],
-    great_root: ["A root as wide as a house, rising out of the market toward the trunk. It's warm. It's always warm."]
+    great_root: ["A root as wide as a house, rising out of the market toward the trunk.", "It's warm. It's always warm."]
   )
 
   # What the party says in the city's new places (the party-chat menu).
@@ -66,6 +66,75 @@ module FrostThaw
                 frozen_cellar: ["The knife likes it down here. That's how I know it's wrong."] }
   }.each { |k, areas| (PARTY_CHAT[k] ||= {}).merge!(areas) if defined?(PARTY_CHAT) }
 
+  # The party remembers what you finished (notes/15 E5: one line per ending),
+  # in the place it happened. A line here comes before the place's usual one.
+  def self.party_react(who, area, flag, lines)
+    return if !defined?(PARTY_CHAT)
+    tab = (PARTY_CHAT[who] ||= {})
+    cur = tab[area]
+    variant = { if: { flag: flag }, lines: lines }
+    tab[area] = if cur.nil? then [variant, ["..."]]
+                elsif cur.all? { |e| e.is_a?(String) } then [variant, cur]
+                else [variant] + cur
+                end
+  end
+
+  [[:reptin, :fields, :staff_attuned, ["The staff hums with me now. Out here, where the year goes round."]],
+   [:reptin, :fields, :yeti_child_home, ["That yeti's out there with her cub.", "I like to think she watches the road for us."]],
+   [:glimmer, :canopy, :glimmer_hope, ["I told the envoy hope. The Shard's been warm since. Like a hearth."]],
+   [:glimmer, :canopy, :glimmer_judgment, ["I told the envoy judgment. The Shard runs hot now.", "I'm trying to be worth it."]],
+   [:alberica, :library, :naerth_ledger_published, ["Naerth's ledger, on the open shelves. People queue to cry at it.", "Good."]],
+   [:alberica, :library, :naerth_ledger_sealed, ["Eirwen's sealed ledger. Some doors you shut so you can open them later."]],
+   [:alberica, :library, :naerth_ledger_council, ["Kelyn has the ledger. I hope the Council reads faster than it votes."]],
+   [:alerion, :root_tier, :frozen_run_done, ["The ice is quiet now. The crews are sleeping."]],
+   [:meat_meat, :council, :heist_exposed, ["Meat Meat sat in fancy man's empty chair. It is not comfortable. Good."]],
+   [:meat_meat, :council, :heist_destroyed, ["Girl of light went up through that roof. Meat Meat waves at the roof sometimes."]],
+   [:reptin, :council, :council_support, ["The whole Council stood up for us.", "I've never been stood up for by a committee. It's alarming."]],
+   [:alberica, :hearth, :rootspire_haven, ["Home, sweetheart. It still sounds strange. I'm getting used to it."]],
+   [:alerion, :canopy, :kelyn_secret, ["Kelyn doesn't touch the orb for herself now. She looks at it. That's all."]],
+   [:wyn, :rootspire, :ash_exposed, ["Ash taught me to tie a ward-knot. I keep tying them.", "I don't know who for any more."]],
+   [:glimmer, :suncleft, :helion_known, ["Helion waited thirty years for that engine. The Shard hates him."]],
+   [:alberica, :college, :chronal_anchored, ["I can hear the tree in my pulse, darling. It hums flat. I'm learning harmony."]],
+   [:alberica, :college, :wynsnow_confessed, ["The Professor meant to sew us into his tapestry. Sweet man. Dangerous needle."]],
+   [:reptin, :warden_hall, :oath_of_roots, ["I took my own oath, from Rheven. My hands still feel it."]],
+   [:meat_meat, :promenade, :sliver_freed, ["Ice lady's statue is just a statue now. Meat Meat licked it to check. Cold."]]
+  ].each { |who, area, f, lines| party_react(who, area, f, lines) }
+
+  #-----------------------------------------------------------------------------
+  # Givers who come to you (notes/15 E1): when someone's second beat is ready,
+  # they notice you ("!") and come over, the way Act I's givers do (045_TenTowns
+  # GIVERS, givers_step). Their own scripts call giver_hello.
+  #-----------------------------------------------------------------------------
+  if defined?(GIVERS)
+    GIVERS.merge!(
+      2189 => [["Serelle of the Still Veil", 3, -> { flag?(:met_serelle) && !flag?(:serelle_vision) }],
+               ["Mira Thynelight", 4, -> { thynelight_ready? }]],
+      2055 => [["Shivven Pearlbite", 3, -> { flag?(:met_shivven) && !flag?(:shivven_told) }],
+               ["Viessa Arialune", 3, -> { flag?(:met_viessa) && !flag?(:viessa_map) }],
+               ["Captain Ivran Solmar", 4, -> { ivran_ready? && !(respond_to?(:hellen_note_due?) && hellen_note_due?) }]],
+      2050 => [["Krolf the Mossback", 3, -> { flag?(:met_krolf) && !flag?(:krolf_boy) }],
+               ["Mistress Felka", 3, -> { felka_ready? && !flag?(:felka_offered) }],
+               ["Guild assessor", 3, -> { !flag?(:amber_asked) && !flag?(:amber_tested) }]],
+      2062 => [["Pimmlet Natch", 3, -> { pimmlet_ready? }],
+               ["Professor Halden Vex", 4, -> { halden_ready? }]],
+      2180 => [["Gurk Thistlebane", 3, -> { flag?(:met_gurk) && !flag?(:cellar_hint) && flag?(:rite_stopped) }]]
+    )
+  end
+
+  # The Wheel, the first time it turns in Rootspire (notes/15 F10): what it is,
+  # once, in plain words.
+  class << self
+    alias_method :wheel_before_note, :wheel if method_defined?(:wheel) && !method_defined?(:wheel_before_note)
+  end
+
+  def self.wheel(amount = 1)
+    wheel_before_note(amount)
+    if amount > 0 && flag?(:act1_done) && !flag?(:wheel_explained)
+      set_flag(:wheel_explained)
+      say(["(Somewhere in the year, something turns a notch. The Wheel: kindness moves the seasons.)"])
+    end
+  end
+
   module_function
 
   #-----------------------------------------------------------------------------
@@ -85,45 +154,66 @@ module FrostThaw
 
   def petition_bench(event_id = nil)
     if !flag?(:engine_dead)
-      return say(["The petitioners' bench, in front of the four crystals. Rootspire's citizens wait here for the Council's ear.",
-                  "A clerk's sign: PETITIONS HEARD BETWEEN SEASONS. (There haven't been seasons for thirty years.)"], event_id)
+      return say(["The petitioners' bench, before the four crystals. People wait here for the Council's ear.",
+                  "A clerk's sign: PETITIONS HEARD BETWEEN SEASONS. (No seasons, these thirty years.)"], event_id)
     end
     return council_petitions(event_id) if !flag?(:council_petitioned)
     return festival_of_balance(event_id) if !flag?(:festival_of_balance)
-    say(["The petitioners' bench. Somebody has carved five small figures into the end of it, and a sixth, newer, smaller."], event_id)
+    say(["The petitioners' bench. Five small figures carved into one end.", "And a sixth, newer, smaller."], event_id)
   end
+
+  # Each seat wants a particular proof (notes/15 E7): what it cares about wins
+  # it; anything else wins it only if that season already trusts you a little;
+  # an appeal without proof only if it trusts you more.
+  SEAT_WANTS = { spring: %i[chardalyn_found ash_exposed], winter: %i[selrae_white_womb souls_ledger_seen],
+                 autumn: %i[heist_exposed ledger_found], wardens: %i[ash_exposed forge_glimpsed chardalyn_found] }
 
   def council_petitions(event_id = nil)
     have = PETITION_FINDINGS.select { |f, _| flag?(f) }
     say(["The Council sits for petitions, the first time since the summer began.",
-         "KELYN: Heralds. You've been under the city and out to its edges. Tell the Council what you found. Persuade us."], event_id)
+         "KELYN: Heralds. You've been under the city and out to its edges.",
+         "KELYN: The Council will hear what you found. Not what you think. What you found."], event_id)
     if have.size < 2
-      return say(["You haven't enough to lay before them yet. (Bring the Council proof: what you found under the city and in it.)"])
+      return say(["You haven't enough to lay before them yet.",
+                  "(Bring the Council proof: what you found under the city, and in it.)"])
     end
     wins = 0; fails = 0
-    seats = [["KELYN: (to the Hall) Spring will hear it.", :spring], ["SELRAE's empty seat is filled by her deputy, a frost-bearded old Warden.", :winter],
-             ["DARRUS's seat has a new Autumn Warden in it, very nervous.", :autumn], ["The Rootwardens' captains, at the back, arms folded.", :spring]]
-    seats.each do |intro, faction|
+    winter = flag?(:selrae_rescued) ? "SELRAE: (from Winter's seat) Winter will hear it. Briefly." :
+                                      "Selrae's seat holds her deputy now, a frost-bearded old Warden."
+    seats = [["KELYN: (to the Hall) Spring will hear it.", :spring, :spring],
+             [winter, :winter, :winter],
+             ["Autumn's seat has a new Warden in it, very nervous.", :autumn, :autumn],
+             ["The Rootwardens' captains, at the back, arms folded.", :spring, :wardens]]
+    seats.each do |intro, faction, wants|
       break if wins >= 3 || fails >= 2
       say([intro])
       opts = have.map { |_, t| _INTL("Show {1}.", t) } + [_INTL("Appeal to them without proof.")]
-      c = pbMessage(_INTL("What do you lay before them?"), opts, 0)
-      if c < have.size
+      c = pbMessage(_INTL("What do you lay before them?"), opts, -1)
+      c = opts.size - 1 if !c || c < 0
+      ok = if c < have.size
+             SEAT_WANTS[wants].include?(have[c][0]) || favour_of(faction) >= 1
+           else
+             favour_of(faction) >= 2
+           end
+      if ok
         wins += 1
-        favour(faction, 1)
-        say(["A murmur runs round the Hall. Heads nod, slowly. #{have[c][1].capitalize}: nobody can argue with that."])
-        have.delete_at(c) if have.size > 1
+        favour(faction, 1, quiet: true)
+        say([c < have.size ? "A murmur runs round the Hall. Heads nod, slowly. #{have[c][1].capitalize}." :
+                             "They hear you out, and believe you. They've watched you all season."])
       else
         fails += 1
-        say(["Polite silence. Somebody coughs. You've lost them, a little."])
+        say([c < have.size ? "They listen, politely. It isn't what this seat wanted to hear." :
+                             "Polite silence. Somebody coughs. You've lost them, a little."])
       end
+      have.delete_at(c) if c < have.size && have.size > 1
     end
     set_flag(:council_petitioned)
     if wins >= 3
       set_flag(:council_support)
       wheel(1)
       add_counter(:story_beats)
-      say(["KELYN: (standing) The Council of Seasons supports the Heralds. Whatever you need, for whatever comes next. North, if it's north.",
+      say(["KELYN: (standing) The Council of Seasons supports the Heralds. Whatever you need.",
+           "KELYN: For whatever comes next. North, if it's north.",
            "Every crystal in the Hall glows at once."])
     else
       say(["KELYN: (carefully) The Council... thanks the Heralds. And will consider. At length.",
@@ -132,16 +222,25 @@ module FrostThaw
   end
 
   def festival_of_balance(event_id = nil)
-    say(["KELYN: The city wants to thank you. A Festival of Balance, in the Hall of Seasons. The Heralds celebrated.",
-         "KELYN: And if you'll accept it: Rootspire as your home. Whatever comes, there's a bed here, and a door that's never locked."], event_id)
+    say(["KELYN: The city wants to thank you. A Festival of Balance, in the Hall of Seasons.",
+         "KELYN: And if you'll take it, Rootspire as your home. A bed. A door that's never locked."], event_id)
     c = pbMessage(_INTL("Accept the city's thanks?"), [_INTL("\"We accept.\""), _INTL("\"Not yet. When it's finished.\"")], 0)
     set_flag(:festival_of_balance)
     if c == 0
       set_flag(:rootspire_haven)
-      sayc(["That night the whole city comes. Rootwood pipes, frost-glass lanterns, and for once the dawn comes up green.",
-            "Hellen cries. Tamsin pretends not to. Somebody carves your names into the Council's living pillar, under the four leaves.",
+      # (notes/15 E11: the night comes, and the city with it)
+      pbFadeOutIn { $game_screen.start_tone_change(Tone.new(-60, -50, -10, 30), 0) rescue nil }
+      px, py = $game_player.x, $game_player.y
+      Stage.actor(:hellen, px - 1, py + 2, 8, graphic: "FT_hellen")
+      Stage.actor(:tamsin, px + 1, py + 2, 8, graphic: "FT_tamsin")
+      Stage.actor(:rheven, px + 2, py + 1, 4, graphic: "FT_captain_rheven_stormbranch")
+      sayc(["That night the whole city comes. Rootwood pipes, frost-glass lanterns, and dancing.",
+            "Hellen cries. Tamsin pretends not to. Rheven dances, very badly, with a Wennen.",
+            "Somebody carves your names into the Council's living pillar, under the four leaves.",
             cl(:alberica, "Home. Sweethearts, I haven't had one of those in four hundred years."),
             cl(:reptin, "We've had one. We just kept leaving it.")].compact)
+      pbFadeOutIn { $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil }
+      say(["For once the dawn comes up green."])
       wheel(1)
     else
       say(["KELYN: Then the door's open when it's finished. It'll stay open."])
@@ -162,13 +261,13 @@ module FrostThaw
     set_flag(:tamsin_tour)
     ev = event_id && $game_map ? $game_map.events[event_id] : nil
     sayc(["TAMSIN: (to the Heralds, bouncing) Never seen the Verdant Halls? Have you? HAVE you?",
-          "TAMSIN: North stair. The Rootwarden Hall's up there. Seven shops. Everyone who's anyone.",
+          "TAMSIN: North stair. The Rootwarden Hall's up there. Seven shops. Everyone who matters.",
           cl(:alberica, "Darling, is anyone up there who knows where Summer went?"),
           "TAMSIN: Everyone up there THINKS they know. That's the fun of it. Come on!"].compact, event_id)
     Stage.escort(ev, 17, 9) rescue nil if ev
     say(["TAMSIN: And the Promenade's over the leaf-bridge, on the Canopy. That's Autumn's. Posh."], event_id)
     say(["TAMSIN: (to you, quieter) I'm showing them round. You can come. ...You can't be in charge."], event_id) if journey?
-    side_goal(:city_tour, "The Verdant Halls: up the root-stair, north of the market. The Promenade: the leaf-bridge.",
+    side_goal(:city_tour, "The Verdant Halls: up the market's north stair. The Promenade: the leaf-bridge.",
               done: [:festival_night, :visited_halls])
   end
 
@@ -222,6 +321,11 @@ module FrostThaw
     $game_switches[SW_RUN_OPEN] = true if flag?(:heist_offered) || flag?(:jorik_confessed) || flag?(:viessa_map)
     $game_switches[SW_CELLAR_FOUND] = true if flag?(:cellar_hint) || (flag?(:viessa_map) && flag?(:rite_stopped))
     $game_switches[SW_SUNCLEFT_OPEN] = true if flag?(:suncleft_open)
+    # (notes/15 E10: Darrus ran; he isn't at his seat when you come back)
+    if flag?(:heist_exposed) && ($game_map.map_id rescue 0) == 2054
+      d = $game_map.events.values.find { |e| e.name == "Darrus Fell" }
+      (d.transparent = true; d.through = true) if d
+    end
     $game_map.need_refresh = true if $game_map
   end
 end

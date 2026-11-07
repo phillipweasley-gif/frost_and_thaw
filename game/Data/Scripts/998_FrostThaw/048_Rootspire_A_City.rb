@@ -86,7 +86,7 @@ module FrostThaw
     FT_EMBERLEAF: ["Emberleaf Capsule", "Emberleaf Capsules", 2, 1200,
       "Red with green wisps: heartfire and verdant threads. In battle, raises a Pokémon's Attack and Sp. Atk.", 0, 2, 0],
     FT_STILLSHARD: ["Shard of Stillness", "Shards of Stillness", 1, 600,
-      "A splinter of mirror from the Still Sky's black market. In it, your reflection blinks a beat late.", 0, 0, 0],
+      "A splinter of mirror from the Still Sky's black market. It goes cold near a hidden watcher, and your reflection blinks a beat late.", 0, 0, 0],
     FT_LOOPBAND: ["Rootwarden's Loop-Band", "Rootwarden's Loop-Bands", 8, 0,
       "A wristband of living bark from Arvik. It grows to fit, and moves with the World Tree. With the Quiet Step, half as many wild Pokémon find you in grass.", 0, 0, 6],
     FT_CHARDALYN: ["Chardalyn Fragment", "Chardalyn Fragments", 8, 0,
@@ -209,7 +209,7 @@ module FrostThaw
     arvik_spar:        "ARVIK: Guard the pulse. ...Guard YOUR pulse, then. Come on.",
     arvik_ambush:      "ARVIK: (dropping out of a branch above you) Ambush! Move!",
     ash_turned:        "ASH: You couldn't leave it alone. Fine. Rootwardens settle things the old way.",
-    eren_touched:      "EREN: (frost on his lashes, eyes far away) She gave me every winter there ever was. Let me show you.",
+    eren_touched:      "EREN: (frost on his lashes) She gave me every winter there ever was. Let me show you.",
     halden_vex:        "HALDEN: Hold still, displaced centuries! You're out of place, and I'm putting you back!",
     kethan_duel:       "KETHAN: (cracking his knuckles: pop, pop, like ice splitting) Words lie. Fists don't."
   )
@@ -221,25 +221,25 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   WATCHERS = [
     [:stalker, "Root-Hollow Stalker", "Bryn of Spring", :B185H93, "Followers/SUDOWOODO", :met_bryn,
-     "It reports on anyone examining the Heartroot, using fire, or asking about burning roots."],
+     "It reports anyone examining the Heartroot, using fire, or asking about burning roots."],
     [:veil_shade, "Frost-Veil Shade", "Ysera Dorn", :B200H124, "Followers/MISDREAVUS_fly", :met_ysera,
-     "It reports who talks with Autumn or Summer, any necromancy, and any heart pulled out of balance."],
+     "It reports who talks with Autumn or Summer, any necromancy, any heart out of balance."],
     [:moth_swarm, "Auroral Moth-Swarm", "Lumea Keth", :B49H122, "Followers/VENOMOTH_fly", :met_lumea,
-     "It reports what moves you: beauty, praise, resistance. Autumn's propaganda runs on perfect readings."],
+     "It reports what moves you: beauty, praise, resistance. Autumn's flattery needs to know."],
     [:ember_rat, "Infernal Ember-Rat", "Gorran Ashal-Forge", :B20H228, "Followers/RATICATE", :met_gorran,
-     "It follows heat. It reports anyone near the Suncleft, anyone with fire or radiance, anyone with a wyrmling's warmth."],
+     "It follows heat: anyone near the Suncleft, anyone with fire, any wyrmling's warmth."],
     [:homunculus, "Mirror-Shard Homunculus", "Jast Penumbran", :B137H122, "Followers/PORYGON", :met_jast,
-     "It reports anyone carrying mirror shards, anyone who says Avarice's name, and every visit to the Root-Tier shrines."],
+     "It reports mirror shards, anyone who says Avarice's name, every Root-Tier shrine visit."],
     [:weasel, "Garden-Whisper Weasel", "Maera Vell", :B162H215, "Followers/FURRET", :met_maera,
-     "It steals the details of you: hair, cloth, scent, who you trust. Maera is designing a coronation."],
+     "It steals the details of you: hair, cloth, scent, who you trust. Maera plans a crowning."],
     [:wraithling, "Soul-Thread Wraithling", "Ysera Dorn and the Rootwarden captains", :B93H167, "Followers/HAUNTER_fly", :met_kethan,
-     "It guards the Heartroot's doors and sees the threads between people like strings."],
+     "It guards the Heartroot's doors, and sees the threads between people like strings."],
     [:rune_beetle, "Echo-Rune Beetle", "Lumea Keth", :B165H178, "Followers/LEDYBA_fly", :atelier_fox_seen,
-     "It records thirty seconds of anything said near it, in its runes. Especially doubts about Autumn."],
+     "It keeps thirty seconds of anything said near it. Doubts about Autumn, most of all."],
     [:raven, "Snow-Still Raven", "Eira Voss", :B198H124, "Followers/MURKROW", :rite_stopped,
-     "Auril's sacred bird, altered. It reports anyone protecting warmth, or wyrmlings, or leading people away from the rite."],
+     "Auril's sacred bird, altered. It reports anyone who shields warmth or wyrmlings."],
     [:lurker, "Shadow-Heat Lurker", "Avarice herself", :B94H229, "Followers/GENGAR", :ch7_started,
-     "It lives in your own shadow. It studies your fears, your loyalties, your growing power, and the wyrmlings."]
+     "It lives in your own shadow. It studies your fears, your loyalties, and the wyrmlings."]
   ]
 
   # Where each watcher can be cornered: [map, x, y].
