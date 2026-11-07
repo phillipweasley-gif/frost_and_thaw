@@ -101,6 +101,11 @@ sw.event(20, 20, "Selrae Vorn", [
   { graphic: "FT_winter_matron_selrae_vorn", direction: 2, script: "FT.selrae_heartroot(@event_id)" },
   { switch: SW_SELRAE, graphic: "", through: true }
 ])
+# the two Rootwardens standing over Selrae, "unsure who they're guarding" (notes 07 E5); they go up with her
+[[19, 19, "Rootwarden"], [21, 19, "Rootwarden 2"]].each do |x, y, n|
+  sw.event(x, y, n, [{ graphic: "BW (72)", direction: 2, script: "FT.talk(:selrae_guard, @event_id)" },
+                     { switch: SW_SELRAE, graphic: "", through: true }])
+end
 [4, 5].each { |x| sw.warp(x, 2, ID[:root_gate], x == 4 ? 7 : 8, 33, 8, name: "Up to the Root Gate") }
 sw.cutscene(3, 5, :sap_wells_enter)
 save(sw, :sap_wells)

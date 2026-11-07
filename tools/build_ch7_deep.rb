@@ -160,8 +160,10 @@ thing(av, 21, 3, "Chanting pod", "FT.talk(:amber_chant, @event_id)", tile: 808)
   thing(av, x, y, "Amber pod #{i + 1}", "FT.stasis_pod(#{i + 1}, @event_id)", tile: i.even? ? 808 : 809)
 end
 thing(av, 24, 12, "Lab notes", "FT.stasis_notes(@event_id)", tile: 581)
+# a rest this deep (notes 07 E9: a loss here sent you two maps up): a Rootwarden camp, left behind
+thing(av, 30, 18, "Rootwarden camp", "FT.amber_camp(@event_id)", tile: 808)
 step_trigger(av, 24, 16, "Temporal Surge", "FT.temporal_surge(@event_id)")
-being(av, 40, 12, "Cataloguing construct", "Followers/GOLETT", "FT.cataloguer(@event_id)", dir: 4)
+being(av, 40, 12, "Cataloguer construct", "Followers/GOLETT", "FT.cataloguer(@event_id)", dir: 4)   # (its CATALOGUER: lines bubble on it, notes 07 E2)
 thing(av, 43, 15, "Root-table", "FT.dissectory_notes(@event_id)", tile: 581)
 thing(av, 37, 16, "Sealed crates", "FT.autumn_crates(@event_id)", tile: 809)
 being(av, 41, 16, "Hammer-arm construct", "Followers/GOLURK", "FT.dissectory_golem(@event_id)", dir: 8)

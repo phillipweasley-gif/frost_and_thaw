@@ -64,8 +64,9 @@ module FrostThaw
     rootguard_post: ["A cramped guardroom: bark-fibre bunks, a brazier of sizzling sap still warm.",
                      "On the rack, tools etched with infernal script. Not Rootwarden tools.",
                      "Someone else's tools, borrowed by Rootwarden hands."],
-    thrall_oren_after: ["I can still hear it. Down there.", "Like a heart, if a heart could want things."],
-    thrall_mae_after: ["Go on. Go down. Somebody has to.", "I can't make my feet do it anymore."],
+    thrall_oren_after: ["OREN: I can still hear it. Down there.", "OREN: Like a heart, if a heart could want things."],
+    thrall_mae_after: ["MAE: Go on. Go down. Somebody has to.", "MAE: I can't make my feet do it anymore."],
+    selrae_guard: ["ROOTWARDEN: We came down after the Matron. Now we're... not sure who we're guarding."],
     fragment_taken: ["Only a clear smear of sap is left where the map fragment was."],
     selrae_after: -> { flag?(:selrae_ahead) ? ["Selrae's footprints lead deeper, into the frost-grown roots.", "Frost follows them."] :
                                               ["Where Selrae sat, the root is still rimed with frost in the shape of her hands."] }
@@ -73,7 +74,7 @@ module FrostThaw
 
   PARTY_CHAT[:alberica].merge!(
     heartroot: [{ if: { flag: :selrae_faced }, lines: ["'The White Womb.' She said it like a prayer.",
-                                                        "I'd like to never hear anyone say it like that again, sweetheart."] },
+                                                        "I'd like to never hear anyone say it like that again."] },
                 ["It's like walking inside a song that's forgotten its words.", "The tree's still humming the tune. Badly. I could help."]]
   )
   PARTY_CHAT[:reptin].merge!(
@@ -113,9 +114,14 @@ module FrostThaw
   # (the Root-Gate event takes you down itself, right after this)
   def root_gate_descend(event_id = nil)
     aurora_hue
-    say(["The Rootwardens' willow seal lies cut on the ground.",
-         "Warm air rises out of the well: sap, and old ice.",
-         "A stair of living root spirals down into the dark. You climb over the fence and go down."], event_id)
+    if flag?(:root_gate_climbed)
+      say(["You climb down the root stair."], event_id)
+    else
+      set_flag(:root_gate_climbed)
+      say(["The Rootwardens' willow seal lies cut on the ground.",
+           "Warm air rises out of the well: sap, and old ice.",
+           "A stair of living root spirals down into the dark. You climb over the fence and go down."], event_id)
+    end
     root_gate_hook
   end
 
@@ -143,7 +149,7 @@ module FrostThaw
          "The air goes warm, then cold, as if the seasons can't agree whose turn it is.",
          "Somewhere ahead, water whispers against glass.",
          "Faint aurora trickles down through hairline cracks. #{HUE_WORDS[hue][0]}, tonight: #{HUE_WORDS[hue][1]}'s colour.",
-         cl(:alerion, "Tonight's aurora is #{HUE_WORDS[hue][0].downcase}. Remember that. Places like this always ask."),
+         cl(:alerion, "Tonight's aurora is #{HUE_WORDS[hue][0].downcase}. Remember that."),
          with_or_is?(:alerion) ? cl(:reptin, "He means: everyone, please take notes.") : nil,
          with_or_is?(:alerion) && with_or_is?(:reptin) ? cl(:alerion, "I meant remember it.") : nil,
          cl(:wyn, "(very softly) ...The tree's frightened. Sorry. I just... thought someone should say.")].compact)
@@ -180,10 +186,13 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Press your palm to the rune?"))
     seq << season
     pbSEPlay("Saint1") rescue nil
-    say(["The rune lights under your hand, and its sap runs bright down the channel toward the centre."])
+    rn = stage_event(event_id)
+    Stage.fx("E-07", stage_spot(rn), frames: 8, oy: 16, wait: false) rescue nil
+    say(["The rune lights under your hand. Its sap runs bright down the channel toward the centre."])
     return if seq.size < 4
     state[:rune_seq] = []
     if seq == rune_answer
+      ($game_screen.start_flash(Color.new(220, 255, 200, 180), 20)) rescue nil
       say(["Four colours of sap meet in the hollow at the centre.",
            "They climb the thread of aurora like ivy up a wall, in order, round and round.",
            "The circle sighs. Below you, the braided-root door unknots itself, root by root.",
@@ -215,11 +224,17 @@ module FrostThaw
   def rune_seal(event_id = nil)
     return say(["The four runes glow softly in turn, and the braided-root door stands open."], event_id) if flag?(:seal_open)
     hue = aurora_hue
-    say(["A circle of bare heartroot, carved with four seasonal runes. Each bleeds a different colour of sap.",
-         "At the centre, a hollow where the colours could meet.",
-         "Above it, a crack in the roof lets in a thread of aurora: #{HUE_WORDS[hue][0].downcase}.",
-         "Round the rim, in Druidic and in Wennen:",
-         "BEGIN WHERE THE SKY BEGINS. TURN AS THE YEAR TURNS."], event_id)
+    if flag?(:seal_read)
+      say(["The seal circle. Tonight's thread of aurora: #{HUE_WORDS[hue][0].downcase}.",
+           "BEGIN WHERE THE SKY BEGINS. TURN AS THE YEAR TURNS."], event_id)
+    else
+      set_flag(:seal_read)
+      say(["A circle of bare heartroot, carved with four seasonal runes. Each bleeds a different colour.",
+           "At the centre, a hollow where the colours could meet.",
+           "Above it, a crack in the roof lets in a thread of aurora: #{HUE_WORDS[hue][0].downcase}.",
+           "Round the rim, in Druidic and in Wennen:",
+           "BEGIN WHERE THE SKY BEGINS. TURN AS THE YEAR TURNS."], event_id)
+    end
     seq = state[:rune_seq] || []
     if !seq.empty?
       say(["#{seq.size == 1 ? 'One rune is' : "#{seq.size} runes are"} glowing: #{seq.map { |k| HUE_WORDS[k][1] }.join(', ')}."])

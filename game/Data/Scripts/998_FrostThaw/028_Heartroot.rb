@@ -100,10 +100,11 @@ module FrostThaw
     sap_bones: ["Half sunk in the glowing sap: bones that aren't bones.",
                 "Ribs of root and wire, a skull of fired clay. Failed constructs.",
                 "One still has a brass plate on its chest, stamped with a stylized \"A\"."],
-    thrall_bryce_after: ["I can hear my own name again. It's a good name. I'd forgotten."],
-    thrall_ulla_after: ["Go careful past the wells. The sap sings to you if you let it."],
-    digger_gant_after: ["Tell Hew I'm sorry about the lamp. It was a good lamp."],
-    digger_hobb_after: ["I'm going up. I'm going up and I'm never coming down.", "Somebody else can dig."],
+    # (notes 07 §3: trainers' after-lines are spoken, so they carry the speaker's name)
+    thrall_bryce_after: ["BRYCE: I can hear my own name again. It's a good name. I'd forgotten."],
+    thrall_ulla_after: ["ULLA: Go careful past the wells. The sap sings to you if you let it."],
+    digger_gant_after: ["GANT: Tell Hew I'm sorry about the lamp. It was a good lamp."],
+    digger_hobb_after: ["HOBB: I'm going up. I'm going up and I'm never coming down.", "HOBB: Somebody else can dig."],
     overflow_sign: ["Carved into the root at the top of the slope, in Rootwarden script:", "SLICK. ONCE YOU'RE MOVING, YOU'RE MOVING."]
   )
 

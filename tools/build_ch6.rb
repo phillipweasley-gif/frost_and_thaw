@@ -125,7 +125,8 @@ rs.trainer(18, 31, nil, :warden_tobin, :FT_ROOTWARDEN, dir: 8, sight: 2)
 rs.door(17, 8, LIFE[:halls], 62, 40, 4, name: "Root-stair to the Verdant Halls")
 # Mira of the North Wind's mirror stall in the Bazaar, until she's herself again; the boy with the mirror
 person_until(rs, 36, 20, "FT_mira_possessed", :mira_stall, SW_MIRA_FREED, dir: 2, name: "Mira's mirror stall")
-rs.event(38, 20, "Boy with a mirror", [{ graphic: "BW (17)", direction: 2, script: "FT.rs_mirror_child(@event_id)" }])
+# the boy with the mirror: named "Child" so his CHILD: lines bubble on him (notes 07 E2); a boy's sprite (BW (17) is Mira's girl)
+rs.event(38, 20, "Child with a mirror", [{ graphic: "BW (18)", direction: 2, script: "FT.rs_mirror_child(@event_id)" }])
 rs.event(10, 23, "Krolf the Mossback", [{ graphic: "BW (115)", direction: 4, script: "FT.krolf(@event_id)" }])
 rs.event(47, 18, "Mistress Felka", [{ graphic: "BWOldWoman", direction: 4, script: "FT.felka(@event_id)" }])
 rs.event(46, 29, "Guild assessor", [{ graphic: "BW (84)", direction: 4, script: "FT.amber_assessor(@event_id)" }])
@@ -153,12 +154,13 @@ save(sw, :sap_shop)
 
 # 2053: the Rooted Hearth, a tavern grown into a hollow knot of the tree
 rh, ex = Builder.from_existing(768)
+rh.map.events.delete_if { |_id, e| e.name == "Closed" }   # (the source map's stair: the cellar stair below, notes 06 E28)
 exits_to(rh, ex, ID[:rootspire], 31, 28)
 rh.event(3, 6, "Hellen Brightrun", [{ graphic: "FT_hellen", direction: 6, script: "FT.hellen(@event_id)" }])
 rh.event(13, 5, "Rumours", [{ graphic: "BW (85)", direction: 4, script: "FT.hearth_rumour(@event_id)" }])
 rh.npc(10, 8, "BW (54)", :hearth_drinker, dir: 2)
 rh.npc(7, 10, "BW (62)", :hearth_bard, dir: 8)
-gated_door(rh, 5, 3, 2059, 11, 24, 8, 3934, :hearth_stair_shut, name: "Cellar stair")
+[5, 6].each { |x| gated_door(rh, x, 3, 2059, 11, 24, 8, 3934, :hearth_stair_shut, name: "Cellar stair") }
 watcher(rh, 12, 9, :lurker, "Followers/GENGAR")
 save(rh, :hearth)
 

@@ -988,7 +988,7 @@ module Story
       beat("SC 7B.07 Selrae, below (the Root-Key)", :root_key)
       # M2 is Meat Meat's: take the boy's mirror off him in the Bazaar first.
       if !($PokemonBag.pbHasItem?(:FT_BOYSMIRROR) rescue false) && !FrostThaw.flag?(:mirror_child_free)
-        until_flag(:boy_mirror_taken, 3) { travel(2050); talk(/Boy with a mirror/) }
+        until_flag(:boy_mirror_taken, 3) { travel(2050); talk(/(Boy|Child) with a mirror/) }
         beat("  M2: Meat Meat takes the boy's mirror", :boy_mirror_taken)
       end
       travel(2067); HL.frames(20); HL.settle(3000)
@@ -1040,7 +1040,7 @@ module Story
       talk(/Lab notes/)
       until_flag(:core_destroyed, 3) { travel(2143); talk(/Amber pod 4/) }
       beat("H19 the Stasis Gallery: the Homunculus Core and the lab notes", :core_destroyed)
-      talk(/Cataloguing construct/); talk(/Root-table/); talk(/Sealed crates/)
+      talk(/Catalogu(ing|er) construct/); talk(/Root-table/); talk(/Sealed crates/)
       beat("H20 the Dissectory Annex (Autumn's crates)", :autumn_labs_seen)
       until_flag(:dissectory_golem, 2) { travel(2143); talk(/Hammer-arm construct/) }
       until_flag(:torturer_down, 2) { travel(2143); talk(/Torturer construct/) }

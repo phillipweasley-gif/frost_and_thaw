@@ -79,7 +79,7 @@ module FrostThaw
 
   # One line from each Herald as their own domain lights (SC 7A.06).
   DOMAIN_QUIPS = { alerion: "Illusion. ...Fine.", meat_meat: "Force. Obviously.",
-                   alberica: "Time. Darling, I'm always late.", reptin: "Wild. Not one word, any of you.",
+                   alberica: "Time. I'm always late.", reptin: "Wild. Not one word, any of you.",
                    wyn: "...Shadow. Oh." }
   HERALD_THEIR = { alerion: "his", meat_meat: "her", alberica: "her", reptin: "his", wyn: "their" }
 
@@ -166,7 +166,7 @@ module FrostThaw
     set_flag(:undercanopy_entered)
     add_counter(:story_beats)
     say(["Fungal beds glow green, blue and amber. The ceiling rises and falls, like breathing.",
-         "A myconid with a violet-veined cap steps into the tunnel. Its spear is tipped with mirror-glass.",
+         "A mushroom-person as tall as you steps into the tunnel: a myconid, violet-veined, with a spear.",
          "Its voice arrives inside your head, like a cold creek running over stones.",
          "EIRA: Halt. Declare your purpose."])
     speak(:wyn, "They're with me, Eira. The roots are burning.", "...The roots are burning.")
@@ -302,7 +302,7 @@ module FrostThaw
     sayc([cl(:glimmer, "And a little light. I'm told I'm good for that now."),
           "LUMINARA: Then share spores with us. Battle is how we taste a stranger.",
           cl(:meat_meat, "Meat Meat will not be tasted. Meat Meat does the tasting."),
-          cl(:reptin, "(under his breath) What she means is, thank you for having us.")])
+          cl(:reptin, "What she means is, thank you for having us.")])
     return if !scaled_leader_battle(:luminara)
     $Trainer.badges[6] = true
     set_flag(:badge_undercanopy)
@@ -380,8 +380,8 @@ module FrostThaw
           "VOICE IN THE WATER: The lake remembers. The lake remembers.",
           cl(:glimmer, "(a hand on the dagger at his hip) The Rimefang's gone cold. It knows that voice."),
           cl(:alerion, "Sephek."),
-          as(:wyn, "(a hand out to the spores) Not him. The spores taste it. His heart, burning."),
-          as(:wyn, "The sap carries the echo up here."),
+          as(:wyn, "(a hand out to the spores) Not him. His... the spores can taste it. His heart. Burning."),
+          as(:wyn, "Under us, somewhere. The sap carries the echo up. Sorry. I don't like it either."),
           cl(:meat_meat, "Meat Meat hates this lake. Meat Meat is not drinking this lake.")])
   end
 
@@ -395,7 +395,9 @@ module FrostThaw
           cl(:meat_meat, "Since now. Watch.")], event_id)
     return if !boss_battle(named_mon(:B73H130, 45, "Scalded Lake-Wyrm"))
     ($game_switches[SW_LAKE_DOWN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
-    say(["The creature sinks back under the slick, exhausted. The water still stinks of rot and heat."])
+    say(["The creature sinks back under the slick, exhausted. The water still stinks of rot and heat."], event_id)
+    wyrm = stage_event(event_id)
+    (wyrm.transparent = true) if wyrm && !wyrm.character_name.to_s.empty?    # (it's gone under: notes 07 E4)
     lake_purification
     stage_act(with_or_is?(:reptin) ? :reptin : :wyn, :kneel, dx: 0, dy: -1, dir: 8)   # a hand flat on the root
     if herald?(:reptin)
@@ -410,11 +412,14 @@ module FrostThaw
       say(["Wyn kneels and lays a hand flat on a root. The tree answers."])
     end
     pbSEPlay("Rain") rescue nil
+    ($game_screen.weather(1, 6, 20)) rescue nil          # the rain on screen (notes 07 E7)
     sayc(["Rain falls from the roots overhead: clean water, cold, pattering on the lake.",
-          "The slick breaks up, drifts apart, and is gone.",
-          "The lake goes clear. At the bottom, something round and stony glints.",
-          with_or_is?(:reptin) ? cl(:alberica, "Reptin, darling, you have to teach me that. For baths.") :
-                                 cl(:alberica, "Wyn, sweetheart, you have to teach me that. For baths.")])
+          "The slick breaks up, drifts apart, and is gone."])
+    ($game_screen.weather(0, 0, 40)) rescue nil
+    sayc(["The lake goes clear. At the bottom, something round and stony glints.",
+          with_or_is?(:reptin) ? cl(:alberica, "Reptin, you have to teach me that. For baths.") :
+                                 cl(:alberica, "Wyn, you have to teach me that. For baths."),
+          cl(:alberica, "The lake remembers? Good. Let it remember this.")])
     Stage.cleanup rescue nil
     set_flag(:lake_cleansed)
     set_flag(:lake_clean)
@@ -431,9 +436,10 @@ module FrostThaw
   def lake_purification
     return if flag?(:lake_ritual_done)
     yarro = flag?(:yarro_errand_done)
-    say([yarro ? "Yarro comes padding down the root-tunnel with his jars, humming. He heard the lake's story; he knows the end of it." :
-                 "Yarro comes padding down the root-tunnel with his jars, out of breath. \"The lake! Don't let it scar!\"",
-         "YARRO: Herbs first. Then the tree's rain. Then it sleeps clean. Keep the slick off me."])
+    say([yarro ? "Yarro comes padding down the root-tunnel with his jars, humming. He knows how this ends." :
+                 "Yarro comes padding down the root-tunnel with his jars, out of breath.",
+         yarro ? nil : "YARRO: The lake! Don't let it scar!",
+         "YARRO: Herbs first. Then the tree's rain. Then it sleeps clean. Keep the slick off me."].compact)
     good = 0
     good += 1 if challenge("Mix the herbs.", [yarro ? "Moss, sap and the lake's own clean silt, the way the sample said" : "Moss and warm sap, packed close",
                                               "Everything in the jars at once", "Snow, to cool it"], 0)
@@ -457,7 +463,7 @@ module FrostThaw
     set_flag(:hollow_entered)
     sayc(["A sealed door with five carvings: a mask, a fist, an hourglass, a paw, a shadow.",
           cl(:alerion, "Places like this always ask."),
-          cl(:reptin, "Five carvings, five of us. I do love a door with a guest list.")])
+          cl(:reptin, "Five carvings. I do love a door with a guest list.")])
   end
 
   def domain_carving(key, event_id = nil)
@@ -487,6 +493,7 @@ module FrostThaw
     set_flag(:"domain_#{carving}")
     if DOMAINS.all? { |c, _, _| flag?(:"domain_#{c}") }
       pbSEPlay("Door exit") rescue nil
+      ($game_screen.start_flash(Color.new(200, 230, 255, 170), 20)) rescue nil     # (notes 07 E7)
       say(["All five carvings glow at once.", "The door grinds open, and cold breathes out of it."])
       set_flag(:domains_open)
       ($game_switches[SW_DOMAINS_OPEN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
@@ -497,8 +504,8 @@ module FrostThaw
     return say(["Where the monolith stood: black water, and a ring of tiny white caps along the edge."], event_id) if flag?(:mycolith_down)
     sayc(["Icy platforms over a black lake.", "On them, a shelf-fungus monolith with an auroral crack down its middle.",
           "It's breathing.",
-          as(:wyn, "It's the old tree. What's left of Balanus's grief."),
-          as(:wyn, "A god that died, and wouldn't let go."),
+          as(:wyn, "(very quietly) Oh... it's the old tree. What's left of Balanus. Still grieving."),
+          as(:wyn, "A god that died, and... wouldn't let go."),
           cl(:alerion, "(very quietly) I know how that goes."),
           "SHADOW MYCOLITH: (roots of sound) STILL. STAY. STILL."], event_id)
     if !flag?(:mycolith_minions_1)
@@ -520,7 +527,8 @@ module FrostThaw
     set_flag(:mycolith_down)
     ($game_switches[SW_MYCOLITH] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    stage_act(:wyn, :kneel, dx: 1, dy: 0, dir: 2)
+    wyn_ev = stage_act(:wyn, :kneel, dx: 1, dy: 0, dir: 2)
+    Stage.fx("E-07", wyn_ev || $game_player, frames: 8, oy: 24) rescue nil    # the spark settles (notes 07 E7)
     if herald?(:wyn)
       say(["When it falls, a spark of shadow rises from it like a moth, and settles on your hand."])
       speak(:wyn, "Oh. That's... mine now. Isn't it.", "...Oh.")
@@ -551,7 +559,7 @@ module FrostThaw
     return if flag?(:hyphora_leave)
     Stage.panel("S-hyphora", fade: 24)                # the face in the roots
     sayc(["The roots around you glow amber. Something enormous and very young looks at you through them.",
-          "HYPHORA: (no words at first; only the feeling of being held)",
+          "For a moment there are no words, only the feeling of being held.",
           "HYPHORA: You planted me. You came back.",
           "HYPHORA: Below me: fire. The cold man's heart. A woman who counts.",
           "HYPHORA: It burns his heart to keep me in summer. My leaves forget how to fall.",
@@ -559,11 +567,15 @@ module FrostThaw
           flag?(:promised_their_time) || flag?(:herald_wall_vow) ?
             "HYPHORA: (to you) You want the light-wall gone. Then help me let go of summer." : nil,
           cl(:reptin, "(very quietly) I only planted an acorn. I didn't know it would be someone."),
-          "HYPHORA: I will open my roots to the burning place.", "HYPHORA: Go carefully. I am only four hundred years old.",
+          "HYPHORA: I will open my roots to the burning place."])
+    speak(:wyn, "(a hand on the root) ...The night the door broke. Was that you? Calling me?",
+          "...Was that you? Calling me?") if with_or_is?(:wyn)
+    sayc([with_or_is?(:wyn) ? "The roots go very quiet. Then, too lightly:" : nil,
+          "HYPHORA: Go carefully. I am only four hundred years old.",
           cl(:alberica, "Only four hundred? Sweetheart, I've got shoes older than that."),
           cl(:reptin, "You do not."),
           cl(:alberica, "Spiritually."),
-          cl(:wyn, "(a hand on the root) We'll be careful. I promise.")])
+          cl(:wyn, "(very softly) ...She didn't say no.")])
     Stage.panel_off(fade: 16)
     set_flag(:hyphora_leave)
     set_flag(:road_a_done)
@@ -586,7 +598,10 @@ module FrostThaw
   def forge_door(side, event_id = nil)
     if side == :b
       if !flag?(:root_key)
-        say(lines_for(:forge_door_glass) + ["There's a keyhole, small and black, rimed with frost."], event_id)
+        # (notes 07 E16, F7: the glass's sigil is seen on the first look, so the second lock isn't news)
+        say(lines_for(:forge_door_glass) + ["There's a keyhole, small and black, rimed with frost.",
+                                            "Under it, a sigil is etched into the glass, like frost that's been taught to write."], event_id)
+        state[:goal] = "Hew's door: a keyhole in the iron, a sigil in the glass. Summer's people took the key below." if flag?(:badge_hew)
         pbMoveRoute($game_player, [PBMoveRoute::Backward]) rescue nil
         return
       end

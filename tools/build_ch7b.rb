@@ -130,5 +130,30 @@ ov.event(8, 25, "Twin mirror", [{ graphic: "", tile_id: 809, script: "FT.twin_mi
 [[11, 13], [24, 13]].each { |x, y| ov.sign(x, y, :sap_bones) }
 save(ov, :overflow)
 
+# ---------------------------------------------------------------------------
+# 2214/2215: the Boreal Requiem, Mira's ship at the Split Dock (SC 7B.04;
+# notes 07 E3). Grown from the Old Shipwreck's two decks: the deck (Mira at
+# the wheel, the girl brought home) and the flooded hold (the mirror-core wired
+# into the ribs). The scene (033 boreal_requiem) boards you with a fade, takes
+# you down to the hold and back up; the stairs and the gangplank work too.
+RQ_DECK, RQ_HOLD = 2214, 2215
+ROOT_TIER = 2055
+dk, _ex = Builder.from_existing(610)
+dk.map.events.clear
+[12, 13].each { |x| dk.warp(x, 10, ROOT_TIER, 36, 8, 6, name: "Gangplank down") }
+[25, 26].each { |x| dk.warp(x, 11, RQ_HOLD, 24, 6, 2, name: "Stair to the hold") }
+save_map(dk, RQ_DECK, "Seafoam Islands Music")
+hd, _ex = Builder.from_existing(806)
+hd.map.events.clear
+[24, 25].each { |x| hd.warp(x, 5, RQ_DECK, 26, 9, 8, name: "Stair to the deck") }
+# the hold's barrels (the source's were boulders to push: here they're cargo)
+[[13, 3], [17, 4], [15, 4], [22, 3], [19, 7], [27, 6], [27, 7], [28, 8], [29, 8], [14, 5], [17, 6]].each do |x, y|
+  hd.event(x, y, "Barrel", [{ graphic: "BARREL", direction: 2, script: "FT.talk(:requiem_barrel, @event_id)" }])
+end
+hd.event(12, 7, "Mirror-core", [{ graphic: "Followers/BRONZOR", direction: 2, step_anime: true, script: "FT.requiem_core(@event_id)" },
+                                { switch: 3974, graphic: "", through: true }])
+save_map(hd, RQ_HOLD, "Seafoam Islands Music")
+merge_infos([[RQ_DECK, "The Boreal Requiem"], [RQ_HOLD, "The Boreal Requiem: the Hold"]])
+
 merge_infos(ID.map { |k, v| [v, NAMES[k]] })
 puts "built #{ID.size} maps into #{OUT}"
