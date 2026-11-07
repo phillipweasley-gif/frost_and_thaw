@@ -655,7 +655,7 @@ module FrostThaw
           "(touching the cold cheek) ...No.", event_id)
     sayc([as(:alerion, "It's what she looked like. Shimmer's in Frostina now. Shade made sure of that.")], event_id)
     cline(:meat_meat, "Shade would have said something clever here. Meat Meat will say it instead.",
-          "...Shade would have said something clever.")
+          "...Shade would know what to say.")
     sayc([cl(:meat_meat, "...Meat Meat does not know what it was."),
           cl(:reptin, "(softly) That was it, Meat Meat. That was exactly it.")], event_id)
     set_flag(:fields_crossed)

@@ -461,6 +461,7 @@ module FrostThaw
   VAULT_CIRCUITS = %i[circuit_north circuit_east circuit_west]
 
   AVARICE_BGM = "Powerplant & Pokemon Mansion Remix"    # the lab under the ice: her music
+  AVARICE_BATTLE_BGM = "BW2_Ghetsis Battle"             # a villain's fight, not a gym leader's
   VAULT_PANES = [[14, 9], [18, 9], [14, 15], [18, 15]]     # the maze-panes on the Circuits map
 
   # Avarice in every mirror (notes 12 E4, dialogue 12 Top 1): the light goes
@@ -604,7 +605,9 @@ module FrostThaw
     circuits = VAULT_CIRCUITS.count { |k| flag?(k) } + (flag?(:blade_cut_ward) ? 1 : 0)
     type, name = TRAINERS[:avarice_vault]
     $ft_avarice_circuits = circuits
+    ($PokemonGlobal.nextBattleBGM = pbStringToAudioFile(AVARICE_BATTLE_BGM)) rescue nil
     won = pbTrainerBattle(type, name, nil, false, 0) ? true : false
+    ($PokemonGlobal.nextBattleBGM = nil) rescue nil
     $ft_avarice_circuits = 0
     return if !won
     Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
@@ -692,7 +695,9 @@ module FrostThaw
       trainer_intro(:avarice_reforged)          # (notes 12 E21: her last line before the fight)
       type, name = TRAINERS[:avarice_reforged]
       $ft_avarice_circuits = 0
+      ($PokemonGlobal.nextBattleBGM = pbStringToAudioFile(AVARICE_BATTLE_BGM)) rescue nil
       won = pbTrainerBattle(type, name, nil, false, 0, true) ? true : false
+      ($PokemonGlobal.nextBattleBGM = nil) rescue nil
       pbFadeOutIn { $Trainer.heal_party } rescue nil
       if won
         Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
