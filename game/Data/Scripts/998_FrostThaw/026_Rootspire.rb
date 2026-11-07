@@ -916,7 +916,7 @@ module FrostThaw
     if !flag?(:twins_met)
       return sayc(["Two spires twist together above you, one jade, one white crystal.",
                    "Two dragons, carved circling one another. Between them hangs an orb of shifting light.",
-                   "It pulses like a heartbeat. At each pulse the worshippers sing a line of the Canticle.",
+                   "It pulses like a heartbeat. At each pulse, worshippers sing a line of the Cycle Canticle.",
                    "Softly, the way you'd sing to something asleep: winter, spring, summer, autumn, and round.",
                    "LUMIN: Lumin Weavemoss, of the Circle. The orb's been green-white since you arrived.",
                    "LUMIN: It glows when either wyrm stirs. Tonight it hasn't stopped.",
@@ -1043,7 +1043,7 @@ module FrostThaw
           me ? "(You weep. In the tears you see fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.)" :
                "#{who} weeps, and in the tears there is fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.",
           "Two flames.",
-          "In one: the spark leaps from the torch to the two dragons. They blaze with life.",
+          "In one: the spark leaps from the torch to the two dragons, and they blaze with life.",
           "In the other: despair closes over the torch like a hand, and the flame gutters to ash."])
   end
 
