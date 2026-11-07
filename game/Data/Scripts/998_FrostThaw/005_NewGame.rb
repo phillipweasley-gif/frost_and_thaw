@@ -315,6 +315,7 @@ module FrostThaw
     pbAddPokemonSilent(pkmn)
     Stage.cry(pkmn.species)
     pbMessage(_INTL("Your {1} chirps from the rafters. It found you the night you ran, and it never left.", pkmn.speciesName))
+    find_razzy_blanket(pkmn)                          # her own: halves Ice for a Noibat in an icy Dale (049)
     side_goal(:razzy, "Meat Meat's own: Razzy's footprints, out past the south-west gate.", done: :met_razzy)
   end
 

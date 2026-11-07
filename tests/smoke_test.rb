@@ -980,6 +980,12 @@ pose_sheets = Dir[File.join(repo, "game/Data/Scripts/998_FrostThaw/*.rb")].flat_
   File.read(f, encoding: "UTF-8").scan(/pose\([^,]+,\s*"([A-Z]-[A-Z]{2,3}-\d\d)"/).flatten }.uniq
 missing_poses = pose_sheets.reject { |n|
   File.exist?(File.join(repo, "build/gfx/Characters/#{n}.png")) || File.exist?(File.join(repo, "build/Characters/#{n}.png")) }
+check("Razzy's Blanket is Meat Meat's alone (given only in her opening)") {
+  srcs = Dir[File.join(repo, "game/Data/Scripts/998_FrostThaw/*.rb")].map { |f| [File.basename(f), File.read(f, encoding: "UTF-8")] }
+  users = srcs.select { |_, t| t.include?("FT_RAZZYBLANKET") }.map(&:first)
+  calls = srcs.flat_map { |n, t| t.scan(/^.*find_razzy_blanket\(.*$/).reject { |l| l =~ /def find_razzy_blanket/ }.map { |l| [n, l] } }
+  users == ["049_HeraldGifts.rb"] && calls.size == 1 && calls[0][0] == "005_NewGame.rb" &&
+    srcs.find { |n, _| n == "049_HeraldGifts.rb" }[1].include?("return if !herald?(:meat_meat)") }
 check("every boss with its own battle picture has one in the art") {
   (FT::BOSS_PICTURES.values + ["FT_AVARICE_BODY"]).all? { |n| File.exist?(File.join(repo, "build/gfx/Battlers/FrostThaw/bosses/#{n}.png")) } }
 check("every pose sheet the scenes play is in the art (#{pose_sheets.size} sheets)") { pose_sheets.size > 20 && missing_poses.empty? }

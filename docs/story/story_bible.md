@@ -842,4 +842,5 @@ Your answers are now in the script. Nothing is left open.
 - Var is sworn to sit the empty Summer Throne on the festival's seventh night: the week's deadline.
 - Alberica's home village is **Ironhollow** (invented here, not canon), somewhere south of Ten-Towns. The lottery never drew a name from it: the bargain's price was paid by others. A Bryn Shander refugee says so in Chapter 9; Alberica names it when the Vault opens.
 - Mira of the North Wind has **black hair** (2026-11-06), as all her art draws her; the script used to say silver. The White Vault line now says her black hair has gone white.
+- Meat Meat keeps her Noibat (2026-11-06). In her own opening she finds **Razzy's Blanket** in the hay; Noibat holds it, and it halves Ice-type damage. Only her playthrough has it (049_HeraldGifts.rb). Hellen keeps the Nov 3 in-style sprite.
 
