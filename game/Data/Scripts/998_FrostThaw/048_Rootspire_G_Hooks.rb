@@ -435,3 +435,17 @@ if defined?(BattleHandlers::UserItemAfterMoveUse)
     }
   )
 end
+
+# A map where someone has spoken since you arrived holds back its step-triggered
+# omen or vignette for the next map (048_E's step hook; box rules, notes/09 E15).
+module FrostThaw
+  class << self
+    unless method_defined?(:ft_h_scene_say)
+      alias ft_h_scene_say say
+      def say(lines, event_id = nil)
+        @rs_scene_here = true
+        ft_h_scene_say(lines, event_id)
+      end
+    end
+  end
+end

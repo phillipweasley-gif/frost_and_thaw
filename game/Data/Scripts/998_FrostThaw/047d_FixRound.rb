@@ -376,7 +376,10 @@ module FrostThaw
            "KELYN: Some will call it washing your hands. The Council won't know what you are. Nor I."])
       set_flag(:election_neutral)
     else
-      say(["KELYN: Then speak where people can hear: the debate stages, in the Bazaar and the Fields."])
+      # (the week's debates are over by the seventh day: then it's tonight's vote)
+      late = at_vote || ((trial[:day] rescue 1).to_i >= 7)
+      say([late ? "KELYN: Then say so tonight, when the city fills the chairs." :
+                  "KELYN: Then speak where people can hear: the debate stages, in the Bazaar and the Fields."])
     end
     stance
   end

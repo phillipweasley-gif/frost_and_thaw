@@ -211,6 +211,12 @@ module FrostThaw
     # beat, then dawn, then the morning. One beat a night, as before, and the
     # morning ones (boons, Autumn's ruin, the Glasswater view) still come first
     # in line, so the week's pacing doesn't change: they just play after dawn.
+    # (box rules: the morning the five share Hellen's coffee is the night's whole beat)
+    if flag?(:hearth_coffee) && !state[:coffee_night]
+      state[:coffee_night] = true
+      dawn_hue
+      return
+    end
     hearth_word
     return if investigation_night               # past midnight: the night carries on from the knock
     morning = (respond_to?(:hearth_morning_due?) && hearth_morning_due?) ||
@@ -914,11 +920,17 @@ end
 # Hooks: first step on a Rootspire map. (notes/10 E14: never in the middle of
 # someone else's scene: a step taken while an event runs waits for the next.)
 if Events.respond_to?(:onStepTaken) && Events.respond_to?(:onMapChange)
-  Events.onMapChange += proc { |_sender, _e| FrostThaw.instance_variable_set(:@rs_step_pending, true) }
+  Events.onMapChange += proc { |_sender, _e|
+    FrostThaw.instance_variable_set(:@rs_step_pending, true)
+    FrostThaw.instance_variable_set(:@rs_scene_here, false)
+  }
   Events.onStepTaken += proc { |_sender, _e|
     begin
       busy = ($game_system.map_interpreter.running? rescue false) || ($game_temp.message_window_showing rescue false)
       FrostThaw.frozen_run_ship_step if FrostThaw.respond_to?(:frozen_run_ship_step)
+      # (box rules: a map that has just played a scene keeps its omen or vignette for the next map,
+      # so they never run straight on from someone else's long scene)
+      FrostThaw.instance_variable_set(:@rs_step_pending, false) if FrostThaw.instance_variable_get(:@rs_scene_here)
       if FrostThaw.instance_variable_get(:@rs_step_pending) && !busy
         FrostThaw.instance_variable_set(:@rs_step_pending, false)
         FrostThaw.rootspire_step
