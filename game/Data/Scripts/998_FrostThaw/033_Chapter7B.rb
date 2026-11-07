@@ -76,9 +76,9 @@ module FrostThaw
     mira_after: ["MIRA: Thirty years of something in my mirrors.", "MIRA: I'll be smashing every one I own. Slowly. With joy.",
                  "MIRA: The Requiem is yours if you ever need a ship. I don't care where."],
     mira_daughter: ["MIRA'S DAUGHTER: I don't look in mirrors any more. I look at puddles. Puddles are honest."],
-    dig_roots_shut: ["Where the dig broke into the Heartroot, the roots have braided shut again, tight as a fist.",
+    dig_roots_shut: ["Where the dig broke into the Heartroot, the roots have braided shut, tight as a fist.",
                      "(From the other side, through the Root Gate, they might open.)", "(The well in the market goes down to it.)"],
-    heart_wall: ["The roots here are knotted tight as a fist. Behind them something beats, slow and enormous.",
+    heart_wall: ["The roots here are knotted tight as a fist. Something beats behind them, slow and huge.",
                  "Warm air comes through the gaps, and with it, very faint, the smell of forge smoke.",
                  "(The way down isn't here. Hew's tunnels go deeper, though.)"]
   )
@@ -179,7 +179,7 @@ module FrostThaw
   def father_construct(event_id = nil)
     if flag?(:construct_kept) || flag?(:construct_stopped)
       return say([flag?(:construct_kept) ? "The construct kneels at the root, praying softly. \"Father, you are cooler today.\"" :
-                                           "The construct sits still and dark, its lamp-eyes out. Moss has already started on its shoulders."], event_id)
+                                           "The construct sits still and dark, its lamp-eyes out. Moss has started on its shoulders."], event_id)
     end
     sayc(["A small sap-powered construct kneels at a root, hands pressed together.",
           "PROTOTYPE 3: Father. Father, you are hot. Father, I am afraid for you.",
@@ -208,7 +208,7 @@ module FrostThaw
     if flag?(:badge_hew)
       return say([flag?(:hew_held) ? "HEW: I meant it. Any trial you like. ...My last ladder's past the south cache." :
                                      "HEW: (gruff) Still can't believe you let me off. My last ladder's past the south cache.",
-                  "HEW: There's a door at the bottom I was told never to open. By Summer's people. Of course I was."], event_id)
+                  "HEW: There's a door at the bottom I was told never to open. By Summer's people."], event_id)
     end
     if !flag?(:cache_1_safe) || !flag?(:cache_2_safe)
       return say(["HEW: Caches first! If those go up, there's no Guild left to have a gym.",
@@ -243,11 +243,12 @@ module FrostThaw
     sayc(["HEW: My last ladder runs past the south cache, to a door I was told never to open.",
           "HEW: Iron and glass. Summer's people again.",
           "HEW: They had the only key, and took it down the Root-Gate. Find them, you'll find it.",
+          "You're halfway to the door when he calls after you.",
           "HEW: Wait. Take this down with you.",
           "HEW: Built from spare construct parts. The batch Summer's people paid for.",
           "HEW: Root-compass. Points at the warmest thing below you. Ticks a bit. Ignore the ticking.",
           cl(:alberica, "I never ignore ticking."),
-          cl(:meat_meat, "(holding it to her ear) It is ticking in a pattern. Meat Meat does not like the pattern.")])
+          cl(:meat_meat, "(an ear to it) It is ticking in a pattern. Meat Meat does not like the pattern.")])
     give_key(:FT_ROOTCOMPASS)
     set_flag(:hew_gift)
     if flag?(:beat_digger_gant) && flag?(:beat_digger_hobb) && !flag?(:hew_thanked)
@@ -278,7 +279,7 @@ module FrostThaw
     mx, my = stage_spot(mirror)
     # Quest M2 is Meat Meat's (rootspire.md 8323): she carries the boy's mirror down.
     if !with_or_is?(:meat_meat)
-      return say(["The glass is cold and flat as ice under your hand. It won't break. It's waiting for something.",
+      return say(["The glass is cold and flat as ice. It won't break. It's waiting for something.",
                   "(Meat Meat should be here. This one is hers.)"])
     end
     if !flag?(:mirror_sentinel_down)
@@ -292,7 +293,7 @@ module FrostThaw
     if !has_key?(:FT_BOYSMIRROR)
       return say([herald?(:meat_meat) ? "You put your palm on the glass. It won't break. It won't even crack." :
                                         "Meat Meat puts her palm on the glass. It won't break. It won't even crack.",
-                  "In it, behind the girl, a woman's face with hollow eyes smiles. \"Not without my other half, V-7.\"",
+                  "Behind the girl, a woman's face with hollow eyes smiles. \"Not without my other half, V-7.\"",
                   # (notes 07 F5: the number, said once by the one it belongs to)
                   flag?(:v7_said) ? nil : cl(:meat_meat, "(very still) V-7. That's what she called Meat Meat. On the cold table."),
                   "(The boy's mirror. In the Verdant Bazaar. It's the other half.)"].compact)
@@ -303,14 +304,14 @@ module FrostThaw
     stage_act(:meat_meat, :reach, dx: dx, dy: dy, dir: 8, per: 6)   # the boy's mirror, against the twin
     sayc([mm ? "You press the boy's mirror flat against the tall one. Glass to glass." :
                "Meat Meat presses the boy's mirror flat against the tall one. Glass to glass.",
-          "Both mirrors scream. Something pours from one into the other and back, looking for a way out.",
+          "Both mirrors scream. Something pours from one into the other and back, hunting a way out.",
           "And there's a girl in the way.",
           cl(:alberica, "Hold it, sweetheart! Hold it there!")])
     c = pbMessage(_INTL(mm ? "The mirrors buck in your hands..." : "The mirrors buck in Meat Meat's hands..."),
                   [_INTL("Brace, and hold them together"), _INTL("Pull the girl through first"), _INTL("Let go")], 0)
     Stage.cleanup rescue nil
     if c != 0
-      say(["The mirrors slip. The spirit tears loose between them: a wraith of glass and ice, screaming in a pleasant, precise voice."])
+      say(["The mirrors slip. The spirit tears loose between them: a wraith of glass and ice.", "It screams in a pleasant, precise voice."])
       boss_battle(named_mon(:B122H429, 44, "Mirror Wraith"))
       say(["The wraith breaks up and slides back into the glass. The two mirrors are still waiting.",
            "(Try again: brace, and hold them together.)"])
@@ -400,14 +401,15 @@ module FrostThaw
     Stage.walk_to(girl, MIRA_AT_WHEEL[0] + 1, MIRA_AT_WHEEL[1] + 1, face: 4) if girl
     say(["Her daughter runs to her. Mira doesn't look down."])
     Stage.turn_to(mira) if mira
-    sayc(["MIRA: (two voices at once, one of them colder) We know you. The Heralds. Our little failures.",
+    sayc(["MIRA: (two voices at once, one colder) We know you. The Heralds. Our little failures.",
           herald?(:meat_meat) ? "(You stop dead. The mirror lady. She's in the captain.)" :
                                 cl(:meat_meat, "(stopping dead) Mirror lady. Mirror lady is in the captain."),
           cl(:reptin, "(stepping between the girl and her mother) Behind me. Now."),
-          "MIRA: (the cold voice) You found my nest, didn't you? Come down and see it. We'll be waiting.",
+          "MIRA: (the cold voice) You found my nest, didn't you? Come down and see it. We'll wait.",
           "Below, in the hold, something hums: a mirror-core, wired into the ship's ribs.",
           "MIRA: (both voices, sweetly) Or leave it. You'll have your seal, and the girl.",
-          "MIRA: No one has to break anything. The girl's mother stays with her. Isn't that what you came for?"])
+          "MIRA: No one has to break anything. The girl's mother stays with her.",
+          "MIRA: Isn't that what you came for?"])
     c = pbMessage(_INTL("The mirror-core hums in the hold."), [_INTL("Go down and break it"), _INTL("Leave it be")], 0)
     if c == 1
       return requiem_leave if mira_left_possessed(true)
@@ -422,7 +424,7 @@ module FrostThaw
   def requiem_core(event_id = nil)
     return say(["Cracked glass, wired into the ribs of the hold. Quiet now."], event_id) if flag?(:mira_core_broken)
     core = Stage.find("Mirror-core")
-    say(["Water to the ankles, barrels lashed to the ribs, and in the middle of it all: the mirror-core.",
+    say(["Water to the ankles, barrels lashed to the ribs, and in the middle: the mirror-core.",
          "It hums in two voices."])
     Stage.emote(core, :exclaim) if core
     return if !boss_battle(named_mon(:B122H429, 45, "Mirror-Core"))
@@ -481,10 +483,10 @@ module FrostThaw
       set_flag(:mira_left_possessed)
       set_flag(:mira_core_broken)        # (the gangplank's gate: the matter is settled, one way)
       sayc(["You don't go down. The humming in the hold settles, content.",
-            "MIRA: (the warm voice, and the cold one, together, smiling) Good. Good. We knew you were reasonable.",
+            "MIRA: (both voices, smiling) Good. Good. We knew you were reasonable.",
             "Her daughter holds her hand and looks up at her, and frowns, and doesn't say anything.",
             cl(:reptin, "(very quietly) First deal I've ever won and wanted to give back."),
-            cl(:meat_meat, "(staring at the hold) Meat Meat is going to remember this. Meat Meat is going to remember we LEFT her.")])
+            cl(:meat_meat, "(staring at the hold) Meat Meat will remember this. We LEFT her.")])
     else
       say(["MIRA: (two voices) Back for the seal, little failures? We kept it warm."])
     end
@@ -498,7 +500,7 @@ module FrostThaw
     say(["MIRA: (two voices) Tide Seal."])
     pbMessage(_INTL("\\me[Badge get]{1} received the Tide Seal!", $Trainer.name))
     give(:TM29)
-    say(["MIRA: Psychic. We think very clearly, now. We'll see you again, little failures. North, probably.",
+    say(["MIRA: Psychic. We think very clearly now. We'll see you again, little failures.",
          "(No offer of a ship. The crew won't meet your eyes.)"])
     true
   end
@@ -509,7 +511,7 @@ module FrostThaw
   WELL_VISIONS = {
     1 => ["A woman in white fur walks through glass trees, on an island shaped like a snowflake."],
     2 => ["Long ago: a hand of mirror glass reaches up from under the roots, and takes hold."],
-    3 => ["A vault of white ice under a glacier. In it, something with wings spread over a frozen eye."]
+    3 => ["A vault of white ice under a glacier. In it, wings spread over a frozen eye."]
   }
 
   def sap_well(n, event_id = nil)
@@ -526,7 +528,7 @@ module FrostThaw
     Stage.overlay_off("O-03", fade: 20)
     # the visions bite back (Tab 3: psychic backlash)
     $Trainer.party.each { |pk| pk.hp = [pk.hp - [pk.totalhp / 10, 1].max, 1].max if pk.hp > 0 } rescue nil
-    say(["The vision lets go all at once. Your head rings like a struck bell, and your Pokémon flinch and shake theirs."])
+    say(["The vision lets go all at once. Your head rings like a struck bell.", "Your Pokémon flinch, and shake their heads."])
     if (1..3).all? { |i| flag?(:"well_vision_#{i}") }
       set_flag(:wells_seen)
       add_counter(:story_beats)
@@ -534,7 +536,7 @@ module FrostThaw
             cl(:alberica, "Or somebody else's plans."),
             cl(:alerion, "Plans.")])
       if !flag?(:vault_map_2)
-        say(["In the third basin, where the visions overlapped, the sap has set into something flat and pale:",
+        say(["In the third basin, where the visions met, the sap has set into something flat and pale:",
              flag?(:vault_map_1) ? "a second fragment of the frost-drawn map. A glacier. A door. A dragon's eye." :
                                    "a fragment of a frost-drawn map. A glacier. A door. A dragon's eye."])
         set_flag(:vault_map_2)
@@ -550,7 +552,7 @@ module FrostThaw
           "ATTENDANT: (in a woman's voice, then in #{herald?(:alberica) ? 'your own' : "Alberica's"}) Ask. One question at a time.",
           cl(:alberica, "Don't do my voice. Nobody does my voice.")], event_id)
     if !state[:attendant_promise]
-      say(["ATTENDANT: (every mouth at once) But a question costs a promise. Burn the forge. Or free the heart.",
+      say(["ATTENDANT: (every mouth) A question costs a promise. Burn the forge. Or free the heart.",
            "(Whatever you promise, the sap will remember.)"])
       sayc([cl(:alerion, "Don't promise what you don't understand.")])     # (notes 07 F8)
       c0 = pbMessage(_INTL("The attendant's price..."), [_INTL("\"We'll burn the forge.\""), _INTL("\"We'll free the heart.\""), _INTL("Promise nothing")], 2)
@@ -650,7 +652,7 @@ module FrostThaw
   def amber_camp(event_id = nil)
     if !flag?(:amber_camp_found)
       set_flag(:amber_camp_found)
-      say(["A Rootwarden camp, left in a hurry: bedrolls, a ring of glow-moss, a kettle still half full.",
+      say(["A Rootwarden camp, left in a hurry: bedrolls, glow-moss, a kettle still half full.",
            "Whoever made it meant to come back."], event_id)
       sayc([cl(:wyn, "(very softly) Rheven's people. ...They'd want us to use it.")])
     end

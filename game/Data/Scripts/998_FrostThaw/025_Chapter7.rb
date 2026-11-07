@@ -95,13 +95,13 @@ module FrostThaw
   def ch7_council(event_id = nil)
     if !flag?(:ch7_started)
       say(["KELYN: The aurora touched the tree tonight, and the tree held. Because of you.",
-           "DARRUS: The Halo are off the streets. Var's still missing. And somebody still signed that decree.",
+           "DARRUS: The Halo are off the streets. Var's still missing. Somebody signed that decree.",
            "KELYN: The festival runs to its seventh night. Come to the Hearth for the last one.",
            "KELYN: The whole city will be there.",
            cl(:alberica, "A party in our honour? Speaker, you shouldn't have. I'll be there early."),
            with_or_is?(:alberica) ? cl(:reptin, "(smoothly) She means thank you. And she will be there early.") : nil].compact, event_id)
     elsif flag?(:selrae_home)
-      say(["KELYN: Selrae told us. All of it. Thirty years of letting the Halo in, for a little winter.",
+      say(["KELYN: Selrae told us. Thirty years of letting the Halo in, for a little winter.",
            "KELYN: She'll answer for it at the Trials.",
            "KELYN: You found her, and you brought her home. Thank you for that."], event_id)
     else
@@ -229,7 +229,7 @@ module FrostThaw
            "BEGIN WHERE THE SKY BEGINS. TURN AS THE YEAR TURNS."], event_id)
     else
       set_flag(:seal_read)
-      say(["A circle of bare heartroot, carved with four seasonal runes. Each bleeds a different colour.",
+      say(["A circle of bare heartroot, carved with four seasonal runes, each bleeding a colour.",
            "At the centre, a hollow where the colours could meet.",
            "Above it, a crack in the roof lets in a thread of aurora: #{HUE_WORDS[hue][0].downcase}.",
            "Round the rim, in Druidic and in Wennen:",
@@ -251,7 +251,7 @@ module FrostThaw
   def scene_sap_wells_enter
     return if flag?(:sap_wells_entered)
     set_flag(:sap_wells_entered)
-    say(["A low arch of roots opens onto a cavern. Golden sap rains from the ceiling in thin strands.",
+    say(["A low arch of roots opens onto a cavern. Golden sap rains from the ceiling in strands.",
          "It fills shallow basins. Some of them glow with the aurora's reflection.",
          "The air smells like honey left too long in the sun.",
          cl(:alberica, "Oh, that's indecent. Somebody hold my hair, I'm going to drink a wall."),

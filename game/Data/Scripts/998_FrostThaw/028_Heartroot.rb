@@ -65,12 +65,12 @@ module FrostThaw
                    ["I bought a mirror from the lady! It's got a friend in it.",
                     "She talks when the others aren't looking. She says she knows you.",
                     "She says you broke her house.",
-                    "...She says she's cold. She says her other half is down in the roots, and she wants it back."]],
+                    "...She says she's cold. Her other half is down in the roots, and she wants it back."]],
     mira_north_wind: -> {
       if T.flag?(:twin_broken)
         ["MIRA: The child's mirror went quiet. So did mine, a little.",
          "MIRA: I didn't know how loud they were until they stopped.",
-         "MIRA: The Corsairs owe you. When you need a ship, you'll have one. I don't say that to anyone."]
+         "MIRA: The Corsairs owe you. Need a ship, you'll have one. I don't say that lightly."]
       elsif T.flag?(:met_mirror_child)
         T.set_flag(:mirror_twin_known)
         ["MIRA: The child's mirror? Frost-glass, like all of them. That one came up in a pair.",
@@ -93,8 +93,8 @@ module FrostThaw
                   "A Guild label: TEST BATCH 7. DO NOT BURN NEAR PEOPLE.",
                   "Underneath, in a different hand: DO NOT BURN AT ALL."],
     guild_ladder_up: ["A Guild ladder goes up a shaft toward lantern-light and market noise."],
-    guild_ladder_shut: ["A Guild ladder, pulled up and lashed out of reach at the top of the shaft. Someone up there has to lower it."],
-    heart_wall: ["The roots here are knotted tight as a fist. Behind them something beats, slow and enormous.",
+    guild_ladder_shut: ["A Guild ladder, pulled up and lashed out of reach. Someone up there has to lower it."],
+    heart_wall: ["The roots here are knotted tight as a fist. Something beats behind them, slow and huge.",
                  "Warm air comes through the gaps, and with it, very faintly, forge smoke.",
                  "(The way to the Heart of the tree, where the Heartroot meets the Rootsun Forge. Not yet.)"],
     sap_bones: ["Half sunk in the glowing sap: bones that aren't bones.",

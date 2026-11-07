@@ -166,7 +166,7 @@ module FrostThaw
     set_flag(:undercanopy_entered)
     add_counter(:story_beats)
     say(["Fungal beds glow green, blue and amber. The ceiling rises and falls, like breathing.",
-         "A mushroom-person as tall as you steps into the tunnel: a myconid, violet-veined, with a spear.",
+         "A mushroom-person as tall as you steps out: a myconid, violet-capped, with a spear.",
          "Its voice arrives inside your head, like a cold creek running over stones.",
          "EIRA: Halt. Declare your purpose."])
     speak(:wyn, "They're with me, Eira. The roots are burning.", "...The roots are burning.")
@@ -203,7 +203,7 @@ module FrostThaw
       return yarro_tincture(event_id) if flag?(:spores_debated) && !flag?(:colony_recognised) && !flag?(:colony_exiled)
       return yarro_errand(event_id) if flag?(:hyphora_named) && flag?(:badge_undercanopy) && !flag?(:yarro_errand_done)
       if flag?(:blight_cleansed)
-        return say(["Where the black-red caps were, the beds glow a healthy amber. The sap under them beats steady."], event_id)
+        return say(["Where the black-red caps were, the beds glow amber. The sap under them beats steady."], event_id)
       end
       return say(["Where the black-red caps were, new vermilion ones are pushing up through the ash.", "They're tiny, and bright."], event_id)
     end
@@ -230,7 +230,7 @@ module FrostThaw
               "YARRO: Mended, not burned. The gardens will remember you. So will I, if anyone asks.",
               "YARRO: Take a lantern-puff. Squeeze it and it glows. Carry it and the dark leaves you be."])
         give(:FT_SPORELANTERN)
-        say(["(The Luminescent Lantern: while you carry it, half as many wild Pokémon find you in caves.)"])
+        say(["(The Luminescent Lantern: carry it, and half as many wild Pokémon find you in caves.)"])
         state[:goal] = "The Fane, east past the water: Sovereign Luminara."
         return
       end
@@ -244,7 +244,7 @@ module FrostThaw
     elsif with_or_is?(:glimmer)
       return if !pbConfirmMessage(_INTL("None of your Pokémon knows a Fire move. Ask Glimmer?"))
       sayc(["GLIMMER: Let me. Brightmane says I'm a fire now. Let's find out if she's right.",
-            "The Lumen Shard in his chest flares. He draws one finger through the air over the black caps.",
+            "The Shard in his chest flares. He draws one finger through the air over the black caps.",
             "They curl and go to ash. The healthy beds don't even get warm.",
             cl(:meat_meat, "Cat is a lighter now. Useful cat.")])
     else
@@ -259,7 +259,7 @@ module FrostThaw
           "YARRO: Gently done. The gardens will remember you. So will I, if anyone asks.",
           "YARRO: Take a lantern-puff. Squeeze it and it glows. Carry it and the dark leaves you be."])
     give(:FT_SPORELANTERN)
-    say(["(The Luminescent Lantern: while you carry it, half as many wild Pokémon find you in caves.)"])
+    say(["(The Luminescent Lantern: carry it, and half as many wild Pokémon find you in caves.)"])
     state[:goal] = "The Fane, east past the water: Sovereign Luminara."
   end
 
@@ -294,7 +294,7 @@ module FrostThaw
     say(["LUMINARA: (wind through reeds) Surface. Sap-takers. Root-burners.",
          "LUMINARA: You come asking, asking. What do you bring?"], event_id)
     if with_or_is?(:reptin)
-      speak(:reptin, "Good manners, Sovereign. And your gardener's beds, mended. And a fight, if you'd like one.",
+      speak(:reptin, "Good manners, Sovereign. Your gardener's beds, mended. And a fight, if you like.",
             "Your gardener's beds. Mended.")
     else
       say(["You brought back her gardener's beds."])
@@ -326,7 +326,7 @@ module FrostThaw
   def myr(event_id = nil)
     if flag?(:hyphora_named)
       return myr_after(event_id) if respond_to?(:myr_after)
-      return say(["MYR: (many voices at once, slow as roots) Hyphora is afraid. Go down to the water. Go carefully."], event_id)
+      return say(["MYR: (many voices, slow as roots) Hyphora is afraid. Go down to the water. Carefully."], event_id)
     end
     sayc(["An ancient myconid, layered like old bark, sits in a ring of stone tablets.",
           "MYR: (many voices at once) I remember the first logger. I remember the sapling.",
@@ -349,6 +349,7 @@ module FrostThaw
           cl(:wyn, "(very quietly) Hyphora. ...Hello."),
           "MYR: And Hyphora is afraid. Something under her burns hotter every night.",
           "MYR: It drinks her sap. It has carved her old roots into a machine.",
+          "The tablets round her hum, all together, like a held breath.",
           "MYR: Past the Fane the water has gone bad. Go down that way.", "MYR: The lake remembers things it shouldn't."])
     set_flag(:hyphora_named)
     add_counter(:story_beats)
@@ -360,7 +361,7 @@ module FrostThaw
   # The root-tunnel down from the Fane's far side to the lake.
   def lake_tunnel(event_id = nil)
     if !flag?(:hyphora_named) || !flag?(:badge_undercanopy)
-      say(["A root-tunnel slopes down into the dark. The air coming up it smells of rot and warm metal.",
+      say(["A root-tunnel slopes down into the dark. The air from it smells of rot and warm metal.",
            "EIRA: (from somewhere behind you) Not that way. Not yet.",
            "EIRA: Not until the Sovereign has tasted you and the Mnemosyne has named you."], event_id)
       pbMoveRoute($game_player, [PBMoveRoute::Backward]) rescue nil
@@ -380,7 +381,7 @@ module FrostThaw
           "VOICE IN THE WATER: The lake remembers. The lake remembers.",
           cl(:glimmer, "(a hand on the dagger at his hip) The Rimefang's gone cold. It knows that voice."),
           cl(:alerion, "Sephek."),
-          as(:wyn, "(a hand out to the spores) Not him. His... the spores can taste it. His heart. Burning."),
+          as(:wyn, "(a hand to the spores) Not him. His... the spores can taste it. His heart. Burning."),
           as(:wyn, "Under us, somewhere. The sap carries the echo up. Sorry. I don't like it either."),
           cl(:meat_meat, "Meat Meat hates this lake. Meat Meat is not drinking this lake.")])
   end
@@ -395,7 +396,7 @@ module FrostThaw
           cl(:meat_meat, "Since now. Watch.")], event_id)
     return if !boss_battle(named_mon(:B73H130, 45, "Scalded Lake-Wyrm"))
     ($game_switches[SW_LAKE_DOWN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
-    say(["The creature sinks back under the slick, exhausted. The water still stinks of rot and heat."], event_id)
+    say(["The creature sinks back under the slick, exhausted. The water still stinks of rot."], event_id)
     wyrm = stage_event(event_id)
     (wyrm.transparent = true) if wyrm && !wyrm.character_name.to_s.empty?    # (it's gone under: notes 07 E4)
     lake_purification
@@ -444,7 +445,7 @@ module FrostThaw
     good += 1 if challenge("Mix the herbs.", [yarro ? "Moss, sap and the lake's own clean silt, the way the sample said" : "Moss and warm sap, packed close",
                                               "Everything in the jars at once", "Snow, to cool it"], 0)
     good += 1 if challenge("Grind them.", ["Slowly, sunwise, while Yarro hums", "As fast as you can", "Let Meat Meat do it"], 0)
-    say(["The slick bulges again: pseudopods, grey and blind, feeling along the shore for Yarro's jars."])
+    say(["The slick bulges again: grey, blind pseudopods, feeling along the shore for Yarro's jars."])
     if good < 2
       say(["The mixture smokes wrong. The slick smells it, and comes for it faster."])
       skirmish(named_mon(:B114H72, 45, "Spore-Lash Creeper"), named_mon(:B114H72, 45, "Spore-Lash Creeper"))
@@ -558,10 +559,11 @@ module FrostThaw
   def scene_root_chapel
     return if flag?(:hyphora_leave)
     Stage.panel("S-hyphora", fade: 24)                # the face in the roots
-    sayc(["The roots around you glow amber. Something enormous and very young looks at you through them.",
+    sayc(["The roots glow amber. Something enormous and very young looks at you through them.",
           "For a moment there are no words, only the feeling of being held.",
           "HYPHORA: You planted me. You came back.",
           "HYPHORA: Below me: fire. The cold man's heart. A woman who counts.",
+          "The roots tighten round you, very slightly, as if she's flinching.",
           "HYPHORA: It burns his heart to keep me in summer. My leaves forget how to fall.",
           "HYPHORA: Thirty summers. No winter, no spring. The wheel can't turn on one season.",
           flag?(:promised_their_time) || flag?(:herald_wall_vow) ?

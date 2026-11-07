@@ -174,7 +174,7 @@ module FrostThaw
     },
     lirielle: -> {
       if T.flag?(:lirielle_dream)
-        ["LIRIELLE: I've written your scent down. Snow, smoke, something green. I'm calling it Herald.",
+        ["LIRIELLE: I wrote your scent down. Snow, smoke, something green. I'm calling it Herald.",
          "LIRIELLE: I still dream of the roots burning. Under the tree, where the old town was.",
          "LIRIELLE: Something down there is making fire that shouldn't be."]
       else
@@ -184,16 +184,18 @@ module FrostThaw
          "LIRIELLE: Oh! Sorry. Lirielle Mossdancer, of the Perfumed Root. I read the air.",
          "LIRIELLE: Yours is very old. And very new. That's not supposed to happen.",
          "LIRIELLE: My people came from the Circle in Lonelywood. We carry the Moon Requiem with us.",
+         "Her ears go flat.",
          "LIRIELLE: The night the frost egg hatched. You know it?",
          "LIRIELLE: (sniffing) ...You were there. It's still on your coat. Snow, and a lullaby.",
          "LIRIELLE: Lately I dream every night. Roots burning. Sap screaming.",
+         "She lowers her voice.",
          "LIRIELLE: Something below is burning the seasons alive.",
          "LIRIELLE: Nobody wants to hear that during a festival. You look like you'd go and check."]
       end
     },
     nivva: ["NIVVA: Run & Bloom Apothecary! Draughts, frost-balm and Sap-Skin Salve.",
             "NIVVA: One jar and you can sleep in a snowdrift. Please don't, though.",
-            "NIVVA: Red heals. Green's for frost. The muddled ones are a surprise. A surprise costs extra."],
+            "NIVVA: Red heals. Green's for frost. Muddled ones are a surprise. Surprises cost extra."],
     reva: [{ if: { flag: :twins_met }, lines: ["REVA: I'm adding two dragons to the sculpture. They keep growing.",
                                                 "REVA: The dragons, I mean. Also the sculpture."] },
            ["A Wennen with pink-tipped ears ties living flowers into a sculpture of four figures.",
@@ -210,11 +212,13 @@ module FrostThaw
         $game_map.need_refresh = true if $game_map
         ["RHEVEN: Hellen's seal. She doesn't give that to anyone she wouldn't trust with her cellar.",
          "RHEVEN: So I'll trust you with ours. Below the Root-Tier there's a crypt.",
+         "His direwolf thumps her tail on the cobbles, once.",
          "RHEVEN: The first Rootwardens, standing in clear sap, as they asked to.",
          "RHEVEN: One holds a staff grown from the World Tree's first roots.",
          "RHEVEN: The creed says it waits for whoever taught us the creed.",
+         "He touches two fingers to his chest, the way the Rootwardens do.",
          "RHEVEN: Guard the pulse. Let neither flame nor frost claim it wholly.",
-         "RHEVEN: The door's unsealed. South-east of the Root-Tier. If it wants one of you, it'll say."]
+         "RHEVEN: The door's unsealed, south-east in the Root-Tier. If it wants you, it'll say."]
       else
         ["A huge half-orc in wolf-skin watches the crowd, arms folded. A direwolf dozes at his feet.",
          "RHEVEN: Captain Rheven Stormbranch, Rootwardens. Guard the pulse.",
@@ -248,10 +252,10 @@ module FrostThaw
     },
     hearth_dunstan_after: ["DUNSTAN: Barrel-hoops and battles. Both want a firm hand."],
     hearth_mellow_after: ["MELLOW: Hellen's at the back, by the shrine. Mind the roots. They trip people on purpose."],
-    hearth_corrie_after: ["OLD CORRIE: My great-great-great-grandad would've liked you. He liked anyone who beat him. Odd man."],
-    hearth_tallis_after: ["TALLIS: 'And lo, the Heralds came down the stair, and Tallis was SPLENDID.' ...It's a draft."],
-    bough_teo_after: ["TEO: Rheven's lost four of us out here this year. If you see Bough colours by the Wall... tell him."],
-    pilgrim_ysolde_after: ["YSOLDE: Flowers grow right through the snow here. Gran called it the Dale arguing with itself."],
+    hearth_corrie_after: ["OLD CORRIE: My great-great-great-grandad would've liked you. He liked anyone who beat him."],
+    hearth_tallis_after: ["TALLIS: 'And lo, the Heralds came down, and Tallis was SPLENDID.' ...It's a draft."],
+    bough_teo_after: ["TEO: Rheven's lost four of us this year. If you see Bough colours by the Wall... tell him."],
+    pilgrim_ysolde_after: ["YSOLDE: Flowers grow right through the snow. Gran called it the Dale arguing with itself."],
     hiker_gromm_after: ["GROMM: Wall's that way. Don't touch it. Time's stuck on the other side, and it's sticky."],
     halo_kael_after: ["KAEL: The Reversal caught them mid-step. Mid-prayer. We call them saints.", "KAEL: They call for help."],
     eren_after: ["EREN: There's a hunter frozen at the Wall. He looks like you, Alerion. A bit like me, too.",
@@ -285,11 +289,11 @@ module FrostThaw
     statue_alberica: ["A dwarf with a pendant at her throat, mid-song. ALBERICA, THE DWARF OF SONG. MEMORY.",
                       "Someone's left a lute at her feet. It's a very bad lute. It's been left with love."],
     statue_reptin: ["An elf with a wolf's shadow at his heels, one hand open, one closed.",
-                    "REPTIN. GROWTH. THE WARDEN. The stone at his feet is worn smooth from people touching it for luck."],
+                    "REPTIN. GROWTH. THE WARDEN. The stone at his feet is worn smooth by hands, for luck."],
     statue_alerion: ["An eladrin with a ring of frost on one hand, bow lowered.",
                      "ALERION FROSTSTRIDE. HE TAUGHT THE COLD TO KNEEL. Frost grows on it even in summer.",
                      "The cleaners have given up."],
-    statue_meat_meat: ["A small statue of a goblin, grinning, goggles pushed up, long hair carved in a sweep down her back.",
+    statue_meat_meat: ["A small statue of a goblin, grinning, goggles pushed up, long hair swept down her back.",
                        "A wyrmling is coiled round her shoulders. MEAT MEAT. THE LIGHT HALF.",
                        "It's the only statue with snacks at its feet. The snacks are always gone by morning."],
     # --- the Canopy-Tier ------------------------------------------------------------------
@@ -315,6 +319,7 @@ module FrostThaw
         T.set_flag(:balanus_explained)
         ["CORNIPUS: Oh. Oh, put that down. No, don't. Hold it. Carefully.",
          "CORNIPUS: That's a seed of Balanus. The first World Tree on this plane.",
+         "He takes his cap off. Then he puts it back on.",
          "CORNIPUS: The Frostmaiden cut him down before your great-grandmothers were born.",
          "CORNIPUS: He didn't stop being a tree just because he was dead. Seeds remember.",
          "CORNIPUS: Keep it. Someday something will need planting, and you'll know."]
@@ -328,18 +333,21 @@ module FrostThaw
          "It has a face, tiny arms, and a cap like a hat.",
          "CORNIPUS: Hello! Cornipus, Seed of Plaito. I'm a Feycorn. Fruit of a God-Tree!",
          "CORNIPUS: Mine's on another plane entirely. I came up through the roots.",
+         "He swings his little feet.",
          "CORNIPUS: Every plane has a World Tree, you know. Their roots reach through everything.",
          "CORNIPUS: When a World Tree's old enough to bear fruit, it becomes a god. We're the fruit.",
          "CORNIPUS: We wake up with a job and a terrible urge to travel.",
+         "He leans in, very serious.",
          "CORNIPUS: This tree's four hundred years old. A baby! It should take thousands.",
          "CORNIPUS: But it grew on dragon-breath and stubbornness, and it's thinking about godhood.",
          "CORNIPUS: Nobody's told it it isn't allowed, so.",
-         "CORNIPUS: Something under it is listening. Someone who speaks for a tree. Down with the mushrooms.",
-         "CORNIPUS: Tell me a story and I'll give you a seed. ...Four hundred years ago? Take the seed."]
+         "He taps the railing with one tiny hand.",
+         "CORNIPUS: Something under it is listening, for the tree. Ask the mushrooms.",
+         "CORNIPUS: Tell me a story for a seed. ...Four hundred years ago? Take the seed."]
       end
     },
     lumen_shard: -> {
-      lines = ["The sky opens above you. No clouds, no stars: only the aurora, pouring down in gold and green.",
+      lines = ["The sky opens above you. No clouds, no stars: only aurora, pouring down gold and green.",
                "In the heart of it floats a splinter of crystal light the size of a heart.",
                "You reach for it, and a shadow of yourself forms in the light, eyes black as void.",
                "\"Will you bear hope when even the sun freezes?\"",
@@ -354,20 +362,22 @@ module FrostThaw
     # --- the Wind-Glass Library ------------------------------------------------------------
     eirwen: -> {
       if T.flag?(:met_eirwen)
-        ["EIRWEN: The leaves are listening, Heralds. Speak kindly near the shelves. They keep everything."]
+        ["EIRWEN: The leaves are listening, Heralds. Speak kindly near the shelves."]
       else
         T.set_flag(:met_eirwen)
         ["An elf with bare feet and frost-dust in their hair turns from a shelf of clear bark.",
          "EIRWEN: Archivist Eirwen Solglass. Every word spoken in Rootspire is written here.",
          "EIRWEN: On leaves of light. Yours too, now. Mind your language.",
+         "On the nearest shelf a leaf flickers, writing that down.",
          "EIRWEN: In the oldest roots I keep Naerth Maxildanarr's last ledger.",
          "EIRWEN: It says Avarice was bleeding Targos white long before the Rime.",
+         "They glance at the door, as if someone might be listening.",
          "EIRWEN: I've never known who to show it to. And there's a sub-vault. Alberica's.",
          "EIRWEN: Her students wrote it into the founding charter: a case only she may open.",
          "EIRWEN: A lovely, safe, symbolic thing to write. Until about an hour ago.",
-         T.with_or_is?(:alberica) ? "EIRWEN: (to #{T.herald?(:alberica) ? 'you' : 'Alberica'}, suddenly shy) I've read every verse you wrote. Here, they're scripture." : nil,
+         T.with_or_is?(:alberica) ? "EIRWEN: (to #{T.herald?(:alberica) ? 'you' : 'Alberica'}, shy) I've read every verse you wrote. Here they're scripture." : nil,
          T.with_or_is?(:alberica) ? "EIRWEN: I never thought I'd have to stand in front of the author and be sensible about it." : nil,
-         "EIRWEN: And the chronal leaves are yours to read, whenever you like. The ones that remember days."].compact
+         "EIRWEN: The chronal leaves are yours to read, whenever you like. They remember days."].compact
       end
     },
     # (dialogue 06 §3.7, 15 line 1: he says why he has the riddles, and who
@@ -379,12 +389,13 @@ module FrostThaw
                                 "LORN SCRIBE: Four riddles, kept four hundred years for the Heralds. One for each of you.",
                    "LORN SCRIBE: The blade sleeps in the silt where the boats were frozen.",
                    "LORN SCRIBE: The staff stands with the first Wardens, in sap clear as glass.",
+                   "His pen doesn't stop.",
                    "LORN SCRIBE: The mantle waits where the world stops at the wall of light.",
                    "LORN SCRIBE: The key is in this room. It always was. Begin where the year sleeps."]
     },
     wennen_scholar: ["A Wennen scholar copies old carvings onto leaf-paper.",
-                     "WENNEN SCHOLAR: Old Wennen. 'Dragon Warriors,' it says. Partners of dragons. Never masters.",
-                     "WENNEN SCHOLAR: And this: 'the wyrm cannot turn the wheel alone, but it may, with a guide.'",
+                     "WENNEN SCHOLAR: Old Wennen. 'Dragon Warriors.' Partners of dragons. Never masters.",
+                     "WENNEN SCHOLAR: And this: 'the wyrm cannot turn the wheel alone. With a guide, it may.'",
                      "WENNEN SCHOLAR: Nobody knows who the guides are. I have theories. Nobody listens to them."],
     library_note: ["A crystal leaf, filed under A, glows with handwriting. Four hundred years old.",
                    "It's Alberica's hand.",
@@ -399,7 +410,7 @@ module FrostThaw
     ivran: [{ if: { flag: :twins_met }, lines: ["IVRAN: You've seen them, then. The dragons. I told the Corsairs they were omens.",
                                                  "IVRAN: They laughed. They've stopped laughing."] },
             ["A dock captain with burn scars and one glass-blue eye watches the black water.",
-             "IVRAN: Captain Ivran Solmar. I run what moves on this water. I've seen things move under it, too.",
+             "IVRAN: Captain Ivran Solmar. I run what moves on this water. I watch what moves under it.",
              "IVRAN: The night before you came: two shapes under the Glasswater. Wyrmling-shaped.",
              "IVRAN: Green, and white. And the Corsairs lost two crews to ice that came off the shore.",
              "IVRAN: Somebody's praying for cold. Somebody's being answered."]],
@@ -415,14 +426,14 @@ module FrostThaw
     crypt_inscription: ["Carved in the wall above the petrified Wardens:",
                         "\"When the first Warden fell, his staff took root and waited for balance to return.",
                         "May the next bearer remember that rage is only winter longing for spring.\""],
-    crypt_warden: ["A druid stands sealed in clear sap, eyes closed, hand raised in the old Rootwarden blessing.",
+    crypt_warden: ["A druid stands sealed in clear sap, eyes closed, a hand raised in the Rootwarden blessing.",
                    "They look peaceful. They look like they're listening."],
     # --- Hyphora's Undercanopy -----------------------------------------------------------------
     yarro: -> {
       if T.flag?(:blight_burned)
-        ["YARRO: (A voice like warm rain, inside your head.) The gardens breathe easier. Rest, little ones."]
+        ["YARRO: (A voice like warm rain.) The gardens breathe easier. Rest, little ones."]
       else
-        ["A small myconid hums over beds of glowing caps. Its voice blooms in your head like warm rain.",
+        ["A small myconid hums over beds of glowing caps. Its voice blooms in your head, like rain.",
          "YARRO: (Gently. Gently. You walk on hyphae. Every step is a hand you're standing on.)",
          "YARRO: (The vermilion caps by the far wall have gone black. A blight. It spreads.)",
          "YARRO: (Fire would stop it. We have no fire.)"]
@@ -437,6 +448,7 @@ module FrostThaw
       ["A myconid with shelf-fungi round its cap like bookshelves speaks quickly into your head.",
        "LYSELLA: (A word first. Teach me one of yours. I pay in history.)"] + word +
         ["LYSELLA: (Ours, for you: 'mycelium'. It means family, mostly.)",
+         "Her shelf-cap creaks as she settles in to pay you in history.",
          "LYSELLA: (Balanus was the first World Tree. Erato was his seed, a Feycorn.)",
          "LYSELLA: (She planted herself, and became a tree, and a god.)",
          "LYSELLA: (Her last seeds scattered through many worlds. One woke here.)"]
@@ -463,7 +475,7 @@ module FrostThaw
                     ["The roots of a young tree pulse faintly through the walls.",
                      "They're a different colour from the World Tree's. Smaller. Younger. Sick."]],
     barricade: ["The north-east tunnel runs on toward the hag's old lair under Dougan's Hole.",
-                "Duergar ironwork walls it off, riveted into the living root. Smoke leaks through the seams.",
+                "Duergar ironwork walls it off, riveted into the root. Smoke leaks through the seams.",
                 "Behind it, a sound like hammers. Someone has scratched a note in Rootwarden script:",
                 "THE ROOTWARD BARRICADE. NOT YET."],
     mycolith_gone: ["The lake is clear. Pale myconid sprouts bumble along the shore, poking at the water."]
@@ -484,7 +496,7 @@ module FrostThaw
               "I don't know whether to cry or correct the spelling. I'll do both. Later. With a drink."],
     college: [{ if: { with: :reptin }, lines: ["Copies of our things in a case. Reptin's already charmed the curator.",
                                                "I'm checking my neck for the pendant anyway. ...Still gone. Of course it is."] },
-              ["Copies of our things, in a case. The pendant's a copy, of course. The real one cracked in Lonelywood.",
+              ["Copies of our things, in a case. The real pendant cracked in Lonelywood, of course.",
                "I'm checking my neck anyway. Habit."]],
     crypt: ["Sap like glass. They're not dead, are they. They're waiting.",
             "...Hush. I just don't like being the loudest thing in a room. Is all."],
@@ -537,7 +549,7 @@ module FrostThaw
     rootspire: ["Big tree! Big, big tree. Meat Meat would climb it, but it is somebody's house.",
                 "Coffee in market: six out of ten. Strong. Sad. Meat Meat drank three anyway."],
     hearth: [{ if: { with: :alberica }, lines: ["Free snacks. Meat Meat is staying here forever. Tell the dragons.",
-                                                "Alberica's drink is sad juice. Meat Meat's drink is war. Hellen's coffee: eight out of ten."] },
+                                                "Alberica drinks sad juice. Meat Meat drinks war. Hellen's coffee: eight out of ten."] },
              ["Free snacks. Meat Meat is staying here forever. Tell the dragons.", "Hellen's coffee: eight out of ten. Hellen is a good person."]],
     council: ["Statue of Meat Meat has snacks. Meat Meat respects this city very much."],
     root_tier: ["Fish smell. Secret smell. Meat Meat likes both."],
@@ -600,7 +612,7 @@ module FrostThaw
     set_flag(:razzy_hatched)
     pbSEPlay("Saint7") rescue nil
     sayc(["Under your coat, the egg moves.",
-          "It's been warm since the frost-light chasm. Since a name was spoken over it like a promise.",
+          "It's been warm since the frost-light chasm, since a name was spoken over it.",
           "Now it's hot. And it's cracking.",
           "Shell falls away in green flakes. A wyrmling unfolds in your arms, no bigger than a cat.",
           "Scales of iridescent moss, flecked with silver. Bright, knowing eyes.",
@@ -612,7 +624,7 @@ module FrostThaw
     sayc([cl(:reptin, "Easy. Easy, little one. You know my voice. I gave you my blood once."),
           cl(:reptin, "You can have it again if you need it. ...Don't tell Meat Meat I offered."),
           (with_or_is?(:meat_meat) && with_or_is?(:reptin) ? cl(:meat_meat, "Meat Meat heard. Meat Meat will allow it. Once.") : nil),
-          "Razzy looks at each of you. Then he laughs: a sound like a meadow. It shouldn't fit in a chasm.",
+          "Razzy looks at each of you. Then he laughs, like a meadow. It shouldn't fit in a chasm.",
           "It does.",
           "He spreads his wings, wet and new, and before anyone can catch him he's gone.",
           "Up, into the light pouring from the broken mirrors. After the green."])
@@ -647,7 +659,7 @@ module FrostThaw
         lines << as(:alberica, "Pretty boy, you're gripping the rail. Afraid of heights?")
         lines << as(:alerion, "No. I'm afraid of falling. Different thing.")
       end
-      lines << cl(:meat_meat, "Meat Meat is not afraid. Meat Meat is holding Reptin's sleeve for Reptin's sake.") if with_or_is?(:reptin)
+      lines << cl(:meat_meat, "Meat Meat is not afraid. Meat Meat holds Reptin's sleeve for Reptin's sake.") if with_or_is?(:reptin)
       lines << cl(:reptin, "Very generous of you. Truly. My sleeve and I are touched.") if with_or_is?(:meat_meat)
       lines << cl(:wyn, "...Sableye likes it. He's never been this far from the ground. He keeps looking down.")
       sayc(lines.compact) if lines.compact.size >= 2
@@ -687,7 +699,7 @@ module FrostThaw
       sayc([cl(:alberica, "Darling, I'd let you look at my seams any day of the week."),
             (with_or_is?(:alberica) ? cl(:reptin, "What my colleague means is: thank you, Pip. We'd be delighted.") : nil)].compact)
     else
-      say(["PIP: Did you know a pocket is just a little room you carry with you? A room! For your hands!"], event_id)
+      say(["PIP: A pocket is just a little room you carry with you. A room! For your hands!"], event_id)
     end
     limit = state[:bag_limit] || BAG_START_LIMIT
     PIP_UPGRADES.each do |name, new_limit, need, price|
@@ -765,7 +777,7 @@ module FrostThaw
            "TAMSIN: Tamsin Brightrun! Mum's been talking about you since you walked in.",
            "TAMSIN: All of you. She's never like this. If the Heralds are real, I want to see.",
            "TAMSIN: Battle me!"], event_id)
-      sayc([cl(:meat_meat, "Small one has two balls and big eyes. Meat Meat likes small one. Meat Meat will still win."),
+      sayc([cl(:meat_meat, "Small one has big eyes. Meat Meat likes small one. Meat Meat will still win."),
             cl(:alerion, "She's holding them upside down."),
             (with_or_is?(:alerion) && with_or_is?(:alberica) ? cl(:alberica, "Don't tell them, pretty boy. Let them find out. That's how you learn.") : nil)].compact)
     end
@@ -795,7 +807,7 @@ module FrostThaw
     if flag?(:badge_hearth)
       return say(["HELLEN: You've got my seal, love. Go on. And come back for supper. I'm not asking."], event_id)
     end
-    sayc(["Hellen stands in the warm dark among the roots, sleeves rolled up. Like the bar at closing.",
+    sayc(["Hellen stands in the warm dark among the roots, sleeves rolled up, like at closing.",
           "HELLEN: Sit down first. Eat that. ...Good. Four hundred years I've told your stories.",
           "HELLEN: Show me I wasn't lying.",
           cl(:shade, "Look at her stance. That's not a barkeep. That's a bouncer."),
@@ -807,11 +819,12 @@ module FrostThaw
     set_flag(:badge_hearth)
     ($game_switches[SW_HEARTH_BADGE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
-    say(["HELLEN: The Hearthstone Seal. It's a little cup, see? Because you always come back to the Hearth."])
+    say(["HELLEN: The Hearthstone Seal. A little cup, see? You always come back to the Hearth."])
     pbMessage(_INTL("\\me[Badge get]{1} received the Hearthstone Seal!", $Trainer.name))
     give(:TM42)
     say(["HELLEN: And you never pay for a drink here again.",
          "HELLEN: That TM's Facade. Hits harder when you're hurt. Like most of the people in my bar.",
+         "Upstairs, the regulars are stamping on the floorboards.",
          "HELLEN: Go and see Pip in the Bazaar. Four badges? She'll want to make you a rucksack.",
          "HELLEN: She'll cry. Let her."])
     sayc([cl(:alberica, "Never pay for a drink again. Hellen, I'm moving in."),
@@ -837,7 +850,7 @@ module FrostThaw
            "He measures you with a brass rule. Then with a candle. Then with a look.",
            "WYNSNOW: Your shadow is a quarter-second late. Remarkable. Horrifying."], event_id)
     else
-      say(["A half-elf in an ink-stained coat looks up from three books at once, and drops all of them.",
+      say(["A half-elf in an ink-stained coat looks up from three books at once, and drops them all.",
            "WYNSNOW: The Heralds. In my lab. Hold still. I've waited my whole life to measure you."], event_id)
     end
     # (dialogue 06 §3.5: Alerion's "No." answers something, in every mode)
@@ -847,6 +860,7 @@ module FrostThaw
           "WYNSNOW: You'll want this. A licence. Grafting: two Pokémon merged in a cocoon of sap.",
           "WYNSNOW: The old way. One gives itself to the other and comes out part of it.",
           "WYNSNOW: Splicers fuse two for a while. A graft is for keeps.",
+          "He taps a jar on the desk. Inside, two Pokémon sleep in one cocoon of sap.",
           "WYNSNOW: The rules are the lore. No cocoon holds a stranger: they must be close in level.",
           "WYNSNOW: And seedlings remember: eggs keep their parent's growth.",
           "WYNSNOW: Never into a person. That's Joining, and it's forbidden.",
@@ -873,7 +887,7 @@ module FrostThaw
     Stage.fx("E-06", stage_spot(wyn_ev, 0, -1).then { |x, y| [x, y - 1] }, frames: 10, oy: 16) rescue nil
     say(["The air over his desk splits like ice. Blue fire pours through.",
          "Cold comes with it, four hundred years old: snow, Targos harbour, and something walking.",
-         "A wight steps out of the frozen past, wreathed in blue flame. It turns its empty eyes on the class.",
+         "A wight steps out of the frozen past, wreathed in blue flame. It eyes the class.",
          "WYNSNOW: -less contained than expected! Heralds! Practical demonstration! Please!"], event_id)
     sayc([cl(:alberica, "Oh, he's dreadful. I love him. Somebody hit the skeleton."),
           (with_or_is?(:alberica) ? cl(:alerion, "On it.") : nil)].compact)
@@ -884,8 +898,7 @@ module FrostThaw
          "The crack seals with a sound like a page turning.",
          "WYNSNOW: ...And that concludes the lecture. Class dismissed.",
          "WYNSNOW: Somebody open a window. Somebody close that window.",
-         "WYNSNOW: Thank you. Truly. This is for the student with the best practical.",
-         "WYNSNOW: That's you. That's very clearly you."])
+         "WYNSNOW: Thank you. Truly. The prize for the best practical is... very clearly you."])
     give(:LUCKYEGG)
     sayc([cl(:meat_meat, "Meat Meat also did practical. Meat Meat bit the skeleton."),
           (with_or_is?(:meat_meat) ? cl(:reptin, "And it was a beautiful bite. We'll put it in the minutes.") : nil)].compact)
@@ -900,9 +913,9 @@ module FrostThaw
     if !flag?(:twins_met)
       return sayc(["Two spires twist together above you, one jade, one white crystal.",
                    "Two dragons, carved circling one another. Between them hangs an orb of shifting light.",
-                   "It pulses like a heartbeat. Each time it brightens, the worshippers kneeling round it sing a line of the Cycle Canticle,",
-                   "softly, the way you'd sing to something sleeping: winter, spring, summer, autumn, and round.",
-                   "LUMIN: Lumin Weavemoss, priest of the Circle. The orb's been green-white since you arrived.",
+                   "It pulses like a heartbeat. At each pulse the worshippers sing a line of the Canticle.",
+                   "Softly, the way you'd sing to something asleep: winter, spring, summer, autumn, and round.",
+                   "LUMIN: Lumin Weavemoss, of the Circle. The orb's been green-white since you arrived.",
                    "LUMIN: It glows when either wyrm stirs. Tonight it hasn't stopped.",
                    "LUMIN: They know you're here. They're deciding."], event_id)
     end
@@ -913,8 +926,9 @@ module FrostThaw
                   "High above, two shapes circle the crown of the World Tree."], event_id)
     end
     return if respond_to?(:orb_halo_scene) && !orb_halo_scene   # the Halo splinter at the orb first (048)
-    sayc(["LUMIN: (still shaking) You came up just in time. The whole Canopy felt the dragons land for you.",
+    sayc(["LUMIN: (still shaking) You came up just in time. The whole Canopy felt them land for you.",
           "LUMIN: Put your hands to the orb. It shows the guides what they're guiding.",
+          "The orb pulses: two heartbeats, out of step.",
           "LUMIN: Two roads for each of you. Not what will be. What might.",
           "LUMIN: That's the old teaching. I've never once seen it work."], event_id)
     pbSEPlay("Saint7") rescue nil
@@ -922,13 +936,11 @@ module FrostThaw
     sayc(["The light lets you go.",
           "LUMIN: ...It worked. Oh, it worked. Dragon Warriors. Partners. Never masters.",
           "LUMIN: Two roads each. The wyrms will follow whichever one you walk.",
-          "LUMIN: The wyrms can't turn the wheel of the seasons alone. They may, with a guide.",
-          "LUMIN: Take this: a moon-charm of the Circle. Zenith Abbott's line made it.",
-          "LUMIN: For whoever woke the wyrms.",
           cl(:shade, "(very quietly) Her eyes. In the street, when she hummed. I knew."),
           cl(:meat_meat, "Meat Meat saw a meadow. Razzy was in it. Meat Meat is keeping that one."),
           cl(:alerion, "I saw a forest with no dawn. ...It was quiet. I liked it. Don't tell anyone."),
-          (with_or_is?(:alerion) && with_or_is?(:alberica) ? cl(:alberica, "Everyone heard you, pretty boy. We're all going to tell everyone.") : nil)].compact)
+          (with_or_is?(:alerion) && with_or_is?(:alberica) ? cl(:alberica, "Everyone heard you, pretty boy. We're all going to tell everyone.") : nil),
+          "LUMIN: Take this: a moon-charm of the Circle, for whoever woke the wyrms."].compact)
     give(:MOONSTONE)
     set_flag(:orb_visions)
     set_flag(:halo_orb_cleared)
@@ -973,30 +985,30 @@ module FrostThaw
 
   def bloom_vision_alerion
     me = herald?(:alerion)
-    sayc([me ? "(A black forest under a sky that never knew dawn. Two pale moons between the trunks: Frostina's eyes.)" :
+    sayc([me ? "(A black forest under a sky that never knew dawn. Two pale moons: Frostina's eyes.)" :
                "Alerion stands in a black forest under a sky that never knew dawn.",
           me ? nil : "Between the trunks, two pale moons: Frostina's eyes.",
-          "\"Guardian of the Dark Half. Keeper of stillness, and of the endings that let the wheel turn.\"",
-          "Then another age. Shimmer, her breath silver in the night, her eyes on a man with a shield. Him.",
+          "\"Guardian of the Dark Half. Keeper of stillness, and the endings that turn the wheel.\"",
+          "Shimmer, her breath silver in the night, her eyes locked on a man with a shield. Him.",
           me ? "(You were her shield, once, a whole life ago. You know her eyes. They're Frostina's.)" :
-               "He was Shimmer's shield, a whole life ago. And Frostina carries her eyes, and her soul's echo.",
+               "He was Shimmer's shield, a life ago. And Frostina carries her eyes, and her soul's echo.",
           "Two roads open through the black trees.",
-          "On one: a sentinel at the ruins of the north, a sword in the snow, keeping watch over a silence.",
-          "On the other: a shape under great white wings, and Frostina's cry across the void. A name, forgotten.",
+          "On one: a sentinel at the northern ruins, a sword in the snow, keeping watch on a silence.",
+          "On the other: a shape under great white wings, and Frostina's cry. A name, forgotten.",
           "Both roads are his."].compact)
   end
 
   def bloom_vision_meat_meat
     me = herald?(:meat_meat)
     sayc([me ? "(The ice cracks and a meadow breaks through. Razzilith lies coiled in the wildflowers.)" :
-               "Meat Meat stands in a meadow breaking up through the ice. Razzilith lies coiled in the wildflowers.",
-          "\"Guardian of the Light Half. Keeper of renewal, flame and song. Without you, the wheel rots.\"",
-          me ? "(You remember feeding him. Acorns, one at a time. Flowers, which he ate, and then sneezed.)" :
+               "Meat Meat stands in a meadow that's broken through the ice. Razzilith lies in the flowers.",
+          "\"Guardian of the Light Half. Keeper of renewal and song. Without you, the wheel rots.\"",
+          me ? "(You remember feeding him. Acorns, one at a time. Flowers, which he ate, then sneezed.)" :
                "She's feeding him. Acorns, one at a time. Flowers, which he eats, and then sneezes.",
           me ? "(The first time he laughed. You taught him that.)" : "He laughs. She taught him that.",
           "Two futures, side by side like reflections in a pond.",
-          "In one: the earth thaws as far as the eye can see, and his roar cracks the mountains open, and green pours out.",
-          "In the other: she cradles his muzzle while the meadow burns around them, and the flames are his."])
+          "In one: the earth thaws as far as the eye can see, and his roar cracks the mountains open.",
+          "In the other: she cradles his muzzle while the meadow burns. The flames are his."])
   end
 
   def bloom_vision_alberica
@@ -1005,40 +1017,40 @@ module FrostThaw
           "Faces press against the inside of it, crying to be remembered.",
           "\"Keeper of Memory. Your key is the life you have carried. Hold it all.\"",
           "\"Without memory, the wheel does not turn.\"",
-          me ? "(On your chest, a rune you've never seen burns cold. It pulses brightest when you face the vault.)" :
-               "On her chest, where her pendant used to hang, a rune burns cold. Brightest when she faces the vault.",
-          me ? "(And you're in Bryn Shander's square again, pouring warmth out of the pendant into a frightened crowd.)" :
-               "And she's in Bryn Shander's square again, pouring warmth out of the pendant into a frightened crowd.",
+          me ? "(On your chest, a rune you've never seen burns cold, brightest when you face the vault.)" :
+               "Where her pendant used to hang, a rune burns cold. Brightest when she faces the vault.",
+          me ? "(And you're in Bryn Shander's square again, pouring warmth into a frightened crowd.)" :
+               "And she's in Bryn Shander's square again, pouring warmth into a frightened crowd.",
           "Two paths, and the snow falls on both.",
           "On one: her hand turns a key, and the whole Dale is locked in winter forever. Safe. Still.",
           "On the other: she sings the tender and the terrible both, and the vault shatters.",
           "Every face inside it remembers its name.",
           # (context 06 §6, 15 §6: Herald Alberica notices; the price stays unsaid)
-          me ? as(:alberica, "A key. A vault. The family's bargain had a key in it. Nobody ever said what it opened.") : nil].compact)
+          me ? as(:alberica, "A key. A vault. The family's bargain had a key in it. Nobody said what for.") : nil].compact)
   end
 
   def bloom_vision_glimmer
     me = herald?(:glimmer) || herald?(:shade)
     who = with_or_is?(:glimmer) ? "Glimmer" : "Shade"
-    sayc(["A plain of stars like embers. A unicorn strides out of it, mane aflame, horn burning like dawn: Brightmane.",
+    sayc(["A plain of stars like embers. A unicorn strides out of it, mane aflame: Brightmane.",
           "Where her hooves fall, the frost shatters, and flowers spring up through the cracks.",
           "\"Sparkbearer. My light is yours.\"",
-          "\"Shimmer gave the ice of her heart so that others might live. Her torch is yours to carry.\"",
-          "Shimmer's last breath. The rose. The heart of ice that went down into the root, and became the seed.",
+          "\"Shimmer gave the ice of her heart so others might live. Her torch is yours to carry.\"",
+          "Shimmer's last breath. The rose. Her heart of ice, gone into the root to become the seed.",
           me ? "(You weep. In the tears you see fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.)" :
                "#{who} weeps, and in the tears there is fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.",
           "Two flames.",
-          "In one: the spark leaps from the torch to the two dragons circling the crown, and they blaze with life.",
-          "In the other: despair closes over the torch like a hand, and the flame gutters down to ash."])
+          "In one: the spark leaps from the torch to the two dragons. They blaze with life.",
+          "In the other: despair closes over the torch like a hand, and the flame gutters to ash."])
   end
 
   def bloom_vision_reptin
     me = herald?(:reptin)
     sayc(["A graveyard, where roots tear through the soil and flowers bloom blood-red against frost.",
           "Wolves pace at its edge, neither cruel nor kind.",
-          "\"Warden of Life and Death. Without either, there is only stillness, and stillness is the enemy.\"",
-          me ? "(The old wolf-bite in your hand sears anew: fire beneath snow. You remember the starving pack.)" :
-               "Reptin's old wolf-bite sears anew, fire beneath snow. He remembers the rations, and the starving pack.",
+          "\"Warden of Life and Death. Without either, there is only stillness: the enemy.\"",
+          me ? "(The old wolf-bite in your hand sears: fire beneath snow. You remember the starving pack.)" :
+               "Reptin's old wolf-bite sears, fire beneath snow. He remembers the starving pack.",
           "Mercy bound him then, as the curse bound him to hunger. Both bind him still.",
           "Two visions, one on each side of the graveyard wall.",
           "In one: he walks between the living and the dying with a lantern, and neither is afraid.",
@@ -1051,7 +1063,7 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def subvault(event_id = nil)
     if flag?(:key_found)
-      return say(["The instrument case lies open and empty. Its lock of two interlocking notes still hums faintly."], event_id)
+      return say(["The instrument case lies open and empty. Its lock of two notes still hums, faintly."], event_id)
     end
     say(["Behind a curtain of crystal leaves: a small instrument case.",
          "Its lock is two music notes, interlocked."], event_id)
@@ -1060,7 +1072,7 @@ module FrostThaw
                   "and waits for someone who knows the next bar."])
     end
     say(["The moment #{herald?(:alberica) ? 'you touch' : 'Alberica touches'} it, the case hums a melody.", "Nobody here remembers composing it."])
-    speak(:alberica, "I know this. I wrote this. I haven't written it yet. ...Somebody pour me something.",
+    speak(:alberica, "I know this. I wrote this. I haven't written it yet. ...Pour me a drink.",
           "(very quietly) ...I know this one. I wrote it. I haven't written it yet.")
     sayc([cl(:reptin, "Then you'll write it beautifully. You always do. Eventually. After the drinks."),
           "The lock opens. Inside, on velvet: a slender tuning-key of silver and frost glass.",
@@ -1115,14 +1127,14 @@ module FrostThaw
          "EIRWEN: (whispering) It isn't my song. It's yours, Alberica. The crystals are waiting.",
          "EIRWEN: Before dawn. They won't hold the song past it."], event_id)
     if !with_or_is?(:alberica)
-      return say(["EIRWEN: ...Ah. Not yours. Hers. The Key won't wake for anyone but the Dwarf of Song. Bring her back."])
+      return say(["EIRWEN: ...Ah. Not yours. The Key won't wake for anyone but the Dwarf of Song."])
     end
     if state[:canticle_night] == rs_day
-      return say(["EIRWEN: The crystals are spent for tonight. Even the choir has to sleep. Tomorrow, before dawn."])
+      return say(["EIRWEN: The crystals are spent tonight. Even choirs sleep. Tomorrow, before dawn."])
     end
     if !flag?(:canticle_researched) && !flag?(:canticle_partial)
-      say(["EIRWEN: Half the old verses were lost in the Reversal. The Library's crystal leaves keep what's left of them.",
-           "EIRWEN: You could find them first. Or you could sing now, and make up what's missing as you go."])
+      say(["EIRWEN: Half the old verses were lost in the Reversal. The Library's leaves keep the rest.",
+           "EIRWEN: You could find them first. Or sing now, and make up what's missing."])
       c = pbMessage(_INTL("The lost verses..."), [_INTL("Research them in the Library first"), _INTL("Sing now, and improvise")], 0)
       if c == 0
         say(["EIRWEN: Wise. Come to the Library. I'll leave the oldest case unlocked."])
@@ -1134,7 +1146,8 @@ module FrostThaw
     state[:canticle_night] = rs_day
     known = flag?(:canticle_researched)
     say(["#{me ? 'You stand' : 'Alberica stands'} at the living pillar with the Key of Whispering Memory in #{me ? 'your' : 'her'} hand.",
-         "Around the hall, very faint, the crystals show other singers: the choir who tried this before, and failed, centuries ago. They're watching."])
+         "Very faint in the crystals: other singers. The choir who tried this before, and failed.",
+         "They're watching."])
     key_used = false
     hits = 0
     misses = 0
@@ -1149,7 +1162,7 @@ module FrostThaw
       if !key_used && c == lines.size
         key_used = true
         hits += 1
-        say(["The Key rings: one long note, and the crystal answers it like an echo answering a bell. Magic, not voice. It counts."])
+        say(["The Key rings one long note, and the crystal answers. Magic, not voice. It counts."])
         next
       end
       good = right.include?(c)
@@ -1177,22 +1190,24 @@ module FrostThaw
     add_counter(:story_beats)
     sayc(["Hope, and loss, and enduring. And round again.",
           "The crystal veins light one after another, in time. The Key rings like a struck bell.",
-          "The old choir in the crystals is singing with you now. Then they bow, all together, and go out like candles at dawn.",
+          "The old choir in the crystals is singing with you now.",
+          "Then they bow, all together, and go out like candles at dawn.",
           "For a moment the hall is full of voices: everyone who ever knew you, singing back."])
     if with_or_is?(:alberica)
       speak(:alberica, "...Oh. Oh, there you all are. Hello, darlings. I missed you. Every one.",
             "...Oh. There you all are.")
     end
     give(:FT_WHISPERKEY)
-    say(["(The Key of Whispering Memory: held by a Pokémon, it makes sound-based moves 30% stronger.)"])
+    say(["(The Key of Whispering Memory: held by a Pokémon, sound moves are 30% stronger.)"])
     # Eirwen's reward: a chronal leaf with a prophecy, and the lore of Verse XI.
-    sayc(["EIRWEN: (very quietly, wiping their eyes) The chronicle's mended. I felt it close, like a door.",
+    sayc(["EIRWEN: (wiping their eyes) The chronicle's mended. I felt it close, like a door.",
           "EIRWEN: Take this. A chronal leaf from the oldest case. It's been waiting for the song.",
           "On the leaf, in gold, a verse no one has sung yet:",
           "\"The Frost Saint will climb the Spire when the roots bleed.\"",
-          "EIRWEN: The Library's been whispering that line for a month. Now it's written down, it'll have to come true or be prevented.",
+          "EIRWEN: The leaves have whispered it a month. Now it must come true, or be stopped.",
           "EIRWEN: And the line we carve over the Library door, so you know it's yours:",
-          "\"The Dwarf of Song taught memory to sing so the world would not forget it had once been warm.\" Verse Eleven. The Ballads of the Verdant Reversal."])
+          "\"The Dwarf of Song taught memory to sing, so the world would not forget it had been warm.\"",
+          "(Verse Eleven. The Ballads of the Verdant Reversal.)"])
     give_key(:FT_PROPHECYLEAF)
     set_flag(:verse_xi_known)
     wheel(2)
@@ -1205,15 +1220,18 @@ module FrostThaw
   def canticle_failure
     me = herald?(:alberica)
     say(["The song breaks. All four crystals go dark at once.",
-         "Out of them pour the choir who failed here before you: bards of light with hollow faces, singing a wrong note, together, louder and louder."])
+         "Out of them pours the choir who failed here before you: bards of light with hollow faces.",
+         "They sing a wrong note, together, louder and louder."])
     won = boss_battle(named_mon(:WOOBAT, 42, "Spectral Bard"), named_mon(:WOOBAT, 42, "Spectral Bard"))
     sayc([won ? "The spectral bards scatter like moths, and the wrong note goes with them." :
-                "You get out of the hall with your hands over your ears. Behind you the chorus sings to an empty room.",
+                "You get out with your hands over your ears. Behind you the chorus sings to an empty room.",
           "The ritual's broken. But some of the chronicle came back anyway, through the cracks:",
-          "a founding charter with one name scratched out; a Summer seal on a decree nobody signed; a goblin's name in a breeding ledger.",
-          me ? "(And one melody won't leave your head. The choir's wrong note. You'll be humming it for days.)" :
+          "a founding charter with one name scratched out; a Summer seal on a decree nobody signed;",
+          "a goblin's name in a breeding ledger.",
+          me ? "(One melody won't leave your head: the choir's wrong note. You'll hum it for days.)" :
                "Alberica hums under her breath all the way back. The choir's wrong note. She can't stop.",
-          "EIRWEN: (shaken) Not tonight, then. The crystals will hold the song one more night. Tomorrow, before dawn, if you'll try again."].compact)
+          "EIRWEN: (shaken) Not tonight, then. The crystals will hold the song one more night.",
+          "EIRWEN: Tomorrow, before dawn, if you'll try again."].compact)
     set_flag(:canticle_haunted)
     wheel(1) if !flag?(:canticle_failed_once)
     set_flag(:canticle_failed_once)
@@ -1228,7 +1246,7 @@ module FrostThaw
     sayc(["Half buried in the silt below the pier: a driftwood chest.",
           "A single candle still burns inside it, somehow, behind the wood.",
           herald?(:meat_meat) ? "(The tiny lock opens for your fingers like it was made for them. It was.)" : "Meat Meat's fingers find the tiny lock. It opens like it was made for them.",
-          "Inside: a dagger, wrapped in an old ledger page with a scorched laboratory seal. A stylized \"A\".",
+          "Inside: a dagger, wrapped in a ledger page with a scorched laboratory seal: an \"A\".",
           "Across the top, in a hand you almost recognize:",
           "\"Subject V-7, the one who escaped.\""], event_id)
     speak(:meat_meat, "...Meat Meat's number. That is Meat Meat's number.",
@@ -1237,8 +1255,8 @@ module FrostThaw
           cl(:alberica, "Burn the page, sweetheart. Keep the knife.")].compact)
     sayc(["The blade is curved and goblin-sized: mirrored steel, veined with green crystal.",
           "Its reflection moves half a heartbeat out of step.",
-          herald?(:meat_meat) ? "(You close your hand on it, and you're back on the cold table. A dozen other yous fade into frost.)" :
-                                "Meat Meat closes her hand on it and goes very still. Her eyes are on a cold table, far away.",
+          herald?(:meat_meat) ? "(You close your hand on it, and you're on the cold table. Other yous fade into frost.)" :
+                                "Meat Meat closes her hand on it and goes very still. Her eyes are on a cold table.",
           herald?(:meat_meat) ? nil : "A dozen others like her are fading into frost there.",
           "A voice, counting. Then, under it: \"Will you remain a weapon, or become a seed?\""])
     c = pbMessage(_INTL("Weapon, or seed?"), [_INTL("A seed"), _INTL("A weapon")], 0)
@@ -1256,31 +1274,31 @@ module FrostThaw
     set_self_switch(event_id, "A")
     add_counter(:story_beats)
     give(:FT_VERDANTBLADE)
-    say(["(The Verdant Blade: held by a Pokémon, its not very effective moves do double damage. Life resists design.)"])
+    say(["(The Verdant Blade: held by a Pokémon, its not very effective moves do double damage.)"])
   end
 
   def crypt_staff(event_id = nil)
-    return say(["The petrified Warden's hands are empty now, curled round a staff that isn't there. They look lighter."], event_id) if flag?(:staff_found)
+    return say(["The petrified Warden's hands are empty now, curled round a staff that isn't there."], event_id) if flag?(:staff_found)
     say(["In the ring of petrified druids, one stands taller than the rest.",
          "Its hands hold a staff of living root. The tip burns faintly gold inside the sap."], event_id)
     if !with_or_is?(:reptin)
-      return say(["The sap is clear as glass and hard as stone. Whatever the staff is waiting for, it isn't you."])
+      return say(["The sap is clear as glass, hard as stone. Whatever the staff is waiting for, it isn't you."])
     end
     if !flag?(:crypt_guardian_down)
-      say(["As you step closer, the sap stirs. Something grows up out of the floor between you and the staff.",
+      say(["As you step closer, the sap stirs. Something grows up out of the floor, in your way.",
            "Bark, old wolf hide, and two green, sleepy eyes. The crypt's guardian.",
            "It wants to know if you came to take, or to keep."])
       sayc([cl(:reptin, "To keep. Obviously. I'd say that even if it weren't true, but it is."),
             cl(:alerion, "It doesn't believe you.")].compact)
       return if !boss_battle(named_mon(:B103H439, 41, "Crypt Guardian"))
       set_flag(:crypt_guardian_down)
-      say(["The guardian folds back into the floor, slowly. Like someone sitting down after a long day.",
+      say(["The guardian folds back into the floor, like someone sitting down after a long day.",
            "It doesn't look beaten. It looks satisfied."])
     end
     sayc([herald?(:reptin) ? "(You touch the sap, and it softens under your hand like warm wax.)" : "Reptin touches the sap, and it softens under his hand like warm wax.",
           "The bark of the staff splits. Under it, carved into the heartwood: a wolf's head.",
           "His totem. Four hundred years, waiting for his hand."])
-    speak(:reptin, "'Rage is only winter longing for spring.' ...Well. I'll try to remember. No promises.",
+    speak(:reptin, "'Rage is only winter longing for spring.' ...I'll try to remember. No promises.",
           "Rage is only winter longing for spring. ...I'll try to remember.")
     sayc([cl(:meat_meat, "Reptin's wolf is on a stick now. Meat Meat approves of stick."),
           "A gnarled length of living root, bound in frozen wolf hide, capped with a gem.",
@@ -1291,8 +1309,9 @@ module FrostThaw
     # cycle of seasons (rootspire.md 1681-1683): auroral_wall_edge (048_H).
     give_key(:FT_UNBONDEDSTAFF)
     say(["The staff hums, but a beat out of time with #{herald?(:reptin) ? 'you' : 'Reptin'}, like a song in the wrong key.",
-         "Carved under the wolf's head, very small: REST AT THE EDGE OF THE LIGHT, AND LET THE YEAR GO ROUND YOU.",
-         cl(:wyn, "(softly) The Wall. The old wardens bonded their staves at the Auroral Wall. One whole night.")].compact)
+         "Carved under the wolf's head, very small:",
+         "REST AT THE EDGE OF THE LIGHT, AND LET THE YEAR GO ROUND YOU.",
+         cl(:wyn, "(softly) The old wardens bonded their staves at the Auroral Wall. One whole night.")].compact)
     state[:goal] = "Bond the Heartwarden's Staff: a night's rest at the edge of the Auroral Wall (the Blooming Fields)." if with_or_is?(:reptin)
   end
 
@@ -1310,7 +1329,7 @@ module FrostThaw
     say(["A cloaked, masked human sells rare surface goods from a stall made of crates.",
          "The sign reads: WHISPERS OF THE ECHO GATE.",
          "There's frost in the grain of his gloves. In the Undercanopy, where nothing freezes."], event_id)
-    sayc([(with_or_is?(:meat_meat) ? cl(:reptin, "(under his breath) Leave the talking to me. ...Actually, no. Leave the hitting to Meat Meat.") : nil),
+    sayc([(with_or_is?(:meat_meat) ? cl(:reptin, "Leave the talking to me. ...Actually, no. Leave the hitting to Meat Meat.") : nil),
           cl(:meat_meat, "Meat Meat is ready. Meat Meat was born ready. In a jar.")].compact)
     return if !pbConfirmMessage(_INTL("Call him out?"))
     return if !trainer(:masked_trader, event_id)
@@ -1325,7 +1344,7 @@ module FrostThaw
     say(["When the white smoke clears, he's gone.",
          "ZYM: (Spy. He smelled of frost. Come. You are owed.)"])
     give(:FT_SPORECHIME)
-    say(["(The Sporechime: carry it, and it chimes when a trainer on the map you've just entered still wants to battle.)"])
+    say(["(The Sporechime: carry it, and it chimes when a trainer here still wants to battle.)"])
   end
 
   def undercanopy_rest(event_id = nil)
@@ -1341,7 +1360,7 @@ module FrostThaw
       lines << as(:wyn, "Oh. You don't have to.")
       lines << as(:meat_meat, "Meat Meat does not have to. Meat Meat wants to. Different thing.")
     elsif with_or_is?(:wyn)
-      lines << as(:wyn, "The spores are humming. That means they like you. ...Sorry. That's a lot to say at once.")
+      lines << as(:wyn, "The spores are humming. That means they like you. ...Sorry. That was a lot at once.")
     end
     if with_or_is?(:alerion) && lines.size >= 2
       lines << as(:alerion, "Let her. She guards better than she sleeps.")
@@ -1362,11 +1381,11 @@ module FrostThaw
   def echo_wraiths
     return false if flag?(:echo_wraiths_down) || !flag?(:wardens_emeritus)
     return false if !pbConfirmMessage(_INTL("Linger, and listen to the voices?"))
-    sayc(["You stand still in the gate. The voices come closer: your own names, whispered over and over.",
+    sayc(["You stand still in the gate. The voices come closer: your names, whispered over and over.",
           "Under them, the wind itself, one word at a time: \"Don't... turn... back...\"",
           "The frost patterns on the walls aren't patterns. They're eyes. They follow you.",
           "Then Sephek's voice, close enough to feel: \"The lake remembers.\"",
-          with_or_is?(:alerion) ? "And a boy's voice, younger, behind it, very far off: \"Alerion? You said you'd come back for me.\"" : nil,
+          with_or_is?(:alerion) ? "And a boy's voice behind it, far off: \"Alerion? You said you'd come back for me.\"" : nil,
           with_or_is?(:alerion) ? cl(:alerion, "(gone white) ...Talion?") : nil,
           "The frost on the walls opens like eyes. Two shapes step out of it:",
           "figures of mirror-glass, with your faces, cracked.",
@@ -1404,7 +1423,7 @@ module FrostThaw
     # down to the Heartroot (rootspire.md 1022).
     talk(:eline_circle, event_id)
     return talk(:frost_saint_runes) if !flag?(:rite_stopped)
-    return say(["The marble is warm now. The new runes are only scratches. The old prayers are just prayers."], event_id) if blessing?(:warmth)
+    return say(["The marble is warm now. The new runes are scratches. The old prayers are just prayers."], event_id) if blessing?(:warmth)
     say(["The new runes, cut over the old prayers: THE FROST SAINT WALKS AGAIN.",
          "Frost still lives in the grooves, cold enough to burn."], event_id)
     return if !pbConfirmMessage(_INTL("Scour the frost out of the runes with the spilled sap?"))
@@ -1422,11 +1441,11 @@ module FrostThaw
   # The Blooming Fields: the Still Ones, and Alerion's Boundary Hunt
   #-----------------------------------------------------------------------------
   STILL_ONES = {
-    faith:   ["A woman in a priest's robe, frozen kneeling, hands pressed together. Her lips still move, very slowly.",
+    faith:   ["A woman in a priest's robe, frozen kneeling, hands together. Her lips still move, slowly.",
               :B200H124, "Still One of Faith", :CLEANSETAG],
-    hope:    ["A child frozen mid-run, holding up a lantern long gone out. Her eyes are fixed just past the Wall.",
+    hope:    ["A child frozen mid-run, holding up a lantern long gone out. Her eyes are on the Wall.",
               :B365H220, "Still One of Hope", :LUCKYEGG],
-    love:    ["Two figures frozen holding hands, one reaching back for the other. Frost has grown their fingers together.",
+    love:    ["Two figures frozen holding hands. Frost has grown their fingers together.",
               :B429H131, "Still One of Love", :SOOTHEBELL],
     balance: ["A Rootwarden frozen mid-stride, one foot in flowers and one in snow, holding empty scales.",
               :B215H438, "Still One of Balance", :FT_AURORALMOTE]
@@ -1444,7 +1463,7 @@ module FrostThaw
     return if c != 0 && c != 1
     if c == 1
       say(["You strike the frost hard. It doesn't crack: it bursts, like a dropped lantern.",
-           "For one moment you hear it scream. Then the virtue it held goes out, and the shards ring as they fall.",
+           "For one moment you hear it scream. Then the virtue in it goes out, and the shards ring.",
            "Along the Wall the snow thickens, as if something cold just took a deep breath."])
       set_flag(:"still_#{key}")
       set_flag(:"still_#{key}_shattered")
@@ -1454,12 +1473,12 @@ module FrostThaw
       give(:FT_STILLSHARD)
     else
       say(["You touch the frost. It cracks.",
-           "Something that's waited four hundred years to move pours out of it, half-panicked, all cold!"])
+           "Something that's waited four hundred years to move pours out, half-panicked, all cold!"])
       return if !boss_battle(named_mon(species, 38, name))
       set_flag(:"still_#{key}")
       add_counter(:tree_verdant)
       add_counter(:story_beats)
-      say(["The frozen figure sighs. The frost runs off it like water, and there's nobody inside at all.",
+      say(["The frozen figure sighs. The frost runs off it like water. There's nobody inside at all.",
            "Just snow, settling. Finished. Something is left behind in the slush."])
       give(reward)
     end
@@ -1473,28 +1492,29 @@ module FrostThaw
               cl(:wyn, "...They're resting now. Properly. Thank you for helping them.")].compact)
         set_flag(:tree_leans_verdant)
       else
-        sayc(["All four Still Ones are gone. Along the Wall the flowers have closed, and the snow lies smooth and hard.",
+        sayc(["All four Still Ones are gone. Along the Wall the flowers have closed. The snow lies hard.",
               "Somewhere very deep, something pleased turns over in its sleep.",
-              cl(:reptin, "(very quiet) We broke them. The tree felt that too. It's leaning toward the cold now. I can feel it lean."),
+              cl(:reptin, "(very quiet) We broke them. The tree felt that too."),
+              cl(:reptin, "It's leaning toward the cold now. I can feel it lean."),
               cl(:wyn, "...They wanted to finish. Not to end. Those aren't the same.")].compact)
         set_flag(:tree_leans_frost)
       end
-      grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and snow: no more sliding on the frozen ground. (Sap is another matter.)")
+      grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and snow: no more sliding. (Sap is another matter.)")
     end
   end
 
   def frozen_hunter(event_id = nil)
     if flag?(:mantle_found)
-      return say(["Where the hunter stood, two sets of footprints: one going toward the Wall, one coming back."], event_id)
+      return say(["Where the hunter stood, two sets of footprints: one toward the Wall, one coming back."], event_id)
     end
     say(["At the foot of the Auroral Wall stands a hunter frozen mid-stride, in silver-white mail.",
-         "His face is turned toward the light. A cloak of rime-touched feathers lies round his shoulders."], event_id)
+         "His face is turned to the light. A cloak of rime-touched feathers hangs on his shoulders."], event_id)
     if !with_or_is?(:alerion)
       return say(["His face is a stranger's. Whoever he's waiting for, it isn't you."])
     end
     say([herald?(:alerion) ? "(His face is yours. Not like yours. Yours.)" : "His face is Alerion's. Not like Alerion's. Alerion's."])
     speak(:alerion, "...That's me. A me that didn't come back.", "...That's me.")
-    say(["The frozen hunter's lips are parted. Frost has written a word on them, fine as lace: TALION.",
+    say(["The hunter's lips are parted. Frost has written a word on them, fine as lace: TALION.",
          herald?(:alerion) ? "(Your brother's name. The one you tried to bring back.)" : "Alerion's brother's name. The one he tried to bring back."])
     set_flag(:talion_foreshadowed)
     sayc([cl(:alberica, "(quietly, a hand on his arm) Pretty boy. Breathe."),
@@ -1517,7 +1537,7 @@ module FrostThaw
     if decision == 4
       set_flag(:mantle_found)
       add_counter(:story_beats)
-      sayc(["The moment the stalker's in the ball, the hunter's cloak slides into #{herald?(:alerion) ? 'your' : "Alerion's"} hands.",
+      sayc(["The moment the stalker's caught, the hunter's cloak slides into #{herald?(:alerion) ? 'your' : "Alerion's"} hands.",
             "The mail cracks and falls. There's no one in it. Just two footprints, turned toward home.",
             cl(:alerion, "Winter remembers those who walk softly. I'll walk softly."),
             cl(:meat_meat, "Ice Prince walks very loud. Meat Meat has heard him. Meat Meat will help."),
@@ -1525,7 +1545,7 @@ module FrostThaw
             "A mantle woven from frost-hawk feathers and the scales of a long-dead dragon.",
             "Cold air spirals lazily off it. Never unkind."].compact)
       give(:FT_RIMEMANTLE)
-      say(["(The Rime Mantle: held by a Pokémon, its Ice moves are 20% stronger, and it can't be frozen or hurt by hail.)"])
+      say(["(The Rime Mantle: held by a Pokémon, Ice moves are 20% stronger; no freezing, no hail.)"])
     elsif decision == 1
       say(["The stalker falls still in the snow. The cloak's feathers freeze solid.",
            "The stalker won't stay down. It has to be caught, not beaten. (Come back and try again.)"])

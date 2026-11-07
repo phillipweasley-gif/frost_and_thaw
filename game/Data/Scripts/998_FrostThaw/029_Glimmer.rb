@@ -75,7 +75,7 @@ module FrostThaw
     rx, ry = stage_spot(rift, 0, -2)
     Stage.overlay("O-01", scroll_x: 0.6, opacity: 255, fade: 30)   # the aurora pours down
     pbBGMPlay("sky pillar") rescue nil
-    sayc(["Above the crown of the tree, the sky opens. No clouds: only aurora, pouring down in a curtain.",
+    sayc(["Above the tree's crown the sky opens. No clouds: only aurora, pouring down in a curtain.",
           "In the middle of it a shard of light turns slowly.",
           "Behind it the curtain goes smooth and bright as a mirror.",
           "In the mirror, a plain of stars, each one burning like an ember.",
@@ -85,7 +85,7 @@ module FrostThaw
           "Shade looks down at their own empty hands.",
           cl(:shade, "That night in the white, I pulled Shimmer out. And something pulled back."),
           cl(:shade, "In the morning there was a horn in the snow. Then I gave it to an egg."),
-          "BRIGHTMANE: (a voice like a bell, heard through warm water) You gave away the last of me...",
+          "BRIGHTMANE: (a bell, heard through warm water) You gave away the last of me...",
           "BRIGHTMANE: ...to save a child you had never met. Come and get it back."])
     if flag?(:luna_spark)
       say([cl(:shade, "The Wennen said our house had a spark that wasn't out. Waiting somewhere bright."),
@@ -116,47 +116,53 @@ module FrostThaw
     # Glimmer steps out, and walks back to you
     gl = Stage.actor(:glimmer, rx, ry, 2, graphic: "FT_glimmer") if Stage.map?
     $game_screen.start_flash(Color.new(255, 240, 200, 160), 16) rescue nil
-    sayc(["Then the glass bulges. A tall cat-man steps out, and for a moment stars come with him, caught in his fur.",
+    sayc(["Then the glass bulges. A tall cat-man steps out, stars caught in his fur.",
           "A midnight-blue coat. The cursed dagger at his hip. In his hand, a unicorn's horn.",
-          "He reaches for the Lumen Shard. A shadow of him forms in the aurora beside him, eyes black as void.",
+          "He reaches for the Lumen Shard. A shadow of him forms beside him, eyes black as void.",
           "SHADOW: Will you bear hope when even the sun freezes?",
           "He doesn't look away from it.",
           "???: ...Yes. Somebody has to.",
-          "The shadow steps back into him. The Shard sinks into his chest like a coal into snow, and beats.",
+          "The shadow steps into him. The Shard sinks into his chest like a coal in snow, and beats.",
           "Round the Rift's inner ring, letters light up that weren't there a moment ago:",
           "FROM THE SPARK WAS BORN THE LUMEN SHARD, HOPE CRYSTALLIZED.",
           "MAY ITS BEARER LIGHT PATHS THAT NEVER KNEW DAWN."])
     Stage.approach(gl) if gl
     sayc(["???: ...That took longer than Brightmane promised. Unicorns are terrible at time.",
-          flag?(:told_shade_back) ? "???: (to you) You said come back. So I did." : "???: (to you) You said go. So I went.",
-          cl(:alberica, "...Shade?")].compact)
+          flag?(:told_shade_back) ? "???: (to you) You said come back. So I did." : "???: (to you) You said go. So I went."].compact)
+    # (scene pass: the player answers the return, the decisive beat's sequel)
+    c = pbMessage(_INTL("He's waiting for you to say something."), [_INTL("\"...Shade?\""), _INTL("\"Welcome back.\"")], 0)
     Stage.theme(:heralds)                # he names himself (the design: Thaw, then Heralds)
-    sayc(["GLIMMER: Glimmer, now. A name should fit what you carry. She was firm about that.",
+    sayc([c == 1 ? "???: Back. ...Mostly. Different." : nil,
+          "GLIMMER: Glimmer, now. A name should fit what you carry. She was firm about that.",
           "GLIMMER: Seven years on her side of the glass. About a minute on yours.",
           "He turns the horn over in his hands.",
-          "GLIMMER: She gave it back. She says I'm a fire now. I'm still deciding how I feel about the fur.",
+          "GLIMMER: She gave it back. She says I'm a fire now.",
+          "GLIMMER: I'm still deciding how I feel about the fur.",
           cl(:meat_meat, "(poking his arm) Shade came back. Meat Meat promised. ...Shade is fluffy now."),
           with_or_is?(:meat_meat) ? "GLIMMER: Please don't." : nil])
     if flag?(:heard_of_glimmer)
-      sayc(["He takes Shimmer's little carved wooden cat out of his coat and holds it up beside his face.",
+      sayc(["He takes Shimmer's little carved cat out of his coat and holds it up beside his face.",
             "He laughs. Then he isn't laughing.",
             "GLIMMER: She always said I'd end up a cat. I hate that she was right."])
     end
     if flag?(:sanctum_dream)
-      say(["GLIMMER: ...And you. You knocked on the Moon Temple door. I heard you, from the other side.",
+      say(["GLIMMER: ...And you. You knocked on the Moon Temple door. I heard you, from inside.",
            "GLIMMER: Time's strange over there."])
     end
     # The dead Glimmer's journal from the Cackling Chasm (044): the ghost said
     # "You'll see. Not yet." This is the seeing.
-    if ($PokemonBag.pbHasItem?(:FT_GLIMMERJOURNAL) rescue false) || flag?(:glimmer_journal_read)
-      sayc([cl(:alberica, "(very slowly, taking the journal out of the pack) Read this. The chasm. The skeleton with claws.") ||
-              "You take the bloodstained journal from the Chasm out of the pack, and hold it out to him.",
-            "He reads it standing very still: \"...desperate to save Alberica... Tomorrow, I venture into the chasm.\"",
+    # (scene pass: you hand it over, or not; an input inside the scene)
+    if (($PokemonBag.pbHasItem?(:FT_GLIMMERJOURNAL) rescue false) || flag?(:glimmer_journal_read)) &&
+       pbConfirmMessage(_INTL("Show him the journal from the Chasm?"))
+      sayc(["You take the bloodstained journal out of the pack, and hold it out to him.",
+            cl(:alberica, "(very quietly) The chasm. The skeleton with claws. Read it."),
+            "He reads it very still: \"...desperate to save Alberica... Tomorrow, I go into the chasm.\"",
             "It's signed Glimmer.",
-            "He turns to the last page. Then back to the first. Then he holds his own hand out beside the writing.",
+            "He turns to the last page. Back to the first. He holds his own hand beside the writing.",
             "GLIMMER: (hoarse) That's my hand. That's how I make my G. I've never written this.",
             "GLIMMER: ...I haven't written it yet. Or I wrote it last time.",
-            "GLIMMER: Brightmane said the wheel turns. She didn't say it turns with me on it. Every time.",
+            "Nobody says anything.",
+            "GLIMMER: She said the wheel turns. She didn't say it turns with me on it. Every time.",
             "GLIMMER: (to #{herald?(:alberica) ? 'you' : 'Alberica'}, very quietly) I went into that chasm for you once. I died in it.",
             "GLIMMER: ...I'm still trying. Apparently I always am.",
             cl(:alberica, "(not quite managing her voice) Then this time you're going to try alive.")].compact)
