@@ -843,4 +843,11 @@ Your answers are now in the script. Nothing is left open.
 - Alberica's home village is **Ironhollow** (invented here, not canon), somewhere south of Ten-Towns. The lottery never drew a name from it: the bargain's price was paid by others. A Bryn Shander refugee says so in Chapter 9; Alberica names it when the Vault opens.
 - Mira of the North Wind has **black hair** (2026-11-06), as all her art draws her; the script used to say silver. The White Vault line now says her black hair has gone white.
 - Meat Meat keeps her Noibat (2026-11-06). In her own opening she finds **Razzy's Blanket** in the hay; Noibat holds it, and it halves Ice-type damage. Only her playthrough has it (049_HeraldGifts.rb). Hellen keeps the Nov 3 in-style sprite.
+- Hellen keeps the Nov 3 sprite (2026-11-06).
+
+## Owner's decisions, 2026-11-07
+
+- **The coffee scene gets one choice:** "What kind of coffee for you?" Four cups (Hellen's black, Wyn's mushroom coffee, honey and cream, Corsair-style with salt), each lifting one stat of every Pokémon you send out for the next three battles (050_Coffee.rb). The rest of the scene stays word for word.
+- **Rootspire's cut-and-merge verdicts (story/15) are approved:** Glimmer's rite down to two days, Meat Meat's days merged, the portal and Eira's market cut.
+- **The Umbound Chasm is renamed the Scratching Hollow** (Ch8, the Hag's Domain): named for the umber hulk under its floor.
 
