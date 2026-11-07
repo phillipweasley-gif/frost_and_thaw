@@ -97,8 +97,9 @@ module FrostThaw
     sayc(["TAMSIN: (cloak on crooked, planting their feet) Hold it. HOLD it, #{player_display_name}!",
           "TAMSIN: You're going to fight a GOD. With THAT team? Not without one more battle first."])
     cline(:alberica, "Look at them. All grown up and threatening people. I could cry.", "...Look at them. All grown up.")
-    sayc([cl(:reptin, "They mean they'll miss us. That's how Tamsin says it."),
-          "TAMSIN: I mean I'll WIN."])
+    # (lines someone answers are spoken, not thought, when you are that Herald: WRITING_GUIDE §5)
+    cline(:reptin, "They mean they'll miss us. That's how Tamsin says it.", "...They mean they'll miss us.")
+    say(["TAMSIN: I mean I'll WIN."])
     if outsider?
       say([herald?(:wyn) ? "TAMSIN: Also. Hellen's wall. The sixth figure. It's got a Sableye on its boot." :
                            "TAMSIN: Also. Hellen's wall. The sixth figure, the small one with no face.",
@@ -135,8 +136,8 @@ module FrostThaw
       say(["TAMSIN: (after, very quietly) ...Huh. I didn't think I'd actually win.",
            "TAMSIN: That's worse. That's so much worse. Train on the way. Please."])
     end
-    sayc([cl(:meat_meat, "Meat Meat will train. Meat Meat will train SO hard. After coffee."),
-          cl(:alerion, "You said that last time.")])
+    cline(:meat_meat, "Meat Meat will train. Meat Meat will train SO hard. After coffee.", "...Meat Meat will train. After coffee.")
+    sayc([cl(:alerion, "You said that last time.")])
     # Hellen comes up off the lift with the food; the Full Restores are hers,
     # handed over on her own line (notes 12 E3, E16)
     hel = Stage.actor(:hellen, px + 5, py + 1, 4)
@@ -208,7 +209,7 @@ module FrostThaw
       if flag?(:mira_left_possessed)
         # (F3's branch: Mira was left possessed; her first mate sails the Requiem)
         say(["The Boreal Requiem noses through the pack ice#{paid ? ", on #{paid}" : ''}.",
-             "FIRST MATE: (at the wheel) Captain's below, talking to the mirrors again. I've got the ship.",
+             "FIRST MATE: (at the wheel) Captain's below, talking to the mirrors. I've got the ship.",
              "FIRST MATE: If you hear singing, that's the ice. If you hear laughing, don't go below."])
       else
         say(["The Boreal Requiem noses through the pack ice#{paid ? ", on #{paid}" : ''}.",
@@ -223,7 +224,7 @@ module FrostThaw
     when :griffons
       say(["Griffons, beating hard over a white sea.",
            tag == "RHEVEN" ? "RHEVEN: Don't look down. ...No. Actually, do. You'll never see anything like it again." :
-                             "KETHAN: (on the lead griffon) Don't look down. ...No. Do. Skytower's never flown this far north."])
+                             "KETHAN: Don't look down. ...No. Do. Skytower's never flown this far north."])
     end
     say([{ griffons: "Below: the Sea of Moving Ice. Floes the size of towns, grinding past each other.",
            ship: "Round the hull: the Sea of Moving Ice. Floes the size of towns, grinding past each other." }[route] ||
@@ -281,7 +282,7 @@ module FrostThaw
       Stage.panel_off(fade: 12)
       $game_screen.start_tone_change(squall, 12) rescue nil
       say(["ANGAJUK: Hold on, small ones. I have broken thicker than this."])
-      say(["He breaks it with his back. Something comes up with the ice and clamps onto the boat: a Cloyster."])
+      say(["He breaks it with his back. Something comes up with the ice and clamps on: a Cloyster."])
       setBattleRule("canLose") rescue nil   # (the sea is in the way, not a wall)
       boss_battle(named_mon(:CLOYSTER, 58, "Cloyster"), bgm: SEA_FIGHT_BGM) rescue nil
       say(["Angajuk rolls, and the Cloyster goes back into the black water where it came from."])
@@ -346,7 +347,8 @@ module FrostThaw
     rail = { griffons: "looking down past the wing", ship: "at the rail" }[route] || "looking down into the water"
     speak(:alerion, "(#{rail}) Every one of those was somebody.", "(#{rail}) ...So many.")
     if with_or_is?(:reptin) && !herald?(:alerion)
-      sayc([cl(:reptin, "He means: be careful."), "ALERION: I meant what I said."])
+      cline(:reptin, "He means: be careful.", "...He means be careful.")
+      say(["ALERION: I meant what I said."])
     end
     if outsider? && has_key?(:FT_OWLFEATHER)
       say(["In your pack, the owl feather stiffens with frost, as if something looked up."])
@@ -414,6 +416,7 @@ module FrostThaw
     stand = []
     pbFadeOutIn do
       $game_screen.start_tone_change(night, 0) rescue nil
+      pbBGMPlay("wind") rescue nil                   # (context 12 M12-6: no music on the dock at night, only wind)
       # round the stove (the camp is the tile in front of you), facing in
       ring = [[-1, 1, 6], [1, 1, 4], [-1, 0, 2], [1, 0, 2], [0, -1, 2]]
       party.each_with_index { |k, i| dx, dy, d = ring[i]; stand << [k, stand_in(k, dx, dy, d)] }
@@ -423,12 +426,12 @@ module FrostThaw
     if with_or_is?(:wyn)
       cline(:wyn, "...Um. I brought some. Mushroom. It's still a bit warm, if you hold it close.",
             "...Um. Mushroom coffee? It's still warm.")
-      sayc([cl(:meat_meat, "Mushroom friend. Meat Meat will die for you. Tomorrow, probably.")])
+      cline(:meat_meat, "Mushroom friend. Meat Meat will die for you. Tomorrow, probably.", "...Mushroom friend.")
     end
     cline(:alberica, "Nobody dies tomorrow, sugar. I've got a song half-written about tomorrow.",
           "...Nobody dies tomorrow. I've got a song to finish.")
     if with_or_is?(:alerion)
-      sayc([cl(:alerion, "You finished it an hour ago.")])
+      cline(:alerion, "You finished it an hour ago.", "...You finished it.")
       sayc([cl(:alberica, "Then I'll write another. Problem solved, pretty boy.")])
     end
     # what do we do with her? (Reptin's promise at the Shrine: "on the way, we decide")
@@ -436,12 +439,15 @@ module FrostThaw
           "(setting the cup down) ...We said we'd decide. So.")
     cline(:meat_meat, "(a hand on Dawnfang) Meat Meat decided. One stab. No more winters.",
           "(a hand on Dawnfang) ...Meat Meat would miss snow a little.")
-    cline(:reptin, "Kill a god and her faithful pray her back. Then we do this again, older.")
+    cline(:reptin, "Kill a god and her faithful pray her back. Then we do this again, older.",
+          "...Kill her, and they pray her back.")
     cline(:alberica, "(very still) Or somebody holds her. Keeps her still. I'm good at keeping.",
           "(very still) ...Or somebody holds her.")
     cline(:alerion, "No.", "...No. Not you.")
-    cline(:wyn, "...Um. In the spore beds nothing's ever gone. It rests. Then it comes back.")
-    cline(:alerion, "Shimmer told Sephek there was a third way. She never said what it was.")
+    cline(:wyn, "...Um. In the spore beds nothing's ever gone. It rests. Then it comes back.",
+          "...Nothing in the spore beds is ever gone.")
+    cline(:alerion, "Shimmer told Sephek there was a third way. She never said what it was.",
+          "...Shimmer said there was a third way.")
     asker = herald?(:reptin) ? :alberica : :reptin
     if outsider?
       sayc([cl(asker, asker == :reptin ? "(to you) You've been quiet, dear. And it's your Wall riding on it." :
@@ -483,6 +489,7 @@ module FrostThaw
     pbFadeOutIn do
       Stage.cleanup rescue nil
       $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil
+      Stage.theme(nil)
     end rescue nil
     say(["Dawn comes up grey over the ice. Up the slope, the skull is waiting."])
     if !flag?(:statue_fields_entered)
@@ -610,11 +617,11 @@ module FrostThaw
     set_flag(:statue_fields_entered)
     sayc(["A field of ice sculptures, too perfect for any hand.",
           "Bears. Elk. Sabertooths. Yetis. Dragons with their wings half open.",
-          "Every whisker. Every feather. Every scale.",
-          as(:meat_meat, "(whispering) Are they alive?"),
-          cl(:alerion, "They were."),
-          cl(:alberica, "Nobody touch anything. I mean it. Hands in pockets, sweethearts."),
-          cl(:reptin, "Says the woman who has never once in her life kept her hands to herself.")])
+          "Every whisker. Every feather. Every scale."])
+    cline(:meat_meat, "(whispering) Are they alive?", "(whispering) ...Alive?")
+    sayc([cl(:alerion, "They were.")])
+    cline(:alberica, "Nobody touch anything. I mean it. Hands in pockets, sweethearts.", "...Nobody touch anything.")
+    sayc([cl(:reptin, "Says the woman who has never once in her life kept her hands to herself.")])
   end
 
   # Touching a statue wakes the Snow Aspect (once per statue).
@@ -642,13 +649,14 @@ module FrostThaw
     end
     say(["At the far edge, one statue isn't an animal.",
          "A young woman, arms open, smiling into the wind.",
-         as(:alerion, "(stopping dead) ...Shimmer."),
-         as(:alberica, "It's her. Auril kept her. Like a flower pressed in a book.")], event_id)
+         as(:alerion, "(stopping dead) ...Shimmer.")], event_id)
+    cline(:alberica, "It's her. Auril kept her. Like a flower pressed in a book.", "...Auril kept her.")
     speak(:alerion, "(touching the cold cheek) She didn't keep anything. That's not her.",
           "(touching the cold cheek) ...No.", event_id)
-    sayc([as(:alerion, "It's what she looked like. Shimmer's in Frostina now. Shade made sure of that."),
-          cl(:meat_meat, "Shade would have said something clever here. Meat Meat will say it instead."),
-          cl(:meat_meat, "...Meat Meat does not know what it was."),
+    sayc([as(:alerion, "It's what she looked like. Shimmer's in Frostina now. Shade made sure of that.")], event_id)
+    cline(:meat_meat, "Shade would have said something clever here. Meat Meat will say it instead.",
+          "...Shade would have said something clever.")
+    sayc([cl(:meat_meat, "...Meat Meat does not know what it was."),
           cl(:reptin, "(softly) That was it, Meat Meat. That was exactly it.")], event_id)
     set_flag(:fields_crossed)
     set_switch(SW_FIELDS_ROPE, true)   # a rope back up from the entrance, from now on
@@ -674,8 +682,8 @@ module FrostThaw
       pbSEPlay("Rock Smash") rescue nil
       Stage.pan_back
     end
-    sayc([cl(:alberica, "...And I thought my last party was grim."),
-          cl(:alerion, "It was.")])
+    cline(:alberica, "...And I thought my last party was grim.", "...My last party was grim too.")
+    sayc([cl(:alerion, "It was.")])
   end
 
   def ice_troll(event_id = nil)

@@ -92,7 +92,7 @@ module FrostThaw
     vault_gate_shut: ["A door of white ice set into the glacier, three times the height of a giant.",
                       "Carved across it: wings spread over a frozen eye.",
                       "Three hollows in the eye, each the shape of a sigil."],
-    vault_gate_open: ["The door of wings stands open. Cold breathes out, and under the cold, the hum of machinery."],
+    vault_gate_open: ["The door of wings stands open. Cold breathes out, and under it, the hum of machinery."],
     vault_circuit_dead: ["The mirror circuit is dark. The reflections in it are only yours."],
     vault_cradle_empty: ["The cradle is empty. Crystal dust, a broken mirror, the smell of hot metal on ice."],
     vault_case: ["A case of ice behind the cradle. Inside it, something green catches the light."]
@@ -149,7 +149,7 @@ module FrostThaw
            "Your hand goes to your throat, where the pendant hung. Something cold pulses there."])
       speak(:alberica, "Gran's door. The one that had to stay shut.", "...I know that door.")
     elsif with_or_is?(:alberica)
-      say([seen ? "ALBERICA: (very quietly) The well showed me a map with that on it. I thought it was a bird." :
+      say([seen ? "ALBERICA: (quietly) The well showed me a map with that on it. I thought it was a bird." :
                   "ALBERICA: (very quietly) Wings over a frozen eye. I've dreamed that door.",
            "Where her pendant used to hang, something cold pulses. Brightest facing north.",
            "ALBERICA: (a hand at her throat) Gran's door. The one that had to stay shut."])
@@ -356,11 +356,11 @@ module FrostThaw
     return false if !ok
     say(["His followers down, Sephek sways. He's below half, and he knows it."])
     return false if !trainer(:sephek_saint, nil)
-    say(["Behind him, in her crystal, Frostina's eyes find yours. Warmth comes off the crystal like a hearth.",
+    say(["Behind him, in her crystal, Frostina's eyes find yours. Warmth comes off it like a hearth.",
          "(Your Pokémon get their breath back.)"])
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     sayc(["Auril pours herself into him.",
-          "His form shatters into a whirlwind of ice and reassembles, taller, wider: a towering crystalline horror.",
+          "He shatters into a whirlwind of ice and comes back taller, wider: a crystalline horror.",
           "The cold coming off him is a wall. Every follower who fell makes it colder.",
           "SEPHEK: (a voice like a glacier moving) STAND STILL."])
     say(["Two winter wolves lope out of the blizzard at his call."])
@@ -482,8 +482,9 @@ module FrostThaw
     pbBGMPlay(AVARICE_BGM) rescue nil
     sayc(["White hair. Infernal sigils. A smile like arithmetic.",
           "AVARICE: (from every mirror at once) Variables that refused to die. How untidy.",
-          cl(:alberica, "(very still) We froze you. At her throne. We watched it hold."),
-          al ? "AVARICE: You froze a mirror, songbird. Did you think I kept only one?" :
+          nil])
+    cline(:alberica, "(very still) We froze you. At her throne. We watched it hold.", "(very still) ...We froze you.")
+    sayc([al ? "AVARICE: You froze a mirror, songbird. Did you think I kept only one?" :
                "AVARICE: You froze a mirror, Alberica. Did you think I kept only one?",
           "AVARICE: A little of me lived in every mirror I made. A little is all I've ever needed."])
     if with_or_is?(:meat_meat)
@@ -508,7 +509,7 @@ module FrostThaw
     # her case, against the ending you chose (dialogue 12 §1a)
     sayc([flag?(:ending_shatter) ? "AVARICE: You broke a god for a sunrise. I'll build you a better one." :
           flag?(:ending_third_way) ? "AVARICE: You let winter go round again. Sloppy. I'd have put it on a schedule." : nil,
-          "AVARICE: The Seraph-Draco. A god of ordered seasons. No Rime, no Summer. Just the schedule.",
+          "AVARICE: The Seraph-Draco. Ordered seasons. No Rime, no Summer. Just the schedule.",
           "AVARICE: Come to the cradle. You were always going to.",
           cl(:meat_meat, "Meat Meat is coming. Meat Meat is bringing her teeth.")])
     8.times { |i| panes.each { |e| e.opacity = 144 - 18 * (i + 1) }; Stage.wait(2) }
@@ -538,7 +539,7 @@ module FrostThaw
     Stage.fx("E-09", wr, frames: 9, oy: 16) rescue nil if wr && won
     Stage.remove_actor(wr) if wr
     return if !won
-    say(["The wraith spatters across the ice. The ring grinds to a stop. The mirrors go dark one by one."])
+    say(["The wraith spatters across the ice. The ring grinds to a stop, its mirrors going dark."])
     set_flag(key)
     left = VAULT_CIRCUITS.count { |k| !flag?(k) }
     say([left == 0 ? "(All three circuits are dark. Far off, something in a cradle stops humming.)" :
@@ -587,9 +588,9 @@ module FrostThaw
           Stage.walk_to(rep, mev.x, mev.y - 1, face: 8) if rep && !mm
         end
       end
-      sayc([cl(:reptin, "(stepping in front of her) No. Not her. Ask me instead."),
-            cl(:alerion, "You faked your death to hide in an icebox. Come out."),
-            "AVARICE: Oh, I'll come out."], event_id)
+      sayc([cl(:reptin, "(stepping in front of her) No. Not her. Ask me instead.")], event_id)
+      cline(:alerion, "You faked your death to hide in an icebox. Come out.", "...Come out.")
+      say(["AVARICE: Oh, I'll come out."], event_id)
       verdant_blade_cuts_ward
       # what the rings did (notes 12 E9): the player sees the circuits pay
       dark = VAULT_CIRCUITS.count { |k| flag?(k) }
@@ -685,19 +686,20 @@ module FrostThaw
                                  cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
             # the one secret you kept alone (Ch8, "Nobody else noticed"), come due (context 13 M13-5)
             flag?(:avarice_doubt) ? "You knew. You saw her arms in the Forge, bare, and you never said." : nil,
-            flag?(:mira_left_possessed) ? "AVARICE: (in Mira's voice) You watched a coat burn. I had another. You left her for me, on her own ship." :
-                                          "AVARICE: You watched a coat burn. Did you think I only had one?",
+            flag?(:mira_left_possessed) ? "AVARICE: (in Mira's voice) You watched a coat burn. I had another: you left her for me." :
+                                          "AVARICE: You watched a coat burn. I keep a wardrobe.",   # (dialogue 12 §4)
             "AVARICE: A god in a gem. The last variable. Thank you for weighing her out for me."])
+      trainer_intro(:avarice_reforged)          # (notes 12 E21: her last line before the fight)
       type, name = TRAINERS[:avarice_reforged]
       $ft_avarice_circuits = 0
       won = pbTrainerBattle(type, name, nil, false, 0, true) ? true : false
       pbFadeOutIn { $Trainer.heal_party } rescue nil
       if won
         Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
-        say(["Her crystal body cracks across, from the crown down. Her reflection runs out of it into the ice.",
-             "Frostina breathes on the ice. It freezes solid, with the reflection inside it, and doesn't thaw."])
+        say(["Her crystal body cracks from the crown down. Her reflection runs out of it into the ice.",
+             "Frostina breathes on the ice. It freezes solid round the reflection, and doesn't thaw."])
       else
-        say(["She reaches for the diamond. Razzilith gets there first and bites her hand off at the wrist.",
+        say(["She reaches for the diamond. Razzilith gets there first and bites off her hand.",
              "Frostina breathes on the ice wall, and the mirror freezes solid with her in it."])
       end
       Stage.fx("E-04", av, frames: 10, oy: 16) rescue nil if av
@@ -853,7 +855,8 @@ module FrostThaw
       el = (eline_actor rescue nil)
       sev = stage_event("Sephek")
       Stage.walk_to(el, sev.x, sev.y + 1) if el && sev
-      say(["ELINE: (stepping between you and him) No further. I carried his heart up a mountain. I'll carry it up this one.",
+      say(["ELINE: (stepping between you and him) No further. I carried his heart up a mountain.",
+           "ELINE: I'll carry it up this one.",
            "ELINE: Silence is mercy, and I've been merciful long enough."])
       type, name = TRAINERS[:eline_sephek]
       if pbTrainerBattle(type, name, nil, false, 0, true)
