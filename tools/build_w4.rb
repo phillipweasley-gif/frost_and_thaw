@@ -600,14 +600,17 @@ resave(uc, 2068)
 sq, sq_ex = Builder.from_existing(35)          # (a captain's cabin: one room, one door, an alcove)
 exits_to(sq, sq_ex, 2054, 6, 5)
 sq.cutscene(1, 1, :summer_quarters)
-(4..12).each { |x| sq.event(x, 8, "Alarm glyph #{x}", [{ trigger: 1, through: true, script: "FT.quarters_glyph(1, @event_id)" }]) }
-(5..14).each { |x| sq.event(x, 6, "Alarm glyph #{x}b", [{ trigger: 1, through: true, script: "FT.quarters_glyph(2, @event_id)" }]) }
+# (notes/10 E31, builder h: the glyphs glow faintly until unwritten; the construct's heap stays in its corner)
+GLYPH = { graphic: "Followers/UNOWN", direction: 2, opacity: 90, step_anime: false, walk_anime: false, trigger: 1, through: true }
+(4..12).each { |x| sq.event(x, 8, "Alarm glyph #{x}", [GLYPH.merge(script: "FT.quarters_glyph(1, @event_id)"), { self_switch: "A", through: true }]) }
+((5..14).to_a - [8]).each { |x| sq.event(x, 6, "Alarm glyph #{x}b", [GLYPH.merge(script: "FT.quarters_glyph(2, @event_id)"), { self_switch: "A", through: true }]) }
 sq.event(12, 5, "Bone-and-ice construct", [{ graphic: "Followers/MAROWAK", direction: 2, script: "FT.quarters_construct(@event_id)" },
-                                            { self_switch: "A", through: true }])
+                                            { self_switch: "A", graphic: "Followers/MAROWAK", direction: 8, opacity: 130, step_anime: false, through: true,
+                                              walk_anime: false, script: "FT.quarters_construct(@event_id)" }])
 sq.event(14, 4, "Loose floorboard", [{ tile_id: 1665, script: "FT.quarters_floorboard(@event_id)" }])   # (her desk, with the board under it)
 in_wall(sq, 7, 5, "Wardrobe", "FT.quarters_wardrobe(@event_id)")
 in_wall(sq, 14, 5, "Turned mirror", "FT.quarters_mirror(@event_id)")
-save_map(sq, 2173)
+save_map(sq, 2173, "Lavender_Town_Pokemon_Tower_Remix")   # (a tower's music, not the ship's)
 
 merge_infos(NAMES)
 puts "built #{NAMES.size} maps into #{OUT} (and added W4's people to 2012, 2050, 2053-2058, 2060-2062, 2067, 2068)"

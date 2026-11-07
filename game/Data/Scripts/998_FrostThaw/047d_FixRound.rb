@@ -376,7 +376,10 @@ module FrostThaw
            "KELYN: Some will call it washing your hands. The Council won't know what you are. Nor I."])
       set_flag(:election_neutral)
     else
-      say(["KELYN: Then speak where people can hear: the debate stages, in the Bazaar and the Fields."])
+      # (the week's debates are over by the seventh day: then it's tonight's vote)
+      late = at_vote || ((trial[:day] rescue 1).to_i >= 7)
+      say([late ? "KELYN: Then say so tonight, when the city fills the chairs." :
+                  "KELYN: Then speak where people can hear: the debate stages, in the Bazaar and the Fields."])
     end
     stance
   end
@@ -403,9 +406,14 @@ module FrostThaw
       next if w == :neutral
       case fac
       when :spring
-        say_staged(["A warden in Spring's green presses a basket into your hands as you cross the Bazaar.",
-             "SPRING WARDEN: Seeds from the Spring Seat's own beds.", "SPRING WARDEN: Kelyn's people remember their friends. We'll speak for you."])
-        give(:REVIVALHERB, w == :trusted ? 3 : 2)
+        if state[:patron_faction] == :spring          # (notes/10 E15: one basket a week; theirs came to the Hearth)
+          say_staged(["A warden in Spring's green nods to you across the Bazaar.",
+                      "SPRING WARDEN: Kelyn's people remember their friends. We'll speak for you."])
+        else
+          say_staged(["A warden in Spring's green presses a basket into your hands as you cross the Bazaar.",
+                      "SPRING WARDEN: Seeds from the Spring Seat's own beds.", "SPRING WARDEN: Kelyn's people remember their friends. We'll speak for you."])
+          give(:REVIVALHERB, w == :trusted ? 3 : 2)
+        end
         add_opinion(1)
       when :winter
         say_staged(["A Rootwarden in Winter's white falls in beside you, and stays there.",
@@ -488,7 +496,7 @@ module FrostThaw
   def pilgrim_dream
     return if flag?(:pilgrim_dream)
     set_flag(:pilgrim_dream)
-    say(["Last night, you all dreamed the same dream."])
+    say(["That night, you all dream the same dream."])
     pbFadeOutIn { $game_screen.start_tone_change(Tone.new(-40, -30, 10, 80), 0) rescue nil }
     pil = walk_on("PILGRIM")
     say(["A road of packed snow, and a hooded pilgrim walking it beside you, staff tapping the ice.",
@@ -519,6 +527,7 @@ module FrostThaw
       wake.call
       say(["You wake. Somebody says \"Sephek\" out loud in the dark, and nobody answers."])
     end
+    true
   end
 
   # rootspire.md Tab 5, the Fane's sap delegation: "Then we'll take it ourselves, one night."
@@ -636,7 +645,8 @@ module FrostThaw
     set_flag(key)
     say(["Your foot comes down on a glyph in her neat white hand. It brightens."], event_id)
     ok = challenge("The alarm glyph.", ["Trace it backwards, and unwrite it", "Jump clear", "Smudge it with your boot"], 0)
-    return say(["The glyph unwrites itself, line by line, and goes dark."]) if ok
+    quarters_row_dark(n)                     # (notes/10 E31: the row of glyphs goes dark either way)
+    return say(["The glyph unwrites itself, line by line, and the whole row goes dark."]) if ok
     say(["The glyph flares white. Out of the corner unfolds a shape of bone and ice.", "Avarice's sigil is burned into its skull."])
     if !skirmish(named_mon(:B105H124, 56, "Bone-and-Ice Construct"))
       say(["It herds you back to the door, and folds itself back into its corner to wait."])
@@ -644,10 +654,23 @@ module FrostThaw
     end
   end
 
+  def quarters_row_dark(n)
+    return if !$game_map
+    $game_map.events.values.each do |e|
+      next unless e.name.start_with?("Alarm glyph") && e.list.to_a.any? { |c| c.parameters.any? { |p| p.to_s.include?("quarters_glyph(#{n},") } }
+      $game_self_switches[[$game_map.map_id, e.id, "A"]] = true
+    end
+    $game_map.need_refresh = true
+  rescue StandardError
+    nil
+  end
+
   def quarters_construct(event_id = nil)
     return say(["Bone and ice in a heap, and a burnt sigil on the skull."], event_id) if flag?(:quarters_construct)
-    say(["The construct stands in the alcove by the desk. Avarice's sigil is burned in its skull.",
-         "Its head turns. Not all the way. Not yet."], event_id)
+    say(["The construct stands in the alcove by the desk. Avarice's sigil is burned in its skull."], event_id)
+    con = ($game_map.events[event_id] rescue nil)
+    Stage.turn_to(con) if con                # (its head comes round to you)
+    say(["Its head turns. Not all the way. Not yet."], event_id)
     c = pbMessage(_INTL("The construct..."), [_INTL("Slip past while it's still turning"), _INTL("Break it")], 0)
     if c == 0 && challenge("Its head is still turning.", ["Move when it moves, and stop when it stops", "Run for it", "Throw something to distract it"], 0)
       say(["You move when it moves. It stops. You stop. Its empty eyes slide over you, to the door.",

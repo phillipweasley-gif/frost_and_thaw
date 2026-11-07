@@ -136,12 +136,17 @@ module FrostThaw
   def omen_check
     return false if !with_or_is?(:alberica) || flag?(:auril_whisper)
     state[:omens] ||= {}
+    # (notes/09 E15: never two close together, so they don't stack and flatten each other:
+    # at least three maps walked between one omen and the next)
+    last = state[:omens][:visit]
+    return false if last && (state[:map_visits] || 0) - last < 3
     OMENS.each do |key, (who, triggers, tiers)|
       next if who != :alberica && !with_or_is?(who) && !(key == :spark && flag?(:glimmer_gone))
       t = (0..2).find { |i| !state[:omens][[key, i]] }
       next if !t || t + 1 > omen_tier
       next if triggers[t..].flatten.none? { |f| flag?(f) }
       state[:omens][[key, t]] = true
+      state[:omens][:visit] = state[:map_visits] || 0
       play_omen(key, tiers[t])
       return true
     end
@@ -208,11 +213,20 @@ module FrostThaw
     # beat, then dawn, then the morning. One beat a night, as before, and the
     # morning ones (boons, Autumn's ruin, the Glasswater view) still come first
     # in line, so the week's pacing doesn't change: they just play after dawn.
+    # (box rules: the morning the five share Hellen's coffee is the night's whole beat)
+    if flag?(:hearth_coffee) && !state[:coffee_night]
+      state[:coffee_night] = true
+      dawn_hue
+      return
+    end
     hearth_word
     return if investigation_night               # past midnight: the night carries on from the knock
     morning = (respond_to?(:hearth_morning_due?) && hearth_morning_due?) ||
               MORNING_VIGNETTES.include?(next_vignette)   # a morning vignette keeps its place in the queue
-    night = (respond_to?(:lantern_rumours) && lantern_rumours) ||       # late in the common room: first in line, as before
+    # (notes/10 E16: in the trial week Sephek's dream is the night, before the dawn and the day count)
+    dreamt = flag?(:trials_open) && !flag?(:ch10_done) && !flag?(:pilgrim_dream) && respond_to?(:pilgrim_dream) && pilgrim_dream
+    night = dreamt ||
+            (respond_to?(:lantern_rumours) && lantern_rumours) ||       # late in the common room: first in line, as before
             (!morning && (omen_check || hearth_vignette(:night) || night_event))
     dawn_hue
     downtime_morning if respond_to?(:downtime_morning)
@@ -738,6 +752,9 @@ module FrostThaw
       sayc(["Your hand brushes something sharp in your pocket: a shard of mirror. It wasn't there.",
             "In it, your reflection blinks a moment out of sync."])
       give(:FT_STILLSHARD)
+      # (notes/10 E34: a hook for it)
+      sayc([cl(:alberica, "(very still) ...Throw that in the lake, darling. Please."),
+            "(It goes cold when something hidden is watching. Jast on the Root-Tier buys them, too.)"].compact)
     }],
     [:halo_stillness, ROOT_MAPS, -> { flag?(:wardens_emeritus) }, -> {
       sayc(["Sound drops away for a heartbeat: no footsteps, no breath, no rustle.",
@@ -905,12 +922,21 @@ end
 # Hooks: first step on a Rootspire map. (notes/10 E14: never in the middle of
 # someone else's scene: a step taken while an event runs waits for the next.)
 if Events.respond_to?(:onStepTaken) && Events.respond_to?(:onMapChange)
-  Events.onMapChange += proc { |_sender, _e| FrostThaw.instance_variable_set(:@rs_step_pending, true) }
+  Events.onMapChange += proc { |_sender, _e|
+    FrostThaw.instance_variable_set(:@rs_step_pending, true)
+    FrostThaw.instance_variable_set(:@rs_scene_here, false)
+    FrostThaw.state[:map_visits] = (FrostThaw.state[:map_visits] || 0) + 1 rescue nil
+  }
   Events.onStepTaken += proc { |_sender, _e|
     begin
       busy = ($game_system.map_interpreter.running? rescue false) || ($game_temp.message_window_showing rescue false)
       FrostThaw.frozen_run_ship_step if FrostThaw.respond_to?(:frozen_run_ship_step)
-      if FrostThaw.instance_variable_get(:@rs_step_pending) && !busy
+      # (box rules: after someone's scene on this map, the omen or vignette waits until you've
+      # walked a few steps, so it never runs straight on from that scene)
+      steps = FrostThaw.instance_variable_get(:@rs_steps_since_say).to_i + 1
+      FrostThaw.instance_variable_set(:@rs_steps_since_say, steps)
+      quiet = !FrostThaw.instance_variable_get(:@rs_scene_here) || steps >= 4
+      if FrostThaw.instance_variable_get(:@rs_step_pending) && !busy && quiet
         FrostThaw.instance_variable_set(:@rs_step_pending, false)
         FrostThaw.rootspire_step
       end
