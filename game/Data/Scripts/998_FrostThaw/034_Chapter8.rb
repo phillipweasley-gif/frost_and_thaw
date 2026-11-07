@@ -1313,8 +1313,7 @@ module FrostThaw
     set_flag(:dragon_launched)
     add_counter(:story_beats)
     $game_screen.start_shake(8, 9, 50) rescue nil
-    say(["The Heart Chamber starts to come apart. Roots slough off the walls.",
-         "Part of the cavern folds into a tunnel of cooling sap.",
+    say(["The Heart Chamber comes apart. Part of the cavern folds into a tunnel of cooling sap.",
          cl(:reptin, "That's our way out. GO!")].compact)
     # (the player's last look, a beat for Glimmer before the run)
     c = pbMessage(_INTL("The roof is coming down."), [_INTL("Run"), _INTL("Look back once")], 0)
