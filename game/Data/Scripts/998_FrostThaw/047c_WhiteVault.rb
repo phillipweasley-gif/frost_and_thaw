@@ -620,8 +620,11 @@ module FrostThaw
             "Mira never sails again. But she lives."], event_id)
       set_flag(:mira_freed_late)
     elsif av
-      av.opacity = 110                                   # (what stands there now is her reflection)
+      av.opacity = 0                                     # (the crystal body is gone)
     end
+    # what's left of her is a reflection, standing in front of the cradle: her lines bubble on it
+    refl = av ? Stage.actor(:"avarice's_reflection", av.x, av.y + 1, 2, graphic: "FT_avarice") : nil
+    refl.opacity = 120 if refl
     soul = named_mon(AVARICE_SOUL, 76, "Avarice's Reflection")
     broken = circuits
     if flag?(:chapel_avarice)
@@ -634,12 +637,12 @@ module FrostThaw
     soul.hp = [(soul.totalhp * (1.0 - 0.2 * broken)).floor, 1].max
     caught = boss_battle(soul)
     if caught
-      Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
-      av.opacity = 0 if av && !flag?(:mira_left_possessed)
+      Stage.fx("E-06", refl, frames: 10, oy: 16) rescue nil if refl
+      Stage.remove_actor(refl) if refl
       sayc(["Her reflection shatters, and every splinter of it goes dark.",
             "AVARICE: (very small, from no mirror at all) ...Recalculating..."])
     else
-      av.opacity = 0 if av && !flag?(:mira_left_possessed)
+      Stage.remove_actor(refl) if refl
       sayc(["Her reflection slides deep into the glacier, laughing. Frostina breathes after it,",
             "and the ice closes over it a mile thick. It doesn't thaw."])
     end
