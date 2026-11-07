@@ -180,6 +180,8 @@ module FrostThaw
           cl(:alerion, "You could not sing."),
           cl(:alberica, "Pretty boy, I could not breathe, either. Neither's happening.")])
     state[:goal] = "The Spore Gardens: Yarro's blight. Then the Sovereign, in the Fane."
+    # (Rheven waits at the blight from now on; don't leave it to the next map change)
+    (apply_undercanopy_switches; $game_map.need_refresh = true if $game_map) if respond_to?(:apply_undercanopy_switches)
   end
 
   def eira(event_id = nil)

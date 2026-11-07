@@ -526,9 +526,7 @@ module FrostThaw
     ($game_screen.start_tone_change(FESTIVAL_TONE, 20) if FESTIVAL_TONE) rescue nil
     pbBGMPlay("meloetta_song") rescue nil                     # the festival's own tune (notes 06 E9)
     festival_opening if respond_to?(:festival_opening)
-    say(["The seventh night. Lanterns on every root, pine-mead in every hand, the whole city out.",
-         "Beside the Heralds stands the Summer Throne, carried out for the night. Empty. Scorched.",
-         "Var's portrait leans against it, still grinning.",
+    say(["Beside the Heralds stands the Summer Throne, carried out for the night. Empty. Scorched.",
          "KELYN: (raising a glass) Heralds of Dawn and Dusk. Tonight, Rootspire remembers.",
          cl(:alberica, "Finally, a toast with my name in it. Somebody top me up."),
          cl(:reptin, "(smiling at the crowd) Wave. They carved us. We owe them the faces."),
@@ -909,7 +907,7 @@ module FrostThaw
   def council_terrace_vote
     say([flag?(:wardens_refused) ? "KELYN: (to you) Sworn or not, the city will ask you. Walls, or roots?" :
                                    "KELYN: (to you) You're Wardens now. You'll have a voice at that vote. Walls, or roots?"])
-    c = pbMessage(_INTL("Walls, or roots?"), [_INTL("\"Roots. Let the tree grow.\""), _INTL("\"Walls. Keep the cold out.\""),
+    c = pbMessage(_INTL("What do you tell the Council?"), [_INTL("\"Roots. Let the tree grow.\""), _INTL("\"Walls. Keep the cold out.\""),
                                                 _INTL("\"We'll listen first.\"")], 2)
     case c
     when 0
@@ -1078,7 +1076,7 @@ module FrostThaw
     # Herald Reptin's own thought comes after, so his line here is a companion's.
     say(["SELRAE: (to the Heralds) Know where you are. Inside the Wall, four hundred years.",
          "SELRAE: Outside it, weeks. Your Dale's still out there. Still frozen.",
-         herald?(:reptin) ? nil : cl(:reptin, "(very quietly) Weeks. Anduin's out there. It's only been weeks."),
+         herald?(:reptin) || !with_or_is?(:reptin) ? "Nobody says anything for a moment." : cl(:reptin, "(very quietly) Weeks. Anduin's out there. It's only been weeks."),
          "SELRAE: The Wall holds because the wheel is stuck.", "SELRAE: Summer won't leave in here. Winter won't leave out there.",
          "SELRAE: Unstick it, and the Wall comes down. Your time and ours, one morning."].compact)
     return their_time_herald if !outsider?
