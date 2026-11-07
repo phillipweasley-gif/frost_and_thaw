@@ -1273,7 +1273,7 @@ module FrostThaw
          "The faces drift out of the shards like breath on a cold morning. They thin, and are gone.",
          "One of them, an old man, waves.",
          as(:meat_meat, "(watching them go) Faces kept behind glass. Meat Meat knows that cage."),
-         "(Phildendrin will tell the court what her daughter did here.)"])
+         herald?(:meat_meat) ? "(Mama will tell the court what you did here.)" : "(Phildendrin will tell the court what her daughter did here.)"])
     set_flag(:mm_atoned)
     set_switch(SW_PHIL_MIRROR, false)
     set_flag(:candidate_phildendrin)
@@ -1461,7 +1461,7 @@ module FrostThaw
   # Kethan's two wardens walk the tunnels with you (notes/10 E1: they're on
   # screen whenever they speak; they keep a step behind you, out of sight
   # between the scenes, and come up beside you when there's trouble).
-  UNDERDARK_WARDENS = { warden_teague: "BW029", warden_oda: "BW030" }
+  UNDERDARK_WARDENS = { warden_teague: "BW029", warden_oda: "BW048" }
 
   def underdark_wardens
     UNDERDARK_WARDENS.each_with_index.map do |(key, look), i|
@@ -2406,9 +2406,13 @@ module FrostThaw
   end
 
   # One witness comes forward and says it (WITNESSES holds each in their own words).
+  # (things are put before the court; people come forward)
+  EVIDENCE_WORDS = /ledger|Ledger|horns|tincture|leaf|Leaf|bubble|robes|runes|charm|flask|story|reliquary|Oath|laboratories|vision|echo/
+
   def testify(row)
     _, who, what, _ = row
-    say(["(#{who} comes forward.)", "\"#{witness_line(what)}\""])
+    say([who =~ EVIDENCE_WORDS ? "(#{who}, put before the court.)" : "(#{who} comes forward.)",
+         "\"#{witness_line(what)}\""])
   end
 
   # The witnesses for one charge: you call the first, Kelyn calls one more,
