@@ -1919,7 +1919,7 @@ module FrostThaw
     # (dialogue 10 Top 3: her fear comes out in anger at the joke, not on request)
     say(["SELRAE: (cold) Joke, then. I've watched a forest go black and soft in one season.",
          "SELRAE: And I prayed to a god in my head for thirty years. I know what a voice costs."])
-    speak(:alberica, "(gently) Come and meet it, then. Three hundred years. It's never asked for a prayer.",
+    speak(:alberica, "(gently) Then come and meet it. Three hundred years, and not one prayer.",
                      "(gently) ...Then come and meet it.")
     set_flag(:knows_winter_fear)
     adv = with_or_is?(:wyn) ? 1 : 0
