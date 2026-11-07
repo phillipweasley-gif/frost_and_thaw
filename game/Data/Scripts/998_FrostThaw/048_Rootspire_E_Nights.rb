@@ -260,6 +260,17 @@ module FrostThaw
   ]
 
   # One line from Hellen at the night's rest, at most: what's changed in the city.
+  # A beat of Hellen before her word, so it doesn't run straight on from her
+  # greeting (box rules: no more than three boxes in a row from one speaker).
+  HELLEN_BEATS = ["Later, Hellen stops by your table with the pot.", "Hellen sets the bowls down and lingers.",
+                  "Clearing the plates, Hellen leans in.", "Hellen pours, and doesn't go away at once."]
+
+  def hellen_says(lines)
+    i = state[:hellen_beat] = ((state[:hellen_beat] || -1) + 1) % HELLEN_BEATS.size
+    say([HELLEN_BEATS[i]] + lines)
+    true
+  end
+
   def hearth_word
     if !flag?(:city_keeps_count) && CITY_REMEMBERS.any? { |f| flag?(f) }
       set_flag(:city_keeps_count)
@@ -268,24 +279,24 @@ module FrostThaw
     end
     if flag?(:ch7_started) && !flag?(:hellen_favours_word)
       set_flag(:hellen_favours_word)
-      return say(["HELLEN: Since the Council sent you down, half the city's come to me with a favour.",
+      return hellen_says(["HELLEN: Since the Council sent you down, half the city's come to me with a favour.",
                   "HELLEN: I've told them where you sleep."])
     end
     if rs_day >= 3 && flag?(:orb_visions) && !flag?(:kelyn_secret) && !flag?(:hellen_orb_word) && !flag?(:summer_ended)
       set_flag(:hellen_orb_word)
       side_goal(:kelyn_orb, "The High Speaker goes up to the twin orb at night, alone. Hellen's seen her.", done: [:kelyn_secret, :summer_ended])
-      return say(["HELLEN: The High Speaker's up at the orb again. Every night this week."])
+      return hellen_says(["HELLEN: The High Speaker's up at the orb again. Every night this week."])
     end
     # (notes/15 E4: Jast's lantern, on the spine, once you've seen a watcher)
     if (flag?(:watcher_glimpsed) || rs_day >= 4) && !flag?(:hellen_lantern_word) && !flag?(:summer_ended)
       set_flag(:hellen_lantern_word)
-      return say(["HELLEN: Seeing things at the edge of your eye? Half the city does. Spies, they say.",
+      return hellen_says(["HELLEN: Seeing things at the edge of your eye? Half the city does. Spies, they say.",
                   "HELLEN: Old Jast on the Root-Tier sells a lantern for it. Don't let him charge you double."])
     end
     # (notes/15 F11: the seasons keep score, and where to read it)
     if state[:favour_moved] && !flag?(:hellen_board_word)
       set_flag(:hellen_board_word)
-      return say(["HELLEN: The seasons keep score of you, you know. There's a board in the Verdant Halls.",
+      return hellen_says(["HELLEN: The seasons keep score of you, you know. There's a board in the Verdant Halls.",
                   "HELLEN: A clerk chalks it fresh every morning. Who's warm to you, who isn't."])
     end
     city_news
@@ -298,8 +309,7 @@ module FrostThaw
       seen << f
       line = line.call(self) if line.respond_to?(:call)
       next if !line
-      say([line])
-      return true
+      return hellen_says([line])
     end
     false
   end
