@@ -148,6 +148,8 @@ begin
   ash = ev("Trainer(3)"); $game_self_switches[[2050, ash.id, "A"]] = true if ash   # (beaten once, as a trainer)
   $game_map.need_refresh = true; HL.settle(300)
   $Trainer.party.each { |pk| pk.level = 100; pk.calc_stats; pk.heal }
+  # (Ash's team has Flash Fire; lead with water so the driver doesn't punch fire into it)
+  $Trainer.party.unshift(Pokemon.new(:BLASTOISE, 100).tap { |pk| HL.sensible_moves(pk, nil); pk.calc_stats; pk.heal }) if $Trainer.party.size < 6
   n = logpos; talk("Trainer(3)")
   if !flag(:ash_exposed)                             # (the driver loses a battle now and then: once more)
     heal; go(2050, 28, 27, 8)

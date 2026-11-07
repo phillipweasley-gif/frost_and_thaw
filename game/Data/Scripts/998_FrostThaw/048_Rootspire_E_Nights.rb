@@ -229,8 +229,10 @@ module FrostThaw
             (respond_to?(:lantern_rumours) && lantern_rumours) ||       # late in the common room: first in line, as before
             (!morning && (omen_check || hearth_vignette(:night) || night_event))
     dawn_hue
+    days = counter(:downtime_days)
     downtime_morning if respond_to?(:downtime_morning)
     return if night
+    return if counter(:downtime_days) > days     # (a Herald's day is the morning's beat: box rules)
     return if respond_to?(:hearth_extras) && hearth_extras   # standing boons, Autumn's ruin, the Glasswater view (048_H)
     hearth_vignette(:morning)
   end
