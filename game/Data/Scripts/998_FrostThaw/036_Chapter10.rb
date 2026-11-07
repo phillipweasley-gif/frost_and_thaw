@@ -1911,8 +1911,10 @@ module FrostThaw
     Stage.approach(selrae) if selrae
     Stage.approach(kelyn) if kelyn
     say(["SELRAE: A mind is a house. In Bryn Shander you walked into a hundred without knocking.",
-         "SELRAE: Now the camp's children breathe spores that do the same. Glowing dust, in bed.",
-         "SELRAE: The Council never sanctioned a fungal colony under the city. Explain yourself.",
+         "SELRAE: Now the camp's children breathe spores that do the same. Glowing dust, in bed."])
+    # (dialogue 09 §6, protected: her old answer to the spores, back where the spores are)
+    speak(:alberica, "(under her breath) I sneezed.")
+    say(["SELRAE: The Council never sanctioned a fungal colony under the city. Explain yourself.",
          "The Spring crystal pulses green."])
     speak(:alberica, "It's been here three hundred years. Come and meet it. Bring a hanky.",
                      "...It's been here three hundred years. Come and meet it.")
@@ -2521,6 +2523,14 @@ module FrostThaw
     end
     # Meat Meat's charge
     say(["KELYN: The second charge. The death of #{autumn_hand[:who] == 'The Autumn Warden' ? 'the Autumn Warden' : autumn_hand[:full]}, by Meat Meat's hand."])
+    # (notes 08 E3, built by e in Ch9: on the walk south she asked you to say it here)
+    if flag?(:you_took_cocoon) && !herald?(:meat_meat)
+      c = pbMessage(_INTL("(\"You held the child. Say that, at the trial.\")"), [_INTL("Say it"), _INTL("Say nothing")], 0)
+      if c == 0
+        say(["(You tell the court: you caught the cocoon at the rail. She let go of #{autumn_hand[:him]}.)",
+             as(:meat_meat, "(in the dock, very quietly) ...Thank you.")])
+      end
+    end
     call_witnesses(:autumn, "Who do you call for Meat Meat?")
     refugee_faces if flag?(:refugees_testify)
     autumn = witnesses(:autumn).size + (flag?(:mm_atoned) ? 2 : 0) + (flag?(:mm_cooperated) ? 1 : 0) - (flag?(:mm_broke_out) ? 3 : 0)
