@@ -322,9 +322,10 @@ module FrostThaw
       elsif flag?(:ch7_started) then "gold. Deep gold. It lingers far too long"
       else "gold, the way it's been gold for thirty years"
       end
-    hue += flag?(:tree_leans_frost) ? ", with a rim of hard white frost at its edges" : ""
-    hue += flag?(:tree_leans_verdant) && !flag?(:summer_ended) ? ", and the Wall's leaves a little greener" : ""
-    say(["Dawn over Rootspire: #{hue}."])
+    lean = if flag?(:tree_leans_frost) then "A rim of hard white frost sits at its edges."
+           elsif flag?(:tree_leans_verdant) && !flag?(:summer_ended) then "The Wall's leaves are a little greener."
+           end
+    say(["Dawn over Rootspire: #{hue}.", lean].compact)
   end
 
   # After the festival: the Rootwardens come to the door (GM outline, steps 1-6).

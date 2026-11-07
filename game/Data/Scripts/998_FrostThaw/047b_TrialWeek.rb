@@ -205,7 +205,7 @@ module FrostThaw
     sayc(["A pocket of the world made entirely of mirror-ice. Corridors that reflect corridors.",
           "Somewhere in it, very far off, a figure is walking away from you, wearing your face.",
           cl(:alerion, "(very quietly) That one's mine. I left it here. When the time broke, and we fell."),
-          cl(:alberica, "Then we'll go and fetch it, pretty boy. Nobody leaves bits of themselves lying about.")])
+          cl(:alberica, "Then we'll fetch it, pretty boy. Nobody leaves bits of themselves lying about.")])
   end
 
   # The maze's three junctions (skill challenge: 3 successes before 2 failures).
@@ -262,7 +262,7 @@ module FrostThaw
     ok = challenge("Meditate, and take it back.", ["Breathe slow, and let it come", "Reach in and grab it", "Talk to it"], [0, 2])
     if ok
       say(["The man who walked into the winter four hundred years ago left a piece of himself here."])
-      speak(:alerion, "(laying his palm flat on the glass) Come on, then. I've kept your seat warm. Well. Cold.",
+      speak(:alerion, "(a palm flat on the glass) Come on, then. I've kept your seat warm. Well. Cold.",
             "(a palm flat on the glass) ...Come home.")
       say([al ? "You breathe out. The reflection breathes in. Then it's not in the ice any more." :
                 "Alerion breathes out. The reflection breathes in. Then it's not in the ice any more.",
@@ -743,7 +743,7 @@ module FrostThaw
                             flag?(:rootwarden_freed) || with_or_is?(:alberica) ? 0 : [])
     end
     if persuaded
-      say(["TEMPORAL GUARDIAN: (after a long, long moment) ...Then keep it. It's heavier than it looks."])
+      say(["TEMPORAL GUARDIAN: (a long, long moment) ...Then keep it. It's heavier than it looks."])
     else
       say(["TEMPORAL GUARDIAN: Then I keep it."])
       guard = named_mon(:B92H449, 60, "Temporal Guardian")

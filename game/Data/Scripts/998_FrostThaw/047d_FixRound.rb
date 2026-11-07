@@ -456,7 +456,13 @@ module FrostThaw
     say(["In the morning a grey wolf sits in the snow outside the Hearth. Thin, scarred, patient.", "Not a Rootwarden's.",
          rp ? "It's waiting for you. You know it. You saw it last at the Chasm, answering your howl." :
               "It's waiting for Reptin. He knows it before he's halfway down the steps."])
-    seen = ["The wolf puts its nose in #{rp ? 'your' : "Reptin's"} hand, and you all see it, the way wolves see things: the Chasm, quiet."]
+    # (an input in the trial week's long morning run, Act II audit)
+    c = pbMessage(_INTL(rp ? "(The wolf waits.)" : "(At the bottom of the steps Reptin looks back up at you.)"),
+                  rp ? [_INTL("Go down to it"), _INTL("Kneel where you are")] : [_INTL("Go down with him"), _INTL("Watch from the door")], 0)
+    say([rp ? (c == 0 ? "You go down the steps. It doesn't move." : "You kneel on the top step. It comes the rest of the way.") :
+              (c == 0 ? "You go down with him. The wolf allows it." : "You stay in the doorway. This one's mostly his.")])
+    seen = ["The wolf puts its nose in #{rp ? 'your' : "Reptin's"} hand, and you all see it, the way wolves see things.",
+            "The Chasm, quiet."]
     seen << "The kobolds' fires, lit along the old bridge." if flag?(:kobolds_freed)
     seen << "A yeti and her grown cub fishing at the black water." if flag?(:cub_home) && !flag?(:yeti_mother_dead)
     seen << "A young yeti, alone, keeping the Order's hall swept." if flag?(:yeti_mother_dead)

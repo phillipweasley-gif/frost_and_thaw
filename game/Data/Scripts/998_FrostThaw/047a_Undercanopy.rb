@@ -112,13 +112,14 @@ module FrostThaw
           "He kneels at the black caps.",
           "RHEVEN: The sap's gone black up top too. Clotted.",
           "RHEVEN: The tree's heartbeat's muffled, like a drum under a blanket.",
+          herald?(:reptin) ? "(You feel it through your boots. Slow. Thick.)" : "Reptin goes very still, listening.",
           herald?(:reptin) ? "RHEVEN: (gripping your shoulder) Reptin. You planted her. You can hear her." :
                              "RHEVEN: (gripping Reptin's shoulder) Reptin. You planted her. You can hear her.",
           "RHEVEN: Cleanse it, or do we cut away the rot?"])
     set_flag(:rheven_met_blight)
     c = pbMessage(_INTL("The blight..."), [_INTL("Cleanse it (Reptin's ritual)"), _INTL("Cut away the rot (burn it)")], 0)
     return nil if c != 0
-    say([as(:reptin, "(a hand flat on the root) ...There. Under the gardens. It's running sick from one place.")])
+    say([as(:reptin, "(a hand on the root) ...There. Under the gardens. It runs sick from one place.")])
     # Sense the blight: follow the sick sap to its source
     if !challenge("Follow the sick sap.", ["The warm, sour trickle downhill", "The cold clear one", "The loudest drip"], 0)
       say(["The trail runs into toxic mould. Everyone coughs; your lead Pokémon is poisoned."])
@@ -661,11 +662,14 @@ module FrostThaw
          "Not treasure. A reliquary."])
     [[:FT_FROSTBAR, 2], [:FT_MOONOPAL, 4], [:FT_FUNGALRELIEF, 3], [:FT_ROOTKNOT, 2], [:FT_AURORALCRYSTAL, 1],
      [:POTION, 2], [:SUPERPOTION, 1], [:FT_CLEARMIND, 1], [:FT_SAPSALVE, 1], [:FT_SPORECHARM, 1]].each do |item, n|
-      give(item, n)
+      # (one box for the lot, not twenty: the scene's long run, Act II audit)
+      ($PokemonBag.pbStoreItem(item, n) rescue give(item, n))
     end
-    say(["(Bars, opals, reliefs and totems: the Bazaar's merchants will buy them.)"])
     $Trainer.money += 5000 rescue nil
-    pbMessage(_INTL("You found 500 black-ice coins. (+$5000)")) rescue nil
+    pbMessage(_INTL("\\me[Item get]You gather it up: 2 Frost-stamped Bars, 4 Moonshadow Opals, 3 Fungal Reliefs.")) rescue nil
+    pbMessage(_INTL("2 Root-knot Totems, an Auroral Crystal, and 500 black-ice coins (+$5000).")) rescue nil
+    pbMessage(_INTL("In the flasks: 2 Potions, a Super Potion, a Clear Mind elixir, a salve, a Spore Charm.")) rescue nil
+    say(["(Bars, opals, reliefs and totems: the Bazaar's merchants will buy them.)"])
     set_flag(:mycolith_hoard)
   end
 

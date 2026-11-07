@@ -310,6 +310,10 @@ module FrostThaw
     $game_screen.start_tone_change(Tone.new(-255, -255, -255, 0), 12) rescue nil
     say(["The root-cells under the Council Hall. A night, and most of a day.",
          "Light through the bars, in four colours. Somewhere above, a city arguing about you."])
+    # (an input between the arrest and the court, the Act II audit's longest run)
+    c = pbMessage(_INTL("The night in the root-cells..."), [_INTL("Sleep, if you can"), _INTL("Lie awake and listen")], 0)
+    say([c == 0 ? "You sleep, badly. In the next cell someone snores like a bear in a barrel." :
+                  "Feet on the root-stair above, all night. Every one of them stops at the grate, and goes on."])
     say(["CHAPTER 10: TRIALS OF THE ROOTS"])
     $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 12) rescue nil
     transfer(2054, 11, 17, 8)

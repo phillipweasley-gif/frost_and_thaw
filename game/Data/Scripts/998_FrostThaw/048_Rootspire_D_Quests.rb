@@ -549,6 +549,7 @@ module FrostThaw
       say(["ELINE: (a small, sad smile) Grief, then. Keep it. It will keep you warm a while."])
     end
     say(["ELINE: And tell your Winter Matron her chair is beside mine. She's nearly ours.",
+         "The candles nearest her gutter, all together, as if someone had breathed on them.",
          "ELINE: Who do you think pays for the candles?"])
     set_flag(:eline_named_selrae)
   end
