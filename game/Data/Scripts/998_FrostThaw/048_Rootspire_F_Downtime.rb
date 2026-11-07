@@ -858,8 +858,7 @@ module FrostThaw
          "EIRWEN: And Rootspire, drawn over it. The Stones lie right under us. Under the Heartroot.",
          "Their finger follows a line of faded ink, down, and down.",
          "EIRWEN: A passage, sealed since the Reversal. Under the Root-Gate, past the Guild Dig.",
-         "EIRWEN: The old maps end it at a door. Iron and glass.",
-         "EIRWEN: It began humming two nights ago. The leaves lining it are writing down hammers."], event_id)
+         "EIRWEN: It ends at a door, iron and glass. Two nights ago it began humming. Hammers."], event_id)
     if ($PokemonBag.pbHasItem?(:FT_CHARDALYN) rescue false)
       say(["Eirwen looks at the chardalyn fragment for a long time without touching it.",
            "EIRWEN: That came up from there. I'd stake the Library on it."])
