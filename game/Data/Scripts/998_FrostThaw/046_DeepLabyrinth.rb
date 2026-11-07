@@ -187,7 +187,7 @@ module FrostThaw
            "The knot loosens, root by root, like a fist opening.",
            "Beyond, a low grove. Flowers bloom from the walls, each with a mirror at its heart."], event_id)
       sayc([flag?(:selrae_ahead) ? cl(:alerion, "Frost on the roots. Selrae came this way.") : nil,
-            cl(:reptin, "After you. No, really. I insist. Age before beauty."),   # (notes 07 §3: no pet names from Reptin)
+            cl(:reptin, "After you. No, really. After you."),   # (notes 07 §3: no pet names; dialogue 07 §5: no cliche, so "Coward." answers it)
             cl(:alberica, "Coward."),
             cl(:reptin, "Diplomat.")])
       set_flag(:heartwall_open)
@@ -243,7 +243,8 @@ module FrostThaw
     return if flag?(:reflection_lag)
     set_flag(:reflection_lag)
     sayc([cl(:alerion, "It's lagging."),
-          cl(:glimmer, "I lived behind a mirror. Don't stare. It starts to think it's the one in front."),
+          cl(:glimmer, "Seven years behind a mirror. Trust me: don't stare."),   # protected line (dialogue 07 §6), split at its sentence break for the box
+          cl(:glimmer, "It starts to think it's the one in front."),
           cl(:reptin, "Noted. Eyes front, everyone.")])
   end
 
@@ -584,7 +585,7 @@ module FrostThaw
     say(["Woven-bark bunks and weapon racks, deep in the shaft, where the core sap-soldiers sleep.",
          "Six of them, sap glowing faintly under their skin. They sleep with their eyes open."], event_id)
     sayc([cl(:alerion, "Sleeping enemies are enemies."),
-          cl(:wyn, "Sorry, but... they're sap-dazed. Like Gant was. They might not want to be."),
+          cl(:wyn, "Sorry, but... they're sap-dazed. Like Gant was. They might not even want to be."),   # protected (dialogue 07 §6)
           cl(:reptin, "Then let's not make them.")])
     opts = [_INTL("Strike while they sleep"), _INTL("Wake them, and fight fair")]
     opts << _INTL("Slip past in the shadows") if with_or_is?(:wyn)
@@ -1103,7 +1104,8 @@ module FrostThaw
          "The Split Dock, at night. A big, scarred man in Marshal's gold counts crates off a skiff.",
          "VAR: Thirty blades, forty bows, no Council stamp, no Council questions. That's the deal.",
          "CORSAIR: And the Council never knows.",
-         "VAR: The Council argues for a living. I keep the peace. Go, before somebody sober sees.",
+         "VAR: The Council argues for a living. I keep the peace for one.",   # protected (dialogue 07 §6), split for the box
+         "VAR: Go on, before somebody sober sees.",
          "He leans on a glaive with a blade of melted mirror. It hums when he isn't touching it.",
          "Alone, he looks out at the Wall, and talks to nobody:",
          "VAR: My line carried spears for Naerth Maxildanarr. Gold-sick. Greed in the blood.",

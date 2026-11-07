@@ -780,7 +780,7 @@ module FrostThaw
                     "You put your hands up. So does everyone else, slowly."])
     end
     speak(:meat_meat, "Var was a coat! A coat!", "...Var was a coat.")
-    sayc([cl(:reptin, "(hands up, smiling) Let's all be reasonable. Especially the people with spears."),
+    sayc([cl(:reptin, "Let's all be very reasonable. Especially the people with spears."),   # protected (dialogue 09 §6)
           cl(:alerion, "She's right. He was a coat.")])
     kelyn = Stage.actor(:kelyn, px + 6, py, 4, graphic: "FT_high_speaker_kelyn_of_spring")
     Stage.approach(kelyn) if kelyn
