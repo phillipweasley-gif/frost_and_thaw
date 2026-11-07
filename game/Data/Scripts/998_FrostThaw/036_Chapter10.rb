@@ -404,6 +404,11 @@ module FrostThaw
     elsif !herald?(:wyn)
       say(["KELYN: (to you) And you. Charged or not, you stand with them. Speak for yourself."])
       pbMessage(_INTL("(Kelyn waits.)"), [_INTL("(Nod.)"), _INTL("(Hold her eye.)")], -1)
+    else
+      # Wyn Mode: you're one of the charged, and a Rootwarden; you know this court
+      say(["KELYN: (to you) Wyn. You know this court better than they do. Stand straight in it."])
+      c = pbMessage(_INTL("(Kelyn waits.)"), [_INTL("(Stand straight.)"), _INTL("(Look at the floor.)")], -1)
+      say([c == 0 ? "KELYN: Good." : "KELYN: (gently) Up, Rootwarden. Up."])
     end
     say(["KELYN: Every word said under these crystals is kept, on the Library's leaves.",
          "KELYN: Lie under them, and your season's crystal goes dark. Everyone sees it."])
@@ -1914,7 +1919,7 @@ module FrostThaw
     # (dialogue 10 Top 3: her fear comes out in anger at the joke, not on request)
     say(["SELRAE: (cold) Joke, then. I've watched a forest go black and soft in one season.",
          "SELRAE: And I prayed to a god in my head for thirty years. I know what a voice costs."])
-    speak(:alberica, "(gently) Then come and meet it. Three hundred years, and it never asked a prayer.",
+    speak(:alberica, "(gently) Come and meet it, then. Three hundred years. It's never asked for a prayer.",
                      "(gently) ...Then come and meet it.")
     set_flag(:knows_winter_fear)
     adv = with_or_is?(:wyn) ? 1 : 0
