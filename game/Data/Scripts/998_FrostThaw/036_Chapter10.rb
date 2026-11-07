@@ -1128,6 +1128,15 @@ module FrostThaw
     end
     mm = herald?(:meat_meat)
     cell = stage_event(event_id)
+    # For this scene her lines come from the cell (its name says who's in it).
+    cell_data = (cell.instance_variable_get(:@event) rescue nil)
+    cell_data.name = "Meat Meat (root-cell)" if cell_data && !mm
+    root_cells_scene(event_id, mm, cell)
+  ensure
+    cell_data.name = "Root-cells" if cell_data
+  end
+
+  def root_cells_scene(event_id, mm, cell)
     if mm
       # you're the one behind the bars
       $game_player.moveto(*CELL_SPOT) rescue nil
@@ -1309,7 +1318,7 @@ module FrostThaw
       end
     when :anduin
       if flag?(:anduin_reconciled) && challenge("Rheven distrusts gods, and outsiders.",
-                                                ["\"He wants fewer gods, not more. Like you.\"", "\"He's harmless.\"", "\"He's Reptin's husband.\""], 0)
+                                                ["\"He wants fewer gods. Like you.\"", "\"He's harmless.\"", "\"He's Reptin's husband.\""], 0)
         say(["RHEVEN: Fewer god-sparks. ...Hm. A man who'd say that out loud in the Bazaar has nerve.",
              "RHEVEN: The wardens won't stand in his way."])
         set_flag(:rootwardens_accept_anduin)
@@ -1905,7 +1914,7 @@ module FrostThaw
     # (dialogue 10 Top 3: her fear comes out in anger at the joke, not on request)
     say(["SELRAE: (cold) Joke, then. I've watched a forest go black and soft in one season.",
          "SELRAE: And I prayed to a god in my head for thirty years. I know what a voice costs."])
-    speak(:alberica, "(gently) Then come and meet it. Three hundred years, and it never asked for a prayer.",
+    speak(:alberica, "(gently) Then come and meet it. Three hundred years, and it never asked a prayer.",
                      "(gently) ...Then come and meet it.")
     set_flag(:knows_winter_fear)
     adv = with_or_is?(:wyn) ? 1 : 0
@@ -2021,7 +2030,7 @@ module FrostThaw
       set_flag(:fungal_liaison)
       add_support(:eirwen, 1)
       add_counter(:story_beats)
-      say(["(Alberica is named the Council's Fungal Liaison.)"])
+      say([herald?(:alberica) ? "(You're named the Council's Fungal Liaison.)" : "(Alberica is named the Council's Fungal Liaison.)"])
       speak(:alberica, "Fungal Liaison. At last, a title that matches my reputation.", "...Fungal Liaison.")
       say([cl(:reptin, "Please don't let her have it embroidered.")].compact)
     else
@@ -2305,7 +2314,7 @@ module FrostThaw
          "SELRAE: On Solstice, her island, out on the Sea of Moving Ice. North, past the Dale.",
          "SELRAE: She'll have felt the summer end. She'll come for what she thinks is hers.",
          cl(:alerion, "She can try."),
-         cl(:alberica, "(a hand over her rune) ...Let's not dare her, pretty boy.")].compact)
+         cl(:alberica, "(a hand on her rune) ...Let's not dare her, pretty boy.")].compact)
     trial_work_done
     trial_week_goal
   end
@@ -2633,7 +2642,7 @@ module FrostThaw
       next if !flag?(:"petition_#{k}") || nominated?(k)
       short = [(SIGNATURES_NEEDED[k] || 0) - (trial[:signatures][k] || 0), 1].max
       Stage.actor(k, $game_player.x - 2, $game_player.y + 1, 8, graphic: PLATFORMS[k][0]) if PLATFORMS[k]
-      say(["#{k.to_s.upcase}: (from the crowd) #{short} #{short == 1 ? 'name' : 'names'} short. Next year, then."])
+      say(["#{k.to_s.upcase}: (from the crowd) #{number_word(short).capitalize} #{short == 1 ? 'name' : 'names'} short. Next year, then."])
     end
     if !(winners & %i[mira rheven anduin heralds]).any?
       say(["LUMIN: (later) Nobody's got a ship, or a griffon, or a whale-bell.",

@@ -67,6 +67,12 @@ module FrostThaw
         say(["AURIL: You'll look, in the end. Everyone does."])
       end
       say(["She turns back to #{al ? 'you' : 'Alberica'}."])
+    elsif al
+      c = pbMessage(_INTL("(She's looking at you.)"), [_INTL("(Look back.)"), _INTL("(Look at your cup.)")], -1)
+      say([c == 0 ? "AURIL: (pleased) There you are, songbird." : "AURIL: The cup won't help you."])
+    else
+      pbMessage(_INTL("(You can't move. Try?)"), [_INTL("(Try.)")], 0)
+      say(["Not a finger. You can only watch."])
     end
     say(["AURIL: Hear the wheel, and the ones who bind it.",
          "Her breath frosts the table between you.",

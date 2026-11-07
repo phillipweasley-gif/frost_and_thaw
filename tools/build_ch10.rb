@@ -17,7 +17,8 @@ end
 ch = reopen(2054)
 ch.event(1, 1, "Cutscene tribunal", [{ graphic: "", through: true }, { switch: SW_TRIBUNAL, trigger: 3, script: "FT.scene_tribunal" }])
 # The cell shows Meat Meat in it (notes/10 E12); the script swaps in Phildendrin once she's found her.
-ch.event(17, 5, "Meat Meat in the Root-cells", [{ graphic: "", through: true }, { switch: SW_TRIALS, graphic: "FT_meat_meat", direction: 2, script: "FT.root_cells(@event_id)" }])
+# (Named "Root-cells", not after her: her lines elsewhere in the Hall must find her, not the cell.)
+ch.event(17, 5, "Root-cells", [{ graphic: "", through: true }, { switch: SW_TRIALS, graphic: "FT_meat_meat", direction: 2, script: "FT.root_cells(@event_id)" }])
 during_trials(ch, 9, 7, "Gallery", "BW (32)", "FT.talk(:trial_gallery, @event_id)")
 during_trials(ch, 16, 12, "Gallery 2", "BW (38)", "FT.talk(:trial_gallery, @event_id)")
 resave(ch, 2054)

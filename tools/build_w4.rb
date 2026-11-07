@@ -286,7 +286,7 @@ bw.cutscene(4, 19, :beyond_wall)
 once_trigger(bw, 9, 20, "Frozen time 1", "FT.time_hazard(1, @event_id)")
 once_trigger(bw, 33, 13, "Frozen time 2", "FT.time_hazard(2, @event_id)")
 once_trigger(bw, 29, 2, "Frozen time 3", "FT.time_hazard(3, @event_id)")
-bw.event(20, 21, "Frozen Rootwarden", [{ graphic: "BW029", direction: 6, opacity: 170, step_anime: false, walk_anime: false,
+bw.event(20, 21, "Frozen Rootwarden", [{ graphic: "BW030", direction: 6, opacity: 170, step_anime: false, walk_anime: false,
                                          script: "FT.frozen_rootwarden(@event_id)" }])
 bw.event(22, 7, "Mead hall door, under ice", [{ tile_id: ICE_CRYSTAL, script: "FT.drowned_hall_ice(@event_id)" }])
 bw.sign(18, 8, :drowned_hall_sign)

@@ -402,7 +402,7 @@ module FrostThaw
     if ok && flag?(:undercity_spored)
       # (W1: breathing the spores is disadvantage on the commune.)
       say(["The spores in your lungs answer it first. Its whispers come back in your own voice."])
-      ok = challenge("Hold on to your own voice.", ["Breathe out slowly, and listen for Wyn's", "Shout over it", "Let it talk"], 0)
+      ok = challenge("Hold on to your own voice.", ["Breathe out; listen for Wyn's voice", "Shout over it", "Let it talk"], 0)
     end
     if ok
       say([as(:wyn, "(very softly) ...It's hungry. For stories. It eats them, and dreams them out bent."),
@@ -814,6 +814,11 @@ module FrostThaw
     $game_switches[SW_BEYOND_WALL] = flag?(:summer_ended)
     $game_switches[SW_LEAF_SHELF] = flag?(:summer_ended) && !flag?(:leaf_restored)
     $game_switches[SW_BRISA_HOME] = flag?(:rootwarden_freed)
+    # (once she's out of the ice, the ice is empty: only the hollow is left)
+    if $game_map && $game_map.map_id == 2163 && flag?(:rootwarden_freed)
+      ice = $game_map.events.values.find { |e| e.name == "Frozen Rootwarden" }
+      ice.character_name = "" if ice
+    end
     # (notes/10 E27: Eirwen keeps the Shrine this week; the Library's Eirwen steps out)
     if $game_map && $game_map.map_id == 2062 && $game_switches[SW_EIRWEN_SHRINE]
       lib = $game_map.events.values.find { |e| e.name == "Eirwen Solglass" }

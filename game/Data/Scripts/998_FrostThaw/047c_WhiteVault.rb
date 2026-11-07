@@ -130,7 +130,7 @@ module FrostThaw
     pbSEPlay("Saint7") rescue nil
     $game_screen.start_flash(Color.new(220, 240, 255, 180), 20) rescue nil
     say(["The aurora brightens, stretching northward like a path of glass.",
-         "You hold the three Frostshard Sigils together. They merge into one: wings over a frozen eye.",
+         "You hold the three Frostshard Sigils together. They merge: wings spread over a frozen eye.",
          "The World Tree shivers, and from its roots rises a wind that smells of ancient ice.",
          "Far north, the mirror Frostina froze at Auril's throne splits. Whatever was in it is gone.",
          "Further north still, past where the Wall stood, a door wakes. The White Vault is waiting."])
@@ -229,7 +229,7 @@ module FrostThaw
     if fought >= 3
       mephits.each { |m| Stage.remove_actor(m) }
       say(["The last mephit pops like a soap bubble full of snow.",
-           "Sephek trembles. Frost runs out of him like sweat. For a moment he's only a cold man on an altar."])
+           "Sephek trembles. Frost runs out of him like sweat. For a moment he's only a cold man."])
     else
       say(["The Halo's followers fall back round him, still standing. He doesn't tremble at all."])
     end

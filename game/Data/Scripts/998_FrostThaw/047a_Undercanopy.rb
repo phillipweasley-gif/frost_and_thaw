@@ -129,7 +129,7 @@ module FrostThaw
     ok = 0
     ok += 1 if challenge("The poultice.", ["Moss and warm sap, packed close", "Snow, to cool it", "Ash from the brazier"], 0)
     ok += 1 if challenge("What is it?", ["A necrotic fungus, cooked from below", "Frostbite", "Ordinary rot"], 0)
-    ok += 1 if challenge("Soothe the root's spirit.", [herald?(:reptin) ? "Speak to it softly, as to a hurt animal" : "Reptin speaks to it softly, as to a hurt animal",
+    ok += 1 if challenge("Soothe the root's spirit.", [herald?(:reptin) ? "Speak softly, as to a hurt animal" : "Reptin speaks softly, as to an animal",
                                                        "Command it to heal", "Leave it be"], 0)
     if ok >= 2
       say(["The black drains out of the sap like ink out of water.",
@@ -237,9 +237,9 @@ module FrostThaw
          "FARIA: No coin here. I'll pay in stories. And favours. Good ones. Track them?"], event_id)
     return if !pbConfirmMessage(_INTL("Track the thief?"))
     found = 0
-    found += 1 if challenge("The trail through the Bazaar.", ["Move quietly between the stalls, watching for small shapes", "Ask loudly who saw what", "Run"], 0)
-    found += 1 if challenge("A smear on a root.", ["Look closer: grease, scales, a tiny clawed print", "Wipe it off", "Ignore it"], 0)
-    found += 1 if challenge("Where does it lead?", ["Follow the clawed prints toward the disused roots", "Back to Faria", "Up"], 0)
+    found += 1 if challenge("The trail through the Bazaar.", ["Move quietly, watching for small shapes", "Ask loudly who saw what", "Run"], 0)
+    found += 1 if challenge("A smear on a root.", ["Look closer: a tiny clawed print", "Wipe it off", "Ignore it"], 0)
+    found += 1 if challenge("Where does it lead?", ["Follow the prints to the disused roots", "Back to Faria", "Up"], 0)
     if found >= 2
       say(["The prints lead to a hollow, disused root. Inside: a nest, glinting. And yapping."])
       set_flag(:theft_tracking)
@@ -287,7 +287,7 @@ module FrostThaw
     c = pbMessage(_INTL("The duel..."), [_INTL("Mediate"), _INTL("Spar with them, gently"), _INTL("Find the law: ask Lysella")], 0)
     case c
     when 0
-      if challenge("Mediate.", ["Ask each of them to tell the story the way they heard it", "Tell them both to calm down", "Take a side"], 0)
+      if challenge("Mediate.", ["Ask each to tell the story as heard", "Tell them both to calm down", "Take a side"], 0)
         say(["The two stories come out side by side. They're the same story, one of them told backwards.",
              "Their spores turn pink."])
         set_flag(:duel_settled)
@@ -398,11 +398,11 @@ module FrostThaw
          outsider? ? "The council is divided. Everyone looks at you, and at the Heralds." :
                      "The council is divided. Everyone looks at the Heralds."], event_id)
     ok = 0
-    ok += 1 if challenge("Read the room.", ["The myconids are afraid of being bled; the wardens of children dying", "Everyone's being greedy", "It's about money"], 0)
-    ok += 1 if challenge("Make the case.", [flag?(:niche_read) ? "Recite the old oath from the memory niche: never more than the tree can spare" :
-                                                                 "Propose a measure: so much a week, by the tree's leave",
+    ok += 1 if challenge("Read the room.", ["Both sides are frightened, not greedy", "Everyone's being greedy", "It's about money"], 0)
+    ok += 1 if challenge("Make the case.", [flag?(:niche_read) ? "Recite the old oath from the niche" :
+                                                                 "Propose so much a week, by her leave",
                                            "Tell the myconids to give it all", "Tell the wardens to leave"], 0)
-    ok += 1 if challenge("One side is wavering.", ["Offer to carry the first sap up yourselves", "Threaten both", "Walk out"], 0)
+    ok += 1 if challenge("One side is wavering.", ["Offer to carry the first sap up", "Threaten both", "Walk out"], 0)
     if ok >= 2
       say(["WARDEN LIS: ...A measure, by the tree's leave. Carried by the Heralds. Fine. Fine.",
            "LUMINARA: (inclining her cap) The old oath. Good."])
@@ -419,7 +419,7 @@ module FrostThaw
   def fane_poisoner(event_id = nil)
     return if flag?(:poisoner_caught)
     say(["A Rootwarden kneels at the sap pool's edge, hands cupped, as if to drink."], event_id)
-    if challenge("Something's wrong.", ["His breath doesn't fog in the cold air; and there's a vial in his sleeve", "He's praying", "Nothing"], 0)
+    if challenge("Something's wrong.", ["His breath doesn't fog. A vial, hidden", "He's praying", "Nothing"], 0)
       say(["You catch his wrist. A vial of black-blue liquid: frost-venom. Enough to kill a pool."])
       return if !trainer(:fane_cultist, nil)
       say(["\"WARDEN\" VOSK: She'll come anyway. Through every crack. Through the lake. Through you.",
@@ -477,7 +477,7 @@ module FrostThaw
     return if flag?(:heist_thwarted)
     say(["Someone moves among the archive shelves: a cloak, a sack, a bark tablet in a gloved hand.",
          "MYR: (very faint) ...a prophecy tablet... stop them... don't break the others..."], event_id)
-    if challenge("Through the archive, quietly.", ["Edge round the shelves, never touching them", "Run straight at the thief", "Shout a warning"], 0)
+    if challenge("Through the archive, quietly.", ["Edge round the shelves, touching nothing", "Run straight at the thief", "Shout a warning"], 0)
       say(["You come up behind the thief silently. She drops the tablet; you catch it before it lands.",
            "She runs. She leaves the sack. In it: a Halo prayer-token, mirror-glass."])
     else
@@ -698,7 +698,7 @@ module FrostThaw
         end
       end
       seal_mon = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && (pk.hasType?(:PSYCHIC) || pk.hasType?(:FAIRY)) }
-      ok = shard || seal_mon || challenge("A rift gapes.", ["Pour every bit of will into it, together", "Throw something into it", "Wait"], 0)
+      ok = shard || seal_mon || challenge("A rift gapes.", ["Pour your will into it, together", "Throw something into it", "Wait"], 0)
       if ok
         say([shard ? "Glimmer lays a hand on the rift. The Lumen Shard flares and it closes like an eye." :
              seal_mon ? "#{seal_mon.name} pours its power into the rift. It shrinks, and seals." : "You all push. It seals."])
