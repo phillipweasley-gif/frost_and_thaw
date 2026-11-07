@@ -19,8 +19,6 @@ module FrostThaw
   SW_FROSTINA_FREE = 3951   # Frostina is out of her crystal: the way to the throne room
   SW_AURIL_DOWN    = 3952   # the Frostmaiden has fallen (the throne room's scene is over)
   SW_HALL_SPRING   = 4185   # Eirwen's servants' stair: a warm spring in the Hall
-  SW_HALL_CACHE    = 4186   # Nass's safe way: her cache in the Hall
-  SW_HALL_BACKDOOR = 4187   # Ukuma's back door: a chute from the Hall down to your camp
 
   MAPS.merge!(hall_four_winds: 2083, test_cruelty: 2084, test_endurance: 2085, test_isolation: 2086,
               test_preservation: 2087, the_crown: 2088, throne_of_frost: 2089)
@@ -83,9 +81,6 @@ module FrostThaw
     test_done: ["The vision has gone. Only an ice chamber now, and a tablet's echo on the wall."],
     hall_spring: ["Warm water wells up where the servants' stair comes out, just as Eirwen's plans said.",
                   "Your team drinks. Everyone is rested."],
-    hall_cache: ["A niche behind a loose block, where Nass said it would be. A wizard's cache."],
-    hall_cache_empty: ["Nass's niche. Empty now, apart from a very old sandwich."],
-    hall_backdoor: ["Ukuma's back door: a chute of polished ice, straight down to your camp on the dock."],
     loop_hall_carving: ["A seventh figure on Hellen's wall: a dwarf woman made of ice, hands over her heart.",
                         "Nobody remembers carving it."]
   )
@@ -103,6 +98,15 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # SC 13.01 - The Hall of the Four Winds
   #-----------------------------------------------------------------------------
+  # Sopo on the climb (notes 12 E14): the dock's after-line, then he runs for it.
+  def sopo_on_the_climb(event_id = nil)
+    ev = stage_event(event_id)
+    Stage.emote(ev, :exclaim) if ev
+    say(lines_for(:sopo_after), event_id)
+    Stage.leave(ev, ev.x + 6, ev.y) if ev
+    set_self_switch(event_id, "A")
+  end
+
   # Purpose: the rules of the climb. Sephek (a voice through the ice) sets
   # Auril's four tests; Alberica asks the question the ending will answer
   # ("what if we pass them ours?"), and Sephek has never heard it before.
@@ -158,22 +162,13 @@ module FrostThaw
     transfer(MAPS[:"test_#{key}"], 9, 10, 8)
   end
 
-  # The three shortcuts from the jaw, each something you can use in the Hall
-  # (notes 13 E13): Eirwen's warm spring, Nass's cache, Ukuma's back door.
+  # Eirwen's servants' stair comes out by a warm spring in the Hall (notes 13
+  # E13; Nass's and Ukuma's rewards are given at the jaw, 038).
   def hall_shortcut(kind, event_id = nil)
     case kind
     when :spring
       say(lines_for(:hall_spring), event_id)
       pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
-    when :cache
-      return say(lines_for(:hall_cache_empty), event_id) if flag?(:hall_cache_taken)
-      say(lines_for(:hall_cache), event_id)
-      give(:FULLRESTORE, 2)
-      set_flag(:hall_cache_taken)
-    when :backdoor
-      say(lines_for(:hall_backdoor), event_id)
-      return if !pbConfirmMessage(_INTL("Slide down to the camp?"))
-      transfer(2079, 19, 56, 2)
     end
   end
 
@@ -1219,10 +1214,8 @@ module FrostThaw
     $game_switches[SW_CROWN_OPEN] = tests_faced >= 4
     $game_switches[SW_FROSTINA_FREE] = flag?(:frostina_freed)
     $game_switches[SW_AURIL_DOWN] = flag?(:auril_down)
-    # the three shortcuts, seen in the Hall (notes 13 E13)
+    # Eirwen's shortcut, seen in the Hall (notes 13 E13)
     $game_switches[SW_HALL_SPRING] = flag?(:council_eirwen)
-    $game_switches[SW_HALL_CACHE] = flag?(:skant_freed)
-    $game_switches[SW_HALL_BACKDOOR] = flag?(:ukuma_raced)
   end
 end
 

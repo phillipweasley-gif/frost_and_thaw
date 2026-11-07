@@ -166,6 +166,6 @@ end
 # scene3 j: Grimskalle and the endings (2026-11-07). Act III has no fallback
 # list: the loop's Act III skip runs on the snapshot taken at the Hall
 # (loop_snapshot(:act3)). New Act III flags, for the record: test_<key>_door_seen
-# (each Hall door's carving read once), hall_cache_taken (Nass's cache),
+# (each Hall door's carving read once),
 # toast_empty_chair / toast_everyone (the Festival's toast, read by Hellen
 # after the end), loop_skip_asked_act3.

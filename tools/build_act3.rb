@@ -73,6 +73,12 @@ so.event(19, 53, "Sopo", [
     { switch: SW_DOCK_CLEARED, graphic: "", through: true }
   ])
 end
+# Sopo, up the climb once the dock is cleared (notes 12 E14): he really does follow you
+# at a distance; talk to him and he says his piece and bolts (FT.sopo_on_the_climb)
+so.event(47, 55, "Sopo, up the ice", [{ graphic: "", through: true },
+  { switch: SW_DOCK_CLEARED, graphic: "Followers/SNORUNT", direction: 4, step_anime: true, through: true,
+    script: "FT.sopo_on_the_climb(@event_id)" },
+  { switch: SW_DOCK_CLEARED, self_switch: "A", graphic: "", through: true }])
 # the camp at the end of the dock: rest, or go home (FT.solstice_camp)
 so.event(19, 57, "Your camp", [{ graphic: "BW_Sailor", direction: 8, script: "FT.solstice_camp(@event_id)" }])
 so.event(104, 13, "The skull's cave", [{ trigger: 1, commands: [so.send(:command, 201, [0, ID[:statue_fields], 14, 31, 8, 0])] }])
@@ -177,16 +183,12 @@ end
 { cruelty: [2, 10, 4], endurance: [22, 10, 6], isolation: [12, 0, 8], preservation: [10, 18, 4] }.each_with_index do |(k, (x, y, d)), i|
   hl.event(x, y, "Door of #{k}", [{ tile_id: 582, trigger: 1, script: "FT.test_door(:#{k}, @event_id)" }])
 end
-# No way back out but the way you came: a rope down through the jaw (notes 13 E12)
-hl.event(12, 19, "Rope down to the jaw", [{ trigger: 1, through: true, commands: [hl.send(:command, 201, [0, ID[:gate], 9, 4, 2, 0])] }])
+# (one way in: the jaw's prompt says so, 038 grimskalle_jaw; notes 13 E12)
 # What the three shortcuts are for (notes 13 E13): each makes the climb easier, none skips a Test.
 SW_HALL_SPRING, SW_HALL_CACHE, SW_HALL_BACKDOOR = 4185, 4186, 4187
 hl.event(7, 5, "Warm spring", [{ graphic: "", through: true },
   { switch: SW_HALL_SPRING, tile_id: 774, script: "FT.hall_shortcut(:spring, @event_id)" }])
-hl.event(17, 15, "Nass's cache", [{ graphic: "", through: true },
-  { switch: SW_HALL_CACHE, tile_id: 780, script: "FT.hall_shortcut(:cache, @event_id)" }])
-hl.event(7, 15, "Ukuma's back door", [{ graphic: "", through: true },
-  { switch: SW_HALL_BACKDOOR, tile_id: 582, script: "FT.hall_shortcut(:backdoor, @event_id)" }])
+# (Nass's and Ukuma's rewards are given at the jaw: 038 grimskalle_jaw)
 # the crown stair (behind the preservation door, the hall's south passage is the way in; the stair is east of the tablets)
 hl.event(18, 4, "Stair of ice", [
   { tile_id: 582, script: "FT.talk(:crown_stair_shut, @event_id)" },
