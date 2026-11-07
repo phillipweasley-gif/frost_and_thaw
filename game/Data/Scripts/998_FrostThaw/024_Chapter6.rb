@@ -501,10 +501,8 @@ module FrostThaw
          as(:reptin, "...And that's the working on it."),
          as(:alberica, "Pour it somewhere useful, sweetheart. Like in me."),
          as(:wyn, "(very quietly) Um. There's... a second pot. I made it. It's mushroom."),
-         as(:wyn, "Root-chicory and cap. It's good for you.")])
-    # (owner, 2026-11-07: one choice in the scene: your own cup, and a small lift for your team)
-    pick_coffee
-    say([mm ? "You squint at it." : "Meat Meat squints at it.",
+         as(:wyn, "Root-chicory and cap. It's good for you."),
+         mm ? "You squint at it." : "Meat Meat squints at it.",
          as(:meat_meat, "Mushroom coffee."),
          as(:wyn, "It's very gentle."),
          as(:meat_meat, "Meat Meat does not want gentle. Meat Meat wants to hear colours."),
@@ -512,7 +510,11 @@ module FrostThaw
          as(:meat_meat, "...Meat Meat will kill for you, mushroom friend."),
          as(:wyn, "Oh. Oh, please don't. But thank you."),
          as(:alerion, "That's a compliment."),
-         as(:wyn, "I know. That's the part that worries me."),
+         as(:wyn, "I know. That's the part that worries me.")])
+    # (owner, 2026-11-07: one choice in the scene: your own cup, and a small lift for your
+    # team; placed mid-scene so neither half runs past 25 boxes without an input)
+    pick_coffee
+    say([
          as(:alerion, "(sipping) This is good."),
          as(:alerion, "...I don't like that it's good."),
          as(:alberica, "That's the most feelings Alerion's had all week. Wyn, marry me."),
