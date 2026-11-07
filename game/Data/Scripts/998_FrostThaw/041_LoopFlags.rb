@@ -162,3 +162,10 @@ module FrostThaw
                             rumour_robes rumour_secrets rumour_spores scribe_met selrae_courted selrae_halo_known
                             staff_attuned tree_leans_verdant wheel_explained]).uniq!
 end
+
+# scene3 j: Grimskalle and the endings (2026-11-07). Act III has no fallback
+# list: the loop's Act III skip runs on the snapshot taken at the Hall
+# (loop_snapshot(:act3)). New Act III flags, for the record: test_<key>_door_seen
+# (each Hall door's carving read once), hall_cache_taken (Nass's cache),
+# toast_empty_chair / toast_everyone (the Festival's toast, read by Hellen
+# after the end), loop_skip_asked_act3.

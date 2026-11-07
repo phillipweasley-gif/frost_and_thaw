@@ -144,6 +144,9 @@ gd.cutscene(21, 30, :garden_of_death)
                                            step_anime: false, walk_anime: false, script: "FT.talk(:garden_block, @event_id)" }])
 end
 gd.event(13, 28, "Nass", [{ graphic: "BW (40)", direction: 2, opacity: 120, script: "FT.nass(@event_id)" }])
+# the talking orb in Nass's hands, so Skant's lines have someone to come from (notes 13 §2)
+gd.event(14, 28, "Professor Skant (an orb)", [{ graphic: "Followers/SOLOSIS", direction: 2, opacity: 160, step_anime: true,
+                                               script: "FT.nass(@event_id)" }])
 gd.event(19, 11, "Ice troll", [
   { graphic: "Followers/PILOSWINE", direction: 2, step_anime: true, script: "FT.ice_troll(@event_id)" },
   { switch: SW_TROLL_DOWN, graphic: "", through: true }
@@ -155,7 +158,10 @@ save(gd, :garden)
 gt = cave_map(20, 20)
 paint(gt, [4, 4, 12, 11], [8, 15, 3, 3])
 [8, 9, 10].each { |x| gt.warp(x, 17, ID[:garden], 18, 5, 2, name: "Back down") }
-gt.event(10, 9, "Ukuma", [{ graphic: "Followers/WALREIN", direction: 4, step_anime: true, move_type: 0, script: "FT.ukuma(@event_id)" }])
+# Ukuma slides round and round his rink (notes 13 E8): a loop round the middle of the ice
+gt.event(10, 9, "Ukuma", [{ graphic: "Followers/WALREIN", direction: 4, step_anime: true, move_speed: 4, move_frequency: 5,
+                            move_route: [[2, []], [2, []], [1, []], [1, []], [3, []], [3, []], [4, []], [4, []]],
+                            script: "FT.ukuma(@event_id)" }])
 [9, 10].each { |x| gt.event(x, 3, "The skull's jaw", [{ tile_id: 582, script: "FT.grimskalle_jaw(@event_id)" }]) }
 save(gt, :gate)
 
@@ -166,10 +172,21 @@ hl.cutscene(12, 18, :hall_four_winds)
 [[12, 9], [11, 10], [13, 10], [12, 11]].each_with_index do |(x, y), i|
   hl.event(x, y, "Tablet #{i + 1}", [{ tile_id: 800, script: "FT.talk(:four_tablets, @event_id)" }])
 end
+# The four doors: each one a dark opening you can see, carved with its word; the
+# door says whether its vision is still waiting (a lost test can be faced again).
 { cruelty: [2, 10, 4], endurance: [22, 10, 6], isolation: [12, 0, 8], preservation: [10, 18, 4] }.each_with_index do |(k, (x, y, d)), i|
-  tx = ID[k]
-  hl.event(x, y, "Door of #{k}", [{ trigger: 1, commands: [hl.send(:command, 201, [0, tx, 9, 10, 8, 0])] }])
+  hl.event(x, y, "Door of #{k}", [{ tile_id: 582, trigger: 1, script: "FT.test_door(:#{k}, @event_id)" }])
 end
+# No way back out but the way you came: a rope down through the jaw (notes 13 E12)
+hl.event(12, 19, "Rope down to the jaw", [{ trigger: 1, through: true, commands: [hl.send(:command, 201, [0, ID[:gate], 9, 4, 2, 0])] }])
+# What the three shortcuts are for (notes 13 E13): each makes the climb easier, none skips a Test.
+SW_HALL_SPRING, SW_HALL_CACHE, SW_HALL_BACKDOOR = 4185, 4186, 4187
+hl.event(7, 5, "Warm spring", [{ graphic: "", through: true },
+  { switch: SW_HALL_SPRING, tile_id: 774, script: "FT.hall_shortcut(:spring, @event_id)" }])
+hl.event(17, 15, "Nass's cache", [{ graphic: "", through: true },
+  { switch: SW_HALL_CACHE, tile_id: 780, script: "FT.hall_shortcut(:cache, @event_id)" }])
+hl.event(7, 15, "Ukuma's back door", [{ graphic: "", through: true },
+  { switch: SW_HALL_BACKDOOR, tile_id: 582, script: "FT.hall_shortcut(:backdoor, @event_id)" }])
 # the crown stair (behind the preservation door, the hall's south passage is the way in; the stair is east of the tablets)
 hl.event(18, 4, "Stair of ice", [
   { tile_id: 582, script: "FT.talk(:crown_stair_shut, @event_id)" },
@@ -183,8 +200,12 @@ save(hl, :hall)
   paint(t, [3, 3, 14, 9])
   [[4, 4], [15, 4], [4, 10], [15, 10]].each { |x, y| t.set(x, y, 2, 792) }
   t.event(1, 1, "Test #{k}", [{ trigger: 3, script: "FT.scene(:test_#{k}, @event_id)" }, { self_switch: "A" }])
-  t.event(9, 4, "Keeper", [{ graphic: { cruelty: "BW (72)", endurance: "BW029", isolation: "BW (33)", preservation: "BW (59)" }[k],
-                            direction: 2, opacity: 180, script: "FT.talk(:test_done, @event_id)" }])
+  # The test's shade, named as its lines name it so its words get a bubble (notes 13 E6);
+  # gone once its tablet cracks (FT.finish_test sets its self switch)
+  shade = { cruelty: "Gunvald's Shade", endurance: "Jarund's Shade", isolation: "The Tiger Queen's Shade", preservation: "Still Keeper" }[k]
+  t.event(9, 4, shade, [{ graphic: { cruelty: "BW (72)", endurance: "BW029", isolation: "BW (33)", preservation: "FT_alberica_rune" }[k],
+                          direction: 2, opacity: k == :preservation ? 140 : 180, script: "FT.talk(:test_done, @event_id)" },
+                        { self_switch: "A", graphic: "", through: true }])
   [8, 9, 10].each { |x| t.warp(x, 11, ID[:hall], 12, 16, 8, name: "Back to the hall") }
   save(t, k)
 end
