@@ -928,10 +928,12 @@ if Events.respond_to?(:onStepTaken) && Events.respond_to?(:onMapChange)
     begin
       busy = ($game_system.map_interpreter.running? rescue false) || ($game_temp.message_window_showing rescue false)
       FrostThaw.frozen_run_ship_step if FrostThaw.respond_to?(:frozen_run_ship_step)
-      # (box rules: a map that has just played a scene keeps its omen or vignette for the next map,
-      # so they never run straight on from someone else's long scene)
-      FrostThaw.instance_variable_set(:@rs_step_pending, false) if FrostThaw.instance_variable_get(:@rs_scene_here)
-      if FrostThaw.instance_variable_get(:@rs_step_pending) && !busy
+      # (box rules: after someone's scene on this map, the omen or vignette waits until you've
+      # walked a few steps, so it never runs straight on from that scene)
+      steps = FrostThaw.instance_variable_get(:@rs_steps_since_say).to_i + 1
+      FrostThaw.instance_variable_set(:@rs_steps_since_say, steps)
+      quiet = !FrostThaw.instance_variable_get(:@rs_scene_here) || steps >= 4
+      if FrostThaw.instance_variable_get(:@rs_step_pending) && !busy && quiet
         FrostThaw.instance_variable_set(:@rs_step_pending, false)
         FrostThaw.rootspire_step
       end
