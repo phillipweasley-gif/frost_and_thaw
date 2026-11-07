@@ -897,7 +897,7 @@ module FrostThaw
     al = herald?(:alberica)
     alb = al ? nil : (Stage.speaker("ALBERICA") || (companions.include?(:alberica) ? Stage.summon(:alberica) : nil))
     Stage.remove_actor(auril_diamond) if auril_diamond
-    say([outsider? ? "#{al ? 'You hold' : 'Alberica holds'} the diamond. It's very cold, and very small." :
+    say([outsider? ? "#{al ? 'You hold' : 'Alberica holds'} it up to the light, in both hands." :
                      "#{al ? 'You pick' : 'Alberica picks'} the diamond up. It's very cold, and very small."])
     speak(:alberica, "You don't have to keep everything. Open your hand. It comes back.",
           "...You can let go. It comes back.")
@@ -1082,6 +1082,9 @@ module FrostThaw
                     ["In the Wind-Glass Library, Alberica finds a crystal page in her own hand, very old.",
                      "She reads it, laughs, and starts to write it.",
                      "The Council gives her a new title: Keeper of Time. She makes them spell it properly."])
+    # Skant's "I'll tell you the thought later" (13.05), paid (notes 13 E13)
+    v[:library] << ["On a shelf, a talking orb finally tells a librarian the thought.",
+                    "It takes three days. It was a good one."] if flag?(:skant_freed)
     if flag?(:reptin_warden_vow)
       v[:chasm] << [herald?(:reptin) ? "Every winter you go back to the Cackling Chasm, as you swore." :
                                        "Every winter Reptin goes back to the Cackling Chasm, as he swore.",
@@ -1121,7 +1124,7 @@ module FrostThaw
           owl = Stage.actor(:owl, 31, 26, 2, graphic: "Followers/NOCTOWL")
           say(["Midwinter. On a branch over the market, a white owl sits very still.",
                "It watches the people under it. It doesn't blink.",
-               flag?(:sephek_turned) ? "In Lonelywood, a man in a coat looks up at the sky, and buys more soup." : nil].compact)
+               flag?(:sephek_turned) ? "Three weeks to midwinter's night. In Lonelywood, Sephek has started counting." : nil].compact)
           Stage.remove_actor(owl) if owl
         end
       end
