@@ -160,6 +160,8 @@ module FrostThaw
     "AUTUMN COURIER" => "BWRichboy", "AUTUMN COURTIER" => "BWSocialite", "OLD LOYALIST" => "BW_oldman-drunk",
     "PILGRIM" => "FT_sephek", "CORSAIR RUNNER" => "BW_Sailor", "INITIATE" => "BW (22)", "DOCKWORKER" => "BW (19)",
     "RAZZILITH" => "FT_razzilith", "KETHAN" => "BW (71)", "HELLEN" => "FT_hellen", "EIRWEN" => "FT_eirwen_solglass",
+    "MIRA" => "FT_mira_of_the_north_wind", "LUMIN" => "FT_wennen_lumin", "ANDUIN" => "FT_anduin", "PHILDENDRIN" => "FT_phildendrin",
+    "EIRA" => "FT_myconid_eira", "SPORELING" => "Followers/SHROOMISH", "WARDEN LIS" => "BW (62)",
     "LANTERN-CARVER" => "FT_halo_disciple_male", "DRUM-KEEPER" => "FT_halo_disciple_female", "MASKED DEVOTEE" => "FT_halo_disciple_female"
   }
 
