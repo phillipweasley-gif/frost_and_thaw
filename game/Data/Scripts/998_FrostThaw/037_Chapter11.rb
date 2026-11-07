@@ -43,7 +43,7 @@ module FrostThaw
     say(["The Rooted Hearth, the night of the vote. The bard is playing the Heralds' song, badly.",
          "HELLEN: (stopping, eyes wet) New verse. Glimmer's. The city calls him the Dagger Reborn.",
          cl(:alerion, "(to Hellen) The verse is good. Keep going."),
-         cl(:meat_meat, "Meat Meat has had four coffees. Meat Meat can hear colours."),
+         cl(:meat_meat, "Meat Meat has had four coffees. Meat Meat is vibrating. Fondly."),
          cl(:reptin, "(to the room) She means she's happy. Mostly."),
          al ? "You set down your cup. The rune on your chest is glowing through your shirt." :
               "Alberica sets down her cup. The rune on her chest is glowing through her shirt.",
@@ -51,12 +51,13 @@ module FrostThaw
     (pbBGMFade(1.0) rescue nil)
     Stage.overlay("O-04", fps: 4, stop_at: 2, fade: 0, wait: true)   # frost in from the edges
     $game_screen.start_tone_change(Tone.new(60, 60, 80, 120), 20) rescue nil
+    Stage.theme("newmoonIsland")                                      # (notes/11 E7: her own music, not the tavern's)
     auril = (Stage.actor(:auril, $game_player.x, $game_player.y - 2, 2, graphic: "FT_auril_furs") rescue nil)
-    say(["A woman in frost-furs is sitting across the table. Nobody else can see her."])
+    say(["A woman in frost-furs is sitting across the table. Nobody else turns to look."])
     # The outsider was marked at the last mirror (Ch5): this is the first time
     # since then that Auril has been in a room with them.
     if outsider?
-      say(["You can. Since the last mirror, you've been on her wheel."])
+      say(["You can see her. You've felt her eyes on you since the last mirror."])
       c = pbMessage(_INTL("(She turns her head toward you.)"), [_INTL("(Look back.)"), _INTL("(Look away.)")], -1)
       if c == 0
         set_flag(:looked_at_auril)
@@ -66,24 +67,30 @@ module FrostThaw
         say(["AURIL: You'll look, in the end. Everyone does."])
       end
       say(["She turns back to #{al ? 'you' : 'Alberica'}."])
+    elsif al
+      c = pbMessage(_INTL("(She's looking at you.)"), [_INTL("(Look back.)"), _INTL("(Look at your cup.)")], -1)
+      say([c == 0 ? "AURIL: (pleased) There you are, songbird." : "AURIL: The cup won't help you."])
+    else
+      pbMessage(_INTL("(You can't move. Try?)"), [_INTL("(Try.)")], 0)
+      say(["Not a finger. You can only watch."])
     end
     say(["AURIL: Hear the wheel, and the ones who bind it.",
-         "AURIL: The dark half guards silence, a sentinel chained to frost.",
-         "AURIL: The light half births flame. And flame consumes as easily as it warms. The spark is spent.",
          "Her breath frosts the table between you.",
          "AURIL: Life and death march only so long as they move. Stop them, and all is mine.",
          "AURIL: And memory keeps the key. Keys open, Alberica. They also lock."])
     speak(:alberica, "(through her teeth) Get out of my head.", "(barely) ...Get out.")
     # The omens she sent all through the city (048_E): she knows which ones you saw.
     if (counter(:omens_seen) rescue 0).to_i >= 3
-      say(["AURIL: You've seen them. Every sign. Frost on his shadow. Vines on her breath. Your own throat, cold.",
+      say(["AURIL: You've seen my signs. Frost on his shadow. Vines on her breath. Your throat, cold.",
            *{ never: ["AURIL: \"Never,\" you told yourself."],
               not_yet: ["AURIL: \"Not yet,\" you said. Every night, \"not yet.\""] }[herald?(:alberica) ? state[:omen_secret] : nil].to_a,
            "AURIL: You told no one. That's how I knew you were mine."])
     end
+    Stage.walk(auril, PBMoveRoute::Down) if auril
     say(["She leans in.",
-         "AURIL: You are my vessel, little songbird. You always were.",
-         "AURIL: Guard them if you must. But remember: they cannot escape their fates, and the wheel turns for me.",
+         "AURIL: You are my vessel, little songbird. You always were."])
+    speak(:alberica, "(very quiet) I don't sing for you.", "(barely) ...I don't sing for you.")
+    say(["AURIL: Guard them if you must. The wheel turns for me.",
          "AURIL: Come and be beautiful forever."])
     # Herald Alberica knows there was a bargain (her prologue): let her connect it (context 11 §6).
     say(["(Keys. The family's bargain. Nobody ever said what it locked.)"]) if al
@@ -99,6 +106,7 @@ module FrostThaw
     set_flag(:auril_whisper)
     add_counter(:story_beats)
     pbSEPlay("Earth3") rescue nil
+    Stage.cry(:DRAGONAIR)                                          # (her scream, from the crown)
     say(["Far above, at the crown of the tree, something screams.",
          "A dragon. Frostina."])
     # Context 11 M11-2: Alerion runs; you follow.
@@ -106,6 +114,8 @@ module FrostThaw
       speak(:alerion, "(already on his feet) She's calling me. Up. Now.", "(already on his feet) ...Up. Now.")
       runner = Stage.summon(:alerion)
       Stage.leave(runner, 5, 12) if runner
+      # (notes/11 E5: you run; it isn't done to you)
+      pbMessage(_INTL("(He's out of the door.)"), [_INTL("(Run after him.)")], 0) if !herald?(:alerion)
     end
     Stage.cleanup rescue nil
     set_switch(SW_CH11_SHRINE, true)
@@ -123,7 +133,7 @@ module FrostThaw
       ["Eline holds a heart. It beats, but there's no light in it: a man's heart, cold and clean.",
        "ELINE: When the roots fell, we went down for it. It was beating in the rubble.",
        "ELINE: You burned her out of it. We felt it in every shrine in the Dale.",
-       "ELINE: It doesn't matter. He kept faith four hundred years with no light to see by."]
+       "ELINE: No matter. He kept faith four hundred years with no light to see by. He will again."]
     elsif flag?(:shard_destroyed)
       ["Eline holds a fistful of ice splinters, threaded together on Halo prayer-wire.",
        "They're beating, out of step with each other.",
@@ -160,6 +170,7 @@ module FrostThaw
     set_switch(SW_CH11_SHRINE, false)
     return if flag?(:frostina_taken)
     run_to_the_shrine
+    Stage.theme("sealed_chamber")                     # (notes/11 E7: the Frostmaiden's music at her Saint's waking)
     px, py = ([$game_player.x, $game_player.y] rescue [0, 0])
     real = stage_event("Frostina")
     real.transparent = true if real rescue nil          # the scene's Frostina stands in for her
@@ -174,8 +185,15 @@ module FrostThaw
          "The Halo carried him up from the Still Sky Shrine while the city voted.",
          flag?(:canopy_free) ? "(The Canopy stayed free, as you argued. Nobody was watching the stair.)" : nil,
          "Matron Eline kneels beside him. Last time, she got away from you by a back door.",
-         *saint_heart_lines,
-         "She presses it into the hollow in Sephek's chest."].compact)
+         *saint_heart_lines].compact)
+    # (the decisive beat: you try for the heart, and it doesn't change it)
+    c = pbMessage(_INTL("(Eline lifts the heart to the hollow in his chest.)"), [_INTL("Go for the heart"), _INTL("(Hold still.)")], -1)
+    if c == 0
+      robe = $game_map.events.values.find { |e| e.name.to_s == "stage_halo_robe" } rescue nil
+      Stage.walk_to(robe, $game_player.x, $game_player.y - 1) if robe
+      say(["Two of the Halo step into your way. You're one stride too slow."])
+    end
+    say(["She presses it into the hollow in Sephek's chest."])
     Stage.stop_fx(heart)
     if sephek
       Stage.fx("E-14", sephek, frames: 6, oy: 36)
@@ -183,7 +201,7 @@ module FrostThaw
     end
     say(["The ice cracks. Sephek breathes in, four hundred years late.",
          "His eyes open, blue as a frozen lake.",
-         flag?(:shard_destroyed) ? "SEPHEK: (his voice coming in pieces) ...It's cold. It's so loud in here. Why is it so loud?" :
+         flag?(:shard_destroyed) ? "SEPHEK: (in pieces) ...It's cold. It's so loud in here. Why is it so loud?" :
                                    "SEPHEK: (very quietly) ...It's cold. Why is it still so cold?",
          "ELINE: (kneeling) The Frost Saint walks again.",
          herald?(:alerion) ? "You got here first. You always hear her first." :
@@ -199,6 +217,7 @@ module FrostThaw
     sephek_minor_avatar
     iskra_takes_frostina(px, py, frostina, sephek)
     down = stage_act(:alerion, :down, dx: 0, dy: 1, dir: 2, per: 6)   # in the snow on the steps
+    Stage.cry(:SALAMENCE)                                      # Razzilith, at the sky (notes/11 E6)
     if herald?(:alerion)
       say(["You're lying in the snow on the Shrine steps, a hand pressed to your chest.",
            "Where her second heartbeat was. It's so faint now.",
@@ -296,10 +315,14 @@ module FrostThaw
          "She goes still inside it, her eyes still open.",
          "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home.",
          "SEPHEK: To Solstice. To the nest she fell from. She was always going home.",
-         as(:alerion, "(very quietly) She was never Auril's.")])
+         as(:alerion, "(very quietly) She's not hers.")])
     # the bible's beat: Alerion, her Dragoon, is thrown down trying to stop them
     al = herald?(:alerion)
     goer = al ? nil : Stage.summon(:alerion)
+    if !al
+      c = pbMessage(_INTL("(Alerion is already moving.)"), [_INTL("Go with him"), _INTL("Shout for him to stop")], -1)
+      say([c == 0 ? "You're two steps behind him. It isn't close enough." : "He doesn't hear you. He doesn't stop."])
+    end
     Stage.walk(goer, PBMoveRoute::Up) if goer
     $game_screen.start_shake(7, 8, 16) rescue nil
     pbSEPlay("Wind1") rescue nil
@@ -322,39 +345,58 @@ module FrostThaw
   end
 
   # Context 11 M11-4: three hearts, the act's doorway, and Alberica's secret out.
+  # Purpose: the party learns what Auril wants with three hearts and who the
+  # third is; Alberica's secret comes out; Reptin wants her kept home and she
+  # won't be (dialogue 11 Top 2: a disagreement, not a briefing).
   def scene_three_hearts
+    Stage.theme("sinjoh")                            # (notes/11 E7: a quiet track after the roc)
     lumin = stage_event("Lumin Weavemoss")
     Stage.approach(lumin) if lumin
     say(["Lumin comes down the Shrine steps with an old Wennen book open in both paws.",
          "LUMIN: (paws shaking) \"One heart of ice is grief. Two is a burden.\"",
          "LUMIN: \"Three is a summons.\"",
-         flag?(:knows_three_hearts) ? cl(:reptin, "Luna Carver told us that. Four hundred years ago. Last month.") : nil,
-         "LUMIN: Shimmer's heart, sung into that egg. And his, beating in him. Two."].compact)
+         flag?(:knows_three_hearts) ? cl(:reptin, "Luna Carver told us that. Four hundred years ago. Last month.") : nil].compact)
+    if with_or_is?(:alerion)
+      say([as(:alerion, "(very low) Two, then. Frostina, and him. ...Who's the third?")])
+    else
+      say(["LUMIN: Shimmer's heart, sung into that egg. And his, beating in him. Two."])
+    end
     speak(:alberica, "(a hand on her chest) And she wants me for the third.", "(a hand on her chest) ...And the third's me.")
     if with_or_is?(:alberica)
       say([cl(:reptin, "(turning) ...You knew. How long have you known?")].compact)
-      quiet = speak(:alberica, "Since the festival. She's been counting us off. Dark half. Light half.",
+      quiet = speak(:alberica, "Since the festival. She's been counting us off, one by one.",
                     "...Since the festival. I didn't tell you.")
       # Owner's decision 3: the family bargain, hinted here; the whole of it comes the night before the end.
       say([as(:alberica, "(quieter) My family made her a bargain once. Nobody ever said the price.")])
-      say([as(:alberica, "The spark was Glimmer. Life and death's you. Memory's me. I didn't tell you.")]) if quiet == 0
+      say([as(:alberica, "Life and death, that's you, Reptin. Memory's me. And I didn't tell you.")]) if quiet == 0
       say([cl(:alerion, "(flat) No. You didn't.")].compact)
     end
     # Selrae comes up the root-lift: she heard the scream from the Hall, and she knows this rite.
     selrae = Stage.actor(:selrae, 12, 33, 8, graphic: "FT_winter_matron_selrae_vorn")
     Stage.approach(selrae) if selrae
     say(["SELRAE: (out of breath) I heard the scream. I know this rite. I sat with them for years.",
-         "SELRAE: Solstice. Her island in the Sea of Moving Ice.",
+         "SELRAE: She'll do it on Solstice, her island. In her own house.",
          "SELRAE: She'll pour herself into all three at once, and walk out of there in a body.",
-         "LUMIN: The Wennen had a name for that. The Rewritten Auril.",
-         as(:meat_meat, "Then Meat Meat breaks her.")])
+         "LUMIN: (very small) The old texts have a name for that. The Rewritten Auril."])
+    if with_or_is?(:reptin) && with_or_is?(:alberica)
+      speak(:reptin, "Then Alberica stays here. In Rootspire. We go, and she stays.", "...Then you stay here.")
+      speak(:alberica, "(very plain) No. She'd only come here for me. With all of you gone.",
+                       "(very plain) ...No. She'd only come here.")
+      if !herald?(:alberica) && !herald?(:reptin)
+        # (a real disagreement, and the player has a say in it)
+        c = pbMessage(_INTL("(Reptin looks at you.)"), [_INTL("She's right. She comes"), _INTL("She should stay")], -1)
+        say([c == 1 ? "REPTIN: (to Alberica) You see? ...But it's your neck. It always was." :
+                      "REPTIN: (a long breath) ...Then I'm standing next to her. The whole way."])
+      end
+    end
+    say([as(:meat_meat, "Meat Meat breaks her.")])
     if with_or_is?(:reptin)
-      speak(:reptin, "Then we go and get Frostina back.", "...We get her back.")
-      speak(:reptin, "And on the way, we decide what happens to Auril.", "...And we decide what happens to Auril.")
+      speak(:reptin, "Frostina first. Then we decide what happens to Auril.", "...Frostina first. Then Auril.")
     end
     if with_or_is?(:wyn)
       speak(:wyn, "(quietly) ...Nobody's taking Alberica. I won't let them.", "(quietly) ...Nobody's taking her.")
-      speak(:alberica, "(softly) ...Look at you. My brave little mushroom.", "(softly) ...Look at you.") if with_or_is?(:alberica)
+      speak(:alberica, "(softly) ...Look at you. All fierce. Careful, I'll start believing you.",
+                       "(softly) ...Look at you.") if with_or_is?(:alberica)
     end
     # The Act III doorway for the player (Bell, the walk-away test): two dragons turn the wheel.
     if outsider?
@@ -374,7 +416,7 @@ module FrostThaw
       say(["LUMIN: Two dragons turn the wheel. Never one. With her gone, it stays stuck."])
     end
     # Divine Rejuvenation: the Halo seeded the Heartroot with Auril's relics.
-    say(["SELRAE: (very low) You broke him and he got up again? Then it's begun.",
+    say(["SELRAE: (very low) He got up again, after you broke him? Then it's begun.",
          "SELRAE: The Halo carried three of her relics into the Heartroot. Black ice. I let them in.",
          "SELRAE: While one of them stands, the Saint stands back up. Every time.",
          cl(:alerion, "Then we break them first."),
@@ -429,6 +471,8 @@ module FrostThaw
           elsif !outsider? then "KELYN: Heralds. The city can't order you north. It's asking."
           end
     say([ask]) if ask
+    # (the decisive beat of the scene gets an input: the Council asks, you answer)
+    pbMessage(_INTL("(The Council waits for an answer.)"), [_INTL("We're going north"), _INTL("(Nod.)")], -1)
     four_chairs_consequences if respond_to?(:four_chairs_consequences)
     say([as(:alerion, "(bandaged, standing anyway) I'm coming.")])
     speak(:reptin, "You can barely walk.", "...You can barely walk.") if with_or_is?(:reptin)
@@ -436,14 +480,14 @@ module FrostThaw
          cl(:meat_meat, "Ice Prince can lean on Meat Meat. Meat Meat is short. It will be funny.")].compact)
     speak(:alberica, "And I'm going. If she wants me, she can ask me to my face.",
                      "...I'm going. She doesn't get to wait for me.")
-    say([cl(:reptin, "(sighing) Then I'd better pack something nice. I'm not meeting a god in travel clothes.")].compact)
+    say([cl(:reptin, "Then I'd better pack something nice. I'm not meeting a god in travel clothes.")].compact)
     # The White Vault thread: Eirwen keeps the second sigil; Sephek dropped the third.
     eirwen = stage_event("stage_eirwen") || Stage.actor(:eirwen, 12, 19, 8, graphic: "FT_eirwen_solglass")
     Stage.approach(eirwen) if eirwen
     say(["As the Council rises, Eirwen Solglass pads over, barefoot on the cold floor."])
     eirwen_sigil
     if !try_merge_sigils && !flag?(:sigils_merged)
-      say(["EIRWEN: Three sigils, for a door I've never found. I've given you mine. Keep it for after."]) if sigils_held >= 3
+      say(["EIRWEN: Three sigils for a door I've never found. Mine's yours now. Don't lose it."]) if sigils_held >= 3
       if sigils_held < 3
         say(["EIRWEN: The sigils are keys, for a door I've never found. Keep mine for after.",
              "EIRWEN: The Echo Gate's mirror-wraiths keep another. Linger in the Gate and listen."])
@@ -468,7 +512,7 @@ module FrostThaw
   def relic_goal
     return if !flag?(:knows_auril_relics) || flag?(:auril_relics_destroyed)
     n = relics_left rescue 3
-    side_goal(:auril_relics, "Before you fly: Auril's relics in the Heartroot, #{n} of 3 left. Smash them, and Sephek stays down.",
+    side_goal(:auril_relics, "Before you fly: smash Auril's #{n} #{n == 1 ? 'relic' : 'relics'} in the Heartroot, and Sephek stays down.",
               done: :auril_relics_destroyed)
   end
 

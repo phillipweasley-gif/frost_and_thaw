@@ -286,7 +286,7 @@ bw.cutscene(4, 19, :beyond_wall)
 once_trigger(bw, 9, 20, "Frozen time 1", "FT.time_hazard(1, @event_id)")
 once_trigger(bw, 33, 13, "Frozen time 2", "FT.time_hazard(2, @event_id)")
 once_trigger(bw, 29, 2, "Frozen time 3", "FT.time_hazard(3, @event_id)")
-bw.event(20, 21, "Frozen Rootwarden", [{ graphic: "BW029", direction: 6, opacity: 170, step_anime: false, walk_anime: false,
+bw.event(20, 21, "Frozen Rootwarden", [{ graphic: "BW030", direction: 6, opacity: 170, step_anime: false, walk_anime: false,
                                          script: "FT.frozen_rootwarden(@event_id)" }])
 bw.event(22, 7, "Mead hall door, under ice", [{ tile_id: ICE_CRYSTAL, script: "FT.drowned_hall_ice(@event_id)" }])
 bw.sign(18, 8, :drowned_hall_sign)
@@ -448,7 +448,7 @@ fx, fy = place_near(rs, 22, 22)
 rs.event(fx, fy, "Fallen leaves", [{ graphic: "", through: true }, { switch: SW_TRIALS, tile_id: 0, graphic: "Followers/SEEDOT", direction: 2,
                                                                      script: "FT.fallen_leaves(@event_id)" }])
 rs.event(8, 21, "Echo Gate frost", [{ graphic: "", through: true }, { switch: SW_ECHO_POCKET, tile_id: ICE_CRYSTAL, script: "FT.echo_frost(@event_id)" }])
-person_when(rs, 11, 22, "Sorrel", "BW029", "FT.wyn_emissary(@event_id)", SW_TRIALS, dir: 4)
+person_when(rs, 11, 22, "Sorrel", "BW028", "FT.wyn_emissary(@event_id)", SW_TRIALS, dir: 4)
 resave(rs, 2050)
 
 # 2053 the Rooted Hearth: the hush; Reptin's pack; the regulars sign.
@@ -462,8 +462,9 @@ resave(rh, 2053)
 ch = reopen(2054)
 sel = find_event(ch, "Selrae Vorn")
 sel.pages << ch.build_page(sel.pages[0], { switch: SW_FOUR_SEASONS, graphic: "FT_winter_matron_selrae_vorn", direction: 2, script: "FT.selrae_bid(@event_id)" })
-person_when(ch, 12, 13, "Captain Kethan Vale (hearing)", "BW029", "FT.wyn_hearing(@event_id)", SW_WYN_HEARING, dir: 2)
-person_when(ch, 7, 11, "Spring and Winter", "FT_high_speaker_kelyn_of_spring", "FT.spores_debate(@event_id)", SW_TRIALS, dir: 6)
+person_when(ch, 12, 13, "Captain Kethan Vale (hearing)", "BW061", "FT.wyn_hearing(@event_id)", SW_WYN_HEARING, dir: 2)
+# A clerk calls the spores hearing; the real Kelyn and Selrae walk over (notes/10 E18: no two-in-one stand-in)
+person_when(ch, 7, 11, "Court clerk (spores hearing)", "BW066", "FT.spores_debate(@event_id)", SW_TRIALS, dir: 6)
 # The stair in the back corner (the base map's closed-off upper floor) climbs the
 # tower to Summer's quarters (2173): sealed until the trial week, and after it.
 st = ch.map.events.values.find { |e| e.x == 6 && e.y == 4 }
@@ -475,7 +476,7 @@ resave(ch, 2054)
 # down to the Smuggler's Run; Mira's trial-week page; the dockers sign.
 rt = reopen(2055)
 rt.map.events.delete_if { |_id, e| e.name == "To the Glasswater" }      # (the Glasswater is past the Wall now)
-person_when(rt, 12, 19, "Ivo", "BW029", "FT.pell(@event_id)", SW_PELL, dir: 4)
+person_when(rt, 12, 19, "Ivo", "BW078", "FT.pell(@event_id)", SW_PELL, dir: 4)
 rt.npc(24, 9, "BW (38)", :smuggler_dockworker, dir: 2, name: "Dockworker")
 # (The way down to the Undercity is the crack at the far end of the Smuggler's Run, 2198, below.)
 mira = find_event(rt, "Mira of the North Wind")
@@ -510,18 +511,20 @@ end
 # and its voices; the Fields debate; Talion; the two spirits; the thin place in
 # the Wall out to the Glasswater.
 fl = reopen(2060)
-person_when(fl, 40, 12, "Wall foreman", "BW (72)", "FT.wall_crew(@event_id)", SW_WALL_WORKS, dir: 4)
+person_when(fl, 40, 12, "Wall foreman", "BW057", "FT.wall_crew(@event_id)", SW_WALL_WORKS, dir: 4)
 person_when(fl, 39, 16, "Captain Rheven (wall)", "FT_captain_rheven_stormbranch", "FT.rheven_wall(@event_id)", SW_WALL_WORKS, dir: 4)
-person_when(fl, 41, 18, "Winter wolves", "Followers/MIGHTYENA", "FT.wall_wolves(@event_id)", SW_WOLF_RAID, dir: 4)
+# The raid comes to you once the second length of wall is up (notes/10 E33): the wolves run in as actors.
+wwx, wwy = place_near(fl, 41, 18)
+fl.event(wwx, wwy, "Winter wolves", [{ graphic: "", through: true }, { switch: SW_WOLF_RAID, trigger: 3, through: true, script: "FT.wall_wolves(@event_id)" }])
 wrx, wry = place_near(fl, 38, 14)
 fl.event(wrx, wry, "Wall rubble", [{ graphic: "", through: true }, { switch: SW_WALL_WORKS, tile_id: Builder::SIGNPOST_TILE, script: "FT.talk(:wall_rubble, @event_id)" }])
 person_when(fl, 12, 16, "Refugee camp", "BW (37)", "FT.refugee_blankets(@event_id)", SW_REFUGEE_CAMP)
 person_when(fl, 10, 18, "Refugee from Easthaven", "BWParasolLady", "FT.refugee_voice(:easthaven, @event_id)", SW_REFUGEE_CAMP)
 person_when(fl, 15, 18, "Refugee from Bryn Shander", "BW (38)", "FT.refugee_voice(:bryn, @event_id)", SW_REFUGEE_CAMP)
 person_when(fl, 17, 15, "Refugee from Termalaine", "BW (29)", "FT.refugee_voice(:termalaine, @event_id)", SW_REFUGEE_CAMP)
-person_when(fl, 10, 15, "Signer refugees", "BW (30)", "FT.petition_signer(:refugees, @event_id)", SW_PETITIONS)
+person_when(fl, 10, 15, "Signer refugees", "BW (31)", "FT.petition_signer(:refugees, @event_id)", SW_PETITIONS)
 [[17, 19], [20, 18]].each { |x, y| fl.stamp(HAY, x, y) if [[x, y], [x + 1, y], [x, y + 1], [x + 1, y + 1]].all? { |c| walkable?(fl, *c) && !taken?(fl, *c) } }
-person_when(fl, 26, 9, "Debate stage (Fields)", "BW (30)", "FT.debate_stage(:fields, @event_id)", SW_DEBATES)
+person_when(fl, 26, 9, "Debate stage (Fields)", "BW (99)", "FT.debate_stage(:fields, @event_id)", SW_DEBATES)
 person_when(fl, 39, 9, "Talion", "FT_talion", "FT.talion(@event_id)", SW_TALION_FIELDS, dir: 4)
 # (R2's two spirits stand in the Fields from Chapter 6: tools/build_ch6b.rb.)
 fl.event(46, 14, "A thin place in the Wall", [{ through: true }, { switch: SW_GLASSWATER, trigger: 1, through: true,

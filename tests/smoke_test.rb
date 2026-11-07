@@ -10,7 +10,8 @@ rescue StandardError => e; $fails += 1; puts "FAIL #{name}: #{e.class}: #{e.mess
 def echoln(*); end
 def _INTL(s, *a); a.each_with_index { |v, i| s = s.gsub("{#{i + 1}}", v.to_s) }; s; end
 $messages = []
-def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? ($next_choice || 0) : 0; end
+# (a skill challenge shuffles its options: answer it the way the scene told you, as before)
+def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? ($next_choice || (FrostThaw.challenge_pick rescue nil) || 0) : 0; end
 def pbConfirmMessage(t); $messages << t; true; end
 def pbCallBub(*); end
 def validate(*); end
@@ -803,7 +804,8 @@ check("the loop keeps nothing of the story but the loop") {
   FT.start_loop
   !FT.flag?(:act1_done) && FT.counter(:loop_count) >= 1 && FT.flag?(:in_loop) }
 
-def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? ($next_choice || 0) : 0; end
+# (a skill challenge shuffles its options: answer it the way the scene told you, as before)
+def pbMessage(t, cmds = nil, *_); $messages << t; cmds ? ($next_choice || (FrostThaw.challenge_pick rescue nil) || 0) : 0; end
 FT.state[:mode] = :herald; FT.state[:herald] = :alerion
 $messages.clear; $next_choice = 1
 r = FT.speak(:alerion, "(flat) No.", "...Fine.")

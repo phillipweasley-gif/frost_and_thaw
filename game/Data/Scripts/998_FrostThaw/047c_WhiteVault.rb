@@ -130,8 +130,7 @@ module FrostThaw
     pbSEPlay("Saint7") rescue nil
     $game_screen.start_flash(Color.new(220, 240, 255, 180), 20) rescue nil
     say(["The aurora brightens, stretching northward like a path of glass.",
-         "You hold the three Frostshard Sigils together. They merge into one symbol:",
-         "wings spread over a frozen eye.",
+         "You hold the three Frostshard Sigils together. They merge: wings spread over a frozen eye.",
          "The World Tree shivers, and from its roots rises a wind that smells of ancient ice.",
          "Far north, the mirror Frostina froze at Auril's throne splits. Whatever was in it is gone.",
          "Further north still, past where the Wall stood, a door wakes. The White Vault is waiting."])
@@ -148,7 +147,7 @@ module FrostThaw
            "Your hand goes to your throat, where the pendant hung. Something cold pulses there."])
       speak(:alberica, "Gran's door. The one that had to stay shut.", "...I know that door.")
     elsif with_or_is?(:alberica)
-      say([seen ? "ALBERICA: (very quietly) Wings over a frozen eye. I saw that in the well, on the old map." :
+      say([seen ? "ALBERICA: (very quietly) The well showed me a map with that on it. I thought it was a bird." :
                   "ALBERICA: (very quietly) Wings over a frozen eye. I've dreamed that door.",
            "Where her pendant used to hang, something cold pulses. Brightest facing north.",
            "ALBERICA: (a hand at her throat) Gran's door. The one that had to stay shut."])
@@ -163,7 +162,7 @@ module FrostThaw
         say(["ALBERICA: (to you) You said it wasn't mine to pay. Let's find out whose it is."])
       end
     end
-    sayc([cl(:alerion, "Then we know where it is."),
+    sayc([cl(:alerion, "Then it's waiting for us."),
           vault_map_pieces >= 3 ? cl(:reptin, "And with all three pieces of the map, we know where its heart is. Lovely. I hate it.") : nil,
           cl(:meat_meat, "Selrae called it the White Womb. So did Avarice. Meat Meat hates both names."),
           cl(:wyn, "...Something in there is awake. I can hear it counting.")])
@@ -175,7 +174,7 @@ module FrostThaw
   # one of the three Frostshard Sigils"). She hands hers over when it's time.
   def eirwen_sigil
     return if flag?(:sigil_eirwen)
-    say(["EIRWEN: (barefoot, frost-dust in their hair, holding out a crystal) I've kept this since before the Rime.",
+    say(["EIRWEN: (holding out a crystal) We've kept this since before the Rime. Teacher to teacher.",
          "EIRWEN: A Frostshard Sigil. My teacher said: give it to the ones who come back.",
          "EIRWEN: You keep coming back. I think that's you."])
     give(:FT_FROSTSIGIL)
@@ -187,22 +186,37 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   # Returns true if the party stood (it changes the lines; Iskra comes either way).
   def sephek_minor_avatar
-    sayc(["Sephek lifts one hand. Two of the Halo step out of the ranks and throw back their hoods:",
-          "frost druids, their beards white with rime. The snow at the altar's foot boils, and ice mephits climb out of it, giggling.",
-          "SEPHEK: (gently) Mine, while they stand. Let's see how long they stand."])
+    # (notes/11 E6: his followers step forward and the mephits come up out of the snow, on screen)
+    robes = $game_map.events.values.select { |e| e.name.to_s == "stage_halo_robe" }.first(2) rescue []
+    say(["Sephek lifts a hand. Two of the Halo throw back their hoods: frost druids, rimed white."])
+    robes.each { |r| Stage.walk(r, PBMoveRoute::Down) }
+    sx, sy = robes.first ? [robes.first.x, robes.first.y] : [$game_player.x, $game_player.y - 3]
+    mephits = [[-1, 2], [3, 1]].map { |dx, dy| Stage.actor(:ice_mephit, sx + dx, sy + dy, 2, graphic: "Followers/SNORUNT") }.compact
+    mephits.each { |m| Stage.hop(m) }
+    say(["The snow at the altar's foot boils. Ice mephits climb out of it, giggling.",
+         "SEPHEK: Mine, while they stand. Let's see how long they stand.",
+         "(While his followers stand, the cold in him stays strong.)"])
     glaive_resonates
     # rootspire.md Tab 1 (Sephek): Meat Meat's blood, "Prototype Verdant"; Alerion the rival aspect of frost.
+    # (dialogue 11 Top 4: nothing he couldn't know, and "quietly sorry", not greedy)
     if with_or_is?(:meat_meat)
-      sayc(["SEPHEK: (his blue eyes finding Meat Meat, and staying) ...Prototype Verdant. You're smaller than the notes said.",
-            "SEPHEK: Your blood was cooked in summer's engine and it won't freeze. She'd like a drop of it. So would I.",
+      sayc(["SEPHEK: (eyes on Meat Meat) ...Prototype Verdant. The Halo prayed about you. You're small.",
+            "SEPHEK: Summer's engine cooked your blood. It won't freeze. She'd like a drop. I'm sorry.",
+            cl(:meat_meat, "The dream man. Meat Meat knew it."),
             cl(:meat_meat, "Meat Meat's blood is for Meat Meat. Bite the frost man, Razzy.")])
     end
     if with_or_is?(:alerion)
-      sayc(["SEPHEK: (to Alerion, almost kindly) Two of us hear her. One too many. When she wakes, one of us stops."])
+      sayc(["SEPHEK: (to Alerion, almost kindly) Two of us hear her. When she wakes, one of us stops."])
     end
     # (losing to his followers doesn't end the scene: they just keep standing, and he keeps his strength)
     fought = 0
-    %i[frost_druid_ansel frost_druid_ilse].each do |k|
+    [[:frost_druid_ansel, :ansel], [:frost_druid_ilse, :sister_ilse]].each_with_index do |(k, who), i|
+      robe = robes[i]
+      if robe
+        robe.instance_variable_set(:@name, "stage_#{who}") rescue nil
+        robe.instance_variable_get(:@event).name = "stage_#{who}" rescue nil
+      end
+      trainer_intro(k)                           # (notes/11 E8: they speak before they fight)
       type, name = TRAINERS[k]
       won = pbTrainerBattle(type, name, nil, false, 0, true) ? true : false
       fought += 1 if won
@@ -213,13 +227,14 @@ module FrostThaw
     fought += 1 if boss_battle(named_mon(:B427H215, 56, "Ice Mephit"), named_mon(:B427H215, 56, "Ice Mephit"))
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
     if fought >= 3
+      mephits.each { |m| Stage.remove_actor(m) }
       say(["The last mephit pops like a soap bubble full of snow.",
-           "Sephek trembles. Frost runs out of him like sweat. For a moment he's only a cold man, alone on an altar."])
+           "Sephek trembles. Frost runs out of him like sweat. For a moment he's only a cold man."])
     else
       say(["The Halo's followers fall back round him, still standing. He doesn't tremble at all."])
     end
     able = $Trainer.party.count { |pk| !pk.egg? && pk.hp > 0 }
-    say(["ELINE and SEPHEK: (together, as if one were the other's echo) Stand back from the Saint."])
+    say(["ELINE: (Sephek's lips moving with hers) Stand back from the Saint."])
     won_eline = pbTrainerBattle(:FT_HALO_MATRON, "Matron Eline", nil, able >= 2, 0, true) ? true : false
     say([won_eline ? "Eline goes down on one knee." : "Eline doesn't even look at you. She's looking at him."])
     eline_mercy(won_eline)
@@ -233,7 +248,7 @@ module FrostThaw
       say(["The splinters in his chest grind against each other. He comes at you a beat slow, like something put together from memory."])
     end
     setBattleRule("canLose") rescue nil       # (he can't die here: win or lose, he shatters and reforms)
-    won = boss_battle(av)
+    won = boss_battle(av, bgm: "regibattle")   # (notes/11 E7: the chapter's boss gets a boss's music)
     if won
       say(["Your last blow goes through him like a hand through mist.",
            "He shatters into a whirlwind of ice, and the whirlwind keeps turning."])
@@ -241,8 +256,15 @@ module FrostThaw
       say(["The cold comes off him in a wave and puts every Pokémon on the Shrine on the ground.",
            "Then, without anyone touching him, he shatters into a whirlwind of ice."])
     end
-    say(["Something falls out of the whirlwind and rings on the altar stone: a crystal that hums.",
-         "Then the ice runs back together, flake by flake, and Sephek stands up again.",
+    seph = stage_event("stage_sephek")
+    if seph
+      Stage.fx("E-04", seph, frames: 10, oy: 16)         # the whirlwind of ice
+      seph.opacity = 60
+    end
+    $game_screen.start_shake(5, 8, 12) rescue nil
+    say(["Something falls out of the whirlwind and rings on the altar stone: a crystal that hums."])
+    seph.opacity = 255 if seph rescue nil
+    say(["Then the ice runs back together, flake by flake, and Sephek stands up again.",
          "SEPHEK: (almost sorry) Not here. Not while her relics stand under this tree.", "SEPHEK: Here, I come back."])
     if !flag?(:sigil_sephek)
       give(:FT_FROSTSIGIL)
@@ -670,8 +692,8 @@ module FrostThaw
     key = flag?(:frostina_taken) ? :glaive_hummed_crown : :glaive_hummed_shrine
     return if flag?(key)
     set_flag(key)
-    say(["In your pack, Var's mirror-shard glaive begins to hum: one long note, the same note as the frost in Sephek's chest.",
-         flag?(:var_story_known) ? "Var forged it to cut a frost-touched thing. Thirty years in a dead man's rooms, and it still remembers what for." :
+    say(["Var's mirror-shard glaive hums in your pack: the same note as the frost in Sephek's chest.",
+         flag?(:var_story_known) ? "Var forged it to cut a frost-touched thing. Thirty years on, it still remembers what for." :
                                    "Whoever forged it meant it for something like him."])
     sayc([cl(:alerion, "(very quietly) It knows him. So do I.")].compact)
   end
@@ -685,17 +707,17 @@ module FrostThaw
       set_flag(:eline_unbeaten)          # she rides north with him, and stands with him at the end
       return
     end
-    c = pbMessage(_INTL("Eline kneels in the snow, her hands open."),
+    c = pbMessage(_INTL("Eline looks up at you, her hands open."),
                   [_INTL("Show her mercy"), _INTL("Bind her for the Rootwardens")], 0)
     if c == 0
       set_flag(:eline_spared)
       say(["You step back. Eline looks up, and for a moment she doesn't understand.",
-           "ELINE: (slowly) ...Silence is mercy. That's what I taught them. I never thought anyone would teach it back to me.",
+           "ELINE: (slowly) ...Silence is mercy. I taught it for years. I never once felt it.",
            "She gets up, and goes to stand beside him again. But she doesn't raise her hands."])
     else
       set_flag(:eline_captured)
       say(["Rootwardens come up the steps with cords of woven root. Eline doesn't fight them.",
-           "She speaks the whole way down. It takes you a long time to understand that she's praying, and that every word of it runs backwards.",
+           "She prays the whole way down. It takes you a while to hear that every word runs backwards.",
            "ELINE: ...hcaer ruoy dnoyeb ylno si ecnelis. ...ecnelis, ecnelis, ecnelis."])
       sayc([cl(:wyn, "(very quietly) She's saying it backwards so the goddess can't hear her asking. I think."),
             cl(:alberica, "Or so we can't. Either way, darling, somebody should sit with her.")].compact)
