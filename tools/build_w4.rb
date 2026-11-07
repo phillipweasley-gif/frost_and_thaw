@@ -605,7 +605,7 @@ GLYPH = { graphic: "Followers/UNOWN", direction: 2, opacity: 90, step_anime: fal
 (4..12).each { |x| sq.event(x, 8, "Alarm glyph #{x}", [GLYPH.merge(script: "FT.quarters_glyph(1, @event_id)"), { self_switch: "A", through: true }]) }
 ((5..14).to_a - [8]).each { |x| sq.event(x, 6, "Alarm glyph #{x}b", [GLYPH.merge(script: "FT.quarters_glyph(2, @event_id)"), { self_switch: "A", through: true }]) }
 sq.event(12, 5, "Bone-and-ice construct", [{ graphic: "Followers/MAROWAK", direction: 2, script: "FT.quarters_construct(@event_id)" },
-                                            { self_switch: "A", graphic: "Followers/MAROWAK", direction: 8, opacity: 130, step_anime: false,
+                                            { self_switch: "A", graphic: "Followers/MAROWAK", direction: 8, opacity: 130, step_anime: false, through: true,
                                               walk_anime: false, script: "FT.quarters_construct(@event_id)" }])
 sq.event(14, 4, "Loose floorboard", [{ tile_id: 1665, script: "FT.quarters_floorboard(@event_id)" }])   # (her desk, with the board under it)
 in_wall(sq, 7, 5, "Wardrobe", "FT.quarters_wardrobe(@event_id)")

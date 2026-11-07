@@ -218,7 +218,7 @@ begin
 
   # --- the Heartwarden's Staff at the Wall, by night ----------------------------
   T.give_key(:FT_UNBONDEDSTAFF)
-  answer([/Rest the night here/, 0])
+  answer([/Rest the night here/, 0], [/The cold is the old cold/, /Breathe with the staff/], [/Then spring again/, /Let it turn/])
   go(2060, 45, 9, 6)
   n = logpos; talk("Sign auroral_wall")
   check(flag(:staff_attuned), "the staff is bonded at the edge of the light")
@@ -238,13 +238,20 @@ begin
 
   # --- the Cycle Day Conspiracy (GQ3), lanterns known -------------------------
   set(:lantern_runes_known); unset(:cycle_day_done, :effigy_saved)
+  # (challenge options come in a shuffled order: answer by what they say)
+  right = [[/Follow her how/, /three dancers/], [/Which lanterns/, /don't flicker/], [/Break the rune how/, /last stroke/],
+           [/Get past the ring how/, /round-dance/], [/Who isn't looking up/, /counting/], [/The last string/, /Cut it/],
+           [/The kneelers/, /Break their hands/]]
+  answer(*right)
   go(2050, 31, 28, 2)
   T.cycle_day_conspiracy; HL.settle(3000); heal
   check(flag(:cycle_day_done) && flag(:effigy_saved), "the festival hunt: each step its own question, the effigy saved")
+  HL.answers.shift(right.size)
 
   # --- ...and lost: Auril's Icy Avatar, the music cut, the dead counted ---------
   unset(:lantern_runes_known, :cycle_day_done, :effigy_saved, :festival_casualties)
-  answer([/Follow her how|Which lanterns|Break the rune how|Get past the ring how|Who isn't looking up|The last string|The kneelers/, 1])
+  answer([/Follow her how|Which lanterns|Break the rune how|Get past the ring how|Who isn't looking up|The last string|The kneelers/,
+          /Follow close|brightest|Blow the candle|Push through|crying with joy|Shout for the Rootwardens|Talk to them/])
   go(2050, 31, 28, 2)
   n = logpos; T.cycle_day_conspiracy; HL.settle(3000); heal
   check(flag(:icy_avatar_fought) && flag(:festival_casualties), "three misses: the avatar at the Still Sky Shrine")
