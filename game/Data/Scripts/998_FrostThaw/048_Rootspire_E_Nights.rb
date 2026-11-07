@@ -619,7 +619,7 @@ module FrostThaw
     add_counter(:story_beats)
     say(["The angel shatters. The door folds shut behind it, like a frozen lake settling.",
          "In the snow on the platform: one long feather of ice. It's still beating, faintly."])
-    give(:SNOWBALL) rescue give(:ICYROCK)
+    give(:SNOWBALL)
   end
 
   def night_tree_dream
