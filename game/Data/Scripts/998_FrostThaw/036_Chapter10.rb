@@ -2528,18 +2528,21 @@ module FrostThaw
     # Meat Meat's charge
     say(["KELYN: The second charge. The death of #{autumn_hand[:who] == 'The Autumn Warden' ? 'the Autumn Warden' : autumn_hand[:full]}, by Meat Meat's hand."])
     # (notes 08 E3, built by e in Ch9: on the walk south she asked you to say it here)
+    thanked = false
     if flag?(:you_took_cocoon) && !herald?(:meat_meat)
       c = pbMessage(_INTL("(\"You held the child. Say that, at the trial.\")"), [_INTL("Say it"), _INTL("Say nothing")], 0)
       if c == 0
+        thanked = true
         say(["(You tell the court: you caught the cocoon at the rail. She let go of #{autumn_hand[:him]}.)",
              as(:meat_meat, "(in the dock, very quietly) ...Thank you.")])
       end
-    elsif flag?(:you_called_mm)
+    elsif flag?(:you_called_mm) && !herald?(:meat_meat)
       say(["KELYN: A warden says you shouted her name at the rail, and she took the cocoon."])
     end
     # (notes 09: the player stepped in front of the spears at the arrest)
     if flag?(:stood_by_mm_arrest) && !herald?(:meat_meat)
-      say([as(:meat_meat, "(in the dock, to you) You stood in front of the spears. Meat Meat remembers.")])
+      say([as(:meat_meat, thanked ? "And you stood in front of the spears. Meat Meat remembers." :
+                                    "(in the dock, to you) You stood in front of the spears. Meat Meat remembers.")])
     end
     call_witnesses(:autumn, "Who do you call for Meat Meat?")
     refugee_faces if flag?(:refugees_testify)
