@@ -334,8 +334,8 @@ module FrostThaw
     return false if !flag?(:festival_night) || flag?(:ch7_started) || flag?(:rootwardens_at_door)
     set_flag(:rootwardens_at_door)
     set_switch(SW_SCORCH, true)
-    sayc(["Past midnight, someone hammers on the Hearth's door.",
-          "Two Rootwardens of the Claw circle, soot on their sleeves.",
+    say(["Past midnight, someone hammers on the Hearth's door."])
+    say_staged(["Two Rootwardens of the Claw circle, soot on their sleeves.",
           "ROOTWARDEN: Heralds. A patrol's missing. Three of ours. They went to the Echo Gate.",
           # (notes/06 6.23: warmth is nothing new here; fire is)
           "ROOTWARDEN: They found scorch marks. Still hot, hours later. Not sun. Fire.",
