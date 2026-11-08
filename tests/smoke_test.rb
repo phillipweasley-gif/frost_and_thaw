@@ -1031,11 +1031,16 @@ check("the throne asks the god choice again from its own page, and rests once an
   asked = []
   FT.singleton_class.send(:alias_method, :ft_smoke_wdwd2, :scene_what_do_we_do)
   FT.define_singleton_method(:scene_what_do_we_do) { asked << :asked }
-  had = %i[ending_shatter ending_third_way ending_still_keeper].map { |f| [f, FT.flag?(f)] }
+  had = %i[auril_down ending_shatter ending_third_way ending_still_keeper].map { |f| [f, FT.flag?(f)] }
   had.each { |f, _| FT.state[:flags]&.delete(f) }
-  FT.throne_resume
+  moving = ($game_temp.player_transferring rescue false)
+  $game_temp.player_transferring = false if $game_temp
+  FT.throne_resume                  # the loop has cleared the story: nothing to ask
+  FT.set_flag(:auril_down)
+  FT.throne_resume                  # asked
   FT.set_flag(:ending_shatter)
-  FT.throne_resume
+  FT.throne_resume                  # answered: rests
+  $game_temp.player_transferring = moving if $game_temp
   FT.singleton_class.send(:alias_method, :scene_what_do_we_do, :ft_smoke_wdwd2)
   had.each { |f, v| v ? FT.set_flag(f) : FT.state[:flags]&.delete(f) }
   page && asked.size == 1 }
