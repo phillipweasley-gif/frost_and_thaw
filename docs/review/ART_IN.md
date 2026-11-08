@@ -169,3 +169,8 @@ games' sprites).
 | File | In the game as | Checked |
 | --- | --- | --- |
 | `FT_tamsin` | same (replaces it) | only the 6,544 pure-black outline pixels changed, to #0E080D; every other pixel and all alpha identical; 17 colours; exact 2x grid; feet and height unchanged. At game scale it reads as before, with the cast's tinted outline |
+| `FT_shade` | same (replaces it) | only the 3,672 pure-black outline pixels changed, to #0E080D; every other visible pixel and all alpha identical (some fully transparent pixels carry different hidden colour values, which never show); 19 colours; exact 2x grid |
+
+Held by the designer: `FT_alerion` (88 of its 2x2 blocks are off the 2x grid in the game's own sheet, so an
+outline-only swap isn't enough). A grid check of every character sheet finds the same in `FT_philodendra` (935
+blocks) and `FT_pip` (851); all three are added to the art list's small fixes.
