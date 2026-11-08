@@ -113,6 +113,10 @@ $game_switches = {}
 $game_map = MapStub.new(2001)
 
 check("not active in a normal save") { !FT.active? }
+check("no sprite is shadowed: build/gfx/Characters never holds a different copy of a build/Characters file") {
+  r = File.expand_path("..", __dir__)
+  Dir[File.join(r, "build/Characters/*.png")].none? { |f| g = File.join(r, "build/gfx/Characters", File.basename(f)); File.exist?(g) && File.binread(g) != File.binread(f) }
+}
 check("Infinite Fusion's own maps load normally") { FT.own_map_path("Data/Map042.rxdata").nil? }
 check("map 2001 redirects to Data/FrostThaw") { FT.own_map_path("Data/Map2001.rxdata") == "Data/FrostThaw/Map2001.rxdata" }
 check("MapInfos gain our map names") { i = FT.map_infos_with_ours({}); i[2001] && i[2001].name == "Targos" }
