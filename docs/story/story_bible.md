@@ -857,3 +857,6 @@ Your answers are now in the script. Nothing is left open.
 
 - **One sprite template, the one closest to the main games' sprites:** Gen 5 chibi, 25 to 28 px native (goblins and children 21 to 24, big folk up to 30), head more than half the height, a full near-black outline, at most 24 colours, flat three-tone shading. Batch 02 and the base game's townsfolk already look like this; it replaces the October style guide's "2.7 heads". The rules, plates and per-sprite list are in the "Art Still Needed and Style Guide" doc.
 - **The off-template sprites stay in the game as placeholders** (the 38 November 6 walking sprites and 11 battle pictures) until the corrected art comes through.
+- **Meat Meat has white hair** (her walking sprite), not the P1 sheet's hood.
+- **Iskra is a roc: a giant white bird**, aurora trailing from her wings (as the game's text has her), not a roe.
+- **The existing sprites' small fixes are done mechanically first** (outline colour, the 2x grid, colour counts), then the P1 redraws.

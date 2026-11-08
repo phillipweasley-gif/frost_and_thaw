@@ -174,3 +174,22 @@ games' sprites).
 Held by the designer: `FT_alerion` (88 of its 2x2 blocks are off the 2x grid in the game's own sheet, so an
 outline-only swap isn't enough). A grid check of every character sheet finds the same in `FT_philodendra` (935
 blocks) and `FT_pip` (851); all three are added to the art list's small fixes.
+
+## Repair 3 (2026-11-08): the mechanical fixes, done here (owner: "fix the existing sprites if that's faster")
+
+Each fix is mechanical and was checked beside the original at game scale and close up, in every facing.
+
+| File | Fix | Result |
+| --- | --- | --- |
+| `FT_alerion` | 88 off-grid blocks snapped; pure black to #0E080D | 22 colours, exact 2x, looks unchanged |
+| `FT_pip` | 851 off-grid blocks snapped; pure black; 29 to 24 colours | looks unchanged |
+| `FT_meat_meat` | pure black; light edges outlined (the goggles' strap, the hair's rim); 28 to 24 colours | white hair kept (owner, Nov 8) |
+| `FT_shimmer`, `FT_auril_furs`, `FT_avarice`, `FT_luminara` | light silhouette edges outlined in #0E080D (Avarice also 26 to 24 colours) | full outline, nothing else changed |
+| Battle: `FT_HAG`, `FT_HAG_NIGHT`, `FT_SOVEREIGN`, `FT_AVARICE`, `FT_SEPHEK`, `FT_FROST_SAINT` | 39 to 45 colours cut to 32 (the rarest merged into their nearest) | visually identical |
+| Battle: `FT_TAMSIN_F`, `_G`, `_I`; `FT_HERALD_MEAT_MEAT_back` | 20 off-grid blocks snapped (Tamsin); pure black to #0E080D | visually identical |
+
+Tried and **not** used (a hand fix or a redraw instead): `FT_philodendra` (her dress's hem and pattern are 1-pixel
+details; snapping erases them; she isn't on a map yet), `FT_glimmer` (outlining eats his cream paws and the light
+edge of his face), `FT_alberica_old` (35 colours across the sheet: a November draft, redrawn with the rest),
+`FT_thredra_cauldron` (its steam is an effect and takes no outline), `FT_sephek` and `FT_sephek_frozen` (the head
+needs redrawing). Hellen's sprite and battle picture stay as they are (owner's decision).
