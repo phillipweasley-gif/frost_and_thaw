@@ -1163,7 +1163,7 @@ In his chest, a sliver of blue light still beats. Slow as a sleeper.
 
 `[entering the Warren]` The tunnel widens as it goes down: round halls of pressed clay, ribbed with white roots. Fungal veins glow along the walls. Driftwood lanterns burn amber. It's warm. Tall figures with long ears watch you pass. The Circle of Thirteen. Waiting. Judging. **MEAT MEAT** Meat Meat smells coffee. Rabbit coffee. Meat Meat will find it. **REPTIN** Please don't steal from the moon-keepers. **MEAT MEAT** Meat Meat borrows.
 
-`[before the heart]` **ZENITH** Moon above, roots below, what was given, the rose will know. *(The tall Wennen in green robes speaks only in verse. You think he means: bring what she left at the Glade.)* `[before Sephek]` **ZENITH** The hand that struck still seeks the heart. Meet him under the moon. Then come back to me.
+`[before the heart]` **ZENITH** Moon above, roots below, what was given, the rose will know. *(The tall Wennen in green robes speaks only in verse. You think she means: bring what Shimmer left at the Glade.)* `[before Sephek]` **ZENITH** The hand that struck still seeks the heart. Meet him under the moon. Then come back to me.
 
 **ZENITH** A heart that chose. A rose that would not close.
 

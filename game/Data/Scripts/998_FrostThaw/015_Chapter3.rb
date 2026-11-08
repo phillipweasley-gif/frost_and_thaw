@@ -936,7 +936,7 @@ module FrostThaw
       say(["ZENITH: Moon above, roots below,",
            "ZENITH: what was given, the rose will know.",
            "(The tall Wennen in green robes speaks only in verse.)",
-           "(You think he means: bring what she left at the Glade.)"], event_id)
+           "(You think she means: bring what Shimmer left at the Glade.)"], event_id)
       return
     end
     if !flag?(:sephek_defeated)

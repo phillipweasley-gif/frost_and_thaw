@@ -860,3 +860,4 @@ Your answers are now in the script. Nothing is left open.
 - **Meat Meat has white hair** (her walking sprite), not the P1 sheet's hood.
 - **Iskra is a roc: a giant white bird**, aurora trailing from her wings (as the game's text has her), not a roe.
 - **The existing sprites' small fixes are done mechanically first** (outline colour, the 2x grid, colour counts), then the P1 redraws.
+- **Zenith Abbott is "she"** (the Undying Rose favour's "her verse"); the Ch3 line that called her "he" is fixed.
