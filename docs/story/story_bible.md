@@ -860,4 +860,5 @@ Your answers are now in the script. Nothing is left open.
 - **Meat Meat has white hair** (her walking sprite), not the P1 sheet's hood.
 - **Iskra is a roc: a giant white bird**, aurora trailing from her wings (as the game's text has her), not a roe.
 - **The existing sprites' small fixes are done mechanically first** (outline colour, the 2x grid, colour counts), then the P1 redraws.
+- **Sprites are built on Infinite Fusion's own overworld sheets** (owner, 17:05): the first template (a chibi body taken from our own cast) didn't match the base game in shape, proportion or colour. Every walking sprite, the main cast included, is rebuilt on the closest base-game 320x320 sheet: its body, head size, walk cycle, shading and outline kept; hair, face, clothes, colours and signature items repainted. Batch 1 is redone first, then batch 2, then the cast. The old sheets stay in the game as placeholders until then.
 - **Zenith Abbott is "she"** (the Undying Rose favour's "her verse"); the Ch3 line that called her "he" is fixed.

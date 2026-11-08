@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """Frost & Thaw art checker: tests a PNG against the Nov 8 guide's technical rules.
 
-    python3 art_check.py FILE.png [FILE2.png ...] [--kind human|goblin|big] [--walk WALKSHEET.png]
+    python3 art_check.py FILE.png [FILE2.png ...] [--kind human|goblin|big] [--walk WALKSHEET.png] [--base BW.png]
 
 The kind of asset comes from the canvas (and name): 320x320 walking or pose sheet, 160x160 battle picture,
 512x512 big creature, 960-wide effect, 512x384 panel or overlay, 128x32 balloon, 48x48 icon.
 --kind sets the height range for a walking sheet (human 25-28 native px, the default; goblin 21-24; big up to 30).
 --walk gives a pose sheet's walking sheet, to check that the pose uses its colours.
+--base gives the base game's sheet a walking sheet was built on (2026-11-08 standard: every sprite is built on one of
+Infinite Fusion's own 320x320 overworld sheets), to check that the body, legs and walk cycle are still the base's.
+Walking sheets are measured against the base game's 420 overworld sheets: height 24-31 native px (median 29),
+14 colours a frame (median; 17 at p90), inside of the figure mostly colour, not outline.
 
 It checks what can be measured: size, the 2x grid, hard alpha, colour count, no pure black, the near-black
 outline, feet line, centre and height. Passing it is NOT approval: identity, head size, pose and readability are
@@ -47,6 +51,41 @@ def outline_share(fr):
                 dark += max(px[x, y][:3]) < 70
     return dark / edge if edge else 1.0
 
+def value_stats(fr):
+    """Mean lightness of a frame's figure, and the share of its inside (not edge) pixels that are near-black.
+    Base game: lightness p10 0.29, median 0.37; dark inside median 17%, p90 34%."""
+    import colorsys
+    px = fr.load(); w, h = fr.size
+    light, inner, dark = [], 0, 0
+    for y in range(h):
+        for x in range(w):
+            p = px[x, y]
+            if p[3] != 255:
+                continue
+            light.append(colorsys.rgb_to_hls(*[c / 255 for c in p[:3]])[1])
+            if all(0 <= x + dx < w and 0 <= y + dy < h and px[x + dx, y + dy][3] == 255 for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                inner += 1
+                dark += max(p[:3]) < 70
+    return (sum(light) / len(light) if light else 1.0), (dark / inner if inner else 0.0)
+
+def body_match(a, b, size=80):
+    """Per frame: how much of the base's body below the neck (lower 55% of the figure) the new sheet keeps."""
+    out = []
+    for (cell, fa) in frames(a, size):
+        fb = b.crop((cell[0] * size, cell[1] * size, cell[0] * size + size, cell[1] * size + size))
+        bb = fb.getbbox()
+        if not bb:
+            continue
+        top = bb[1] + int((bb[3] - bb[1]) * 0.45)
+        pa, pb = fa.load(), fb.load()
+        both = either = 0
+        for y in range(top, bb[3]):
+            for x in range(size):
+                oa, ob = pa[x, y][3] > 0, pb[x, y][3] > 0
+                both += oa and ob; either += oa or ob
+        out.append((cell, both / either if either else 1.0))
+    return out
+
 def frames(im, size):
     w, h = im.size
     for fy in range(0, h, size):
@@ -55,7 +94,7 @@ def frames(im, size):
             if fr.getbbox():
                 yield (fx // size, fy // size), fr
 
-def check(path, kind="human", walk=None):
+def check(path, kind="human", walk=None, base=None):
     name = os.path.basename(path)
     raw = Image.open(path)
     im = raw.convert("RGBA")
@@ -68,7 +107,7 @@ def check(path, kind="human", walk=None):
     # the asset type, from canvas and name
     if (w, h) == (320, 320):
         t = "pose" if name.startswith("P-") else "walking"
-        limit, frame, feet = 24, 80, 73
+        limit, frame, feet = 20, 80, 73
     elif (w, h) == (160, 160):
         t, limit, frame, feet = "battle", 32, None, 157
     elif (w, h) == (512, 512):
@@ -98,7 +137,7 @@ def check(path, kind="human", walk=None):
     if limit and len(cols) > limit:
         fails.append(f"{len(cols)} colours (limit {limit} for a {t})")
     black = cols.get((0, 0, 0), 0)
-    if black and t in ("walking", "pose", "battle", "big creature"):
+    if black and t in ("battle", "big creature"):
         fails.append(f"{black} pure #000000 pixels (use #0E080D or a tinted near-black)")
 
     # outline, feet, centre, height
@@ -106,32 +145,48 @@ def check(path, kind="human", walk=None):
         n = native(im)
         nf = frame // 2
         worst = []
+        need = 0.42 if t == "walking" else 0.75   # walking: the base game's own sheets go down to 42% (p10)
         for (cx, cy), fr in frames(n, nf):
             share = outline_share(fr)
-            if share < 0.75:
+            if share < need:
                 worst.append(f"frame r{cy}c{cx} {int(share * 100)}%")
         if worst:
-            fails.append("outline broken (under 75% of the edge near-black; the approved cast is 77-100%): " + ", ".join(worst[:6]) + (" ..." if len(worst) > 6 else ""))
+            fails.append(f"outline broken (under {int(need * 100)}% of the edge near-black): " + ", ".join(worst[:6]) + (" ..." if len(worst) > 6 else ""))
         hs = []
         for (cx, cy), fr in frames(im, frame):
             x0, y0, x1, y1 = fr.getbbox()
             if t == "walking":
-                # the standing frame (column 1) is on the line; walk frames may bob 2 px
-                if (cx == 0 and y1 - 1 != feet) or abs(y1 - 1 - feet) > 2:
+                # as the base game: standing frames on row 73 (or 75), walk frames 71-77
+                fy = y1 - 1
+                if (cx == 0 and fy not in (feet, feet + 2)) or not feet - 2 <= fy <= feet + 4:
                     fails.append(f"frame r{cy}c{cx}: feet on row {y1 - 1}, not {feet}")
                 mid = (x0 + x1) / 2
                 if abs(mid - frame / 2) > 4:
                     notes.append(f"frame r{cy}c{cx}: centred at x {mid:.0f} (guide: {frame // 2}; fine if a tail or prop pulls it)")
                 if cx == 0:
                     hs.append((y1 - y0) // 2)
+        if t == "walking":
+            lt, dk = value_stats(im.crop((0, 0, frame, frame)))
+            if dk > 0.34:
+                fails.append(f"{int(dk * 100)}% of the figure's inside is near-black (base game: median 17%, 34% at most): "
+                             "inner lines and shadows are a darker shade of the local colour, not outline")
+            if lt < 0.29:
+                fails.append(f"figure too dark: mean lightness {lt:.2f} (base game: median 0.37, 0.29 at least)")
+            if base:
+                bm = body_match(im, Image.open(base).convert("RGBA"))
+                low = [f"r{c[1]}c{c[0]} {int(v * 100)}%" for c, v in bm if v < 0.75]
+                if low:
+                    fails.append("body and walk cycle differ from the base below the neck (under 75% shared): " + ", ".join(low[:6]))
+                else:
+                    notes.append(f"body kept from {os.path.basename(base)}: {int(min(v for _, v in bm) * 100)}% or more below the neck, every frame")
         if t == "walking" and hs:
-            lo, hi = {"human": (25, 28), "goblin": (21, 24), "big": (25, 30)}.get(kind, (25, 28))
-            if max(hs) > hi + 1 or min(hs) < lo - 2:
-                fails.append(f"standing height {min(hs)}-{max(hs)} native px (template {lo}-{hi} for {kind}; head over half of it)")
+            lo, hi = {"human": (24, 31), "goblin": (20, 24), "big": (26, 33)}.get(kind, (24, 31))
+            if max(hs) > hi + 1 or min(hs) < lo:
+                fails.append(f"standing height {min(hs)}-{max(hs)} native px (base game {lo}-{hi} for {kind})")
             elif max(hs) > hi:
-                notes.append(f"standing height {max(hs)} native px, 1 over the template's {hi}: fine for a bun, a hat or ears, not for a body")
+                notes.append(f"standing height {max(hs)} native px, 1 over {hi}: fine for a hat or ears, not for a body")
             else:
-                notes.append(f"height {min(hs)}-{max(hs)} native px; now check by eye that the head is 14-17 px, over half")
+                notes.append(f"height {min(hs)}-{max(hs)} native px; now compare the head and build by eye with the base sheet")
     if t == "battle":
         bb = im.getbbox()
         if bb:
@@ -155,27 +210,29 @@ def check(path, kind="human", walk=None):
 
 def main():
     args = sys.argv[1:]
-    kind, walk, files = "human", None, []
+    kind, walk, base, files = "human", None, None, []
     i = 0
     while i < len(args):
         if args[i] == "--kind":
             kind = args[i + 1]; i += 2
         elif args[i] == "--walk":
             walk = args[i + 1]; i += 2
+        elif args[i] == "--base":
+            base = args[i + 1]; i += 2
         else:
             files.append(args[i]); i += 1
     if not files:
         print(__doc__); return 2
     bad = 0
     for f in files:
-        name, t, fails, notes = check(f, kind, walk)
+        name, t, fails, notes = check(f, kind, walk, base)
         print(f"{'PASS' if not fails else 'FAIL'}  {name}  ({t})")
         for x in fails:
             print(f"   x {x}")
         for x in notes:
             print(f"   - {x}")
         bad += bool(fails)
-    print(f"\n{len(files) - bad}/{len(files)} pass the measurable rules. Then judge identity, head and pose by eye.")
+    print(f"\n{len(files) - bad}/{len(files)} pass the measurable rules. Then judge identity, build and face by eye beside the base sheet.")
     return 1 if bad else 0
 
 if __name__ == "__main__":
