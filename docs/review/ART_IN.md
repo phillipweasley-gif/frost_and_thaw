@@ -160,3 +160,12 @@ none is approved until checked against the owner's P1 reference sheets. Batch 09
 here; earlier batches are the owner's call.
 
 Checks: smoke 235/235, maps 159/159, New Journey 244/245.
+
+## Repair 1 (2026-11-08): the template's small fixes
+
+The first repair from the art list's "small fix" rows, against the owner's Nov 8 template (the one closest to the main
+games' sprites).
+
+| File | In the game as | Checked |
+| --- | --- | --- |
+| `FT_tamsin` | same (replaces it) | only the 6,544 pure-black outline pixels changed, to #0E080D; every other pixel and all alpha identical; 17 colours; exact 2x grid; feet and height unchanged. At game scale it reads as before, with the cast's tinted outline |
