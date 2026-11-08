@@ -7,7 +7,8 @@ with its reason.
 ## Checks
 
 - Smoke test 240/240 (three new checks: the throne, Herald Mode's spoken lines, the loop). All 159 maps pass.
-- Full games on 0.8.2, every mode and ending (the driver now plays the postgame White Vault in each):
+- Full games on 0.8.2, every mode and ending (the driver now plays the postgame White Vault in each), kept in
+  `traces_082/`. Shatter, Alberica, Reptin and Meat Meat were recorded before the last text trims (text only):
 
   | Run | 0.8.0 | 0.8.2 |
   | --- | --- | --- |
