@@ -16,7 +16,7 @@
 #     of Auril's relics in the Heartroot stands, he gets up again.
 #   * Avarice faked her death at the Forge. A fragment of her soul lived on in
 #     the mirror circuits and now wears a crystalline body in the White Vault of
-#     Ithryn Athis. She wants Razzy's scale core and Meat Meat's blood, to make
+#     Ythryn Athis. She wants Razzy's scale core and Meat Meat's blood, to make
 #     the Seraph-Draco: a living god of ordered seasons. Until the Vault she is
 #     only seen in mirrors and dreams. If you never go, she comes to you: in
 #     the Throne of Frost, for what's left of Auril.
@@ -54,7 +54,7 @@ module FrostThaw
 
   TRAINER_TYPES.merge!(
     FT_FROST_DRUID: ["Frost Druid", :CHANNELER, 0, 120, :LEADER_Pryce],
-    FT_AVARICE_R: ["Avarice Reforged", :CHANNELER, 1, 250, :LEADER_Pryce]
+    FT_AVARICE_R: ["Reforged", :CHANNELER, 1, 250, :LEADER_Pryce]
   )
   TRAINERS.merge!(
     frost_druid_ansel: [:FT_FROST_DRUID, "Brother Ansel", [[:B124H221, 56], [:WEAVILE, 57], [:B427H215, 57]],
@@ -202,13 +202,13 @@ module FrostThaw
     # rootspire.md Tab 1 (Sephek): Meat Meat's blood, "Prototype Verdant"; Alerion the rival aspect of frost.
     # (dialogue 11 Top 4: nothing he couldn't know, and "quietly sorry", not greedy)
     if with_or_is?(:meat_meat)
-      sayc(["SEPHEK: (eyes on Meat Meat) ...Prototype Verdant. The Halo prayed about you. You're small.",
+      sayc([(herald?(:meat_meat) ? "SEPHEK: (eyes on you) " : "SEPHEK: (eyes on Meat Meat) ") + "...Prototype Verdant. The Halo prayed about you. You're small.",
             "SEPHEK: Summer's engine cooked your blood. It won't freeze. She'd like a drop. I'm sorry.",
             cl(:meat_meat, "The dream man. Meat Meat knew it."),
             cl(:meat_meat, "Meat Meat's blood is for Meat Meat. Bite the frost man, Razzy.")])
     end
     if with_or_is?(:alerion)
-      sayc(["SEPHEK: (to Alerion, almost kindly) Two of us hear her. When she wakes, one of us stops."])
+      sayc([(herald?(:alerion) ? "SEPHEK: (to you, almost kindly) " : "SEPHEK: (to Alerion, almost kindly) ") + "Two of us hear her. When she wakes, one of us stops."])
     end
     # (losing to his followers doesn't end the scene: they just keep standing, and he keeps his strength)
     fought = 0
@@ -295,7 +295,7 @@ module FrostThaw
     case relics_left
     when 3
       say(["A shard of black ice #{where}.", "It sits in a nest of frost-runes, and hums with her cold.",
-           "The frost-runes are fresh. The Halo carried it in while Selrae was their prisoner."], event_id)
+           "The frost-runes are fresh. The Halo carried it in while Selrae stood in the dock."], event_id)
       sayc([cl(:alerion, "(a hand on his chest) It's beating. In time with Sephek."),
             cl(:wyn, "...It's taking from the tree. Like a tick. While it stands, he gets back up.")])
     when 2
@@ -380,7 +380,7 @@ module FrostThaw
   end
 
   #-----------------------------------------------------------------------------
-  # The White Vault of Ithryn Athis (after the sigils merge)
+  # The White Vault of Ythryn Athis (after the sigils merge)
   #-----------------------------------------------------------------------------
   def scene_vault_gate_enter
     return if flag?(:vault_entered)
@@ -640,7 +640,8 @@ module FrostThaw
       Stage.fx("E-06", refl, frames: 10, oy: 16) rescue nil if refl
       Stage.remove_actor(refl) if refl
       sayc(["Her reflection shatters, and every splinter of it goes dark.",
-            "AVARICE: (very small, from no mirror at all) ...Recalculating..."])
+            "AVARICE: (very small, from no mirror at all) ...Recalculating...",
+            cl(:meat_meat, "That is for Razzy's voice. Meat Meat is DONE.")])
     else
       Stage.remove_actor(refl) if refl
       sayc(["Her reflection slides deep into the glacier, laughing. Frostina breathes after it,",
@@ -688,10 +689,17 @@ module FrostThaw
       av = (Stage.actor(:avarice, $game_player.x + 1, $game_player.y - 4, 2, graphic: "FT_avarice_reforged") rescue nil)
       Stage.fx("E-06", av, frames: 10, oy: 16) rescue nil if av
       sayc(["A woman of crystal in machinery: white hair, infernal sigils, a smile like arithmetic.",
-            herald?(:alberica) ? "You're on your knees. You don't believe it. (No. No, we watched you burn.)" :
-                                 cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn."),
+            # Ch9's choice read back (whole read T1/V7): you told them in the square, or kept it
+            if flag?(:avarice_doubt_shared)
+              herald?(:alberica) ? "You're on your knees. (You said it, in the square. You didn't want to be right.)" :
+                                   cl(:alberica, "(on her knees) You said. In the square. I didn't want you to be right.")
+            else
+              herald?(:alberica) ? "You're on your knees. You don't believe it. (No. No, we watched you burn.)" :
+                                   cl(:alberica, "(on her knees, not believing it) No. No, we watched you burn.")
+            end,
             # the one secret you kept alone (Ch8, "Nobody else noticed"), come due (context 13 M13-5)
-            flag?(:avarice_doubt) ? "You knew. You saw her arms in the Forge, bare, and you never said." : nil,
+            flag?(:avarice_doubt) && !flag?(:avarice_doubt_shared) ?
+              "You knew. You saw her arms in the Forge, bare. You said nothing, even after the shard." : nil,
             flag?(:mira_left_possessed) ? "AVARICE: (in Mira's voice) You watched a coat burn. I had another: you left her for me." :
                                           "AVARICE: You watched a coat burn. I keep a wardrobe.",   # (dialogue 12 §4)
             "AVARICE: A god in a gem. The last variable. Thank you for weighing her out for me."])
@@ -713,7 +721,8 @@ module FrostThaw
       Stage.fx("E-04", av, frames: 10, oy: 16) rescue nil if av
       Stage.remove_actor(av) if av
       # Razzy's voice, paid at last (dialogue 12 §1a: the short branch can't play on the main path now)
-      sayc([cl(:meat_meat, "(to the ice) That is for Razzy's voice. Meat Meat is DONE.")])
+      # not closed here: the Vault's last blow is hers (whole read T16)
+      sayc([cl(:meat_meat, "(to the ice) That is for Razzy's voice. ...Meat Meat is not done with you.")])
       set_flag(:avarice_revealed)
     end
     set_flag(:avarice_ended)

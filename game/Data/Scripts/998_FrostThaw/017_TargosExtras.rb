@@ -50,7 +50,9 @@ module FrostThaw
     end
     pkmn = (Pokemon.new(:SPHEAL, 6) rescue nil)
     pkmn.makeFemale rescue nil if pkmn
-    if pbAddPokemon(pkmn || :SPHEAL, 6)
+    again = looped_gift?(:widow_spheal)
+    say(["(She already swims with you, from last time. The widow smiles anyway.)"]) if again
+    if again || pbAddPokemon(pkmn || :SPHEAL, 6)
       set_flag(:widow_spheal)
       if pet
         set_self_switch(pet.id, "A")
@@ -108,7 +110,7 @@ module FrostThaw
     say(["EPHERIS: Put those down. Not on the counter. On the floor.",
          herald?(:reptin) ? "You set your medallion on the floor, very gently." :
                             "Reptin sets his medallion on the floor, very gently.",
-         as(:reptin, "Of course. So sorry. Is the floor also cursed?"),
+         ask_as(:reptin, "Of course. So sorry. Is the floor also cursed?"),
          "EPHERIS: Five cold trinkets. All found where you'd find them, right when you'd find them.",
          "EPHERIS: That's not luck. That's bait."], event_id)
     speak(:alberica, "Bait? I've been called a lot of things, but bait?", "...Bait?", event_id)

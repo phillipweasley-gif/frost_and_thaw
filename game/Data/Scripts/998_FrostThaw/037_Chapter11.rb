@@ -43,7 +43,7 @@ module FrostThaw
     say(["The Rooted Hearth, the night of the vote. The bard is playing the Heralds' song, badly.",
          "HELLEN: (stopping, eyes wet) New verse. Glimmer's. The city calls him the Dagger Reborn.",
          cl(:alerion, "(to Hellen) The verse is good. Keep going."),
-         cl(:meat_meat, "Meat Meat has had four coffees. Meat Meat is vibrating. Fondly."),
+         cl(:meat_meat, "Meat Meat has had four coffees. Meat Meat is vibrating."),
          cl(:reptin, "(to the room) She means she's happy. Mostly."),
          al ? "You set down your cup. The rune on your chest is glowing through your shirt." :
               "Alberica sets down her cup. The rune on her chest is glowing through her shirt.",
@@ -313,7 +313,8 @@ module FrostThaw
     end
     say(["Sephek raises one hand. Ice blooms around Frostina: a crystal, not a cage.",
          "She goes still inside it, her eyes still open.",
-         "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home.",
+         (herald?(:alerion) ? "SEPHEK: (to you, and he means it) I'm sorry. I'm taking her home." :
+                             "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home."),
          "SEPHEK: To Solstice. To the nest she fell from. She was always going home.",
          as(:alerion, "(very quietly) She's not hers.")])
     # the bible's beat: Alerion, her Dragoon, is thrown down trying to stop them
@@ -379,7 +380,8 @@ module FrostThaw
          "SELRAE: She'll pour herself into all three at once, and walk out of there in a body.",
          "LUMIN: (very small) The old texts have a name for that. The Rewritten Auril."])
     if with_or_is?(:reptin) && with_or_is?(:alberica)
-      speak(:reptin, "Then Alberica stays here. In Rootspire. We go, and she stays.", "...Then you stay here.")
+      speak(:reptin, herald?(:alberica) ? "Then you stay here. In Rootspire. We go, and you stay." :
+                                          "Then Alberica stays here. In Rootspire. We go, and she stays.", "...Then you stay here.")
       speak(:alberica, "(very plain) No. She'd only come here for me. With all of you gone.",
                        "(very plain) ...No. She'd only come here.")
       if !herald?(:alberica) && !herald?(:reptin)
@@ -402,7 +404,7 @@ module FrostThaw
     if outsider?
       say(["LUMIN: (to you) And your Wall. Two dragons turn the wheel. Never one.",
            "LUMIN: Without her the wheel stays stuck. The Wall stays up. Your time and theirs, apart.",
-           with_or_is?(:reptin) ? as(:reptin, "(to you, gently) You're home, darling. Nobody would blame you for staying.") :
+           with_or_is?(:reptin) ? as(:reptin, "(to you, gently) You're home, dear. Nobody would blame you for staying.") :
                                   "LUMIN: (to you) You're home, though. Nobody would blame you for staying."])
       c = pbMessage(_INTL("(They wait.)"), [_INTL("I'm coming"), _INTL("I'm not done with that Wall"), _INTL("(Say nothing.)")], -1)
       c = 2 if !c || c < 0
@@ -410,7 +412,7 @@ module FrostThaw
       say([[cl(:alerion, "(on his feet now, just) Good.") || "LUMIN: Good.",
             cl(:reptin, "Then it's all of our Wall now.") || "LUMIN: Then it's all of ours now.",
             cl(:meat_meat, "Quiet one is coming. Meat Meat can tell.") || "LUMIN: You're coming. I can tell."][c]])
-      side_goal(:their_time, "Your own: bring Frostina home. Two dragons turn the wheel; with one, the Wall stays up.",
+      side_goal(:their_time, "Your own: bring Frostina home. Two dragons turn the wheel.",
                 done: %i[ending_third_way ending_shatter ending_still_keeper])
     else
       say(["LUMIN: Two dragons turn the wheel. Never one. With her gone, it stays stuck."])

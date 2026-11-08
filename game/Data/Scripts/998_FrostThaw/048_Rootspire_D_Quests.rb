@@ -499,7 +499,7 @@ module FrostThaw
     if who == :shade
       # (context 06, M6-4: the Rimefang and its curse, first said in a fight)
       say(["SELRAE: (low) Knife-bearer. That knife at your hip. The Rimefang."], event_id)
-      speak(:shade, "It's a knife. It came out of Saltmarsh with me. It's been cold ever since.", "...It's a knife.")
+      speak(:shade, "It's a knife. It turned up in my boot in Targos. It's been cold ever since.", "...It's a knife.")
       say(["SELRAE: Cold because it's hers. It marked you for her that night. You're halfway home."], event_id)
     else
       say(["SELRAE: (low) Sparkbearer. A light that came back through a mirror. Emptied, and filled."], event_id)
@@ -535,7 +535,7 @@ module FrostThaw
       me = herald?(who)
       say(["ELINE: (turning, with a terrible gentleness) And you. #{who == :glimmer ? 'Sparkbearer' : 'Knife-bearer'}.",
            "Behind her the chant drops to a hum, waiting.",
-           "ELINE: The cold in your blade knows the way home. You've felt it since Saltmarsh.",
+           "ELINE: The cold in your blade knows the way home. You've felt it since Targos.",
            "ELINE: Kneel with us. Let her finish what the knife began.",
            "ELINE: You'd never grieve again. Nothing that is still can grieve."])
       c = pbMessage(_INTL("Eline holds out her hand..."), [_INTL("\"No.\""), _INTL("\"...Never grieve again?\"")], 0)
@@ -827,7 +827,7 @@ module FrostThaw
           "Held close, they throw a thin line of light north, through the wall, through the Wall.",
           "At the end of it: a shape like a vault-door, wings spread over a frozen eye.",
           # (notes/15 F7: one place, said once, three names joined)
-          "WYNSNOW: The White Vault of Ithryn Athis, under the glacier. Selrae says the White Womb.",
+          "WYNSNOW: The White Vault of Ythryn Athis, under the glacier. Selrae says the White Womb.",
           "WYNSNOW: Same door. Two keys point the way. The third opens it. I'd bring a coat.",
           "WYNSNOW: Not this year, mind. Not while the tree's sick. When it's well, the door wakes.",
           cl(:alerion, "North. Then we go north.")].compact, event_id)

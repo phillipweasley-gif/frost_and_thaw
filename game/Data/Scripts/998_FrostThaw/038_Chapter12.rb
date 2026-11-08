@@ -33,6 +33,11 @@ module FrostThaw
   ENCOUNTERS[2081] = { step_chances: { Cave: 8 },
                        Cave: [[30, :HAUNTER, 57, 59], [25, :DUSCLOPS, 57, 59], [20, :SNEASEL, 57, 59],
                               [15, :GLALIE, 58, 60], [10, :MISDREAVUS, 58, 60]] }
+  # The Hall of the Four Winds: past the jaw there's no way out, so a team can still
+  # train before Sephek and the throne (whole read P5)
+  ENCOUNTERS[2083] = { step_chances: { Cave: 6 },
+                       Cave: [[30, :DUSCLOPS, 62, 64], [25, :GLALIE, 62, 64], [20, :WEAVILE, 63, 65],
+                              [15, :HAUNTER, 62, 64], [10, :MAMOSWINE, 64, 66]] }
 
   TRAINER_TYPES.merge!(FT_MEPHIT: ["Ice Mephit", :CHANNELER, 0, 100])
   TRAINERS.merge!(
@@ -94,7 +99,7 @@ module FrostThaw
       Stage.walk_to(tam, px + 3, py, face: 4)     # (past the tiles companions walk in to)
       Stage.emote(tam, :exclaim)
     end
-    sayc(["TAMSIN: (cloak on crooked, planting their feet) Hold it. HOLD it, #{player_display_name}!",
+    sayc(["TAMSIN: (Rootwarden cloak on crooked, planting their feet) Hold it. HOLD it, #{player_display_name}!",
           "TAMSIN: You're going to fight a GOD. With THAT team? Not without one more battle first."])
     cline(:alberica, "Look at them. All grown up and threatening people. I could cry.", "...Look at them. All grown up.")
     # (lines someone answers are spoken, not thought, when you are that Herald: WRITING_GUIDE §5)
@@ -247,8 +252,8 @@ module FrostThaw
     cline(:alerion, "(a hand to the heart) North. A little east. She's beating louder.", "(a hand to the heart) ...That way.")
     if with_or_is?(:alerion) && with_or_is?(:reptin)
       who = { "RHEVEN" => "Captain", "MIRA" => "Captain", "KETHAN" => "Kethan", "FIRST MATE" => "mate" }[tag] || "old one"
-      sayc([cl(:reptin, herald?(:alerion) ? "Our Dragoon steers by heartbeat, #{who}. Do keep up." :
-                                            "He's steering by his dragon's heart, #{who}. Do keep up.")])
+      sayc([cl(:reptin, herald?(:alerion) ? "Our Dragoon steers by heartbeat, #{who}. Try to keep up." :
+                                            "He's steering by his dragon's heart, #{who}. Try to keep up.")])
     end
   end
 
@@ -526,6 +531,7 @@ module FrostThaw
         say(["You touch the empty place at your throat, where the pendant used to hang."])
         speak(:alberica, "The price was a door. The White Vault. It stays shut, and we stay spared.")
         speak(:alberica, "Gran kept the key: the pendant. \"Keep it close. It keeps the far future out.\"")
+        speak(:alberica, "I threw it in the sea once. It came back. It always does.")
         say([who == :reptin ? "REPTIN: (very gently) Then tomorrow we find out together. That's the price of me." :
                               "#{name}: (very quietly) Then tomorrow we find out what's behind it. Together."])
       else
@@ -542,6 +548,7 @@ module FrostThaw
          "She touches the empty place at her throat, where the pendant used to hang.",
          "ALBERICA: The price was a door. The White Vault. It stays shut, and we stay spared.",
          "ALBERICA: Gran kept the key: the pendant. \"Keep it close. It keeps the far future out.\"",
+         "ALBERICA: I threw it in the sea once. It came back. It always does.",
          "The stove ticks. Out on the ice, Razzilith sighs in his sleep."])
     say(["ALBERICA: Those sigils in your bag hum at that door. I've heard them. I've said nothing."]) if sig > 0
     say(["ALBERICA: Nobody ever said what's behind it. I think tomorrow she'll tell me herself."])
@@ -780,7 +787,7 @@ module FrostThaw
     have = SHORTCUTS.select { |f, _| flag?(f) }
     say(lines_for(:grimskalle_jaw), event_id)
     say(have.map(&:last) + ["(None of them skips a Test.)"]) if !have.empty?
-    return if !pbConfirmMessage(_INTL("Go into Grimskalle? (No way back out until it's done.)"))
+    return if !pbConfirmMessage(_INTL("Go into Grimskalle? (No way back out until it's done. Sephek and the throne are past level 65.)"))
     set_flag(:grimskalle_entered)
     add_counter(:story_beats)
     if !flag?(:shortcuts_used)

@@ -91,6 +91,7 @@ module FrostThaw
   # and at version 2 the leader brings the extra Pokémon listed in SCALED_EXTRA.
   #-----------------------------------------------------------------------------
   SCALED_EXTRA = {}
+  SCALED_CAP = { mira: 1 }   # (whole read P4: Mira's version 2 was a wall before the Requiem's rest)
 
   def scaled_version
     [[badges_held - 4, 0].max, 2].min
@@ -113,7 +114,7 @@ module FrostThaw
   def scaled_leader_battle(key)
     register_scaled(key)
     type, name = TRAINERS[key]
-    pbTrainerBattle(type, name, nil, false, scaled_version) ? true : false
+    pbTrainerBattle(type, name, nil, false, [scaled_version, SCALED_CAP[key] || 2].min) ? true : false
   rescue StandardError => e
     log("scaled_leader_battle(#{key}) failed: #{e.message}")
     false
@@ -174,7 +175,7 @@ module FrostThaw
                          "EIRA: (to Wyn) You left your post. The night the curtain tore. The tree noticed."])
     speak(:wyn, "I know. I'm here to answer for it.", "...I know.")
     sayc([cl(:reptin, "(gently) And we're here to stand next to them while they do."),
-          cl(:meat_meat, "Anyone pokes mushroom friend with a spear, Meat Meat pokes back."),
+          cl(:meat_meat, "Anyone pokes mushroom person with a spear, Meat Meat pokes back."),
           "EIRA: ...Pass. Touch nothing that sings.",
           cl(:alberica, "Touch nothing that sings. Well. There goes my evening."),
           cl(:alerion, "You could not sing."),
@@ -213,7 +214,7 @@ module FrostThaw
           "The air above them shimmers with heat.",
           "YARRO: (a voice like warm rain) They grow where the roots run hot.",
           "YARRO: Something below is cooking them. Cooking her.",
-          cl(:reptin, "Her? Forgive me. Who's 'her'?"),
+          ask_cl(:reptin, "Her? Forgive me. Who's 'her'?", "...Who's 'her'?"),
           "YARRO: We don't say her name to people we've just met.",
           cl(:alberica, "Then buy us a drink first, sugar. That's how it works upstairs.")], event_id)
     # R1, Verdant Sickness: Rheven comes down, and asks Reptin to cleanse it or cut it out.
@@ -394,7 +395,7 @@ module FrostThaw
           "Its gills flare. It's furious at the heat that woke it.",
           cl(:reptin, "It's not evil. It's scalded. Gently, if we can."),
           cl(:meat_meat, "Meat Meat can be gentle."),
-          cl(:alberica, "Since when, sweetheart?"),
+          ask_cl(:alberica, "Since when, sweetheart?", "...Since when?"),
           cl(:meat_meat, "Since now. Watch.")], event_id)
     return if !boss_battle(named_mon(:B73H130, 45, "Scalded Lake-Wyrm"))
     ($game_switches[SW_LAKE_DOWN] = true; $game_map.need_refresh = true if $game_map) if $game_switches
@@ -545,7 +546,7 @@ module FrostThaw
            "WYN: A god's last spark. The part of it that hid. It doesn't want to hide any more."])
     end
     if with_or_is?(:meat_meat)
-      sayc([cl(:meat_meat, "Mushroom friend is a god now. Meat Meat is still the bodyguard."),
+      sayc([cl(:meat_meat, "Mushroom person is a god now. Meat Meat is thinking about bodyguarding."),
             as(:wyn, "...Thank you. For both of those.")])
     end
     Stage.cleanup rescue nil

@@ -89,7 +89,7 @@ module FrostThaw
     FT_HEARTH_LEADER: ["Hearth-Keeper", :BEAUTY, 1, 120, :LEADER_Brock],
     FT_TAMSIN_I:      ["Hearth-Kid", :PICNICKER, 1, 80, :LEADER_Brock],
     FT_TAMSIN_G:      ["Hearth-Kid", :PICNICKER, 1, 80, :LEADER_Brock],
-    FT_TAMSIN_F:      ["Hearth-Kid", :PICNICKER, 1, 80, :LEADER_Brock],
+    FT_TAMSIN_F:      ["Rootwarden", :PICNICKER, 1, 80, :LEADER_Brock],   # sworn in during the trial week (whole read T7)
     FT_SKYSAILOR:     ["Sky-Sailor", :PICNICKER, 1, 60],
     FT_SCHOLAR:       ["Auroral Scholar", :GENTLEMAN, 0, 70],
     FT_SOVEREIGN:     ["Myconid Sovereign", :BEAUTY, 1, 140, :LEADER_Brock]
@@ -104,7 +104,7 @@ module FrostThaw
                      "Four hundred years my family waited to lose to you. Worth it."],
     hearth_tallis:  [:GENTLEMAN, "Tallis", [[:GIRAFARIG, 38], [:B124H40, 39]],
                      "I'll put this in the song. I'll sound better in the song."],
-    hellen_gym:     [:FT_HEARTH_LEADER, "Hellen", [[:B184H241, 39], [:B266H217, 40], [:B38H128, 40], [:B149H143, 42]],
+    hellen_gym:     [:FT_HEARTH_LEADER, "Hellen", [[:B184H241, 37], [:B266H217, 38], [:B38H128, 38], [:B149H143, 40]],   # (whole read P3: was ace 42, the most-lost fight)
                      "Well. The wall had you right, love.", [:HYPERPOTION, :FULLRESTORE]],
     # Tamsin, Hellen's kid: the starter that beats yours
     tamsin_i: [:FT_TAMSIN_I, "Tamsin", [[:FURRET, 37], [:JUMPLUFF, 38], [:B331H154, 40]], "No. No! ...Okay. Rematch. Soon."],
@@ -372,7 +372,7 @@ module FrostThaw
          "EIRWEN: On leaves of light. Yours too, now. Mind your language.",
          "On the nearest shelf a leaf flickers, writing that down.",
          "EIRWEN: In the oldest roots I keep Naerth Maxildanarr's last ledger.",
-         "EIRWEN: It says Avarice was bleeding Targos white long before the Rime.",
+         "EIRWEN: It says a pale lady in a tower was bleeding Targos white long before the Rime.",
          "They glance at the door, as if someone might be listening.",
          "EIRWEN: I've never known who to show it to. And there's a sub-vault. Alberica's.",
          "EIRWEN: Her students wrote it into the founding charter: a case only she may open.",
@@ -567,7 +567,7 @@ module FrostThaw
     college: ["Professor has ink on his nose. Meat Meat will not tell him.", "It is funnier. Coffee here: two out of ten. It is tea. It is lying."],
     crypt: ["Sleepy wardens. Meat Meat whispers.", "Wardens do not mind whispers. Meat Meat checked."],
     undercanopy: [{ if: { with: :wyn }, lines: ["Mushrooms are talking in Meat Meat's head! They are very polite!",
-                                                "Anyone touches mushroom friend's mushrooms, Meat Meat bites. Fondly. Then not fondly."] },
+                                                "Anyone touches mushroom person's mushrooms, Meat Meat bites. Fondly. Then not fondly."] },
                   ["Mushrooms are talking in Meat Meat's head! They are very polite!", "Meat Meat is talking back very polite too!"]]
   )
   # Wyn travels with you from festival night (SC 6.09).
@@ -644,7 +644,7 @@ module FrostThaw
           "A green wyrmling, moss and silver, sneezing spores that grew moss on the ice. Razzy.",
           "He laughed, and flew up into the light, after the green.",
           cl(:meat_meat, "Razzy hatched! Meat Meat remembers now! Meat Meat said hello!"),
-          cl(:meat_meat, "Razzy flew away. Very rude. Meat Meat will bite him. Fondly."),
+          cl(:meat_meat, "Razzy flew away. Very rude. Meat Meat will bite him."),
           cl(:reptin, "Four hundred years. If he flew forward with us, he's out there. Somewhere above.")])
   end
 
@@ -660,7 +660,7 @@ module FrostThaw
       set_flag(:canopy_lift_banter)
       lines = []
       if with_or_is?(:alberica) && with_or_is?(:alerion)
-        lines << as(:alberica, "Pretty boy, you're gripping the rail. Afraid of heights?")
+        lines << ask_as(:alberica, "Pretty boy, you're gripping the rail. Afraid of heights?", "...Afraid of heights?")
         lines << as(:alerion, "No. I'm afraid of falling. Different thing.")
       end
       lines << cl(:meat_meat, "Meat Meat is not afraid. Meat Meat holds Reptin's sleeve for Reptin's sake.") if with_or_is?(:reptin)
@@ -782,7 +782,7 @@ module FrostThaw
            "TAMSIN: All of you. She's never like this. If the Heralds are real, I want to see.",
            "TAMSIN: Battle me!"], event_id)
       sayc([cl(:meat_meat, "Small one has big eyes. Meat Meat likes small one. Meat Meat will still win."),
-            cl(:alerion, "She's holding them upside down."),
+            cl(:alerion, "They're holding them upside down."),
             (with_or_is?(:alerion) && with_or_is?(:alberica) ? cl(:alberica, "Don't tell them, pretty boy. Let them find out. That's how you learn.") : nil)].compact)
     end
     type = case state[:starter]
@@ -868,7 +868,7 @@ module FrostThaw
           "WYNSNOW: The rules are the lore. No cocoon holds a stranger: they must be close in level.",
           "WYNSNOW: And seedlings remember: eggs keep their parent's growth.",
           "WYNSNOW: Never into a person. That's Joining, and it's forbidden.",
-          cl(:meat_meat, "...Why forbidden?"),
+          ask_cl(:meat_meat, "...Why forbidden?", "...Why?"),
           "WYNSNOW: Because the last person who tried it made monsters. A pale woman. Long ago.",
           cl(:alerion, "(very quietly) Naerth's pale lady."),
           herald?(:meat_meat) ? "(You don't say anything. Your hands have gone cold.)" : (with_or_is?(:meat_meat) ? "Meat Meat doesn't say anything else. She puts her hands in her pockets." : nil),
@@ -1041,7 +1041,7 @@ module FrostThaw
           "Where her hooves fall, the frost shatters, and flowers spring up through the cracks.",
           "\"Sparkbearer. My light is yours.\"",
           "\"Shimmer gave the ice of her heart so others might live. Her torch is yours to carry.\"",
-          "Shimmer's last breath. The rose. Her heart of ice, gone into the root to become the seed.",
+          "Shimmer's last breath. The rose. Her heart of ice, sung into an egg, waiting to wake.",
           me ? "(You weep. In the tears you see fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.)" :
                "#{who} weeps, and in the tears there is fire. It's been burning since #{flag?(:glimmer_joined) ? 'the mirror' : 'the Glade'}.",
           "Two flames.",

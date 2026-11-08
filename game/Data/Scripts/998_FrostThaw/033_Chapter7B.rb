@@ -593,7 +593,7 @@ module FrostThaw
     return say(lines_for(:selrae_after), event_id) if flag?(:root_key)
     sayc(["The Winter Matron sits on a root with frost-burned hands. Her Pokémon pant in the heat.",
           "Two Rootwardens stand over her, unsure who they're guarding.",
-          "SELRAE: I came down after Var. A week ago. I got this far.",
+          "SELRAE: I came down after Var. The night the tree shook. I got this far.",
           "SELRAE: It was me. I let the Halo into this city. Thirty years.",
           "SELRAE: I thought a little winter would balance this endless summer. That's all I wanted.",
           cl(:reptin, "(gently) A little winter. Matron, the Halo don't do little."),

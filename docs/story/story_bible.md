@@ -797,7 +797,7 @@ The concept sheets are pixel-style references, not game-resolution sprites, so e
 | Winter Matron Selrae Vorn | OW; TR | P2 | BWOldWoman | Not started |
 | High Speaker Kelyn of Spring | OW | P2 | BW (30) | Not started |
 | Captain Rheven Stormbranch and his direwolf | OW; wolf follower | P2 | BW (72); Mightyena | Not started |
-| Captain Kethan Vale (Wyn's captain) | OW | P3 | none | Not started |
+| Captain Kethan Vale (captain of the Hall watch; Rheven commands the Rootwardens) | OW | P3 | none | Not started |
 | Eirwen Solglass (librarian; candidate) | OW | P2 | BW (30) | Not started |
 | Professor Wynsnow | OW | P2 | BW (55) | Not started |
 | Wennen (generic sheet, plus Zenith, Jet Sentry, Luna, Lumin) | OW | P2 | Lopunny and Buneary followers | Not started |
@@ -852,3 +852,8 @@ Your answers are now in the script. Nothing is left open.
 - **The Umbound Chasm is renamed the Scratching Hollow** (Ch8, the Hag's Domain): named for the umber hulk under its floor.
 - **An autosave before the god choice** ("What do we do with a god?"): one of the game's autosave slots is written just before it; loading it brings you back to the question (039 `autosave_before_choice`).
 
+
+## Owner's decisions, 2026-11-08
+
+- **One sprite template, the one closest to the main games' sprites:** Gen 5 chibi, 25 to 28 px native (goblins and children 21 to 24, big folk up to 30), head more than half the height, a full near-black outline, at most 24 colours, flat three-tone shading. Batch 02 and the base game's townsfolk already look like this; it replaces the October style guide's "2.7 heads". The rules, plates and per-sprite list are in the "Art Still Needed and Style Guide" doc.
+- **The off-template sprites stay in the game as placeholders** (the 38 November 6 walking sprites and 11 battle pictures) until the corrected art comes through.

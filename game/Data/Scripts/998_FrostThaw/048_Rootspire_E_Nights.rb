@@ -40,7 +40,7 @@ module FrostThaw
   # Auril's Omens
   #-----------------------------------------------------------------------------
   # key => [herald, [[tier1 triggers], [tier2], [tier3]], [tier lines...]]
-  # In the lines: {A} Alberica/you, {A's} Alberica's/your, {She} {she} She/You,
+  # In the lines: {A} Alberica/you, {A's} Alberica's/your, {A's own} Alberica's/yours, {She} {she} She/You,
   # {her} her/your, [[third|second]] the verb for each.
   OMENS = {
     dark_half: [:alerion, [[:twins_met, :echo_wraiths_down, :mantle_found], [:eren_pupil, :alerion_reflection, :ch7_started], [:summer_ended]], [
@@ -62,7 +62,7 @@ module FrostThaw
        "Nobody else's breath is fogging."],
       ["Meat Meat laughs, and says something warm and stupid, and everyone groans.",
        "{A's} breath comes out white and heavy, and creeps toward the goblin like ivy.",
-       "Every flame needs frost waiting to quench it. The thought isn't {A's}."],
+       "Every flame needs frost waiting to quench it. The thought isn't {A's own}."],
       ["Meat Meat laughs, and {A's} breath freezes in {her} throat. {She} can't swallow.",
        "The steam that escapes curls into a meadow on fire,",
        "and a goblin holding a dragon's muzzle.",
@@ -155,6 +155,7 @@ module FrostThaw
 
   def omen_text(line, me)
     t = line.gsub(/\[\[([^|\]]*)\|([^\]]*)\]\]/) { me ? $2 : $1 }
+    t = t.gsub("{A's own}", me ? "yours" : "Alberica's")   # (whole read V10: "isn't yours")
     t = t.gsub("{A's}", me ? "your" : "Alberica's").gsub("{A}", me ? "you" : "Alberica")
     t = t.gsub("{She}", me ? "You" : "She").gsub("{she}", me ? "you" : "she").gsub("{her}", me ? "your" : "her")
     t = t.gsub(/([.!?]\)?\s+)(you|your)\b/) { "#{$1}#{$2.capitalize}" }   # (context 09: "...again. You can't")
@@ -413,7 +414,7 @@ module FrostThaw
     set_switch(SW_SCORCH, false)
     say(["Beyond the scorch, three Rootwarden cloaks lie folded in the dust, as if left for you.",
          "No bodies. No footprints. Only a drag mark, going down."])
-    sayc([cl(:alerion, "(at the drag mark) Down. Eirwen has the oldest maps. She'll know what's under.")].compact)
+    sayc([cl(:alerion, "(at the drag mark) Down. Eirwen has the oldest maps. They'll know what's under.")].compact)
     side_goal(:patrol, "Take the chardalyn to Eirwen at the Wind-Glass Library, on the Canopy-Tier.", done: [:eirwen_audience, :barricade_entered])
     add_counter(:story_beats)
   end
@@ -458,7 +459,7 @@ module FrostThaw
   TAVERN_RUMOURS = [
     [:rumour_mirrors, "Some of the Bazaar's mirrors watch back, merchants say. A child went strange last week."],
     [:rumour_secrets, "Secrets run through the market like sap. Say one at a stall; three stalls on, they know."],
-    [:rumour_bryn, "Bryn of Spring hasn't slept in a month. Something in the roots. He says it's nothing."],
+    [:rumour_bryn, "Bryn the apothecary hasn't slept in a month. Something in the roots. He says it's nothing."],
     [:rumour_lirielle, "Lirielle's dreams have gone dark. Burning roots. Her fur smells of charred flowers."],
     [:rumour_robes, "The Frost-Thread tailors say the Autumn Warden ordered crowning robes. Nobody knows whose."],
     [:rumour_spores, "The bank's counting spores whisper one name at night. Spore echo, the clerks say. Scared."],

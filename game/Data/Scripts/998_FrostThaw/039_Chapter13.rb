@@ -248,7 +248,7 @@ module FrostThaw
          "GUNVALD'S SHADE: Cruelty is a knife. Cut.",
          "A blade of pure thought forms in #{mm ? 'your' : "Meat Meat's"} hand, on its own.",
          # (Auril in her head: a voice, no body)
-         "AURIL: (a whisper) You were made to cut, little knife. Cut.",
+         "AURIL: (a whisper) You were made to cut, V-7. Cut.",
          "AURIL: (a whisper) Or be a seed, and rot in the snow with them."], event_id)
     test_line(:meat_meat, "(the blade goes out) Meat Meat was made a weapon. Meat Meat chose to be a seed.",
               "(letting the blade go out) ...No. Meat Meat says no.")
@@ -277,6 +277,8 @@ module FrostThaw
     say(["JARUND'S SHADE: Outlast. By any means. Those who fall, fall."])
     carrier = test_herald(:reptin)
     Stage.walk_to(carrier, 9, 9, face: 8) if carrier && carrier != $game_player
+    say([rp ? "(Your medallion, quiet since Dougan's Hole, fogs once and clears.)" :
+              "Reptin's medallion, quiet since Dougan's Hole, fogs once and clears."]) if with_or_is?(:reptin)   # (whole read T25)
     say(["#{rp ? 'You pick' : 'Reptin picks'} the child up. Then the next one who falls.",
          "Slower. The line pulls away."])
     Stage.remove_actor(child) if child
@@ -438,7 +440,8 @@ module FrostThaw
     iskra_ev = stage_event("Iskra")
     Stage.emote(iskra_ev, :angry) if iskra_ev
     c = pbMessage(_INTL("Iskra won't move from her nest."), [_INTL("Hum Shimmer's four notes"), _INTL("Approach slowly"), _INTL("Fight")], 1)
-    if c == 0 && flag?(:hummed_song)
+    # the four notes have been heard all game; any of these taught them well enough (whole read T27)
+    if c == 0 && (flag?(:hummed_song) || flag?(:luna_spark) || flag?(:frostina_sang_north) || flag?(:glimmer_joined))
       Stage.balloon($game_player, "B-05", frames: 50)
       Stage.wait(20)
       Stage.balloon(stage_event("Frostina's crystal"), "B-05", frames: 60)
@@ -447,7 +450,7 @@ module FrostThaw
       set_flag(:iskra_calm)
     elsif c == 0
       # (notes 13 E16: without the song from Chapter 9 the hum is yours, and half known)
-      say(["You hum four notes you only half know. Inside the crystal, Frostina doesn't stir.",
+      say(["You hum the four notes. Iskra's head tilts. Frostina, inside the ice, can't hear you.",
            "You go forward one step at a time.", "Iskra watches every step. She doesn't charge."])
     elsif c == 1
       say(["You go forward one step at a time.", "Iskra watches every step. She doesn't charge."])
@@ -456,7 +459,7 @@ module FrostThaw
       say(["Iskra stumbles back over her nest and stays there, guarding the egg.", "She lets you pass."])
     end
     set_flag(:iskra_passed)
-    say(["The silver egg stays in the nest. (Something to come back for, one day.)"]) if flag?(:iskra_calm)
+    say(["The silver egg stays in the nest, warm under Iskra's wing."]) if flag?(:iskra_calm)
   end
 
   # Frostina comes out of the crystal; her Dragoon feels it.
@@ -472,10 +475,10 @@ module FrostThaw
     set_flag(:sephek_motives_crown)
     if with_or_is?(:meat_meat)
       # (Chapter 11 said why; here it's one box: dialogue 13 §4)
-      say(["SEPHEK: (to Meat Meat) A drop of your blood and winter never thaws. I'd have asked nicely."])
+      say([(herald?(:meat_meat) ? "SEPHEK: (to you) " : "SEPHEK: (to Meat Meat) ") + "A drop of your blood and winter never thaws. I'd have asked nicely."])
     end
     if with_or_is?(:alerion)
-      say(["SEPHEK: (to Alerion) And you. She's quieter in me since the Shrine. Louder in you.",
+      say([(herald?(:alerion) ? "SEPHEK: (to you) " : "SEPHEK: (to Alerion) ") + "And you. She's quieter in me since the Shrine. Louder in you.",
            as(:alerion, "Then stop listening.")])
     end
     if flag?(:took_cold_blessing)
@@ -490,7 +493,7 @@ module FrostThaw
     eline_actor
     say(["SEPHEK: (standing between you and the crystal) I held the knife.",
          "SEPHEK: I held a lot of knives for her. Then four hundred years of ice.",
-         "SEPHEK: The only thing I remembered was a woman laughing on an altar."], event_id)
+         "SEPHEK: The only thing I remembered was a woman on an altar, saying no."], event_id)
     eline_at_the_crown(:before)                   # (unbeaten at the Shrine, she's his last follower)
     glaive_resonates                              # (Var's glaive knows him: rootspire.md 833)
     # rootspire.md Tab 1: he wants Meat Meat's altered blood, and Alerion is the rival he must break.
@@ -571,9 +574,7 @@ module FrostThaw
       Stage.balloon(stage_event("Sephek"), "B-07") rescue nil
     end
     eline_at_the_crown(:after)                    # (spared at the Shrine, she dies for him)
-    if el && flag?(:eline_martyred)
-      cline(:alberica, "(quietly) ...Somebody should sit with her. After.", "(quietly) ...After. Somebody sits with her.")
-    end
+    # (Alberica's "Somebody should sit with her" plays once, inside eline_at_the_crown: whole read V17/T14)
     set_flag(:frostina_freed)
     ($game_switches[SW_FROSTINA_FREE] = true; $game_map.need_refresh = true if $game_map) if $game_switches
     add_counter(:story_beats)
@@ -693,8 +694,10 @@ module FrostThaw
     Stage.turn_to(auril) if auril
     say([herald?(:wyn) ? "AURIL: (to you) And you. The tree's little warden. You came through a crack in my glass." :
                          "AURIL: (to you) And you. I couldn't see you at all, until the hag's last glass.",
+         # Ch11's look back, read here (whole read T3)
+         flag?(:looked_at_auril) ? "AURIL: You looked back at me, once. I thought that made you mine. It didn't." : nil,
          "AURIL: You chose, and I felt it. You don't turn on my wheel. You don't turn on theirs.",
-         "AURIL: Go home, little stranger. This isn't your winter."])
+         "AURIL: Go home, little stranger. This isn't your winter."].compact)
     opts = [[:wall, _INTL("\"It's my Wall.\"")]]
     opts << [:feather, _INTL("(Hold up the owl feather.)")] if has_key?(:FT_OWLFEATHER)
     opts << [:no, _INTL("\"...No.\"")]
@@ -728,7 +731,10 @@ module FrostThaw
          "Frost reaches out of it three ways.",
          "Toward Frostina. Toward #{al ? 'your' : "Alberica's"} rune. Toward the heart in Sephek's chest."])
     if flag?(:sephek_turned)
-      say(["The third strand finds nothing. Sephek's chest is empty, and the frost recoils."])
+      # what the Crown did with his heart, read back (whole read V16/T2)
+      say([flag?(:shard_purified) ? "The third strand finds Sephek's heart, warm now, only his. It slides off." :
+           flag?(:shard_destroyed) ? "The third strand finds only scar where the splinters were. The frost recoils." :
+                                     "The third strand finds nothing. Sephek's chest is empty, and the frost recoils."])
     else
       say(["The third strand finds Sephek's heart and drags him, choking, toward the diamond."])
     end
@@ -801,6 +807,19 @@ module FrostThaw
     scene_what_do_we_do
   end
 
+  # Map 2089's pages after Auril falls (whole read P1): ask the choice if it
+  # hasn't been answered; once it has, rest the autorun page.
+  def throne_resume(event_id = nil)
+    if ending_chosen?
+      if event_id && $game_self_switches
+        $game_self_switches[[$game_map.map_id, event_id, "A"]] = true
+        $game_map.need_refresh = true
+      end
+      return
+    end
+    scene_what_do_we_do
+  end
+
   def ending_chosen?
     flag?(:ending_shatter) || flag?(:ending_third_way) || flag?(:ending_still_keeper)
   end
@@ -809,7 +828,10 @@ module FrostThaw
   # seen without replaying Grimskalle (owner, 2026-11-07).
   def autosave_before_choice
     return if !defined?(Game) || !Game.respond_to?(:auto_save)
-    ok = (Game.auto_save rescue false)
+    # dump in memory first, so a bad object never leaves a half-written slot (whole read P17)
+    dumps = (defined?(SaveData) && SaveData.respond_to?(:compile_save_hash)) ?
+              ((Marshal.dump(SaveData.compile_save_hash) && true) rescue false) : true
+    ok = dumps && (Game.auto_save rescue false)
     pbMessage(ok ? _INTL("\\me[GUI save game](The game autosaved here, before the choice.)") :
                    _INTL("(The autosave didn't work. Save from the menu if you'd like to.)")) rescue nil
   rescue StandardError => e
@@ -836,14 +858,14 @@ module FrostThaw
       $game_screen.start_tone_change(Tone.new(20, 30, 60, 60), 20) rescue nil
       say(["AURIL: (tiny, from the diamond) Then be still with me.",
            "Frost climbs everyone in the ring, to the shoulders. Their breath stops in the air.",
-           "Not yours. You were never on her wheel."])
+           flag?(:looked_at_auril) ? "Not yours. She thought she had you. She never did." : "Not yours. You were never on her wheel."])
       pbMessage(_INTL("The diamond lies at your feet."), [_INTL("(Pick it up.)")], 0)
       Stage.remove_actor(auril_diamond) if auril_diamond
       say(["It's very cold, and very small. Every face in the ring is turned to you."])
     end
     say([herald?(:meat_meat) ? "Dawnfang is in your hand. (One stab. No more winters. Ever.)" :
                                "MEAT MEAT: (Dawnfang in her hand) One stab. No more winters. Ever.",
-         herald?(:meat_meat) ? "(...You'd miss snow a little.)" : "MEAT MEAT: ...Meat Meat would miss snow a little."])
+         herald?(:meat_meat) ? "(...Meat Meat would miss snow a little.)" : "MEAT MEAT: ...Meat Meat would miss snow a little."])
     say(["SEPHEK: She'll come back. At the solstice. Gods with worshippers always do. Angrier."]) if flag?(:sephek_turned)
     sayc([cl(:reptin, "Or we hold her. Somebody could.")])
     speak(:alberica, "(very still) I could. I'm the one she wanted.", "(very still) ...I could.")
@@ -940,7 +962,8 @@ module FrostThaw
     Stage.fx("E-14", frost, oy: 24) if frost
     say(["The light in the diamond flickers, then settles.",
          "It goes into Frostina like breath into a lung. Winter, the season. Not the cage.",
-         "And Frostina, Shimmer's answer, carries it."])
+         "And Frostina, Shimmer's answer, carries it.",
+         "The old relics answer: a medallion fogs, a ring frosts, Dawnfang hums. The chord from Targos, once."])   # (whole read T25)
     Stage.theme("lake_crater")
     say([herald?(:alerion) ? "Behind your ribs, the second heartbeat goes cold and clean, like a winter morning." :
                              "Alerion puts a hand to his chest and, very slightly, smiles."])
@@ -985,18 +1008,20 @@ module FrostThaw
   end
 
   # Flags that survive the loop; everything else is the story, and replays.
-  LOOP_KEEP = %i[intro_done fell_through]
+  LOOP_KEEP = %i[intro_done fell_through razzy_blanket]   # (the Blanket isn't handed over twice: whole read P7)
   # Everything else in state is the story, and replays. These belong to the
   # player (the team, the bag and what's in it, the save), not the story.
-  LOOP_KEEP_STATE = %i[flags counters companions goal loop_snap bargain_memory mode herald version active starter
+  LOOP_KEEP_STATE = %i[flags counters companions goal loop_snap loop_gifts bargain_memory mode herald version active starter
                        bag_limit bank pip_upgrades pip_yes chwinga_charges grass_line_v2 locket_day]
   # Counters that are the player's, not the story's: the wheel, the beats and
   # the loops themselves, and how many trainers you've beaten.
-  LOOP_KEEP_COUNTERS = %i[wheel story_beats loop_count trainers_beaten]
+  # (the Wheel isn't kept: a loop re-earns it; a skip restores what that act earned. Whole read T31)
+  LOOP_KEEP_COUNTERS = %i[story_beats loop_count trainers_beaten]
 
   def start_loop
     n = (counter(:loop_count) rescue 0).to_i + 1
     flags = state[:flags] || {}
+    remember_loop_gifts(flags)
     flags.keys.each { |k| flags.delete(k) unless LOOP_KEEP.include?(k) }
     state[:flags] = flags
     state[:counters] ||= {}
@@ -1010,6 +1035,7 @@ module FrostThaw
     $game_self_switches.instance_variable_get(:@data)&.delete_if { |(m, _e, _c), _| m >= 2001 && m < 2400 } rescue nil
     set_flag(:in_loop)
     take_story_keys                         # (notes 13 E18: the story hands them out again, or a skip gives them back)
+    apply_herald_switches rescue nil         # your own Herald stays hidden, even if Act I is skipped (whole read P14)
     pbMessage(_INTL("(Loop {1}. The story starts over. You keep your team, your bag and your Pokédex.)", n)) rescue nil
     pbMessage(_INTL("(The story's keepsakes go back where you found them. You can skip what you remember.)")) rescue nil
     if journey?
@@ -1045,6 +1071,7 @@ module FrostThaw
     v[:wall] << ["Hellen's wall. A new carving, cut right through the shadowy figure with the knife:",
                  "a cat-man with a golden dagger, mid-stride, stepping out of it: Glimmer, who was Shade.",
                  "Under it: THE DAGGER REBORN."]
+    v[:wall] << "On the shelf under the new carving, a little wooden cat. Hellen dusts round it."   # (Shimmer's "Keep the cat": whole read T17)
     if outsider?
       v[:wall] << ["And under the small sixth figure, freshly cut: your name.",
                    flag?(:told_tamsin) ? "TAMSIN: Told you, #{player_display_name}. Told you it was you." :
@@ -1070,12 +1097,21 @@ module FrostThaw
                      "Phildendrin is screaming happily#{flag?(:council_phildendrin) ? ', in the Autumn sash' : ''}.",
                      herald?(:meat_meat) ? "(Hold on with your KNEES, Mama!)" : "MEAT MEAT: Mama! Hold on with your KNEES!"]
     end
+    # the trial's sentence, come due (whole read T11)
+    if flag?(:verdict_service) && (herald?(:meat_meat) || with_or_is?(:meat_meat) || flag?(:meat_meat_joined))
+      v[:market] << (herald?(:meat_meat) ? "(You serve your season at the refugee camp. By week two you run it. There is coffee.)" :
+                                           "Meat Meat serves her season at the camp. By week two she runs it. There is coffee.")
+    end
     v[:market] << (al ? "You're teaching a Rootwarden class how to fall off a dragon properly." :
                         "Alerion is teaching a Rootwarden class how to fall off a dragon properly.")
     if flag?(:talion_released)
       v[:market] << (al ? "You laugh at something Alberica says. Nobody has ever heard you laugh." :
                      herald?(:alberica) ? "Alerion laughs at something you say. Nobody has ever seen him laugh." :
                                           "He laughs at something Alberica says. Nobody has ever seen him laugh.")
+    end
+    if flag?(:anduin_leaving) && !flag?(:anduin_reconciled)
+      v[:heartroot] << (herald?(:reptin) ? "(You plant something in the Heartroot alone. You write to Anduin every week.)" :
+                                           "Reptin plants something in the Heartroot alone. He writes to Anduin every week.")
     end
     if flag?(:anduin_reconciled)
       v[:heartroot] << [herald?(:reptin) ? "You and Anduin kneel together in the Heartroot, planting something." :
@@ -1090,6 +1126,11 @@ module FrostThaw
       v[:council] << ["Down in the root-cells, a woman in threadbare blue still prays every morning.",
                       "Backwards, mostly. Some mornings now, the warden says, a line comes out the right way."]
     end
+    # the city you voted for (whole read T12)
+    v[:council] << "Summer's chair has a direwolf asleep under it. Rheven says it's a security measure." if flag?(:council_rheven)
+    v[:council] << "Mira's chair faces the window, toward the Glasswater. She sails on recess." if flag?(:council_mira)
+    v[:council] << "Eirwen chairs the Autumn session barefoot. The minutes are in verse." if flag?(:council_eirwen)
+    v[:council] << "Anduin keeps an iron ring on the Council table, for whoever's late. It's always Kelyn." if flag?(:council_anduin)
     if flag?(:council_heralds)
       v[:council] << ["In the Council Hall, Summer's chair has a Herald's cloak over the back of it,",
                       "and a coffee ring on the arm."]
@@ -1110,6 +1151,9 @@ module FrostThaw
                     herald?(:reptin) ? "The wolves meet you at the bridge." : "The wolves meet him at the bridge.",
                     flag?(:chasm_watch_kept) ? "The grey wolf is greyer now." : nil].compact
     end
+    # Reptin's vow to Garagai, kept (whole read T13)
+    v[:chasm] << "At Garagai's lodge, Norsu noses the axe-head back onto its peg. He doesn't leave it all day." if flag?(:garagai_axe)
+    v[:chasm] << "A grown yeti watches from the ridge above the Chasm, and doesn't come closer." if flag?(:got_yetot)
     v[:lonelywood] << ["In Lonelywood, a man in a coat, for the first time, buys soup.",
                        "He's given a cookie shaped like a halfling."] if flag?(:sephek_turned)
     v.reject { |_k, l| l.flatten.compact.empty? }
@@ -1201,13 +1245,15 @@ module FrostThaw
     Stage.face(old, 8) if old
     Stage.pan_to(px, py - 4) rescue nil                          # the cave mouth, up the hall
     say(["She looks up at the cave mouth.",
-         "Five travellers and a stranger are about to come in out of the cold.",
+         # a stranger only where somebody fell out of a lantern (whole read T8)
+         (journey? || herald?(:wyn)) ? "Five travellers and a stranger are about to come in out of the cold." :
+                                       "Five travellers are about to come in out of the cold.",
          journey? ? "The stranger fell out of a lantern." :
          herald?(:wyn) ? "The stranger has a Sableye asleep on their boot." :
          herald?(:alberica) ? "One of the five is you. Louder. Younger." : "One of the five is you."])
     Stage.pan_back rescue nil
     Stage.face(old, 2) if old
-    say(["OLD ALBERICA: (smiling) Hello again."])
+    say(["OLD ALBERICA: (smiling) Oh. You're early."])   # (her ghost's first line, so the loop closes on it: whole read V22)
     # (the last input: the story's over, and the game goes on)
     pbMessage(_INTL("THE END"), [_INTL("(Keep playing.)")], 0)
     Stage.cleanup rescue nil
@@ -1313,10 +1359,10 @@ module FrostThaw
         sayc([cl(:alberica, "(to you) You said sorry. This is better.")])
       end
     else
-      say([{ reptin: "(Out there, Anduin's had weeks. You've had four hundred years. Now it's one morning.)",
+      say([{ reptin: "(The Dale and Anduin's husband, on the same morning. He'll want to see the lake.)",
              alerion: "(Your village is out there under the snow. You can visit. You don't have to stay.)",
              meat_meat: "(Mama's Dale and Razzy's tree. Same morning. Meat Meat needs two coffees.)",
-             alberica: "(Out there, a village that never drew a name. Somebody should go and ask why.)",
+             alberica: "(Ironhollow, out there. Never drew a name. Somebody should go home and say what it cost.)",
              wyn: "(Sableye's going to want to see the snow. ...So am I.)" }[herald] || nil].compact)
     end
     if flag?(:auril_answered_wall)

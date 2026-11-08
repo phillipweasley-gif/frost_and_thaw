@@ -294,7 +294,8 @@ module FrostThaw
                   ["Shimmer keeps touching her stone. She thinks I don't notice.", "I always notice."]],
     lonelywood: [{ if: { flag: :shimmer_taken }, lines: ["...I should have been awake.", "I'm always awake. I should have been awake."] },
                  ["Nimsy Huddle bakes cookies and runs a town full of thieves. I respect that."]],
-    lucky_liar: ["I'm not drinking tonight. Someone has to watch the door."],
+    lucky_liar: ["I'm not drinking tonight. Someone has to watch the door.",
+                 "(flexing a white hand) Knife's cold. My fingers are colder. Don't tell Shimmer."],   # the curse, set up (whole read T5)
     glade: [{ if: { flag: :shimmer_taken }, lines: ["Don't. Just... don't say anything. Not yet."] },
             ["Stone circle, nobody for miles. Good place for a bad deal."]],
     moon_temple: [{ if: { flag: :sephek_defeated }, lines: ["He's in there. Asleep. I could stand here all night and watch him not wake up."] },
@@ -683,7 +684,7 @@ module FrostThaw
     Stage.pan_to(*NIMSY_ROOF)
     say(["Smoke rises from a green-roofed house. Someone in there is baking."])
     Stage.pan_back
-    say([as(:alberica, "Is that... cinnamon? In Icewind Dale? Somebody marry me."),
+    say([ask_as(:alberica, "Is that... cinnamon? In Icewind Dale? Somebody marry me.", "...Cinnamon?"),
          cl(:alerion, "No."),
          cl(:reptin, "He means congratulations."),
          cl(:shimmer, "He means no.")].compact)
@@ -771,7 +772,7 @@ module FrostThaw
            as(:reptin, "(quietly) The scar on his throat."),
            as(:alerion, "Pale, books and bones. Naerth's lady in the tower."),
            "MEAT MEAT: Meat Meat comes with you now. Meat Meat is not asking.",
-           cl(:alberica, "Oh, I love her. Can we keep her?"),
+           ask_cl(:alberica, "Oh, I love her. Can we keep her?"),
            "MEAT MEAT: Meat Meat will bite you. Fondly.",
            cl(:reptin, "She's saying she's grateful."),
            "MEAT MEAT: Meat Meat is saying the other thing. Also: who has coffee?",

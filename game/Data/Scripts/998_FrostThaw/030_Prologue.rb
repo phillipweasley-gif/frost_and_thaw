@@ -165,8 +165,11 @@ module FrostThaw
     Stage.leave(tamsin, 6, 12)
     pbSEPlay("Exit Door") rescue nil
     say(["Tamsin's gone, toast in their teeth.",
-         "(Your first Pokémon is at the College, top of the tree. The root-lift's in the market.)"])
-    state[:goal] = "Your first Pokémon is at the College. The root-lift's by the big stair, north."
+         loop? ? "(The College, top of the tree. Wynsnow's table. You know this part.)" :
+                 "(Your first Pokémon is at the College, top of the tree. The root-lift's in the market.)"])
+    # (in the loop you already have a team: whole read P15)
+    state[:goal] = loop? ? "The College, top of the tree. You know this part." :
+                           "Your first Pokémon is at the College. The root-lift's by the big stair, north."
     set_flag(:intro_started)
     set_switch(SW_PRO_MORNING, true)
     Stage.cleanup

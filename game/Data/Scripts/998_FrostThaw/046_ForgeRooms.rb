@@ -121,7 +121,7 @@ module FrostThaw
     duergar_gate_morn_after: ["Below the gate's the Dragonforge. You'll hear it before you see it."],
     duergar_gate_sharl_after: ["Thank you. I didn't want to hold it any more."],
     duergar_gate_ulf_after: ["I'll stay up here. Somebody has to tell the others it's over. If it's over."],
-    duergar_tower_grik_after: ["You can see her from the rail. All that gold. Never blinks. I told you I don't look."],
+    duergar_tower_grik_after: ["You can see it from the rail. All that fire. Never stops. I told you I don't look."],
     duergar_tower_nall_after: ["No more bolts. Whoever goes down there goes down without us shooting at them."],
     broken_duergar_after: ["...fire... replaces... ...", "(He goes back to chanting, softer now.)"],
     guardhold_pool: ["A pool of burning sap in a barracks of petrified root. Duergar sat round it till just now.",
@@ -660,7 +660,8 @@ module FrostThaw
            "GLIMMER: (through his teeth) The Shard knows that thing. It wants to go and meet it."])
     end
     sayc([cl(:alerion, "Chardalyn. Demon-forged. Black as a bad tooth."),
-          cl(:alerion, "Built on what she learned from Razzy. From Meat Meat. The cold table, with wings.")])
+          cl(:alerion, herald?(:meat_meat) ? "Built on what she learned from Razzy. From you. The cold table, with wings." :
+                                           "Built on what she learned from Razzy. From Meat Meat. The cold table, with wings.")])
   end
 
   # A25: the east vantage: its guards would rain bolts on the forge fight.
@@ -1200,7 +1201,7 @@ module FrostThaw
     FT_GREATVERDANTSEED: ["Greater Verdant Seed", "Greater Verdant Seeds", 1, 0,
       "A seed from deep in the Heartroot, heavy and warm. It raises a Pokémon's level by three.", 1, 0, 0],
     FT_SHARDFOCUS: ["Mirror Shard Focus", "Mirror Shard Foci", 8, 0,
-      "A clean, flat shard from the Shattered Bed. It shows things a little more truly than they are. Once.", 0, 0, 6],
+      "A clean, flat shard from the Shattered Bed. It shows things a little more truly than they are.", 0, 0, 6],
     FT_GLASSSIGIL: ["Glass Sigil", "Glass Sigils", 8, 0,
       "A crystal from Avarice's Scriptory with a sigil turning inside it. The glass half of a door of iron and glass.", 0, 0, 6],
     FT_VARGLAIVE: ["Var's Glaive", "Var's Glaives", 8, 0,

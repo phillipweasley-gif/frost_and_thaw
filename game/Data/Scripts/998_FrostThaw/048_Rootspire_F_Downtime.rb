@@ -611,7 +611,7 @@ module FrostThaw
       say(["An old dwarf draped in frost-paper scrolls writes without looking.",
            "His eyes are milky, inked with runes."], event_id)
       if with_or_is?(:alberica)
-        say([as(:alberica, "Who are you writing all that for, sugar?")])
+        say([ask_as(:alberica, "Who are you writing all that for, sugar?", "...Who's it for?")])
       end
       say(["LORN SCRIBE: (still writing) The tree. Not the Council. Not the College.",
            "LORN SCRIBE: The World Tree dreams, and I write its dreams down, so it remembers them.",
@@ -643,7 +643,8 @@ module FrostThaw
     end
     if with_or_is?(:alberica) && !flag?(:codex_given)
       say(["LORN SCRIBE: (stopping. For the first time, the quill stops.) Keeper of Memory.",
-           "He draws out a sheaf of pages: paper older than the tree, in Alberica's hand.",
+           herald?(:alberica) ? "He draws out a sheaf of pages: paper older than the tree, in your own hand." :
+                               "He draws out a sheaf of pages: paper older than the tree, in Alberica's hand.",
            "LORN SCRIBE: Your journal. The pages you lost in the white. The tree found them."], event_id)
       sayc([cl(:alberica, "(very still) I wrote those in the snow. I burned the rest for warmth.")].compact)
       if pbConfirmMessage(_INTL(herald?(:alberica) ? "Take the pages?" : "Let Alberica take the pages?"))
@@ -678,7 +679,7 @@ module FrostThaw
       Stage.overlay("O-03", above_panels: true, fade: 20) rescue nil
       say(["FRAGMENT ONE. Dougan's Hole, the day it became Rootspire.",
            "A child's laughter. A sapling splitting frost. #{me ? 'Your' : 'Her'} own hand, touching the sprout.",
-           "#{me ? 'You' : 'She'} wasn't only there when the Verdant Reversal happened. #{me ? 'You were' : 'She was'} anchoring it.",
+           "#{me ? "You weren't" : "She wasn't"} only there when the Verdant Reversal happened. #{me ? 'You were' : 'She was'} anchoring it.",
            "The Codex drinks the fragment. The ink glows gold."])
       set_flag(:codex_fragment_1)
       if !pbConfirmMessage(_INTL(me ? "Keep writing?" : "Alberica's hand is shaking. Keep going?"))

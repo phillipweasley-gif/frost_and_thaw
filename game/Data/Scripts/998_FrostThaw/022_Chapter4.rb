@@ -135,7 +135,7 @@ module FrostThaw
                      "Fair's fair. Go on back."],
     trapper_ysa:    [:FT_TRAPPER,      "Ysa",   [[:B232H220, 27]],
                      "Edgra skinned a winter wolf barehanded once. She says. I believe her."],
-    durmoot:        [:FT_SPEAKER_DH,   "Durmoot", [[:B87H28, 27], [:B131H217, 27], [:B232H274, 29]],
+    durmoot:        [:FT_SPEAKER_DH,   "Durmoot", [[:B87H28, 27], [:B131H217, 27], [:B232H274, 28]],   # (whole read P4)
                      "Hmph. Dougan's Hole doesn't bend. It can say thank you, though.", [:SUPERPOTION, :SUPERPOTION]],
     # the hag at the Twenty Stones
     hag:            [:FT_HAG_NIGHT,    "Thredra", [[:B429H124, 27], [:B255H200, 27], [:B124H429, 28]],
@@ -355,7 +355,7 @@ module FrostThaw
                "Coffee here tastes like fish. Meat Meat drank it anyway. Meat Meat is brave."]],
     durmoot_lodge: ["Lady Speaker has a scary face. Meat Meat has a scarier face. Meat Meat practised."],
     tundra: ["Too much snow. Meat Meat is going inside your coat. No arguing."],
-    ice_lodge: ["Little lizard people! Meat Meat will say hello. Fondly. With teeth."]
+    ice_lodge: ["Little lizard people! Meat Meat will say hello. With teeth."]
   )
 
   module_function
@@ -475,7 +475,7 @@ module FrostThaw
     oli = (Stage.actor(:olivessa, $game_player.x + 3, $game_player.y + 4, 8, graphic: "BW (56)") rescue nil)
     say(["A woman with sawdust on her apron comes up the road at a trot, a basket on her arm."])
     Stage.approach(oli) if oli
-    sayc(["OLIVESSA: Olivessa. I make casks. Headed to the Hole? Eat first.",
+    sayc(["OLIVESSA: Olivessa. I make casks. Headed to the Hole? Take a cake.",
           "OLIVESSA: Nobody comes back from there fat.",
           "She presses a honey cake into every hand in reach.",
           cl(:alberica, "Cake first, questions later. My kind of town."),
@@ -674,7 +674,8 @@ module FrostThaw
       elsif with_or_is?(:alberica)
         say(["Alberica's hand goes to her throat, where the pendant used to hang."])
       end
-      say(["THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time."], event_id)
+      say(["THREDRA: The sea gave it back to me, dearie, and I gave it back to you.",   # (whole read T9)
+           "THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time."], event_id)
       say(["(The medallion fogs in your palm. \"It knows,\" the captain said.)"]) if herald?(:reptin)
       sayc([cl(:alerion, "...Boy."),
             "THREDRA: A dagger for the one who hides in shadow.",
@@ -683,7 +684,7 @@ module FrostThaw
         speak(:shade, "Her name was Shimmer.", "...Shimmer.", event_id)
         say(["THREDRA: Names are for the living, dearie."], event_id)
       end
-      speak(:alberica, "You sent them. You sent me that pendant, you dried-up old...", "...You sent them.", event_id)
+      speak(:alberica, "You fished it out. I threw that in the sea, you dried-up old...", "...You sent them.", event_id)
       say(["THREDRA: Old, dearie. Not dried. My watchers saw each of you onto your ships."], event_id)
       if herald?(:alberica)
         say(["(The tall thing at the edge of the lamplight. On the ship. That was hers.)"])

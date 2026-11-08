@@ -863,7 +863,6 @@ module Story
       beat("SC 11.03 three hearts (Auril's relics)", :knows_rewritten)
       travel(2054); HL.frames(30); HL.settle(5000)
       beat("SC 11.04 four chairs (route: #{FrostThaw.voyage_route})", :ch11_done)
-      beat("  Eirwen's sigil; the three sigils merge", :sigils_merged)
       act3_side unless ENV["NO_SIDE"]
       chapter12
     end
@@ -878,6 +877,11 @@ module Story
         slide_to_event(/Auril's relic \(relic_overflow\)/) || talk(/Auril's relic \(relic_overflow\)/)
       end
       beat("side: Auril's three relics smashed (no Divine Rejuvenation)", :auril_relics_destroyed)
+    end
+
+    # Postgame (whole read P10): the sigils merge after the credits, so the White
+    # Vault is played after the ending, not before Chapter 12.
+    def vault_side
       return if !FrostThaw.flag?(:sigils_merged)
       travel(2078); talk(/^Old boat$/); HL.settle(3000)
       travel(2163); travel(2168); HL.frames(20); HL.settle(3000)
@@ -943,6 +947,10 @@ module Story
       beat("SC 13.08-13.09 the Frostmaiden and the Rewritten Auril", :auril_down)
       beat("  Avarice's last splinter, at the throne", :avarice_ended)
       beat("SC 13.10 an ending (#{%i[ending_shatter ending_third_way ending_still_keeper].find { |f| FrostThaw.flag?(f) }})", :game_complete)
+      return if FrostThaw.flag?(:ending_still_keeper)   # (the loop: the Vault waits for the third way)
+      HL.frames(30); HL.settle(5000)
+      beat("  postgame: the three Frostshard Sigils merge", :sigils_merged)
+      vault_side unless ENV["NO_SIDE"]
     end
 
     # Act II, Chapter 7, Road B: the Forge Road (SC 7B.01-7B.08).

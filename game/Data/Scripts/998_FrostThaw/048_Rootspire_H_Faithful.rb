@@ -27,7 +27,7 @@ module FrostThaw
 
   RELIC_ITEMS.merge!(
     FT_PROPHECYLEAF: ["Chronal Leaf of Prophecy", "Chronal Leaves of Prophecy", 8, 0,
-      "Eirwen's gift for the Canticle. In gold: \"The Frost Saint will climb the Spire when the roots bleed.\" And, under it, Verse XI.", 2, 0, 6],
+      "Eirwen's gift for the Canticle. In gold: \"The Frost Saint will climb the Spire when the roots bleed.\" And, under it, Verse XI.", 0, 0, 6],
     FT_UNBONDEDSTAFF: ["Heartwarden's Staff (unbonded)", "Heartwarden's Staffs (unbonded)", 8, 0,
       "Living root in frozen wolf hide, capped with a gem. It hums a beat out of time. Carved under the wolf: REST AT THE EDGE OF THE LIGHT, AND LET THE YEAR GO ROUND YOU.", 0, 0, 6],
     FT_HELLENNOTE: ["Hellen's Sealed Note", "Hellen's Sealed Notes", 8, 0,
@@ -131,7 +131,7 @@ module FrostThaw
   def lantern_rumours
     return false if flag?(:lantern_rumours) || flag?(:festival_night) || rs_day < 3 || !flag?(:wardens_emeritus)
     set_flag(:lantern_rumours)
-    say(["Late in the Hearth's common room. Three nights to the festival, and no other talk.",
+    say(["Late in the Hearth's common room. Three nights to the festival's last, and no other talk.",
          "In the noise, the same thing three times: masked devotees in grey, in the lantern-markets.",
          "Buying frost-glass. A lot of frost-glass. Nobody makes festival lanterns from frost-glass."])
     c = pbMessage(_INTL("Who do you ask?"),

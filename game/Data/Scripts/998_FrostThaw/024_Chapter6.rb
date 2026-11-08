@@ -302,7 +302,7 @@ module FrostThaw
     Stage.panel_off(fade: 20)
     if journey?
       say(["TAMSIN: (screaming, then grabbing you) WHERE DID YOU GO. You were gone an HOUR.",
-           "TAMSIN: Who are... (she sees the others) ...who are THEY?",
+           "TAMSIN: Who are... (they see the others) ...who are THEY?",
            cl(:alberica, "(dusting snow off Tamsin's head) Hello, trouble."), cl(:alberica, "We fell out of a lamp. Don't try it at home.")].compact)
     end
     say([cl(:alberica, "(looking at her empty hands) I was holding it. In the Chasm. It was a seed."),
@@ -328,7 +328,7 @@ module FrostThaw
            "TARIN: Cures chills, sulks and most frostbite. Proper supplies, too, for adventurers.",
            "TARIN: You look proper. Mostly."], event_id)
       if with_or_is?(:meat_meat)
-        say([as(:meat_meat, "Is there coffee in the sunlight?"),
+        say([ask_as(:meat_meat, "Is there coffee in the sunlight?", "...Coffee?"),
              "TARIN: ...There can be.",
              as(:meat_meat, "Rootspire. Meat Meat gives you four beans. So far.")])
       end
@@ -380,7 +380,7 @@ module FrostThaw
       say(["HELLEN: That's the strange part. There's a ring of light round the valley. The Wall.",
            "HELLEN: Outside, it's still snowing the same snow. The flakes just hang in the air.",
            "HELLEN: Like time out there is holding its breath."])
-      speak(:reptin, "(very quietly) My husband's out there. Anduin. Waiting in Bryn Shander.", "...Anduin.") if with_or_is?(:reptin)
+      speak(:reptin, "(quietly) My husband's out there. Anduin. Counting days. I said a month.", "...Anduin.") if with_or_is?(:reptin)
       say([with_or_is?(:reptin) ? "HELLEN: Then he's waiting a lot less time than you'd think, love." : nil].compact)
       speak(:alberica, with_or_is?(:reptin) ? "Then we walk out and fetch him. Point me at the door." :
                                               "Then we walk out and fetch them. Point me at the door.", "...Where's the door?")
@@ -793,6 +793,8 @@ module FrostThaw
       Stage.remove_actor(raz) if raz
       Stage.remove_actor(fro) if fro
     end
+    # Iskra kept warm between Ch3 and Ch11 (whole read T20)
+    say(["LUMIN: Our books say a white roc dropped her egg.", "LUMIN: Some winters, a shadow that size still crosses the Wall."]) if lumin
     Stage.leave(lumin, px - 7, py + 2) if lumin
     Stage.remove_actor(shade) if shade
     set_flag(:twins_met)
@@ -896,7 +898,7 @@ module FrostThaw
          "KELYN: (quieter) And a season too long. Thirty years of summer. I want to know why.",
          "DARRUS: (to the ceiling) And here we go.",
          # (notes 06 E19: one Rootwarden captain, Rheven; Kethan keeps the civic watch)
-         "KELYN: Kethan Vale, of the civic watch, says it was no accident. Up the north stair.",
+         "KELYN: Kethan Vale, captain of the Hall watch, says it was no accident. North stair.",
          "SELRAE: The Fractured Halo want the old winter back. They'll move tonight.",
          "SELRAE: If they do, I want the Canopy under martial law, Kelyn. My wardens, at the Rift.",
          "KELYN: No.",
@@ -976,7 +978,7 @@ module FrostThaw
            "In his chest, where the frost-light used to beat, there's only a carved-out hollow.",
            "ELINE: The Frost Saint. You know him. Your hand froze him. Ours kept him.",
            "ELINE: His heart was the holiest thing we had.",
-           cl(:alberica, "Was?"),
+           ask_cl(:alberica, "Was?", "...Was?"),
            "ELINE: We gave it to Summer. Summer has promised us a winter.", "ELINE: Not death. Stillness, at last. The way the Dale was meant to be.",
            "ELINE: Tonight we cool the tree. A little. Just enough to start."].compact, event_id)
       # Context 06 M6-6: the Act I mark, seen by someone who'd care.
@@ -1117,7 +1119,7 @@ module FrostThaw
   # thought names what they left out there; then the vow (herald_wall_vow).
   HERALD_WALL_THOUGHTS = {
     alberica: "Weeks. Out there the lottery's still drawing names.",
-    reptin: "Weeks. Anduin's still at the window. He hasn't even had time to worry.",
+    reptin: "Weeks. Anduin's still at the window. He'll have started counting.",
     alerion: "Weeks. The wyrm's cold is still on the lake. So is Talion.",
     meat_meat: "Weeks. The lady with books is still out there too. Somewhere."
   }

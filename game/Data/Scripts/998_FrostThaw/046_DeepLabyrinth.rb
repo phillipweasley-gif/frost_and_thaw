@@ -23,7 +23,7 @@
 #     Node (down to the door of iron and glass).
 #   The Mirror-Root Vault (2145), Tab 1's H3: the broken ice mask (Avarice's
 #     first homunculus, a failed vessel for Auril), the Mirror Sentinels, the
-#     clue to Ithryn Athis, and the pit of liquid mirror: thirty years back, to
+#     clue to Ythryn Athis, and the pit of liquid mirror: thirty years back, to
 #     the night Avarice took Var Rime-Breaker. His echo tests Alerion.
 # Zone VI (the Antechapel to the Echo Vault) is part of the Forge, Chapter 8
 # (047's neighbour 046_ForgeRooms.rb).
@@ -114,7 +114,7 @@ module FrostThaw
     underdark_mouth: -> {
       ["A side tunnel breaks off from the shaft. The air in it is thicker and older.",
        "Beyond, the dark tastes of stone and mushrooms: the true Underdark, past the tree's reach.",
-       herald?(:wyn) ? "(Your old post was the door to this. ...This is the back of the door.)" :
+       herald?(:wyn) ? "(My post was the door to this. ...This is the back of the door.)" :
          (with_or_is?(:wyn) ? "WYN: (very quietly) My post was the door to that. ...This is the back of the door." : nil),
        "(The tunnel runs on, deeper than any lantern. Not today.)"].compact
     },
@@ -148,6 +148,13 @@ module FrostThaw
     glimmer: "A cat-man with a cold blue dagger, walking away from a girl in the snow. Not looking back.",
     wyn: "Wyn's bench at the Sap Gate, empty. Far away, Wyn, not coming back. Not even sorry.",
     you: "You, standing just outside every story, watching. Not helping. Not once."
+  }
+  # The same petals when that Herald is you (whole read V13: Herald Mode says "you")
+  WORST_SELVES_ME = {
+    alberica: "You, on an ice throne. Everyone you love stands round you, smiling, still. Forever.",
+    reptin: "You, all wolf, standing over a sapling with its bark in your teeth. You aren't sorry.",
+    alerion: "You, in a locked warm house. A boy's coat on the peg. A necromancer's candle, burning.",
+    wyn: "Your bench at the Sap Gate, empty. Far away, you, not coming back. Not even sorry."
   }
 
   module_function
@@ -253,7 +260,8 @@ module FrostThaw
     order = ([herald || :you] + companions).uniq
     i = (state[:petal_look] = ((state[:petal_look] || -1) + 1)) % order.size
     who = order[i]
-    say(["A mirror-petal turns toward you like a face toward the sun.", "In it:", WORST_SELVES[who] || WORST_SELVES[:you]], event_id)
+    seen = (who == herald && WORST_SELVES_ME[who]) || WORST_SELVES[who] || WORST_SELVES[:you]
+    say(["A mirror-petal turns toward you like a face toward the sun.", "In it:", seen], event_id)
     say(["(It's you. It's the you that could still happen.)"]) if who == herald || (who == :you && journey?)
   end
 
@@ -269,7 +277,8 @@ module FrostThaw
       quiet = [with_or_is?(:wyn), with_or_is?(:reptin), with_or_is?(:alerion)].count(true)
       say(["Heads down. Eyes on your feet. One step, then another, the petals whispering your names."])
       if quiet >= 2
-        say([with_or_is?(:wyn) ? "Wyn's shadow goes ahead of you, and the petals can't find your faces in it." :
+        say([with_or_is?(:wyn) ? (herald?(:wyn) ? "Your shadow goes ahead of the others, and the petals can't find their faces in it." :
+                                                  "Wyn's shadow goes ahead of you, and the petals can't find your faces in it.") :
                                  "Nobody looks up. Not once. The petals whisper themselves hoarse.",
              "You reach the petal-gate. It parts for you, sulking."])
         sayc([cl(:meat_meat, "Meat Meat peeked. Only one eye. It does not count.")])
@@ -376,7 +385,7 @@ module FrostThaw
       set_flag(:grotto_boon)
       sayc(["A scent you know: the perfume stalls in the Verdant Bazaar, where the moss-dancer sells.",
             # (dialogue 07 §4: she asks; Wyn answers)
-            cl(:alberica, "Lirielle's. Ten gold a bottle and worth twelve. ...What's it doing down here?"),
+            ask_cl(:alberica, "Lirielle's. Ten gold a bottle and worth twelve. ...What's it doing down here?", "...Lirielle's?"),
             cl(:wyn, "...She dreams of roots burning. Maybe she dreamed this place. Somewhere safe."),
             "(Rested in the grotto, nothing in the Heartroot can frighten your party: once.)"])
     end
@@ -768,7 +777,7 @@ module FrostThaw
     add_counter(:story_beats)
     # (dialogue 07 §4: no explaining what we just read; Reptin without the pet name)
     sayc([cl(:alerion, "Sephek's heart. With Auril still in it."),
-          cl(:wyn, "So when it stops burning... what's left in it?"),
+          ask_cl(:wyn, "So when it stops burning... what's left in it?", "...What's left?"),
           cl(:reptin, "(gently) Ask me again when we're standing in front of it.")])
   end
 
@@ -1076,7 +1085,7 @@ module FrostThaw
     set_flag(:ithryn_athis_clue)
     add_counter(:story_beats)
     say(["Etched on the inside of the mask, in two hands, one neat and white, one older and cruder:",
-         "\"Ithryn Athis.\" Under it, an arrow pointing north, and a dragon's eye round a glacier."])
+         "\"Ythryn Athis.\" Under it, an arrow pointing north, and a dragon's eye round a glacier."])
     sayc([cl(:alerion, "A draconic vault. North. Under a glacier."),
           cl(:alberica, "The White Womb. Or its front door."),
           cl(:glimmer, "Everybody keeps drawing that eye. I'm starting to take it personally.")])
@@ -1150,9 +1159,10 @@ module FrostThaw
       speak(:alerion, "(breathing hard) ...Just.", "...Just.")
     end
     say([unmasked ? "VAR: She's wearing me, isn't she. Up there. Thirty years of my face, smiling at Kelyn." :
-                    "VAR: How long have I been in here? ...Don't tell me. Tell Kelyn I kept the peace.",
+                    "VAR: Tell Kelyn I kept the peace.",   # (before the Heart Chamber nothing says he's trapped: whole read T4)
          "VAR: Tell Rootspire I'm sorry. Tell them Naerth's debt is paid; I paid it in summers.",
-         "VAR: Take this. She left it here because it hums when Sephek's near. She didn't like that."])
+         unmasked ? "VAR: Take this. She left it here because it hums when Sephek's near. She didn't like that." :
+                    "VAR: Take this. It hums when Sephek's near. Somebody didn't like that."])
     give_key(:FT_VARGLAIVE)
     say(["The mirror goes still. Var's echo raises a hand, and the glass is only glass."])
     Stage.remove_actor(echo) if echo

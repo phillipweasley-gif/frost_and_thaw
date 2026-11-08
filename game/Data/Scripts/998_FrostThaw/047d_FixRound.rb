@@ -504,7 +504,7 @@ module FrostThaw
          "PILGRIM: Take a little cold with you. A blessing. It keeps things the way they are.",
          "He holds out a hand. In it, a snowflake that doesn't melt."])
     if with_or_is?(:meat_meat)
-      say(["PILGRIM: (to Meat Meat, softer) And you. Prototype Verdant.", "PILGRIM: Your blood remembers the cold table. So do I.",
+      say([(herald?(:meat_meat) ? "PILGRIM: (to you, softer) " : "PILGRIM: (to Meat Meat, softer) ") + "And you. Prototype Verdant.", "PILGRIM: Your blood remembers the cold table. So do I.",
            herald?(:meat_meat) ? "(Nobody calls you that. Only the cold table did. Your skin crawls.)" :
                                  "MEAT MEAT: (very small) Nobody calls Meat Meat that. Only the cold table did.",
            herald?(:meat_meat) ? nil : "MEAT MEAT: (smaller still) ...Meat Meat does not like this man."].compact)
@@ -600,7 +600,7 @@ module FrostThaw
     return if !pbConfirmMessage(_INTL("Creep up, and get through that door?"))
     opts = []
     opts << [:badge, _INTL("Press the Marshal's badge into the lock")] if ($PokemonBag.pbHasItem?(:FT_MARSHALBADGE) rescue false)
-    opts << [:pick, _INTL("Pick the lock (Meat Meat's fingers)")] if with_or_is?(:meat_meat)
+    opts << [:pick, (herald?(:meat_meat) ? _INTL("Pick the lock (your fingers)") : _INTL("Pick the lock (Meat Meat's fingers)"))] if with_or_is?(:meat_meat)
     opts << [:feel, _INTL("Feel for the knot in the root that holds it")]
     opts << [:force, _INTL("Force it")]
     c = pbMessage(_INTL("The lock..."), opts.map(&:last), 0)

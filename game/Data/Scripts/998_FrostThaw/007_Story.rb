@@ -20,6 +20,11 @@ module FrostThaw
   # log so the staging sweep can find them.
   def say(lines, event_id = nil)
     Array(lines).flatten.compact.each do |line|
+      # a line the Herald says aloud, by choice, in its place (ask_as / ask_cl)
+      if line.is_a?(Proc)
+        line.call
+        next
+      end
       begin
         tag = line[/\A([A-Z][A-Z'\- ]*[A-Z]):/, 1]
         if tag

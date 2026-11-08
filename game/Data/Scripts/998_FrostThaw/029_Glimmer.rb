@@ -156,7 +156,7 @@ module FrostThaw
     # The dead Glimmer's journal from the Cackling Chasm (044): the ghost said
     # "You'll see. Not yet." This is the seeing.
     # (scene pass: you hand it over, or not; an input inside the scene)
-    if (($PokemonBag.pbHasItem?(:FT_GLIMMERJOURNAL) rescue false) || flag?(:glimmer_journal_read)) &&
+    if (($PokemonBag.pbHasItem?(:FT_GLIMMERJOURNAL) rescue false) || flag?(:read_glimmer_journal)) &&
        pbConfirmMessage(_INTL("Show him the journal from the Chasm?"))
       sayc(["You take the bloodstained journal out of the pack, and hold it out to him.",
             cl(:alberica, "(very quietly) The chasm. The skeleton with claws. Read it."),
@@ -176,7 +176,7 @@ module FrostThaw
           "GLIMMER: Somebody had to carry her torch. I said it wasn't fair that it was mine.",
           "GLIMMER: She said that's what torches are like.",
           "He draws the Rimefang. The blade still smokes with cold.",
-          "GLIMMER: And this still thinks it's Auril's. It's been killing me slowly since Saltmarsh.",
+          "GLIMMER: And this still thinks it's Auril's. It's been killing me slowly since Targos.",
           "GLIMMER: Brightmane says I'll find it a better fire."])
     speak(:alerion, "Then we look.", "...We look.") if with_or_is?(:alerion)
     state[:companions] = ((state[:companions] || []) - [:shade] + [:glimmer]).uniq

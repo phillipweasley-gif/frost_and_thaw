@@ -302,7 +302,7 @@ module FrostThaw
       c = pbMessage(_INTL("What do you say?"), [_INTL("\"Who's the buyer?\""), _INTL("\"We'll pay double. Don't sell it.\""), _INTL("\"Nothing.\"")], 2)
       case c
       when 0
-        say(["DATHRA: (snap) Never seen her face. Nobody has. She sends a man with no reflection.",
+        say(["DATHRA: (snap) Never seen her face. Nobody has. She sends a man. Never the same one.",
              "DATHRA: ...You've gone very pale. Is that a normal colour for you?"], event_id)
         set_flag(:dathra_buyer)
       when 1

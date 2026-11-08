@@ -244,7 +244,12 @@ th.event(9, 4, "Auril", [
   { graphic: "FT_auril_furs", direction: 2, script: "FT.scene_throne" },
   { switch: SW_AURIL_DOWN, graphic: "", through: true }
 ])
-th.event(1, 1, "Cutscene throne", [{ trigger: 3, script: "FT.scene_throne" }, { switch: SW_AURIL_DOWN }])
+# Auril down: if a save comes back without its running event (a game update clears it),
+# the god choice is asked again from here; once an ending is chosen, self switch A rests it
+# (whole read P1).
+th.event(1, 1, "Cutscene throne", [{ trigger: 3, script: "FT.scene_throne" },
+                                   { switch: SW_AURIL_DOWN, trigger: 3, script: "FT.throne_resume(@event_id)" },
+                                   { switch: SW_AURIL_DOWN, self_switch: "A" }])
 save(th, :throne)
 
 merge_infos(ID.map { |k, v| [v, NAMES[k]] })

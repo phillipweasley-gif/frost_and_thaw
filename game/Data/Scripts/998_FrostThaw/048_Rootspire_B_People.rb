@@ -140,7 +140,7 @@ module FrostThaw
            "BRYN: Rot, near the Heartroot. Black and soft, in roots that have never rotted.",
            "BRYN: I've been covering it with moss so nobody panics. I've been covering it with moss.",
            "He pats the moss on the counter flat, very carefully.",
-           "BRYN: Summer, I think. Summer, and something older that wears Summer like a glove.",
+           "BRYN: Summer, I think. Something in the heat that isn't heat.",
            "BRYN: Please don't make me say it's something until you know what it is."], event_id)
       sayc([cl(:reptin, "You did right to tell someone. Now you've told the Heralds. That's two someones."),
             cl(:wyn, "(quietly) Hyphora's roots felt it too. Under the gardens. Like a fever.")].compact)

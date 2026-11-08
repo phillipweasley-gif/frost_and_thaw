@@ -522,7 +522,7 @@ module FrostThaw
       set_flag(:mm_turned)
     end
     sayc([cl(:alerion, "(after a beat) ...We'll talk about that later."),
-          herald?(:meat_meat) ? "(Holding the child: Yes.)" : "MEAT MEAT: (holding the child) Yes.",
+          herald?(:meat_meat) ? "Holding the child. (Yes.)" : "MEAT MEAT: (holding the child) Yes.",
           cl(:wyn, "(very quietly) ...Is the little one breathing?")])
     set_flag(:autumn_fell)
     set_flag(:child_saved)
@@ -962,17 +962,21 @@ module FrostThaw
     # (dialogue 08 §3b: he answers her; 6.08's words, and the echo turns)
     say(["GLIMMER: (stepping past her) Neither."])
     Stage.walk_to(gl, *GLIMMER_SPOT, face: 8) if gl
-    say(["GLIMMER: This blade's been killing me slowly since Saltmarsh.",
+    say(["GLIMMER: This blade's been killing me since it turned up in my boot.",
          flag?(:brightmane_answered) ? "GLIMMER: \"You'll know it when you see it,\" Brightmane said." : "GLIMMER: Brightmane said I'd find a better fire.",
          "He lifts the Rimefang.",
          "GLIMMER: She never said it'd be me."])
     c = pbMessage(_INTL("Glimmer..."), [_INTL("Reach for him"), _INTL("Let him go")], 0)
     say([c == 0 ? "You reach for him. He's already past you." : "You let him go. It's the hardest thing you've done down here."])
     if with_or_is?(:alberica)
-      speak(:alberica, "Glimmer. Sweetheart. Don't you dare.", "...Glimmer.")
+      speak(:alberica, "Glimmer. Glimmer, don't you dare.", "...Glimmer.")
     end
     say(["AVARICE: (interested, not moving) Go on. I want to see the sums.",
          "GLIMMER: Shimmer found the third way. I'm only following her."])
+    # Shimmer's "Keep the cat", handed on (whole read T17)
+    say([herald?(:alberica) ? "He presses Shimmer's carved cat into your hand." :
+         with_or_is?(:alberica) ? "He presses Shimmer's carved cat into Alberica's hand." :
+                                  "He sets Shimmer's carved cat down on the stone, where you'll find it."])
     # The Rimefang into the engine (a panel when the art comes: see the report).
     heart = Stage.fx("E-14", [15, 6], oy: 16, loop_from: 0)
     say(["He drives the Rimefang into the heart of the engine.",
@@ -1268,7 +1272,7 @@ module FrostThaw
       end
     end
     if flag?(:ithryn_athis_clue) && with_or_is?(:alerion)
-      say([as(:alerion, "The White Womb. The glass mask called it Ithryn. The sigils call it a vault.")])
+      say([as(:alerion, "The White Womb. The glass mask called it Ythryn. The sigils call it a vault.")])
     end
   end
 

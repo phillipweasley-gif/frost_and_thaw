@@ -46,8 +46,12 @@ module FrostThaw
     hooded_woman: -> { ["A hooded goblin woman stands very still in a moving crowd.",
                         "When you look at her, she pulls her hood lower."] },
     # (notes 09 E17: five people, five lines, not one shared script)
-    refugee_1: ["BEEKEEPER: Good Mead's gone. I walked here with a hive under my coat. It's still humming."],
-    refugee_2: ["FISHER: Caer-Konig sent its boats up the river. There's no river. We pulled them."],
+    refugee_1: -> { T.flag?(:good_mead_saved) ?
+                    ["BEEKEEPER: Good Mead's half ash. Olivessa got the queens out. I walked here with a hive under my coat."] :
+                    ["BEEKEEPER: Good Mead's gone. I walked here with a hive under my coat. It's still humming."] },
+    refugee_2: -> { T.flag?(:prisoners_freed) ?   # (whole read T30: the forge pods, read back)
+                    ["A woman from the forge pods, wrapped in a Rootwarden's cloak, won't let go of your sleeve."] :
+                    ["FISHER: Caer-Konig sent its boats up the river. There's no river. We pulled them."] },
     refugee_3: ["CHILD: (from Easthaven) Is it true there's a tree with summer inside it? Is it far?"],
     refugee_4: ["DOCKHAND: Targos shut its gate on us. Bryn Shander didn't. I won't forget which."],
     refugee_5: ["REFUGEE: Rootspire? Where's Rootspire? ...Under the green light? That's Dougan's Hole."],
@@ -98,13 +102,13 @@ module FrostThaw
     if journey?
       say(["TAMSIN: (catching one) It's brown. Why is it brown? Is it sick?"])
     else
-      say(["A kid with Hellen's chin catches one.",
+      say(["Tamsin catches one.",
            "TAMSIN: It's brown. Why is it brown? Is it sick?"])
     end
     # (an input in the market's first quiet minute)
-    c = pbMessage(_INTL("Tamsin holds the leaf out to you."), [_INTL("Take it"), _INTL("Tuck it behind her ear")], 0)
+    c = pbMessage(_INTL("Tamsin holds the leaf out to you."), [_INTL("Take it"), _INTL("Tuck it behind their ear")], 0)
     say([c == 0 ? "You take it. It's dry and light, and smells of something you can't name." :
-                  "You tuck it behind her ear. She keeps very still, so it won't fall."])
+                  "You tuck it behind their ear. They keep very still, so it won't fall."])
     rheven = Stage.find("Captain Rheven")
     Stage.approach(rheven) if rheven             # he walks over from the Council stair
     say(["RHEVEN: (looking up at the crown) It's not sick, kid. Summer's over.",
@@ -437,7 +441,7 @@ module FrostThaw
     say([flag?(:good_mead_met) ? "OLIVESSA: (coughing) A month! Not a word, and now dragons?" :
                                  "OLIVESSA: Whoever you are, you've a hive's worth of thanks and a jar of mead coming.",
          cl(:alberica, "Mead. Darling, I could kiss you. Later. When less of the town is on fire."),
-         cl(:meat_meat, "Does Good Mead have coffee?"),
+         ask_cl(:meat_meat, "Does Good Mead have coffee?", "...Coffee?"),
          "OLIVESSA: ...We have mead.",
          cl(:meat_meat, "Good Mead is dead to Meat Meat. ...After the dragon."),
          cl(:wyn, "(cupping a dazed bee) ...You're all right. You're all right, little one."),
@@ -503,7 +507,7 @@ module FrostThaw
         say(["You grab the reins and steer straight back into the chase.",
              "Your Dragoon shakes it off in a minute.",
              rider == :alerion ? "ALERION: ...Thanks. Don't do that again." :
-                                 "MEAT MEAT: ...Thank you. Meat Meat will bite you later. Fondly."])
+                                 "MEAT MEAT: ...Thank you. Meat Meat will bite you later."])
       end
     when 3
       say(["You lean against your Dragoon's back and listen.",

@@ -46,6 +46,17 @@ module FrostThaw
     end
   end
 
+  # Companions given as gifts (whole read P7): a replayed act plays the scene but
+  # doesn't hand over a second Sahnar, Heartwood, Spheal or Yetot.
+  LOOP_GIFTS = %i[widow_spheal sahnar_with_you treant_given got_yeti_cub]
+  def remember_loop_gifts(flags)
+    state[:loop_gifts] = ((state[:loop_gifts] || []) | LOOP_GIFTS.select { |f| flags[f] })
+  end
+
+  def looped_gift?(f)
+    loop? && (state[:loop_gifts] || []).include?(f)
+  end
+
   # Called as each act ends: remember how *this* playthrough went, so a skip in
   # the loop replays your own choices (the static lists are only a fallback).
   def loop_snapshot(act)
@@ -57,9 +68,32 @@ module FrostThaw
     story = (Marshal.load(Marshal.dump(story)) rescue {})
     counters = (state[:counters] || {}).reject { |k, _v| k == :loop_count }.dup
     snaps[act] = { flags: flags, companions: (state[:companions] || []).dup, state: story, counters: counters,
-                   keys: story_keys_held }
+                   keys: story_keys_held, switches: loop_switches_held, self_switches: loop_self_switches_held }
   rescue StandardError => e
     log("loop snapshot failed: #{e.message}") rescue nil
+  end
+
+  # The maps' own memory (whole read P6): story switches and the self switches of
+  # every Frost & Thaw map, so a skip brings back finished favours, beaten trainers
+  # and taken items along with the flags.
+  def loop_switches_held
+    return [] if !$game_switches
+    STORY_SWITCHES.select { |i| $game_switches[i] }
+  end
+
+  def loop_self_switches_held
+    data = ($game_self_switches.instance_variable_get(:@data) rescue nil) || {}
+    data.select { |(m, _e, _c), v| v && m >= 2001 && m < 2400 }.keys
+  end
+
+  def loop_skip_switches(act)
+    snap = state[:loop_snap] && state[:loop_snap][act]
+    return if !snap
+    (snap[:switches] || []).each { |i| $game_switches[i] = true } if $game_switches
+    (snap[:self_switches] || []).each { |k| $game_self_switches[k] = true } if $game_self_switches
+    $game_map.need_refresh = true if $game_map
+  rescue StandardError => e
+    log("loop skip switches failed: #{e.message}") rescue nil
   end
 
   def loop_skip_flags(act)
@@ -75,7 +109,7 @@ module FrostThaw
     return if !snap
     (snap[:state] || {}).each { |k, v| state[k] = (Marshal.load(Marshal.dump(v)) rescue v) }
     state[:counters] ||= {}
-    (snap[:counters] || {}).each { |k, v| state[:counters][k] = v if !%i[loop_count wheel].include?(k) }
+    (snap[:counters] || {}).each { |k, v| state[:counters][k] = v if k != :loop_count }
   rescue StandardError => e
     log("loop skip state failed: #{e.message}") rescue nil
   end
@@ -92,6 +126,7 @@ module FrostThaw
     return false if !pbConfirmMessage(prompt)
     loop_skip_flags(act).each { |f| set_flag(f) }
     loop_skip_state(act)
+    loop_skip_switches(act)
     give_back_story_keys(act)
     badges = act == :act1 ? (0..2) : (0..7)
     badges.each { |i| $Trainer.badges[i] = true } rescue nil

@@ -75,7 +75,7 @@ module FrostThaw
                      "Rangers don't go into the chasm. I can see why you might."],
     channeler_odda: [:CHANNELER,       "Odda",  [[:HAUNTER, 29], [:B200H427, 30]],
                      "The voices in the chasm aren't ghosts, child. That's what frightens me."],
-    thredra:        [:FT_HAG,          "Thredra", [[:B429H124, 31], [:B255H200, 32], [:B124H429, 33]],
+    thredra:        [:FT_HAG,          "Thredra", [[:B429H124, 31], [:B255H200, 32], [:B124H429, 32]],   # (whole read P4)
                      "Heh... heh... Won, have you? Look in the mirror, dearies.", [:HYPERPOTION, :FULLHEAL]]
   )
 
@@ -645,7 +645,7 @@ module FrostThaw
            "Beyond the far tunnel the chanting is clearer: a drone that comes up through the stone."])
       # (the banter plays once; later rests just heal, like the mead hall's)
       sayc([cl(:meat_meat, "Warm crack. Meat Meat could make coffee on this crack."),
-            cl(:meat_meat, "Meat Meat has no coffee. Meat Meat will bite this crack. Fondly."),
+            cl(:meat_meat, "Meat Meat has no coffee. Meat Meat will bite this crack."),
             cl(:alberica, "Here, darling. Last of the Good Mead honey cake. Don't tell anyone."),
             cl(:shade, "Everyone's watching you hand it over."),
             cl(:alberica, "Then nobody tell anyone.")], event_id)
@@ -807,7 +807,7 @@ module FrostThaw
     ghost_actor(bier)
     say(["GHOST: Oh. You're early.",
          me ? "When she turns, she has your face, decades older." : "When she turns, she has Alberica's face, decades older.",
-         me ? "(You have my face.)" : "ALBERICA: You have my face.",
+         ask_as(:alberica, "You have my face.", "...My face."),
          "GHOST: I borrowed it. I'll give it back when you're done.",
          "GHOST: I am the last guardian of the Order of Life and Death.",
          "GHOST: I came to it late, and old. I'd stood here once before. Young, with friends."])
@@ -824,7 +824,7 @@ module FrostThaw
     end
     # the Order's history, and one name for the thing it kept
     say(["GHOST: The Order kept the balance here, between life and death. We kept the Heart.",
-         me ? "(We?)" : "ALBERICA: (very quietly) ...We?",
+         ask_as(:alberica, "(very quietly) ...We?", "...We?"),
          "GHOST: The Heart is a root. The last living root of a World Tree.",
          "GHOST: The Frostmaiden felled that tree long ago. This root is all of it that's left.",
          journey? ? "You think of Rootspire's roots, the ones you climbed as a kid. This one feels the same." :
@@ -853,7 +853,7 @@ module FrostThaw
          "GHOST: Cut the wolf out of you, and the Heart has no warden. Then it's hers.",
          cl(:reptin, "(very quietly) And she offered to.")].compact)
     say(["GHOST: She means to drain the root and become winter herself.",
-         me ? "(Why does that sound like something I already knew?)" : "ALBERICA: ...Why does that sound like something I already knew?",
+         ask_as(:alberica, "...Why does that sound like something I already knew?", "...I knew that."),
          "GHOST: She'd end this winter, yes. Then she'd be a blight on life and death both.",
          "GHOST: The life she means to spend is a yeti cub. A baby. Stop her. Please.",
          cl(:meat_meat, "Nobody is killing baby yeti. Meat Meat has decided.")].compact)
@@ -912,7 +912,7 @@ module FrostThaw
          cl(:reptin, "(quietly) Wardens. Plural."),
          "GHOST: (half singing, an old tune) Wolf's howl and baby's cry, under the crone...",
          "GHOST: ...and round the wheel goes.",
-         me ? "(Who are you?)" : "ALBERICA: Who are you?",
+         ask_as(:alberica, "Who are you?", "...Who are you?"),
          "GHOST: (her light thinning) Time is a wheel, dear. Go. She's started."].compact)
     set_flag(:tip_staff)
     set_flag(:tip_flame)
@@ -1293,7 +1293,7 @@ module FrostThaw
     sayc([cl(:alerion, "(softly) Frostina.")])
     Stage.panel_off
     Stage.balloon(green, "B-05") if green
-    say(["RAZZILITH: (no voice; a picture in all your heads, of flying) ...Fly?"])
+    say(["RAZZY: (no voice; a picture in all your heads, of flying) ...Fly?"])
     mm = stand_in(:meat_meat, -2, 0, 6)
     Stage.balloon(mm, "B-07", frames: 80) if mm
     speak(:meat_meat, "(sobbing and laughing) RAZZY. Meat Meat is not crying. That is sap. RAZZY.", "(very quietly) ...Razzy.")
@@ -1368,7 +1368,13 @@ module FrostThaw
       say(["You catch a wing. It slips through your fingers like a tide going out."])
     else
       set_flag(:fall_held_on)
-      sayc([cl(:alberica, "I'm holding on to you, pretty boy. Don't make it weird.")])
+      grab = if herald?(:alberica) || herald?(:alerion) then "I'm holding on to you, pretty boy. Don't make it weird."
+             elsif herald?(:reptin)    then "I've got you, sugar. Don't make it weird."
+             elsif herald?(:wyn)       then "I've got you. Hold on, love."
+             elsif herald?(:meat_meat) then "Got you, little goblin. Don't bite."
+             else                           "Got you, sweetheart. Don't let go."
+             end
+      sayc([cl(:alberica, grab)])
     end
     speak(:meat_meat, "Holding Razzy! Meat Meat is holding... Razzy? RAZZY!", "...Razzy?")
     say(["Both wyrmlings are pulled out of your arms, back toward the root.",

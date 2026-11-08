@@ -53,7 +53,7 @@ module FrostThaw
     FT_WOLFBLOOM: ["Wolf-and-Bloom Carving", "Wolf-and-Bloom Carvings", 8, 0,
       "A wolf and a flower, carved together out of ancient ice. Warm to the touch. Nobody saw who left it.", 2, 0, 6],
     FT_OWLFEATHER: ["Rimed Owl Feather", "Rimed Owl Feathers", 8, 0,
-      "A black feather from a snowy owl, coated in rime. It doesn't thaw. The Frostmaiden's mark.", 2, 0, 6],
+      "A white owl feather, barred with black, coated in rime. It doesn't thaw. The Frostmaiden's mark.", 2, 0, 6],
     FT_BONEDUST: ["Bone Dust", "Bone Dust", 8, 0,
       "A pinch of grey dust from the oldest bones in the feast hall, folded in a scrap of cloth. You kept it on an impulse.", 0, 0, 6],
     FT_SWADDLING: ["Yeti Swaddling", "Yeti Swaddlings", 8, 0,
@@ -298,7 +298,7 @@ module FrostThaw
     case plan
     when :rope
       sayc([cl(:alerion, "Rope. Round the waist. I go first, anchor the far end. Last one brings the rope."),
-            cl(:alberica, "The old railing?"),
+            ask_cl(:alberica, "The old railing?"),
             cl(:alerion, "Don't touch the old railing."),
             "You knot yourselves together and go over one at a time, slowly."])
     when :slow
@@ -409,12 +409,12 @@ module FrostThaw
     return if flag?(:rift_voices)
     set_flag(:rift_voices)
     say(["The laughter on the wind changes. It isn't laughter any more. It's voices."])
-    # one line each that names who they hear (context 05 M5-4): the only place in
-    # Act I that Anduin and Talion can be planted
+    # one line each for who they hear (context 05 M5-4). Anduin stays unnamed in
+    # Act I (owner's decision 7): Reptin hears "someone"; Ch9 names him
     sayc([herald?(:alberica) ? "(A woman laughing the way your mother used to, at a joke you've forgotten.)" :
                                cl(:alberica, "...Mum? (a breath) No. She's been dead twenty years."),
-          herald?(:reptin) ? "(Wolves, singing. And under them Anduin, your husband, calling you home.)" :
-                             cl(:reptin, "Wolves. And Anduin, calling me home. My husband. He can't be here.")])
+          herald?(:reptin) ? "(Wolves, singing. And under them, his voice. Calling you home.)" :
+                             cl(:reptin, "Wolves. And someone calling me home. ...He can't be here.")])
     if herald?(:alerion)
       say(["(A boy's voice: \"You said you'd come back.\" Talion. You didn't.)"])
     elsif with_or_is?(:alerion)
@@ -786,7 +786,7 @@ module FrostThaw
     sayc([cl(:alberica, "I'm not writing this one down. Nobody is ever writing this one down."),
           cl(:shade, "...We could have said no."),
           cl(:alerion, "We could have.")])
-    say(["That night, a snowy owl's black feather drifts onto the ledge beside you, rimed white.",
+    say(["That night, a snowy owl's feather drifts onto the ledge beside you, barred black, rimed white.",
          "The Frostmaiden has seen. The Frostmaiden will remember."])
     give_key(:FT_OWLFEATHER)
     chasm_wheel_turns_back
@@ -870,7 +870,11 @@ module FrostThaw
       say(["You tuck the swaddling from the feast hall round it. It sniffs it, and goes very still."])
       take_key(:FT_SWADDLING)
     end
-    if pbConfirmMessage(_INTL("Take Yetot with you?"))
+    if looped_gift?(:got_yeti_cub) && pbConfirmMessage(_INTL("Take Yetot with you?"))
+      say(["(Yetot is already with you, from last time. The cub sniffs its own scent on you, and settles.)"])
+      set_flag(:got_yeti_cub)
+      set_flag(:got_yetot)
+    elsif pbConfirmMessage(_INTL("Take Yetot with you?"))
       cub = Pokemon.new(:YETOT, 25)
       cub.calc_stats
       # a wounded cub comes with you scarred, and slower to trust anything with a knife
@@ -953,7 +957,7 @@ module FrostThaw
          "Wolves on the ridge above it, howling at nothing. Not hungry. Watchful.",
          flag?(:order_wardens) ? "Nomad tents ring the chasm mouth, round a post carved with a wolf and a scythe." : nil,
          "Dougan's Hole. Durmoot lifts a cup: \"To the ones who went down.\" A pause. \"...Don't tell.\"",
-         "In Bryn Shander a bard sings \"Glimmer in the Chasm\": a small light, and an old spirit."].compact)
+         "In Bryn Shander a bard sings \"Glimmer in the Chasm\", from a journal a trapper found."].compact)
     sayc([cl(:shade, "(somewhere in the fall) ...Glimmer. That name again.")])
     say(["The woman in dark green, and beside her a small light, like a lantern. They smile at you.",
          "\"Thank you,\" they whisper, like wind chimes. \"Keep the watch.\""])
@@ -964,7 +968,7 @@ module FrostThaw
     # Owner's call (2026-11-05): the outsider is unseen until a choice of their
     # own; the last mirror is that choice, and then Auril marks them.
     say(["As the light slows, something cold settles on your collar.",
-         "A single black feather from a snowy owl, coated in rime."])
+         "A single white feather from a snowy owl, barred with black and coated in rime."])
     if outsider?
       say([flag?(:tried_to_leave) ? "You reached for the way home, and the glass broke in your hands." :
                                     "You chose this side of the glass.",
@@ -1040,7 +1044,7 @@ module FrostThaw
   end
 
   def read_owl_feather
-    pbMessage(_INTL("A black feather from a snowy owl, coated in rime that won't thaw, even by a fire."))
+    pbMessage(_INTL("A white feather from a snowy owl, barred with black, coated in rime that won't thaw, even by a fire."))
     pbMessage(_INTL(outsider? ? "It caught in your collar the moment you chose. The Frostmaiden has marked you." :
                                 "It drifted down out of nowhere and caught in your collar. The Frostmaiden has marked you."))
   end

@@ -354,6 +354,24 @@ module FrostThaw
     return "#{COMPANION_NAMES[key]}: #{text}"
   end
 
+  # A line someone answers (WRITING_GUIDE §5; whole read V1): for a companion it's
+  # their line; when you are that Herald it isn't a thought the NPC can hear, it's
+  # something you choose to say aloud, loud or quiet, in its place in the say list.
+  def ask_as(key, text, quiet = nil)
+    return as(key, text) if !herald?(key)
+    quiet ||= begin
+      body = text.sub(/\A\([^()]*\)\s*/, "")
+      last = body.split(/(?<=[.?!])\s+/).last.to_s
+      last == body ? "...#{body}" : "...#{last}"
+    end
+    -> { speak(key, text, quiet) }
+  end
+
+  def ask_cl(key, text, quiet = nil)
+    return nil if !with_or_is?(key)
+    ask_as(key, text, quiet)
+  end
+
   # The line north of the chasm bend: until the egg is safe, the party turns back.
   def razzy_block(event_id = nil)
     return if !flag?(:met_razzy) || flag?(:razzy_egg)

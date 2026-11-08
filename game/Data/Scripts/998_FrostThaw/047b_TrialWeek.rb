@@ -58,7 +58,8 @@ module FrostThaw
       flag?(:undercity_done) ? ["DOCKWORKER: I sleep now. Right through. Thank whatever you did down there."] :
         ["DOCKWORKER: (shaking) A fungus down the Smuggler's Run. It sprouts eyes. It whispers.",
          "DOCKWORKER: It showed me things I shouldn't know. Now my dreams are full of shadows.",
-         "DOCKWORKER: The hatch by the Split Dock barrels. Wyn knows it. The wardens won't go down."] },
+         (herald?(:wyn) ? "DOCKWORKER: The hatch by the Split Dock barrels. You'll know it, Rootwarden." :
+                          "DOCKWORKER: The hatch by the Split Dock barrels. Wyn knows it. The wardens won't go down.")] },
     run_glowworms: ["Lanterns of bottled glow-worms swing from root arches. The light is green and sick.",
                     "Moss-steam rises off the dark water like breath."],
     guild_vault_sealed: ["A door of banded root, set deep in the rock. The Guild of Roots and Stone's seal is on it.",
@@ -402,12 +403,12 @@ module FrostThaw
     if ok && flag?(:undercity_spored)
       # (W1: breathing the spores is disadvantage on the commune.)
       say(["The spores in your lungs answer it first. Its whispers come back in your own voice."])
-      ok = challenge("Hold on to your own voice.", ["Breathe out; listen for Wyn's voice", "Shout over it", "Let it talk"], 0)
+      ok = challenge("Hold on to your own voice.", [(herald?(:wyn) ? "Breathe out; listen for your own voice" : "Breathe out; listen for Wyn's voice"), "Shout over it", "Let it talk"], 0)
     end
     if ok
       say([as(:wyn, "(very softly) ...It's hungry. For stories. It eats them, and dreams them out bent."),
            as(:wyn, "It doesn't mean to frighten anyone. It just doesn't know what else to do with them.")])
-      c = pbMessage(_INTL("Pacify it?"), [_INTL("Offer it a memory of Wyn's"), _INTL("Feed it your Pokémon's strength"), _INTL("No")], 0)
+      c = pbMessage(_INTL("Pacify it?"), [herald?(:wyn) ? _INTL("Offer it a memory of your own") : _INTL("Offer it a memory of Wyn's"), _INTL("Feed it your Pokémon's strength"), _INTL("No")], 0)
       if c == 0
         speak(:wyn, herald?(:wyn) ? "(to the colony) The night the spores went quiet. Then the snow. Take it. It's a good one." :
                                     "Here. The night Hyphora called me. The spores singing my name. Take it. It's a good one.",
@@ -506,7 +507,7 @@ module FrostThaw
     if c == 0
       gmon = $Trainer.party.find { |pk| !pk.egg? && !pk.fainted? && pk.hasType?(:GHOST) }
       say([gmon ? "#{gmon.name} sings to her, the way ghosts sing to each other." :
-                  as(:wyn, "(the god-spark of shadow, warm in their hand) You can put it down now. I'll hold it."),
+                  as(:wyn, "(the god-spark of shadow warm in one hand) You can put it down now. I'll hold it."),
            wyn_me ? "She opens her hand. The shard drops into yours. She smiles, and the mist takes her." :
                     "She opens her hand. The shard drops into Wyn's. She smiles, and the mist takes her.",
            "From now on the Glasswater lies still and kind. The ice holds; the boats don't tip."])
@@ -545,8 +546,11 @@ module FrostThaw
     say(lines_for(:leaf_gap), event_id)
     if !flag?(:leaf_quest)
       library_eirwen
-      say(["EIRWEN: (out of breath) A chronal leaf is gone. Torn out of Alberica's own timeline.",
-           "EIRWEN: Without it, her days come loose. A year of her, gone, like a torn-out page.",
+      me = herald?(:alberica)
+      say([me ? "EIRWEN: (out of breath) A chronal leaf is gone. Torn out of your own timeline." :
+                "EIRWEN: (out of breath) A chronal leaf is gone. Torn out of Alberica's own timeline.",
+           me ? "EIRWEN: Without it, your days come loose. A year of you, gone, like a torn-out page." :
+                "EIRWEN: Without it, her days come loose. A year of her, gone, like a torn-out page.",
            "EIRWEN: A Bough patrol went out past the Wall the night it went. They never came back."])
       speak(:alberica, "(very pale) ...Somebody's got a piece of my life in their pocket.", "(very pale) ...That's mine.")
       say([as(:alberica, "I'd like it back.")])
@@ -755,7 +759,7 @@ module FrostThaw
          "A fragment of a map: the White Vault. A glacier, north, and a door with wings on it."])
     set_flag(:vault_map_3)
     add_counter(:story_beats)
-    grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and slick sap: no more sliding.") if !blessing?(:still_sky)
+    grant_blessing(:still_sky, "Blessing of Still Sky", "You keep your footing on ice and snow: no more sliding. (Sap is another matter.)") if !blessing?(:still_sky)
     say(["(Clues to the White Vault: it lies beyond the Wall, under the glacier to the north.)"])
   end
 

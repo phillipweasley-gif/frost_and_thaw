@@ -563,8 +563,10 @@ module FrostThaw
           cl(:meat_meat, "Meat Meat likes this one.")])
     set_switch(SW_WM_SAHNAR, true)
     pk = named_mon(:YAMASK, 18, "Sahnar")
-    if pbAddPokemonSilent(pk)
-      pbMessage(_INTL("Sahnar the moon-elf mummy (a Yamask) joins you!\\me[Pkmn get]\\wtnp[20]"))
+    again = looped_gift?(:sahnar_with_you)
+    if again || pbAddPokemonSilent(pk)
+      pbMessage(again ? _INTL("(Sahnar is already with you, from last time. He bows anyway.)") :
+                        _INTL("Sahnar the moon-elf mummy (a Yamask) joins you!\\me[Pkmn get]\\wtnp[20]"))
       say(["Sahnar knows nothing of Ten-Towns, or the winter. He's been sealed up for centuries.",
            "SAHNAR: But the moon dial, that I know. Ask, and I will show you how it turns."])
       set_flag(:sahnar_with_you)

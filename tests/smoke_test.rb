@@ -1023,5 +1023,33 @@ check("the Hearth coffee: four cups, each a real stat, picked once in the scene,
   FT.state[:coffee] = old_c
   ok && a == [:SPEED, 1] && b.nil? }
 
+# The whole-game read's fixes (0.8.2)
+check("the throne asks the god choice again from its own page, and rests once an ending is chosen") {
+  b = File.read(File.join(repo, "tools/build_act3.rb"), encoding: "UTF-8")
+  page = b.include?('{ switch: SW_AURIL_DOWN, trigger: 3, script: "FT.throne_resume(@event_id)" }') &&
+         b.include?('{ switch: SW_AURIL_DOWN, self_switch: "A" }')
+  asked = []
+  FT.singleton_class.send(:alias_method, :ft_smoke_wdwd2, :scene_what_do_we_do)
+  FT.define_singleton_method(:scene_what_do_we_do) { asked << :asked }
+  had = %i[ending_shatter ending_third_way ending_still_keeper].map { |f| [f, FT.flag?(f)] }
+  had.each { |f, _| FT.state[:flags]&.delete(f) }
+  FT.throne_resume
+  FT.set_flag(:ending_shatter)
+  FT.throne_resume
+  FT.singleton_class.send(:alias_method, :scene_what_do_we_do, :ft_smoke_wdwd2)
+  had.each { |f, v| v ? FT.set_flag(f) : FT.state[:flags]&.delete(f) }
+  page && asked.size == 1 }
+check("a line an NPC answers is said aloud by choice in Herald Mode, and spoken by the companion otherwise") {
+  old = [FT.state[:mode], FT.state[:herald]]
+  FT.state[:mode] = :herald; FT.state[:herald] = :alberica
+  h = FT.ask_as(:alberica, "Who are you?")
+  FT.state[:mode] = :journey; FT.state[:herald] = nil
+  j = FT.ask_as(:alberica, "Who are you?")
+  FT.state[:mode], FT.state[:herald] = old
+  h.is_a?(Proc) && j == "ALBERICA: Who are you?" }
+check("the loop re-earns the Wheel and gives no companion twice") {
+  !FT::LOOP_KEEP_COUNTERS.include?(:wheel) && FT::LOOP_GIFTS.include?(:sahnar_with_you) &&
+    FT::LOOP_KEEP_STATE.include?(:loop_gifts) && FT::LOOP_KEEP.include?(:razzy_blanket) }
+
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)
