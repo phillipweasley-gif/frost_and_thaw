@@ -695,8 +695,8 @@ module FrostThaw
     say([herald?(:wyn) ? "AURIL: (to you) And you. The tree's little warden. You came through a crack in my glass." :
                          "AURIL: (to you) And you. I couldn't see you at all, until the hag's last glass.",
          # Ch11's look back, read here (whole read T3)
-         flag?(:looked_at_auril) ? "AURIL: You looked back at me, once. I thought that made you mine. It didn't." : nil,
-         "AURIL: You chose, and I felt it. You don't turn on my wheel. You don't turn on theirs.",
+         flag?(:looked_at_auril) ? "AURIL: You looked back once. I thought that made you mine. You don't turn on my wheel." :
+                                   "AURIL: You chose, and I felt it. You don't turn on my wheel. You don't turn on theirs.",
          "AURIL: Go home, little stranger. This isn't your winter."].compact)
     opts = [[:wall, _INTL("\"It's my Wall.\"")]]
     opts << [:feather, _INTL("(Hold up the owl feather.)")] if has_key?(:FT_OWLFEATHER)

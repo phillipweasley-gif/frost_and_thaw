@@ -6,7 +6,29 @@ with its reason.
 
 ## Checks
 
-RESULTS
+- Smoke test 240/240 (three new checks: the throne, Herald Mode's spoken lines, the loop). All 159 maps pass.
+- Full games on 0.8.2, every mode and ending (the driver now plays the postgame White Vault in each):
+
+  | Run | 0.8.0 | 0.8.2 |
+  | --- | --- | --- |
+  | New Journey (the Third Way) | 244/245 | 247/247 |
+  | Shatter | 244/245 | 247/247 |
+  | Still Keeper | 241/245 | 241/245 (the four flags the loop clears by design) |
+  | Herald Alberica, Reptin, Meat Meat | 236/237 | 239/239 |
+  | Herald Wyn | 235/236 | 238/238 |
+  | Herald Alerion | none | 239/239 |
+
+  The first Wyn run lost to Duvessa and the driver couldn't walk back to her; a direct test shows the player can
+  (every trainer at its start, path clear), and the rerun passed. The old "one miss" (the sigils' merge) was the
+  driver checking for it before the ending.
+- **Reload at the throne**, from the autosave before the god choice: with its running event kept, the choice comes
+  back once; with it lost (as after a game update), stepping onto the empty throne asks it once. Shatter ends and
+  plays on; the Still Keeper loops exactly once. (A first version used an autorun page; the Still Keeper trace
+  caught it starting the loop twice, and it was replaced.)
+- **Box rules**, whole game, every mode: no new box over 90 characters (the ones left are the protected lines and
+  the base game's bag strings), no speaker four in a row, no run over 25 boxes without an input. The fix round's
+  own long lines, Auril's added box and a 26-box Thredra run were trimmed after the first traces, and Herald
+  Alerion's 31-box Shrine run now has an input.
 
 ## What was fixed
 
@@ -30,7 +52,8 @@ RESULTS
 - Before the Heart Chamber: Var's echo no longer says he's trapped; Bryn and Dathra no longer describe Summer;
   Eirwen's ledger names "a pale lady"; Grik sees the fire, not "her gold".
 - The Rimefang came in Shade's boot in Targos (four lines), and a Lonelywood line sets its cold up.
-- Thredra says she gave the pendant back; Alberica says she threw it in the sea, on the dock too.
+- Alberica tells Thredra she threw the pendant in the sea and the hag fished it out; on the dock, that it always
+  comes back.
 - Shimmer's heart went into an egg. Reptin says "dear"; Alberica's plain voice when Glimmer goes. Ythryn spelt as the
   bible spells it. The last line is the ghost's own first line. "Mushroom person" until the coffee. Small tics cut.
 

@@ -674,8 +674,7 @@ module FrostThaw
       elsif with_or_is?(:alberica)
         say(["Alberica's hand goes to her throat, where the pendant used to hang."])
       end
-      say(["THREDRA: The sea gave it back to me, dearie, and I gave it back to you.",   # (whole read T9)
-           "THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time."], event_id)
+      say(["THREDRA: A medallion for the wolf of seasons. A ring for the boy outside time."], event_id)
       say(["(The medallion fogs in your palm. \"It knows,\" the captain said.)"]) if herald?(:reptin)
       sayc([cl(:alerion, "...Boy."),
             "THREDRA: A dagger for the one who hides in shadow.",

@@ -2524,7 +2524,7 @@ module FrostThaw
     summer_n = witnesses(:summer).size
     strength = summer_n * 2 + (summer_n >= 3 ? 2 : 0) + (t[:opinion] - t[:mud]) + speaker - neglect
     say(["KELYN: (reading) On the death of Summer.",
-         flag?(:corsair_arms_deal) ? "KELYN: (reading) ...thirty blades, forty bows, no Council stamp. He kept the peace his way." : nil,
+         flag?(:corsair_arms_deal) ? "KELYN: (reading) ...thirty blades, forty bows, no Council stamp. He kept the peace." : nil,
          (flag?(:avarice_doubt_shared) ? "(You think of the arms in the glass. The others know. The court doesn't.)" :
           flag?(:avarice_doubt) ? "(You think of the arms in the glass. No sigils. You don't say anything.)" : nil)].compact)
     if strength >= 8

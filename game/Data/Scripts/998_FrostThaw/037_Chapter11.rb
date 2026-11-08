@@ -316,7 +316,7 @@ module FrostThaw
          (herald?(:alerion) ? "SEPHEK: (to you, and he means it) I'm sorry. I'm taking her home." :
                              "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home."),
          "SEPHEK: To Solstice. To the nest she fell from. She was always going home.",
-         as(:alerion, "(very quietly) She's not hers.")])
+         ask_as(:alerion, "(very quietly) She's not hers.", "...She's not hers.")])   # (said to Sephek: an input in his mode)
     # the bible's beat: Alerion, her Dragoon, is thrown down trying to stop them
     al = herald?(:alerion)
     goer = al ? nil : Stage.summon(:alerion)
