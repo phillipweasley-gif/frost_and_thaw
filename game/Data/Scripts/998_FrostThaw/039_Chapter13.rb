@@ -807,12 +807,10 @@ module FrostThaw
     scene_what_do_we_do
   end
 
-  # Map 2089's pages after Auril falls (whole read P1): ask the choice if it
-  # hasn't been answered; once it has, rest the autorun page.
+  # Map 2089 after Auril falls (whole read P1): stepping onto the empty throne asks
+  # the choice if it hasn't been answered; once it has, the page rests.
   def throne_resume(event_id = nil)
-    # nothing to ask once the Still Keeper loop has cleared the story, or while you're
-    # being moved off the map (the page can still be live for a frame after the loop)
-    return if !flag?(:auril_down) || ($game_temp.player_transferring rescue false)
+    return if !flag?(:auril_down)
     if ending_chosen?
       if event_id && $game_self_switches
         $game_self_switches[[$game_map.map_id, event_id, "A"]] = true
@@ -1034,7 +1032,8 @@ module FrostThaw
     state[:goal] = nil
     state.keys.each { |k| state.delete(k) unless LOOP_KEEP_STATE.include?(k) }
     STORY_SWITCHES.each { |i| $game_switches[i] = false } if $game_switches
-    $game_map.need_refresh = true if $game_map
+    # (no map refresh here: a refresh would wake the throne's first autorun page before the
+    # transfer, and the fight would start again. The new map refreshes on arrival.)
     # every Frost & Thaw map (2001 up: Act I, its side quests at 2100+, Rootspire and on)
     $game_self_switches.instance_variable_get(:@data)&.delete_if { |(m, _e, _c), _| m >= 2001 && m < 2400 } rescue nil
     set_flag(:in_loop)

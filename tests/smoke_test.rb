@@ -1024,10 +1024,12 @@ check("the Hearth coffee: four cups, each a real stat, picked once in the scene,
   ok && a == [:SPEED, 1] && b.nil? }
 
 # The whole-game read's fixes (0.8.2)
-check("the throne asks the god choice again from its own page, and rests once an ending is chosen") {
+check("stepping onto the empty throne asks the god choice again, and rests once an ending is chosen") {
   b = File.read(File.join(repo, "tools/build_act3.rb"), encoding: "UTF-8")
-  page = b.include?('{ switch: SW_AURIL_DOWN, trigger: 3, script: "FT.throne_resume(@event_id)" }') &&
-         b.include?('{ switch: SW_AURIL_DOWN, self_switch: "A" }')
+  # a step onto the empty throne, not an autorun (one fired again around the loop's transfer)
+  page = b.include?('{ switch: SW_AURIL_DOWN, graphic: "", through: true, trigger: 1, script: "FT.throne_resume(@event_id)" }') &&
+         b.include?('{ switch: SW_AURIL_DOWN, self_switch: "A", graphic: "", through: true }') &&
+         !b.include?('trigger: 3, script: "FT.throne_resume')
   asked = []
   FT.singleton_class.send(:alias_method, :ft_smoke_wdwd2, :scene_what_do_we_do)
   FT.define_singleton_method(:scene_what_do_we_do) { asked << :asked }

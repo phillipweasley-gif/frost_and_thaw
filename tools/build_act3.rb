@@ -240,16 +240,16 @@ th = cave_map(20, 16)
 paint(th, [3, 3, 14, 10], [8, 13, 3, 2])
 [[4, 4], [15, 4], [4, 11], [15, 11]].each { |x, y| th.set(x, y - 1, 2, 800); th.set(x, y, 2, 808) }
 [8, 9, 10].each { |x| th.warp(x, 14, ID[:crown], 13, 3, 2, name: "Back to the Crown") }
+# Auril down: if a save comes back without its running event (a game update clears it),
+# stepping onto the empty throne asks the god choice again; once an ending is chosen,
+# self switch A rests it (whole read P1). No autorun: one would fire again around the
+# Still Keeper loop's transfer.
 th.event(9, 4, "Auril", [
   { graphic: "FT_auril_furs", direction: 2, script: "FT.scene_throne" },
-  { switch: SW_AURIL_DOWN, graphic: "", through: true }
+  { switch: SW_AURIL_DOWN, graphic: "", through: true, trigger: 1, script: "FT.throne_resume(@event_id)" },
+  { switch: SW_AURIL_DOWN, self_switch: "A", graphic: "", through: true }
 ])
-# Auril down: if a save comes back without its running event (a game update clears it),
-# the god choice is asked again from here; once an ending is chosen, self switch A rests it
-# (whole read P1).
-th.event(1, 1, "Cutscene throne", [{ trigger: 3, script: "FT.scene_throne" },
-                                   { switch: SW_AURIL_DOWN, trigger: 3, script: "FT.throne_resume(@event_id)" },
-                                   { switch: SW_AURIL_DOWN, self_switch: "A" }])
+th.event(1, 1, "Cutscene throne", [{ trigger: 3, script: "FT.scene_throne" }, { switch: SW_AURIL_DOWN }])
 save(th, :throne)
 
 merge_infos(ID.map { |k, v| [v, NAMES[k]] })
