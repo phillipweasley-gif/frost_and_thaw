@@ -786,7 +786,7 @@ module FrostThaw
     sayc([cl(:alberica, "I'm not writing this one down. Nobody is ever writing this one down."),
           cl(:shade, "...We could have said no."),
           cl(:alerion, "We could have.")])
-    say(["That night, a snowy owl's feather drifts onto the ledge beside you, barred black, rimed white.",
+    say(["That night an owl's feather drifts onto the ledge by you, barred black, rimed white.",
          "The Frostmaiden has seen. The Frostmaiden will remember."])
     give_key(:FT_OWLFEATHER)
     chasm_wheel_turns_back
@@ -871,7 +871,7 @@ module FrostThaw
       take_key(:FT_SWADDLING)
     end
     if looped_gift?(:got_yeti_cub) && pbConfirmMessage(_INTL("Take Yetot with you?"))
-      say(["(Yetot is already with you, from last time. The cub sniffs its own scent on you, and settles.)"])
+      say(["(Yetot is already with you, from last time. The cub sniffs your scent, and settles.)"])
       set_flag(:got_yeti_cub)
       set_flag(:got_yetot)
     elsif pbConfirmMessage(_INTL("Take Yetot with you?"))
@@ -1044,7 +1044,7 @@ module FrostThaw
   end
 
   def read_owl_feather
-    pbMessage(_INTL("A white feather from a snowy owl, barred with black, coated in rime that won't thaw, even by a fire."))
+    pbMessage(_INTL("A snowy owl's white feather, barred black, in rime that won't thaw, even by a fire."))
     pbMessage(_INTL(outsider? ? "It caught in your collar the moment you chose. The Frostmaiden has marked you." :
                                 "It drifted down out of nowhere and caught in your collar. The Frostmaiden has marked you."))
   end

@@ -99,7 +99,7 @@ module FrostThaw
       Stage.walk_to(tam, px + 3, py, face: 4)     # (past the tiles companions walk in to)
       Stage.emote(tam, :exclaim)
     end
-    sayc(["TAMSIN: (Rootwarden cloak on crooked, planting their feet) Hold it. HOLD it, #{player_display_name}!",
+    sayc(["TAMSIN: (new cloak on crooked, planting their feet) Hold it. HOLD it, #{player_display_name}!",
           "TAMSIN: You're going to fight a GOD. With THAT team? Not without one more battle first."])
     cline(:alberica, "Look at them. All grown up and threatening people. I could cry.", "...Look at them. All grown up.")
     # (lines someone answers are spoken, not thought, when you are that Herald: WRITING_GUIDE §5)
@@ -787,7 +787,7 @@ module FrostThaw
     have = SHORTCUTS.select { |f, _| flag?(f) }
     say(lines_for(:grimskalle_jaw), event_id)
     say(have.map(&:last) + ["(None of them skips a Test.)"]) if !have.empty?
-    return if !pbConfirmMessage(_INTL("Go into Grimskalle? (No way back out until it's done. Sephek and the throne are past level 65.)"))
+    return if !pbConfirmMessage(_INTL("Go into Grimskalle? (No way back until it's done. Sephek and the throne are past level 65.)"))
     set_flag(:grimskalle_entered)
     add_counter(:story_beats)
     if !flag?(:shortcuts_used)

@@ -604,7 +604,7 @@ module FrostThaw
     tam = (Stage.actor(:tamsin, $game_player.x + 2, $game_player.y, 4, graphic: "FT_tamsin") rescue nil)
     Stage.walk_to(tam, $game_player.x + 1, $game_player.y, face: 4) rescue nil if tam
     say(["Tamsin comes up the line in a new green cloak, on crooked.",
-         "TAMSIN: Sworn in this morning. Rootwarden. Junior. Very junior. I hold the end of the rope."])
+         "TAMSIN: Sworn in this morning. Junior Rootwarden. Very junior. I hold the rope."])
     sayc([cl(:alberica, "(beaming) Look at you. Somebody fetch Hellen."),
           cl(:reptin, "Congratulations, Rootwarden. The cloak goes the other way round.")])
     Stage.remove_actor(tam) rescue nil if tam
@@ -2028,7 +2028,7 @@ module FrostThaw
          "LUMINARA: Three hundred years we've done it. Under your feet. You never asked."])
     has = ->(item) { ($PokemonBag.pbHasItem?(item) rescue false) }
     set_flag(:blessed_leaf_shown) if has.(:FT_BLESSEDLEAF)
-    set_flag(:tincture_shown) if flag?(:knows_winter_fear) && has.(:FT_FROSTBITETINCTURE)
+    set_flag(:tincture_shown) if flag?(:knows_winter_fear) && (flag?(:tincture_given) || has.(:FT_FROSTBITETINCTURE))
     set_flag(:history_shown) if has.(:FT_HISTORYSCROLL)
     score = 0
     score += 1 if !flag?(:spores_mistrust)
@@ -2145,12 +2145,13 @@ module FrostThaw
   end
 
   def yarro_tincture(event_id = nil)
-    return say(["YARRO: (a voice like warm rain) Mind you show it to the cold one. She needs it most."], event_id) if ($PokemonBag.pbHasItem?(:FT_FROSTBITETINCTURE) rescue false)
+    return say(["YARRO: (a voice like warm rain) Mind you show it to the cold one. She needs it most."], event_id) if flag?(:tincture_given) || ($PokemonBag.pbHasItem?(:FT_FROSTBITETINCTURE) rescue false)
     say(["YARRO: Frostbite, you say? In the camp? Our spores mend it. They don't rot it.",
          "YARRO: Help me brew. Moss, sap, and the right caps."], event_id)
     if challenge("Which caps?", ["The pale ones, from where it's warm", "The black-red ones from the old blight", "Any of them"], 0)
       say(["The brew goes clear and smells of spring rain."])
       give(:FT_FROSTBITETINCTURE, 2)
+      set_flag(:tincture_given)   # (the witness is the brewing, not a bottle you might drink: whole read P16)
     else
       say(["YARRO: Not those. Never those. Try again tomorrow, gently."])
     end
@@ -2491,7 +2492,7 @@ module FrostThaw
          "KELYN: (very quietly) Sit down, or leave."])
     tam = (Stage.actor(:tamsin, 5, 13, 6, graphic: "FT_tamsin") rescue nil)
     say([flag?(:tamsin_sworn) ? "TAMSIN: (in the gallery, too loud) That's my friend. Write that down." :
-                                "TAMSIN: (in the gallery, in a brand-new green cloak) Rootwarden Tamsin. That's my friend. Write that down."])
+                                "TAMSIN: (in the gallery, in a new green cloak) That's my friend. Write that down."])
     set_flag(:tamsin_sworn)
     Stage.remove_actor(tam) rescue nil if tam
     worked = t[:helped] + (flag?(:blankets_given) ? 1 : 0)
@@ -2523,7 +2524,7 @@ module FrostThaw
     summer_n = witnesses(:summer).size
     strength = summer_n * 2 + (summer_n >= 3 ? 2 : 0) + (t[:opinion] - t[:mud]) + speaker - neglect
     say(["KELYN: (reading) On the death of Summer.",
-         flag?(:corsair_arms_deal) ? "KELYN: (reading) ...and thirty blades, forty bows, no Council stamp. Var kept the peace his own way." : nil,
+         flag?(:corsair_arms_deal) ? "KELYN: (reading) ...thirty blades, forty bows, no Council stamp. He kept the peace his way." : nil,
          (flag?(:avarice_doubt_shared) ? "(You think of the arms in the glass. The others know. The court doesn't.)" :
           flag?(:avarice_doubt) ? "(You think of the arms in the glass. No sigils. You don't say anything.)" : nil)].compact)
     if strength >= 8

@@ -47,7 +47,7 @@ module FrostThaw
                         "When you look at her, she pulls her hood lower."] },
     # (notes 09 E17: five people, five lines, not one shared script)
     refugee_1: -> { T.flag?(:good_mead_saved) ?
-                    ["BEEKEEPER: Good Mead's half ash. Olivessa got the queens out. I walked here with a hive under my coat."] :
+                    ["BEEKEEPER: Good Mead's half ash. Olivessa got the queens out. I brought a hive."] :
                     ["BEEKEEPER: Good Mead's gone. I walked here with a hive under my coat. It's still humming."] },
     refugee_2: -> { T.flag?(:prisoners_freed) ?   # (whole read T30: the forge pods, read back)
                     ["A woman from the forge pods, wrapped in a Rootwarden's cloak, won't let go of your sleeve."] :

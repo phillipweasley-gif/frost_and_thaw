@@ -963,7 +963,7 @@ module FrostThaw
     say(["The light in the diamond flickers, then settles.",
          "It goes into Frostina like breath into a lung. Winter, the season. Not the cage.",
          "And Frostina, Shimmer's answer, carries it.",
-         "The old relics answer: a medallion fogs, a ring frosts, Dawnfang hums. The chord from Targos, once."])   # (whole read T25)
+         "A medallion fogs. A ring frosts. Dawnfang hums. The chord from Targos, once."])   # (whole read T25)
     Stage.theme("lake_crater")
     say([herald?(:alerion) ? "Behind your ribs, the second heartbeat goes cold and clean, like a winter morning." :
                              "Alerion puts a hand to his chest and, very slightly, smiles."])
@@ -1152,7 +1152,7 @@ module FrostThaw
                     flag?(:chasm_watch_kept) ? "The grey wolf is greyer now." : nil].compact
     end
     # Reptin's vow to Garagai, kept (whole read T13)
-    v[:chasm] << "At Garagai's lodge, Norsu noses the axe-head back onto its peg. He doesn't leave it all day." if flag?(:garagai_axe)
+    v[:chasm] << "At Garagai's lodge, Norsu noses the axe-head back onto its peg, and stays by it all day." if flag?(:garagai_axe)
     v[:chasm] << "A grown yeti watches from the ridge above the Chasm, and doesn't come closer." if flag?(:got_yetot)
     v[:lonelywood] << ["In Lonelywood, a man in a coat, for the first time, buys soup.",
                        "He's given a cookie shaped like a halfling."] if flag?(:sephek_turned)
