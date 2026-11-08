@@ -939,7 +939,7 @@ module Story
       end
       travel(2088); HL.frames(20); HL.settle(3000)
       talk(/^Iskra$/)
-      beat("SC 13.06 the roe's nest", :iskra_passed)
+      beat("SC 13.06 the roc's nest", :iskra_passed)
       until_flag(:frostina_freed, 3) { travel(2088); talk(/^Sephek$/) }
       beat("SC 13.07 the Frost Saint (#{FrostThaw.flag?(:sephek_turned) ? 'turned' : 'beaten'})", :frostina_freed)
       fit(70)
