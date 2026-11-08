@@ -18,7 +18,7 @@ from PIL import Image
 OUTLINE = (14, 8, 13)
 
 def pixels(im):
-    return im.get_flattened_data() if hasattr(im, "get_flattened_data") else pixels(im)
+    return im.get_flattened_data() if hasattr(im, "get_flattened_data") else im.getdata()
 
 def native(im):
     w, h = im.size
