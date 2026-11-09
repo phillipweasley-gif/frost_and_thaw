@@ -33,3 +33,7 @@
   Selrae at the Echo Gate. Hew at the Trials follows what you told him in Ch7B.
 
 ## Checks
+- Alberica beardless (owner): `tools/alberica_beardless.py`; her poses and rune variant regenerated.
+- Maps rebuilt from scratch (`build_all`); all 159 pass `check_all`. Smoke test 241/241.
+- **Final round on 0.8.4 (all eight):** Journey 247/247, Shatter 247/247, Still Keeper 241/245 (the loop's four by
+  design), Heralds Alberica, Reptin, Meat Meat, Alerion 239/239, Wyn 238/238.
