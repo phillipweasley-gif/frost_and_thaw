@@ -116,8 +116,10 @@ module FrostThaw
     Stage.fx("E-07", [rx, ry], frames: 8, oy: 40) rescue nil
     $game_screen.start_flash(Color.new(255, 240, 200, 200), 20) rescue nil
     Stage.remove_actor(shade) if shade
+    Stage.panel("S-10", fade: 20)                                  # Shade into the mirror of stars (panel, when drawn)
     sayc(["Shade steps into the mirror. The glass takes them like warm water.",
           "Stars move on the other side. For one breath, nothing at all."])
+    Stage.panel_off
     # Glimmer steps out, and walks back to you
     gl = Stage.actor(:glimmer, rx, ry, 2, graphic: "FT_glimmer") if Stage.map?
     $game_screen.start_flash(Color.new(255, 240, 200, 160), 16) rescue nil

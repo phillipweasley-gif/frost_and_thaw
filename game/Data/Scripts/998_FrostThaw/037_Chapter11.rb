@@ -39,7 +39,7 @@ module FrostThaw
     return if flag?(:auril_whisper)
     al = herald?(:alberica)
     # Context 11 M11-1: an act card, then where and when this is.
-    say(["ACT III. THE FROSTMAIDEN"])
+    act_card("c", "ACT III. THE FROSTMAIDEN")
     say(["The Rooted Hearth, the night of the vote. The bard is playing the Heralds' song, badly.",
          "HELLEN: (stopping, eyes wet) New verse. Glimmer's. The city calls him the Dagger Reborn.",
          cl(:alerion, "(to Hellen) The verse is good. Keep going."),
@@ -303,9 +303,11 @@ module FrostThaw
       $game_screen.start_shake(4, 6, 12) rescue nil
     end
     Stage.cry(:ARTICUNO)
+    Stage.panel("S-15", fade: 20)                                  # Iskra through the torn sky (panel, when drawn)
     say(["Through the thinned Wall, a white bird drops out of the night. A roc, vast as a ship.",
          "Aurora trails from her wingtips.",
          "Iskra."])
+    Stage.panel_off
     say([as(:alerion, "(barely breathing) The Frostmaiden's roc. Frostina's egg fell from her.")])
     if frostina
       Stage.fx("E-04", frostina, frames: 10, hold: true, wait: true, oy: 8)   # the crystal closes over her

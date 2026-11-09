@@ -97,8 +97,10 @@ module FrostThaw
     set_switch(SW_CH9_MARKET, false)
     return if flag?(:summer_ended)
     say(["The gold dawn flickers. Goes rose. Then pale.",
-         "For the first time in thirty years, the light changes.",
-         "A leaf falls in the market. Then a hundred. People hold out their hands like it's rain."])
+         "For the first time in thirty years, the light changes."])
+    Stage.panel("S-13", fade: 20)                                  # the market, hands out, the Wall going thin (panel, when drawn)
+    say(["A leaf falls in the market. Then a hundred. People hold out their hands like it's rain."])
+    Stage.panel_off
     if journey?
       say(["TAMSIN: (catching one) It's brown. Why is it brown? Is it sick?"])
     else
@@ -387,9 +389,11 @@ module FrostThaw
          "Two years of night, exactly as you left it."])
     speak(:alberica, "(shouting over the wind) It's the same winter! We've been gone a month!",
                      "(into the wind, quietly) ...It's the same winter. Nothing's moved.")
+    Stage.panel("S-14", fade: 16)                                  # two dragons over burning Good Mead (panel, when drawn)
     say([cl(:reptin, "(shouting back) I'd almost forgotten how much I hate it!"),
          "Ahead, a black dragon with burning gold eyes dives on a town of beehives and honey-halls.",
          "Good Mead. Its breath is a line of light. Roofs go up like paper."].compact)
+    Stage.panel_off
     px, py = $game_player.x, $game_player.y
     Stage.fx("E-17", [px - 3, py - 3], start: 16, frames: 8, ox: 80) rescue nil   # the black dragon's breath (E-17, row 3)
     Stage.fx("E-23", [px + 2, py - 3], frames: 6, fps: 10) rescue nil               # a roof goes up (E-23)

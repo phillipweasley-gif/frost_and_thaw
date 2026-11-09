@@ -609,6 +609,9 @@ module FrostThaw
          "In its heart, a sliver of blue frost-light, wrapped in Hyphora's gold sap."])
     Stage.stop_fx(heart)
     Stage.pan_back
+    Stage.panel("S-11", fade: 20)                                  # the black crystal dragon among the Twenty Stones (panel, when drawn)
+    say(["The Dragonforge."])
+    Stage.panel_off
     sayc([as(:wyn, "(stricken) That's her sap. That's Hyphora's blood."),
           cl(:alerion, flag?(:heart_given_summer) ? "That's the cold Sephek carried. Eline said Summer had his heart." :
                                                     "That's the cold Sephek carried. I'd know it anywhere. That's his heart."),
@@ -1001,7 +1004,9 @@ module FrostThaw
     $game_screen.start_flash(Color.new(255, 250, 220, 200), 40) rescue nil
     stage_fade(gl, 120, 8, 3)
     Stage.fx("E-11", gl, oy: 24) rescue nil if gl                     # his light rises out of him (E-11)
+    Stage.panel("S-12", fade: 20)                                  # a better fire: Glimmer kneeling in light (panel, when drawn)
     say(["The light goes up, through the roots, through the tree, toward a plain of stars."])
+    Stage.panel_off
     stage_fade(gl, 0, 10, 4)
     Stage.remove_actor(gl) if gl
     say(["The unicorn's horn goes with it.",

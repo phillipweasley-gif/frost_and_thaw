@@ -825,9 +825,11 @@ module FrostThaw
     $game_screen.start_tone_change(Tone.new(-30, -25, 0, 10), 20) rescue nil
     crowd.each { |c| s.balloon(c, "B-06", frames: 30) }
     s.wait(20)
+    Stage.panel("S-03", fade: 16)                                  # Alberica on the well, the pendant blazing (panel, when drawn)
     say(["The pendant burns white-hot and cold at once.",
          "The square fills with things that aren't there: cut grass, a lullaby, somebody's laugh.",
          "Every face in the crowd changes."])
+    Stage.panel_off
     if flag?(:lottery_rigged)
       say([as(:alberica, "And three of you have never once been drawn. Ask yourselves why.")])
     end

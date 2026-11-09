@@ -172,8 +172,20 @@ module FrostThaw
 
   # SC 1.01 - Out of the air. Where and when you are, and the three who find
   # you on the pier, walking in and off on screen (context/01.md B1, HB1, HB3).
+  # An act's title card (S-25a-c, art list), held a moment; until it's drawn, the act's name as a line.
+  def act_card(letter, title)
+    if (pbResolveBitmap("Graphics/Pictures/S-25#{letter}") rescue nil)
+      Stage.panel("S-25#{letter}", fade: 24)
+      Stage.wait(70)
+      Stage.panel_off(fade: 24)
+    else
+      say([title])
+    end
+  end
+
   def scene_targos_arrival
     return if respond_to?(:loop_skip) && loop_skip(:act1)      # (in the Still Keeper's loop: "I remember this")
+    act_card("a", "ACT I. THE RIME")
     apply_herald_switches
     if herald?(:meat_meat)
       say(["From behind the hay bales you watch the docks. Strangers are coming up from the ships."])
@@ -409,8 +421,10 @@ module FrostThaw
     tavern_intro(herald) if herald && TAVERN_TALKS.include?(herald)     # your own, now theirs are said
     say(["Old things, cold things. Relics, the Dale calls them."])
     stage_relics_hum
+    Stage.panel("S-02", fade: 20)                                  # the five relics, frost spreading across the wood (panel, when drawn)
     say(["Four relics on four tables. The stone under Shimmer's ribs makes five.",
          "They hum together, like a chord."])
+    Stage.panel_off
     speak(:reptin, "They know each other. That's either very good news or the start of a ghost story.",
           "...Good news, or a ghost story.")
     say([as(:alerion, "Ghost story."),

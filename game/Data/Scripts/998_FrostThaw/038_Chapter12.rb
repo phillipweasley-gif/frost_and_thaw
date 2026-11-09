@@ -361,8 +361,10 @@ module FrostThaw
     # the skull (S-12b): the music cuts for it
     pbBGMFade(1.0) rescue nil
     Stage.panel("S-12b", fade: 24)
+    Stage.panel("S-16", fade: 20)                                  # Solstice out of the fog (panel, when drawn)
     say(["The fog parts. An island of ice, shaped like a snowflake. Six jagged arms.",
          "On it, a mountain carved into a giant skull, wearing a crown."])
+    Stage.panel_off
     # Grimskalle, joined to the skull (Eirwen's plans named it at the Council)
     stair = flag?(:council_eirwen) ? " Eirwen's servants' stair is round the back." : " She moved in."
     say([{ "RHEVEN" => "RHEVEN: Grimskalle. The giants' old fortress.#{stair}",

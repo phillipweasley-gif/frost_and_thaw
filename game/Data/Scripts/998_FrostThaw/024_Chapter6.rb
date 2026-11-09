@@ -285,6 +285,7 @@ module FrostThaw
   def scene_rootspire_arrival
     return if flag?(:rootspire_arrived)
     set_flag(:rootspire_arrived)
+    act_card("b", "ACT II. THE THAW")
     set_flag(:razzy_hatched)
     add_counter(:story_beats)
     state[:companions] = ([:alberica, :reptin, :alerion, :shade, :meat_meat] - [herald]).uniq

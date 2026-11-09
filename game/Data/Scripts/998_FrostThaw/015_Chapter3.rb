@@ -1017,7 +1017,9 @@ module FrostThaw
       st.wait(14)
     end
     $game_screen.start_tone_change(Tone.new(30, 30, 50, 0), 30) rescue nil
+    Stage.panel("S-06", fade: 20)                                  # the pale egg under the Undying Rose (panel, when drawn)
     say(["The Wennen thump a slow beat with their feet. The false moon in the ceiling brightens."])
+    Stage.panel_off
     mood(:thaw)
     pbSEPlay("Ice2") rescue nil
     say(["The egg doesn't crack. It warms.",

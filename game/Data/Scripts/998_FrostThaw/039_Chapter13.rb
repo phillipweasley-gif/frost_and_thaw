@@ -157,7 +157,10 @@ module FrostThaw
       set_self_switch(id, "A", false, MAPS[:"test_#{key}"]) if id          # the vision plays again
     elsif !flag?(:"test_#{key}_door_seen")
       set_flag(:"test_#{key}_door_seen")
+      card = { "cruelty" => "a", "endurance" => "b", "isolation" => "c", "preservation" => "d" }[key.to_s]
+      Stage.panel("S-24#{card}", fade: 16) if card                  # the Test's card, as you step in (panel, when drawn)
       say(["A door of ice, carved #{t[2]}."], event_id)
+      Stage.panel_off if card
     end
     transfer(MAPS[:"test_#{key}"], 9, 10, 8)
   end
@@ -752,9 +755,11 @@ module FrostThaw
     cline(:wyn, "(to the diamond, not loud) No. You'll stop.", "(to the diamond) ...You'll stop.")
     auril_look(3, throne)
     $game_screen.start_flash(Color.new(255, 255, 255, 200), 12) rescue nil
+    Stage.panel("S-17", fade: 20)                                  # the Rewritten Auril forming (panel, when drawn)
     sayc([
           "In the middle of the room something forms: a woman made of all three.",
           "Shimmer's face for a moment. Then #{al ? 'yours' : "Alberica's"}. Then no one's."])
+    Stage.panel_off
     if flag?(:council_phildendrin)
       say(["(Phildendrin's people at the dock sent up a fire-arrow and every potion in Rootspire.)",
            "(Your team is fully healed.)"])
@@ -925,10 +930,12 @@ module FrostThaw
     Stage.remove_actor(auril_diamond) if auril_diamond
     $game_screen.start_flash(Color.new(255, 255, 255, 255), 16) rescue nil
     pbSEPlay("Ice8") rescue nil
-    sayc(["#{mm ? 'You drive' : (with_or_is?(:meat_meat) ? 'Meat Meat drives' : 'You drive')} Dawnfang into the diamond. It bursts into snow.",
-          "The Rime breaks at once. The first sunrise over Icewind Dale in two years.",
+    sayc(["#{mm ? 'You drive' : (with_or_is?(:meat_meat) ? 'Meat Meat drives' : 'You drive')} Dawnfang into the diamond. It bursts into snow."])
+    Stage.panel("S-18", fade: 24)                                  # the first sunrise (panel, when drawn)
+    sayc(["The Rime breaks at once. The first sunrise over Icewind Dale in two years.",
           "The Auroral Wall falls, and the two times meet. Rootspire and Ten-Towns share one sky.",
           cl(:alberica, "...Well. That's one way to end a party.")])
+    Stage.panel_off
     Stage.theme("strongWind")
     say(["SEPHEK: Next solstice."]) if flag?(:sephek_turned)
     their_time_payoff
@@ -956,12 +963,14 @@ module FrostThaw
     Stage.walk_to(frost, tx, ty - 1, face: 2) if frost
     Stage.walk_to(razz, tx + 1, ty - 1, face: 4) if razz
     Stage.balloon(frost, "B-05", frames: 60) if frost
+    Stage.panel("S-19", fade: 20)                                  # the two dragons turning the wheel (panel, when drawn)
     say(["Frostina lowers her head to the diamond and hums Shimmer's four notes:",
          "the song of the first vessel, who refused her. Razzilith puts his nose beside hers."])
     # (the player's beat in it: the song came from Chapter 3, and you've heard it since)
     c = pbMessage(_INTL("The four notes, over and over."), [_INTL("(Hum along.)"), _INTL("(Listen.)")], 1)
     say([c == 0 ? "Your four notes come out a little flat. Frostina doesn't mind." :
                   "Nobody else makes a sound."])
+    Stage.panel_off
     $game_screen.start_flash(Color.new(200, 230, 255, 200), 20) rescue nil
     Stage.fx("E-14", frost, oy: 24) if frost
     say(["The light in the diamond flickers, then settles.",
@@ -993,6 +1002,7 @@ module FrostThaw
           "#{al ? 'You press' : 'She presses'} the diamond to #{al ? 'your' : 'her'} chest.",
           "Frost spreads, slowly, from the heart outward."])
     Stage.overlay("O-04", fps: 3, fade: 0)                          # frost in from the edges, to white
+    Stage.panel("S-20", fade: 20)                                  # Alberica frozen, the room cracking (panel, when drawn)
     sayc(["#{al ? 'You smile' : 'She smiles'} at each of them until #{al ? 'you' : 'she'} can't.",
           # (for one breath she looks exactly like the Still Keeper from her test)
           al ? "For a moment you look exactly like the Still Keeper." : "For a moment she looks exactly like the Still Keeper.",
@@ -1003,6 +1013,7 @@ module FrostThaw
     pbSEPlay("Earth3") rescue nil
     Stage.theme("fusion_reversed")                                  # the journey, running backwards
     Stage.overlay("O-06", fps: 5, fade: 0, above_panels: true, wait: true)   # the white cracks like a mirror
+    Stage.panel_off(fade: 0)
     sayc(["The throne room cracks like a mirror.",
           "Every shard shows a moment of your journey, running backwards.",
           as(:alberica, "(from inside the ice, very far away) Oh. ...Oh, no. It doesn't end."),
@@ -1177,7 +1188,9 @@ module FrostThaw
     pbBGMFade(2.0) rescue nil
     pbFadeOutIn { Stage.jump(*HEARTH_EPILOGUE) } rescue nil
     Stage.theme(:heralds)                                         # the Heralds' theme (notes 13 E1)
+    Stage.panel("S-22", fade: 20)                                  # everyone round one table (panel, when drawn)
     say([flag?(:ending_shatter) ? "A year later. The first frost has come early. Nobody says why." : "A year later."])
+    Stage.panel_off
     places = epilogue_vignettes
     hold_music do
       until places.empty?
@@ -1185,7 +1198,11 @@ module FrostThaw
         c = pbMessage(_INTL("Whom do you look in on?"), keys.map { |k| _INTL(EPILOGUE_LABELS[k]) }, -1)
         k = keys[(c && c >= 0) ? c : 0]
         lines = places.delete(k)
-        epilogue_place(k) { lines.each { |l| say(Array(l).compact) } }
+        epilogue_place(k) do
+          Stage.panel("S-21", fade: 16) if k == :wall              # Hellen's wall, the new carving (panel, when drawn)
+          lines.each { |l| say(Array(l).compact) }
+          Stage.panel_off if k == :wall
+        end
       end
       # Shatter's last image: the owl at midwinter (notes 13 E19)
       if flag?(:ending_shatter)
@@ -1232,7 +1249,9 @@ module FrostThaw
     pbBGMFade(1.0) rescue nil
     pbFadeOutIn { Stage.jump(*CHASM_CODA) } rescue nil
     Stage.theme("sinjoh")                                        # time, turning (not the Chasm's own music)
+    Stage.panel("S-23", fade: 20)                                  # an old dwarf woman looking up at the cave mouth (panel, when drawn)
     say(["Many years later. The Cackling Chasm."])
+    Stage.panel_off
     px, py = ([$game_player.x, $game_player.y] rescue [0, 0])
     own = (pbResolveBitmap("Graphics/Characters/FT_alberica_old") rescue nil)
     old = Stage.actor(:old_alberica, px, py, 2, graphic: own ? "FT_alberica_old" : "FT_green_ghost")
