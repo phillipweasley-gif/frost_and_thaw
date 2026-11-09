@@ -384,16 +384,18 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   def sky_chase
     flight_begin
+    # S-14 is the two dragons through the Wall into the Rime's night, fires far below (the panel as drawn): it
+    # covers the crossing, and comes down before the black dragon is seen, which plays on the map with E-17.
+    Stage.panel("S-14", fade: 16)                                  # Frostina and Razzilith through the Wall
     say(["You fly into the Auroral Wall. For a moment the air is cold water.",
          "Then you're through, into the Rime. No sun. Snow in your face.",
          "Two years of night, exactly as you left it."])
     speak(:alberica, "(shouting over the wind) It's the same winter! We've been gone a month!",
                      "(into the wind, quietly) ...It's the same winter. Nothing's moved.")
-    Stage.panel("S-14", fade: 16)                                  # two dragons over burning Good Mead (panel, when drawn)
-    say([cl(:reptin, "(shouting back) I'd almost forgotten how much I hate it!"),
-         "Ahead, a black dragon with burning gold eyes dives on a town of beehives and honey-halls.",
-         "Good Mead. Its breath is a line of light. Roofs go up like paper."].compact)
+    (r = cl(:reptin, "(shouting back) I'd almost forgotten how much I hate it!")) && say([r])
     Stage.panel_off
+    say(["Ahead, a black dragon with burning gold eyes dives on a town of beehives and honey-halls.",
+         "Good Mead. Its breath is a line of light. Roofs go up like paper."])
     px, py = $game_player.x, $game_player.y
     Stage.fx("E-17", [px - 3, py - 3], start: 16, frames: 8, ox: 80) rescue nil   # the black dragon's breath (E-17, row 3)
     Stage.fx("E-23", [px + 2, py - 3], frames: 6, fps: 10) rescue nil               # a roof goes up (E-23)
