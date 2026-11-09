@@ -255,6 +255,9 @@ module FrostThaw
       say(["Your last blow goes through him like a hand through mist.",
            "He shatters into a whirlwind of ice, and the whirlwind keeps turning."])
     else
+      cold_from = stage_event("stage_sephek") || $game_player
+      $game_screen.start_shake(4, 8, 16) rescue nil
+      Stage.fx("E-16", cold_from) rescue nil                     # the wave of cold flattens everything (Art List E-16)
       say(["The cold comes off him in a wave and puts every Pokémon on the Shrine on the ground.",
            "Then, without anyone touching him, he shatters into a whirlwind of ice."])
     end

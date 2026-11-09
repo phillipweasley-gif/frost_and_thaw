@@ -929,6 +929,7 @@ module FrostThaw
       if i == 1
         set_flag(:engine_vented)
         $game_screen.start_shake(5, 8, 20) rescue nil
+        Stage.fx("E-13", $game_player) rescue nil                  # the ring of heat rolls out (Art List E-13)
         say(["The engine screams and vents. A wave of heat throws everyone to the floor.",
              "When you can see again, Avarice is on her feet, laughing, whole.",
              "AVARICE: Again? Again. I love a repeatable experiment."])
