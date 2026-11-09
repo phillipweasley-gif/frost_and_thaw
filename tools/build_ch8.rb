@@ -103,6 +103,8 @@ save(cp, :hag_pens)
 df = cave_map(40, 30)
 paint(df, [0, 13, 6, 3], [16, 4, 21, 23])
 cave_bridge_h(df, 6, 15, 14)                                    # over the boiling sap
+# (A-15) the sap itself, down in the pit under the bridge: the animated sap autotile on the void's floor
+df.autotile(0, FrostThaw::SAP_AUTOTILE, Builder.rect_cells(7, 8, 8, 15).select { |x, y| df.get(x, y, 0) == CAVE_VOID })
 [13, 14, 15].each { |y| df.warp(0, y, 2150, 13, 27, 8, name: "Back up to the root-keep gate") }
 df.event(11, 14, "Darrus Fell", [
   { graphic: "FT_darrus_fell", direction: 4, script: "FT.scene_autumn_falls" },

@@ -98,7 +98,7 @@ sf.event(18, 11, "Rope down", [{ trigger: 1, commands: [sf.send(:command, 201, [
 sf.event(17, 11, "On, into the dead", [{ trigger: 1, commands: [sf.send(:command, 201, [0, ID[:garden], 21, 31, 8, 0])] }])
 # the slide solver: from the entrance you can reach the top (and Shimmer), and every place
 # you can slide to still has a way on (up to the exit) or back (to the entrance)
-TS23 = load_data(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[sf.map.tileset_id]
+TS23 = FTTilesets.load(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[sf.map.tileset_id]
 spass = lambda do |x, y|
   next false if x < 0 || y < 0 || x >= sf.w || y >= sf.h
   r = true

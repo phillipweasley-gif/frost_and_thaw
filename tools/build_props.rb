@@ -8,7 +8,7 @@
 # Every prop is walk-through, fixed facing, step-animated, with no commands: scenery only.
 require_relative "ft_common"
 require_relative "rgss_stub"
-TS = load_data("/home/claude/pif-682/Data/Tilesets.rxdata") if !defined?(TS)
+TS = FTTilesets.load("/home/claude/pif-682/Data/Tilesets.rxdata") if !defined?(TS)
 
 # As check_all.rb reads a tile: a wall is a tile the player can't walk onto.
 def wall?(m, x, y)

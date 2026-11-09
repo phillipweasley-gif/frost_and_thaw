@@ -1,7 +1,8 @@
 # Directional passability, the way the game checks it: leaving a tile in a
 # direction and entering the next tile from the opposite side.
 require_relative "rgss_stub"
-DIRPASS_TS = load_data("/home/claude/pif-682/Data/Tilesets.rxdata")
+require_relative "ft_tilesets"
+DIRPASS_TS = FTTilesets.load("/home/claude/pif-682/Data/Tilesets.rxdata")
 DIRBIT = { 2 => 1, 4 => 2, 6 => 4, 8 => 8 }
 DSTEP = { 2 => [0, 1], 4 => [-1, 0], 6 => [1, 0], 8 => [0, -1] }
 def tile_pass?(m, x, y, d)

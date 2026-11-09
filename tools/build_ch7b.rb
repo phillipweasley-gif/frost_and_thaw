@@ -32,6 +32,8 @@ cave_paint(gd, floor_rects([
   [4, 4, 4, 6]
 ]))
 [[31, 15], [36, 10], [22, 13], [19, 4], [11, 20], [5, 12], [17, 9]].each { |x, y| gd.set(x, y, 2, 792) }
+# (A-15) the seam the Guild drains: a channel of live sap in the pit between the south cache and the east drift
+gd.autotile(0, FrostThaw::SAP_AUTOTILE, Builder.rect_cells(23, 16, 6, 4).select { |x, y| gd.get(x, y, 0) == CAVE_VOID })
 # the dig's break into the Heartroot: braided shut from this side until the Root Gate's seal is open
 [12, 13].each do |y|
   gd.event(36, y, "Into the Heartroot", [

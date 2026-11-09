@@ -87,7 +87,12 @@ end
 grass(fl, 9, 11, 5, 3); grass(fl, 22, 10, 6, 2); grass(fl, 30, 10, 4, 5); grass(fl, 39, 15, 4, 3)
 [[17, 8], [26, 15], [35, 12]].each { |x, y| tree(fl, x, y, 2) }
 # the Auroral Wall: a shimmer of light from the snow to the sky, the map's east edge
-(0...FH).step(2) { |y| fl.stamp(ICE_BOULDER, FW - 2, y) }
+# (A-06: the animated curtain, 002b_TilesetPatch.rb; its two columns are solid, the soft edge before them isn't)
+(0...FH).each do |y|
+  fl.set(FW - 3, y, 2, FrostThaw::AURORA_EDGE) if fl.get(FW - 3, y, 2) == 0
+  fl.set(FW - 2, y, 2, FrostThaw::AURORA_WALL)
+  fl.set(FW - 1, y, 2, FrostThaw::AURORA_WALL_B)
+end
 [12, 13, 14, 15, 16, 17, 18].each { |y| fl.warp(0, y, ROOTSPIRE, 58, [[y + 14, 28].max, 31].min, 4, name: "To Rootspire") }
 fl.sign(4, 11, :fields_sign)
 fl.trainer(13, 13, nil, :bough_teo, :FT_ROOTWARDEN, dir: 4, sight: 3)
@@ -222,7 +227,7 @@ uc.sign(49, 19, :barricade)          # the root-tunnel east, toward the Rootsun 
 # glowing caps (the cave's crystals) in corners where they block nobody: each one
 # is only kept if every cell that could be walked to before still can be
 def walkable_cells(b)
-  ts = load_data(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[b.map.tileset_id]
+  ts = FTTilesets.load(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[b.map.tileset_id]
   pass = lambda do |x, y|
     next false if x < 0 || y < 0 || x >= b.w || y >= b.h
     r = true

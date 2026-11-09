@@ -3,6 +3,7 @@
 # copied in as "stamps" (a house, a Pokémon Center, a stretch of forest).
 require_relative "rgss_stub"
 require "json"
+require_relative "ft_tilesets"
 
 GAME_DIR = ENV["GAME"] || "/home/claude/pif-682"
 
@@ -419,7 +420,7 @@ module MapKit
     # A sign standing on open ground needs a signpost: an invisible sign on a
     # walkable tile can only be read by standing on it, which nobody does.
     def post_signs
-      ts = load_data(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[@map.tileset_id]
+      ts = FTTilesets.load(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[@map.tileset_id]
       walk = lambda do |x, y|
         return false if x < 0 || y < 0 || x >= @map.width || y >= @map.height
         [2, 1, 0].each do |z|
@@ -452,7 +453,7 @@ module MapKit
     end
 
     def to_json_file(path)
-      ts = load_data(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[@map.tileset_id]
+      ts = FTTilesets.load(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[@map.tileset_id]
       evs = @map.events.values.map do |e|
         pg = e.pages[0]
         { id: e.id, name: e.name, x: e.x, y: e.y, char: pg.graphic.character_name,
@@ -471,7 +472,7 @@ EDGE_ROCK = 1336                                     # the icy rock at the foot 
 def seal_edges(b)
   warp = {}
   b.map.events.each_value { |e| warp[[e.x, e.y]] = true if e.pages.any? { |pg| pg.list.any? { |c| c.code == 201 } } }
-  ts = load_data(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[b.map.tileset_id]
+  ts = FTTilesets.load(File.join(GAME_DIR, "Data/Tilesets.rxdata"))[b.map.tileset_id]
   walk = lambda do |x, y|
     [2, 1, 0].each do |z|
       id = b.map.data[x, y, z]

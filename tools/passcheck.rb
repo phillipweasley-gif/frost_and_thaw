@@ -1,5 +1,6 @@
 require_relative "rgss_stub"
-TS = load_data("/home/claude/pif-682/Data/Tilesets.rxdata")
+require_relative "ft_tilesets"
+TS = FTTilesets.load("/home/claude/pif-682/Data/Tilesets.rxdata")
 def passable?(m, x, y)
   return false if x < 0 || y < 0 || x >= m.width || y >= m.height
   t = TS[m.tileset_id]

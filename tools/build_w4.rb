@@ -18,8 +18,9 @@
 # Run after build_act3.rb (it reopens maps every chapter builder has made).
 require_relative "ft_common"
 require_relative "cavekit"
+require_relative "ft_tilesets"
 
-TSETS = load_data(File.join(GAME_DIR, "Data/Tilesets.rxdata"))
+TSETS = FTTilesets.load(File.join(GAME_DIR, "Data/Tilesets.rxdata"))
 MURKY = 6
 WATER = 5
 MIRROR_TILE = 809          # a pane of mirror-glass (Autumn's mirror uses it too)

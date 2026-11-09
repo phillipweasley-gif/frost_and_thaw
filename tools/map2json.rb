@@ -1,9 +1,10 @@
 # Usage: ruby map2json.rb <map.rxdata> <out.json> [game_dir]
 require_relative "rgss_stub"
 require "json"
+require_relative "ft_tilesets"
 game = ARGV[2] || "/home/claude/pif-682"
 m = load_data(ARGV[0])
-ts = load_data(File.join(game, "Data/Tilesets.rxdata"))[m.tileset_id]
+ts = FTTilesets.load(File.join(game, "Data/Tilesets.rxdata"))[m.tileset_id]
 evs = m.events.values.map do |e|
   pg = e.pages[0]
   { id: e.id, name: e.name, x: e.x, y: e.y,

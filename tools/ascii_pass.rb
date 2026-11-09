@@ -1,6 +1,7 @@
 # ASCII passability: ruby ascii_pass.rb <rxdata path> [x0 y0 w h]   (. walkable, # blocked, E event)
 require_relative "rgss_stub"
-TS = load_data("/home/claude/pif-682/Data/Tilesets.rxdata")
+require_relative "ft_tilesets"
+TS = FTTilesets.load("/home/claude/pif-682/Data/Tilesets.rxdata")
 m = load_data(ARGV[0])
 t = TS[m.tileset_id]
 pass = lambda do |x, y|

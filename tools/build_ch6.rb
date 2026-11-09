@@ -260,7 +260,7 @@ sh.map.events.clear
 # below the hall the Sealed Chamber's underwater floor runs on to the map edge: wall it off
 # (black, with the tileset's invisible blocker 390 on top); and anything else you can't reach gets the blocker too
 (0...sh.map.width).each { |x| (28...sh.map.height).each { |y| sh.set(x, y, 0, 389); sh.set(x, y, 1, 0); sh.set(x, y, 2, 390) } }
-UW = load_data("#{GAME_DIR}/Data/Tilesets.rxdata")[sh.map.tileset_id]
+UW = FTTilesets.load("#{GAME_DIR}/Data/Tilesets.rxdata")[sh.map.tileset_id]
 pass = lambda do |x, y|
   next false if x < 0 || y < 0 || x >= sh.map.width || y >= sh.map.height
   ok = true
