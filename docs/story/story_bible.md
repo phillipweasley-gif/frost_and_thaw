@@ -171,7 +171,7 @@ The Heralds drive the plot. Every character below wants something specific, and 
 
 ### The Heralds
 
-**Alberica, Keeper of Memory.** Dwarf bard. Partner: Lutling (haunted lute line). She plays it badly and says so.
+**Alberica, Keeper of Memory.** Dwarf bard, beardless (owner, 2026-11-09). Partner: Lutling (haunted lute line). She plays it badly and says so.
 
 - **Wants:** to know why something keeps calling her north, and what her family's bargain cost.
 - **The family bargain** (owner, 2026-11-05): her family bargained with Auril that their small village would be spared the Rime's hardships and the lottery's sacrifices, so long as the White Vault stayed sealed, keeping the Heralds out of it far in the future. Her pendant is the key that unlocks it. She knows there was a bargain and that the pendant is part of it; she doesn't know what it cost.

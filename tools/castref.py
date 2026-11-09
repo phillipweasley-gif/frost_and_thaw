@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 D = "build/Characters/"
 CAST = [
-    ("Alberica", "FT_alberica", "Dwarf bard, a woman: short and broad. Red hair in braids, a purple cap, an orange tunic. "
+    ("Alberica", "FT_alberica", "Dwarf bard, a woman, beardless (owner): short and broad. Red hair in braids, a purple cap, an orange tunic. "
                                  "Her pendant (a relic). Loud and warm. Later: Auril's rune scarred on her chest."),
     ("Reptin", "FT_reptin", "Elf moon druid. Slim, fair, short brown hair, a cream shirt and green trousers. "
                              "Married to Anduin. Partner: Bulbasaur."),
