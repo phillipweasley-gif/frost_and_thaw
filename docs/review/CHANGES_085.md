@@ -1,4 +1,4 @@
-# 0.8.5 (2026-11-09): the animated autotiles
+# 0.8.5 (2026-11-09): the animated autotiles, the dragons in motion
 
 - **A-06, the Auroral Wall:** a shimmering curtain of light (green, teal, a little violet) along the Blooming Fields'
   east edge, where ice boulders stood in for it: two solid columns and a soft edge you can walk into, drawn above
@@ -10,5 +10,12 @@
 - One patch, `game/Data/Scripts/998_FrostThaw/002b_TilesetPatch.rb`, sets the autotiles, passages and priorities in
   the game; the map tools load the same file (`tools/ft_tilesets.rb`), so `check_all` sees what the game does.
   Graphics: `tools/autotilegen.py`.
+- **The dragons' cutscene sheets** (`tools/dragongen.py`, from their own sprites, 18 sheets): Frostina lands like
+  snow, lowers her head to hum, takes off, breathes frost, is closed in her crystal and tumbles out of it shaking;
+  Razzilith lands hard (the cobbles crack), takes off, roars, breathes leaves and light; the chained dragon's eyes
+  light gold, it strains, tears free and goes up, dives on Good Mead breathing a line of light, lands in the square
+  and roars, and shatters. Wired into the market landing and take-off (Ch6), the Dragonforge (Ch8), the Shrine
+  take-off, Good Mead and the square (Ch9), the Shrine crystal (Ch11), and the crown (Ch13). Flying sheets carry no
+  riders (a cast sprite on a dragon's back reads as a giant head). Iskra still has no sprite of her own.
 
 ## Checks
