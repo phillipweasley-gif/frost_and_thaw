@@ -19,3 +19,7 @@
   riders (a cast sprite on a dragon's back reads as a giant head). Iskra still has no sprite of her own.
 
 ## Checks
+- Maps rebuilt (`build_all`), all 159 pass `check_all`; smoke test 241/241.
+- **Final round on 0.8.5:** Journey 247/247, Shatter 247/247, Still Keeper 241/245 (by design), Heralds Alberica,
+  Meat Meat 239/239, Wyn 238/238; Reptin and Alerion fell short in the round (the driver stuck before Duvessa's
+  badge; a missed side beat on an unchanged map) and reran clean at 239/239 each.
