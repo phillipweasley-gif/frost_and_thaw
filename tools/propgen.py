@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Animated props, generated (2026-11-09): A-01 hanging lanterns, A-02 season banners.
+"""Animated props, generated (2026-11-09): A-01 hanging lanterns, A-02 season banners, A-03 ice twinkles,
+A-04 sap drips, A-13 laundry.
 
     python3 tools/propgen.py [--out build/Characters]
 
@@ -128,6 +129,67 @@ def banner(ramp, phase):
 def banners():
     return sheet([[banner(r, p) for p in range(4)] for r in SEASONS])
 
+# --- A-13 laundry on a line, A-04 sap drip, A-03 ice twinkle -----------------------------------------------
+ROPE = (200, 190, 160)
+CLOTH = [((40, 80, 150), (90, 140, 210)), ((200, 200, 210), (250, 250, 255)), ((150, 40, 40), (220, 80, 70))]
+
+def laundry(phase):
+    pts = {}
+    for y in range(18, 37):                              # two posts
+        pts[(5, y)] = WOOD[1]; pts[(34, y)] = WOOD[1]
+    sag = lambda x: 19 + round(2 * (1 - ((x - 19.5) / 14.5) ** 2))
+    for x in range(6, 34):
+        pts[(x, sag(x))] = ROPE
+    # a shirt, a sheet and a pair of socks, their hems moving with the wind
+    for (x0, x1, h, ci) in ((8, 14, 8, 0), (16, 25, 11, 1), (27, 31, 5, 2)):
+        dark, light = CLOTH[ci]
+        for x in range(x0, x1):
+            top = sag(x) + 1
+            swing = [0, 1, 0, -1][(phase + x // 3) % 4]
+            for y in range(top, top + h + (1 if (x + phase) % 3 == 0 else 0)):
+                pts[(x + (swing if y > top + h // 2 else 0), y)] = light if x == x0 or y == top else dark
+    return outlined(pts)
+
+AMBER = [(110, 60, 10), (200, 130, 30), (250, 200, 90)]
+
+def sap_drip(k):
+    pts = {}
+    for x in range(16, 25):                              # the root it drips from, high on the wall
+        pts[(x, 6 + abs(x - 20) // 2)] = WOOD[0] if abs(x - 20) > 2 else WOOD[1]
+    pts[(20, 9)] = WOOD[1]
+    for x in range(17, 24):                              # the little pool on the floor
+        pts[(x, 35)] = AMBER[1] if 18 <= x <= 22 else AMBER[0]
+    pts[(19, 34)] = AMBER[2]
+    if k == 0:
+        pts[(20, 10)] = AMBER[2]                         # a drop forms
+    elif k == 1:
+        pts[(20, 10)] = AMBER[1]; pts[(20, 11)] = AMBER[2]; pts[(19, 11)] = AMBER[1]; pts[(21, 11)] = AMBER[1]
+    elif k == 2:
+        pts[(20, 22)] = AMBER[2]; pts[(20, 23)] = AMBER[1]   # it falls
+    else:
+        for x, y in ((18, 33), (22, 33), (17, 32), (23, 32), (20, 32)):
+            pts[(x, y)] = AMBER[2]                       # and splashes
+    return outlined(pts)
+
+ICE_T = [(120, 172, 222), (192, 226, 248), (255, 255, 255)]
+
+def twinkle(on):
+    pts = {}
+    if on:
+        cx, cy = 20, 31
+        for dx, dy in ((0, -2), (0, 2), (-2, 0), (2, 0)):
+            pts[(cx + dx, cy + dy)] = ICE_T[0]
+        for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)):
+            pts[(cx + dx, cy + dy)] = ICE_T[1]
+        pts[(cx, cy)] = ICE_T[2]
+    return pts                                           # light, so no outline: it should read as a glint
+
+def more_props(out):
+    sheet([[laundry(p) for p in range(4)]] * 4).save(os.path.join(out, "FT_prop_laundry.png"))
+    sheet([[sap_drip(k) for k in range(4)]] * 4).save(os.path.join(out, "FT_prop_sapdrip.png"))
+    # four rows, each glinting on a different frame, so neighbours don't flash together
+    sheet([[twinkle(c == r) for c in range(4)] for r in range(4)]).save(os.path.join(out, "FT_prop_twinkle.png"))
+
 def main():
     out = "build/Characters"
     if "--out" in sys.argv:
@@ -135,7 +197,8 @@ def main():
     os.makedirs(out, exist_ok=True)
     lanterns().save(os.path.join(out, "FT_prop_lantern.png"))
     banners().save(os.path.join(out, "FT_prop_banner.png"))
-    print("FT_prop_lantern FT_prop_banner")
+    more_props(out)
+    print("FT_prop_lantern FT_prop_banner FT_prop_laundry FT_prop_sapdrip FT_prop_twinkle")
 
 if __name__ == "__main__":
     main()

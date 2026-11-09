@@ -64,3 +64,72 @@ BANNERS.each do |id, spots|
   resave(b, id)
   puts "#{id}: #{spots.size} banners"
 end
+
+# --- A-13 laundry, A-04 sap drips, A-03 ice twinkles ------------------------------------------------------------
+def floor?(m, x, y)
+  x >= 0 && y >= 0 && x < m.width && y < m.height && !wall?(m, x, y)
+end
+
+def plain?(m, x, y)
+  t = TS[m.tileset_id]
+  [0, 1, 2].all? { |z| (i = m.data[x, y, z]) == 0 || t.terrain_tags[i] == 0 }
+end
+
+def near_event?(b, x, y, r)
+  b.map.events.values.any? { |e| (e.x - x).abs <= r && (e.y - y).abs <= r }
+end
+
+def spaced?(spots, x, y, d)
+  spots.none? { |sx, sy| (sx - x).abs + (sy - y).abs < d }
+end
+
+# Laundry: in front of homes (not shops, halls or the Center), two tiles beside the door and one below.
+NOT_HOME = /Pokemon|Center|Hall|Arms|Blades|Lottery|Council|Morninglord|Northlook|Inn|Shop|Mart|Tavern|Temple|Sailing|Triglio/
+{ 2001 => 3, 2021 => 3 }.each do |id, max|
+  b = reopen(id)
+  clear_props(b, "Laundry")
+  spots = []
+  b.map.events.values.select { |e| e.name.start_with?("Door ") && e.name !~ NOT_HOME }.sort_by { |e| [e.y, e.x] }.each do |d|
+    break if spots.size >= max
+    s = [[d.x + 2, d.y + 1], [d.x - 2, d.y + 1]].find { |x, y| floor?(b.map, x, y) && floor?(b.map, x, y + 1) && !occupied?(b, x, y) && !near_event?(b, x, y, 0) }
+    spots << s if s
+  end
+  spots.each { |x, y| b.event(x, y, "Laundry", [prop_page("FT_prop_laundry", 2)]) }
+  resave(b, id)
+  puts "#{id}: #{spots.size} laundry lines"
+end
+
+# Sap drips: on the floor at the foot of a root wall, away from people and doors, spread out.
+{ 2055 => 4, 2057 => 4, 2058 => 4, 2066 => 4 }.each do |id, max|
+  b = reopen(id)
+  clear_props(b, "Sap drip")
+  m, spots = b.map, []
+  rng = Random.new(id)
+  cells = (1...m.height).flat_map { |y| (0...m.width).map { |x| [x, y] } }.shuffle(random: rng)
+  cells.each do |x, y|
+    break if spots.size >= max
+    next if !floor?(m, x, y) || !wall?(m, x, y - 1) || near_event?(b, x, y, 2) || !spaced?(spots, x, y, 8)
+    spots << [x, y]
+  end
+  spots.each { |x, y| b.event(x, y, "Sap drip", [prop_page("FT_prop_sapdrip", 2)]) }
+  resave(b, id)
+  puts "#{id}: #{spots.size} sap drips"
+end
+
+# Ice twinkles: on open ice and snow (plain floor: no grass, no water), spread out, each row of the sheet a
+# different phase so they glint in turn.
+{ 2101 => 12, 2034 => 12, 2079 => 20 }.each do |id, max|
+  b = reopen(id)
+  clear_props(b, "Ice twinkle")
+  m, spots = b.map, []
+  rng = Random.new(id)
+  cells = (0...m.height).flat_map { |y| (0...m.width).map { |x| [x, y] } }.shuffle(random: rng)
+  cells.each do |x, y|
+    break if spots.size >= max
+    next if !floor?(m, x, y) || !plain?(m, x, y) || near_event?(b, x, y, 1) || !spaced?(spots, x, y, 6)
+    spots << [x, y]
+  end
+  spots.each_with_index { |(x, y), i| b.event(x, y, "Ice twinkle", [prop_page("FT_prop_twinkle", [2, 4, 6, 8][i % 4])]) }
+  resave(b, id)
+  puts "#{id}: #{spots.size} ice twinkles"
+end
