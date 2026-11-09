@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Animated props, generated (2026-11-09): A-01 hanging lanterns, A-02 season banners, A-03 ice twinkles,
-A-04 sap drips, A-13 laundry.
+A-04 sap drips, A-13 laundry, A-05 glowing spore beds (rows: teal, violet, amber), A-07 bees over a hive, A-08 snow
+birds pecking (rows: four placings), A-16 a Wennen peeking out of a burrow (hidden, ears, looking, ducking).
 
     python3 tools/propgen.py [--out build/Characters]
 
@@ -190,6 +191,118 @@ def more_props(out):
     # four rows, each glinting on a different frame, so neighbours don't flash together
     sheet([[twinkle(c == r) for c in range(4)] for r in range(4)]).save(os.path.join(out, "FT_prop_twinkle.png"))
 
+# --- A-05 glowing spore beds -----------------------------------------------------------------------------------
+SPORE = {"teal": [(20, 70, 76), (40, 140, 140), (110, 220, 210), (210, 255, 246)],
+         "violet": [(54, 30, 80), (110, 66, 170), (180, 130, 240), (240, 220, 255)],
+         "amber": [(80, 46, 14), (170, 104, 30), (240, 180, 70), (255, 240, 190)]}
+STALK = [(150, 140, 120), (200, 192, 170)]
+
+def spore_bed(ramp, pulse):
+    """Three caps on the floor, their glow pulsing (pulse 0..2)."""
+    pts = {}
+    for (cx, cy, r) in ((15, 33, 3), (22, 31, 4), (27, 34, 2)):
+        for y in range(cy, 37):                           # the stalk
+            pts[(cx, y)] = STALK[0] if y > cy + 1 else STALK[1]
+        for dy in range(-r // 2 - 1, 1):
+            for dx in range(-r, r + 1):
+                if dx * dx / (r * r + 0.5) + (dy * dy) / ((r / 2 + 1) ** 2) <= 1:
+                    pts[(cx + dx, cy + dy)] = ramp[1 + (1 if dy < -r // 3 else 0)]
+        pts[(cx - r // 2, cy - r // 2 - 1)] = ramp[2 + (pulse == 2)]         # the glow spot
+        for dx in (-1, 1):
+            if pulse:
+                pts[(cx + dx * (r - 1), cy - 1)] = ramp[2]
+    out = outlined(pts)
+    if pulse:                                             # a halo on the floor when it's bright
+        for (cx, cy, r) in ((15, 33, 3), (22, 31, 4), (27, 34, 2)):
+            for dx in range(-r - 1, r + 2):
+                if (cx + dx, 37) not in out:
+                    out[(cx + dx, 37)] = ramp[1 if pulse == 1 else 2]
+    return out
+
+def spore_beds():
+    rows = []
+    for name in ("teal", "violet", "amber", "teal"):
+        rows.append([spore_bed(SPORE[name], p) for p in (0, 1, 2, 1)])
+    return sheet(rows)
+
+# --- A-07 bees circling a hive -----------------------------------------------------------------------------------
+BEE = [(40, 30, 10), (240, 190, 40), (250, 250, 255)]
+
+def bees(phase):
+    """Five bees on a loose loop above the hive box the event stands on (they hover at rows 8-24)."""
+    import math
+    pts = {}
+    for i in range(5):
+        a = (phase / 4 + i / 5) * 2 * math.pi
+        x = round(20 + 11 * math.cos(a))
+        y = round(16 + 5 * math.sin(a) + (2 if i % 2 else 0))
+        pts[(x, y)] = BEE[1]; pts[(x + 1, y)] = BEE[0]
+        pts[(x, y - 1)] = BEE[2]                          # a wing glint
+    return pts                                            # tiny: no outline, as the base game's
+
+# --- A-08 snow birds pecking ------------------------------------------------------------------------------------
+BIRD = [(70, 50, 40), (150, 110, 80), (236, 236, 240), (240, 170, 60)]
+
+def bird(pts, x, y, peck, hop):
+    y -= hop
+    for dx in range(4):
+        pts[(x + dx, y)] = BIRD[2] if dx < 3 else BIRD[1]          # white breast, brown back
+        pts[(x + dx, y - 1)] = BIRD[1] if dx else BIRD[2]
+    hx, hy = (x - 1, y) if peck else (x - 1, y - 2)
+    pts[(hx, hy)] = BIRD[2]; pts[(hx + 1, hy)] = BIRD[1]
+    pts[(hx - 1, hy + (1 if peck else 0))] = BIRD[3]               # beak
+    pts[(x + 4, y - 2)] = BIRD[0]                                  # tail
+    pts[(x + 1, y + 1)] = BIRD[0]; pts[(x + 2, y + 1)] = BIRD[0]   # feet
+
+def birds(variant, f):
+    pts = {}
+    a = [(1, 0), (0, 0), (0, 1), (0, 0)][f]
+    b = [(0, 0), (1, 0), (0, 0), (0, 1)][f]
+    spots = [((12, 33), (24, 35)), ((16, 35), (26, 32)), ((10, 34), (22, 33)), ((14, 32), (25, 35))][variant]
+    bird(pts, *spots[0], *a)
+    bird(pts, *spots[1], *b)
+    return outlined(pts)
+
+# --- A-16 a Wennen peeking out of a burrow -----------------------------------------------------------------------
+EARTH = [(40, 28, 20), (90, 64, 40), (130, 96, 60)]
+
+def wennen_peek(head, k):
+    pts = {}
+    for dx in range(-6, 7):                               # the burrow mouth and its rim of earth
+        for dy in range(-1, 2):
+            if dx * dx / 36 + dy * dy / 2.2 <= 1:
+                pts[(20 + dx, 34 + dy)] = EARTH[0]
+    for dx in (-7, -6, 6, 7):
+        pts[(20 + dx, 34)] = EARTH[2]
+    for dx in range(-5, 6, 2):
+        pts[(20 + dx, 36)] = EARTH[1]
+    out = outlined(pts)
+    show = [0, 7, 20, 6][k]                               # rows of the head above the hole: ears, then eyes
+    if show:
+        part = head.crop((0, 0, head.width, show))      # the top `show` rows: the hole hides the rest
+        x0 = 20 - head.width // 2
+        for y in range(part.height):
+            for x in range(part.width):
+                p = part.getpixel((x, y))
+                if p[3]:
+                    out[(x0 + x, 34 - show + y)] = p[:3]
+    return out
+
+def wennen_peeks():
+    src = Image.open("build/Characters/FT_wennen_generic.png").convert("RGBA").resize((160, 160), Image.NEAREST)
+    rows = []
+    for r in range(4):
+        fr = src.crop((0, 0, N, N))                       # facing out of the burrow, every row
+        head = fr.crop(fr.getbbox())
+        rows.append([wennen_peek(head, k) for k in range(4)])
+    return sheet(rows)
+
+def ambient_props(out):
+    spore_beds().save(os.path.join(out, "FT_prop_spores.png"))
+    sheet([[bees(p) for p in range(4)]] * 4).save(os.path.join(out, "FT_prop_bees.png"))
+    sheet([[birds(r, f) for f in range(4)] for r in range(4)]).save(os.path.join(out, "FT_prop_birds.png"))
+    wennen_peeks().save(os.path.join(out, "FT_prop_wennen.png"))
+
 def main():
     out = "build/Characters"
     if "--out" in sys.argv:
@@ -198,7 +311,9 @@ def main():
     lanterns().save(os.path.join(out, "FT_prop_lantern.png"))
     banners().save(os.path.join(out, "FT_prop_banner.png"))
     more_props(out)
-    print("FT_prop_lantern FT_prop_banner FT_prop_laundry FT_prop_sapdrip FT_prop_twinkle")
+    ambient_props(out)
+    print("FT_prop_lantern FT_prop_banner FT_prop_laundry FT_prop_sapdrip FT_prop_twinkle FT_prop_spores FT_prop_bees "
+          "FT_prop_birds FT_prop_wennen")
 
 if __name__ == "__main__":
     main()

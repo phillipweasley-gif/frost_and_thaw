@@ -133,3 +133,33 @@ end
   resave(b, id)
   puts "#{id}: #{spots.size} ice twinkles"
 end
+
+# --- A-05 spore beds, A-07 bees, A-08 snow birds, A-16 Wennen burrows -------------------------------------------
+# Scattered the same way as the twinkles: plain floor, away from people and doors, spread out; a seeded shuffle so a
+# rebuild puts them in the same places.
+def scatter(id, name, graphic, max, gap, near, dirs)
+  b = reopen(id)
+  clear_props(b, name)
+  m, spots = b.map, []
+  rng = Random.new(id * 7 + name.size)
+  cells = (1...m.height - 1).flat_map { |y| (1...m.width - 1).map { |x| [x, y] } }.shuffle(random: rng)
+  cells.each do |x, y|
+    break if spots.size >= max
+    next if !floor?(m, x, y) || !plain?(m, x, y) || near_event?(b, x, y, near) || !spaced?(spots, x, y, gap)
+    spots << [x, y]
+  end
+  spots.each_with_index { |(x, y), i| b.event(x, y, name, [prop_page(graphic, dirs[i % dirs.size])]) }
+  resave(b, id)
+  puts "#{id}: #{spots.size} x #{name}"
+end
+
+{ 2068 => 10, 2070 => 10, 2171 => 8 }.each { |id, n| scatter(id, "Spore bed", "FT_prop_spores", n, 5, 1, [2, 4, 6]) }
+{ 2001 => 3, 2012 => 3, 2020 => 3, 2021 => 2, 2031 => 2, 2035 => 2 }.each { |id, n| scatter(id, "Snow birds", "FT_prop_birds", n, 9, 2, [2, 4, 6, 8]) }
+{ 2021 => 2, 2022 => 2, 2055 => 2 }.each { |id, n| scatter(id, "Wennen burrow", "FT_prop_wennen", n, 10, 2, [2, 4, 6, 8]) }
+
+# Bees over Good Mead's two hive boxes (build_tentowns: the HAY stamps at (9,5) and (11,5)).
+b = reopen(2031)
+clear_props(b, "Bees")
+[[9, 5, 2], [11, 5, 4]].each { |x, y, d| b.event(x, y, "Bees", [prop_page("FT_prop_bees", d)]) }
+resave(b, 2031)
+puts "2031: 2 bees"
