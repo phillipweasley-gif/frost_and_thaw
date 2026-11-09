@@ -861,4 +861,5 @@ Your answers are now in the script. Nothing is left open.
 - **Iskra is a roc: a giant white bird**, aurora trailing from her wings (as the game's text has her), not a roe.
 - **The existing sprites' small fixes are done mechanically first** (outline colour, the 2x grid, colour counts), then the P1 redraws.
 - **Sprites are built on Infinite Fusion's own overworld sheets** (owner, 17:05): the first template (a chibi body taken from our own cast) didn't match the base game in shape, proportion or colour. Every walking sprite, the main cast included, is rebuilt on the closest base-game 320x320 sheet: its body, head size, walk cycle, shading and outline kept; hair, face, clothes, colours and signature items repainted. Batch 1 is redone first, then batch 2, then the cast. The old sheets stay in the game as placeholders until then.
+- **Pip the bag-maker is a female Wennen, quite fat and fancy** (owner, 2026-11-09).
 - **Zenith Abbott is "she"** (the Undying Rose favour's "her verse"); the Ch3 line that called her "he" is fixed.
