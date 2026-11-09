@@ -86,6 +86,22 @@ def body_match(a, b, size=80):
         out.append((cell, both / either if either else 1.0))
     return out
 
+def loose_pieces(fr):
+    """Sizes of the pieces of a native frame that aren't joined to its largest shape (4-neighbour)."""
+    px = fr.load(); w, h = fr.size; seen = set(); sizes = []
+    for y in range(h):
+        for x in range(w):
+            if px[x, y][3] and (x, y) not in seen:
+                stack = [(x, y)]; seen.add((x, y)); n = 0
+                while stack:
+                    cx, cy = stack.pop(); n += 1
+                    for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                        if 0 <= nx < w and 0 <= ny < h and px[nx, ny][3] and (nx, ny) not in seen:
+                            seen.add((nx, ny)); stack.append((nx, ny))
+                sizes.append(n)
+    sizes.sort(reverse=True)
+    return sizes[1:]
+
 def frames(im, size):
     w, h = im.size
     for fy in range(0, h, size):
@@ -150,6 +166,9 @@ def check(path, kind="human", walk=None, base=None):
             share = outline_share(fr)
             if share < need:
                 worst.append(f"frame r{cy}c{cx} {int(share * 100)}%")
+        loose = [f"r{cy}c{cx} ({', '.join(str(v) for v in lp)} px)" for (cx, cy), fr in frames(n, nf) for lp in [loose_pieces(fr)] if lp]
+        if loose and t == "walking":
+            fails.append("pixels floating free of the figure (leftovers from the base?): " + ", ".join(loose[:6]))
         if worst:
             fails.append(f"outline broken (under {int(need * 100)}% of the edge near-black): " + ", ".join(worst[:6]) + (" ..." if len(worst) > 6 else ""))
         hs = []
