@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Meat Meat, kitbashed from the base game (2026-11-09): every pixel is BW (66)'s, recoloured by region, plus her
-brass goggles stamped into the hair. White hair (owner), green myconid skin, grey-teal clothes.
+brass goggles stamped into the hair. White hair (owner), green myconid skin, purple clothes (owner).
 
     python3 tools/meatmeat_build.py BASE_SHEET OUT.png
 
@@ -12,12 +12,12 @@ from PIL import Image
 SKIN = {(213, 172, 132): (176, 214, 150), (195, 139, 80): (120, 170, 104), (144, 113, 72): (58, 96, 58)}
 HAIR = {(109, 101, 43): (250, 251, 255), (75, 67, 43): (190, 198, 216), (70, 45, 70): (104, 110, 140),   # strong steps,
         (72, 142, 77): (214, 150, 40), (52, 108, 47): (150, 96, 24)}     # so the twists show; the green iris goes amber
-BODY = {(72, 142, 77): (110, 148, 160), (52, 108, 47): (64, 96, 110), (85, 181, 86): (150, 186, 196),   # shirt
+BODY = {(72, 142, 77): (150, 108, 196), (52, 108, 47): (92, 58, 132), (85, 181, 86): (200, 172, 232),   # shirt (purple, owner)
         (70, 45, 70): (52, 58, 72), (75, 67, 43): (70, 70, 80), (109, 101, 43): (150, 154, 166),
         # (under the 20-colour limit: the base's shorts and belt take the shirt's and the goggles' tones)
-        (104, 129, 141): (110, 148, 160), (86, 108, 117): (64, 96, 110), (166, 133, 46): (140, 96, 36), (196, 165, 76): (214, 160, 64)}
+        (104, 129, 141): (150, 108, 196), (86, 108, 117): (92, 58, 132), (166, 133, 46): (140, 96, 36), (196, 165, 76): (214, 160, 64)}
 BRASS = [(140, 96, 36), (214, 160, 64)]
-LENS = [(64, 96, 110), (255, 255, 255)]           # her shirt's dark teal for the glass, white for the glint
+LENS = [(52, 58, 72), (255, 255, 255)]            # dark slate glass (her trousers' tone), white for the glint
 HEAD_ROWS = 16
 
 def build(src):
