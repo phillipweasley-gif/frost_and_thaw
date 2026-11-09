@@ -163,3 +163,27 @@ clear_props(b, "Bees")
 [[9, 5, 2], [11, 5, 4]].each { |x, y, d| b.event(x, y, "Bees", [prop_page("FT_prop_bees", d)]) }
 resave(b, 2031)
 puts "2031: 2 bees"
+
+# A-14 snow sliding off a roof: on the ground two tiles beside a door, under the building's face, in the snowy
+# towns. The route waits several seconds, then turns through the sheet's rows (falling, landing, the puff) and back
+# to the empty one; each roof waits a different time so they don't slide together.
+SLIDE_ROUTE = lambda { |wait| [[15, [wait]], [17, []], [15, [2]], [18, []], [15, [2]], [19, []], [15, [4]], [16, []]] }
+{ 2001 => 3, 2012 => 3, 2031 => 2, 2035 => 2, 2021 => 2 }.each do |id, max|
+  b = reopen(id)
+  clear_props(b, "Roof snow")
+  spots = []
+  b.map.events.values.select { |e| e.name.start_with?("Door ") }.sort_by { |e| [e.y, e.x] }.each do |d|
+    break if spots.size >= max
+    s = [[d.x + 2, d.y + 1], [d.x - 2, d.y + 1]].find do |x, y|
+      floor?(b.map, x, y) && wall?(b.map, x, y - 1) && !occupied?(b, x, y) && !near_event?(b, x, y, 0) && spaced?(spots, x, y, 4)
+    end
+    spots << s if s
+  end
+  spots.each_with_index do |(x, y), i|
+    b.event(x, y, "Roof snow", [{ graphic: "FT_prop_snowslide", direction: 2, through: true, always_on_top: false,
+                                  walk_anime: false, step_anime: false, direction_fix: false, move_frequency: 6,
+                                  move_route: SLIDE_ROUTE.call(110 + 37 * i + (id % 5) * 11) }])
+  end
+  resave(b, id)
+  puts "#{id}: #{spots.size} x Roof snow"
+end

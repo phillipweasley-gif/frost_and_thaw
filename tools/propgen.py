@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Animated props, generated (2026-11-09): A-01 hanging lanterns, A-02 season banners, A-03 ice twinkles,
 A-04 sap drips, A-13 laundry, A-05 glowing spore beds (rows: teal, violet, amber), A-07 bees over a hive, A-08 snow
-birds pecking (rows: four placings), A-16 a Wennen peeking out of a burrow (hidden, ears, looking, ducking).
+birds pecking (rows: four placings), A-16 a Wennen peeking out of a burrow (hidden, ears, looking, ducking), A-14
+snow sliding off a roof (rows: nothing, falling, landing, the puff; the event's route turns through them every
+few seconds, so the slide happens now and then, not on a loop).
 
     python3 tools/propgen.py [--out build/Characters]
 
@@ -297,7 +299,40 @@ def wennen_peeks():
         rows.append([wennen_peek(head, k) for k in range(4)])
     return sheet(rows)
 
+# --- A-14 snow sliding off a roof edge --------------------------------------------------------------------------
+SNOWC = [(150, 170, 196), (214, 228, 244), (250, 252, 255)]
+
+def snow_slide(stage):
+    """One state per row (the event's route turns through them now and then): 0 nothing, 1 a clump just off the
+    eave, 2 near the ground, trailing powder, 3 the puff where it lands."""
+    pts = {}
+    if stage == 1:
+        for (x, y) in ((19, 6), (20, 6), (21, 6), (18, 7), (19, 7), (20, 7), (21, 7), (22, 7), (19, 8), (20, 8), (21, 8)):
+            pts[(x, y)] = SNOWC[2] if y == 6 else SNOWC[1]
+        out = outlined(pts)
+        for (x, y) in ((17, 4), (23, 3), (20, 3)):
+            out[(x, y)] = SNOWC[2]
+        return out
+    if stage == 2:
+        for (x, y) in ((19, 27), (20, 27), (21, 27), (18, 28), (19, 28), (20, 28), (21, 28), (22, 28), (19, 29), (20, 29), (21, 29), (20, 30)):
+            pts[(x, y)] = SNOWC[1] if y > 27 else SNOWC[2]
+        out = outlined(pts)
+        for y in range(10, 25, 3):                        # the powder it trails
+            out[(20 + (y % 2), y)] = SNOWC[2]
+        return out
+    if stage == 3:
+        for dx in range(-6, 7):
+            y = 36 - (2 if abs(dx) < 3 else 1 if abs(dx) < 5 else 0)
+            pts[(20 + dx, y)] = SNOWC[1]
+            pts[(20 + dx, 37)] = SNOWC[0]
+        out = outlined(pts)
+        for (x, y) in ((12, 32), (28, 31), (15, 30), (25, 29), (20, 31)):
+            out[(x, y)] = SNOWC[2]
+        return out
+    return {}
+
 def ambient_props(out):
+    sheet([[snow_slide(st)] * 4 for st in (0, 1, 2, 3)]).save(os.path.join(out, "FT_prop_snowslide.png"))
     spore_beds().save(os.path.join(out, "FT_prop_spores.png"))
     sheet([[bees(p) for p in range(4)]] * 4).save(os.path.join(out, "FT_prop_bees.png"))
     sheet([[birds(r, f) for f in range(4)] for r in range(4)]).save(os.path.join(out, "FT_prop_birds.png"))
@@ -313,7 +348,7 @@ def main():
     more_props(out)
     ambient_props(out)
     print("FT_prop_lantern FT_prop_banner FT_prop_laundry FT_prop_sapdrip FT_prop_twinkle FT_prop_spores FT_prop_bees "
-          "FT_prop_birds FT_prop_wennen")
+          "FT_prop_birds FT_prop_wennen FT_prop_snowslide")
 
 if __name__ == "__main__":
     main()
