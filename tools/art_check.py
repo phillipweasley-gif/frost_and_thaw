@@ -122,7 +122,7 @@ def check(path, kind="human", walk=None, base=None):
 
     # the asset type, from canvas and name
     if (w, h) == (320, 320):
-        t = "pose" if name.startswith("P-") else "walking"
+        t = "pose" if name.startswith("P-") else "prop" if "_prop_" in name else "walking"
         limit, frame, feet = 20, 80, 73
     elif (w, h) == (160, 160):
         t, limit, frame, feet = "battle", 32, None, 157

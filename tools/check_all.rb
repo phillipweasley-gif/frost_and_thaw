@@ -101,7 +101,8 @@ maps.each do |id, m|
     cmds = e.pages.flat_map(&:list)
     warp_cells[[e.x, e.y]] = true if cmds.any? { |c| c.code == 201 }
     g = e.pages[0].graphic.character_name.to_s
-    if !g.empty? && !passable?(m, e.x, e.y) && e.pages[0].trigger != 3 && !(e.name =~ /EV00\d/)
+    if !g.empty? && !passable?(m, e.x, e.y) && e.pages[0].trigger != 3 && !(e.name =~ /EV00\d/) &&
+       !g.start_with?("FT_prop_")                   # wall lanterns and banners hang on walls by design
       problems << "#{id}: #{e.name} at (#{e.x},#{e.y}) stands inside a wall"
     end
     transfer = cmds.any? { |c| c.code == 201 }
