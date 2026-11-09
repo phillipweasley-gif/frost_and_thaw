@@ -104,7 +104,7 @@ module FrostThaw
   #   :autumn - Meat Meat, and the death of the Autumn Warden
   #   :wyn    - the Underdark door      :spores - Alberica's spores      :reptin - Reptin and the tree
   WITNESSES = [
-    [[:hew_confessed], "Hew Talmire", "His ledgers: ten years of sap, sold to Summer's people.", :summer],
+    [[:hew_confessed], "Hew Talmire", "His ledgers: ten years of sap, sold to Summer's people.{HEW_HELD}", :summer],
     [[:yarro_witness], "Yarro", "The roots ran hot from below. The Heralds put the fire out. Gently.", :summer],
     [[:mira_witness], "Mira of the North Wind", "Darrus shipped crates to the Forge every week for ten years.{MAERA_KEPT}", :autumn],
     [[:anduin_reconciled, :anduin_doubtful], "Anduin", "Reptin stood between a fire and a sapling.", :reptin],
@@ -232,6 +232,8 @@ module FrostThaw
     maera = flag?(:heist_exposed)
     text.gsub("{MAERA_KEPT}", maera ? " When he ran, Maera Vell kept them going." : "")
         .gsub("{MAERA_CARRIED}", maera ? " When Darrus ran, Maera Vell carried them below." : "")
+        .gsub("{HEW_HELD}", flag?(:hew_held) ? " He says every word himself, as he promised you." :     # (Ch7B: "Then say it at the Trials.")
+                            flag?(:hew_forgiven) ? " He came anyway. Nobody asked him to." : "")
   end
 
   def trials_done

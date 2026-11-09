@@ -1107,6 +1107,7 @@ module FrostThaw
       v[:shrine] << ["On the Shrine steps, someone has carved a small figure in blue, her hands open.",
                      "Nobody will say who. Sephek leaves snowdrops there."]
     end
+    v[:shrine] << "Beside Frostina's nest, Shimmer's rose stands in a jar of clear ice. It hasn't wilted." if flag?(:rose_to_frostina)
     v[:shrine] << ["Round the Shrine stump, under the old vow, two new names:",
                    "the first Dragoons in four hundred years. Rheven had them cut deep."] if flag?(:dragoons_bound)
     if flag?(:phildendrin_found)
@@ -1139,11 +1140,16 @@ module FrostThaw
     v[:heartroot] << ["In the spore beds under the Heartroot, every mushroom has a name now.",
                       "Sableye is asleep on #{herald?(:wyn) ? 'your' : "Wyn's"} boot."] if herald?(:wyn) || flag?(:wyn_joined)
     v[:heartroot] << "Back at the Underdark door, a sign: BACK SOON. ASK THE MUSHROOMS." if flag?(:godspark_shadow)
+    v[:heartroot] << "The sporelings from the root tremor follow the gardeners about now, in a line, bumping into each other." if flag?(:sporelings_saved)
+    # the root-beasts you let out of Avarice's pens (Ch8, the Cocoon Pens), paid
+    v[:heartroot] << ["Deep in the roots, something half-grown and half-forged has made a nest of rust and moss.",
+                      "It doesn't cower any more. One of them has a mechanical leg, and it's teaching the others to climb."] if flag?(:rootbeasts_freed)
     if flag?(:eline_captured)
       v[:council] << ["Down in the root-cells, a woman in threadbare blue still prays every morning.",
                       "Backwards, mostly. Some mornings now, the warden says, a line comes out the right way."]
     end
     # the city you voted for (whole read T12)
+    v[:council] << "At the Echo Gate, where the cold comes in, Selrae Vorn keeps the candles lit. Every one of them." if flag?(:selrae_sentenced)
     v[:council] << "Summer's chair has a direwolf asleep under it. Rheven says it's a security measure." if flag?(:council_rheven)
     v[:council] << "Mira's chair faces the window, toward the Glasswater. She sails on recess." if flag?(:council_mira)
     v[:council] << "Eirwen chairs the Autumn session barefoot. The minutes are in verse." if flag?(:council_eirwen)
