@@ -187,3 +187,55 @@ SLIDE_ROUTE = lambda { |wait| [[15, [wait]], [17, []], [15, [2]], [18, []], [15,
   resave(b, id)
   puts "#{id}: #{spots.size} x Roof snow"
 end
+
+# --- A-09 ice fishers, A-10 a brazier and two villagers warming their hands, A-17 a shoveller ---------------------
+# (tools/townsfolkgen.py: the base game's own villagers at work.) Solid, like any villager, and placed only where
+# the tiles round them stay open, so they never block a way through.
+def open_spot?(b, x, y, r)
+  m = b.map
+  (-1..1).all? { |dx| (-1..1).all? { |dy| floor?(m, x + dx, y + dy) } } && plain?(m, x, y) && !near_event?(b, x, y, r)
+end
+
+def first_spot(b, id, name, &ok)
+  rng = Random.new(id * 13 + name.size)
+  m = b.map
+  (2...m.height - 2).flat_map { |y| (2...m.width - 2).map { |x| [x, y] } }.shuffle(random: rng).find(&ok)
+end
+
+def worker(graphic, dir)
+  { graphic: graphic, direction: dir, step_anime: true, walk_anime: false, direction_fix: true, through: false }
+end
+
+[2001, 2012].each do |id|
+  b = reopen(id)
+  %w[Brazier Warming\ hands].each { |n| clear_props(b, n) }
+  s = first_spot(b, id, "Brazier") { |x, y| open_spot?(b, x, y, 3) && open_spot?(b, x - 1, y, 0) && open_spot?(b, x + 1, y, 0) }
+  if s
+    x, y = s
+    b.event(x, y, "Brazier", [{ graphic: "FT_prop_brazier", direction: 2, step_anime: true, walk_anime: false, direction_fix: true }])
+    b.event(x - 1, y, "Warming hands", [worker("FT_town_warm_a", 6)])
+    b.event(x + 1, y, "Warming hands", [worker("FT_town_warm_b", 4)])
+  end
+  resave(b, id)
+  puts "#{id}: brazier #{s.inspect}"
+end
+
+{ 2001 => 6, 2012 => 4, 2035 => 6 }.each do |id, dir|
+  b = reopen(id)
+  clear_props(b, "Shovelling")
+  s = first_spot(b, id, "Shovelling") { |x, y| open_spot?(b, x, y, 3) }
+  b.event(*s, "Shovelling", [worker("FT_town_shovel", dir)]) if s
+  resave(b, id)
+  puts "#{id}: shoveller #{s.inspect}"
+end
+
+{ 2035 => %w[FT_town_fish_a FT_town_fish_b], 2034 => %w[FT_town_fish_b] }.each do |id, gs|
+  b = reopen(id)
+  clear_props(b, "Ice fishing")
+  gs.each_with_index do |g, i|
+    s = first_spot(b, id, "Ice fishing #{i}") { |x, y| open_spot?(b, x, y, 3) && floor?(b.map, x + 2, y) }
+    b.event(*s, "Ice fishing", [worker(g, 6)]) if s
+    puts "#{id}: fisher #{s.inspect}"
+  end
+  resave(b, id)
+end
