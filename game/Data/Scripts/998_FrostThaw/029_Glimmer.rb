@@ -78,6 +78,7 @@ module FrostThaw
     rift = stage_event(event_id)
     rx, ry = stage_spot(rift, 0, -2)
     Stage.overlay("O-01", scroll_x: 0.6, opacity: 255, fade: 30)   # the aurora pours down
+    rift_fx = (Stage.fx("E-10", [rx, ry], oy: 24, fps: 10, loop_from: 0) rescue nil) if rift   # the turning shard, the mirror of stars (E-10)
     pbBGMPlay("sky pillar") rescue nil
     sayc(["Above the tree's crown the sky opens. No clouds: only aurora, pouring down in a curtain.",
           "In the middle of it a shard of light turns slowly.",
@@ -130,6 +131,7 @@ module FrostThaw
           "Round the Rift's inner ring, letters light up that weren't there a moment ago:",
           "FROM THE SPARK WAS BORN THE LUMEN SHARD, HOPE CRYSTALLIZED.",
           "MAY ITS BEARER LIGHT PATHS THAT NEVER KNEW DAWN."])
+    Stage.stop_fx(rift_fx) rescue nil                                # the mirror closes behind him
     Stage.approach(gl) if gl
     sayc(["???: ...That took longer than Brightmane promised. Unicorns are terrible at time.",
           flag?(:told_shade_back) ? "???: (to you) You said come back. So I did." : "???: (to you) You said go. So I went."].compact)

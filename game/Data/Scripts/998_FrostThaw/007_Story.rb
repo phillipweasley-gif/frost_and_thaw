@@ -18,6 +18,24 @@ module FrostThaw
   # name on the map (WRITING_GUIDE §9a: speakers are on screen). A speaker who
   # isn't on the map, or is outside the camera, is noted once per map in the
   # log so the staging sweep can find them.
+  # A reaction balloon over the speaker, read off the line's stage direction ("MEAT MEAT: (delighted) ...").
+  # Only when the speaker is on the map and on screen; it plays in the background while the line shows.
+  REACTION_BALLOONS = [
+    [/delighted|beaming|thrilled|overjoyed|grinning|giggl|laughing/i,           "B-09"],   # sparkle
+    [/nervous|sheepish|embarrass|fluster|awkward|wincing|uneasy|sweating/i,     "B-04"],   # sweat drop
+    [/furious|angry|snapping|snaps|bristl|teeth|seething|glaring/i,             "B-03"],   # anger mark
+    [/asleep|sleepily|yawn|drowsy/i,                                            "B-08"],   # Zzz
+    [/realis|realiz|lighting up|an idea|it clicks/i,                            "B-10"],   # light bulb
+    [/fondly|lovingly|tenderly|hugging|both arms around|nuzzl/i,                "B-02"]    # heart
+  ]
+
+  def reaction_balloon(line)
+    dir = line.to_s[/\A[A-Z][-A-Z' ]*[A-Z]: \(([^)]*)\)/, 1]
+    return nil if !dir
+    REACTION_BALLOONS.each { |re, id| return id if dir =~ re }
+    nil
+  end
+
   def say(lines, event_id = nil)
     Array(lines).flatten.compact.each do |line|
       # a line the Herald says aloud, by choice, in its place (ask_as / ask_cl)
@@ -40,6 +58,7 @@ module FrostThaw
           end
           if ev && Stage.on_screen?(ev)
             pbCallBub(2, ev.id)
+            (bal = reaction_balloon(line)) && (Stage.balloon(ev, bal) rescue nil)
           elsif ev
             note_offstage(tag, :off_camera)      # (no bubble: it would point off the screen)
           else

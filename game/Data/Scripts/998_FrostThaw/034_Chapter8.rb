@@ -1000,6 +1000,7 @@ module FrostThaw
          "GLIMMER: ...Tell Frostina it was a better fire. She'll know what I mean."])
     $game_screen.start_flash(Color.new(255, 250, 220, 200), 40) rescue nil
     stage_fade(gl, 120, 8, 3)
+    Stage.fx("E-11", gl, oy: 24) rescue nil if gl                     # his light rises out of him (E-11)
     say(["The light goes up, through the roots, through the tree, toward a plain of stars."])
     stage_fade(gl, 0, 10, 4)
     Stage.remove_actor(gl) if gl

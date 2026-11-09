@@ -582,8 +582,103 @@ def e32(n=6):
         frames.append(g)
     return frames, ramp_edge([GREEN])
 
+# ================================================================ batch 3 (2026-11-09)
+AUR = [(14, 18, 44), (30, 70, 96), (52, 160, 140), (120, 236, 180), (220, 255, 236)]
+VIO = [(60, 30, 110), (150, 100, 230), (226, 200, 255)]
+GOLD = [(110, 70, 20), (210, 150, 50), (250, 214, 110), (255, 248, 210)]
+BEE = [(30, 22, 10), (200, 150, 30), (250, 210, 70)]
+
+def e10(n=12):
+    """The rift (6.08): a turning shard of light over an aurora gone smooth as a mirror full of stars. Loops."""
+    rnd = random.Random(10)
+    stars = [(rnd.uniform(-30, 30), rnd.uniform(-12, 12), rnd.randint(0, 11)) for _ in range(22)]
+    frames = []
+    for i in range(n):
+        g = blank()
+        ph = i / n * 2 * math.pi
+        # the mirror: a smooth dark oval, rimmed with aurora light that ripples round it
+        for y in range(N):
+            for x in range(N):
+                e = ((x - CX) / 36) ** 2 + ((y - (CY + 6)) / 15) ** 2
+                if e <= 1:
+                    rim = e > 0.78
+                    if rim:
+                        a = math.atan2(y - CY - 6, x - CX)
+                        g[y][x] = AUR[3] if math.sin(a * 3 - ph * 2) > 0.3 else AUR[2]
+                    else:
+                        g[y][x] = AUR[0] if e < 0.45 else AUR[1]
+        for sx, sy, k in stars:                           # stars in the mirror, twinkling in turn
+            x, y = CX + sx, CY + 6 + sy
+            if ((x - CX) / 34) ** 2 + ((y - CY - 6) / 13) ** 2 < 0.7:
+                if (k + i) % 4 == 0:
+                    star(g, x, y, AUR[3], AUR[4])
+                else:
+                    put(g, x, y, AUR[3] if (k + i) % 4 == 2 else AUR[2])
+        # the shard: a tall diamond, turning (its width breathes with the spin), over the mirror's centre
+        w = 2 + abs(math.cos(ph)) * 7
+        top, bot, mid = CY - 34, CY + 2, CY - 14
+        for y in range(top, bot + 1):
+            span = w * (1 - abs(y - mid) / (mid - top if y < mid else bot - mid))
+            for x in range(int(CX - span), int(CX + span) + 1):
+                lit = (x - CX) < math.sin(ph) * span * 0.5
+                g[y][x] = AUR[4] if lit and abs(x - CX) <= 1 else VIO[2] if lit else VIO[1]
+        frames.append(g)
+    return frames, ramp_edge([AUR, VIO])
+
+def e11(n=12):
+    """Glimmer's light rises out of him and up through the roots (8.07)."""
+    rnd = random.Random(11)
+    motes = [(rnd.uniform(0, 2 * math.pi), rnd.uniform(10, 22)) for _ in range(14)]
+    frames = []
+    for i in range(n):
+        g = blank()
+        if i < 5:                                         # light gathers out of him into his chest
+            t = i / 4
+            for a, r in motes:
+                rr = r * (1 - t)
+                star(g, CX + math.cos(a + t) * rr, CY + math.sin(a + t) * rr * 1.2, GOLD[2], GOLD[3])
+            rad = 1 + 4 * t
+            for y in range(N):
+                for x in range(N):
+                    d = math.hypot(x - CX, y - CY)
+                    if d <= rad:
+                        g[y][x] = GOLD[3] if d < rad * 0.5 else GOLD[2]
+        else:                                             # then it rises, trailing light, and goes up out of sight
+            t = (i - 5) / (n - 6)
+            oy = CY - t * 70
+            for y in range(N):
+                for x in range(N):
+                    d = math.hypot(x - CX, y - oy)
+                    if d <= 5 and oy > -6:
+                        g[y][x] = GOLD[3] if d < 2.5 else GOLD[2]
+                    elif oy + 5 < y < CY and abs(x - CX) <= 2 * (1 - (y - oy) / max(1, CY - oy)) + 0.5:
+                        if (x + y + i) % 2 == 0:
+                            g[y][x] = GOLD[2]             # the trail, dithered so it reads as light
+            for k in range(5):
+                put(g, CX + (k - 2) * 4, oy + 10 + k * 5 + (i % 2), GOLD[3])
+        frames.append(g)
+    return frames, ramp_edge([GOLD])
+
+def e25(n=8):
+    """A cloud of furious bees bursting out of a door (9.03)."""
+    rnd = random.Random(25)
+    bees = [(rnd.uniform(-1, 1), rnd.uniform(-1, 0.2), rnd.uniform(0.5, 1.2), rnd.uniform(0, 6)) for _ in range(34)]
+    frames = []
+    for i in range(n):
+        g = blank()
+        t = (i + 1) / n
+        for dx, dy, sp, ph in bees:
+            x = CX + dx * 40 * t * sp + math.sin(i * 1.7 + ph) * 3
+            y = CY + 14 + dy * 40 * t * sp + math.cos(i * 1.3 + ph) * 3
+            put(g, x, y, BEE[2]); put(g, x + 1, y, BEE[0])     # a bee: gold and a black stripe
+            if (i + int(ph)) % 2 == 0:
+                put(g, x, y - 1, (240, 240, 255))              # a wing catching the light
+        frames.append(g)
+    return frames, ramp_edge([BEE, [(30, 22, 10), (240, 240, 255)]])
+
 EFFECTS = {"E-13": e13, "E-16": e16, "E-33": e33, "E-05": e05, "E-17": e17, "E-18": e18, "E-21": e21,
-           "E-22": e22, "E-23": e23, "E-24": e24, "E-31": e31, "E-32": e32, "E-34": e34, "E-35": e35}
+           "E-22": e22, "E-23": e23, "E-24": e24, "E-31": e31, "E-32": e32, "E-34": e34, "E-35": e35,
+           "E-10": e10, "E-11": e11, "E-25": e25}
 
 def main():
     args = sys.argv[1:]

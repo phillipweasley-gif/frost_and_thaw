@@ -435,6 +435,8 @@ module FrostThaw
     say(["#{who} #{who == 'You' ? 'hit' : 'hits'} the door. Once. Twice."])
     $game_screen.start_shake(3, 6, 10) rescue nil
     pbSEPlay("Earth1") rescue nil
+    bees_at = (event_id ? $game_map.events[event_id] : nil) || $game_player
+    Stage.fx("E-25", bees_at, oy: 8, wait: false) rescue nil          # the swarm (E-25)
     say(["It bursts inward in a cloud of smoke and furious bees."])
     door = event_id ? $game_map.events[event_id] : nil
     oli = door ? ch9_actor(:olivessa, door.x, door.y, 2, "BW (56)") : nil
