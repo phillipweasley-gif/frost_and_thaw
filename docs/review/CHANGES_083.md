@@ -29,3 +29,7 @@
 ## Checks
 - Smoke test 241/241; all 159 maps pass; Journey 247/247 and Herald Meat Meat 239/239 after each risky change.
 - The full eight-run round on the final state: see the end of this file.
+
+- **Final round on 0.8.3 (all eight):** Journey 247/247, Shatter 247/247, Still Keeper 241/245 (the loop's four by design;
+  a first run's 237 was the driver losing its way in the loop's replay, and a rerun gave 241), Heralds Alberica,
+  Reptin, Meat Meat, Alerion 239/239, Wyn 238/238. Smoke test 241/241.
