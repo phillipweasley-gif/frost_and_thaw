@@ -249,20 +249,23 @@ module FrostThaw
     #---------------------------------------------------------------------------
     # at: a character (Game_Character) or [map x, map y]. oy lifts the effect off
     # the feet (e.g. 40 for a chest). frames: how many cells to play.
-    def fx(id, at, frames: nil, oy: 0, ox: 0, fps: 20, hold: false, wait: true, loop_from: nil)
+    def fx(id, at, frames: nil, oy: 0, ox: 0, fps: 20, hold: false, wait: true, loop_from: nil, start: 0, mirror: false)
       return if !map?
       bmp = RPG::Cache.load_bitmap("Graphics/Animations/", id) rescue nil
       return log("no effect #{id}") if !bmp
       cols = [bmp.width / 192, 1].max
-      total = frames || cols * [bmp.height / 192, 1].max
+      # start: the first cell to play (a sheet with several effects in rows, as E-17 and E-18);
+      # frames then counts from it. mirror: flips it (E-17's breath is drawn facing right)
+      total = frames || (cols * [bmp.height / 192, 1].max - start)
       sp = Sprite.new(viewport)
       sp.bitmap = bmp
-      sp.src_rect.set(0, 0, 192, 192)
+      sp.mirror = mirror
+      sp.src_rect.set((start % cols) * 192, (start / cols) * 192, 192, 192)
       sp.ox = 96
       sp.oy = 96
       sp.z = 1500
       f = { sprite: sp, at: at, ox: ox, oy: oy, cols: cols, total: total, per: ticks(fps), tick: 0,
-            hold: hold, loop_from: loop_from, kind: :fx }
+            hold: hold, loop_from: loop_from, start: start, kind: :fx }
       place(f)
       @fx << f
       return f if !wait || loop_from
@@ -340,6 +343,7 @@ module FrostThaw
             next
           end
         end
+        n += f[:start] || 0
         sp.src_rect.set((n % f[:cols]) * 192, (n / f[:cols]) * 192, 192, 192)
       end
     rescue StandardError => e

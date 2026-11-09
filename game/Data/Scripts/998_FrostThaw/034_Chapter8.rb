@@ -1215,11 +1215,13 @@ module FrostThaw
     pbSEPlay("Fire1") rescue nil
     $game_screen.start_flash(Color.new(200, 30, 20, 220), 20) rescue nil
     $game_screen.start_shake(4, 6, 20) rescue nil
+    veil = (Stage.fx("E-31", av, oy: 24, fps: 12, loop_from: 4) rescue nil)   # Hell's Veil (E-31), burning while she talks
     sayc(["A pillar of red-black flame roars up round her: Hell's Veil, eating the air.",
           # (notes 08 E19, dialogue 08 §5: no promise to return, and no death-cry;
           # she's faking it, so she sells it with style)
           "AVARICE: (from inside the fire, in no hurry at all) Mind the dragon."])
     stage_fade(av, 0, 8, 3)
+    Stage.stop_fx(veil) rescue nil
     say(["The pillar collapses inward with a sound like a door slamming. Then nothing."])
     Stage.fx("E-06", stage_spot(var, 0, 1), frames: 10, oy: 16)   # the ring of melted glass
     # (notes 08 E19: there is a body in the glass, for "Look more closely")

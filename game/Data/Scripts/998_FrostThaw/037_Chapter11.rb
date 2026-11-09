@@ -196,7 +196,7 @@ module FrostThaw
     say(["She presses it into the hollow in Sephek's chest."])
     Stage.stop_fx(heart)
     if sephek
-      Stage.fx("E-14", sephek, frames: 6, oy: 36)
+      Stage.fx("E-05", sephek, frames: 10, oy: 36)       # the ice cracks and falls away (E-05)
       sephek.character_name = "FT_sephek" rescue nil
     end
     say(["The ice cracks. Sephek breathes in, four hundred years late.",

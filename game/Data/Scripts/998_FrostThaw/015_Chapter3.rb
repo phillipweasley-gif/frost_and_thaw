@@ -536,8 +536,8 @@ module FrostThaw
       shim = st.actor(:shimmer, *GLADE_SLAB, 2)
       st.pose(shim, "P-SHI-03", 3, frames: [0, 1], per: 24) if shim
       seph = st.actor(:sephek, *GLADE_SEPHEK, 6)
-      # the sphere over her: a stand-in until its own effect is drawn (art request)
-      sphere = st.fx("E-14", [GLADE_SLAB[0], GLADE_SLAB[1] - 1], oy: 8, loop_from: 0)
+      # the sphere over her (E-35, the black-veined sphere, pulsing)
+      sphere = st.fx("E-35", [GLADE_SLAB[0], GLADE_SLAB[1] - 1], oy: 8, loop_from: 0, fps: 10)
       st.panel_off(fade: 24)
       say(["Shimmer lies on a slab older than names, bound in cords of living ice.",
            "Above her floats a sphere of black-veined ice: a piece of Auril, waiting for a way in.",

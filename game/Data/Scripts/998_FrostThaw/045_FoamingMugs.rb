@@ -319,7 +319,10 @@ module FrostThaw
     pbSEPlay("Fire2") rescue nil
     $game_screen.start_flash(Color.new(255, 140, 40, 180), 20) rescue nil
     $game_screen.start_shake(2, 6, 12) rescue nil
-    Stage.wait(20)
+    wagon = ($game_map.events.values.find { |e| e.name.to_s =~ /wagon/i } rescue nil)
+    fire = (Stage.fx("E-34", wagon || $game_player, oy: 16, fps: 10, loop_from: 4) rescue nil)   # it goes up (E-34)
+    Stage.wait(48)
+    Stage.stop_fx(fire) rescue nil
   end
 
   # Everyone back in the wagon, and away south behind the bears.

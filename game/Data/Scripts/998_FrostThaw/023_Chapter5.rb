@@ -258,6 +258,7 @@ module FrostThaw
       set_flag(:icefall_fell)
       pbSEPlay("Ice2") rescue nil
       say(["A crack, high overhead. Then the ceiling comes down: icicles and chunks of heavy ice!"])
+      Stage.fx("E-22", $game_player, frames: 8, oy: 24) rescue nil          # icicles and chunks fall (E-22, row 1)
       $game_screen.start_shake(5, 8, 16) rescue nil
       Stage.hop($game_player)
       hurt_party(0.2)
@@ -936,6 +937,7 @@ module FrostThaw
     Stage.overlay_off("O-03", fade: 20)
     Stage.cleanup rescue nil
     pbFadeOutIn { $Trainer.heal_party } rescue ($Trainer.heal_party rescue nil)
+    Stage.fx("E-21", $game_player, oy: 16) rescue nil                        # (E-21)
     pbMessage(_INTL("A soft silver light settles over you and your Pokémon."))
     pbMessage(_INTL("(It will be there again when you need it most.)"))
     set_flag(:reptin_charge)

@@ -200,7 +200,390 @@ def e33(n=6):
         frames.append(g)
     return frames, ramp_edge([LIGHT])
 
-EFFECTS = {"E-13": e13, "E-16": e16, "E-33": e33}
+# ================================================================ batch 2 (2026-11-09)
+SMOKE = [(40, 38, 44), (84, 80, 88), (132, 128, 136), (180, 176, 184)]
+SILVER = [(52, 60, 84), (124, 136, 168), (196, 206, 228), (246, 248, 255)]
+GREEN = [(22, 70, 40), (52, 140, 70), (120, 206, 110), (214, 250, 190)]
+DARK = [(14, 8, 13), (48, 22, 58), (96, 44, 110), (168, 96, 186), (236, 200, 246)]
+HELL = [(40, 6, 10), (110, 14, 18), (186, 36, 26), (236, 96, 48), (255, 196, 120)]
+LEAF = [(24, 62, 30), (58, 118, 50), (118, 182, 70), (206, 236, 140)]
+
+def lines_from(g, x0, y0, n, length, c, rnd, jitter=0.6):
+    """Crack lines: n random walks out from a point."""
+    for k in range(n):
+        a = rnd.uniform(0, 2 * math.pi)
+        x, y = x0, y0
+        for s in range(int(length)):
+            a += rnd.uniform(-jitter, jitter)
+            x += math.cos(a); y += math.sin(a)
+            put(g, x, y, c)
+
+def capsule(x, y, cx, top, bot, w):
+    """Inside a person-sized upright capsule."""
+    if y < top or y > bot:
+        return False
+    r = w / 2
+    if y < top + r:
+        return math.hypot(x - cx, y - (top + r)) <= r
+    if y > bot - r:
+        return math.hypot(x - cx, y - (bot - r)) <= r
+    return abs(x - cx) <= r
+
+# ---------------------------------------------------------------- E-05: ice cracks and falls away from a body
+def e05(n=10):
+    rnd = random.Random(5)
+    top, bot, w = 30, 66, 20
+    cracks = []
+    cr = random.Random(55)
+    for k in range(7):
+        a = cr.uniform(0, 2 * math.pi); x, y = CX, 46; path = []
+        for s in range(22):
+            a += cr.uniform(-0.7, 0.7); x += math.cos(a); y += math.sin(a) * 1.3; path.append((x, y))
+        cracks.append(path)
+    # the shell breaks into chunks: each pixel of the shell belongs to the nearest of these seeds
+    seeds = [(rnd.uniform(CX - w / 2, CX + w / 2), rnd.uniform(top, bot)) for _ in range(9)]
+    vel = [((sx - CX) * 0.18 + rnd.uniform(-0.6, 0.6), rnd.uniform(-1.6, -0.4)) for sx, sy in seeds]
+    frames = []
+    for i in range(n):
+        g = blank()
+        t = i
+        for y in range(N):
+            for x in range(N):
+                if not capsule(x, y, CX, top, bot, w):
+                    continue
+                if (x - CX) % 7 == 0 and (y % 3 == 0):
+                    pass
+                if i < 4:
+                    shade = ICE[4] if x < CX - w / 2 + 4 and y < top + 14 else ICE[3] if x < CX + 2 else ICE[2]
+                    if (x + y) % 2 == 0 and x > CX + 4:
+                        continue                         # the shell is clear ice: the body shows through
+                    g[y][x] = shade
+                else:
+                    k = min(range(len(seeds)), key=lambda q: (x - seeds[q][0]) ** 2 + (y - seeds[q][1]) ** 2)
+                    tt = i - 3
+                    vx, vy = vel[k]
+                    nx, ny = x + vx * tt * 2.2, y + vy * tt + 0.45 * tt * tt   # thrown out, then falling
+                    if ny < 70 and (i < 8 or (x + y + i) % 2 == 0):
+                        put(g, nx, ny, ICE[3] if (x + y) % 3 else ICE[4])
+        upto = min(len(cracks[0]), (i + 1) * 6)
+        if i < 4:
+            for path in cracks:
+                for (x, y) in path[:upto]:
+                    if capsule(int(x), int(y), CX, top, bot, w):
+                        put(g, x, y, ICE[1])
+        if i >= 6:                                       # shards settling on the ground at the feet
+            for k in range(10):
+                put(g, CX - 18 + k * 4 + (i % 2), 69, ICE[3]); put(g, CX - 17 + k * 4, 69, ICE[4])
+        if i in (3, 4):
+            for k in range(6):
+                star(g, CX + rnd.randint(-14, 14), rnd.randint(top, bot), ICE[3], ICE[4])
+        frames.append(g)
+    return frames, ramp_edge([ICE])
+
+# ---------------------------------------------------------------- E-17: dragon breath, three rows of 8, facing right
+def breath(ramp, rnd, kind):
+    frames = []
+    for i in range(8):
+        g = blank()
+        head = min(94, 6 + i * 18)                       # the front of the breath races right
+        tail = 4 + max(0, i - 5) * 26                    # and the back lets go at the end
+        for x in range(int(tail), int(head)):
+            u = (x - 4) / 90
+            half = 1.5 + 13 * u ** 0.8                    # a cone, widening away from the mouth
+            wob = math.sin(x * 0.11 + i * 0.9) * 1.2      # a slight sway, not a wave
+            for y in range(N):
+                off = y - (CY + wob)
+                # a ragged, turbulent edge: the reach differs above and below and churns frame to frame
+                edge = half * (0.75 + 0.25 * math.sin(x * 0.9 + i * 2.3 + (1 if off > 0 else 4)) * math.sin(x * 0.37 - i * 1.1))
+                d = abs(off)
+                if d <= edge:
+                    k = 1 - d / max(edge, 0.5)
+                    if k < 0.3 and (x + y + i) % 2 == 0:
+                        continue                          # the spray thins to a dither at its edge
+                    if kind == "leaves" and (x * 5 + y * 3 + i) % 6 == 0:
+                        continue
+                    g[y][x] = ramp[-1] if k > 0.7 else ramp[-2] if k > 0.4 else ramp[-3]
+        for _ in range(int(6 + 2 * i)):                  # what it carries
+            x = rnd.uniform(tail, head); y = CY + rnd.uniform(-10, 10) * (x / 96)
+            if kind == "frost":
+                star(g, x, y, ICE[3], ICE[4])
+            elif kind == "leaves":
+                blob(g, x, y, LEAF[2] if rnd.random() < 0.5 else LEAF[3])
+            else:
+                put(g, x, y, ramp[-1])
+        frames.append(g)
+    return frames
+
+def e17():
+    rnd = random.Random(17)
+    f1 = breath(ICE, rnd, "frost")
+    f2 = breath(LEAF + [(250, 246, 200)], rnd, "leaves")
+    f3 = breath(DARK, rnd, "dark")
+    return f1 + f2 + f3, ramp_edge([ICE, LEAF + [(250, 246, 200)], DARK])
+
+# ---------------------------------------------------------------- E-18: Auril's diamond: 6-frame spin, then a 10-frame crack
+DIA = [(30, 44, 92), (70, 120, 196), (140, 196, 240), (206, 236, 255), (255, 255, 255)]
+
+def diamond(g, cx, cy, h, wface, phase, crack=0, rnd=None):
+    """An octahedron seen side-on, its width turning with phase."""
+    w = max(2, abs(math.cos(phase)) * wface + 2)
+    for y in range(int(cy - h), int(cy + h) + 1):
+        span = w * (1 - abs(y - cy) / h)
+        for x in range(int(cx - span), int(cx + span) + 1):
+            left = (x - cx) < math.sin(phase) * span * 0.4
+            top = y < cy
+            c = DIA[4] if top and left and abs(x - cx) < 2 else DIA[3] if top and left else DIA[2] if top or left else DIA[1]
+            g[y][x] = c
+
+def e18():
+    frames = []
+    for i in range(6):                                   # the spin loop, humming
+        g = blank()
+        diamond(g, CX, CY - 4, 16, 11, i * math.pi / 6)
+        r = 18 + (i % 3) * 3                              # the hum: a faint ring pulsing
+        for a in range(0, 360, 12):
+            if (a // 12 + i) % 2 == 0:
+                put(g, CX + math.cos(math.radians(a)) * r, CY - 4 + math.sin(math.radians(a)) * r * 0.5, DIA[2])
+        frames.append(g)
+    rnd = random.Random(18)
+    strands = [-2.6, -0.5, math.pi / 2]                   # three strands of frost: left, right, down
+    for i in range(10):
+        g = blank()
+        if i < 4:
+            diamond(g, CX, CY - 4, 16, 11, 0.3)
+            lines_from(g, CX, CY - 4, 2 + i, 6 + i * 3, DIA[0], random.Random(80 + i))
+            if i == 3:
+                for y in range(N):
+                    for x in range(N):
+                        if math.hypot(x - CX, y - CY + 4) < 10:
+                            g[y][x] = DIA[4]
+        else:
+            tt = i - 4
+            for k in range(8):                            # the shards fly apart
+                a = k / 8 * 2 * math.pi + 0.3
+                d = 6 + tt * 6
+                bx, by = CX + math.cos(a) * d, CY - 4 + math.sin(a) * d * 0.7 + tt * tt * 0.3
+                if tt < 5:
+                    for dx in range(-1, 2):
+                        put(g, bx + dx, by, DIA[3]); put(g, bx, by - 1, DIA[4])
+            for s, a in enumerate(strands):               # the strands reach out
+                length = min(46, 8 + tt * 9)
+                x, y = CX, CY - 4
+                for k in range(int(length)):
+                    a2 = a + math.sin(k * 0.25 + s) * 0.25
+                    x += math.cos(a2); y += math.sin(a2) * 0.8
+                    put(g, x, y, DIA[3]); put(g, x, y + 1, DIA[2])
+                    if k % 7 == 3:
+                        star(g, x, y - 2, DIA[3], DIA[4])
+        frames.append(g)
+    return frames, ramp_edge([DIA])
+
+# ---------------------------------------------------------------- E-22: falling ice: icicles and chunks (row of 8), a spear shattering (8)
+def e22():
+    rnd = random.Random(22)
+    frames = []
+    pieces = [(rnd.uniform(24, 72), rnd.uniform(-30, 0), rnd.choice((0, 1))) for _ in range(7)]
+    for i in range(8):
+        g = blank()
+        for px0, py0, kind in pieces:
+            y = py0 + i * i * 1.6 + i * 3
+            if y < CY + 10:
+                if kind == 0:                             # an icicle, point down
+                    for k in range(9):
+                        w = int((9 - k) / 4)
+                        for dx in range(-w, w + 1):
+                            put(g, px0 + dx, y + k, ICE[4] if dx < 0 else ICE[3])
+                else:                                     # a chunk
+                    for dy in range(4):
+                        for dx in range(-2, 3):
+                            put(g, px0 + dx, y + dy, ICE[3] if dx > 0 else ICE[4])
+            else:                                         # it shatters where it lands
+                tt = (y - CY - 10) / 6
+                if tt < 3:
+                    for k in range(5):
+                        a = math.pi + k * math.pi / 4
+                        put(g, px0 + math.cos(a) * tt * 3, CY + 10 + math.sin(a) * tt * 2, ICE[3])
+        frames.append(g)
+    for i in range(8):                                    # the spear
+        g = blank()
+        if i < 4:
+            y = -20 + i * 18
+            for k in range(26):
+                w = 2 if k < 20 else int((26 - k) / 2)
+                for dx in range(-w, w + 1):
+                    put(g, CX + dx, y + k, ICE[4] if dx < 0 else ICE[3] if dx == 0 else ICE[2])
+        else:
+            tt = i - 3
+            for k in range(12):
+                a = math.pi + (k / 11) * math.pi
+                d = tt * 5
+                put(g, CX + math.cos(a) * d, CY + 10 + math.sin(a) * d * 0.6 + tt * tt * 0.4, ICE[4] if k % 2 else ICE[3])
+                put(g, CX + math.cos(a) * d + 1, CY + 10 + math.sin(a) * d * 0.6 + tt * tt * 0.4, ICE[3])
+            for x in range(CX - 10 - tt * 2, CX + 11 + tt * 2):   # the crack in the bridge
+                if (x + tt) % 3 and i < 7:
+                    put(g, x, CY + 11, ICE[1])
+        frames.append(g)
+    return frames, ramp_edge([ICE])
+
+# ---------------------------------------------------------------- fire: E-23 roof (6-loop), E-34 wagon and E-31 Hell's Veil (8, loop the last 4)
+def flames(g, x0, x1, base, height, i, ramp, rnd_seed, dark_core=False):
+    for x in range(int(x0), int(x1)):
+        h = height * (0.55 + 0.45 * math.sin(x * 0.7 + i * 2.1 + rnd_seed) * math.sin(x * 0.23 - i * 1.3))
+        h = max(2, h)
+        for k in range(int(h)):
+            y = base - k
+            u = k / h
+            c = ramp[-1] if u < 0.25 else ramp[-2] if u < 0.55 else ramp[-3] if u < 0.85 else ramp[1]
+            if dark_core and u < 0.3 and (x - x0) % 5 in (1, 2):
+                c = ramp[1]
+            g[y][x] = c
+
+def smoke(g, cx, base, i, n=5, spread=20):
+    rnd = random.Random(99)
+    for k in range(n):
+        ph = (i + k * 6 / n) % 6
+        x = cx + rnd.uniform(-spread, spread) + ph * 1.5
+        y = base - 6 - ph * 6
+        r = 2 + ph * 0.8
+        for yy in range(int(y - r), int(y + r) + 1):
+            for xx in range(int(x - r), int(x + r) + 1):
+                if math.hypot(xx - x, yy - y) <= r and g[yy][xx] is None if 0 <= yy < N and 0 <= xx < N else False:
+                    g[yy][xx] = SMOKE[3] if yy < y - r / 2 else SMOKE[2]
+
+def e23(n=6):
+    frames = []
+    for i in range(n):
+        g = blank()
+        smoke(g, CX, CY - 6, i, n=6, spread=26)
+        flames(g, CX - 32, CX + 32, CY + 4, 14, i, FIRE, 1.0)
+        frames.append(g)
+    return frames, ramp_edge([FIRE, SMOKE])
+
+def e34(n=8):
+    frames = []
+    for i in range(n):
+        g = blank()
+        grow = min(1.0, (i + 1) / 4)
+        smoke(g, CX, CY - 4, i % 6, n=4, spread=12)
+        flames(g, CX - 18 * grow, CX + 18 * grow, CY + 8, 16 * grow, i, FIRE, 2.0, dark_core=True)
+        frames.append(g)
+    return frames, ramp_edge([FIRE, SMOKE])
+
+def e31(n=8):
+    frames = []
+    for i in range(n):
+        g = blank()
+        grow = min(1.0, (i + 1) / 4)
+        h = 60 * grow
+        for x in range(CX - 13, CX + 14):
+            front = abs(x - CX) < 7                       # the pillar's front, over the figure: a lattice of flame
+            hh = h * (0.8 + 0.2 * math.sin(x * 0.9 + i * 2))
+            for k in range(int(hh)):
+                y = CY + 12 - k
+                u = k / max(hh, 1)
+                if front and (x + y + i) % 3 != 0 and u > 0.12:
+                    continue                              # (the figure shows through the front)
+                g[y][x] = HELL[4] if u < 0.15 else HELL[3] if u < 0.4 else HELL[2] if u < 0.75 else HELL[1]
+            # tongues flicking off the top
+            tip = CY + 12 - hh
+            if (x * 3 + i) % 5 == 0:
+                for k in range(int(4 * grow)):
+                    put(g, x, tip - k, HELL[2] if k < 2 else HELL[3])
+        for k in range(6):
+            y = CY + 12 - ((i * 7 + k * 11) % int(max(h, 10)))
+            put(g, CX + (k % 2 and -15 or 15), y, HELL[3])
+        frames.append(g)
+    return frames, ramp_edge([HELL])
+
+# ---------------------------------------------------------------- E-24: rain from the roots on the lake (8-frame loop, wide)
+RAIN = [(30, 54, 84), (90, 140, 190), (170, 210, 240), (236, 248, 255)]
+
+def e24(n=8):
+    rnd = random.Random(24)
+    drops = [(rnd.uniform(0, N), rnd.uniform(0, N)) for _ in range(40)]
+    frames = []
+    for i in range(n):
+        g = blank()
+        for x0, y0 in drops:
+            y = (y0 + i * 12) % N
+            x = (x0 - i * 1.5) % N
+            for k in range(4):
+                put(g, x - k * 0.4, y - k, RAIN[3] if k == 0 else RAIN[2])
+            if y > 84:
+                put(g, x - 1, 90, RAIN[2]); put(g, x + 1, 90, RAIN[2])
+        frames.append(g)
+    return frames, ramp_edge([RAIN])
+
+# ---------------------------------------------------------------- E-35: the black-veined sphere pulsing (6-frame loop)
+def e35(n=6):
+    rnd = random.Random(35)
+    veins = []
+    for k in range(6):
+        a = rnd.uniform(0, 2 * math.pi); x, y = CX, CY; p = []
+        for s in range(14):
+            a += rnd.uniform(-0.6, 0.6); x += math.cos(a); y += math.sin(a); p.append((x, y))
+        veins.append(p)
+    frames = []
+    for i in range(n):
+        g = blank()
+        r = 12 + 2 * math.sin(i / n * 2 * math.pi)
+        for y in range(N):
+            for x in range(N):
+                d = math.hypot(x - CX, y - CY)
+                if d <= r:
+                    lit = (x - CX) + (y - CY) < -r * 0.7
+                    g[y][x] = DARK[3] if lit and d > r - 3 else DARK[2] if d > r - 2 else DARK[1]
+        for p in veins:
+            for (x, y) in p:
+                if math.hypot(x - CX, y - CY) < r - 1:
+                    put(g, x, y, DARK[0])
+        glow = r + 4 + 2 * math.sin(i / n * 2 * math.pi)
+        for a in range(0, 360, 10):                       # a ring of violet light that breathes
+            if (a // 10 + i) % 3 == 0:
+                put(g, CX + math.cos(math.radians(a)) * glow, CY + math.sin(math.radians(a)) * glow, DARK[4])
+        frames.append(g)
+    return frames, ramp_edge([DARK])
+
+# ---------------------------------------------------------------- E-21: soft silver light settles over the team (10)
+def e21(n=10):
+    rnd = random.Random(21)
+    motes = [(rnd.uniform(-40, 40), rnd.uniform(-46, 0), rnd.uniform(0.7, 1.3)) for _ in range(26)]
+    frames = []
+    for i in range(n):
+        g = blank()
+        for mx, my, sp in motes:
+            y = CY + my + i * 4.2 * sp
+            if y < CY + 10:
+                star(g, CX + mx, y, SILVER[2], SILVER[3])
+            elif i > 5 and (int(mx) + i) % 2 == 0:
+                put(g, CX + mx, CY + 10, SILVER[2])
+        if i >= 6:                                        # a soft sheen on the ground, dithered
+            for y in range(CY + 8, CY + 13):
+                for x in range(CX - 38, CX + 39):
+                    if (x + y + i) % 3 == 0 and abs(x - CX) / 38 + abs(y - CY - 10) / 3 < 1:
+                        g[y][x] = g[y][x] or SILVER[2]
+        frames.append(g)
+    return frames, ramp_edge([SILVER])
+
+# ---------------------------------------------------------------- E-32: green bond sparkle rising off a Pokémon and its trainer (6)
+def e32(n=6):
+    rnd = random.Random(32)
+    motes = [(rnd.uniform(-22, 22), rnd.uniform(0, 30)) for _ in range(14)]
+    frames = []
+    for i in range(n):
+        g = blank()
+        for mx, my in motes:
+            y = CY + 10 - my - i * 6
+            if CY - 40 < y < CY + 12:
+                if (int(my) + i) % 3 == 0:
+                    star(g, CX + mx + math.sin(y * 0.3) * 2, y, GREEN[2], GREEN[3])
+                else:
+                    blob(g, CX + mx + math.sin(y * 0.3) * 2, y, GREEN[2] if i < 4 else GREEN[1], 1)
+        frames.append(g)
+    return frames, ramp_edge([GREEN])
+
+EFFECTS = {"E-13": e13, "E-16": e16, "E-33": e33, "E-05": e05, "E-17": e17, "E-18": e18, "E-21": e21,
+           "E-22": e22, "E-23": e23, "E-24": e24, "E-31": e31, "E-32": e32, "E-34": e34, "E-35": e35}
 
 def main():
     args = sys.argv[1:]

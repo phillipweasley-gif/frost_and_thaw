@@ -390,6 +390,9 @@ module FrostThaw
     say([cl(:reptin, "(shouting back) I'd almost forgotten how much I hate it!"),
          "Ahead, a black dragon with burning gold eyes dives on a town of beehives and honey-halls.",
          "Good Mead. Its breath is a line of light. Roofs go up like paper."].compact)
+    px, py = $game_player.x, $game_player.y
+    Stage.fx("E-17", [px - 3, py - 3], start: 16, frames: 8, ox: 80) rescue nil   # the black dragon's breath (E-17, row 3)
+    Stage.fx("E-23", [px + 2, py - 3], frames: 6, fps: 10) rescue nil               # a roof goes up (E-23)
     if flag?(:flight_path_seen)
       # A4's root model: the Heralds know its path.
       sayc([cl(:alerion, "(over the wind) Like the Barricade's model. Good Mead, then Bryn Shander."),

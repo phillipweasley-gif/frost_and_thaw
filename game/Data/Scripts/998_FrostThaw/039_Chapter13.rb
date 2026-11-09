@@ -676,6 +676,7 @@ module FrostThaw
       $game_screen.start_flash(Color.new(220, 240, 255, 230), 14) rescue nil
       Stage.fx("E-01", throne) if throne
       auril_look(stage, throne)
+      @auril_diamond = (Stage.fx("E-18", throne, frames: 6, loop_from: 0, fps: 10, oy: 16) rescue nil) if stage == 2 && throne   # humming (E-18)
       line = ["The crone's furs fall away. Under them, a woman of ice so thin the light goes through.",
               "The maiden shatters. The shards spin together into a floating diamond, humming.",
               nil][stage - 1]
@@ -727,6 +728,8 @@ module FrostThaw
     al = herald?(:alberica)
     throne = stage_event("Auril")
     $game_screen.start_shake(5, 10, 16) rescue nil
+    (Stage.stop_fx(@auril_diamond) rescue nil); @auril_diamond = nil
+    Stage.fx("E-18", throne, start: 6, frames: 10, oy: 16) rescue nil if throne   # it cracks: three strands of frost (E-18)
     say(["The diamond cracks, and it pulls.",
          "Frost reaches out of it three ways.",
          "Toward Frostina. Toward #{al ? 'your' : "Alberica's"} rune. Toward the heart in Sephek's chest."])
