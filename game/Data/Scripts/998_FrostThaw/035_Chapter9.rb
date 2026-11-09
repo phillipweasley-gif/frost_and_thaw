@@ -257,6 +257,9 @@ module FrostThaw
     add_counter(:story_beats)
     set_rest_at(HEARTH_REST) rescue nil
     return if !pbConfirmMessage(_INTL("Take off after the black dragon?"))
+    Stage.pose(razz, "K-RAZ-02", 0, frames: [0, 1], per: 5) if razz       # (K-RAZ-02, K-FRO-03) up off the Shrine
+    Stage.pose(frostina, "K-FRO-03", 0, frames: [0, 1, 2, 3], per: 5) if frostina
+    Stage.pose(razz, "K-RAZ-02", 0, frames: [2, 3], per: 5) if razz
     sky_chase
   end
 
@@ -398,7 +401,10 @@ module FrostThaw
     say(["Ahead, a black dragon with burning gold eyes dives on a town of beehives and honey-halls.",
          "Good Mead. Its breath is a line of light. Roofs go up like paper."])
     px, py = $game_player.x, $game_player.y
+    black = (Stage.actor(:chardalyn_sky, px - 3, py - 5, 2, graphic: "K-CHD-03") rescue nil)   # (K-CHD-03) it dives...
+    Stage.pose(black, "K-CHD-03", 0, frames: [0, 1, 2, 3], per: 6) if black                   # ...and breathes
     Stage.fx("E-17", [px - 3, py - 3], start: 16, frames: 8, ox: 80) rescue nil   # the black dragon's breath (E-17, row 3)
+    Stage.remove_actor(black) if black
     Stage.fx("E-23", [px + 2, py - 3], frames: 6, fps: 10) rescue nil               # a roof goes up (E-23)
     if flag?(:flight_path_seen)
       # A4's root model: the Heralds know its path.
@@ -588,13 +594,19 @@ module FrostThaw
     sky = [px + 2, py - 6]
     dragon_ev = Stage.actor(:chardalyn, sky[0], sky[1], 2, graphic: "FT_chardalyn")
     Stage.walk(dragon_ev, [1] * 4) if dragon_ev
+    Stage.pose(dragon_ev, "K-CHD-04", 0, frames: [2], per: 4) if dragon_ev     # (K-CHD-04) it lands...
     pbSEPlay("Earth3") rescue nil
     $game_screen.start_shake(6, 8, 30) rescue nil
     refugees = $game_map.events.values.select { |e| e.name =~ /^Refugee/ && !e.character_name.to_s.empty? } rescue []
     refugees.each { |e| e.through = true; pbMoveRoute(e, [PBMoveRoute::AwayFromPlayer] * 3) rescue nil }
+    Stage.pose(dragon_ev, "K-CHD-04", 0, frames: [3], per: 4) if dragon_ev     # ...and roars
     say(["The black dragon lands in the square, scattering the crowd. It roars."])
+    Stage.unpose(dragon_ev) if dragon_ev
     mount = Stage.actor(flag?(:rides_frostina) ? :frostina : :razzilith, px - 2, py - 4, 2)
     Stage.walk_to(mount, px - 1, py, face: 6) if mount
+    mount_k = flag?(:rides_frostina) ? %w[K-FRO-01 K-FRO-04] : %w[K-RAZ-01 K-RAZ-04]
+    Stage.pose(mount, mount_k[0], 2, frames: [1, 2, 3], per: 5) if mount      # (K-FRO-01 / K-RAZ-01) down beside you
+    Stage.unpose(mount) if mount
     say(["#{mount_name} comes down beside you, wings spread over the crowd."])
     seams = state[:seams] || 0
     dragon = chardalyn_dragon(55)
@@ -610,8 +622,11 @@ module FrostThaw
       say([seams >= 2 ? "(Its chardalyn seams are cracked all over where you hit them in the air. It's badly hurt.)" :
                         "(One of its chardalyn seams is cracked where you hit it in the air. It's hurt already.)"])
     end
+    Stage.pose(mount, mount_k[1], 2, frames: [1, 2, 3], per: 6) if mount      # (K-FRO-04 / K-RAZ-04) the breath
+    (Stage.fx("E-17", mount, start: flag?(:rides_frostina) ? 0 : 8, frames: 8, ox: 80) rescue nil) if mount
     say(["#{mount_name} breathes first: #{flag?(:rides_frostina) ? 'a white line of frost' : 'a green rush of leaves and light'} across its flank.",
          "It staggers. #{mount_name} stays beside you for the fight."])
+    Stage.unpose(mount) if mount
     dragon.hp = [(dragon.hp * 0.85).floor, 1].max
     # (notes 09 E11: losing here doesn't send you back inside the Wall)
     loop do
@@ -629,7 +644,9 @@ module FrostThaw
          "Where it touched the ground, the cobbles are frozen and scorched in the same stroke."])
     $Trainer.party.each { |p| next if p.fainted?; p.hp = [p.hp - (p.totalhp / 8), 1].max } rescue nil
     say(["(Your team is singed by the burst.)"])            # (notes 09 E22: said, not silent)
+    Stage.pose(dragon_ev, "K-CHD-05", 0, frames: [0, 1, 2], per: 8) if dragon_ev   # (K-CHD-05) it cracks, splits, bursts
     Stage.fx("E-06", dragon_ev, frames: 10, oy: 24) if dragon_ev
+    Stage.pose(dragon_ev, "K-CHD-05", 0, frames: [3], per: 10) if dragon_ev        # shards on the cobbles
     Stage.remove_actor(dragon_ev) if dragon_ev
     say(["The dragon shatters into a thousand pieces of black crystal.",
          "One shard skitters to your feet. In it, a pale face, smiling.",

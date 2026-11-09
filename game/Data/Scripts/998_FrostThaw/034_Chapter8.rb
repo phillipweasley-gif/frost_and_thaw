@@ -1298,12 +1298,15 @@ module FrostThaw
     say(["Below, among the Twenty Stones, the engine's last pulse runs into the dragon's chains."])
     Stage.visit(MAPS[:dragonforge], 26, 19, 8) do
       dragon = Stage.actor(:chardalyn, 26, 15, 2, graphic: "FT_chardalyn")
+      Stage.pose(dragon, "K-CHD-01", 0, frames: [0, 1, 2, 3], per: 8) if dragon   # (K-CHD-01) its eyes light gold
       $game_screen.start_shake(7, 9, 40) rescue nil
-      say(["The sap rivers surge. Chains snap like thunder. A roar shakes the World Tree itself.",
-           "The dragon tears free. Infernal runes blaze. Wings of mirror-glass unfurl.",
+      Stage.pose(dragon, "K-CHD-02", 0, frames: [0, 1], per: 10) if dragon        # (K-CHD-02) it strains at the chains
+      say(["The sap rivers surge. Chains snap like thunder. A roar shakes the World Tree itself."])
+      Stage.pose(dragon, "K-CHD-02", 0, frames: [2], per: 6) if dragon            # ...and they break
+      say(["The dragon tears free. Infernal runes blaze. Wings of mirror-glass unfurl.",
            "In its chest beats another heart, older than Sephek's, and never its own."])
       pbSEPlay("Explosion3") rescue nil
-      Stage.walk(dragon, [4] * 9, wait_for: true) if dragon
+      Stage.pose(dragon, "K-CHD-02", 0, frames: [3], per: 10) if dragon           # straight up
       Stage.remove_actor(dragon) if dragon
       say(["It blasts through the roof and the roots, and rises into the night: toward Ten-Towns."])
     end

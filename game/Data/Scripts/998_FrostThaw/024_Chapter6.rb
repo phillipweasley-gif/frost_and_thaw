@@ -763,8 +763,10 @@ module FrostThaw
     Stage.walk(raz, [37] + [1] * 6, wait_for: false) if raz
     Stage.walk(fro, [37] + [1] * 6, wait_for: true) if fro
     Stage.wait(10)
+    Stage.pose(raz, "K-RAZ-01", 0, frames: [1, 2], per: 5) if raz     # (K-RAZ-01) he comes down hard...
     $game_screen.start_shake(5, 8, 16) rescue nil
     pbSEPlay("Earth3") rescue nil
+    Stage.pose(raz, "K-RAZ-01", 0, frames: [3], per: 6) if raz       # ...and the cobbles crack
     Stage.cry(:FLYGON)
     say(["They're bigger than houses now: one green-gold, one silver-white.",
          herald?(:meat_meat) ? "The green one lands so hard the cobbles crack. He shoves his head into your chest." :
@@ -772,13 +774,18 @@ module FrostThaw
          "RAZZILITH: (a painted thought: a goblin's face, four hundred years of it) ...WAITED.",
          herald?(:meat_meat) ? "(Meat Meat is here. Meat Meat is here now.)" : "MEAT MEAT: (arms round as much of him as she can reach) Meat Meat is here now.",
          cl(:alberica, "(wiping her eyes) Oh, look at the size of him. Who's a big boy? Who waited?")].compact)
+    Stage.unpose(raz) if raz
     Stage.cry(:ALTARIA)
+    Stage.pose(fro, "K-FRO-01", 0, frames: [1, 2, 3], per: 6) if fro     # (K-FRO-01) she settles like snow
+    Stage.unpose(fro) if fro
+    Stage.pose(fro, "K-FRO-02", 0, frames: [1, 2], per: 10) if fro       # (K-FRO-02) head lowered, tilted: the four notes
     say([herald?(:alerion) ? "The white one lands like snow. She looks at you and lowers her head." :
                              "The white one lands like snow. She looks at Alerion and lowers her head to him.",
          herald?(:alerion) ? "Your ring frosts and warms at once." : "His ring frosts and warms at once.",
          "Then she looks at Shade, tilts her head, and hums four notes.",
          "SHADE: (sitting down in the street) ...Hi.",
          cl(:reptin, "(gently) Take your time.")].compact)
+    Stage.unpose(fro) if fro
     if Stage.map?
       lumin = Stage.actor(:lumin, px - 5, py + 2, 6, graphic: "FT_wennen_lumin")
       Stage.walk(lumin, [3, 3]) if lumin
@@ -789,8 +796,8 @@ module FrostThaw
          "LUMIN: Razzilith. Frostina. They haven't touched ground in a century. They waited for you."])
     say(["The dragons lift off together, back to their shrine up on the Canopy-Tier."])
     if raz || fro
-      Stage.walk(raz, [4] * 9, wait_for: false) if raz
-      Stage.walk(fro, [4] * 9, wait_for: true) if fro
+      Stage.pose(raz, "K-RAZ-02", 0, frames: [0, 1, 2, 3], per: 5) if raz   # (K-RAZ-02, K-FRO-03) they take off
+      Stage.pose(fro, "K-FRO-03", 0, frames: [0, 1, 2, 3], per: 5) if fro
       Stage.remove_actor(raz) if raz
       Stage.remove_actor(fro) if fro
     end

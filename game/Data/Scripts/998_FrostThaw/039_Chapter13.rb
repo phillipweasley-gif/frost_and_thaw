@@ -563,7 +563,9 @@ module FrostThaw
       set_flag(:sigil_sephek)
     end
     frostina = Stage.actor(:frostina, 12, 5, 2) rescue nil       # out of the crystal, on the ice
-    Stage.hop(frostina) if frostina
+    # (K-FRO-06) the crystal melting off her, a tumble onto the ice, and a shake like a dog's
+    Stage.pose(frostina, "K-FRO-06", 0, frames: [0, 1, 2, 3, 2, 3], per: 7) if frostina
+    Stage.unpose(frostina) if frostina
     sayc([cl(:meat_meat, "Frosty! Meat Meat missed you. Razzy missed you more. Razzy is LOUD about it.")])
     eline_dies = flag?(:eline_spared) && !flag?(:eline_captured) && !flag?(:eline_fate)
     el = eline_dies ? eline_actor : nil
@@ -653,6 +655,8 @@ module FrostThaw
       $game_screen.start_shake(4, 8, 12) rescue nil
       pbSEPlay("Earth3") rescue nil
       razz = (Stage.actor(:razzilith, px - 2, py - 3, 2) rescue nil)
+      Stage.pose(razz, "K-RAZ-01", 0, frames: [0, 1, 2, 3], per: 5) if razz     # (K-RAZ-01) down through the roof
+      Stage.unpose(razz) if razz
       frost = (Stage.actor(:frostina, px + 1, py, 8) rescue nil)
       Stage.walk_to(frost, px - 1, py - 3) if frost
       say(["Through the roof, Razzilith lands on the ice. Frostina goes to his side.",
@@ -963,6 +967,7 @@ module FrostThaw
     Stage.walk_to(frost, tx, ty - 1, face: 2) if frost
     Stage.walk_to(razz, tx + 1, ty - 1, face: 4) if razz
     Stage.balloon(frost, "B-05", frames: 60) if frost
+    Stage.pose(frost, "K-FRO-02", 0, frames: [1, 2], per: 10) if frost       # (K-FRO-02) her head down to the diamond
     Stage.panel("S-19", fade: 20)                                  # the two dragons turning the wheel (panel, when drawn)
     say(["Frostina lowers her head to the diamond and hums Shimmer's four notes:",
          "the song of the first vessel, who refused her. Razzilith puts his nose beside hers."])
@@ -971,6 +976,7 @@ module FrostThaw
     say([c == 0 ? "Your four notes come out a little flat. Frostina doesn't mind." :
                   "Nobody else makes a sound."])
     Stage.panel_off
+    Stage.unpose(frost) if frost
     $game_screen.start_flash(Color.new(200, 230, 255, 200), 20) rescue nil
     Stage.fx("E-14", frost, oy: 24) if frost
     say(["The light in the diamond flickers, then settles.",

@@ -310,7 +310,9 @@ module FrostThaw
     Stage.panel_off
     say([as(:alerion, "(barely breathing) The Frostmaiden's roc. Frostina's egg fell from her.")])
     if frostina
-      Stage.fx("E-04", frostina, frames: 10, hold: true, wait: true, oy: 8)   # the crystal closes over her
+      Stage.fx("E-04", frostina, frames: 10, wait: false, oy: 8)              # frost blooming round her...
+      Stage.pose(frostina, "K-FRO-05", 1, frames: [0, 1, 2, 3], per: 8)       # (K-FRO-05) ...and the crystal closes over her
+      Stage.unpose(frostina)
       frostina.character_name = "FT_frostina_crystal" rescue nil
     end
     say(["Sephek raises one hand. Ice blooms around Frostina: a crystal, not a cage.",
