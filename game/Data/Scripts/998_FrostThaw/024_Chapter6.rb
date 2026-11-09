@@ -1056,6 +1056,25 @@ module FrostThaw
     end
   end
 
+  # Ambient overlays by map (Art List A-11, A-12): drifting spores in the Undercanopy, embers rising in the
+  # Dragonforge. Like the aurora: on when you arrive, off when you leave; a scene's own overlays leave them be.
+  AMBIENT_OVERLAYS = {
+    "A-11" => { maps: [2068, 2070, 2171],             scroll_x: 0.08, scroll_y: 0.15, opacity: 170 },   # spores, slow
+    "A-12" => { maps: [2075, 2076, 2150, 2151, 2152], scroll_x: 0.0,  scroll_y: 0.6,  opacity: 200 }    # embers, rising
+  }
+  def ambient_overlays
+    return if !$game_map || !active?
+    AMBIENT_OVERLAYS.each do |id, o|
+      if o[:maps].include?($game_map.map_id)
+        Stage.overlay(id, scroll_x: o[:scroll_x], scroll_y: o[:scroll_y], opacity: o[:opacity], fade: 0, ambient: true) if !Stage.overlay?(id)
+      elsif Stage.overlay?(id)
+        Stage.overlay_off(id, fade: 0)
+      end
+    end
+  rescue StandardError => e
+    log("ambient_overlays: #{e.message}")
+  end
+
   # After a scene that took the sky over: give it back.
   def restore_sky
     Stage.overlay_off("O-01", fade: 20)
@@ -1074,6 +1093,7 @@ Events.onMapSceneChange += proc { |_sender, _e|
   begin
     FrostThaw.apply_chapter6_switches
     FrostThaw.rootspire_sky
+    FrostThaw.ambient_overlays
   rescue StandardError => err
     FrostThaw.log("Chapter 6 switches failed: #{err.message}")
   end
