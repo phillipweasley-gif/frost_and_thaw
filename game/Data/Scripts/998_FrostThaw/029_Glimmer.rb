@@ -116,16 +116,18 @@ module FrostThaw
     Stage.fx("E-07", [rx, ry], frames: 8, oy: 40) rescue nil
     $game_screen.start_flash(Color.new(255, 240, 200, 200), 20) rescue nil
     Stage.remove_actor(shade) if shade
-    Stage.panel("S-10", fade: 20)                                  # Shade into the mirror of stars (panel, when drawn)
     sayc(["Shade steps into the mirror. The glass takes them like warm water.",
           "Stars move on the other side. For one breath, nothing at all."])
-    Stage.panel_off
     # Glimmer steps out, and walks back to you
     gl = Stage.actor(:glimmer, rx, ry, 2, graphic: "FT_glimmer") if Stage.map?
     $game_screen.start_flash(Color.new(255, 240, 200, 160), 16) rescue nil
+    # S-10 shows both sides of the glass, Shade going in and Glimmer coming out: it waits for the reveal, so the
+    # panel doesn't give him away during "nothing at all".
+    Stage.panel("S-10", fade: 20)                                  # Shade in, Glimmer out: the mirror of stars
     sayc(["Then the glass bulges. A tall cat-man steps out, stars caught in his fur.",
-          "A midnight-blue coat. The cursed dagger at his hip. In his hand, a unicorn's horn.",
-          "He reaches for the Lumen Shard. A shadow of him forms beside him, eyes black as void.",
+          "A midnight-blue coat. The cursed dagger at his hip. In his hand, a unicorn's horn."])
+    Stage.panel_off
+    sayc(["He reaches for the Lumen Shard. A shadow of him forms beside him, eyes black as void.",
           "SHADOW: Will you bear hope when even the sun freezes?",
           "He doesn't look away from it.",
           "???: ...Yes. Somebody has to.",
