@@ -864,6 +864,6 @@ Your answers are now in the script. Nothing is left open.
 - **Pip the bag-maker is a female Wennen, quite fat and fancy** (owner, 2026-11-09).
 - **Batch 1's Ten-Towns looks are approved** (owner, 2026-11-09: they match the game and their descriptions): Naerth, Keegan, Duvessa, Hlin, Torrga, Edgra, Luna, Zenith, as installed.
 - **Art goes in order of impact** (owner, 2026-11-09): the climax, the endings and each act's turning points first; framing art (title and test cards, flight panels) last.
-- **Meat Meat has white hair, not a mushroom cap** (owner, 2026-11-09), as the script says. Her sprite is built from BW (66) (`tools/meatmeat_build.py`): white twisted hair, green skin, amber eyes, brass goggles in the hair, **purple clothes** (owner).
+- **Meat Meat has white hair, not a mushroom cap** (owner, 2026-11-09), as the script says. Her sprite is built from BW (66) (`tools/meatmeat_build.py`): white twisted hair, green skin, violet eyes, brass goggles in the hair, **purple clothes** (owner).
 - **Wennen have full rabbit heads** (owner, 2026-11-09): muzzle in profile, lateral eyes, long ears, after the domestic rabbit; Pip's sprite set the look, and Luna, Zenith and Lumin are reworked to match.
 - **Zenith Abbott is "she"** (the Undying Rose favour's "her verse"); the Ch3 line that called her "he" is fixed.

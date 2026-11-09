@@ -11,7 +11,7 @@ from PIL import Image
 
 SKIN = {(213, 172, 132): (176, 214, 150), (195, 139, 80): (120, 170, 104), (144, 113, 72): (58, 96, 58)}
 HAIR = {(109, 101, 43): (250, 251, 255), (75, 67, 43): (190, 198, 216), (70, 45, 70): (104, 110, 140),   # strong steps,
-        (72, 142, 77): (214, 150, 40), (52, 108, 47): (150, 96, 24)}     # so the twists show; the green iris goes amber
+        (72, 142, 77): (186, 128, 236), (52, 108, 47): (118, 66, 176)}   # so the twists show; the green iris goes violet (bible)
 BODY = {(72, 142, 77): (150, 108, 196), (52, 108, 47): (92, 58, 132), (85, 181, 86): (200, 172, 232),   # shirt (purple, owner)
         (70, 45, 70): (52, 58, 72), (75, 67, 43): (70, 70, 80), (109, 101, 43): (150, 154, 166),
         # (under the 20-colour limit: the base's shorts and belt take the shirt's and the goggles' tones)
