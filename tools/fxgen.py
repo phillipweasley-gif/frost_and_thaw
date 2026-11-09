@@ -164,7 +164,8 @@ def e16(n=10):
     return frames, ramp_edge([ICE])
 
 # ---------------------------------------------------------------- E-33: a soft column of light going up and fading
-LIGHT = [(110, 88, 44), (200, 166, 92), (238, 214, 150), (252, 244, 210), (255, 255, 250)]
+# Rootspire's beacon, seen from Bryn Shander (Ch9): a green-gold light, the tree's colour
+LIGHT = [(52, 92, 40), (130, 180, 80), (200, 230, 140), (240, 250, 200), (255, 255, 240)]
 
 def e33(n=6):
     rnd = random.Random(33)

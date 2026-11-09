@@ -677,6 +677,7 @@ module FrostThaw
       # (dialogue 09 §4.10: the green light answers what he'd ask next)
       say(["ANDUIN: (touching his face) No. Like something's growing in you."])
     end
+    Stage.fx("E-33", [$game_player.x + 4, $game_player.y + 2], fps: 8) rescue nil   # the beacon far off (E-33)
     say(["South-east, where Dougan's Hole used to be, a green light glows through the snow.",
          "The crown of a tree, piercing the aurora.",
          "DUVESSA: What is that?"])
