@@ -208,6 +208,7 @@ module FrostThaw
     Stage.turn_to(razz, m) if razz && m
     Stage.hop(razz) if razz
     $game_screen.start_flash(Color.new(140, 230, 120, 200), 16) rescue nil
+    (Stage.fx("E-32", m, oy: 24) rescue nil) if m                     # the green bond rising off them (E-32)
     if herald?(:meat_meat)
       say(["Razzilith shoves his snout into your chest hard enough to sit you down in the leaves.",
            "Something green and warm goes in over your heart, and stays."])

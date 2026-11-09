@@ -417,8 +417,10 @@ module FrostThaw
     end
     pbSEPlay("Rain") rescue nil
     ($game_screen.weather(1, 6, 20)) rescue nil          # the rain on screen (notes 07 E7)
+    rain = (Stage.fx("E-24", wyrm, loop_from: 0, fps: 10) rescue nil) if wyrm   # the roots' rain on the lake itself
     sayc(["Rain falls from the roots overhead: clean water, cold, pattering on the lake.",
           "The slick breaks up, drifts apart, and is gone."])
+    (Stage.stop_fx(rain) rescue nil) if rain
     ($game_screen.weather(0, 0, 40)) rescue nil
     sayc(["The lake goes clear. At the bottom, something round and stony glints.",
           with_or_is?(:reptin) ? cl(:alberica, "Reptin, you have to teach me that. For baths.") :
