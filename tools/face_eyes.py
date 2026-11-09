@@ -10,6 +10,8 @@ How the base game draws an open eye (measured on BW (44), BW (35), BW (90); nati
     always on the OUTER lower corner.
   * The eyes sit `row` px below the top of the head (12 on the standard adult body: head top 8, eyes 20-21).
   * `gap` skin pixels between the two blocks (4 on the standard body), centred on the head.
+  * All four colours are taken from the sheet's own palette (pupil = darkest, highlight = lightest, iris and brow =
+    the nearest existing colour to the one asked for), so the eyes never add colours.
   * --brow puts a 2-px brow in that colour on the row above each eye (a stern or older face).
 The walk frames bob, so the head top is found per frame and the eyes move with it.
 Only the four down frames (row 1 of the sheet) are changed; side frames keep their own one-eye profile.
@@ -24,8 +26,12 @@ def hexc(s):
 def stamp(im, row=12, gap=4, iris="3b5d7a", brow=None, dx=0):
     n = im.resize((im.width // 2, im.height // 2), Image.NEAREST)
     px = n.load()
-    P, W, I = hexc("0e080d"), hexc("f8f8f8"), hexc(iris)
-    B = hexc(brow) if brow else None
+    # every eye colour comes from the sheet's own palette, so the colour count doesn't grow:
+    # the pupil is its darkest colour, the highlight its lightest, the iris and brow the nearest to the asked-for ones
+    pal = sorted({p[:3] for p in (n.get_flattened_data() if hasattr(n, "get_flattened_data") else n.getdata()) if p[3]}, key=sum)
+    near = lambda c: min(pal, key=lambda q: sum((a - b) ** 2 for a, b in zip(q, c[:3]))) + (255,)
+    P, W, I = pal[0] + (255,), pal[-1] + (255,), near(hexc(iris))
+    B = near(hexc(brow)) if brow else None
     for col in range(4):
         fx = col * 40
         fr = n.crop((fx, 0, fx + 40, 40))
