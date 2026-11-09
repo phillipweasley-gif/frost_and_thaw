@@ -998,15 +998,17 @@ module FrostThaw
     # (a farewell the player gives: WRITING_GUIDE §3, losses leave room for one)
     c = pbMessage(_INTL("Glimmer looks at you."), [_INTL("Nod"), _INTL("Say his name")], 0)
     say([c == 0 ? "You nod. He nods back, as if you'd agreed on something." : "You say his name. He hears it."])
+    # S-12 as drawn: Glimmer over the stone, the Rimefang gone gold in the forge-light. It carries his last words;
+    # the light rising out of him plays on the map (E-11).
+    Stage.panel("S-12", fade: 20)                                  # a better fire: Glimmer and the reforged dagger
     say([
          "GLIMMER: The cold's gone. Years of it.",
          "GLIMMER: ...Tell Frostina it was a better fire. She'll know what I mean."])
+    Stage.panel_off
     $game_screen.start_flash(Color.new(255, 250, 220, 200), 40) rescue nil
     stage_fade(gl, 120, 8, 3)
     Stage.fx("E-11", gl, oy: 24) rescue nil if gl                     # his light rises out of him (E-11)
-    Stage.panel("S-12", fade: 20)                                  # a better fire: Glimmer kneeling in light (panel, when drawn)
     say(["The light goes up, through the roots, through the tree, toward a plain of stars."])
-    Stage.panel_off
     stage_fade(gl, 0, 10, 4)
     Stage.remove_actor(gl) if gl
     say(["The unicorn's horn goes with it.",

@@ -21,7 +21,7 @@ CAST = [
                            "dagger smoking with cold. Becomes Glimmer."),
     ("Shimmer", "FT_shimmer", "Pale, white hair, a sage-grey dress. A frost stone under her ribs. Auril's first vessel."),
     ("Glimmer", "FT_glimmer", "Shade after the Rift: a tabaxi (cat-folk). Silver-grey fur, amber eyes, a midnight-blue "
-                               "coat, a unicorn horn."),
+                               "coat. Carries Brightmane's unicorn horn IN HIS HAND; no horn on his head."),
     ("Razzy", "FT_razzy", "Small goblin, voiceless. Olive-grey skin, big pointed ears, dark hair, a ragged brown tunic, "
                            "a few green scales on cheek and forearm."),
     ("Razzilith", "FT_razzilith", "Spring dragon: moss-green scales, cream belly, gold wing webs, horns. Big and gentle."),
