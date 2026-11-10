@@ -584,6 +584,34 @@ def p_lunge(sheet):
 
 
 # --- variants (walking sheets) ------------------------------------------------------------------------------------
+OLD_ALB = {(189, 73, 50): (196, 192, 206), (116, 42, 45): (128, 124, 142),      # the red braids gone white
+           (121, 73, 166): (124, 102, 150),                                    # the cap, faded
+           (229, 110, 22): (196, 128, 82), (255, 242, 227): (234, 224, 206)}   # the tunic, worn
+
+def v_alberica_old(sheet):
+    """Alberica many years later (Ch13's coda): her own sprite, so she's still beardless and still herself, with the
+    braids gone white and the cap and tunic faded. Replaces the batch-04 sheet, which had a different face and a
+    grey chin that read as a beard."""
+    out = []
+    for r in range(4):
+        frames = []
+        for c in range(4):
+            fr = cell(sheet, r, c).copy()
+            px = fr.load()
+            for y in range(fr.height):
+                for x in range(fr.width):
+                    p = px[x, y]
+                    if p[3] and p[:3] in OLD_ALB:
+                        px[x, y] = OLD_ALB[p[:3]] + (p[3],)
+            frames.append(fr)
+        out.append(frames)
+    return out
+
+def close_light_edges(path):
+    """White hair vanishes against snow: outline its bare edges (tools/sprite_audit.py's fix, light colours only)."""
+    import sprite_audit
+    sprite_audit.fix(path, path, 150)
+
 def v_alberica_rune(sheet):
     out = []
     for r in range(4):
@@ -651,6 +679,7 @@ JOBS.update({
     "P-THR-02": ("FT_thredra", p_leap),
     "P-THR-04": ("FT_thredra", p_lunge),
     "FT_alberica_rune": ("FT_alberica", v_alberica_rune),
+    "FT_alberica_old": ("FT_alberica", v_alberica_old),
     "FT_sephek_frozen": ("FT_sephek", v_sephek_frozen),
     "FT_var_cracked": ("FT_var", v_var_cracked),
     "FT_thredra_echo": ("FT_thredra", v_thredra_echo),
@@ -670,6 +699,9 @@ def main():
     for pid in ids:
         src, fn = JOBS[pid]
         sheet = save_sheet(fn(load(src)), os.path.join(out, pid + ".png"))
+        if pid == "FT_alberica_old":
+            close_light_edges(os.path.join(out, pid + ".png"))
+            sheet = Image.open(os.path.join(out, pid + ".png")).convert("RGBA")
         made.append((pid, sheet))
         print(pid)
     if prev:

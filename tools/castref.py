@@ -30,8 +30,20 @@ CAST = [
                              "dark clothes. His heart glows with frost-light."),
     ("Auril", "FT_auril_furs", "The Frostmaiden. Pale, long white hair, dark furs. Cold and still."),
     ("Anduin", "FT_anduin", "Reptin's husband. Brown hair, a blue-and-gold tunic."),
+    ("Old Alberica", "FT_alberica_old", "Alberica many years later (the last scene): still beardless, her braids "
+                             "gone white, the purple cap faded, the orange tunic worn."),
+    ("Hellen", "FT_hellen", "Hellen Brightrun: Tamsin's parent, keeps the Hearth (the tavern in Rootspire) and the "
+                             "carved wall. Brown skin, auburn hair under a white cap, a deep red dress. Broad, motherly."),
+    ("Tamsin", "FT_tamsin", "Tamsin Brightrun, Hellen's kid, your age, a would-be Rootwarden. Brown skin, "
+                             "messy brown hair, a moss-green tunic. Carves on the wall too."),
+    ("Zenith Abbott", "FT_wennen_zenith", "Wennen (moon-rabbit folk) abbess. Cream fur, long upright ears, "
+                                          "a dark green robe, a pink rose pinned on her chest. Speaks in verse."),
+    ("Luna Carver", "FT_wennen_luna", "Wennen seer. Lilac-grey fur, a lavender robe, two teal plaits over "
+                                      "her shoulders."),
+    ("Wennen", "FT_wennen_generic", "The rest of the warren: grey or fawn fur, long ears, plain brown "
+                                    "robes. Waist-high to a human."),
 ]
-NOTE = ("Iskra (no sprite): Auril's roc, a giant white bird with aurora trailing from her wings. "
+NOTE = ("Iskra: Auril's roc, a giant white bird with aurora trailing from her wings (her sprite: Graphics/Characters/FT_iskra.png). "
         "Every human-shaped panel figure keeps these skin tones, hair colours and clothes.")
 
 def frame(name, row):

@@ -360,8 +360,7 @@ module FrostThaw
     end
     # the skull (S-12b): the music cuts for it
     pbBGMFade(1.0) rescue nil
-    Stage.panel("S-12b", fade: 24)
-    Stage.panel("S-16", fade: 20)                                  # Solstice out of the fog (panel, when drawn)
+    Stage.panel("S-12b", fade: 24)                                 # Grimskalle out of the fog (S-12b serves the old S-16 request too)
     say(["The fog parts. An island of ice, shaped like a snowflake. Six jagged arms.",
          "On it, a mountain carved into a giant skull, wearing a crown."])
     Stage.panel_off
