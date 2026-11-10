@@ -422,7 +422,7 @@ module FrostThaw
     # (notes/15 E10: Kethan walks in, so he's there when he speaks)
     ash = $game_map.events[event_id] rescue nil
     kx, ky = $game_player.x, $game_player.y + 3
-    ket = Stage.actor(:kethan, kx, ky, 8, graphic: "BW (71)")
+    ket = Stage.actor(:kethan, kx, ky, 8, graphic: "FT_npc_kethan_vale")
     Stage.walk_to(ket, ash.x, ash.y, adjacent: true) if ket && ash
     Stage.turn_to(ket, ash) if ket && ash
     sayc(["Kethan's hand closes on Ash's shoulder from behind. Nobody heard him come. Nor did Ash.",

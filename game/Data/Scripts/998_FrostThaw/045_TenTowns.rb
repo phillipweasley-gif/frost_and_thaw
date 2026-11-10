@@ -554,7 +554,7 @@ module FrostThaw
     if st.map?
       sp[:duvessa] = st.actor(:duvessa, 10, 5, 2, graphic: "FT_speaker_duvessa_shane")
       sp[:naerth] = st.actor(:naerth, 6, 5, 2, graphic: "FT_speaker_naerth")
-      sp[:oarus] = st.actor(:oarus, 14, 5, 2, graphic: "BWHiker")
+      sp[:oarus] = st.actor(:oarus, 14, 5, 2, graphic: "FT_npc_oarus_masthew")
       sp[:kendrick] = st.actor(:kendrick, 8, 9, 8, graphic: "BW (72)")
       sp[:danneth] = st.actor(:danneth, 12, 9, 8, graphic: "BW (54)")
     end

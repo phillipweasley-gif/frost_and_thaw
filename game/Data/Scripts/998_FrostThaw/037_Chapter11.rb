@@ -217,6 +217,8 @@ module FrostThaw
     sephek_minor_avatar
     iskra_takes_frostina(px, py, frostina, sephek)
     down = stage_act(:alerion, :down, dx: 0, dy: 1, dir: 2, per: 6)   # in the snow on the steps
+    raz = stage_event("Razzilith")                            # the twin on the Shrine (2061's event): he rears and roars
+    Stage.pose(raz, "K-RAZ-03", 0, frames: [0, 1, 2, 3], per: 6) if raz && raz.character_name == "FT_razzilith"   # (K-RAZ-03)
     Stage.cry(:SALAMENCE)                                      # Razzilith, at the sky (notes/11 E6)
     if herald?(:alerion)
       say(["You're lying in the snow on the Shrine steps, a hand pressed to your chest.",

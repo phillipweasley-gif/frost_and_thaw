@@ -172,7 +172,7 @@ module FrostThaw
       roost = stage_event("Griffon roost")
       x, y = roost ? [roost.x + 1, roost.y] : [px + 1, py]
       flag?(:council_rheven) ? Stage.actor(:rheven, x, y, 8, graphic: "FT_captain_rheven_stormbranch") :
-                               Stage.actor(:kethan, x, y, 8, graphic: "BW (98)")
+                               Stage.actor(:kethan, x, y, 8, graphic: "FT_npc_kethan_vale")
     when :whale, :bell
       bell = stage_event("Wennen bell")
       x, y = bell ? [bell.x, bell.y - 2] : [px, py - 2]
@@ -186,7 +186,7 @@ module FrostThaw
   # panels drop, in the squall and the fog), with Darrus aboard the Requiem.
   def voyage_guide_beside(route)
     px, py = $game_player.x, $game_player.y
-    look = { "RHEVEN" => "FT_captain_rheven_stormbranch", "KETHAN" => "BW (98)", "MIRA" => "FT_mira_of_the_north_wind",
+    look = { "RHEVEN" => "FT_captain_rheven_stormbranch", "KETHAN" => "FT_npc_kethan_vale", "MIRA" => "FT_mira_of_the_north_wind",
              "FIRST MATE" => "BW_Sailor", "ANGAJUK" => "Followers/WAILORD" }
     tag = voyage_guide_tag(route)
     Stage.actor(tag.downcase.tr(" ", "_").to_sym, px + 2, py - 1, 4, graphic: look[tag])

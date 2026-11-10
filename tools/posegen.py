@@ -18,7 +18,9 @@ the hair blowing, SHI-03 lying bound in ice cords, SHI-04 an ice statue, SEP-02 
 dissolves into frost, REP-04 elf / half wolf / wolf / an elf again on his knees, REP-05 the wolf flashes and is
 caught, REP-06 held to the knees in frost (the wolf tugged at), SEP-05 misty step (frost swirls up, he's gone; played
 back to reappear), SEP-06 the second voice (head tilts, frost-light in the eyes), THR-02 Thredra leaps, THR-04 her
-lunge with the black ice knife.
+lunge with the black ice knife, THR-03 sat on her staff
+rising, THR-05 three of her. GHO-01 the Order's ghost rises out of her body on the bier, GHO-02 lies back into it and
+the body ages to dust.
 Variants: FT_alberica_rune (the rune glowing on her chest), FT_sephek_frozen (in ice), FT_var_cracked (glass
 cracks), FT_thredra_echo (a spectral reflection)."""
 import os, sys, random
@@ -583,6 +585,148 @@ def p_lunge(sheet):
     return out
 
 
+# --- the Order's ghost (Ch5: Alberica's own ghost, old, in the Order's green) and Thredra's battle tricks -------------
+MINT = [(30, 74, 66), (62, 138, 116), (118, 204, 170), (188, 246, 214), (232, 255, 242)]
+
+def alpha(fr, a):
+    out = fr.copy()
+    px = out.load()
+    for y in range(N):
+        for x in range(N):
+            if px[x, y][3]:
+                px[x, y] = px[x, y][:3] + (min(px[x, y][3], a),)
+    return out
+
+def clip_below(fr, y0):
+    out = fr.copy()
+    px = out.load()
+    for y in range(max(0, y0), N):
+        for x in range(N):
+            px[x, y] = (0, 0, 0, 0)
+    return out
+
+def ghost_scene(sheet):
+    """The body laid on the bier (her own sheet turned to lie), the spirit (the same figure in mint, see-through)."""
+    fr = cell(sheet, 0)
+    side = cell(sheet, 2)                                   # laid on her back: the profile turned, face up
+    body = lie(side, Marks(side), ccw=True)
+    spirit = recolour_ramp(fr, MINT, outline=MINT[0])
+    bx0, by0, bx1, by1 = bounds(body)
+    return body, spirit, (by0 + by1) // 2
+
+def rising(body, spirit, mid, k, a=180):
+    """The spirit k pixels up out of the body (its lower part hidden in the body), behind nothing."""
+    out = Image.new("RGBA", (N, N), (0, 0, 0, 0))
+    sx0, sy0, sx1, sy1 = bounds(spirit)
+    up = sy0 - mid + k                                      # k = 0: the spirit's head at the body's middle line
+    s = shift_up(spirit, up) if up > 0 else shift_down(spirit, -up)
+    out.alpha_composite(body)
+    out.alpha_composite(alpha(clip_below(s, mid), a))
+    return out
+
+def p_gho01(sheet):
+    """The body on the bier, then the spirit rising out of it and standing clear (the ghost actor takes over)."""
+    body, spirit, mid = ghost_scene(sheet)
+    sx0, sy0, sx1, sy1 = bounds(spirit)
+    h = sy1 - sy0
+    row = [body, rising(body, spirit, mid, h // 3 + 2), rising(body, spirit, mid, h * 2 // 3 + 2), rising(body, spirit, mid, h + 2)]
+    return [row] * 4
+
+def aged(fr, seed, dust=0.0):
+    """Skin to parchment, robes to grey; with dust, most of it gone and the rest settled."""
+    rnd = random.Random(seed)
+    out = recolour_ramp(fr, [(70, 64, 58), (118, 108, 96), (166, 154, 136), (206, 196, 176), (232, 224, 208)],
+                        outline=(48, 42, 38))
+    if dust:
+        px = out.load()
+        for y in range(N):
+            for x in range(N):
+                if px[x, y][3] and rnd.random() < dust:
+                    px[x, y] = (0, 0, 0, 0)
+        out = shift_down(out, 1)
+    return out
+
+def p_gho02(sheet):
+    """The spirit lies back down into the body; the body ages to parchment, then dust."""
+    body, spirit, mid = ghost_scene(sheet)
+    sx0, sy0, sx1, sy1 = bounds(spirit)
+    h = sy1 - sy0
+    row = [rising(body, spirit, mid, h // 2 + 2, 150), rising(body, spirit, mid, h // 5, 90), aged(body, 7), aged(body, 7, 0.7)]
+    return [row] * 4
+
+STAFF = (84, 87, 99)
+
+def no_staff(fr):
+    """Thredra without her staff: its colour gone, and the outline left standing on its own beside it."""
+    out = fr.copy()
+    px = out.load()
+    for y in range(N):
+        for x in range(N):
+            if px[x, y][3] and px[x, y][:3] == STAFF:
+                px[x, y] = (0, 0, 0, 0)
+    for _ in range(2):
+        for y in range(N):
+            for x in range(N):
+                if px[x, y][3] and is_outline(px[x, y]):
+                    near = [px[x + dx, y + dy] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))
+                            if 0 <= x + dx < N and 0 <= y + dy < N]
+                    if not any(q[3] and not is_outline(q) for q in near):
+                        px[x, y] = (0, 0, 0, 0)
+    return out
+
+def staff_across(fr, y, x0, x1, hook_left=True):
+    """Her black staff laid across under her, two pixels thick and outlined, its hook curling up at one end."""
+    pts = {}
+    for x in range(x0, x1 + 1):
+        pts[(x, y)] = STAFF; pts[(x, y + 1)] = (58, 60, 70)
+    hx = x0 if hook_left else x1
+    d = -1 if hook_left else 1
+    for i, (dx, dy) in enumerate(((0, -1), (0, -2), (-d, -3), (-2 * d, -3))):
+        pts[(hx + dx, y + dy)] = STAFF
+    out = fr.copy()
+    px = out.load()
+    for (x, yy) in pts:
+        for ex, ey in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            q = (x + ex, yy + ey)
+            if q not in pts and 0 <= q[0] < N and 0 <= q[1] < N and not px[q][3]:
+                px[q] = BLACK
+    for (x, yy), c in pts.items():
+        if 0 <= x < N and 0 <= yy < N:
+            px[x, yy] = c + (255,)
+    return out
+
+def p_thr03(sheet):
+    """Thredra seats herself on her staff and rises: sat, then up 3, 6 and 9 pixels."""
+    out = []
+    for r in range(4):
+        fr = no_staff(cell(sheet, r))
+        m = Marks(fr)
+        sat = kneel(fr, m, 4)
+        sm = Marks(sat)
+        x0, y0, x1, y1 = bounds(sat)
+        seat = staff_across(sat, y1 - 5, max(1, x0 - 5), min(N - 2, x1 + 4), hook_left=(r != 2))
+        seat = shift_up(seat, 2)
+        out.append([seat, shift_up(seat, 3), shift_up(seat, 6), shift_up(seat, 9)])
+    return out
+
+def p_thr05(sheet):
+    """There are three of her: one, then two spectral copies flicker out to either side (behind her), and shimmer."""
+    out = []
+    for r in range(4):
+        fr = cell(sheet, r)
+        echo = recolour_ramp(fr, SPECTRE, outline=SPECTRE[0])
+        frames = []
+        for f, (d, a) in enumerate(((0, 0), (11, 200), (12, 140), (11, 200))):
+            im = Image.new("RGBA", (N, N), (0, 0, 0, 0))
+            if d:
+                im.alpha_composite(alpha(shift_x(echo, -d), a))
+                im.alpha_composite(alpha(shift_x(echo, d), a))
+            im.alpha_composite(fr)
+            frames.append(im)
+        out.append(frames)
+    return out
+
+
 # --- variants (walking sheets) ------------------------------------------------------------------------------------
 OLD_ALB = {(189, 73, 50): (196, 192, 206), (116, 42, 45): (128, 124, 142),      # the red braids gone white
            (121, 73, 166): (124, 102, 150),                                    # the cap, faded
@@ -678,6 +822,10 @@ JOBS.update({
     "P-SEP-06": ("FT_sephek", p_sep06),
     "P-THR-02": ("FT_thredra", p_leap),
     "P-THR-04": ("FT_thredra", p_lunge),
+    "P-THR-03": ("FT_thredra", p_thr03),
+    "P-THR-05": ("FT_thredra", p_thr05),
+    "P-GHO-01": ("FT_green_ghost", p_gho01),
+    "P-GHO-02": ("FT_green_ghost", p_gho02),
     "FT_alberica_rune": ("FT_alberica", v_alberica_rune),
     "FT_alberica_old": ("FT_alberica", v_alberica_old),
     "FT_sephek_frozen": ("FT_sephek", v_sephek_frozen),

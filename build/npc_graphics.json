@@ -1,0 +1,57 @@
+{
+ "FT_npc_hruna": {
+  "names": [
+   "Hruna"
+  ],
+  "base": "BW (40)"
+ },
+ "FT_npc_korux": {
+  "names": [
+   "Korux"
+  ],
+  "base": "BW (39)"
+ },
+ "FT_npc_storn": {
+  "names": [
+   "Storn"
+  ],
+  "base": "BW (39)"
+ },
+ "FT_npc_shandar_froth": {
+  "names": [
+   "Shandar Froth"
+  ],
+  "base": "BW (39)"
+ },
+ "FT_npc_tarin_goldlash": {
+  "names": [
+   "Tarin Goldlash"
+  ],
+  "base": "BW (36)"
+ },
+ "FT_npc_copper": {
+  "names": [
+   "Copper Knobberknocker"
+  ],
+  "base": "BW (21)"
+ },
+ "FT_npc_oarus_masthew": {
+  "names": [
+   "Oarus Masthew"
+  ],
+  "base": "BW (36)"
+ },
+ "FT_npc_rilka_dawnshard": {
+  "names": [
+   "Rilka Dawnshard"
+  ],
+  "base": "BW (34)"
+ },
+ "FT_npc_kethan_vale": {
+  "names": [
+   "Captain Kethan Vale",
+   "Captain Kethan Vale (hearing)"
+  ],
+  "base": "BW (80)"
+ }
+}

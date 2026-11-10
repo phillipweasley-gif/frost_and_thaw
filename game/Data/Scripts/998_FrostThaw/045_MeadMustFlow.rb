@@ -793,7 +793,7 @@ module FrostThaw
           "THUG: Nice town. Shame if somebody burned it down. Where's your SPEAKER?"])
     heroes = []
     if Stage.map?
-      [[:shandar, "BWHiker"], [:logger_0, "BW (54)"], [:logger_1, "BW (54)"]].each_with_index do |(k, g), i|
+      [[:shandar, "FT_npc_shandar_froth"], [:logger_0, "BW (54)"], [:logger_1, "BW (54)"]].each_with_index do |(k, g), i|
         h = Stage.actor(k, door[0], door[1], 8, graphic: g) or next
         Stage.walk_to(h, door[0] + i - 1, door[1] - 1, wait_for: i == 2)
         heroes << h
