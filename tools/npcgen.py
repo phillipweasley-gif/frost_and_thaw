@@ -324,7 +324,7 @@ NPCS = {
     "FT_npc_korux": dict(names=["Korux"], base="BW (39)", race="dwarf", bandage=True,
                          recolour=[(B39_BEARD, (90, 62, 44)), (B39_TUNIC, (110, 116, 124), "body")]),
     "FT_npc_storn": dict(names=["Storn"], base="BW (39)", race="dwarf",
-                         recolour=[(B39_BEARD, (178, 70, 38)), (B39_TUNIC, (78, 96, 116), "body")]),
+                         recolour=[(B39_BEARD, (128, 52, 34)), (B39_TUNIC, (70, 92, 126), "body")]),
     # Good Mead's logger (W2): red-bearded shield dwarf, axe on the shoulder
     "FT_npc_shandar_froth": dict(names=["Shandar Froth"], base="BW (39)", race="dwarf",
                                  recolour=[(B39_BEARD, (210, 96, 40)), (B39_TUNIC, (62, 92, 64), "body")]),
