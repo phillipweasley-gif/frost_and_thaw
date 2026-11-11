@@ -114,7 +114,9 @@ module FrostThaw
   def scaled_leader_battle(key)
     register_scaled(key)
     type, name = TRAINERS[key]
-    pbTrainerBattle(type, name, nil, false, [scaled_version, SCALED_CAP[key] || 2].min) ? true : false
+    version = [scaled_version, SCALED_CAP[key] || 2].min
+    graft_reveal(type, name, version)            # the leader's graft comes out first (051)
+    pbTrainerBattle(type, name, nil, false, version) ? true : false
   rescue StandardError => e
     log("scaled_leader_battle(#{key}) failed: #{e.message}")
     false
@@ -587,6 +589,7 @@ module FrostThaw
           cl(:alberica, "Spiritually."),
           cl(:wyn, "(very softly) ...She didn't say no.")])
     Stage.panel_off(fade: 16)
+    hyphora_graft                                # a graft in the party: she knows it (051; never required)
     set_flag(:hyphora_leave)
     set_flag(:road_a_done)
     ($game_switches[SW_HYPHORA] = true; $game_map.need_refresh = true if $game_map) if $game_switches

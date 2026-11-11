@@ -2300,6 +2300,7 @@ module FrostThaw
     Stage.actor(:selrae, $game_player.x, $game_player.y - 2, 2, graphic: "FT_winter_matron_selrae_vorn")
     say(["Out of the blizzard, Selrae. In the dream she's young, eyes the white crystal's colour.",
          "SELRAE: I wanted a little winter for this city. Let me show you what a little winter is."])
+    graft_reveal(:FT_WINTER_MATRON, "Selrae", 0)
     return if !pbTrainerBattle(:FT_WINTER_MATRON, "Selrae", nil, false, 0)
     $Trainer.badges[7] = true
     set_flag(:badge_selrae)

@@ -76,7 +76,7 @@ Every world has a World Tree. Over thousands of years it bears thinking seeds, t
 
 ### Pokémon in this world
 
-People and Pokémon live side by side, as in any Pokémon region. The monsters of *Rime of the Frostmaiden* are Pokémon or fusions: the yetis are Yetitan, the winter wolves are wolf fusions, and the mephits are Snorunt. **Twinning** (DNA Splicers) is the Zhentarim's trade in fused Pokémon, and it starts in Act I with Naerth. **Grafting** is Jade Cocoon-style merging. In Rootspire, Professor Wynsnow teaches it as a licensed art, and he gives you the licence as thanks once he has studied what happened to you. **Joining**, fusing a Pokémon into a person, is forbidden. Avarice did it to Meat Meat and Razzy.
+People and Pokémon live side by side, as in any Pokémon region. The monsters of *Rime of the Frostmaiden* are Pokémon or fusions: the yetis are Yetitan, the winter wolves are wolf fusions, and the mephits are Snorunt. **Twinning** (DNA Splicers) is the Zhentarim's trade in fused Pokémon, and it starts in Act I with Naerth. **Grafting** is Jade Cocoon-style merging. In Rootspire, Professor Wynsnow teaches it as a licensed art, and he gives you the licence as thanks once he has studied what happened to you. His demonstration jar hatches in front of you, and that graft is your first. From then on, some trainers bring grafts of their own (Quill, Hew, Luminara, Mira, Selrae, Tamsin), the party reacts when you graft, and Hyphora recognises one. NPC teams are otherwise never grafted at random. **Joining**, fusing a Pokémon into a person, is forbidden. Avarice did it to Meat Meat and Razzy.
 
 ### Places
 

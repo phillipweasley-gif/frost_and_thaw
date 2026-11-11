@@ -127,6 +127,7 @@ module FrostThaw
                                                            version: 2, items: [:FULLRESTORE], lose_text: "Okay. Okay! You can go.", pokemon: mons })
     # (a send-off, not a wall: win or lose, she lets you go). The rival's last
     # battle gets the rival's last-battle music, not the gym leader's (notes 12 E21).
+    graft_reveal(:FT_TAMSIN_I, "Tamsin", 2)       # her first graft, shown off (051)
     $PokemonGlobal.nextBattleBGM = pbStringToAudioFile(TAMSIN_FINAL_BGM) rescue nil
     won = pbTrainerBattle(:FT_TAMSIN_I, "Tamsin", nil, false, 2, true) ? true : false
     ($PokemonGlobal.nextBattleBGM = nil) rescue nil

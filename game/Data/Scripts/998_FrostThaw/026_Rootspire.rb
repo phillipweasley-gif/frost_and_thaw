@@ -864,7 +864,7 @@ module FrostThaw
           "WYNSNOW: You'll want this. A licence. Grafting: two Pokémon merged in a cocoon of sap.",
           "WYNSNOW: The old way. One gives itself to the other and comes out part of it.",
           "WYNSNOW: Splicers fuse two for a while. A graft is for keeps.",
-          "He taps a jar on the desk. Inside, two Pokémon sleep in one cocoon of sap.",
+          "He holds up a jar. Inside, a Natu and a Sunkern sleep in one cocoon of sap.",
           "WYNSNOW: The rules are the lore. No cocoon holds a stranger: they must be close in level.",
           "WYNSNOW: And seedlings remember: eggs keep their parent's growth.",
           "WYNSNOW: Never into a person. That's Joining, and it's forbidden.",
@@ -875,12 +875,14 @@ module FrostThaw
           # (dialogue 06 §4: the subtext stays subtext)
           (with_or_is?(:meat_meat) && with_or_is?(:alberica) && !herald?(:meat_meat) ?
             (herald?(:alberica) ? "You put a hand on Meat Meat's head, and say nothing." : "Alberica puts a hand on Meat Meat's head, and says nothing.") : nil)].compact)
+    first_graft_gift(event_id)               # the jar hatches; the graft is yours (051, owner 11 Nov)
     set_flag(:grafting_licence)
     set_flag(:grafting)
     add_counter(:story_beats)
     pbMessage(_INTL("\\me[Item get]{1} received a Grafting licence! The Cocoon Chamber is open in every PC.", $Trainer.name))
-    say(["WYNSNOW: Now, excuse me. I'm about to lecture on the Reversal.",
-         "WYNSNOW: Come and watch, if you like. It's about you."])
+    say([flag?(:jar_graft) ? "WYNSNOW: Your own, next time. Pick the one who stays first. Then the one who gives itself." : nil,
+         "WYNSNOW: Now, excuse me. I'm about to lecture on the Reversal.",
+         "WYNSNOW: Come and watch, if you like. It's about you."].compact)
   end
 
   def lecture_in_blue_fire(event_id = nil)
@@ -890,7 +892,7 @@ module FrostThaw
     ($game_screen.start_flash(Color.new(140, 190, 255, 220), 16)) rescue nil
     pbSEPlay("Ice8") rescue nil
     Stage.fx("E-06", stage_spot(wyn_ev, 0, -1).then { |x, y| [x, y - 1] }, frames: 10, oy: 16) rescue nil
-    say(["The air over his desk splits like ice. Blue fire pours through.",
+    say(["The air in front of him splits like ice. Blue fire pours through.",
          "Cold comes with it, four hundred years old: snow, Targos harbour, and something walking.",
          "A wight steps out of the frozen past, wreathed in blue flame. It eyes the class.",
          "WYNSNOW: -less contained than expected! Heralds! Practical demonstration! Please!"], event_id)

@@ -95,6 +95,7 @@ module FrostThaw
     line = TRAINER_INTROS[key]
     line = line.call if line.respond_to?(:call)
     say([line], event_id) if line
+    graft_reveal_key(key, event_id) if respond_to?(:graft_reveal_key)   # a trainer's graft, shown (051)
   end
 end
 

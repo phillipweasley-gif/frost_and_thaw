@@ -3,8 +3,11 @@
 #
 # Grafting is born from the World Tree, so in a Frost & Thaw save it only
 # exists once the story grants it (flag :grafting). Before that the Cocoon
-# Chamber is hidden and trainers don't arrive with grafted teams.
-# Infinite Fusion saves are unaffected.
+# Chamber is hidden.
+# The mod's random grafting of NPC teams never runs in a Frost & Thaw save
+# (2026-11-11): after the licence it rebuilt every hand-made team, and the
+# Pokémon their lines name. The trainers who graft are picked by hand instead,
+# and show it (051_Grafting). Infinite Fusion saves are unaffected.
 #===============================================================================
 module FrostThaw
   module_function
@@ -32,7 +35,7 @@ if defined?(CocoonFusion)
         class << self
           alias ft_orig_apply! apply! unless method_defined?(:ft_orig_apply!)
           def apply!(*args)
-            return if !FrostThaw.grafting_allowed?
+            return if FrostThaw.active?
             ft_orig_apply!(*args)
           end
         end

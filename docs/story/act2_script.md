@@ -255,6 +255,10 @@ In the wax there's a tiny mark: a cracked mirror.
 
 **WYNSNOW** The old way. One gives itself to the other and comes out part of it.
 
+**WYNSNOW** Splicers fuse two for a while. A graft is for keeps.
+
+He holds up a jar. Inside, a Natu and a Sunkern sleep in one cocoon of sap.
+
 **WYNSNOW** The rules are the lore. No cocoon holds a stranger: they must be close in level.
 
 **WYNSNOW** And seedlings remember: eggs keep their parent's growth.
@@ -269,9 +273,32 @@ Meat Meat doesn't say anything else. She puts her hands in her pockets. `[herald
 
 **ALBERICA** *(quietly, a hand on Meat Meat's head)* I've got you, sweetheart.
 
+`[the jar hatches (11 Nov)]` Something taps inside the jar. A crack runs round the cocoon.
+
+**WYNSNOW** Oh! Early. Nothing in this room keeps time with you lot in it.
+
+He tips the cocoon out onto the boards. It rocks. `[cocoon prop, rolling]` The cocoon splits down the middle. One Pokémon climbs out, blinking. `[the graft shown in a Poké Ball window]`
+
+**WYNSNOW** A Natu and a Sunkern. One watches the sun, one drinks it. They were never going to be apart.
+
+**WYNSNOW** Both of them, and neither. The Sunkern gave itself, and the Natu kept it.
+
+**ALBERICA** Oh, look at its face. It's got both their faces. Sort of. Mostly the leaves.
+
+**WYNSNOW** Take it. A licence wants a first graft, and that one will want a window. I work in the dark.
+
+`[You get the graft: Natu + Sunkern, Lv 34. It evolves at its next level.]` `[You receive the Grafting licence.]`
+
+**WYNSNOW** Your own, next time. Pick the one who stays first. Then the one who gives itself.
+
 **WYNSNOW** Now, excuse me. I'm about to lecture on the Reversal. Come and watch, if you like. It's about you.
 
-- **Flow:** Grafting licence (unlocks the Cocoon Chamber). Sets `grafting_licence`. Optional: Lecture in Blue Fire.
+- **Flow:** Grafting licence (unlocks the Cocoon Chamber) and your first graft. Sets `grafting_licence`, `grafting`, `jar_graft`. Optional: Lecture in Blue Fire.
+- **After the licence (051_Grafting):**
+  - **Your first graft at a PC:** if Meat Meat is with you, she stares at where the cocoon was and asks "...Did it hurt? In there?". The first companion with you answers (Alberica: "Slept right through it, love."). She walks round it: "Both still in there. Meat Meat checked." Sets `mm_saw_graft`.
+  - **Later grafts:** one line from whoever's with you, in turn. Alerion: "...It doesn't look lost." Glimmer: "New body, same heart."
+  - **Trainers who graft show it before the battle:** Quill (Xatu + Noctowl), Hew (Golem + Dugtrio), Luminara (Vileplume + Parasect), Mira (Gyarados + Kingdra; possessed, "We know all about keeping"), Selrae (Piloswine + Jynx) and Tamsin's send-off (Furret + her Hoothoot: "It's terrifying. I love it.").
+  - **Hyphora (SC 7A.07):** with a graft in the party, her roots find it: "Two in one. My old way. Someone up in my branches still remembers." She gives a Destiny Knot ("for the next two"). Optional, never a gate.
 
 ### SC 6.06 — Gym 4: Hellen Brightrun
 
