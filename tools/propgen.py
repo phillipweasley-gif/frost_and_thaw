@@ -331,7 +331,38 @@ def snow_slide(stage):
         return out
     return {}
 
+# --- the child's cocoon (Ch8, the Dragonforge; owner, 11 Nov: what people talk about should be there) -------------
+# An amber pod about knee-high, lying on its side, the face of a sleeping child dim inside it; it breathes (a slow
+# glow in the amber). Rows 1 and 3 lying still (an event facing down or right), rows 2 and 4 rolling (moved left or up, it turns
+# over, frame by frame).
+COCOON = [(96, 50, 8), (150, 88, 18), (200, 132, 32), (236, 180, 64), (252, 222, 130)]
+SKIN_C = [(214, 168, 136), (238, 204, 176)]
+
+def cocoon(glow, turn=0):
+    pts = {}
+    cx, cy, rx, ry = 20, 31, 8, 4
+    for y in range(cy - ry, cy + ry + 1):
+        for x in range(cx - rx, cx + rx + 1):
+            d = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2
+            if d <= 1.0:
+                band = (x - cx + turn * 3) % 6
+                c = COCOON[3] if d < 0.35 else COCOON[2] if d < 0.75 else COCOON[1]
+                if band == 0 and d > 0.3:
+                    c = COCOON[1]                         # the pod's seams
+                if glow and d < 0.25:
+                    c = COCOON[4]
+                pts[(x, y)] = c
+    if turn % 2 == 0:                                     # the face, dim, through the amber
+        fx = cx - 3 + (turn // 2)
+        for (dx, dy, c) in ((0, -1, SKIN_C[1]), (1, -1, SKIN_C[1]), (0, 0, SKIN_C[0]), (1, 0, SKIN_C[1]), (2, 0, SKIN_C[0])):
+            pts[(fx + dx, cy + dy)] = c
+        pts[(fx + 1, cy)] = COCOON[0]                     # closed eyes, asleep
+    return outlined(pts)
+
 def ambient_props(out):
+    still, rolling = [cocoon(g) for g in (0, 0, 1, 1)], [cocoon(0, t) for t in range(4)]
+    sheet([still, rolling, still, rolling]).save(
+        os.path.join(out, "FT_prop_cocoon.png"))
     sheet([[snow_slide(st)] * 4 for st in (0, 1, 2, 3)]).save(os.path.join(out, "FT_prop_snowslide.png"))
     spore_beds().save(os.path.join(out, "FT_prop_spores.png"))
     sheet([[bees(p) for p in range(4)]] * 4).save(os.path.join(out, "FT_prop_bees.png"))

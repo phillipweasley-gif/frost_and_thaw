@@ -507,9 +507,12 @@ module FrostThaw
     set_flag(:glass_read)
     if herald?(:wyn)
       # Wyn's sliver of the Sap Gate's mirror, in Sableye's claws since the fall (context/01.md HB2).
-      say(["EPHERIS: (to you) And that one. Your Sableye's got something, like a dragon on a hoard."], event_id)
-      Stage.cry(:SABLEYE)
-      say(["Sableye opens its claws, very slowly. A sliver of mirror, cold as the lake."])
+      sab = ($Trainer.party.find { |p| p && p.species == :SABLEYE } rescue nil)
+      Stage.partner_out(sab)
+      say(["Your Sableye has crept out of its ball, onto the counter, toward all the shiny things.",
+           "EPHERIS: (to you) And that one. Your Sableye's got something, like a dragon on a hoard.",
+           "Sableye opens its claws, very slowly. A sliver of mirror, cold as the lake."], event_id)
+      Stage.partner_in
       give_key(:FT_GATESHARD) rescue nil
       say(["The compass needle swings to it."])
     else

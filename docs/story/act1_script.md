@@ -169,7 +169,7 @@ In the corner, half-hidden by a root, a small sixth figure. No face.
 
 *Tamsin runs out. Goal: "Tamsin's at the lantern stall, just outside the Hearth."*
 
-- **Hellen, after:** "And that's your first, is it? Here. It can have a crust. Everyone eats in my house." / "Don't let Tamsin tell you it was a fair fight, whichever way it went." / "Tamsin's at the wall. Checks it every festival, like it's going to run off."
+- **Hellen, after:** (your Pokémon out of its ball) "There it is. Your first. Here, it can have a crust. Everyone eats in my house." / "Don't let Tamsin tell you it was a fair fight, whichever way it went." / "Tamsin's at the wall. Checks it every festival, like it's going to run off."
 * **Flow:** sets `saw_sixth_figure` (pays off in Chapter 6 and the epilogue).
 
 ### SC 0.04 — Reversal glass `[mode: journey]`

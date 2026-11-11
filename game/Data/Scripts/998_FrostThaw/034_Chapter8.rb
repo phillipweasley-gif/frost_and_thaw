@@ -458,6 +458,8 @@ module FrostThaw
     a = autumn_hand
     darrus = stage_event("Darrus Fell")
     Stage.turn_to(darrus) if darrus
+    # the cocoon he's dragging, on the bridge beside him (it rolls for the rail when he lets go)
+    cocoon = darrus ? Stage.actor(:cocoon, darrus.x + 1, darrus.y, 2, graphic: "FT_prop_cocoon") : nil
     # Context 08 M8-4: who he is (name and role again, two chapters on), and his case.
     say(["#{a[:full]}, #{a[:intro]}, drags a cocoon toward the forge.",
          "#{a[:His]} #{a[:dress]}. Inside the cocoon, a child's face, asleep.",
@@ -483,6 +485,7 @@ module FrostThaw
       autumn_over_rail(darrus)
       say(["#{a[:He]} catches the edge. Below #{a[:him]}, the sap boils.",
            "#{a[:tag]}: (clinging) Help me. Goblin. Help me."])
+      Stage.walk(cocoon, [8]) if cocoon
       c = pbMessage(_INTL("#{first} is hanging from the edge. The child's cocoon is rolling toward the pit."),
                     [_INTL("Take the child"), _INTL("Reach for #{first}")], 0)
       if c == 1
@@ -491,10 +494,12 @@ module FrostThaw
         set_flag(:mm_reached)
       else
         say(["You look at #{a[:him]} for a long moment. Then you pick up the cocoon instead."])
+        Stage.remove_actor(cocoon) if cocoon
         set_flag(:mm_turned)
       end
       autumn_into_sap(darrus)
       say(["#{a[:He]} falls."])
+      Stage.remove_actor(cocoon) if cocoon          # (reaching for him, you left it: now you go back for it)
     else
       mm = with_or_is?(:meat_meat) ? Stage.summon(:meat_meat) : nil
       Stage.walk_to(mm, darrus.x, darrus.y, adjacent: true) if mm && darrus
@@ -506,14 +511,17 @@ module FrostThaw
       say(["#{a[:He]} catches the edge. Below #{a[:him]}, the sap boils.",
            "#{a[:tag]}: (clinging) Help me. Goblin. Help me."])
       Stage.emote(mm, :exclaim) if mm
+      Stage.walk(cocoon, [8]) if cocoon
       c = pbMessage(_INTL("Meat Meat stands over #{a[:him]}, very still. The cocoon rolls."),
                     [_INTL("Grab the cocoon"), _INTL("Shout her name")], 0)
       if c == 1
         set_flag(:you_called_mm)
         say(["You shout her name. Meat Meat looks back at you.",
              "Then she looks at #{a[:him]} for a long moment, and picks up the cocoon instead."])
+        Stage.remove_actor(cocoon) if cocoon
       else
         set_flag(:you_took_cocoon)
+        Stage.remove_actor(cocoon) if cocoon
         say(["You catch the cocoon at the edge of the bridge.",
              "Meat Meat looks at #{a[:him]} for a long moment. Then she takes the child out of your arms."])
       end
@@ -560,6 +568,7 @@ module FrostThaw
   # Context 08 M8-5: Rootwardens the Speaker sent down take the child up, and
   # hear from Meat Meat where Autumn went (the witness for Chapter 9's charge).
   def child_goes_up(a)
+    Stage.actor(:cocoon_held, $game_player.x, $game_player.y + 1, 2, graphic: "FT_prop_cocoon") rescue nil   # in arms
     say(["The child in the cocoon is breathing."])
     pbBGMFade(0.8) rescue nil                    # only the forge's hammering
     w1 = Stage.actor(:rootwarden, 1, 14, 6, graphic: "BW029")

@@ -657,7 +657,7 @@ module FrostThaw
     end
     if with_or_is?(:glimmer)
       say(["The Lumen Shard in Glimmer's chest flares bright as a lamp. He presses a hand over it.",
-           "GLIMMER: (through his teeth) The Shard knows that thing. It wants to go and meet it."])
+           "GLIMMER: (through his teeth) The Shard knows that dragon. It wants to go and meet it."])
     end
     sayc([cl(:alerion, "Chardalyn. Demon-forged. Black as a bad tooth."),
           cl(:alerion, herald?(:meat_meat) ? "Built on what she learned from Razzy. From you. The cold table, with wings." :

@@ -102,7 +102,7 @@ module FrostThaw
   # Dialogue
   #-----------------------------------------------------------------------------
   TEXT.merge!(
-    sapwarden_captain_hesk_after: ["The maps are on the desk. Take them. I don't want to look at them anymore."],
+    sapwarden_captain_hesk_after: ["I mapped these tunnels for her, a year of my life. I don't want to look at them anymore."],
     sapwarden_tamsk_after: ["I can feel my fingers again. That's... that's the worst part, actually."],
     sapwarden_irrel_after: ["That light down there. I've stared at it for days. It stares back."],   # (dialogue 07 §4: not the arrival's words again)
     sapwarden_vesk_after: ["The vines only take the ones who stop moving.", "Keep moving."],

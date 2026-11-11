@@ -566,7 +566,13 @@ module FrostThaw
     say(["Bryn Shander's square is packed. Every town that saw the dragon has sent its people here.",
          "Behind walls that can't stop anything with wings.",
          # (dialogue 09 §4: her own hello, with the reminder in it)
-         "DUVESSA: (on the wall) You. I gave you my seal a month ago. Where have you...",
+         "DUVESSA: (on the wall) You. I gave you my seal a month ago. Where have you..."])
+    # The dragon she means is over the square when she asks (owner, 11 Nov: what people talk about is there);
+    # it comes down later in the scene.
+    sky = [px + 2, py - 6]
+    dragon_ev = Stage.actor(:chardalyn, sky[0], sky[1], 2, graphic: "FT_chardalyn")
+    Stage.cry(:SALAMENCE)
+    say(["Something black wheels over the square, low enough to shadow it.",
          "DUVESSA: Never mind. Never mind! Is that thing yours?"])
     pbMessage(_INTL("Duvessa waits for an answer."), [_INTL("\"No!\""), _INTL("Look at the sky")], 0) if !herald?(:alerion)
     speak(:alerion, "No. It's coming here. It always meant to.", "...It meant to come here.")
@@ -591,8 +597,6 @@ module FrostThaw
     end
     # The dragon lands, and the crowd runs from it (notes 09 E3); your own
     # dragon comes down beside you.
-    sky = [px + 2, py - 6]
-    dragon_ev = Stage.actor(:chardalyn, sky[0], sky[1], 2, graphic: "FT_chardalyn")
     Stage.walk(dragon_ev, [1] * 4) if dragon_ev
     Stage.pose(dragon_ev, "K-CHD-04", 0, frames: [2], per: 4) if dragon_ev     # (K-CHD-04) it lands...
     pbSEPlay("Earth3") rescue nil

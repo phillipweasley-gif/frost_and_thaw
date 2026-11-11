@@ -533,6 +533,7 @@ module FrostThaw
         @hid_player = false
       end
       panel_off(fade: 0)
+      partner_in
       overlay_off(nil, fade: 0)
     rescue StandardError => e
       log("cleanup: #{e.message}")
@@ -619,6 +620,42 @@ module FrostThaw
       end
     rescue StandardError => e
       log("emote: #{e.message}")
+    end
+
+    # Your Pokémon, out of its ball and on screen while people talk about it (owner, 11 Nov: what a line talks
+    # about should be there). Our partners have no walking sprite, so it's shown the way Infinite Fusion shows a
+    # Pokémon in the overworld: its picture in an opened Poké Ball, held up until partner_in.
+    #   pkmn: a Pokemon (default: the first in your party)
+    def partner_out(pkmn = nil)
+      partner_in
+      pkmn ||= ($Trainer.party.find { |p| p && !p.egg? } rescue nil)
+      return if !pkmn
+      data = GameData::Species.get(pkmn.species)
+      loader = BattleSpriteLoader.new
+      pif = if FrostThaw.new_species?(data.id_number)
+              loader.ft_claim(PIFSprite.new(:BASE, data.id_number, nil, ""))
+            else
+              loader.get_pif_sprite_from_species(pkmn.species)
+            end
+      bmp = loader.load_pif_sprite_directly(pif)
+      x, y = Graphics.width / 4, 10
+      back = displayPicture("Graphics/Pictures/Trades/trade_pokeball_open_back", x, y, 1)
+      front = displayPicture("Graphics/Pictures/Trades/trade_pokeball_open_front", x, y, 9999)
+      win = PictureWindow.new(bmp ? bmp.bitmap : "")
+      win.opacity = 0
+      win.x, win.y, win.z = 90, -10, 201
+      @partner = [back, front, win]
+      pbSEPlay("Battle recall") rescue nil
+      cry(pkmn.species)
+    rescue StandardError => e
+      log("partner_out: #{e.message}")
+      partner_in
+    end
+
+    def partner_in
+      return if !@partner
+      @partner.each { |w| w.dispose rescue nil }
+      @partner = nil
     end
 
     def cry(species)

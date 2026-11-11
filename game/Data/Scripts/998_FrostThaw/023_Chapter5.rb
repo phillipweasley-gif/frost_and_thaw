@@ -827,9 +827,9 @@ module FrostThaw
     say(["GHOST: The Order kept the balance here, between life and death. We kept the Heart.",
          ask_as(:alberica, "(very quietly) ...We?", "...We?"),
          "GHOST: The Heart is a root. The last living root of a World Tree.",
-         "GHOST: The Frostmaiden felled that tree long ago. This root is all of it that's left.",
-         journey? ? "You think of Rootspire's roots, the ones you climbed as a kid. This one feels the same." :
-         herald?(:wyn) ? "You think of Rootspire's roots, the ones you walk on watch. This one feels the same." : nil,
+         "GHOST: The Frostmaiden felled that tree long ago. The Heart is all of it that's left.",
+         journey? ? "You think of Rootspire's roots, the ones you climbed as a kid. A World Tree's root, here." :
+         herald?(:wyn) ? "You think of Rootspire's roots, the ones you walk on watch. A World Tree's root, here." : nil,
          cl(:reptin, "(quietly) I can feel it. Under the floor. Like a pulse."),
          "GHOST: It can drink life to stave off death. End a curse, or a winter. The cost is dire.",
          "GHOST: Then the gnolls came, who pray to a hyena-headed demon. They broke in, laughing.",

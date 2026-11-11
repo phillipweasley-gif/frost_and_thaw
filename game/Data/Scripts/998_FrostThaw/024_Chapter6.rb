@@ -347,9 +347,11 @@ module FrostThaw
       ($game_switches[SW_HEARTH] = true; $game_map.need_refresh = true if $game_map) if $game_switches
       add_counter(:story_beats)
       Stage.emote(stage_event(event_id), :exclaim) rescue nil
-      say(["HELLEN: (dropping a tray) No.",
-           herald?(:alberica) ? "She looks at the mural. At you. At the mural again." : "She looks at the mural. At Alberica. At the mural again.",
-           "HELLEN: No. You're the Heralds of Dawn and Dusk. You're on my wall. You're in my BAR.",
+      say(["HELLEN: (dropping a tray) No."], event_id)
+      Stage.panel("S-00", fade: 12)                   # the carving on her wall, the Heralds on it
+      say([herald?(:alberica) ? "She looks at the mural. At you. At the mural again." : "She looks at the mural. At Alberica. At the mural again."], event_id)
+      Stage.panel_off(fade: 12)
+      say(["HELLEN: No. You're the Heralds of Dawn and Dusk. You're on my wall. You're in my BAR.",
            cl(:shade, "We've been called worse. Usually in bars."),
            cl(:alberica, "And we've been in worse bars. This one has a mural of me. I love it here."),
            "HELLEN: Sit. All of you. Eat. You've snow in your hair that fell four hundred years ago."].compact, event_id)

@@ -518,9 +518,12 @@ module FrostThaw
       Stage.turn_to(hellen)
     end
     say(["HELLEN: The carver was my great-great-something. She said the wood grew it."])
-    # Hellen is the only one who notices your first Pokémon (and feeds it).
-    say(["HELLEN: And that's your first, is it? Here. It can have a crust. Everyone eats in my house."])
-    Stage.cry(state[:starter]) if state[:starter]
+    # Hellen is the only one who notices your first Pokémon, and feeds it: it's out of its ball to be fed.
+    Stage.partner_out
+    mon = ($Trainer.party.first rescue nil)
+    say(["#{mon ? mon.name : 'Your Pokémon'} wriggles out of its ball at the smell of the kitchen.",
+         "HELLEN: There it is. Your first. Here, it can have a crust. Everyone eats in my house."])
+    Stage.partner_in
     Stage.pan_back
     Stage.turn_to(tamsin) if tamsin
     say(["TAMSIN: Lanterns! The stall's right outside. Come on, before they sell the good ones."])

@@ -301,6 +301,16 @@ writing. Write a fallback version. Know which parts of the scene can be cut and 
 **Rule:** each scene that requests new art lists the request in `art_requests_W*.md` *and* has a fallback in the
 code: text-only narration if the panel is missing (the existing `rescue nil` pattern).
 
+**G5. What a line talks about is there, or it's named (owner, 11 Nov 2026).** When someone talks about a person,
+creature, object or place, the player should be able to see it on screen at that moment, or the line should name
+it outright. "Over here, before the cake goes" with no cake, "There it is, your first" with the Pokémon in its
+ball, "Is that thing yours?" before the dragon is in the sky: each one sends the player looking for something
+that isn't there. **Rule:** first try to make the thing present: an actor (`Stage.actor`), a prop event, your
+partner out of its ball (`Stage.partner_out` / `partner_in`), a panel, or a camera pan to it. If that would be
+awkward, name it ("the Shard knows that dragon", not "that thing"). Pointing words ("this", "that one", "there
+it is", "look") only ever point at something on screen. Check with `tools/presence_audit.py` over the playthrough
+traces after writing a scene.
+
 ### H. Consistency and continuity
 
 **H1. Inconsistency unravels a story that the player can explore.** In a static medium, gaps can hide. In a game the
