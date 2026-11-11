@@ -378,14 +378,15 @@ module FrostThaw
       ev = me ? nil : Stage.find("Reptin")
       Stage.turn_to(ev) if ev
       say([as(:reptin, "Reptin. I talk us into places and, now and then, out of them."),
-           journey? ? "Reptin. The wolf." : nil,
+           journey? ? "Reptin. The one with the wolf." : nil,
            me ? "You set a frost-etched medallion on the table." : "He sets a frost-etched medallion on the table.",
            as(:reptin, "Someone left this for me. No name, no note. Rude, frankly.")].compact)
     when :alerion
       ev = me ? nil : Stage.find("Alerion")
       Stage.turn_to(ev) if ev
       say([me ? "Your silver ring sits on the table, rimed white." : "A silver ring sits on the table in front of him, rimed white.",
-           as(:alerion, "Alerion. It was on a dock rail. It's cold. That's all I know.")])
+           as(:alerion, "Alerion. It was on a dock rail. It's cold. That's all I know."),
+           journey? && !me ? "Alerion. The one wreathed in snow, on Hellen's wall." : nil].compact)
       alb = Stage.find("Alberica")
       Stage.turn_to(alb, ev || $game_player) if alb
       speak(:alberica, "That's all? Pretty boy, you have to give us more than that.", "...That's all?")
@@ -405,7 +406,9 @@ module FrostThaw
       end
       say(["SHADE: And this turned up in my boot. I don't own boots this nice.",
            "A pale dagger, smoking with cold.",
-           "SHIMMER: I've got a stone. It's under my ribs. Don't ask."])
+           journey? ? "Shade. The one half in shadow, with the knife." : nil,
+           "SHIMMER: I've got a stone. It's under my ribs. Don't ask.",
+           journey? ? "Shimmer. The one in flame. She doesn't look warm." : nil].compact)
       alb = Stage.find("Alberica")
       Stage.turn_to(alb, shimmer || $game_player) if alb
       speak(:alberica, "Oh, now I have to ask.", "...Now I have to ask.")

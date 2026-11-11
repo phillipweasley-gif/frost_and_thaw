@@ -730,7 +730,8 @@ def p_thr05(sheet):
 # --- variants (walking sheets) ------------------------------------------------------------------------------------
 OLD_ALB = {(189, 73, 50): (196, 192, 206), (116, 42, 45): (128, 124, 142),      # the red braids gone white
            (121, 73, 166): (124, 102, 150),                                    # the cap, faded
-           (229, 110, 22): (196, 128, 82), (255, 242, 227): (234, 224, 206)}   # the tunic, worn
+           (229, 110, 22): (196, 128, 82), (255, 242, 227): (234, 224, 206),   # the tunic, worn
+           (196, 28, 44): (150, 70, 74), (226, 64, 76): (176, 98, 100), (132, 16, 32): (104, 52, 58)}  # the red dress, faded
 
 def v_alberica_old(sheet):
     """Alberica many years later (Ch13's coda): her own sprite, so she's still beardless and still herself, with the

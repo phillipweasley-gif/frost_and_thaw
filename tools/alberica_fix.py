@@ -9,6 +9,10 @@
 3. Side-on the cream front panel of her tunic ran the whole width of her body, like an apron worn sideways. A
    panel on the front of a tunic doesn't show side-on: those rows are the tunic's orange.
 
+4. (owner, 11 Nov) Her tunic and trousers are a short red dress: the bodice and skirt red, the front panel a
+   lighter red, bare shoulders and a low neckline from the front, a dark red hem above bare legs, red shoes.
+   The beret stays.
+
     python3 tools/alberica_fix.py [SRC] [DEST]   (default: build/Characters/FT_alberica.png in place)"""
 import sys
 from PIL import Image
@@ -65,6 +69,45 @@ def fix_frame(fr, row):
                     px[x, y] = ORANGE + (255,)
     return fr
 
+RED, RED_L, RED_D = (196, 28, 44), (226, 64, 76), (132, 16, 32)
+TROUSERS, SHOES, SHOULDER, SHOULDER2 = (52, 48, 59), (195, 139, 80), (166, 166, 166), (78, 51, 54)
+
+def dress(fr, row):
+    px = fr.load()
+    tun = rows_with(px, ORANGE)
+    if not tun:
+        return fr
+    t0 = tun[0]
+    trows = [y for y in range(t0, N) if any(px[x, y][3] and px[x, y][:3] == TROUSERS for x in range(N))]
+    hem = trows[0] if trows else None
+    for y in range(N):
+        for x in range(N):
+            p = px[x, y]
+            if not p[3]:
+                continue
+            c = p[:3]
+            if c == ORANGE:
+                px[x, y] = RED + (255,)
+            elif c == CREAM:                              # the bodice's front panel; plain red at the back
+                px[x, y] = (RED if row == 3 else RED_L) + (255,)
+            elif c == TROUSERS and hem is not None and y >= hem:
+                px[x, y] = (RED_D if y == hem else SKIN) + (255,)
+            elif c == SHOES and hem is not None and y > hem:
+                px[x, y] = RED_D + (255,)
+            elif c in (SHOULDER, SHOULDER2) and t0 - 1 <= y <= t0 + 1 and row in (0, 3):
+                px[x, y] = SKIN + (255,)                  # bare shoulders
+    if row == 0:                                          # a low neckline
+        xs = [x for x in range(N) if px[x, t0][3] and px[x, t0][:3] in (RED, RED_L)]
+        if xs:
+            cx = (min(xs) + max(xs)) // 2
+            for x in range(cx - 2, cx + 2):
+                if px[x, t0][:3] in (RED, RED_L):
+                    px[x, t0] = SKIN + (255,)
+            for x in (cx - 1, cx):
+                if px[x, t0 + 1][:3] in (RED, RED_L):
+                    px[x, t0 + 1] = SKIN + (255,)
+    return fr
+
 def main():
     src = sys.argv[1] if len(sys.argv) > 1 else "build/Characters/FT_alberica.png"
     dest = sys.argv[2] if len(sys.argv) > 2 else src
@@ -73,7 +116,7 @@ def main():
     for r in range(4):
         for c in range(4):
             box = (c * N, r * N, c * N + N, r * N + N)
-            out.alpha_composite(fix_frame(im.crop(box), r), box[:2])
+            out.alpha_composite(dress(fix_frame(im.crop(box), r), r), box[:2])
     out.resize((N * 8, N * 8), Image.NEAREST).save(dest)
 
 if __name__ == "__main__":

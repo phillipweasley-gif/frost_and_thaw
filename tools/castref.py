@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 D = "build/Characters/"
 CAST = [
-    ("Alberica", "FT_alberica", "Dwarf bard, a woman, beardless (owner): short and broad. Red hair in braids, a purple cap, an orange tunic. "
+    ("Alberica", "FT_alberica", "Dwarf bard, a woman, beardless (owner): short and broad. Red hair in braids, a purple beret, a short red dress with bare shoulders (owner, 11 Nov). "
                                  "Her pendant (a relic). Loud and warm. Later: Auril's rune scarred on her chest."),
     ("Reptin", "FT_reptin", "Elf moon druid. Slim, fair, short brown hair, a cream shirt and green trousers. "
                              "Married to Anduin. Partner: Bulbasaur."),
@@ -31,7 +31,7 @@ CAST = [
     ("Auril", "FT_auril_furs", "The Frostmaiden. Pale, long white hair, dark furs. Cold and still."),
     ("Anduin", "FT_anduin", "Reptin's husband. Brown hair, a blue-and-gold tunic."),
     ("Old Alberica", "FT_alberica_old", "Alberica many years later (the last scene): still beardless, her braids "
-                             "gone white, the purple cap faded, the orange tunic worn."),
+                             "gone white, the purple beret faded, the red dress faded."),
     ("Hellen", "FT_hellen", "Hellen Brightrun: Tamsin's parent, keeps the Hearth (the tavern in Rootspire) and the "
                              "carved wall. Brown skin, auburn hair under a white cap, a deep red dress. Broad, motherly."),
     ("Tamsin", "FT_tamsin", "Tamsin Brightrun, Hellen's kid, your age, a would-be Rootwarden. Brown skin, "
