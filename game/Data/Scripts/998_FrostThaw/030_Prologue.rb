@@ -147,7 +147,7 @@ module FrostThaw
     say(["Tamsin Brightrun. Hellen's kid, your best friend, set on joining the tree's Rootwardens."])
     Stage.face($game_player, 8)                      # you glance at the gold window
     Stage.wait(16)
-    say(["TAMSIN: Don't look at the window. It's gold. It's always gold. The point is POKÉMON."])
+    say(["TAMSIN: Don't look at the window. It's gold every morning. The point is POKÉMON."])
     Stage.turn_to($game_player, tamsin)
     # Tamsin tows you to the bar, where Hellen has breakfast waiting.
     Stage.escort(tamsin, 6, 6, facing: 4) || Stage.walk_to($game_player, 5, 6)
