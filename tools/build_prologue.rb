@@ -68,7 +68,7 @@ m.npc(16, 23, "BWParasolLady", :pro_festival_goer, dir: 2, name: "Festival-goer"
 m.npc(13, 25, "BW (29)", :pro_mural_kid, dir: 6, name: "Kid")
 m.npc(28, 29, "BW (30)", :pro_lantern_seller, dir: 6, name: "Lantern seller")
 # Tamsin waits by the lift after the battle and leads you to the Hearth...
-tamsin_between(m, 17, 12, SW_PRO_STARTER, SW_PRO_LED, :pro_tamsin_wall, dir: 4)
+tamsin_between(m, 17, 12, SW_PRO_STARTER, SW_PRO_LED, :pro_tamsin_lift, dir: 4)
 autorun_when(m, 1, 0, SW_PRO_STARTER, :pro_market_lead)
 # ...and the first time out of the Hearth, she's outside the door and leads you up to the lift.
 autorun_when(m, 2, 0, SW_PRO_MORNING, :pro_market_up)

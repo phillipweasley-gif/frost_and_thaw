@@ -123,9 +123,7 @@ first. They're on the table, errand-runner." Sets `starter`, `got_starter`.
 
 **WYNSNOW** There. Patched up. Off you go, both of you. I have measuring to do.
 
-**TAMSIN** Hearth! Hellen's got festival cake.
-
-**TAMSIN** And there's something on the wall I want to show you.
+**TAMSIN** The Hearth! The wall! If it moved this year, I'm telling EVERYONE.
 
 **TAMSIN** Come ON, \[Name\]!
 
@@ -149,11 +147,11 @@ first. They're on the table, errand-runner." Sets `starter`, `got_starter`.
 - **Map:** 2090, the mural wall. **Trigger:** coming into the Hearth after the battle (the camera finds Tamsin at the
   far wall). **Music:** *Heralds*.
 
-**TAMSIN** *(!)* Over here! Quick, before the cake goes.
+**TAMSIN** *(!)* Over here! Quick! I think it moved!
 
 *You walk to the wall.*
 
-**TAMSIN** Look. Every festival I check if it moved.
+**TAMSIN** Look. Every festival I check. Every single one.
 
 Five heroes, carved in the living wood. One wreathed in snow, one in flame, one with a lute.
 
@@ -171,7 +169,7 @@ In the corner, half-hidden by a root, a small sixth figure. No face.
 
 *Tamsin runs out. Goal: "Tamsin's at the lantern stall, just outside the Hearth."*
 
-- **Hellen, after:** "There it is. Your first. Here, it can have a crust. Everyone eats in my house." / "Don't let Tamsin tell you it was a fair fight, whichever way it went." / "They're at the wall. They check it every festival."
+- **Hellen, after:** "And that's your first, is it? Here. It can have a crust. Everyone eats in my house." / "Don't let Tamsin tell you it was a fair fight, whichever way it went." / "Tamsin's at the wall. Checks it every festival, like it's going to run off."
 * **Flow:** sets `saw_sixth_figure` (pays off in Chapter 6 and the epilogue).
 
 ### SC 0.04 — Reversal glass `[mode: journey]`
