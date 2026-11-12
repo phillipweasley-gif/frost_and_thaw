@@ -131,8 +131,8 @@ module FrostThaw
   def lantern_rumours
     return false if flag?(:lantern_rumours) || flag?(:festival_night) || rs_day < 3 || !flag?(:wardens_emeritus)
     set_flag(:lantern_rumours)
-    say(["Late in the Hearth's common room. Three nights to the festival's last, and no other talk.",
-         "In the noise, the same thing three times: masked devotees in grey, in the lantern-markets.",
+    say(["Late in the Hearth's common room. Three nights until the festival ends, and nobody talks about anything else.",
+         "Three different people tell you the same thing: masked devotees in grey, in the lantern-markets.",
          "Buying frost-glass. A lot of frost-glass. Nobody makes festival lanterns from frost-glass."])
     c = pbMessage(_INTL("Who do you ask?"),
                   [_INTL("The apprentice nursing one cup all night"),
@@ -359,7 +359,7 @@ module FrostThaw
          "EIRWEN: The Cycle Canticle. What's left is on crystal leaves, all through the catalogue.",
          "EIRWEN: Sung whole, it gives back what the city forgot. Names. Faces. Even yours."], event_id)
     way = pbMessage(_INTL("EIRWEN: How do you want to look?"), [_INTL("By history: when each verse was sung"), _INTL("By faith: what each verse is for")], 0)
-    say([way == 0 ? "You line the leaves up by date. Three verses a year until the Reversal. Then one. None." :
+    say([way == 0 ? "You line the leaves up by date. Three verses a year, right up to the Reversal. After that, one. Then none." :
                     "You sort the leaves by the prayers beside them. Each hard season had a verse, and a use."])
     ok = challenge("Which season's verse was sung for hope?", ["Spring", "Summer", "Winter"], 0)
     ok &&= challenge("And which one, for loss?", ["Winter", "Autumn", "Spring"], 1)
@@ -498,7 +498,7 @@ module FrostThaw
       say(["Hellen listens to all of it with a cloth forgotten in her hands.",
            flag?(:tobin_turned) ? "HELLEN: Tobin. Little Tobin from the bakery. ...I'll put a cup out for him." :
            flag?(:tobin_arrested) ? "HELLEN: (quietly) The frost's stopped. I'll sleep. I keep seeing that boy on my stair." :
-                                    "HELLEN: Gone, and not coming back, the frost. I'll sleep tonight.",
+                                    "HELLEN: The frost's gone, and it's not coming back. I'll sleep tonight.",
            flag?(:tobin_turned) ? "HELLEN: He can come and pray to you properly, in daylight, like everyone else." : nil,
            "HELLEN: That's two I owe you. Brightruns pay what they owe."].compact, event_id)
       give(:LEFTOVERS) if !($PokemonBag.pbHasItem?(:LEFTOVERS) rescue false)
@@ -513,7 +513,7 @@ module FrostThaw
     # (WRITING_GUIDE §9a: the grey cloak is on the dock, behind you)
     cloak = (Stage.actor(:grey_cloak, $game_player.x, $game_player.y + 3, 8, graphic: "FT_halo_disciple_male") rescue nil)
     Stage.pan_to(cloak.x, cloak.y) if cloak
-    say(["Halfway down the Split Dock you notice the grey cloak. Three boats back, since the stair."], event_id)
+    say(["Halfway down the Split Dock you notice the grey cloak. He's been three boats behind you since the stair."], event_id)
     Stage.pan_back if cloak
     c = pbMessage(_INTL("You're being followed..."), [_INTL("Lose him in the fish market"), _INTL("Turn round and face him")], 0)
     if c == 0

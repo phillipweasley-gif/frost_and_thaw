@@ -208,7 +208,7 @@ module FrostThaw
             cl(:meat_meat, "Meat Meat's blood is for Meat Meat. Bite the frost man, Razzy.")])
     end
     if with_or_is?(:alerion)
-      sayc([(herald?(:alerion) ? "SEPHEK: (to you, almost kindly) " : "SEPHEK: (to Alerion, almost kindly) ") + "Two of us hear her. When she wakes, one of us stops."])
+      sayc([(herald?(:alerion) ? "SEPHEK: (to you, almost kindly) " : "SEPHEK: (to Alerion, almost kindly) ") + "We both hear her. When she wakes, only one of us will go on hearing."])
     end
     # (losing to his followers doesn't end the scene: they just keep standing, and he keeps his strength)
     fought = 0
@@ -694,7 +694,7 @@ module FrostThaw
       sayc(["A woman of crystal in machinery: white hair, infernal sigils, a smile like arithmetic.",
             # Ch9's choice read back (whole read T1/V7): you told them in the square, or kept it
             if flag?(:avarice_doubt_shared)
-              herald?(:alberica) ? "You're on your knees. (You said it, in the square. You didn't want to be right.)" :
+              herald?(:alberica) ? "You're on your knees. (I knew it, in the square. I didn't want to be right.)" :
                                    cl(:alberica, "(on her knees) You said. In the square. I didn't want you to be right.")
             else
               herald?(:alberica) ? "You're on your knees. You don't believe it. (No. No, we watched you burn.)" :

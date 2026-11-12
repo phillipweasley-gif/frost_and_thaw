@@ -411,7 +411,7 @@ module FrostThaw
     say(["The laughter on the wind changes. It isn't laughter any more. It's voices."])
     # one line each for who they hear (context 05 M5-4). Anduin stays unnamed in
     # Act I (owner's decision 7): Reptin hears "someone"; Ch9 names him
-    sayc([herald?(:alberica) ? "(A woman laughing the way your mother used to, at a joke you've forgotten.)" :
+    sayc([herald?(:alberica) ? "(A woman laughing the way Mum used to, at a joke I've forgotten.)" :
                                cl(:alberica, "...Mum? (a breath) No. She's been dead twenty years."),
           herald?(:reptin) ? "(Wolves, singing. And under them, his voice. Calling you home.)" :
                              cl(:reptin, "Wolves. And someone calling me home. ...He can't be here.")])
@@ -979,7 +979,7 @@ module FrostThaw
     end
     give_key(:FT_OWLFEATHER)
     say(["In your pack, a carving that wasn't there before: a wolf and a bloom, twined, in old ice.",
-         "Nobody saw who left it. It's warm, like the locket was. Like she was."])
+         "Nobody saw who left it. It's warm, like the locket was."])
     give_key(:FT_WOLFBLOOM)
   end
 
@@ -1201,7 +1201,7 @@ module FrostThaw
     seph = (event_id && $game_map ? $game_map.events[event_id] : nil) rescue nil
     sephek_misty_step(seph)
     sayc(["Frost swirls up round him like a breath. Then he's across the sled, ten paces off.",
-          cl(:alerion, "Misty step. He's not running. He's showing us he can."),
+          cl(:alerion, "He's not running away. He's showing us he can do that."),
           cl(:shimmer, "...I know.")])
     if !flag?(:shimmer_taken)
       sayc([cl(:shade, "He won't fight with children in the street. Neither will we. Not tonight.")])

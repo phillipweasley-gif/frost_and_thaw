@@ -171,7 +171,7 @@ module FrostThaw
             cl(:alerion, "Somebody's banking on that."),
             cl(:meat_meat, "Ice Prince did maths. Meat Meat is proud."),
             flag?(:hew_down) ? "HEW: (from the west tunnels) Caches safe? Then the Annex." : nil,
-            flag?(:hew_down) ? "HEW: I owe you a fight. And ten years of something worse." : nil])
+            flag?(:hew_down) ? "HEW: I owe you a fight. And after that, a confession." : nil])
       state[:goal] = "Hew, in the Guild Annex by the ladder."
     end
   end

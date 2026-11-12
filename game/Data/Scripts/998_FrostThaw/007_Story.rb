@@ -113,9 +113,16 @@ module FrostThaw
     $game_map.need_refresh = true
   end
 
+  # A gift handed over inside a talk lambda arrives after its lines, not before
+  # them (the seer and Cornipus said "Take these" after you'd been given them).
   def talk(key, event_id = nil)
-    say(lines_for(key), event_id)
+    @ft_gifts_later = []
+    lines = lines_for(key)
+    gifts, @ft_gifts_later = @ft_gifts_later, nil
+    say(lines, event_id)
+    gifts.each { |item, qty| give(item, qty) }
   rescue StandardError => e
+    @ft_gifts_later = nil
     log("talk(#{key}) failed: #{e.message}")
   end
 
@@ -618,8 +625,8 @@ module FrostThaw
     Stage.face(rest[:shimmer], 2) if rest[:shimmer]
     say(["Across the hearth, Shimmer turns a little carved wooden cat over and over in her fingers.",
          "SHADE: She does that when she's scared.",
-         "SHIMMER: I'm not scared. I'm counting.",
-         "SHIMMER: Shade carved it when we were kids. Terrible cats. Shade always wanted to be one.",
+         "SHIMMER: I'm not scared. I'm just thinking.",
+         "SHIMMER: Shade carved this when we were kids. Terrible cats, all of them. Shade always wanted to be one.",
          "SHADE: I still do. Cats land on their feet.",
          "SHIMMER: Cats get nine lives. You've used about six."])
     Stage.turn_to(rest[:shade], rest[:shimmer]) if rest[:shade] && rest[:shimmer]
@@ -662,7 +669,7 @@ module FrostThaw
       # Your answer, and Shimmer steps in front of it either way (context/01.md B4).
       c = pbMessage(_INTL("You say..."), [_INTL("\"Far away.\""), _INTL("Nothing.")], -1)
       say([c == 0 ? "SHIMMER: Very far. Somewhere warm. Leave it." : "SHIMMER: Somewhere warm. Leave it.",
-           "NAERTH: Auril. The Frostmaiden. Winter's own goddess. She's had two years of names."], event_id)
+           "NAERTH: Auril. The Frostmaiden. Winter's own goddess. She's been taking names for two years."], event_id)
     else
       say(["NAERTH: Whoever's drawn walks onto the ice, for Auril, winter's goddess. Two years now."], event_id)
     end
@@ -671,7 +678,7 @@ module FrostThaw
          "SHIMMER: (very still) Sephek."], event_id)
     Stage.emote(naerth, :exclaim) if naerth
     say(["NAERTH: ...You know his name. Interesting.",
-         "NAERTH: My seal says you aren't running. Earn it. Town Hall. I'll be waiting.",
+         "NAERTH: You want out of Targos? Earn my seal. Come to the Town Hall. I'll be waiting.",
          journey? && flag?(:glass_read) ? "NAERTH: And the stray wants Dougan's Hole. Everyone wants something." : nil].compact,
         event_id)
     set_flag(:naerth_terms)
@@ -728,7 +735,7 @@ module FrostThaw
       $Trainer.badges[0] = true
       set_flag(:badge_targos)
       $game_switches[3910] = true if $game_switches     # the Targos gate guards step aside
-      say(["NAERTH: Fine. You're not running. You're walking toward something. That's worse."], event_id)
+      say(["NAERTH: Fine. You're not running away from trouble. You're running at it. That's worse."], event_id)
       Stage.approach($game_map.events[event_id]) if event_id && $game_map.events[event_id]   # he hands it over (notes/01 E6)
       say(["NAERTH: Here. My seal. Any guard on the lake will let you pass."], event_id)
       pbMessage(_INTL("\\me[Badge get]{1} received the Speaker's Seal!", $Trainer.name))
@@ -747,7 +754,7 @@ module FrostThaw
   # Twinning: Naerth hands over a few DNA Splicers, and from then on the
   # shops stock them.
   def naerth_splicers(event_id)
-    say(["NAERTH: My last one was two in one skin. Twinning, the traders call it.",
+    say(["NAERTH: You saw my last Pokémon. Two in one skin. Twinning, the traders call it.",
          "NAERTH: You're going into the Dale. Take these. DNA Splicers: two Pokémon in, one out."], event_id)
     pbReceiveItem(:DNASPLICERS, 3)
     say(["NAERTH: Use them from your Bag, on two of your Pokémon. Splice again to pull them apart.",

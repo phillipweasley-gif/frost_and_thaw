@@ -351,7 +351,7 @@ module FrostThaw
     say(["The gallery goes very quiet. Above the bench, the white crystal stays lit.",
          "KELYN: (very quietly) Still lit. ...She told me, the night she came up."])
     told = flag?(:selrae_home)
-    c = pbMessage(_INTL(told ? "(Selrae finds you in the Hall. You told her to come home.)" :
+    c = pbMessage(_INTL(told ? "(Selrae looks for you in the Hall. You told her to come home, and she did.)" :
                                "(Selrae finds you in the Hall, and holds your eye.)"),
                   [_INTL("(Nod to her.)"), _INTL("(Look away.)")], -1)
     say([c == 0 ? "SELRAE: (a breath) ...Thank you. I'll read the charges, because someone must." :
@@ -546,7 +546,7 @@ module FrostThaw
     # Context 11 M11-3: one plant between Luna's word on Iskra (Ch3) and Iskra herself (Ch11)
     if t[:day] >= 2 && !flag?(:frostina_sang_north)
       set_flag(:frostina_sang_north)
-      say(["Last night Frostina sang at the north, up at the crown, for an hour. Nobody knows why."])
+      say(["Last night Frostina sang to the north, up at the crown, for an hour. Nobody knows why."])
     end
     trial_week_goal
   end
@@ -983,7 +983,7 @@ module FrostThaw
       # (dialogue 10 §4: say what it means to him, not what we just saw)
       say(["Anduin is crying.",
            "ANDUIN: ...I'd packed, Reptin. My bag's by the fountain. I'll go and unpack it.",
-           "ANDUIN: Stewards of this. Both of us. ...Ask them with me."])
+           "ANDUIN: We'll look after it together. Both of us. ...Ask the roots with me."])
       pbMessage(_INTL(me ? "(Ask the roots, with him?)" : "(Reptin holds out his hand to Anduin.)"),
                 [_INTL(me ? "(Ask them.)" : "(Step back, and let them ask.)")], 0)
       say(["#{me ? 'Your hand and his' : 'Their two hands'}, flat on the root. It warms under them, and stays warm.",
@@ -1122,10 +1122,10 @@ module FrostThaw
                                                        "Ask Eirwen what the leaves saw Reptin do?"))
       # (dialogue 10 §4: the accused asks it himself, not a lawyer's question)
       if with_or_is?(:reptin)
-        speak(:reptin, "(to Eirwen) You've read the leaves about me, Eirwen. Be unkind, if they are.",
-                       "...Be unkind, if they are.")
+        speak(:reptin, "(to Eirwen) You've read the leaves about me, Eirwen. If they're unkind, tell me anyway.",
+                       "...If they're unkind, tell me anyway.")
       end
-      say(["EIRWEN: (looking up) I saw the Mycolith fight from the Fane. The Forge, I read."])
+      say(["EIRWEN: (looking up) I watched the Mycolith fight from the Fane. The Forge, I've only read about."])
       ok = challenge("Persuade Eirwen.", ["Ask them to read the leaves aloud", "Remind them Reptin planted the tree",
                                          "Tell them they owe you"], [0, 1])
       if ok

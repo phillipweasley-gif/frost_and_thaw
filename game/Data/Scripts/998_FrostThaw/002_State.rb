@@ -58,7 +58,11 @@ module FrostThaw
     HERALD_SWITCH.each { |key, sw| $game_switches[sw] = herald?(key) }
   end
 
+  # What people call you out loud: a Herald's first name ("Alerion", not
+  # "Alerion Froststride"); in Journey Mode, the name you chose.
   def player_display_name
-    return $Trainer ? $Trainer.name : "you"
+    return "you" if !$Trainer
+    return $Trainer.name.split(" ").first if respond_to?(:herald) && herald && $Trainer.name.to_s.include?(" ") && herald != :meat_meat
+    $Trainer.name
   end
 end

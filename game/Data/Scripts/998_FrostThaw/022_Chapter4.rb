@@ -459,7 +459,7 @@ module FrostThaw
                      "South-east, past Good Mead, is Dougan's Hole, where the laughing comes from.",
           cl(:shade, "A laughing hag. In a chasm. Is anything in this Dale just a nice lake?"),
           cl(:alerion, "No."),
-          cl(:alberica, "He's right. That's the worst part.")])
+          cl(:alberica, "Darling, you know there isn't.")])
   end
 
   # SC 4.01 - Good Mead. A rest town on the way, and a face the player needs
@@ -733,10 +733,10 @@ module FrostThaw
     else
       if herald?(:wyn)
         ["You look into the mirror. It shows the Sap Gate at festival. Your post, a lamp still lit.",
-         "The shard in your pocket stays quiet. This glass is wearing your home. It isn't yours."]
+         "The shard in your pocket stays quiet. The mirror is only showing you home. It isn't the way there."]
       elsif journey?
         ["You look into the mirror. It shows Hellen's tavern, warm. Someone is saving your seat.",
-         "The glass in your pocket stays quiet. This mirror is wearing your home. It isn't yours."]
+         "The glass in your pocket stays quiet. The mirror is only showing you home. It isn't the way there."]
       else
         ["You look into the mirror. You're warm in it, by a summer fire. Then it grins."]
       end

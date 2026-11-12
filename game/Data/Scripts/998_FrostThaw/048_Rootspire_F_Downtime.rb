@@ -51,11 +51,11 @@ module FrostThaw
     if with_or_is?(:alberica) && !flag?(:alberica_remember)
       set_flag(:alberica_remember)
       me = herald?(:alberica)
-      say(["Sleep doesn't so much leave #{me ? 'you' : 'Alberica'} as loosen its grip.",
+      say(["#{me ? 'You wake' : 'Alberica wakes'} slowly.",
            "The Hearth's walls are warm with slow sap that glows like sunset caught in amber.",
            "Just before #{me ? 'your' : 'her'} eyes open: whispers. Soft. Like pages turning, somewhere known.",
            "\"Remember... remember...\"",
-           "Then only the tree's heartbeat, through the floor, as if checking whether #{me ? "you've" : "she's"} risen.",
+           "Then just the tree's heartbeat, through the floor.",
            "Outside, someone is singing a tune too old for this age, and too familiar to ignore."])
     end
     if with_or_is?(:alberica) && flag?(:codex_given) && !flag?(:codex_fragments) && dt_ready?(:alberica)
@@ -530,7 +530,7 @@ module FrostThaw
 
   def meat_meat_undercity
     Stage.visit(2055, 20, 14, 2) do
-      say(["Below the Trunk-Tier's hum, the undercity is a lung half breathed out: thin air, cold.",
+      say(["Below the Trunk-Tier, down in the undercity, the air is thin and cold.",
            "#{herald?(:meat_meat) ? 'You slip' : 'Meat Meat slips'} between fungal lanterns and crooked doorways.",
            "Roots curve overhead like ribs.",
            "The lake-wind whistles through the planks. Something down here watches. It always does.",
@@ -630,7 +630,7 @@ module FrostThaw
       sayc([cl(who, answer)].compact)
       side_goal(key, herald?(who) ? goal.sub(/for (Alberica|Meat Meat|Reptin|Alerion)/, "for you") : goal, done: done)
       left = SCRIBE_RIDDLES.count { |k, w, d, *_| !given.include?(k) && !flag?(d) && with_or_is?(w) }
-      say([left > 0 ? "LORN SCRIBE: Come back when that one's found. There are #{left} more." :
+      say([left > 0 ? "LORN SCRIBE: Come back when that one's found. #{left == 1 ? "One more after that" : "#{%w[Zero One Two Three Four][left] || left} more after that"}." :
                       "LORN SCRIBE: That's the last of them. Go on. The tree's waiting."], event_id) if first || left > 0
     elsif !first && !flag?(:lorn_known)
       # (his own story, on a later visit: a want, and a cost)
@@ -726,11 +726,11 @@ module FrostThaw
     say(["FRAGMENT TWO. A shadow in the future.",
          "The ink turns cold. The page curls, frostbitten.",
          "A figure outlined in pale flame, eyes like ice-splinters, watching across centuries.",
-         "Not for #{me ? 'your' : "Alberica's"} power. For #{me ? 'your' : 'her'} memories.",
-         "It isn't only hunting wyrmlings. It's hunting a timeline."])
+         "It isn't after #{me ? 'your' : "Alberica's"} power. It's after #{me ? 'your' : 'her'} memories.",
+         "It isn't only hunting the wyrmlings. It wants to change what already happened."])
     Stage.overlay_off("O-03", fade: 20) rescue nil
     set_flag(:codex_fragment_2)
-    say(["The Codex closes itself with a soft thrum. Two pages more, and they won't come today."])
+    say(["The Codex closes itself with a soft thrum. There are two more pages, but they won't come today."])
     sayc([cl(:meat_meat, "(sliding a plate across) Meat Meat saved you the good bread. Most of it."),
           cl(:alberica, "(very quietly, a hand flat on the Codex) Anchoring it. I was anchoring it.")].compact)
     dt_step!(:alberica)
@@ -759,7 +759,7 @@ module FrostThaw
   # The Festival of Returning Light (024's scene_festival_night calls these)
   #-----------------------------------------------------------------------------
   def festival_opening
-    say(["The seventh night breaks warm, like a breath drawn before a long-awaited song.",
+    say(["The festival's last night comes in warm.",
          "The Festival Circle at the market's heart is strung with frost-glass lanterns. Pipes play.",
          "Children run ahead scattering blossoms, with wyrmling effigies: one white, one green.",
          "The Rootwardens form an honour guard along the root-walk, spears garlanded.",
@@ -772,7 +772,7 @@ module FrostThaw
     say(["KELYN: (raising a chalice) To the five on the wall. And the sixth we never could carve.",
          "KELYN: We're the children of the Reversal, every one. And our Heralds are home."])
     say(["By the empty Summer Throne, the golden vines are dry and brittle. One is charred black.",
-         "Warm sap drips under the chair. Archivist Eirwen watches it drip, frowning. Watching."])
+         "Warm sap drips under the chair. Archivist Eirwen watches it drip, frowning."])
     festival_effigy
   end
 
@@ -787,15 +787,15 @@ module FrostThaw
   def festival_shudder_extras
     sayc([with_or_is?(:glimmer) ? "The Lumen Shard in #{herald?(:glimmer) ? 'your' : "Glimmer's"} chest flashes a painful white." : nil,
           flag?(:twins_met) ? "On the Hall's roof, Razzilith stiffens, nose to the roots, and growls. He doesn't stop." : nil,
-          with_or_is?(:alberica) ? (herald?(:alberica) ? "(Every memory-thread you hold trembles at once, like a web touched.)" :
-                                                         "Alberica's hand goes to her chest. Every memory-thread she holds is trembling.") : nil].compact)
+          with_or_is?(:alberica) ? (herald?(:alberica) ? "(Your hands are shaking. You can't make them stop.)" :
+                                                         "Alberica's hand goes to her chest. She's shaking.") : nil].compact)
   end
 
   def festival_voices
     # (dialogue 06 §4: what the leaves did, not what the Heralds heard from Darrus)
     say([flag?(:met_eirwen) ? "EIRWEN: (quietly, beside you) The leaves wrote that down. They've never written a shudder." :
-                              "EIRWEN: (quietly, beside you) Eirwen, of the Library. The leaves have never shuddered.",
-         "LIRIELLE: (a grey-furred Wennen, fur on end) Heat on the wind. Someone's rewriting it."])
+                              "EIRWEN: (quietly, beside you) Eirwen, of the Library. The leaves have never shuddered like this.",
+         "LIRIELLE: (a grey-furred Wennen, fur on end) The air smells wrong. Like hot metal."])
   end
 
   #-----------------------------------------------------------------------------

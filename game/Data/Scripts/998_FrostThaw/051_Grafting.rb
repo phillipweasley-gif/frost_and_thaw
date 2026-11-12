@@ -27,44 +27,44 @@ module FrostThaw
     # then their teams are as written and nothing is said.
     [:FT_SCHOLAR, "Quill"] => {
       base: :XATU, donor: :NOCTOWL,
-      lines: ["QUILL: My thesis. Xatu took a Noctowl into its cocoon.",
-              "QUILL: One sees the future, one sees in the dark. Now it does both. Mostly."]
+      lines: ["QUILL: This is my thesis project. I grafted a Noctowl into my Xatu.",
+              "QUILL: Xatu sees the future and Noctowl sees in the dark. Now it does both. Most days."]
     },
     # Gym 6 (the Undercanopy): Luminara's ace
     [:FT_SOVEREIGN, "Luminara"] => {
       base: :B45H439, donor: :PARASECT,
-      lines: ["LUMINARA: (wind through reeds) Our oldest way. A flower and a cap, one cocoon.",
-              "LUMINARA: Vileplume gave room. Parasect gave spores. Taste them."]
+      lines: ["LUMINARA: (wind through reeds) My Vileplume took a Parasect into its cocoon. The old way, from before the city.",
+              "LUMINARA: Flower and mushroom in one body. Let us see how you handle its spores."]
     },
     # Gym 5 (the Guild): Hew's ace
     [:FT_GUILDMASTER, "Hew"] => {
       base: :B76H208, donor: :DUGTRIO,
-      lines: ["HEW: (thumbing a Ball) My Golem took a Dugtrio in. My first week in the Guild.",
-              "HEW: Forty years. Best digger I've ever had."]
+      lines: ["HEW: (thumbing a Ball) I grafted a Dugtrio into my Golem, my first week in the Guild.",
+              "HEW: It's been digging for me forty years. Best digger I've ever had."]
     },
     # Gym 6 (the Requiem): Mira, free or not
     [:FT_CORSAIR_CAPT, "Mira"] => {
       base: :B130H196, donor: :KINGDRA,
       lines: -> {
         flag?(:mira_left_possessed) ?
-          ["MIRA: (both voices) Our Gyarados took a Kingdra into its cocoon. A graft is for keeps.",
-           "MIRA: (both voices) We know all about keeping."] :
-          ["MIRA: (a Ball in her fist) My Gyarados took a Kingdra into its cocoon, the year before the mirrors.",
-           "MIRA: Let's see if it still knows me."]
+          ["MIRA: (both voices) Her Gyarados has a Kingdra grafted into it. A graft is for keeps.",
+           "MIRA: (both voices) And we know all about keeping what we take."] :
+          ["MIRA: (a Ball in her fist) I grafted a Kingdra into my Gyarados years ago, before all this.",
+           "MIRA: Let's see if it still remembers me."]
       }
     },
     # Gym 8 (Selrae's dream)
     [:FT_WINTER_MATRON, "Selrae"] => {
       base: :B221H215, donor: :JYNX,
-      lines: ["SELRAE: My Piloswine took a Jynx into its cocoon.",
-              "SELRAE: Even winter can make room for someone."]
+      lines: ["SELRAE: My Piloswine has a Jynx grafted into it. Two ice Pokémon in one body.",
+              "SELRAE: Let me show you what that can do."]
     },
     # The rival's send-off (038 tamsin_final). Only that battle: version 2.
     [:FT_TAMSIN_I, "Tamsin"] => {
       base: :FURRET, donor: :HOOTHOOT, versions: [2],
       pre:   ["TAMSIN: And I've got a licence now. Wynsnow says I'm a natural. LOOK."],
-      lines: ["TAMSIN: Furret and my Hoothoot. One cocoon. Now it can see in the dark.",
-              "TAMSIN: It's terrifying. I love it."]
+      lines: ["TAMSIN: I grafted my Hoothoot into Furret! Now Furret can see in the dark.",
+              "TAMSIN: It stares at me all night. I love it."]
     }
   }
 
@@ -159,8 +159,8 @@ module FrostThaw
     pk.heal
     pbSEPlay("Battle damage weak") rescue nil
     say(["Something taps inside the jar. A crack runs round the cocoon.",
-         "WYNSNOW: Oh! Early. Nothing in this room keeps time with you lot in it.",
-         "He tips the cocoon out onto the boards. It rocks."], event_id)
+         "WYNSNOW: Oh! That's not due for another month.",
+         "He tips the cocoon out onto the floor. It starts to rock."], event_id)
     cocoon = Stage.actor(:jar_cocoon, x, y, 4, graphic: "FT_prop_cocoon")
     Stage.pose(cocoon, "FT_prop_cocoon", 1, frames: [0, 1, 2, 3, 0, 1, 2, 3], per: 5) if cocoon
     pbSEPlay("Battle recall") rescue nil
@@ -168,10 +168,10 @@ module FrostThaw
     begin
       Stage.partner_out(pk)
       sayc(["The cocoon splits down the middle. One Pokémon climbs out, blinking.",
-            "WYNSNOW: A Natu and a Sunkern. One watches the sun, one drinks it. They were never going to be apart.",
-            "WYNSNOW: Both of them, and neither. The Sunkern gave itself, and the Natu kept it.",
-            cl(:alberica, "Oh, look at its face. It's got both their faces. Sort of. Mostly the leaves."),
-            "WYNSNOW: Take it. A licence wants a first graft, and that one will want a window. I work in the dark."], event_id)
+            "WYNSNOW: That was a Natu and a Sunkern. They wouldn't leave each other alone, so I let them graft.",
+            "WYNSNOW: The Natu is the one that stayed. The Sunkern gave itself up to it. That's a graft: one stays, one gives.",
+            cl(:alberica, "Oh, look at it! It's got the Sunkern's leaves on its head!"),
+            "WYNSNOW: Take it. Every new licence should come with one. Besides, it wants sunlight, and my office hasn't got any."], event_id)
     ensure
       Stage.partner_in
     end
@@ -186,10 +186,10 @@ module FrostThaw
   #-----------------------------------------------------------------------------
   GRAFT_LINES = {
     alberica:  "Oh, look at it. Somebody write it a song. ...Fine. Me. I'll do it.",
-    reptin:    "Seedlings remember. That one's going to remember both of them.",
-    wyn:       "(a hand on its head) It smells like both of them. Like a wood after rain.",
-    alerion:   "(looking at it a long time) ...It doesn't look lost.",
-    glimmer:   "(the horn humming in his hand) New body, same heart. It takes a while to fit. It'll get there.",
+    reptin:    "It'll remember both of them, you know. Grafts do.",
+    wyn:       "(a hand on its head) It smells like both of them.",
+    alerion:   "(after a long look) It looks happy. Good.",
+    glimmer:   "(the horn humming in his hand) A new body takes some getting used to. Trust me.",
     shade:     "(turning the Rimefang over) For keeps, the Professor said. ...Nothing's for keeps.",
     meat_meat: "(walking all the way round it) Both still in there. Meat Meat checks every time."
   }
@@ -238,9 +238,9 @@ module FrostThaw
     set_flag(:hyphora_graft)
     begin
       Stage.partner_out(pk)
-      sayc(["A root finds #{pk.name} and stops. It feels it all over, the way you'd read a face in the dark.",
-            "HYPHORA: Two in one. My old way. Someone up in my branches still remembers.",
-            "HYPHORA: Then take this. For the next two.",
+      sayc(["A root reaches out and touches #{pk.name}, feeling it all over.",
+            "HYPHORA: A graft. That's my old way. I didn't know anyone in the city still did it.",
+            "HYPHORA: Here. This will help with your next one.",
             "A thread of root ties itself into a knot in your hand.",
             cl(:wyn, "(very softly) She sounds proud.")])
     ensure

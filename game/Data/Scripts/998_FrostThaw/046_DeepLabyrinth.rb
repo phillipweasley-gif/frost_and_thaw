@@ -487,7 +487,7 @@ module FrostThaw
     when :wennen
       pod = event_id ? $game_map.events[event_id] : nil
       scout = pod ? Stage.actor(:wennen_scout, pod.x, pod.y + 1, 2, graphic: "FT_wennen_generic") : nil
-      say(["Moon-white fur, folded ears, a Wennen scout. Her eyes open: pale gold, and furious.",
+      say(["It's a Wennen scout. Her eyes open: pale gold, and furious.",
            "WENNEN SCOUT: You are not the woman with white hair.",
            "WENNEN SCOUT: Good. I have bitten her once. She did not like it.",
            "She stands, tests her legs, and touches each of your foreheads with two cold fingers.",
@@ -922,7 +922,7 @@ module FrostThaw
     set_flag(:knows_xardorok)
     # (dialogue 07 §4: not a recap of the page)
     sayc([cl(:alberica, "Xardorok. There's a duergar song about him. Nobody sings the end."),
-          cl(:alerion, "Names are coats too.")])
+          cl(:alerion, "She wears names the way she wears people.")])
   end
 
   # H21: the sealed crystal: the glass half of the forge door.
@@ -973,8 +973,8 @@ module FrostThaw
         set_flag(:bloom_bargain)
         wheel(-1)
         say(["You prick your thumb on a petal. The emissary breathes in the drop like perfume.",
-             "EMISSARY: (delighted) Under the ice, in a white room, they'll hand you something cold.",
-             "EMISSARY: Everyone always is. Do say hello to her for me."], event_id)
+             "EMISSARY: (delighted) Under the ice, in a white room, they'll hand you something cold, and you'll take it.",
+             "EMISSARY: Everyone always does. Do say hello to her for me."], event_id)
       else
         say(["EMISSARY: Wise. Dull, but wise. I'll stay. I'm very good at staying."], event_id)
         sayc([cl(:reptin, "(under his breath) Finally, manners. Naturally it's a devil.")])   # (dialogue 07 §4)
@@ -1162,7 +1162,7 @@ module FrostThaw
                     "VAR: Tell Kelyn I kept the peace.",   # (before the Heart Chamber nothing says he's trapped: whole read T4)
          "VAR: Tell Rootspire I'm sorry. Tell them Naerth's debt is paid; I paid it in summers.",
          unmasked ? "VAR: Take this. She left it here because it hums when Sephek's near. She didn't like that." :
-                    "VAR: Take this. It hums when Sephek's near. Somebody didn't like that."])
+                    "VAR: Take this. It hums when Sephek's near. Listen to it."])
     give_key(:FT_VARGLAIVE)
     say(["The mirror goes still. Var's echo raises a hand, and the glass is only glass."])
     Stage.remove_actor(echo) if echo

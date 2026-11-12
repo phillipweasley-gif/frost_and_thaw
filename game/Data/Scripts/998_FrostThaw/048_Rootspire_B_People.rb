@@ -258,7 +258,7 @@ module FrostThaw
       say(["Fur, leather, climbing gear and frost-elk tack. A warm stream runs under the floor.",
            "A rangy woman in a ranger's coat taps a crate with her boot.",
            "TIRENA: You'll want better gear than that. Tirena Loch-Vine. I map the Dale.",
-           "TIRENA: Mapped. Map. The maps change when the aurora shifts. I've stopped arguing.",
+           "TIRENA: Well. I try. The maps change when the aurora shifts. I've stopped arguing.",
            "She digs in the crate and holds something out."], event_id)
       # (notes/15 E19: it does what she says)
       say(["TIRENA: A compass from the frozen side. It doesn't point north.",
@@ -736,7 +736,7 @@ module FrostThaw
       # With Darrus fled, Maera carried the robes below herself, and fell at the Forge (034 autumn_hand).
       say(["A boy with pins in his mouth is minding the shop. The dress form in the back stands empty.",
            "APPRENTICE: Mistress Vell took the gold robes down herself. For a steady hand, she said.",
-           "APPRENTICE: That was when Warden Fell ran. She didn't come back up.",
+           "APPRENTICE: That was the night Warden Fell went down below. She went after him, and she didn't come back up.",
            "APPRENTICE: ...The scarves are still half price. She'd want them sold."], event_id)
       set_flag(:maera_apprentice_heard)        # (a witness at the trial: 036 WITNESSES)
       return mart(:frost_thread, event_id)

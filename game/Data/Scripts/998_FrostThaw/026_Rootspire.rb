@@ -306,12 +306,12 @@ module FrostThaw
                      "AERIE MERCHANT: Everything up here is lighter. Even the prices. Some of the prices."],
     aarakocra_seer: -> {
       if T.flag?(:seer_motes)
-        ["SEER: The frozen half of the world dreams of walking. I have said it. Now I sleep."]
+        ["SEER: The frozen world outside the Wall is waking. I've said it. Now I sleep."]
       else
         T.set_flag(:seer_motes)
         T.give(:FT_AURORALMOTE, 2)
         ["An aarakocra with a bandaged wing sits among bottles of light, watching the aurora.",
-         "SEER: You. The ones from before. Listen. The frozen half of the world dreams of walking.",
+         "SEER: You. The ones from before. Listen: the frozen world outside the Wall is starting to wake.",
          "SEER: Take these. Motes of the northern lights. The market collectors pay well.",
          "SEER: Where you're going, you'll need the money."]
       end
@@ -345,7 +345,7 @@ module FrostThaw
          "CORNIPUS: Nobody's told it it isn't allowed, so.",
          "He taps the railing with one tiny hand.",
          "CORNIPUS: Something under it is listening, for the tree. Ask the mushrooms.",
-         "CORNIPUS: Tell me a story for a seed. ...Four hundred years ago? Take the seed."]
+         "CORNIPUS: Got a story for me? Four hundred years ago, you say? Oh, that's a good one. Here, have a seed."]
       end
     },
     lumen_shard: -> {
@@ -697,7 +697,7 @@ module FrostThaw
       set_flag(:met_pip)
       say(["A tiny tailor sits buried in thread at a stall made mostly of pockets.",
            "A Pokémon in a silk cocoon spins beside her.",
-           "PIP: Twenty pockets? Twenty? Oh, you poor thing. Sit. Let me look at your seams.",
+           "PIP: Only twenty things to a pocket? Oh, you poor thing. Sit. Let me look at your seams.",
            "PIP: Pip! I sew bags. Bigger bags. Bags with more room than they've any right to.",
            "PIP: Bring me badges and money, and I'll make your bag better."], event_id)
       sayc([cl(:alberica, "Darling, I'd let you look at my seams any day of the week."),
@@ -880,7 +880,7 @@ module FrostThaw
     set_flag(:grafting)
     add_counter(:story_beats)
     pbMessage(_INTL("\\me[Item get]{1} received a Grafting licence! The Cocoon Chamber is open in every PC.", $Trainer.name))
-    say([flag?(:jar_graft) ? "WYNSNOW: Your own, next time. Pick the one who stays first. Then the one who gives itself." : nil,
+    say([flag?(:jar_graft) ? "WYNSNOW: Next time, do your own at any PC. Choose the one that stays first, then the one that gives itself." : nil,
          "WYNSNOW: Now, excuse me. I'm about to lecture on the Reversal.",
          "WYNSNOW: Come and watch, if you like. It's about you."].compact)
   end
@@ -933,7 +933,7 @@ module FrostThaw
                   "High above, two shapes circle the crown of the World Tree."], event_id)
     end
     return if respond_to?(:orb_halo_scene) && !orb_halo_scene   # the Halo splinter at the orb first (048)
-    sayc(["LUMIN: (still shaking) You came up just in time. The whole Canopy felt them land for you.",
+    sayc(["LUMIN: (still shaking) You came up just in time. The dragons have been waiting up here for you.",
           "LUMIN: Put your hands to the orb. It shows the guides what they're guiding.",
           "The orb pulses: two heartbeats, out of step.",
           "LUMIN: Two roads for each of you. Not what will be. What might.",
@@ -996,12 +996,12 @@ module FrostThaw
                "Alerion stands in a black forest under a sky that never knew dawn.",
           me ? nil : "Between the trunks, two pale moons: Frostina's eyes.",
           "\"Guardian of the Dark Half. Keeper of stillness, and the endings that turn the wheel.\"",
-          "Shimmer, her breath silver in the night, her eyes locked on a man with a shield. Him.",
-          me ? "(You were her shield, once, a whole life ago. You know her eyes. They're Frostina's.)" :
-               "He was Shimmer's shield, a life ago. And Frostina carries her eyes, and her soul's echo.",
+          "Shimmer, her breath silver in the night, looking at a man with a shield. It's Alerion.",
+          me ? "(You were Shimmer's shield, once, a whole life ago. You know her eyes. They're Frostina's.)" :
+               "In another life, long ago, he guarded her. Now Frostina has her eyes, and something of her soul.",
           "Two roads open through the black trees.",
           "On one: a sentinel at the northern ruins, a sword in the snow, keeping watch on a silence.",
-          "On the other: a shape under great white wings, and Frostina's cry. A name, forgotten.",
+          "On the other: a shape under great white wings, and Frostina crying out a name he's forgotten.",
           "Both roads are his."].compact)
   end
 
@@ -1058,11 +1058,11 @@ module FrostThaw
           "\"Warden of Life and Death. Without either, there is only stillness: the enemy.\"",
           me ? "(The old wolf-bite in your hand sears: fire beneath snow. You remember the starving pack.)" :
                "Reptin's old wolf-bite sears, fire beneath snow. He remembers the starving pack.",
-          "Mercy bound him then, as the curse bound him to hunger. Both bind him still.",
+          "He fed them out of mercy, and one of them gave him the curse. He carries both.",
           "Two visions, one on each side of the graveyard wall.",
           "In one: he walks between the living and the dying with a lantern, and neither is afraid.",
           "In the other: the beast tears free of him, and somewhere in the dark two dragons cower.",
-          "Even ruin is motion. His charge isn't to choose one. It's to keep both moving."])
+          "His job isn't to pick one. It's to keep the wheel turning between them."])
   end
 
   #-----------------------------------------------------------------------------
@@ -1342,8 +1342,8 @@ module FrostThaw
     return if !trainer(:masked_trader, event_id)
     set_flag(:spy_unmasked)
     say(["The trader's mask cracks. Underneath: the cracked-snowflake tattoo of the Fractured Halo.",
-         "MASKED TRADER: She sent me for the tree's name. The little tree.",
-         "MASKED TRADER: The Matron says a god-sapling's name is worth a goddess's body.",
+         "MASKED TRADER: The Matron sent me to learn the little tree's true name.",
+         "MASKED TRADER: She says with a young god's name, the goddess could have a body again.",
          "He breaks a vial of frost against the floor."], event_id)
     tr = stage_event(event_id)
     Stage.fx("E-09", stage_spot(tr), frames: 9, oy: 16) rescue nil
@@ -1525,7 +1525,7 @@ module FrostThaw
          herald?(:alerion) ? "(Your brother's name. The one you tried to bring back.)" : "Alerion's brother's name. The one he tried to bring back."])
     set_flag(:talion_foreshadowed)
     sayc([cl(:alberica, "(quietly, a hand on his arm) Pretty boy. Breathe."),
-          "As #{herald?(:alerion) ? 'you reach' : 'Alerion reaches'} for the cloak, the reflection breathes.",
+          "As #{herald?(:alerion) ? 'you reach' : 'Alerion reaches'} for the cloak, the frozen hunter breathes.",
           "\"Finish the step I never could.\"",
           "Tracks lead away from him along the Wall: something big and hungry, heading for the city.",
           "The cloak won't come free. Not yet."].compact)
@@ -1546,7 +1546,7 @@ module FrostThaw
       add_counter(:story_beats)
       sayc(["The moment the stalker's caught, the hunter's cloak slides into #{herald?(:alerion) ? 'your' : "Alerion's"} hands.",
             "The mail cracks and falls. There's no one in it. Just two footprints, turned toward home.",
-            cl(:alerion, "Winter remembers those who walk softly. I'll walk softly."),
+            cl(:alerion, "Walk softly, he'd say. I'll try."),
             cl(:meat_meat, "Ice Prince walks very loud. Meat Meat has heard him. Meat Meat will help."),
             (with_or_is?(:meat_meat) ? cl(:alerion, "...Thank you.") : nil),
             "A mantle woven from frost-hawk feathers and the scales of a long-dead dragon.",

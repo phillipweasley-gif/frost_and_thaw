@@ -929,8 +929,8 @@ check("the dossier's faction events (9 by map, 5 at the Hearth: Autumn's leaf is
   FT::FACTION_EVENTS.size == 9 && FT::HEARTH_VIGNETTES.size == 5 && FT::HEARTH_VIGNETTES.any? { |k, *_| k == :autumn_pillow } && FT::AMBIENT.size == 11 }
 check("all seven of Alberica's rumours are in the tavern") { FT::TAVERN_RUMOURS.size == 7 }
 f2_src = %w[023_Chapter5 024_Chapter6 026_Rootspire 029_Glimmer 048_Rootspire_B_People 048_Rootspire_E_Nights 048_Rootspire_F_Downtime].to_h { |f| [f, File.read(File.join(FT_DIR, "#{f}.rb"))] }
-{ "026_Rootspire" => ["her breath silver in the night, her eyes locked on a man with a shield", "Both roads are his.", "in the tears there is fire",
-                      "they blaze with life", "two dragons cower", "wolf-bite in your hand", "as the curse bound him to hunger", "Even ruin is motion",
+{ "026_Rootspire" => ["her breath silver in the night, looking at a man with a shield", "Both roads are his.", "in the tears there is fire",
+                      "they blaze with life", "two dragons cower", "wolf-bite in your hand", "one of them gave him the curse", "keep the wheel turning between them",
                       "...Still gone. Of course it is.", "sing a line of the Cycle Canticle", "The Vault of the North", "the tender and the terrible both",
                       "Here they're scripture", "chronal leaves", "Verse Eleven"],
   "024_Chapter6" => ["Wardens Emeritus of Rootspire", "I still can't sleep in a cold room", "Expansion is a wall, Kelyn", "Mirror-ice"],
@@ -1061,6 +1061,50 @@ check("a line an NPC answers is said aloud by choice in Herald Mode, and spoken 
 check("the loop re-earns the Wheel and gives no companion twice") {
   !FT::LOOP_KEEP_COUNTERS.include?(:wheel) && FT::LOOP_GIFTS.include?(:sahnar_with_you) &&
     FT::LOOP_KEEP_STATE.include?(:loop_gifts) && FT::LOOP_KEEP.include?(:razzy_blanket) }
+
+# --- the Cup of Seasons (postgame) -------------------------------------------
+cup_mons = FT::CUP_TEAMS.values.flat_map { |t| t[2].map(&:first) } + FT::CUP_TAMSIN_ACE.values + %i[FURRET NOCTOWL JUMPLUFF AMPHAROS LANTURN]
+check("every Cup Pokémon is a real species or fusion (#{cup_mons.uniq.size})") {
+  bad = cup_mons.uniq.reject { |sp| (GameData::Species.get(sp) rescue nil) }
+  bad.empty? || (puts bad.inspect; false) }
+check("every Cup trainer class exists, and each opponent has an entrance line") {
+  types = FT::CUP_TEAMS.values.map(&:first) + FT::CUP_TAMSIN_ACE.keys
+  types.all? { |t| GameData::TrainerType.try_get(t) } && FT::CUP_TEAMS.keys.all? { |k| FT::CUP_INTROS[k] } }
+check("the Cup draws only people still in the city") {
+  had = %i[mira_left_possessed mira_freed_late colony_exiled selrae_sentenced].map { |f| [f, FT.flag?(f)] }
+  had.each { |f, _| FT.state[:flags]&.delete(f) }
+  full = FT.cup_pool
+  FT.set_flag(:mira_left_possessed); FT.set_flag(:colony_exiled); FT.set_flag(:selrae_sentenced)
+  thin = FT.cup_pool
+  had.each { |f, v| v ? FT.set_flag(f) : FT.state[:flags]&.delete(f) }
+  full.size == 7 && thin.sort == %i[duvessa hellen hew kethan].sort }
+check("a Cup run: three rounds and the final make a champion; a loss puts you out") {
+  had = %i[cup_champion].map { |f| [f, FT.flag?(f)] }
+  FT.state[:flags]&.delete(:cup_champion)
+  $battle_result = true; $got_items = []
+  won = FT.run_cup
+  champ = FT.flag?(:cup_champion) && $got_items.any? { |i, _| i == :MASTERBALL }
+  final = (GameData::Trainer.try_get(FT.cup_tamsin_type, "Tamsin", FT::CUP_VERSION + FT::CUP_ROUNDS) rescue nil)
+  $battle_result = false
+  lost = FT.run_cup
+  had.each { |f, v| v ? FT.set_flag(f) : FT.state[:flags]&.delete(f) }
+  won && champ && !lost && final && final.pokemon.size == 6 }
+
+check("every trade's Pokémon are real, and a trade runs once") {
+  real = FT::TRADES.values.all? { |t| GameData::Species.get(t[:want]) && GameData::Species.get(t[:give]) rescue false }
+  had = FT.flag?(:trade_gurk)
+  FT.state[:flags]&.delete(:trade_gurk); FT.state[:flags]&.delete(:trade_gurk_asked)
+  party = $Trainer.party
+  $Trainer.instance_variable_set(:@party, [Struct.new(:species) { def egg? = false }.new(:MAGCARGO)]) rescue nil
+  $traded = nil; gv = $game_variables; $game_variables = Array.new(10, 0)
+  FT.singleton_class.send(:define_method, :pbChooseTradablePokemon) { |a, b, *_| $game_variables[a] = 0 }
+  FT.singleton_class.send(:define_method, :pbStartTrade) { |i, sp, nick, *_| $traded = [i, sp, nick] }
+  FT.offer_trade(:gurk)
+  once = $traded == [0, :SCYTHER, "Whetstone"] && FT.flag?(:trade_gurk)
+  $traded = nil; FT.offer_trade(:gurk)
+  $Trainer.instance_variable_set(:@party, party) rescue nil; $game_variables = gv
+  FT.state[:flags]&.delete(:trade_gurk) if !had
+  real && once && $traded.nil? }
 
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

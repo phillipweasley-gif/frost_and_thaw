@@ -97,10 +97,10 @@ module FrostThaw
       ["Reptin tosses the last of his bread to a stray. He doesn't even think about it.",
        "{A's} heartbeat slows. Slower. Slower.",
        "Then it slams back, fast, as if somebody had tested how long {she} could go without one."],
-      ["Reptin decides a life, gently, one way and then the other. Balance.",
+      ["Reptin crouches by a wilting sapling and waits, as if deciding whether it lives. It does.",
        "{A's} heart stops. A full breath. Two. Then it hammers, and {she} [[has|have]] to sit.",
        "\"Life and death march only so long as they move.\""],
-      ["Reptin does what a Warden of Life and Death does, and {A's} blood freezes.",
+      ["Reptin closes a dying animal's eyes with one hand, gently, and {A's} blood freezes.",
        "For a heartbeat {she} [[sees|see]] him dead in the snow, and all of them with him.",
        "\"Stop them, and all is mine. You could stop them, Alberica. So easily.\""]
     ]]
@@ -177,7 +177,7 @@ module FrostThaw
     omen_secret_choice if me && !state[:omen_secret] && (flag?(:trials_open) || lines.any? { |l| l.include?("told anyone") })
     # The first line about her family's key meets the bargain (context 09 §6)
     if me && lines.any? { |l| l.include?("Memory keeps the key") }
-      say(["(The key. Gran's pendant. The Vault stays shut.)", "(That was the bargain, and you never asked what it cost.)"])
+      say(["(The key. Gran's pendant. The Vault stays shut.)", "(That was the bargain, and I never asked what it cost.)"])
     end
 
     if first && !me
@@ -250,7 +250,7 @@ module FrostThaw
   # rest, one a night, oldest first. [flag, line] (or a lambda for the line).
   CITY_NEWS = [
     # (story/15 §3, 15.05: Tobin comes back)
-    [:tobin_turned, "HELLEN: Little Tobin came in at noon. Lit a candle at your shrine. In daylight. Loudly."],
+    [:tobin_turned, "HELLEN: Little Tobin came in at noon. Lit a candle at your shrine. In broad daylight, where everyone could see."],
     [:sliver_freed, "HELLEN: The Bazaar says you pulled a sliver of Auril out of Elitha's ice. Is that true?"],
     [:ash_exposed, "HELLEN: Ash. Ash, of all of them. He used to carry my barrels for nothing. ...Eat."],
     [:cellar_cleared, "HELLEN: Rootwardens marched a Halo preacher up the south steps today. Your doing, I hear."],
@@ -269,7 +269,7 @@ module FrostThaw
     [:glimmer_judgment, "HELLEN: Lumin says the orb went white-hot and somebody with six wings stood in it. Six!"],
     [:yeti_child_home, "HELLEN: The pelt-hunter's gone from the Bazaar. Somebody gave his cub back to its mother."],
     [:rootwardens_favour, "HELLEN: Rheven was in. He says the Rootwardens owe you. Rheven doesn't owe anybody."],
-    [:council_support, "HELLEN: The Council stood up for you. All of it. In my lifetime! Sit. Eat. Councillors."],
+    [:council_support, "HELLEN: The Council stood up for you. All of it. In my lifetime! Sit. Eat, Councillors."],
     [:rootspire_haven, "HELLEN: There's a bed upstairs with your names carved on it now. Tamsin did it. Badly."],
     [:wynsnow_confessed, "HELLEN: The Professor came in looking sheepish. Bought everyone a drink. Wouldn't say why."],
     [:chronal_anchored, "HELLEN: You've got the tree's colour about you, love. Like you were born under it."],
@@ -363,7 +363,7 @@ module FrostThaw
     if with_or_is?(:meat_meat)
       sayc(["Down at the dragons' hollow, Razzilith hasn't slept. He's clawing at the Shrine floor.",
             herald?(:meat_meat) ? "(Through the bond: a dragon, made, not born. A heart in it, screaming. And her.)" :
-                                  "Through the bond Meat Meat feels it, and goes grey. A made dragon. A screaming heart. Her.",
+                                  "Through the bond, Meat Meat feels what he feels, and goes grey: a dragon made on a table, a heart screaming. And her.",
             cl(:meat_meat, "The woman who hurt him. She is down there. Under all of it.")].compact)
     end
     # rootspire.md 5662-5667: both twins grow restless, not only Razzilith; and Glimmer hears the hammers.
@@ -462,7 +462,7 @@ module FrostThaw
     [:rumour_bryn, "Bryn the apothecary hasn't slept in a month. Something in the roots. He says it's nothing."],
     [:rumour_lirielle, "Lirielle's dreams have gone dark. Burning roots. Her fur smells of charred flowers."],
     [:rumour_robes, "The Frost-Thread tailors say the Autumn Warden ordered crowning robes. Nobody knows whose."],
-    [:rumour_spores, "The bank's counting spores whisper one name at night. Spore echo, the clerks say. Scared."],
+    [:rumour_spores, "At the bank, the counting spores whisper a name at night. The clerks call it spore echo. They're scared."],
     [:rumour_heat, "Heat comes up the sap-lines after sundown now. Not weather. Something burning, under us."]
   ]
 

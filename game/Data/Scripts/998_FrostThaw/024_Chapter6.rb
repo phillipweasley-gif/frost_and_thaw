@@ -374,7 +374,7 @@ module FrostThaw
              "HELLEN: An hour for you, love. Four hundred years for them."])
       end
       say(["HELLEN: Gran told it like this. You broke the hag's mirrors, and a seed took root.",
-           "HELLEN: The tree grew in one night that lasted four hundred years. In here, anyway."])
+           "HELLEN: In here, that one night lasted four hundred years. The tree grew, and the city grew round it."])
       if with_or_is?(:reptin)
         speak(:reptin, "(very quietly) Four hundred years. Then everyone we left out there...", "...Everyone we left.")
       else
@@ -548,7 +548,7 @@ module FrostThaw
     say(["Beside the Heralds stands the Summer Throne, carried out for the night. Empty. Scorched.",
          "KELYN: (raising a glass) Heralds of Dawn and Dusk. Tonight, Rootspire remembers.",
          cl(:alberica, "Finally, a toast with my name in it. Somebody top me up."),
-         cl(:reptin, "(smiling at the crowd) Wave. They carved us. We owe them the faces."),
+         cl(:reptin, "(smiling at the crowd) Wave. They carved us into a wall. The least we can do is wave."),
          "KELYN: (lower, eyes on the empty chair) Seven nights. The Marshal's oath. He didn't come.",
          "Nobody near enough hears her but you. The pipes strike up again."].compact)
     festival_toast if respond_to?(:festival_toast)
@@ -562,7 +562,7 @@ module FrostThaw
     say([shudder, "The pipes falter. Everyone goes silent."])
     festival_shudder_extras if respond_to?(:festival_shudder_extras)
     Stage.overlay("O-01", scroll_x: 0.25, opacity: 210, pulse: :hard, fade: 8)
-    say(["Overhead, the aurora flickers in a hard, even rhythm. Like a pulse. Like something built.",
+    say(["Overhead, the aurora flickers in a hard, even rhythm. Like a pulse. Like a machine.",
          cl(:glimmer, "(a hand on his chest) Something under us is burning."),
          cl(:glimmer, "And hammering. Deep in the roots. Can't you hear it?")].compact)
     if with_or_is?(:glimmer) && !herald?(:glimmer)
@@ -861,7 +861,7 @@ module FrostThaw
          "DARRUS: The empty one's Summer's. Our Marshal's: Var Rime-Breaker.",
          "DARRUS: Var went down to look at the roots a week ago. Routine. He's resting, I'm sure.",
          "Over the empty chair, scorched black, hangs a portrait: a big, scarred man in gold.",
-         "KELYN: Var. Our Marshal thirty years. He took the seat the spring the summer stuck.",
+         "KELYN: Var. Our Marshal for thirty years. He took the seat the year the summer stuck.",
          "DARRUS: And this arrived the morning after he went down.",
          "A decree: \"Begin excavation beneath the Heartroot.\" Signed with Summer's seal.",
          "In the wax there's a tiny mark: a cracked mirror.",
@@ -875,7 +875,7 @@ module FrostThaw
          "KELYN: Swear to defend Rootspire from the old cold gods, and you'll be Wardens Emeritus."].compact, event_id)
     speak(:reptin, "Speaker, we'd be honoured. We'd also like to know what we're swearing to.",
           "...What are we swearing to, exactly?") if with_or_is?(:reptin)
-    c = pbMessage(_INTL("Swear the Wardens' oath?"), [_INTL("\"We'll guard the pulse.\""), _INTL("\"We just got here.\"")], 0)
+    c = pbMessage(_INTL("Swear the Wardens' oath?"), [_INTL("\"We swear it.\""), _INTL("\"We just got here.\"")], 0)
     if c == 1
       set_flag(:wardens_refused)
       say(["SELRAE: Good. People who swear oaths in their first hour swear them to anyone.",

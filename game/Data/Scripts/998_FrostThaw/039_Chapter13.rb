@@ -365,7 +365,7 @@ module FrostThaw
     Stage.hop(boy, 2) if boy
     say(["A little boy in wolf furs, the last of his family, laughing in the snow."], event_id)
     # (Aerix: a Wolf Tribe boy whose tribe's song Alberica knows; owner's decision 5)
-    say([al ? "(Aerix. Wolf Tribe. You sang at their fires once. You know how their song ends.)" :
+    say([al ? "(Aerix. Wolf Tribe. I sang at their fires once. I know how their song ends.)" :
               "ALBERICA: (very quiet) Aerix. Wolf Tribe. I sang at their fires once. I know how it ends."])
     mad = Stage.actor(:madman, 4, 7, 6, graphic: "BW (40)")
     Stage.walk_to(mad, 6, 7, face: 6) if mad
@@ -527,7 +527,7 @@ module FrostThaw
       pick = :fight
     end
     if pick != :fight && flag?(:shade_curse_broken)
-      say(["SEPHEK: (looking at Frostina) Her silence, not her return, honours her.",
+      say(["SEPHEK: (looking at Frostina) She doesn't have to come back for me to honour her. She said no. That's enough.",
            "SEPHEK: She died saying no to Auril. I won't make her say yes.",
            "He puts his hand on the crystal, and it melts.",
            "Frostina tumbles out and shakes herself like a dog."])
@@ -930,7 +930,7 @@ module FrostThaw
   def ending_shatter
     mm = herald?(:meat_meat)
     sayc([mm ? "(You were a seed. ...Once more a weapon.)" :
-               cl(:meat_meat, "(Dawnfang raised, not moving) Meat Meat was a seed. ...Once more a weapon.")])
+               cl(:meat_meat, "(Dawnfang raised, not moving) Meat Meat chose to be a seed. ...One more time, a weapon.")])
     Stage.remove_actor(auril_diamond) if auril_diamond
     $game_screen.start_flash(Color.new(255, 255, 255, 255), 16) rescue nil
     pbSEPlay("Ice8") rescue nil
@@ -1207,7 +1207,7 @@ module FrostThaw
     hold_music do
       until places.empty?
         keys = places.keys
-        c = pbMessage(_INTL("Whom do you look in on?"), keys.map { |k| _INTL(EPILOGUE_LABELS[k]) }, -1)
+        c = pbMessage(_INTL("Who do you look in on?"), keys.map { |k| _INTL(EPILOGUE_LABELS[k]) }, -1)
         k = keys[(c && c >= 0) ? c : 0]
         lines = places.delete(k)
         epilogue_place(k) do
@@ -1396,7 +1396,7 @@ module FrostThaw
         sayc([cl(:alberica, "(to you) You said sorry. This is better.")])
       end
     else
-      say([{ reptin: "(The Dale and Anduin's husband, on the same morning. He'll want to see the lake.)",
+      say([{ reptin: "(The Dale and Anduin, on the same morning. He'll want to see the lake.)",
              alerion: "(Your village is out there under the snow. You can visit. You don't have to stay.)",
              meat_meat: "(Mama's Dale and Razzy's tree. Same morning. Meat Meat needs two coffees.)",
              alberica: "(Ironhollow, out there. Never drew a name. Somebody should go home and say what it cost.)",
@@ -1443,6 +1443,7 @@ module FrostThaw
         lines = POSTGAME_HELLEN.dup
         lines << "HELLEN: Somebody keeps leaving a cup by the cat's chair. ...It's me." if flag?(:toast_empty_chair)
         lines << "HELLEN: You raised a cup to the lot of us. Nobody's let me forget it." if flag?(:toast_everyone)
+        lines << "HELLEN: That mug Tamsin gave you, I made it. Drink out of it. It's not for a shelf." if flag?(:cup_champion)
         say(lines, event_id)
       end
     end

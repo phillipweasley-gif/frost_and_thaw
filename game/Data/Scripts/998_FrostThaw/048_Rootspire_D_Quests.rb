@@ -55,7 +55,7 @@ module FrostThaw
 
   def self.trainer_intro(key, event_id = nil)
     if key == :warden_ash && herald?(:wyn)
-      return say(["ASH: Wyn. Everyone's claiming to be a Herald this week. You, I'd believed were dead."], event_id)
+      return say(["ASH: Wyn. Everyone's claiming to be a Herald this week. You, I thought you were dead."], event_id)
     end
     trainer_intro_before_wyn(key, event_id)
   end
@@ -311,7 +311,7 @@ module FrostThaw
                   "WARDEN: The Oath of Roots is taken here. Captain Rheven gives it. Not to strangers."], event_id)
     end
     say(["Rheven stands before the living pillar. Every Warden in the Hall has stopped to watch.",
-         "RHEVEN: You swore the Council's oath. This is ours, the Oath of Roots. Founders too.",
+         "RHEVEN: You swore the Council's oath. This is ours, the Oath of Roots. Even founders swear it.",
          "RHEVEN: Before the tree: balance mercy and fury. Show it what you are when it matters."], event_id)
     say(["Two Wardens drag in a Halo cultist, caught cutting sap-lines with a mirror-shard.",
          "He spits frost at you.",
@@ -323,10 +323,10 @@ module FrostThaw
     when 0
       say(["You let him go. He runs. His Sneasel stays at the sap-line, and the sap freezes.",
            "The pillar shivers.",
-           "RHEVEN: Mercy, with nothing to catch the harm. The tree felt that. Again."])
+           "RHEVEN: Mercy, with nothing to catch the harm. The tree felt that. Try again."])
     when 1
       say(["You step toward him. The pillar goes hot under your hand. Too hot.",
-           "RHEVEN: Fury, before you'd seen what the harm was. The tree felt that too. Again."])
+           "RHEVEN: Fury, before you'd seen what the harm was. The tree felt that too. Try again."])
     end
     if c != 2
       return if !pbConfirmMessage(_INTL("Try the oath again?"))
@@ -874,7 +874,7 @@ module FrostThaw
       giver_hello(event_id) if respond_to?(:giver_hello)
       set_flag(:amber_asked)
       say(["An assessor from the Guild of Roots and Stone, goggles and clipboard, waves you over.",
-           "GUILD ASSESSOR: Heralds! Perfect! The Guild needs a neutral witness. Hew's new fuel.",
+           "GUILD ASSESSOR: Heralds! Perfect! The Guild needs a neutral witness for Hew's new fuel.",
            "GUILD ASSESSOR: Frozen sap, cut into bricks. Three times hotter than coal.",
            "GUILD ASSESSOR: A few complaints about noise. Would you light one? For the record?"], event_id)
     end
@@ -909,7 +909,7 @@ module FrostThaw
          "In the middle of it all, two whirlwinds. One is hot as noon: flowers wilt where it passes.",
          "One is cold as midwinter: frost forms in its wake. In the wind, you hear them shouting."], event_id)
     lead = with_or_is?(:reptin) ? :reptin : nil
-    say([lead ? (herald?(:reptin) ? "(You know them. A green egg in a coat. A white one with Shimmer's heart.)" :
+    say([lead ? (herald?(:reptin) ? "(You know them. You'd know them anywhere: the two eggs you carried out of the Dale.)" :
                                     "Reptin goes very still. \"I know them,\" he says. \"I'd know them anywhere.\"") :
                 "There's something familiar in the shapes. A green glint. A white one."])
     say(["The summer-spirit has Razzilith's laugh. The winter-spirit hums four notes.",
@@ -977,7 +977,7 @@ module FrostThaw
   def echoes_at_the_wall
     done = flag?(:alerion_reflection) || flag?(:reflection_claimed)
     return false if done || !flag?(:echo_wraiths_down) || !with_or_is?(:alerion)
-    return false if !pbConfirmMessage(_INTL("The frost in the Echo Gate is moving like a door. Go through, after Alerion's reflection?"))
+    return false if !pbConfirmMessage(_INTL("The frost in the Echo Gate is moving like a door. Go through?"))
     sayc(["Wind pours out of the Gate: laughter, sobbing. The frost patterns on the walls are eyes.",
           "The wind whispers your names. Then a voice, familiar and cold: \"The lake remembers.\"",
           herald?(:alerion) ? "In the ice beside you, your reflection stops walking. You don't." :
@@ -1239,7 +1239,7 @@ module FrostThaw
     elsif flag?(:rite_stopped)
       watcher_glimpse("On a cask above her, a white-eyed raven turns its head to follow you.")
     end
-    say(["EIRA VOSS: Every soul I send down brings the forge closer. Yours would bring it close."], event_id)
+    say(["EIRA VOSS: Every soul I send down brings the forge closer. Yours would bring it very close."], event_id)
     return if !pbTrainerBattle(:FT_HALO_F, "Eira Voss", nil, false, 0)
     set_flag(:cellar_cleared)
     set_self_switch(event_id, "A")

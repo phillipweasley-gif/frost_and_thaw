@@ -442,7 +442,7 @@ module FrostThaw
     if !flag?(:heard_of_glimmer)
       say([as(:shade, "(half asleep) You're doing the cat thing."),
            as(:shimmer, "I'm not scared. I'm counting."),
-           as(:shimmer, "You carved it when we were kids. Terrible cats. They always wanted to be one."),
+           as(:shimmer, "You carved this when we were kids. Terrible cats, all of them. You always wanted to be one."),
            as(:shimmer, "Cats get nine lives. You've used about six. Go to sleep.")])
     else
       say([as(:shade, "(half asleep) Still counting?"),
@@ -574,7 +574,7 @@ module FrostThaw
     mood(:requiem)                                  # (not the house's music, coming home from the vision)
     state[:companions] = (state[:companions] || []) - [:shimmer]   # (her last line comes from nowhere)
     say(["Sephek is on his knees, weeping.",
-         "SHIMMER: (from nowhere, very softly) Not all fire dies. Some of it just learns to freeze."])
+         "SHIMMER: (from nowhere, very softly) Don't cry, Shade. I'm still here. Just colder."])
     Stage.overlay_off("O-03", fade: 20)
     Stage.panel_off(fade: 20)
   end
@@ -591,7 +591,7 @@ module FrostThaw
       st.emote(jet, :exclaim)
       st.approach(jet)
     end
-    say(["Long ears, a lantern, snow thick on her shoulders. She's been out here all night.",
+    say(["Snow lies thick on her shoulders. She's been out there all night.",
          "JET SENTRY: Jet Sentry, of the Wennen. The moon-keepers, in the woods north of here.",
          "JET SENTRY: Before dawn she walked to the cold man's sleds. Nobody made her.",
          "JET SENTRY: He bound her in ice and carried her east.",
@@ -797,7 +797,7 @@ module FrostThaw
     say(["JET SENTRY: The Circle will want that heart.",
          as(:shade, "The Circle can ask. It's my sister's. It goes where I go."),
          "JET SENTRY: Then come with it. The Circle is our council: thirteen Wennen, in our Warren.",
-         "JET SENTRY: The Warren is under the Moon Temple, north of town. Zenith can keep it safe.",
+         "JET SENTRY: The Warren is under the Moon Temple, north of town. Zenith, our abbess, can keep it safe.",
          "JET SENTRY: The cold man knows that. He'll be waiting at the door.",
          as(:shade, "Let him.")], jet ? jet.id : nil)
     st.leave(jet, 14, 27) if jet
@@ -1032,7 +1032,7 @@ module FrostThaw
     st.balloon(shade, "B-07", frames: 70) if shade
     say([as(:shade, "(very quiet) ...She said it wasn't a song."),
          flag?(:shimmer_asked) && !herald?(:shade) ? "You put a hand on Shade's shoulder." : nil,
-         "ZENITH: Not her vessel. Her answer.",
+         "ZENITH: Not her vessel, and not her prize. Her answer, in a new disguise.",
          herald?(:alerion) ? "The ring on your hand warms for the first time. (...Frostina.)" :
                              "The ring on Alerion's hand warms for the first time.",
          herald?(:alerion) ? nil : "ALERION: ...Frostina.",
@@ -1072,7 +1072,7 @@ module FrostThaw
          "LUNA CARVER: Shimmer's is the first, sung into the egg. The cold man's beats in his chest.",
          "LUNA CARVER: Bring a third to the other two, and the Frostmaiden gets a body to walk in.",
          cl(:reptin, "Then nobody brings a third. I'll be very rude about it."),
-         outsider? ? "LUNA CARVER: (to you) You I can't see at all. Like you're not on her wheel yet." : nil].compact, event_id)
+         outsider? ? "LUNA CARVER: (to you) You, I can't see at all. It's as if you haven't been born yet." : nil].compact, event_id)
     lev = event_id && $game_map ? $game_map.events[event_id] : nil
     st.turn_to(lev, shade) if lev && shade
     say(["LUNA CARVER: (to Shade) And you. Your house has a spark in it that isn't out.",

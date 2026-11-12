@@ -432,7 +432,7 @@ module FrostThaw
       rival = FACTION_RIVAL[fac]
       next if friends.include?(rival)
       say_staged([{ spring: "AUTUMN COURTIER: (loudly, to nobody) Spring's favourites. On trial for murder.",
-             autumn: "SPRING WARDEN: (not quite to you) Gilded by the Court. The tree knows bought gold's smell.",
+             autumn: "SPRING WARDEN: (not quite to you) Gilded by the Court. The tree can smell bought gold.",
              winter: "OLD LOYALIST: (spitting) The Order's pets. The Marshal kept this city warm thirty years." }[fac]])
       trial[:mud] += 1
     end
@@ -886,8 +886,8 @@ module FrostThaw
     c = pbMessage(_INTL("The Heralds will go north..."), opts.map(&:last), 0)
     state[:voyage_pick] = opts[[c, 0].max][0]
     say_staged([{ ship: flag?(:mira_left_possessed) ? "FIRST MATE: (from the gallery) The Requiem sails. The captain's not herself. I'll steer." :
-                                             "MIRA: (from the gallery) The Requiem's been provisioned for thirty years. It's about time.",
-           griffons: "KETHAN: Skytower remembers who carried its wounded down the mountain. Griffons. Dawn.",
+                                             "MIRA: (from the gallery) The Requiem's sat in port, fully stocked, for thirty years. About time she sailed.",
+           griffons: "KETHAN: Skytower remembers who carried its wounded down the mountain. The griffons fly at dawn.",
            whale: "LUMIN: (both paws on the bell rope already) He'll come. He always comes for the bell." }[state[:voyage_pick]]])
   end
 

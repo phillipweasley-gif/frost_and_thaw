@@ -13,7 +13,7 @@ module FrostThaw
     tavern_brawler:   "GORM: That's my stool you're eyeing, stranger. Fight me for it.",
     # The first Zhentarim you fight names the gang once, in both its names
     # (notes/02 E31: Dorn, the Broker and Brosk say "Black Network" later).
-    zhent_thug_1:     -> { FrostThaw.zhent_named("DASK: Zhentarim. The Black Network. The Speaker likes to know what you're made of.",
+    zhent_thug_1:     -> { FrostThaw.zhent_named("DASK: We're Zhentarim. The Speaker's people. He likes to know what you're made of.",
                                                  "DASK: Strangers in the Luskan Arms. The Speaker likes to know what strangers are made of.") },
     zhent_thug_2:     "VEY: Lost, are we? Let me show you how Targos treats people who wander.",
     # Before Naerth has asked for you, there's no Speaker in the hall to see (notes/01 E22).

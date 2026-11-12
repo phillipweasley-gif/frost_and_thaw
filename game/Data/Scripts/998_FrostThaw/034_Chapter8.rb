@@ -465,7 +465,7 @@ module FrostThaw
          "#{a[:His]} #{a[:dress]}. Inside the cocoon, a child's face, asleep.",
          "#{a[:tag]}: Stand aside! The engine needs one more. One more, and it never stops.",
          # (dialogue 08 §4.14: his velvet voice, so the case is a temptation)
-         "#{a[:tag]}: (velvet again) One child. Then no famine years, ever. Be sensible.",
+         "#{a[:tag]}: (smooth again) One child. Then no famine years, ever. Be sensible.",
          "#{a[:tag]}: Do you know what Autumn's ledgers could do with that?"])
     if with_or_is?(:reptin)
       speak(:reptin, "(very pleasantly) You sold her the city, for a summer.", "...You sold her the city.")
@@ -857,7 +857,7 @@ module FrostThaw
     return say(["You've already worked this spire."], event_id) if done[n]
     left = 6 - (state[:circle_actions] || 0)
     say(["Under her glyph, a frost-sigil glitters, half buried. " +
-         (left > 1 ? "(This one and #{NUMBER_WORDS[left - 1]} more.)" : "(The last before the engine beats.)")], event_id)
+         (left > 1 ? "(This one and #{NUMBER_WORDS[left - 1]} more.)" : "(The last one. Then the engine.)")], event_id)
     c = pbMessage(_INTL("The spire..."), [_INTL("Scour off her glyph"), _INTL("Break both runes"), _INTL("Leave it")], 2)
     return if c.nil? || c == 2
     if c == 0
@@ -1058,10 +1058,10 @@ module FrostThaw
            "MEAT MEAT: Meat Meat not crying. That is sap."])
       Stage.approach(mm) if mm
       c = pbMessage(_INTL("Meat Meat holds the dagger out to you."), [_INTL("Take it with her"), _INTL("Close her hands round it")], 0)
-      say([c == 0 ? "You take hold. She doesn't let go of it until you've both got hold." :
+      say([c == 0 ? "You take hold of it too. She doesn't let go until you've both got it." :
                     "You close her hands round it. She closes yours round it too. Neither of you lets go."])
     end
-    sayc([cl(:alerion, "(very quietly) He always hummed it wrong. On purpose, I think.")])
+    sayc([cl(:alerion, "(very quietly) He always hummed Shimmer's song wrong. On purpose, I think.")])
     give_key(:FT_DAWNFANG)
     Stage.cleanup rescue nil
     pbMessage(_INTL("Glimmer is gone.")) rescue nil
@@ -1084,7 +1084,7 @@ module FrostThaw
          "In the silver pool, something floats free, gathering ice and light: the Frost Saint Shard.",
          "Sephek's heart, veined with frost-light. It whispers prayers in a voice that isn't his."])
     lines = []
-    lines << "(The lab notes: a goddess poured into a drowned man's heart. It went too right.)" if flag?(:knows_shard_origin)
+    lines << "(The lab notes: a goddess poured into a drowned man's heart. It worked too well.)" if flag?(:knows_shard_origin)
     lines << "(The ghost in the Antechapel: cleanse me, leave me whole, or break me. None clean.)" if flag?(:shard_echo_heard)
     lines << "(The whispering attendant's price, still owing: #{state[:attendant_promise] == :free ? 'free the heart' : 'burn the forge'}.)" if state[:attendant_promise]
     say(lines.first(2)) if !lines.empty?          # (notes 08 F13: no more than two memories here)
@@ -1326,7 +1326,7 @@ module FrostThaw
     say([herald?(:meat_meat) ? "(You scream it before you know you're going to: RAZZY!)" : "MEAT MEAT: RAZZY!",
          "Far above, Razzilith panics. A picture in all your heads: every scale on end, then rage."])
     lines = []
-    lines << cl(:alerion, "(already running) That's old frostcraft. Older than her. ...Frostina.")
+    lines << cl(:alerion, "(already running) That heart's an old frost wyrm's. Older than her. ...Frostina!")
     lines << (herald?(:meat_meat) ? "In your hands, the golden dagger hums, and won't stop." :
               with_or_is?(:meat_meat) ? "In your hands, and Meat Meat's, the golden dagger hums, and won't stop." :
                                         "In your pack, the golden dagger hums, and won't stop.")

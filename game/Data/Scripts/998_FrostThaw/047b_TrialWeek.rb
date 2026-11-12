@@ -551,7 +551,7 @@ module FrostThaw
                 "EIRWEN: (out of breath) A chronal leaf is gone. Torn out of Alberica's own timeline.",
            me ? "EIRWEN: Without it, your days come loose. A year of you, gone, like a torn-out page." :
                 "EIRWEN: Without it, her days come loose. A year of her, gone, like a torn-out page.",
-           "EIRWEN: A Bough patrol went out past the Wall the night it went. They never came back."])
+           "EIRWEN: A Rootwarden patrol from the Bough circle went out past the Wall that night. They never came back."])
       speak(:alberica, "(very pale) ...Somebody's got a piece of my life in their pocket.", "(very pale) ...That's mine.")
       say([as(:alberica, "I'd like it back.")])
       set_flag(:leaf_quest)
@@ -571,7 +571,7 @@ module FrostThaw
       Stage.cleanup rescue nil
     elsif flag?(:leaf_shattered)
       library_eirwen
-      say(["EIRWEN: The pieces... a mending, and a careful hand. Let me try."])
+      say(["EIRWEN: The pieces... They need mending, and a careful hand. Let me try."])
       if challenge("Help Eirwen mend it.", ["Hold the pieces in the order they hum", "Push them together", "Glue"], 0)
         say(["The pieces hum, find each other, and the leaf is whole. Cracked, but whole.",
              cl(:alberica, "(very quietly) ...Cracked's all right. So am I.")].compact)

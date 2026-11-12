@@ -131,7 +131,7 @@ module FrostThaw
     else
       say(["(A night in here. Out there, past the Wall, a few breaths.)"])
     end
-    sayc([cl(:reptin, flag?(:clock_first_light) ? "Then we woke it early, and it's still barely past the Wall." :
+    sayc([cl(:reptin, flag?(:clock_first_light) ? "Then the dragon's barely past the Wall. We can still catch it." :
                                                   "Then it's barely past the Wall. Good Mead hasn't even seen it yet.")])
     # (notes 08 E16, E27: the people you cut out of the pens came up too)
     if flag?(:prison_pod_1)
@@ -201,7 +201,7 @@ module FrostThaw
       say(["Frostina turns and lays her brow against Alerion's.",
            "Frost-light runs up his arm under the skin, and settles behind his ribs."])
     end
-    say([as(:alerion, "(a hand flat on his ribs) ...Two of them. Hers. Then mine."),
+    say([as(:alerion, "(a hand flat on his ribs) ...Two heartbeats. Hers, and mine."),
          cl(:alberica, "(softly) Pretty boy. You're glowing."),
          as(:alerion, "I know.")].compact)
     m = herald?(:meat_meat) ? $game_player : mm
@@ -348,7 +348,7 @@ module FrostThaw
       rider = rider_key
       if herald?(rider)
         say(["(You let go of #{mount_name}'s neck and drop: a falling star with a blade in it.)",
-             "(Gravity is a suggestion made by someone timid.)"])
+             "(Don't think. Fall.)"])
       else
         say(["#{rider == :alerion ? 'Alerion' : 'Meat Meat'} lets go of #{mount_name}'s neck and drops, blade first.",
              "A falling star with a blade in it: a Dragoon's dive."])
@@ -464,7 +464,7 @@ module FrostThaw
          cl(:meat_meat, "Good Mead is dead to Meat Meat. ...After the dragon."),
          cl(:wyn, "(cupping a dazed bee) ...You're all right. You're all right, little one."),
          # (notes 09 E19: the reward from someone's hand, and what it is)
-         "OLIVESSA: (pressing something into your hand) Fell through the roof with the fire. Yours."].compact)
+         "OLIVESSA: (pressing something into your hand) This came down through the roof with the fire. Take it. You've earned it."].compact)
     set_flag(:good_mead_saved)
     set_switch(SW_CH9_MEADSAFE, true)
     add_counter(:story_beats)

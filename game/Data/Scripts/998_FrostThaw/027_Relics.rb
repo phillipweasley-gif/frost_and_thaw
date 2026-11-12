@@ -86,12 +86,15 @@ module FrostThaw
     return if blessing?(key)
     set_flag(:"blessing_#{key}")
     pbSEPlay("Saint7") rescue nil
-    pbMessage(_INTL("\\me[Item get]You received the {1}!", title)) rescue nil
+    # "the Blessing of Warmth", but not "the The Fields' Two Spirits" or "the Alerion's Reflection"
+    article = title =~ /\AThe / || title =~ /\A(Alerion|Hyphora|Reptin|Alberica|Wyn|Meat Meat|Glimmer)'s / ? "" : "the "
+    pbMessage(_INTL("\\me[Item get]You received {1}{2}!", article, title)) rescue nil
     pbMessage(_INTL("({1})", effect)) rescue nil
   end
 
   # Gives a relic, a goods item or a treasure, with the usual jingle.
   def give(item, qty = 1)
+    return @ft_gifts_later << [item, qty] if @ft_gifts_later     # inside talk(): after the lines (007)
     pbReceiveItem(item, qty)
   rescue StandardError => e
     log("give(#{item}) failed: #{e.message}")

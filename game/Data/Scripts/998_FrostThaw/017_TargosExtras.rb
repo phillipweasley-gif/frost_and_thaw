@@ -111,7 +111,7 @@ module FrostThaw
          herald?(:reptin) ? "You set your medallion on the floor, very gently." :
                             "Reptin sets his medallion on the floor, very gently.",
          ask_as(:reptin, "Of course. So sorry. Is the floor also cursed?"),
-         "EPHERIS: Five cold trinkets. All found where you'd find them, right when you'd find them.",
+         "EPHERIS: Five cold trinkets, and each of you just happened to find one. Right where you'd see it.",
          "EPHERIS: That's not luck. That's bait."], event_id)
     speak(:alberica, "Bait? I've been called a lot of things, but bait?", "...Bait?", event_id)
     say(["EPHERIS: Not you. The trinkets are the bait. You're the fish. Somebody wanted you here.",

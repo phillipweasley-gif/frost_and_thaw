@@ -143,7 +143,7 @@ module FrostThaw
     wheel_before_note(amount)
     if amount > 0 && flag?(:act1_done) && !flag?(:wheel_explained)
       set_flag(:wheel_explained)
-      say(["(Somewhere in the year, something turns a notch. The Wheel: kindness moves the seasons.)"])
+      say(["(The Wheel of the Year turns a little. Kind choices move the seasons.)"])
     end
   end
 

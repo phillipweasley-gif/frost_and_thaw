@@ -268,8 +268,8 @@ module FrostThaw
       return pro_rival(mine)
     end
     Stage.face(wyn, 2) if wyn                        # from the blackboard to the table
-    say(["WYNSNOW: A Pokémon in each. Raise it well and it'll fight beside you. Usually for you.",
-         "WYNSNOW: Three Pokémon, three futures. Choose before I start measuring them."])
+    say(["WYNSNOW: There's a Pokémon in each one. Look after yours, and it'll look after you.",
+         "WYNSNOW: Take your time. Well, not too much. I've a lecture at noon."])
     Stage.walk_to($game_player, 20, 6, face: 8)
     say(["WYNSNOW: Look in each Poké Ball first, then pick one."])
     state[:goal] = "Look in the three Poké Balls on Wynsnow's table, and choose your first Pokémon."
@@ -391,14 +391,14 @@ module FrostThaw
       $Trainer.heal_party rescue nil
     end
     Stage.jingle(:heal)
-    say(["WYNSNOW: There. Patched up. Off you go, both of you. I have measuring to do.",
+    say(["WYNSNOW: There. Patched up. Off you go, both of you. I've a lecture to write.",
          "WYNSNOW: And these. Five Poké Balls, two Potions. The College's festival gift."])
     pbReceiveItem(:POKEBALL, 5) rescue nil
     pbReceiveItem(:POTION, 2) rescue nil
     say(["WYNSNOW: Wild ones live in long grass. Tire one out, then throw a ball. Bring me notes."])
     Stage.walk_to(wyn, *PRO_WYNSNOW_DESK, face: 8, wait_for: false) if wyn
     Stage.turn_to(tamsin) if tamsin
-    say(["TAMSIN: The Hearth! The wall! If it moved this year, I'm telling EVERYONE.",
+    say(["TAMSIN: Now the Hearth! I have to check the carving. I swear it changes every year.",
          "TAMSIN: Come ON!"])
     Stage.leave(tamsin, 13, 19) if tamsin
     Stage.theme(nil)
@@ -477,7 +477,7 @@ module FrostThaw
     if tamsin
       Stage.pan_to(tamsin.x, tamsin.y)               # the camera finds Tamsin at the far wall
       Stage.emote(tamsin, :exclaim)
-      say(["TAMSIN: Over here! Quick! I think it moved!"])
+      say(["TAMSIN: Over here! Quick! I think it's changed!"])
       Stage.pan_back
     end
     Stage.walk_to($game_player, 15, 8, face: 6)
@@ -522,7 +522,7 @@ module FrostThaw
     Stage.partner_out
     mon = ($Trainer.party.first rescue nil)
     say(["#{mon ? mon.name : 'Your Pokémon'} wriggles out of its ball at the smell of the kitchen.",
-         "HELLEN: There it is. Your first. Here, it can have a crust. Everyone eats in my house."])
+         "HELLEN: Oh, look at you! Your very first Pokémon. Here, have a crust. Nobody goes hungry in my house."])
     Stage.partner_in
     Stage.pan_back
     Stage.turn_to(tamsin) if tamsin

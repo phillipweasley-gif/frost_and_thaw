@@ -641,7 +641,7 @@ module FrostThaw
       eira_patrol_report
     when :trial
       say(["EIRA: A Rootwarden wants to learn the rites? Mercy, and fury, Wyn. Both, in the same hand.",
-           "EIRA: Hold both against me, and the guard will have you."])
+           "EIRA: Show me both, and the guard will have you."])
       if trainer(:eira_trial, nil)
         say(["EIRA: Spore-guard. Welcome. We don't say it twice."])
         set_flag(:spore_guard)

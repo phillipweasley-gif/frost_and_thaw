@@ -646,8 +646,8 @@ module FrostThaw
          "The shell rounds into an egg, warm and green-gold.",
          herald?(:alerion) ? "(Your ring goes cold near the dead. The egg is warm.)" : nil,
          herald?(:reptin) ? "(The old druid rhymes. You haven't said one aloud in years.)" : nil].compact)
-    speak(:reptin, "The old rhymes want a name. Spoken as a promise.",
-          "...The old rhymes want a name. Spoken as a promise.")
+    speak(:reptin, "The old rhymes say an egg like this needs a name, spoken as a promise.",
+          "...The old rhymes say an egg like this needs a name, spoken as a promise.")
     speak(:alberica, "And none of us knows his.", "...None of us knows his name.")
     say([cl(:alerion, "Then we find whoever cut his throat. They'll know.")].compact)
     if herald?(:meat_meat)

@@ -207,7 +207,7 @@ module FrostThaw
     arvik_ambush:      "ARVIK: (dropping out of a branch above you) Ambush! Move!",
     ash_turned:        "ASH: You couldn't leave it alone. Fine. Rootwardens settle things the old way.",
     eren_touched:      "EREN: (frost on his lashes) She gave me every winter there ever was. Let me show you.",
-    halden_vex:        "HALDEN: Hold still, displaced centuries! You're out of place, and I'm putting you back!",
+    halden_vex:        "HALDEN: Hold still! You're centuries out of place, and I'm putting you back!",
     kethan_duel:       "KETHAN: (cracking his knuckles: pop, pop, like ice splitting) Words lie. Fists don't."
   )
 
