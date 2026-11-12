@@ -51,8 +51,8 @@ module FrostThaw
     mira:     ["MIRA: The docks have money on this match. Most of it's on you.",
                "MIRA: Some of it's mine. I haven't decided which way yet."],
     luminara: ["LUMINARA: (wind through reeds) The colony wanted to see you fight. So: I fight."],
-    selrae:   ["SELRAE: Winter doesn't enter tournaments. I'm making an exception.",
-               "SELRAE: Don't make me regret it."]
+    selrae:   ["SELRAE: Winter does not enter tournaments. I am making an exception.",
+               "SELRAE: Do not make me regret it."]
   }
 
   # Tamsin's final team: her three from the Hearth, grown up, and three more
@@ -194,7 +194,7 @@ module FrostThaw
     add_counter(:cup_wins)
     say(["The Hall comes apart in noise. Somebody's banging a pot with a ladle. That'll be Hellen."])
     if first
-      say(["TAMSIN: (handing it over, scowling, then not) The Cup. It's a mug, really. Mum made it.",
+      say(["TAMSIN: (handing it over, then not) The Cup. It's a mug, really. Mum made it.",
            "TAMSIN: You're the champion. I'm putting your name on the wall under your carving.",
            "TAMSIN: Next year it's mine."])
       set_flag(:cup_champion)

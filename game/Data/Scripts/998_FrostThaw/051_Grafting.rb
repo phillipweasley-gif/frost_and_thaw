@@ -188,7 +188,7 @@ module FrostThaw
     alberica:  "Oh, look at it. Somebody write it a song. ...Fine. Me. I'll do it.",
     reptin:    "It'll remember both of them, you know. Grafts do.",
     wyn:       "(a hand on its head) It smells like both of them.",
-    alerion:   "(after a long look) It looks happy. Good.",
+    alerion:   "It looks happy. Good.",
     glimmer:   "(the horn humming in his hand) A new body takes some getting used to. Trust me.",
     shade:     "(turning the Rimefang over) For keeps, the Professor said. ...Nothing's for keeps.",
     meat_meat: "(walking all the way round it) Both still in there. Meat Meat checks every time."
@@ -197,7 +197,7 @@ module FrostThaw
   GRAFT_ANSWERS = [
     [:alberica, "Slept right through it, love. Look. Not a scratch."],
     [:reptin,   "No. It slept. Like a seed in the ground."],
-    [:wyn,      "(softly) It was asleep. It didn't even dream. ...I'd know."],
+    [:wyn,      "It was asleep. It didn't even dream. ...I'd know."],
     [:glimmer,  "No. Waking up's the strange part. Trust me."],
     [:shade,    "No. It went to sleep and woke up bigger. I've had worse nights."],
     [:alerion,  "No."]
@@ -215,7 +215,7 @@ module FrostThaw
                                     "Meat Meat is staring at the place where the cocoon was.",
               ask_cl(:meat_meat, "...Did it hurt? In there?", "...Did it hurt?"),
               answer ? as(answer[0], answer[1]) : "Nobody answers.",
-              cl(:meat_meat, "(walking all the way round it, slowly) Both still in there. Meat Meat checked.")])
+              cl(:meat_meat, "(walking all the way round it) Both still in there. Meat Meat checked.")])
       else
         here = GRAFT_LINES.keys.select { |k| companions.include?(k) }
         k = here[(counter(:grafts) - 1) % here.size] if !here.empty?
@@ -242,7 +242,7 @@ module FrostThaw
             "HYPHORA: A graft. That's my old way. I didn't know anyone in the city still did it.",
             "HYPHORA: Here. This will help with your next one.",
             "A thread of root ties itself into a knot in your hand.",
-            cl(:wyn, "(very softly) She sounds proud.")])
+            cl(:wyn, "She sounds proud.")])
     ensure
       Stage.partner_in
     end

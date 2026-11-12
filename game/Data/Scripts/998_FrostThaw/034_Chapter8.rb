@@ -112,7 +112,7 @@ module FrostThaw
   )
 
   TEXT.merge!(
-    duergar_kord_after:  ["(rubbing his temples) It's quieter when I lose. Isn't that a thing."],
+    duergar_kord_after:  ["It's quieter when I lose. Isn't that a thing."],
     duergar_brask_after: ["I had a name before the Forge. I'm sure I did."],
     duergar_hild_after:  ["The words are in the ledger. Everyone knows them. Nobody says them."],
     duergar_thane_after: ["Go on, then. The engine doesn't care who feeds it."],
@@ -127,14 +127,14 @@ module FrostThaw
                      "At the top of every page, the same words in a cramped hand:",
                      "\"Rimebound. Rise unbroken.\""],
     glassy_digger: -> {
-      flag?(:barricade_passed) ? ["DIGGER: (blinking) ...Is this the Guild? Is Hew here? I was hauling. I forget what."] :
-                                 ["DIGGER: (hauling sap, smiling, eyes like glass) Warm. Warm. Down's where the warm is."]
+      flag?(:barricade_passed) ? ["DIGGER: ...Is this the Guild? Is Hew here? I was hauling. I forget what."] :
+                                 ["DIGGER: (hauling sap) Warm. Warm. Down's where the warm is."]
     },
     tea_table: -> {
       if flag?(:sworn_to_thredra) && flag?(:engine_dead)
         next ["A tea table set for six, a skin of frost on every cup.",
               "In the cracked glass, the hag with the ember eye lifts her cup to you.",
-              "THREDRA: (very small) Burned. Paid in full, dearies. Mother's kitchen thanks you."]
+              "THREDRA: Burned. Paid in full, dearies. Mother's kitchen thanks you."]
       end
       flag?(:hag_mirror_done) ? ["A tea table set for six, a skin of frost on every cup.",
                                  "The cracked mirror over it is just a mirror now. Nearly."] :
@@ -208,7 +208,7 @@ module FrostThaw
     say(["In your pack, the sending-stone warms. Kelyn's voice comes out of it, thin and far.",
          "KELYN: (from the stone) Heralds? The tree shook again. Have you found Var?"])
     c = pbMessage(_INTL("Tell Kelyn..."), [_INTL("\"Not yet.\""), _INTL("\"There's a dragon.\"")], 0)
-    say([c == 1 ? "KELYN: (from the stone, a long pause) ...Then find Var. He'll know what it is." :
+    say([c == 1 ? "KELYN: (from the stone) ...Then find Var. He'll know what it is." :
                   "KELYN: (from the stone) Then keep looking. If he's down there, he's been there a week.",
          "The stone goes cool."])
     if with_or_is?(:alerion)
@@ -219,7 +219,7 @@ module FrostThaw
       speak(:reptin, "So Var's a prisoner down here, or he's the one handing out the keys.", "...Prisoner, or keeper.")
     end
     if with_or_is?(:wyn)
-      speak(:wyn, "(very quietly) ...Or something else. The roots don't know his name.", "...The roots don't know him.")
+      speak(:wyn, "...Or something else. The roots don't know his name.", "...The roots don't know him.")
     end
   end
 
@@ -247,10 +247,10 @@ module FrostThaw
     # Context 08 M8-1 boxes 12-13: the third "little failures", heard as the third.
     heard = [flag?(:mira_core_broken) || flag?(:mira_freed) ? "Mira said that." : nil,
              flag?(:met_mirror_child) ? "The boy's mirror said that." : nil].compact
-    sayc([cl(:meat_meat, heard.empty? ? "(very still) Little failures. Meat Meat knows that voice. From the cold table." :
-                                        "(very still) #{heard.join(' ')} Little failures."),
+    sayc([cl(:meat_meat, heard.empty? ? "Little failures. Meat Meat knows that voice. From the cold table." :
+                                        "#{heard.join(' ')} Little failures."),
           cl(:alberica, "Built from parts Summer's people paid for. Lovely. Somebody check my pockets."),
-          cl(:alerion, "Then she knows we're here."), cl(:wyn, "(very quietly) She always knew.")])
+          cl(:alerion, "Then she knows we're here."), cl(:wyn, "She always knew.")])
   end
 
   def barricade_gate(event_id = nil)
@@ -322,7 +322,7 @@ module FrostThaw
     end
     say(["In the glass, the table isn't empty: a stooped hag sips tea that isn't there.",
          "One of her eyes is dead and white. The other is a burning ember."])
-    say(["THREDRA: (from the glass, very small) My, my. The children come back to mother's kitchen."])
+    say(["THREDRA: (from the glass) My, my. The children come back to mother's kitchen."])
     # (WRITING_GUIDE §5: she answers it, so it's spoken, not thought)
     speak(:alberica, "You're dead. We were there.", "...You're dead.") if with_or_is?(:alberica)
     sayc(["THREDRA: I'm remembered, dearie. Mirrors always remember.",
@@ -371,7 +371,7 @@ module FrostThaw
     say(["Amber cocoons in rows in the root walls. In some, shapes that might have been goblins.",
          "Labels on brass plates: RAZ-MKI. RAZ-MKII. V-3. V-5. V-6.",
          "One plate is empty, its cocoon split open from the inside, long ago. V-7.",
-         herald?(:meat_meat) ? "(Very quietly, to yourself: ...That one is Meat Meat.)" : "MEAT MEAT: (very quietly) ...That one is Meat Meat."])
+         herald?(:meat_meat) ? "(Very quietly, to yourself: ...That one is Meat Meat.)" : "MEAT MEAT: ...That one is Meat Meat."])
     say(lines_for(:pens_journal))
     # Context 08 M8-2: the name and the face meet. Meat Meat goes to the empty
     # V-7 plate and names the neat white hand (the Act I "lady with books and
@@ -389,7 +389,7 @@ module FrostThaw
       Stage.walk_to($game_player, 19, 5, face: 6) rescue nil   # you go with her; the camera follows
       sayc(["MEAT MEAT: (a hand flat on the empty plate) Neat white hand. That is her. Avarice.",
             "MEAT MEAT: She wrote on Meat Meat too. Under the hair. Same seven.",
-            "MEAT MEAT: (after a long time) Meat Meat is not a method.",
+            "MEAT MEAT: Meat Meat is not a method.",
             with_or_is?(:reptin) ? as(:reptin, "(kneeling beside her) No. You're not.") : nil,
             herald?(:alberica) ? "You don't make a joke. You just hold out your arm, and Meat Meat leans into it." :
               (with_or_is?(:alberica) ? "Alberica doesn't make a joke. She just holds out her arm, and Meat Meat leans into it." : nil)])
@@ -412,8 +412,8 @@ module FrostThaw
     return say(["An empty cocoon, split long ago. Whatever was in it got out."], event_id) if !flag?(:selrae_ahead)
     say(["In the last cocoon: the Winter Matron, half-frozen in amber. Her eyes are open.",
          "You cut her free."], event_id)
-    sayc(["SELRAE: ...Thank you. Winter doesn't ask to be rescued. It seems I do.",
-          "SELRAE: Go on. I'll find my own way up. I've had practice being in the wrong place.",
+    sayc(["SELRAE: ...Thank you. Winter does not ask to be rescued. It seems I do.",
+          "SELRAE: Go on. I will find my own way up. I have had practice being in the wrong place.",
           cl(:alerion, "Told you she'd get caught."),
           cl(:alberica, "Nobody likes a told-you-so, pretty boy."),
           cl(:alerion, "I do.")])
@@ -529,9 +529,9 @@ module FrostThaw
       say(["#{a[:He]} falls."])
       set_flag(:mm_turned)
     end
-    sayc([cl(:alerion, "(after a beat) ...We'll talk about that later."),
+    sayc([cl(:alerion, "...We'll talk about that later."),
           herald?(:meat_meat) ? "Holding the child. (Yes.)" : "MEAT MEAT: (holding the child) Yes.",
-          cl(:wyn, "(very quietly) ...Is the little one breathing?")])
+          cl(:wyn, "...Is the little one breathing?")])
     set_flag(:autumn_fell)
     set_flag(:child_saved)
     ($game_switches[SW_AUTUMN_FELL] = true; $game_map.need_refresh = true if $game_map) if $game_switches
@@ -624,6 +624,8 @@ module FrostThaw
     sayc([as(:wyn, "(stricken) That's her sap. That's Hyphora's blood."),
           cl(:alerion, flag?(:heart_given_summer) ? "That's the cold Sephek carried. Eline said Summer had his heart." :
                                                     "That's the cold Sephek carried. I'd know it anywhere. That's his heart."),
+          # (the spine, owner 2026-11-11: Auril is the threat under everything; Summer is burning a piece of her)
+          cl(:reptin, "She's burning a piece of Auril to keep her summer going. When it burns out, Auril comes to take her winter back."),
           # (Brightmane's own words if the player heard her answer, 048_F; else Ch6's, on the spine)
           cl(:glimmer, flag?(:brightmane_answered) ? "(the Rimefang shaking) ...Brightmane said I'd know the fire when I saw it." :
                                                      "(the Rimefang shaking in his hand) ...Brightmane said I'd find a better fire.")])
@@ -751,7 +753,7 @@ module FrostThaw
     say([c == 0 ? "You hold it out across the pool. He doesn't turn round." : "You close your hand over it. He hears her anyway.",
          "VAR: (warm and rough, without turning) Kelyn. I'm here. It's worse than I told you.",
          "KELYN: (from the stone) Oh, thank the seasons. Var, come up. Come up now."])
-    sayc([cl(:meat_meat, "(very still) He talks like the cold table. Slow. Counting.")])
+    sayc([cl(:meat_meat, "He talks like the cold table. Slow. Counting.")])
     Stage.turn_to(var) if var
     say(["He turns. His face is Var's. His eyes are red-gold, and they don't blink.",
          "VAR: (a woman's voice, amused) Variables that refused to die.",
@@ -765,7 +767,7 @@ module FrostThaw
     Stage.theme(nil) rescue nil                 # the chamber's music comes back under her
     set_flag(:summer_unmasked)
     c = pbMessage(_INTL("Avarice waits, smiling."), [_INTL("\"Where's Var?\""), _INTL("Say nothing")], 0)
-    say([c == 0 ? "AVARICE: (a hand on the cracked face, almost fond) You're looking at him. What's left." :
+    say([c == 0 ? "AVARICE: (a hand on the cracked face) You're looking at him. What's left." :
                   "AVARICE: Nothing to say? Good. The ones who count are quiet."])
     # The look-back (never more than three): clues the player walked past.
     recall = []
@@ -774,13 +776,13 @@ module FrostThaw
     recall << "(The compass Summer's people paid for: \"Hello, little failures.\")" if flag?(:hew_compass_woke) && !flag?(:var_story_known)
     recall << "(Var at the Split Dock, glaive up: \"Who in the Nine Hells are you?\" No answer, ever.)" if flag?(:var_story_known)
     say(recall.first(3)) if !recall.empty?
-    say(["KELYN: (from the stone, very small) ...Var?",
+    say(["KELYN: (from the stone) ...Var?",
          "AVARICE: (to the stone) Gone thirty years, Speaker. Do keep up.",
          "The stone goes cold in your hand."])
     say(["AVARICE: The duergar call me Xardorok. Names are coats too. So is summer.",
          "AVARICE: When my dragon flies, Ten-Towns melts, and I sit where the Frostmaiden sits."])
     if with_or_is?(:reptin)
-      speak(:reptin, "(politely) And the Dale? What does your summer cost them?", "...And the Dale?")
+      speak(:reptin, "And the Dale? What does your summer cost them?", "...And the Dale?")
     end
     say(["AVARICE: Auril takes one a month and calls it mercy. I take them once. Do the sums.",
          "AVARICE: One harvest, warm, for the White Womb, and nobody in the Dale freezes again.",
@@ -793,7 +795,7 @@ module FrostThaw
           herald?(:meat_meat) ? cl(:reptin, "(stepping in front of you) She's not going anywhere near you.") :
                                 cl(:reptin, "(stepping in front of Meat Meat) She's not going anywhere near you.")])
     if flag?(:avarice_shard_lodged)
-      say(["AVARICE: (past him, to you) I watched you come down through my garden.",
+      say(["AVARICE: (past him) I watched you come down through my garden.",
            "AVARICE: You've been carrying my eye since the Shattered Bed."])
     end
     if flag?(:took_hag_secret)
@@ -827,7 +829,7 @@ module FrostThaw
     state[:circle_actions] ||= 0
     Stage.pan_to(*HEART_VIEW) if stage_event(VAR_EVENT)
     say(["Avarice lays both hands on the engine. It drinks from her, or she from it.",
-         "AVARICE: (eyes half closed) The engine needs a minute to drink. So do I.",
+         "AVARICE: The engine needs a minute to drink. So do I.",
          "AVARICE: Fiddle with my circle, if you like. Every second, my dragon wakes a little more.",
          "Twelve root-spires ring the pool: Auril's frost-sigils under, Avarice's glyphs on top."])
     if flag?(:captain_hints)
@@ -1061,7 +1063,7 @@ module FrostThaw
       say([c == 0 ? "You take hold of it too. She doesn't let go until you've both got it." :
                     "You close her hands round it. She closes yours round it too. Neither of you lets go."])
     end
-    sayc([cl(:alerion, "(very quietly) He always hummed Shimmer's song wrong. On purpose, I think.")])
+    sayc([cl(:alerion, "He always hummed Shimmer's song wrong. On purpose, I think.")])
     give_key(:FT_DAWNFANG)
     Stage.cleanup rescue nil
     pbMessage(_INTL("Glimmer is gone.")) rescue nil
@@ -1106,9 +1108,9 @@ module FrostThaw
     else
       say(["(Or break it: Auril loses a piece, and Sephek never comes back.)"])
     end
-    sayc([cl(:meat_meat, "(quietly) Meat Meat wants to stab it. ...Meat Meat will listen. For him."),
+    sayc([cl(:meat_meat, "Meat Meat wants to stab it. ...Meat Meat will listen. For him."),
           # (dialogue 08 §5: no pet name in grief, and not a cliché)
-          cl(:alberica, "(plainly) You choose. We'll all carry it.")])
+          cl(:alberica, "You choose. We'll all carry it.")])
     c = pbMessage(_INTL("The Frost Saint Shard..."), [_INTL("Sanctify it"), _INTL("Leave it whole"), _INTL("Destroy it")], 0)
     case c
     when 0
@@ -1227,7 +1229,7 @@ module FrostThaw
     Stage.walk(av, [1]) if av                   # she steps out of him, down off the pool's edge
     Stage.turn_to(av) if av
     sayc(["Avarice steps out of him, and looks down at her own hands.",
-          "AVARICE: (almost admiring) Oh. That was clever.",
+          "AVARICE: Oh. That was clever.",
           "She reaches for a shard of the hag's old mirror. It's cracked through. It won't take her."])
     pbSEPlay("Fire1") rescue nil
     $game_screen.start_flash(Color.new(200, 30, 20, 220), 20) rescue nil
@@ -1251,9 +1253,9 @@ module FrostThaw
     Stage.hide(var) if var
     say(["Beside it, Var Rime-Breaker's borrowed body turns to glass, and breaks."])
     ($game_switches[SW_ENGINE_DEAD] = true; $game_map.need_refresh = true if $game_map) if $game_switches
-    sayc([with_or_is?(:alerion) ? as(:alerion, "(crouching, not touching her) ...Dead. Nothing in her. Nothing at all.") : "She doesn't move.",
-          cl(:alberica, "(very plainly) She doesn't get to come back from that. Not even her."),
-          cl(:meat_meat, "(after a long time) ...Good.")])
+    sayc([with_or_is?(:alerion) ? as(:alerion, "(not touching her) ...Dead. Nothing in her. Nothing at all.") : "She doesn't move.",
+          cl(:alberica, "She doesn't get to come back from that. Not even her."),
+          cl(:meat_meat, "...Good.")])
     # (an input on the beat for everyone; only the player who read the lab's
     # last page knows what the bare arms mean)
     c = pbMessage(_INTL("The body in the glass..."), [_INTL("Look more closely"), _INTL("Leave it")], 1)
@@ -1268,7 +1270,7 @@ module FrostThaw
     white_womb_beat
     # Context 08 M8-9: Kelyn heard it all; the city didn't.
     say(["The sending-stone warms in your hand.",
-         "KELYN: (from the stone, hoarse) I heard her. All of it. ...The leaves are turning up here.",
+         "KELYN: (from the stone) I heard her. All of it. ...The leaves are turning up here.",
          "KELYN: (from the stone) Come up. Before the city decides what it saw."])
     set_flag(:kelyn_heard_reveal)
     say(["On the floor, a splinter of the hag's mirror fogs once, as if breathed on from far away."])
@@ -1387,11 +1389,11 @@ module FrostThaw
             cl(:alberica, "Seven years? Kitten, I'll pour it myself."),
             cl(:alerion, "Don't."),
             # (notes 08 F9, dialogue 08 §5: the curse shown, in his fur-joke voice)
-            cl(:glimmer, "(flexing frosted fingers round the cup) The fur helps. Mostly.")])
+            cl(:glimmer, "The fur helps. Mostly.")])
     elsif flag?(:glimmer_gone) && !flag?(:banter_forge_rest_after)
       set_flag(:banter_forge_rest_after)
       sayc(["Nobody says much. The diggers' flask goes round twice.",
-            cl(:alberica, "(quietly) He'd have made a joke about this sap. A terrible one."),
+            cl(:alberica, "He'd have made a joke about this sap. A terrible one."),
             cl(:alerion, "He did."),
             cl(:wyn, "...I poured him a cup. I don't know why."),
             cl(:meat_meat, "Leave it. Meat Meat will guard it.")])

@@ -130,7 +130,7 @@ module FrostThaw
     end
     # Six people, five trinkets: the one with no lure (context/01.md HB3).
     if herald?(:meat_meat)
-      say(["EPHERIS: (to you) And you've nothing cold on you at all. You just followed them here."], event_id)
+      say(["EPHERIS: And you've nothing cold on you at all. You just followed them here."], event_id)
       speak(:meat_meat, "Meat Meat follows cold things. And Razzy. Razzy went out the gate.",
             "...Razzy went out the gate.", event_id)
       say(["EPHERIS: Then you'll want the same gate they do. Good. Leave together."], event_id)
@@ -516,7 +516,7 @@ module FrostThaw
       give_key(:FT_GATESHARD) rescue nil
       say(["The compass needle swings to it."])
     else
-      say(["EPHERIS: (to you) And you. You've been holding something since you came in. Show me.",
+      say(["EPHERIS: And you. You've been holding something since you came in. Show me.",
            "You open your hand. The lantern glass hums, very low, and the compass needle swings to it."], event_id)
     end
     say(["EPHERIS: ...Hag-glass. Mirror-ice. Nobody makes it but one old woman in the Dale.",

@@ -176,7 +176,7 @@ module FrostThaw
     say([herald?(:wyn) ? "EIRA: You left your post. The night the curtain tore. The tree noticed." :
                          "EIRA: (to Wyn) You left your post. The night the curtain tore. The tree noticed."])
     speak(:wyn, "I know. I'm here to answer for it.", "...I know.")
-    sayc([cl(:reptin, "(gently) And we're here to stand next to them while they do."),
+    sayc([cl(:reptin, "And we're here to stand next to them while they do."),
           cl(:meat_meat, "Anyone pokes mushroom person with a spear, Meat Meat pokes back."),
           "EIRA: ...Pass. Touch nothing that sings.",
           cl(:alberica, "Touch nothing that sings. Well. There goes my evening."),
@@ -230,7 +230,7 @@ module FrostThaw
         set_flag(:verdant_sickness)
         add_counter(:story_beats)
         set_switch(SW_RHEVEN_BLIGHT, false)
-        sayc([cl(:wyn, "(to the root, very softly) There. You can breathe now."),
+        sayc([cl(:wyn, "(to the root) There. You can breathe now."),
               "RHEVEN: I owe you a drink, Reptin. Several. Come up to the Root-Tier when this is done.",
               "YARRO: Mended, not burned. The gardens will remember you. So will I, if anyone asks.",
               "YARRO: Take a lantern-puff. Squeeze it and it glows. Carry it and the dark leaves you be."])
@@ -260,7 +260,7 @@ module FrostThaw
     set_flag(:yarro_witness)
     add_counter(:story_beats)
     set_switch(SW_RHEVEN_BLIGHT, false) rescue nil
-    sayc([cl(:wyn, "(to the ash, very softly) There. You can grow back now."),
+    sayc([cl(:wyn, "(to the ash) There. You can grow back now."),
           "YARRO: Gently done. The gardens will remember you. So will I, if anyone asks.",
           "YARRO: Take a lantern-puff. Squeeze it and it glows. Carry it and the dark leaves you be."])
     give(:FT_SPORELANTERN)
@@ -321,7 +321,7 @@ module FrostThaw
     give(:TM53)
     sayc(["LUMINARA: Energy Ball. Light, gathered by green things, thrown hard.",
           "LUMINARA: Go to the Mnemosyne. She will decide if you may hear the name.",
-          cl(:wyn, "(barely out loud) She said honest. She never says honest.")])
+          cl(:wyn, "She said honest. She never says honest.")])
     state[:goal] = flag?(:hyphora_named) ? "The water past the Fane: the lake remembers." : "The Mnemosyne, above the gardens."
   end
 
@@ -336,7 +336,7 @@ module FrostThaw
     sayc(["An ancient myconid, layered like old bark, sits in a ring of stone tablets.",
           "MYR: (many voices at once) I remember the first logger. I remember the sapling.",
           "MYR: I remember the night the seed drank four hundred years.",
-          herald?(:reptin) ? "MYR: (to you) You carried the seed." : (with_or_is?(:reptin) ? "MYR: (to Reptin) You carried the seed." : "MYR: One of you carried the seed."),
+          herald?(:reptin) ? "MYR: You carried the seed." : (with_or_is?(:reptin) ? "MYR: (to Reptin) You carried the seed." : "MYR: One of you carried the seed."),
           cl(:reptin, "A golden acorn, from a priest in Bryn Shander. I did ask nicely."),
           "MYR: A seed of Erato, who was a seed of Balanus.",
           "MYR: And Balanus was the World Tree, before the Frostmaiden cut it down.",
@@ -351,7 +351,7 @@ module FrostThaw
     end
     set_flag(:hyphora_sworn)
     sayc(["MYR: Hyphora. It means the thread that binds.",
-          cl(:wyn, "(very quietly) Hyphora. ...Hello."),
+          cl(:wyn, "Hyphora. ...Hello."),
           "MYR: And Hyphora is afraid. Something under her burns hotter every night.",
           "MYR: It drinks her sap. It has carved her old roots into a machine.",
           "The tablets round her hum, all together, like a held breath.",
@@ -412,7 +412,7 @@ module FrostThaw
       say(["You ask. The tree answers."])
     elsif with_or_is?(:reptin)
       say(["Reptin kneels at the edge and lays his hand flat on the root that runs under the water.",
-           "REPTIN: (softly, to the root) Excuse me. Could we trouble you for a little rain?",
+           "REPTIN: (to the root) Excuse me. Could we trouble you for a little rain?",
            "He asks. The tree answers."])
     else
       say(["Wyn kneels and lays a hand flat on a root. The tree answers."])
@@ -515,9 +515,9 @@ module FrostThaw
     return say(["Where the monolith stood: black water, and a ring of tiny white caps along the edge."], event_id) if flag?(:mycolith_down)
     sayc(["Icy platforms over a black lake.", "On them, a shelf-fungus monolith with an auroral crack down its middle.",
           "It's breathing.",
-          as(:wyn, "(very quietly) Oh... it's the old tree. What's left of Balanus. Still grieving."),
+          as(:wyn, "Oh... it's the old tree. What's left of Balanus. Still grieving."),
           as(:wyn, "A god that died, and... wouldn't let go."),
-          cl(:alerion, "(very quietly) I know how that goes."),
+          cl(:alerion, "I know how that goes."),
           "SHADOW MYCOLITH: (roots of sound) STILL. STAY. STILL."], event_id)
     if !flag?(:mycolith_minions_1)
       return if !mycolith_minions(1)
@@ -546,7 +546,7 @@ module FrostThaw
       say([as(:wyn, "A god's last spark. It doesn't want to hide any more. ...Neither do I.")])
     else
       say(["When it falls, a spark of shadow rises from it like a moth, and settles on Wyn's hand.",
-           "WYN: (quiet) Oh. That's... mine now. Isn't it.",
+           "WYN: Oh. That's... mine now. Isn't it.",
            "WYN: A god's last spark. The part of it that hid. It doesn't want to hide any more."])
     end
     if with_or_is?(:meat_meat)
@@ -577,8 +577,8 @@ module FrostThaw
           "HYPHORA: It burns his heart to keep me in summer. My leaves forget how to fall.",
           "HYPHORA: Thirty summers. No winter, no spring. The wheel can't turn on one season.",
           flag?(:promised_their_time) || flag?(:herald_wall_vow) ?
-            "HYPHORA: (to you) You want the light-wall gone. Then help me let go of summer." : nil,
-          cl(:reptin, "(very quietly) I only planted an acorn. I didn't know it would be someone."),
+            "HYPHORA: You want the light-wall gone. Then help me let go of summer." : nil,
+          cl(:reptin, "I only planted an acorn. I didn't know it would be someone."),
           "HYPHORA: I will open my roots to the burning place."])
     speak(:wyn, "(a hand on the root) ...The night the door broke. Was that you? Calling me?",
           "...Was that you? Calling me?") if with_or_is?(:wyn)
@@ -587,7 +587,7 @@ module FrostThaw
           cl(:alberica, "Only four hundred? Sweetheart, I've got shoes older than that."),
           cl(:reptin, "You do not."),
           cl(:alberica, "Spiritually."),
-          cl(:wyn, "(very softly) ...She didn't say no.")])
+          cl(:wyn, "...She didn't say no.")])
     Stage.panel_off(fade: 16)
     hyphora_graft                                # a graft in the party: she knows it (051; never required)
     set_flag(:hyphora_leave)
@@ -658,7 +658,7 @@ module FrostThaw
           cl(:meat_meat, "And her. The lady. Meat Meat can smell the cold table from here."),
           cl(:glimmer, "(a hand on the Rimefang) Cold since the stair. It knows where it's going.")])
     if with_or_is?(:wyn)
-      speak(:wyn, "(very quietly) We could go up. Tell the Council. Let the Rootwardens come.", "...We could go up.")
+      speak(:wyn, "We could go up. Tell the Council. Let the Rootwardens come.", "...We could go up.")
     end
     if with_or_is?(:alberica)
       speak(:alberica, "And every night we wait, the tree burns a bit more. You heard her, sweetheart.",

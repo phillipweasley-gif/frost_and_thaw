@@ -1106,5 +1106,14 @@ check("every trade's Pokémon are real, and a trade runs once") {
   FT.state[:flags]&.delete(:trade_gurk) if !had
   real && once && $traded.nil? }
 
+check("Selrae never uses contractions (her voice marker)") {
+  bad = Dir[File.join(FT_DIR, "*.rb")].flat_map { |f| File.read(f, encoding: "UTF-8").scan(/"SELRAE: [^"]*"/) }
+          .select { |l| l =~ /\b(don't|doesn't|can't|won't|I'm|it's|you're|we're|they're|isn't|aren't|I'll|we'll|you'll|they'll|I've|that's|there's|let's)\b/i }
+  bad.empty? || (puts bad.first(5).inspect; false) }
+check("the partner beats exist, and the stake and spine lines are in the story") {
+  src = Dir[File.join(FT_DIR, "*.rb")].map { |f| File.read(f, encoding: "UTF-8") }.join("\n")
+  %i[partner_keeps_you_warm door_helper partner_answers_auril first_partner].all? { |m| FT.respond_to?(m) } &&
+    ["No Hearth, no me", "I only ever sold her weather", "what Auril's winter makes of anyone", "That one grew"].all? { |n| src.include?(n) } }
+
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

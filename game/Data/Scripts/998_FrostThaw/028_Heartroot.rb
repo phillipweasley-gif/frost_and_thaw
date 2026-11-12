@@ -140,7 +140,7 @@ module FrostThaw
           cl(:shade, "Slides. Lovely. Everyone pick a wall to hit.") ||
             cl(:glimmer, "Slides. Lovely. I'll land on my feet. The rest of you, pick a wall."),
           cl(:meat_meat, "Meat Meat goes first. 'Wheee' is a battle cry."),
-          with_or_is?(:meat_meat) ? cl(:reptin, "(sighing) Of course it is. Try not to land on anything with teeth.") : nil])
+          with_or_is?(:meat_meat) ? cl(:reptin, "Of course it is. Try not to land on anything with teeth.") : nil])
   end
 
   #-----------------------------------------------------------------------------

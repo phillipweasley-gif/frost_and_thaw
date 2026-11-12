@@ -295,7 +295,7 @@ module FrostThaw
     lonelywood: [{ if: { flag: :shimmer_taken }, lines: ["...I should have been awake.", "I'm always awake. I should have been awake."] },
                  ["Nimsy Huddle bakes cookies and runs a town full of thieves. I respect that."]],
     lucky_liar: ["I'm not drinking tonight. Someone has to watch the door.",
-                 "(flexing a white hand) Knife's cold. My fingers are colder. Don't tell Shimmer."],   # the curse, set up (whole read T5)
+                 "Knife's cold. My fingers are colder. Don't tell Shimmer."],   # the curse, set up (whole read T5)
     glade: [{ if: { flag: :shimmer_taken }, lines: ["Don't. Just... don't say anything. Not yet."] },
             ["Stone circle, nobody for miles. Good place for a bad deal."]],
     moon_temple: [{ if: { flag: :sephek_defeated }, lines: ["He's in there. Asleep. I could stand here all night and watch him not wake up."] },
@@ -338,7 +338,7 @@ module FrostThaw
     # the morning after, the house knows (notes 03 E14)
     if flag?(:shimmer_taken) && !flag?(:nimsy_sorry)
       set_flag(:nimsy_sorry)
-      say(["NIMSY: (quietly) Your friend's bedroll was cold before dawn. I'm sorry.",
+      say(["NIMSY: Your friend's bedroll was cold before dawn. I'm sorry.",
            "NIMSY: The attic's yours as long as you need it."], event_id)
     end
     last_night = !flag?(:shimmer_taken) && companions.include?(:shimmer)
@@ -458,10 +458,10 @@ module FrostThaw
                   [_INTL("\"Shimmer?\""), _INTL("(Keep your eyes shut.)")], -1)
     if c == 0
       set_flag(:shimmer_lied)
-      say([as(:shimmer, "(a whisper) Privy. Go back to sleep.")])
+      say([as(:shimmer, "Privy. Go back to sleep.")])
     else
       set_flag(:shimmer_asked)
-      say([as(:shimmer, "(a whisper) Look after Shade. They'll pretend they don't need it.")])
+      say([as(:shimmer, "Look after Shade. They'll pretend they don't need it.")])
     end
     if shim
       st.leave(shim, *NIMSY_DOOR)
@@ -477,14 +477,14 @@ module FrostThaw
     pbMessage(_INTL("On the pillow: a note, and the carved wooden cat."), [_INTL("(Read the note.)")], -1)
     shade = party[:shade]
     st.walk_to(shade, 9, 7, face: 8) if shade
-    say([as(:shade, "(reading) \"He said before the next moon, or he picks someone else.\""),
+    say([as(:shade, "\"He said before the next moon, or he picks someone else.\""),
          as(:shade, "\"I'm not letting him pick. Don't follow. Keep the cat. S.\"")])
     if flag?(:shimmer_lied)
       st.turn_to(shade) if shade
       say([herald?(:shade) ? "You look up." : "Shade looks up at you.",
            as(:shade, "She told you the privy. She told me a storm.")])
     end
-    say([as(:shade, "(very quiet) ...She always does this.")])
+    say([as(:shade, "...She always does this.")])
     state[:goal] = "Go after her."
     pbMessage(_INTL("What do you do?"), [_INTL("(Go after her.)")], -1)
     st.walk_to($game_player, *NIMSY_DOOR) if st.map?
@@ -500,13 +500,13 @@ module FrostThaw
     say([me ? "You're back in the attic. The pendant is gone. The rune on your chest isn't." :
               "You're back in the attic. Alberica's pendant is gone. The rune on her chest isn't.",
          me ? "(It itches. Like a snowflake that won't melt.)" : nil,
-         as(:shade, "(very quiet) ...No.")].compact)
+         as(:shade, "...No.")].compact)
     speak(:alerion, "She's gone, Shade. She chose it.", "...She's gone, Shade.")
     speak(:alerion, "Stone circle. Birches. Someone in this town knows where.", "...Stone circle. Birches. Someone here knows where.")
-    say([cl(:reptin, "(very quietly) She said no to a god. Twice.")].compact)
+    say([cl(:reptin, "She said no to a god. Twice.")].compact)
     # (Shade answers her with a look: as Alberica it's said aloud, not thought)
     speak(:alberica, "Shade. Look at me. We go together. Nobody goes alone.", "Shade. ...Together.") if with_or_is?(:alberica)
-    say([outsider? && flag?(:shimmer_first) ? as(:shade, "(to you) You could have gone south. You came for her.") : nil,
+    say([outsider? && flag?(:shimmer_first) ? as(:shade, "You could have gone south. You came for her.") : nil,
          "Outside, under the window, a tall figure with long ears and a lantern waits in the snow."].compact)
     state[:goal] = "Outside. Someone's waiting under the window."
     jet_under_the_window
@@ -574,7 +574,7 @@ module FrostThaw
     mood(:requiem)                                  # (not the house's music, coming home from the vision)
     state[:companions] = (state[:companions] || []) - [:shimmer]   # (her last line comes from nowhere)
     say(["Sephek is on his knees, weeping.",
-         "SHIMMER: (from nowhere, very softly) Don't cry, Shade. I'm still here. Just colder."])
+         "SHIMMER: (from nowhere) Don't cry, Shade. I'm still here. Just colder."])
     Stage.overlay_off("O-03", fade: 20)
     Stage.panel_off(fade: 20)
   end
@@ -625,7 +625,7 @@ module FrostThaw
       say(lines, event_id)
     end
     if first_time?(:iriskree_noticed)
-      sayc([cl(:shade, "(quietly, once she's turned away) She stands like someone who's killed for money."),
+      sayc([cl(:shade, "(once she's turned away) She stands like someone who's killed for money."),
             cl(:alerion, "Then she's retired. Leave it.")])
     end
     mart(:lonelywood, event_id)
@@ -657,7 +657,7 @@ module FrostThaw
          as(:shimmer, "One night, she wore me like a coat. Her priests have a word for it. Vessel.")])
     st.panel_off(fade: 16)
     st.overlay_off("O-03", fade: 16)
-    say([as(:shade, "(quietly) You told me it was a storm."),
+    say([as(:shade, "You told me it was a storm."),
          as(:shimmer, "It was a storm. Hers. You came into it after me anyway."),
          as(:shimmer, "Dragged me out by the hair."),
          as(:shade, "And in the morning there was a horn in the snow. I never knew whose."),
@@ -744,7 +744,7 @@ module FrostThaw
       st.turn_to(jet) if jet
     end
     say(["JET SENTRY: A heart of ice. It's what's left when she tries to wear someone, and can't.",
-         as(:shade, "(very quiet) ...She couldn't. Good.")])
+         as(:shade, "...She couldn't. Good.")])
     if !flag?(:meat_meat_joined)
       eggs = herald?(:reptin) ? "your arms" : "Reptin's arms"
       if mm
@@ -769,7 +769,7 @@ module FrostThaw
       speak(:reptin, "She said his name, and she promised. That's the rite.", "...She said his name. She promised.")
       say(["MEAT MEAT: Razzy and Meat Meat ran away together. From a cold table.",
            "MEAT MEAT: From the lady with books and bones. She took Razzy's voice.",
-           as(:reptin, "(quietly) The scar on his throat."),
+           as(:reptin, "The scar on his throat."),
            as(:alerion, "Pale, books and bones. Naerth's lady in the tower."),
            "MEAT MEAT: Meat Meat comes with you now. Meat Meat is not asking.",
            ask_cl(:alberica, "Oh, I love her. Can we keep her?"),
@@ -777,7 +777,7 @@ module FrostThaw
            cl(:reptin, "She's saying she's grateful."),
            "MEAT MEAT: Meat Meat is saying the other thing. Also: who has coffee?",
            # the grief answers the jokes (dialogue 03 Top 5 #2)
-           as(:shade, "(very quiet) She'd have liked you.")].compact)
+           as(:shade, "She'd have liked you.")].compact)
       state[:companions] = ((state[:companions] || []) + [:meat_meat]).uniq
       set_flag(:meat_meat_joined)
       set_switch(SW_MEAT_JOINED, true)
@@ -790,7 +790,7 @@ module FrostThaw
         speak(:meat_meat, "The lady with books and bones took Razzy's voice. On her cold table.",
               "...The lady with books took his voice.")
         say([as(:alerion, "Pale, books and bones. Naerth's lady in the tower."),
-             as(:reptin, "(quietly) The scar on his throat.")])
+             as(:reptin, "The scar on his throat.")])
       end
     end
     set_flag(:razzy_named)
@@ -837,7 +837,7 @@ module FrostThaw
          "SEPHEK: Give me the heart, and the Frostmaiden forgets your names.",
          "SEPHEK: I can't take it. It burns me. It has to be given.",
          as(:shade, "You killed my sister."),
-         "SEPHEK: (quietly) She killed herself. I only held the knife. I'm sorry. Give it to me.",
+         "SEPHEK: She killed herself. I only held the knife. I'm sorry. Give it to me.",
          cl(:alberica, "(a hand on Shade's arm) Not alone. Not this time.")].compact)
     here = $game_map.map_id
     won = pbTrainerBattle(:FT_SEPHEK, "Sephek", nil, false, 0)
@@ -1030,19 +1030,19 @@ module FrostThaw
     say(["Then, from inside the shell, a hum. Four notes."])
     st.unpose(shade) if shade
     st.balloon(shade, "B-07", frames: 70) if shade
-    say([as(:shade, "(very quiet) ...She said it wasn't a song."),
+    say([as(:shade, "...She said it wasn't a song."),
          flag?(:shimmer_asked) && !herald?(:shade) ? "You put a hand on Shade's shoulder." : nil,
          "ZENITH: Not her vessel, and not her prize. Her answer, in a new disguise.",
          herald?(:alerion) ? "The ring on your hand warms for the first time. (...Frostina.)" :
                              "The ring on Alerion's hand warms for the first time.",
          herald?(:alerion) ? nil : "ALERION: ...Frostina.",
-         cl(:alberica, "(softly) Frostina. She'd have hated that. She'd have loved it."),
+         cl(:alberica, "Frostina. She'd have hated that. She'd have loved it."),
          "LUNA CARVER: It has a heart now. It needs time, and the world hasn't got enough."].compact)
     st.remove_actor(egg) if egg
     give_key(:FT_FROSTEGG)
     say(["Shade wraps the Frost Egg in their coat. (You can check on it in Key Items.)"])
     if with_or_is?(:meat_meat)
-      speak(:meat_meat, "(quietly) Razzy heard it too. Razzy wants a song.", "...Razzy heard it too.")
+      speak(:meat_meat, "Razzy heard it too. Razzy wants a song.", "...Razzy heard it too.")
     end
     # Zenith's optional verse pays off much later: invite it (notes 03 E28)
     say(["ZENITH: Come back when the egg is still,",
@@ -1072,7 +1072,7 @@ module FrostThaw
          "LUNA CARVER: Shimmer's is the first, sung into the egg. The cold man's beats in his chest.",
          "LUNA CARVER: Bring a third to the other two, and the Frostmaiden gets a body to walk in.",
          cl(:reptin, "Then nobody brings a third. I'll be very rude about it."),
-         outsider? ? "LUNA CARVER: (to you) You, I can't see at all. It's as if you haven't been born yet." : nil].compact, event_id)
+         outsider? ? "LUNA CARVER: You, I can't see at all. It's as if you haven't been born yet." : nil].compact, event_id)
     lev = event_id && $game_map ? $game_map.events[event_id] : nil
     st.turn_to(lev, shade) if lev && shade
     say(["LUNA CARVER: (to Shade) And you. Your house has a spark in it that isn't out.",
@@ -1131,7 +1131,7 @@ module FrostThaw
          "ZENITH: a crone laughs low, and the laughing's the call."], zen ? zen.id : nil)
     say(["JET SENTRY: Plain words: a hag lives in a chasm south of Dougan's Hole.",
          "JET SENTRY: The fishers hear her laughing on the ice. So do your trinkets.",
-         outsider? ? "JET SENTRY: (to you) She keeps mirrors. Cold glass. Like the shard you carry." : nil].compact,
+         outsider? ? "JET SENTRY: She keeps mirrors. Cold glass. Like the shard you carry." : nil].compact,
         jet ? jet.id : nil)
     # (Alerion answers her: as Alberica it's said aloud)
     speak(:alberica, "A laughing hag who wants our jewellery. I've dated worse.", "...A hag. Lovely.") if with_or_is?(:alberica)

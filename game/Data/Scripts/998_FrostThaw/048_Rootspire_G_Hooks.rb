@@ -291,11 +291,11 @@ module FrostThaw
       set_flag(:council_support)
       wheel(1)
       add_counter(:story_beats)
-      say(["KELYN: (standing) The Council of Seasons supports the Heralds. Whatever you need.",
+      say(["KELYN: The Council of Seasons supports the Heralds. Whatever you need.",
            "KELYN: For whatever comes next. North, if it's north.",
            "Every crystal in the Hall glows at once."])
     else
-      say(["KELYN: (carefully) The Council... thanks the Heralds. And will consider. At length.",
+      say(["KELYN: The Council... thanks the Heralds. And will consider. At length.",
            "(You can't win the Council over today. The support you have will have to do.)"])
     end
   end
@@ -304,7 +304,7 @@ module FrostThaw
     say(["KELYN: The city wants to thank you. A Festival of Balance, in the Hall of Seasons.",
          "KELYN: And if you'll take it, Rootspire as your home. A bed. A door that's never locked."], event_id)
     # (story/15 §3, 15.33: the Council remembers the orb)
-    say(["KELYN: (quieter, to you) You stopped me at the orb. I haven't forgotten. I won't."], event_id) if flag?(:kelyn_warned)
+    say(["KELYN: You stopped me at the orb. I haven't forgotten. I won't."], event_id) if flag?(:kelyn_warned)
     c = pbMessage(_INTL("Accept the city's thanks?"), [_INTL("\"We accept.\""), _INTL("\"Not yet. When it's finished.\"")], 0)
     set_flag(:festival_of_balance)
     if c == 0
@@ -347,7 +347,7 @@ module FrostThaw
           "TAMSIN: Everyone up there THINKS they know. That's the fun of it. Come on!"].compact, event_id)
     Stage.escort(ev, 17, 9) rescue nil if ev
     say(["TAMSIN: And the Promenade's over the leaf-bridge, on the Canopy. That's Autumn's. Posh."], event_id)
-    say(["TAMSIN: (to you, quieter) I'm showing them round. You can come. ...You can't be in charge."], event_id) if journey?
+    say(["TAMSIN: I'm showing them round. You can come. ...You can't be in charge."], event_id) if journey?
     side_goal(:city_tour, "The Verdant Halls: up the market's north stair. The Promenade: the leaf-bridge.",
               done: [:festival_night, :visited_halls])
   end

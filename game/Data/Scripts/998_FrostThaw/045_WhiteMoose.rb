@@ -194,7 +194,7 @@ module FrostThaw
            "NIMSY: Fine. Ten thousand for its head. The butcher pays a thousand for the carcass."])
       persuade = with_or_is?(:alberica) || rand(100) < 50
       speak(:alberica, "Ten thousand? For a moose that's beaten every hunter in town? Do better.",
-                       "(quietly) Ten thousand. For that moose.") if with_or_is?(:alberica)
+                       "Ten thousand. For that moose.") if with_or_is?(:alberica)
       sayc([
             persuade ? "NIMSY: (laughing) ...Twelve and a half. And not a copper more." : "NIMSY: Ten. I've got children, and a roof that leaks."])
       set_flag(:moose_fee_125) if persuade
@@ -226,14 +226,14 @@ module FrostThaw
         sayc(["You tell her what the mirror showed: a frost druid gave the moose its words.",
               "NIMSY: A druid. Who makes them talk.",
               cl(:alerion, "She'll do it again. A polar bear. Something under the lake. Anything."),
-              "NIMSY: (very quietly) Then this isn't over. Is it."])
+              "NIMSY: Then this isn't over. Is it."])
       end
       set_switch(SW_WM_AWAKENED, true)
     else
       sayc(["You tell her about the druid in the tomb, and the sister she said hunters shot.",
             "NIMSY: Her poor sister. (She sits down.) Somebody's hunters did that. Ours, maybe.",
             nil])
-      speak(:reptin, "It doesn't make what she did right. It makes it make sense.", "(quietly) It makes it make sense. Not right.") if with_or_is?(:reptin)
+      speak(:reptin, "It doesn't make what she did right. It makes it make sense.", "It makes it make sense. Not right.") if with_or_is?(:reptin)
       sayc([
             "NIMSY: It always makes sense, afterwards. That's the worst of it."])
     end
@@ -314,7 +314,7 @@ module FrostThaw
     return if $game_switches[SW_WM_TOMB_FOUND]          # (the fox may have led you to them meanwhile)
     found = rand(100) < (with_or_is?(:alerion) ? 80 : 50)
     return failed_track_search if !found
-    sayc([cl(:alerion, "(crouching) Here. Fresh. Heavy, steady. We follow these.")]) if with_or_is?(:alerion)
+    sayc([cl(:alerion, "Here. Fresh. Heavy, steady. We follow these.")]) if with_or_is?(:alerion)
     state[:track_sets] = state[:track_sets].to_i + 1
     if rand(6) == 5 || state[:track_sets] >= WHITE_MOOSE_PITY
       return white_moose_tracks
@@ -666,8 +666,8 @@ module FrostThaw
   def white_moose_battle
     if boss_battle(named_mon(:B234H128, 22, "White moose"))
       sayc(["The white moose goes down in the snow and doesn't get up.",
-            "MOOSE: (a last breath, almost a laugh) She'll... make... more.",
-            cl(:reptin, "(quietly) It could talk. It could think."),
+            "MOOSE: (a last breath) She'll... make... more.",
+            cl(:reptin, "It could talk. It could think."),
             cl(:reptin, "Someone gave it that, and gave it nothing to do with it but hate."),
             "You take its head, for Speaker Huddle."])
       give_key(:FT_MOOSEHEAD)
@@ -833,7 +833,7 @@ module FrostThaw
     return say(["Three hundred and fifty pounds. You'll need more strength."]) if !party_has_strength?
     sayc(["The tomb fills with a horrible stench of decay.",
           "Inside lies the rotting corpse of a woman with Ravisin's face. Her twin, Vurnis.",
-          cl(:reptin, "(quietly, over the smell) She kept her sister here. Through all of it."),
+          cl(:reptin, "(over the smell) She kept her sister here. Through all of it."),
           "Tucked under the body: a sharkskin pouch, and two crystal vials."])
     pbReceiveItem(:FULLHEAL) rescue nil
     pbReceiveItem(:MAXPOTION) rescue nil
@@ -849,7 +849,7 @@ module FrostThaw
     end
     say(lines_for(which == :e8 ? :tomb_e8_closed : :tomb_e9_closed), event_id)
     if with_or_is?(:shade) && pbConfirmMessage(_INTL("Let Shade try the door?"))
-      sayc([as(:shade, "(after a long minute with an ear to the stone) No keyhole, no pins, no trick."),
+      sayc([as(:shade, "No keyhole, no pins, no trick."),
             as(:shade, "It wants moonlight.")])
     end
   end

@@ -191,8 +191,8 @@ module FrostThaw
             "GOSSIP: A verbeeg came out of the woods. A giant, nine feet, all elbows. It took our mead.",
             "GOSSIP: Speaker Kendrick stood in its way. It put a spear through him. Three times.",
             "The gossip's voice cracks. Somebody behind her looks at the shrine.",
-            flag?(:council_session) ? cl(:alberica, "(very quietly) \"First cask's on me.\" ...He said that. Kendrick said that.") :
-                                      cl(:alberica, "(very quietly) Kendrick. Their Speaker. On his own doorstep."),
+            flag?(:council_session) ? cl(:alberica, "\"First cask's on me.\" ...He said that. Kendrick said that.") :
+                                      cl(:alberica, "Kendrick. Their Speaker. On his own doorstep."),
             "GOSSIP: Lodging and drink for a tenday. And the brewmistress has a pot of royal jelly."], gossip ? gossip.id : event_id)
     end
     return if !pbConfirmMessage(_INTL("Go after the verbeeg and bring back Good Mead's casks?"))
@@ -241,7 +241,7 @@ module FrostThaw
     sayc(["Deep in the woods, among the snowy pines, you find the remains of the five militia.",
           "They look like they were clubbed to death.",
           "New-fallen snow has already begun to settle on them.",
-          cl(:reptin, "(kneeling) Tempus, if you're still listening in that sad little shrine."),
+          cl(:reptin, "Tempus, if you're still listening in that sad little shrine."),
           cl(:reptin, "These were yours."),
           cl(:alerion, "They followed the verbeeg. Something else stayed behind and waited for them.")], event_id)
   end
@@ -252,7 +252,7 @@ module FrostThaw
     set_flag(:ogre_tracks_read)
     # (dialogue 14: tracks are Alerion's, not Shade's; everyone hears there's a second giant)
     if with_or_is?(:alerion)
-      sayc([cl(:alerion, "(crouching) Not the verbeeg's. Bigger."),
+      sayc([cl(:alerion, "Not the verbeeg's. Bigger."),
             cl(:alerion, "It carries a club. The verbeeg carries a spear.")])
     end
     say(["Bigger feet than the verbeeg's. A second giant, with a club. It went home, unhurried."])
@@ -494,7 +494,7 @@ module FrostThaw
     say(["A verbeeg, huge and lanky and lopsided, sits cross-legged in the tunnel by a torch.",
          "He's sharpening a stone knife from the old tomb.",
          "His spear leans against the wall, in reach.",
-         "DUHG: (looking up) Oh. Little ones. Come for my honey? Duhg's honey is for Gahg."], event_id)
+         "DUHG: Oh. Little ones. Come for my honey? Duhg's honey is for Gahg."], event_id)
     c = pbMessage(_INTL("What do you do?"), [_INTL("Fight him."), _INTL("Back away.")], 0)
     return say(["You back away. He goes back to his knife, humming."]) if c == 1
     if !flag?(:friend_down) && !flag?(:friend_asleep_passed)
@@ -502,7 +502,7 @@ module FrostThaw
     end
     return if !boss_battle(named_mon(:B68H297, 27, "Duhg"))
     sayc(["Duhg topples, and the torch rolls into the stream and hisses out.",
-          cl(:alberica, "(quiet) That's for Kendrick. And the five in the woods.")])
+          cl(:alberica, "That's for Kendrick. And the five in the woods.")])
     set_flag(:duhg_down)
     set_self_switch(event_id, "A")
   end
@@ -526,7 +526,7 @@ module FrostThaw
            "In her left hand, a pearl. In her right, a wand."])
       set_flag(:chieftain_seen)
     end
-    sayc([cl(:alerion, "(very still) Leave them. Please."),
+    sayc([cl(:alerion, "Leave them. Please."),
           cl(:alerion, "Whatever you take from her, she'll take something back.")])
     return if !pbConfirmMessage(_INTL("Take the pearl and the wand?"))
     give_key(:FT_PEARLOFPOWER)
@@ -630,8 +630,8 @@ module FrostThaw
   # comes looking for whoever was at his door.
   def gahg_hide_and_seek
     sayc(["You back into the cave mouth, casks and all, and press yourselves into a niche.",
-          cl(:shade, with_or_is?(:meat_meat) ? "(a breath, no more) Nobody moves. Nobody breathes. Nobody sneezes, Meat Meat." :
-                                              "(a breath, no more) Nobody moves. Nobody breathes."),
+          cl(:shade, with_or_is?(:meat_meat) ? "(no more) Nobody moves. Nobody breathes. Nobody sneezes, Meat Meat." :
+                                              "(no more) Nobody moves. Nobody breathes."),
           "Gahg ducks in past you, calling Duhg's name."])
     if flag?(:duhg_down)
       say(["Deep in the lair, she finds him. The sound she makes isn't a word.",
@@ -739,11 +739,11 @@ module FrostThaw
     case c
     when 0
       set_flag(:pc_candidate)
-      say(["OLIVESSA: (with real relief) Then you have my support.",
+      say(["OLIVESSA: Then you have my support.",
            "OLIVESSA: That's not nothing, here. My family's been here since the founding."])
     when 1
       set_flag(:olivessa_candidate)
-      say(["OLIVESSA: (a long breath) ...All right. All right.",
+      say(["OLIVESSA: ...All right. All right.",
            "OLIVESSA: If you'll stand behind me. Somebody has to."])
     else
       set_flag(:no_challenger)
@@ -806,7 +806,7 @@ module FrostThaw
     sayc(["It's over in moments.",
           "The thugs fall over themselves getting out, and nobody seems to have been hurt at all.",
           "The hall erupts. Somebody hoists Shandar onto a table.",
-          cl(:shade, "(very quietly) Not one cut. Not one bruise. That wasn't a fight. That was a play."),
+          cl(:shade, "Not one cut. Not one bruise. That wasn't a fight. That was a play."),
           cl(:alerion, "One of them's slipping off toward the woods. Now, if we're going.")])
     set_switch(SW_GM_SHANDAR_AWAY, false)
     c = pbMessage(_INTL("What do you do?"), [_INTL("Run after the thug."), _INTL("Let it go.")], 0)

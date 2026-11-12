@@ -166,7 +166,7 @@ module FrostThaw
          "The mycelia gather, and swell, and stand up: a sporeling, wobbling, its cap still wet.",
          "It looks at you.",
          cl(:wyn, "(barely breathing) ...Hello. Hello, you."),
-         cl(:meat_meat, "(whispering, for once) Meat Meat will protect this one. Forever. Meat Meat has decided.")])
+         cl(:meat_meat, "(for once) Meat Meat will protect this one. Forever. Meat Meat has decided.")])
     grant_blessing(:nursery, "Sporeling's Wonder", "Having seen the miracle, your Pokémon won't flinch.")
   end
 
@@ -346,7 +346,7 @@ module FrostThaw
         set_flag(:pool_cured)
         say(["(The three sick myconids sit up in their beds. The pool is clean.)"])
       else
-        return say(["YARRO: (sadly) It needs a tincture. The lake knows how, but I haven't heard its story.",
+        return say(["YARRO: It needs a tincture. The lake knows how, but I haven't heard its story.",
                     "YARRO: Walk me down there?"])
       end
     end
@@ -493,7 +493,7 @@ module FrostThaw
   def memory_heist(event_id = nil)
     return if flag?(:heist_thwarted)
     say(["Someone moves among the archive shelves: a cloak, a sack, a bark tablet in a gloved hand.",
-         "MYR: (very faint) ...a prophecy tablet... stop them... don't break the others..."], event_id)
+         "MYR: ...a prophecy tablet... stop them... don't break the others..."], event_id)
     if challenge("Through the archive, quietly.", ["Edge round the shelves, touching nothing", "Run straight at the thief", "Shout a warning"], 0)
       say(["You come up behind the thief silently. She drops the tablet; you catch it before it lands.",
            "She runs. She leaves the sack. In it: a Halo prayer-token, mirror-glass."])
@@ -532,7 +532,7 @@ module FrostThaw
          "It goes out of them like a breath. For a second they look puzzled, and can't say why.",
          "MYR: The Halo kneel at the Still Sky Shrine. They carry her relics in the dark.",
          "MYR: They want a third heart, and they'll take it from a songbird.",
-         cl(:alberica, "(very plainly) Songbird. That's me, then."),
+         cl(:alberica, "Songbird. That's me, then."),
          "MYR: And they have friends in the Council."].compact)
     set_flag(:memory_traded)
     set_flag(:knows_halo_plan)
@@ -557,7 +557,7 @@ module FrostThaw
 
   def dream_request(event_id = nil)
     return say(["MYR: The little one is home. Dreaming better things."], event_id) if flag?(:dream_rescued)
-    say(["MYR: (many voices, quiet) One of the young has gone into a dream and not come out.",
+    say(["MYR: (many voices) One of the young has gone into a dream and not come out.",
          "MYR: It dreams of the first loggers. It can't wake. Will you go in after it?"], event_id)
     return if !pbConfirmMessage(_INTL("Dreamwalk with Myr?"))
     say(["Myr's spores fill the chamber. The ceiling turns into sky."])
@@ -569,7 +569,7 @@ module FrostThaw
     set_flag(:dream_entered)
     sayc(["A forest of stumps under a red sky. Sawdust falls like snow.",
           "Somewhere a small voice is crying. Somewhere else an axe rings on wood, huge and steady.",
-          cl(:wyn, "(very small) ...This is what they're all afraid of. Every one of them. Oh.")])
+          cl(:wyn, "...This is what they're all afraid of. Every one of them. Oh.")])
   end
 
   def dream_sporeling(event_id = nil)

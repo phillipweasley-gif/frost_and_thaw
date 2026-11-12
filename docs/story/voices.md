@@ -124,6 +124,29 @@ Banter comes from pairs. Each of the ten pairs has one dynamic, and the script r
 | Alerion and Wyn | The two quiet ones. Comfortable silences; Alerion talks most when it's only Wyn | WYN: "...You don't have to talk." ALERION: "I know. That's why I can." |
 | Meat Meat and Wyn | She appoints herself Wyn's bodyguard after one cup of mushroom coffee | MEAT MEAT: "Anyone touches mushroom friend, Meat Meat bites." |
 
+## The city cast (editor's pass, 2026-11-11)
+
+The pre-launch voice pass. Each supporting character who carries scenes gets one marker you can hear with the
+name covered, so the city doesn't all talk in the same dry, clipped register.
+
+| Character | Marker (hear it with the name covered) | Pet word or tic | Yes / No | Never |
+| --- | --- | --- | --- | --- |
+| Hellen | Feeds you before she lets you talk; everything is an order wrapped in food | "love", "pet"; "Sit. Eat." | "Course." / "Not in my house." | Speaks to you hungry; is clipped and cold |
+| Tamsin | Fast, competitive, one word in CAPS, keeps score | your full name; "I counted." | "OBVIOUSLY." / "That didn't count!" | Lets a loss go without a rematch |
+| Kelyn | Weighs both sides out loud; the city is the subject of her sentences | "the city"; "the seasons" | "The city will..." / "Not tonight." | Gives an order without a reason |
+| Selrae | **Never uses contractions.** Short, formal, winter as a law of nature | "Winter does not..." | "It is done." / "No." | Jokes; says "don't" |
+| Mira | Everything is a trade: price, debt, the docks' money | "the Corsairs pay their debts"; possessed: "we" | "Done." / "Not at that price." | Gives something for nothing without naming the debt |
+| Hew | Gruff, loud, CAPS when worried; counts his diggers | "my lads"; the Guild's good anvil | "Aye." / "Not on my ladder." | Lies once he's confessed |
+| Kethan | Verdicts, not conversation; fists over words | (pop, pop); "Not me. The Hall." | "Truthful." / "Look again." | Makes a speech |
+| Rheven | Earnest; quotes the creed, asks the moral question aloud | "Guard the pulse." | "That's the creed." / "Not first." | Mocks the creed |
+| Darrus | Nervous; over-explains, then goes very small | "Law and trade."; counting barrels | "Of course. Of course." / "I can't. She'll know." | Is calm before his redemption |
+| Wynsnow | Scattered professor; interrupts himself, apologises mid-sentence | "Hm?"; "Hold still." | "Obviously." / "No. Quite right." | Finishes a lecture on time |
+| Duvessa | Plain duty; speaks for the town; counts the people | "Somebody has to count." | "Done." / "Not on my word." | Pretends the lottery was anything but wrong |
+| Eirwen | Bookish, exact, a little breathless; the leaves keep the record | "the leaves"; dates on seals | "It's written." / "Not yet. It's sealed." | Destroys a record |
+
+**Cover-the-names test.** Before a scene ships, hide the speaker tags. Any line that could belong to two of
+the people above gets that person's marker or gets cut.
+
 ## Supporting cast and house rules
 
 ### Supporting cast touchstones

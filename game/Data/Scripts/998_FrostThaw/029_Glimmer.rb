@@ -101,7 +101,7 @@ module FrostThaw
     Stage.cry(:ALTARIA)
     sayc(["Frostina drops down past the Rift, close enough to stir everyone's hair.",
           "She looks at Shade and hums four notes.",
-          cl(:shade, "(very quietly) Shimmer told me to keep going. I think this is what she meant."),
+          cl(:shade, "Shimmer told me to keep going. I think this is what she meant."),
           cl(:meat_meat, "Shade comes back. Meat Meat promises for Shade.")])
     speak(:alberica, "You'd better come back, sugar. I haven't finished teasing you.",
           "...Come back. That's all.") if with_or_is?(:alberica)
@@ -165,17 +165,17 @@ module FrostThaw
     if (($PokemonBag.pbHasItem?(:FT_GLIMMERJOURNAL) rescue false) || flag?(:read_glimmer_journal)) &&
        pbConfirmMessage(_INTL("Show him the journal from the Chasm?"))
       sayc(["You take the bloodstained journal out of the pack, and hold it out to him.",
-            cl(:alberica, "(very quietly) The chasm. The skeleton with claws. Read it."),
+            cl(:alberica, "The chasm. The skeleton with claws. Read it."),
             "He reads it very still: \"...desperate to save Alberica... Tomorrow, I go into the chasm.\"",
             "It's signed Glimmer.",
             "He turns to the last page. Back to the first. He holds his own hand beside the writing.",
-            "GLIMMER: (hoarse) That's my hand. That's how I make my G. I've never written this.",
+            "GLIMMER: That's my hand. That's how I make my G. I've never written this.",
             "GLIMMER: ...I haven't written it yet. Or I wrote it last time.",
             "Nobody says anything.",
             "GLIMMER: She said the wheel turns. She didn't say it turns with me on it. Every time.",
             "GLIMMER: (to #{herald?(:alberica) ? 'you' : 'Alberica'}, very quietly) I went into that chasm for you once. I died in it.",
             "GLIMMER: ...I'm still trying. Apparently I always am.",
-            cl(:alberica, "(not quite managing her voice) Then this time you're going to try alive.")].compact)
+            cl(:alberica, "Then this time you're going to try alive.")].compact)
       set_flag(:glimmer_knows_journal)
     end
     sayc(["Frostina hums four notes at him. He hums them back, off-key, the way Shade always did.",

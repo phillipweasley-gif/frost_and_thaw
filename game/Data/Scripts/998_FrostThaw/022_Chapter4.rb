@@ -314,7 +314,7 @@ module FrostThaw
               ["These people have been hungry a long time. Hunger makes you hard.",
                "Leave the talking to me. And keep Meat Meat away from the trout."]],
     durmoot_lodge: ["She skins wolves. I keep thinking about the starving pack.",
-                    "(rubbing his hand) I'm fine. Don't look at me."],
+                    "I'm fine. Don't look at me."],
     tundra: [{ if: { flag: :fed_pack }, lines: ["They're following us. Not hunting. Keeping pace.",
                                                  "An escort. Every diplomat should have one."] },
              ["Wolves hunt out here because there's nothing else left to hunt.",
@@ -423,7 +423,7 @@ module FrostThaw
   def smokehouse_night(event_id = nil)
     sayc(["The racks drip. Everything in here smells of smoke and fish.",
           cl(:shade, "Shimmer liked smoked trout. Hated the smell. Ate it anyway."),
-          cl(:alberica, "(quietly) Then we'll eat it anyway too. For her."),
+          cl(:alberica, "Then we'll eat it anyway too. For her."),
           cl(:meat_meat, "Meat Meat will eat two. One for Shimmer. One for Meat Meat."),
           cl(:alerion, "That's three you've eaten.")], event_id)
     if flag?(:frost_egg) && flag?(:razzy_egg)
@@ -691,10 +691,10 @@ module FrostThaw
         sayc([cl(:alberica, "The tall thing on our deck, at the edge of the lamplight. That was yours.")], event_id)
       end
       say(["THREDRA: She wants a new coat to wear, you see. I'm only her seamstress."], event_id)
-      sayc([cl(:alberica, "(very plain) Auril. And the coat's me.")], event_id)
+      sayc([cl(:alberica, "Auril. And the coat's me.")], event_id)
       lines = []
       if outsider?
-        lines << "THREDRA: (squinting at you) And this one fell through my glass. Lost, dearie?"
+        lines << "THREDRA: And this one fell through my glass. Lost, dearie?"
         lines << "THREDRA: Granny could send you home. Granny's very good at sending."
       end
       lines << cl(:reptin, "(aside) Seamstress. Lovely. Let's not let her take our measurements.")
@@ -784,7 +784,7 @@ module FrostThaw
          "Her outline flickers, thin as frost on a windowpane.",
          "THREDRA: Come and find me in the chasm, dearies. Bring your wolf.",
          "THREDRA: Granny keeps her bargains."], event_id)
-    say(["THREDRA: (to you) And you, lost one. My last glass is in the chasm. Yours too."], event_id) if outsider?
+    say(["THREDRA: And you, lost one. My last glass is in the chasm. Yours too."], event_id) if outsider?
     if thr
       Stage.hide(thr)
       Stage.fx("E-06", thr, oy: 40)

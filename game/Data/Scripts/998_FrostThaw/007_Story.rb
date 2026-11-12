@@ -213,6 +213,7 @@ module FrostThaw
              "It's colder than the snow.",
              "Behind you, somewhere very far away, Tamsin is still saying your name."])
         give_key(:FT_LANTERNGLASS) rescue nil
+        partner_keeps_you_warm                   # (054: the first thing in the Dale that's on your side)
         $game_map.autoplay rescue nil
       end
       Stage.face($game_player, 8)
@@ -318,7 +319,7 @@ module FrostThaw
     if !herald?(:meat_meat)
       shade = Stage.find("Shade")
       Stage.emote(shade, :exclaim) if shade
-      say(["SHADE: (to you) You. By the door. Sit down before you fall down."])
+      say(["SHADE: You. By the door. Sit down before you fall down."])
     end
     Stage.pan_back
     set_flag(:tavern_woman)
@@ -443,7 +444,7 @@ module FrostThaw
     if outsider?
       say([journey? ? "...They're the Heralds. And nobody's carved them yet." :
                       "(Every lantern in Rootspire is lit for them. They're sitting by the worst fire in Targos.)",
-           "SHADE: (to you) And you? You came off no ship I saw."])
+           "SHADE: And you? You came off no ship I saw."])
       c = pbMessage(_INTL("What do you do?"), [_INTL("Show your Pokémon"), _INTL("\"I'm from somewhere else.\""), _INTL("Say nothing")], -1)
       case c
       when 0
@@ -470,7 +471,7 @@ module FrostThaw
     if herald?(:meat_meat)
       speak(:meat_meat, "Meat Meat is looking for Razzy. Small. Goblin. Went out the gate tonight.",
             "...Razzy. Small goblin. Went out the gate.")
-      say(["SHIMMER: (quietly) Small ones don't last out there. We'll look."])
+      say(["SHIMMER: Small ones don't last out there. We'll look."])
     end
     say(["SHADE: Relic dealer by the south-west wall. Epheris. He's cheated better people than us."])
     speak(:reptin, "Leave the talking to me. Epheris will love me. Everybody does, eventually.",
@@ -630,7 +631,7 @@ module FrostThaw
          "SHADE: I still do. Cats land on their feet.",
          "SHIMMER: Cats get nine lives. You've used about six."])
     Stage.turn_to(rest[:shade], rest[:shimmer]) if rest[:shade] && rest[:shimmer]
-    say(["SHADE: (quietly) Saltmarsh was one of them. Yours, not mine.",
+    say(["SHADE: Saltmarsh was one of them. Yours, not mine.",
          "SHIMMER: ...Go to sleep, Shade."])
     begin
       pbFadeOutIn do
@@ -665,7 +666,7 @@ module FrostThaw
     if journey?
       say(["NAERTH: Whoever's drawn walks out onto the ice, for Auril."], event_id)
       Stage.emote(naerth, :question) if naerth
-      say(["NAERTH: (to you) You don't know Auril? Where did you say you were from?"], event_id)
+      say(["NAERTH: You don't know Auril? Where did you say you were from?"], event_id)
       # Your answer, and Shimmer steps in front of it either way (context/01.md B4).
       c = pbMessage(_INTL("You say..."), [_INTL("\"Far away.\""), _INTL("Nothing.")], -1)
       say([c == 0 ? "SHIMMER: Very far. Somewhere warm. Leave it." : "SHIMMER: Somewhere warm. Leave it.",
@@ -675,7 +676,7 @@ module FrostThaw
     end
     say(["NAERTH: Some people pay to keep their names off the board. Lately, they get found. Frozen.",
          "NAERTH: By a man who doesn't feel the cold.",
-         "SHIMMER: (very still) Sephek."], event_id)
+         "SHIMMER: Sephek."], event_id)
     Stage.emote(naerth, :exclaim) if naerth
     say(["NAERTH: ...You know his name. Interesting.",
          "NAERTH: You want out of Targos? Earn my seal. Come to the Town Hall. I'll be waiting.",
@@ -740,7 +741,7 @@ module FrostThaw
       say(["NAERTH: Here. My seal. Any guard on the lake will let you pass."], event_id)
       pbMessage(_INTL("\\me[Badge get]{1} received the Speaker's Seal!", $Trainer.name))
       say([as(:reptin, "Thank you, Speaker. We'll treasure it."),
-           as(:reptin, "(quietly) Right up to the gate.")], event_id)
+           as(:reptin, "Right up to the gate.")], event_id)
       pbReceiveItem(:TM46) rescue nil
       say(["NAERTH: That TM teaches Thief. Every child in Targos knows it. Now you do.",
            "NAERTH: One more thing, free. A lady in a tower pays well for cold trinkets like yours.",

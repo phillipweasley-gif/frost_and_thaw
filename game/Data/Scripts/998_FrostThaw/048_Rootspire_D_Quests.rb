@@ -70,10 +70,10 @@ module FrostThaw
     return true if flag?(:halo_orb_cleared)
     sayc(["Two robed figures kneel at the orb, pouring something white into its light.",
           "The orb's green goes grey where it touches. The white deepens to blue.",
-          "SISTER ILSE: (not looking up) Don't. She's the goddess's daughter. Let her mother in.",
+          "SISTER ILSE: Don't. She's the goddess's daughter. Let her mother in.",
           "BROTHER VOSK: The Matron said winter's daughter comes home through this orb. Into her.",
           "LUMIN: (from the shrine steps) The Fractured Halo. They pray for her winter to come back.",
-          cl(:alerion, "(very quietly) Winter's daughter. They mean Frostina."),
+          cl(:alerion, "Winter's daughter. They mean Frostina."),
           cl(:alberica, "Pour one more drop and I'll pour you off this tree, darlings.")].compact)
     return false if !pbTrainerBattle(:FT_HALO_F, "Sister Ilse", nil, false, 0)
     return false if !pbTrainerBattle(:FT_HALO, "Brother Vosk", nil, false, 0)
@@ -84,7 +84,7 @@ module FrostThaw
     ilse = Stage.find("Sister Ilse"); vosk = Stage.find("Brother Vosk")
     Stage.leave_all([ilse, vosk].compact, 12, 34) if ilse || vosk
     sayc(["The cultists run for the root-lift. The white stuff in the orb boils off as steam.",
-          "LUMIN: (shaking) They've come every night. I thought they were praying. They were pouring.",
+          "LUMIN: They've come every night. I thought they were praying. They were pouring.",
           cl(:reptin, "They'll be back. Fanatics are terribly reliable.")].compact)
     true
   end
@@ -108,7 +108,7 @@ module FrostThaw
   def kelyn_orb(event_id = nil)
     if flag?(:kelyn_secret)
       return say([flag?(:kelyn_surge) ? "KELYN: (at the orb, her hands well clear of it) Only for him now. Go on. I'll keep watch." :
-                                        "KELYN: (at the orb, very quietly) He's dreaming of you tonight. Of a meadow. Go on."], event_id)
+                                        "KELYN: (at the orb) He's dreaming of you tonight. Of a meadow. Go on."], event_id)
     end
     night_tone
     if flag?(:kelyn_orb_asked)
@@ -143,7 +143,7 @@ module FrostThaw
       if flag?(:autumn_note)
         sayc(["You show her Pellar's dropped note. \"K. is ready. Feed her the dream of a green crown.\"",
               "\"...Then Summer returns to a burning.\"",
-              "KELYN: (very still) ...Lumea. Who painted my portrait. Who sits by me every festival.",
+              "KELYN: ...Lumea. Who painted my portrait. Who sits by me every festival.",
               "KELYN: A burning. Springfire, out of control. The whole valley.",
               "KELYN: I'd have done it. I'd have done it smiling.",
               cl(:reptin, "You'd have done it hoping. That's not the same as wicked. It's just easier to aim."),
@@ -194,7 +194,7 @@ module FrostThaw
     if !flag?(:rheven_counselled)
       say(["Rheven stands at the edge of the training yard, arms folded.",
            "He watches the archers without seeing them.",
-           herald?(:wyn) ? "RHEVEN: (not looking round) Wyn. Good. You're back. Listen." : nil,
+           herald?(:wyn) ? "RHEVEN: Wyn. Good. You're back. Listen." : nil,
            "RHEVEN: The tree dreams of fire. Lately I dream it with her. Something's eating her.",
            "RHEVEN: I think the Heartroot's woken. Not the tree. The root. And I think it's hungry.",
            "He unfolds his arms. His knuckles are white.",
@@ -220,7 +220,7 @@ module FrostThaw
                 "...I don't know. Together, then.")
           set_flag(:rheven_together)
         end
-        say(["RHEVEN: (a long breath) ...Then I'll hold my torch until you've looked. The gardens first.",
+        say(["RHEVEN: ...Then I'll hold my torch until you've looked. The gardens first.",
              "RHEVEN: The myconids say there's a blight down there. Black sap. That can be cleaned?"], event_id)
       else
         say(["RHEVEN: Can violence ever serve balance? I'd ask Reptin, if he were here. Can it?",
@@ -271,7 +271,7 @@ module FrostThaw
           "Their eyes are glass. Their cloaks are stiff.",
           "Behind them hunches a thing of bone and ice, a sigil burned in its brow.",
           cl(:alberica, "Oh, you poor loves. Somebody's wearing you."),
-          cl(:wyn, "(barely a whisper) That's Teo's sister. That's- I knew her.")].compact, event_id)
+          cl(:wyn, "That's Teo's sister. That's- I knew her.")].compact, event_id)
     return if !boss_battle(named_mon(:B91H93, 41, "Reanimated Bough Warden"), named_mon(:B91H93, 41, "Reanimated Bough Warden"))
     say(["The frozen Wardens fall, and stay fallen. Their faces have gone peaceful.",
          "The thing of bone and ice lowers its head. In its brow, a cracked mirror round an A.",
@@ -342,7 +342,7 @@ module FrostThaw
           "RHEVEN: Root and oath. The tree holds you now, and you hold it.",
           "RHEVEN: I've never said that to a founder.",
           "RHEVEN: Wardens of Rootspire, and Rootwardens. Both oaths, now. The Hall's yours.",
-          cl(:reptin, "(hoarse) I didn't think it would feel like this. Taking my own creed. From him."),
+          cl(:reptin, "I didn't think it would feel like this. Taking my own creed. From him."),
           cl(:alberica, "That's what a legacy is, sweetheart. Somebody hands you back what you gave away.")].compact)
   end
 
@@ -390,7 +390,7 @@ module FrostThaw
     say(["You lay it out: #{found[0..1].join(', and ')}."] +
         (found.size > 2 ? ["And #{found[2..].join(', and ')}."] : []))
     # (scene check 48: the player names the traitor)
-    c = pbMessage(_INTL("KETHAN: (very quietly) Then whose name sits under all of it?"),
+    c = pbMessage(_INTL("KETHAN: Then whose name sits under all of it?"),
                   [_INTL("Ash, on the south steps"), _INTL("Arvik, the trainer"), _INTL("Talwyn, the initiate")], -1)
     if c != 0
       return say(["KETHAN: (pop) No. They'd not know a sap-line from a washing line. Look again."], event_id)
@@ -409,7 +409,7 @@ module FrostThaw
                                            "ASH: #{herald?(:wyn) ? 'Wyn. ' : ''}The Root-Gate's sealed. Council orders, till the festival's done."], event_id)
     end
     # (dialogue 15 §4: he denies first)
-    sayc(["ASH: (not looking up) Kethan sent you. He never could do his own talking.",
+    sayc(["ASH: Kethan sent you. He never could do his own talking.",
           "ASH: Pins move. Wind, kids, clumsy hands. ...Fine. Yes. I moved them.",
           "ASH: I sent the Bough patrols where the cold could have them. Summer pays. The Halo pays.",
           "He sets the shield down, very carefully.",
@@ -453,7 +453,7 @@ module FrostThaw
           "...Don't take it. It's mine she'd give you.")
     c = pbMessage(_INTL("What do you tell Eren?"), [_INTL("\"Refuse her. Learn it the slow way, with us.\""), _INTL("\"It's your choice.\"")], 0)
     if c == 0
-      sayc(["EREN: (after a long time) ...The slow way. Will you teach me? How you made the cold kneel?",
+      sayc(["EREN: ...The slow way. Will you teach me? How you made the cold kneel?",
             herald?(:alerion) ? nil : cl(:alerion, "I didn't make it kneel. I asked it to sit. ...Dawn. Here. Don't be late."),
             herald?(:alerion) ? "(You hear yourself say: Dawn. Here. Don't be late.)" : nil].compact)
       set_flag(:eren_pupil)
@@ -498,17 +498,17 @@ module FrostThaw
          "Only to #{me ? 'you' : (who == :glimmer ? 'him' : 'them')}."], event_id)
     if who == :shade
       # (context 06, M6-4: the Rimefang and its curse, first said in a fight)
-      say(["SELRAE: (low) Knife-bearer. That knife at your hip. The Rimefang."], event_id)
+      say(["SELRAE: Knife-bearer. That knife at your hip. The Rimefang."], event_id)
       speak(:shade, "It's a knife. It turned up in my boot in Targos. It's been cold ever since.", "...It's a knife.")
-      say(["SELRAE: Cold because it's hers. It marked you for her that night. You're halfway home."], event_id)
+      say(["SELRAE: Cold because it is hers. It marked you for her that night. You are halfway home."], event_id)
     else
-      say(["SELRAE: (low) Sparkbearer. A light that came back through a mirror. Emptied, and filled."], event_id)
+      say(["SELRAE: Sparkbearer. A light that came back through a mirror. Emptied, and filled."], event_id)
     end
     say(["She draws a dagger of black ice from her sleeve and turns it to catch the crystals' light.",
          "When the light touches it, it whispers. Prayers. Old ones. To Auril.",
          "SELRAE: The goddess needs no throne. Only a heart that can hold light and cold together.",
          "SELRAE: Yours, perhaps.",
-         "SELRAE: There's a vault in the ice, far north. The White Womb. They'd make a saint there."], event_id)
+         "SELRAE: There is a vault in the ice, far north. The White Womb. They would make a saint there."], event_id)
     # (check 48: the player's hand on the beat; as that Herald, how you say it is the choice)
     if !me
       c = pbMessage(_INTL("She holds the dagger out to {1}, hilt first.", name), [_INTL("Step between them."), _INTL("Let {1} answer.", name)], 0)
@@ -533,7 +533,7 @@ module FrostThaw
     who = with_or_is?(:glimmer) ? :glimmer : (with_or_is?(:shade) ? :shade : nil)
     if who
       me = herald?(who)
-      say(["ELINE: (turning, with a terrible gentleness) And you. #{who == :glimmer ? 'Sparkbearer' : 'Knife-bearer'}.",
+      say(["ELINE: (with a terrible gentleness) And you. #{who == :glimmer ? 'Sparkbearer' : 'Knife-bearer'}.",
            "Behind her the chant drops to a hum, waiting.",
            "ELINE: The cold in your blade knows the way home. You've felt it since Targos.",
            "ELINE: Kneel with us. Let her finish what the knife began.",
@@ -562,7 +562,7 @@ module FrostThaw
     return false if !with_or_is?(:alberica) && !with_or_is?(:glimmer)
     set_flag(:chronal_debt_done)
     names = [:alberica, :glimmer].select { |k| with_or_is?(k) }.map { |k| herald?(k) ? nil : HERALD_NAMES[k] }.compact
-    say(["WYNSNOW: (lowering his voice) #{names.empty? ? 'You' : names.join('. ')}. A private word.",
+    say(["WYNSNOW: #{names.empty? ? 'You' : names.join('. ')}. A private word.",
          "He shuts the door himself. Then, after some thought, the other door.",
          "WYNSNOW: Four hundred years happened while you were falling. I can let you see them.",
          "WYNSNOW: The price is a small anchoring. Your life-threads, tied to Rootspire's.",
@@ -584,20 +584,20 @@ module FrostThaw
         wheel(-2)
         say(["And then all of it at once, every year, every name, pouring in until there's no room.",
              "When the crack seals you can feel the tree's pulse in your own wrists. It doesn't go away.",
-             "WYNSNOW: (very pale) It's done. You're stitched in. ...I'm sorry. I'm so pleased. Sorry."], event_id)
+             "WYNSNOW: It's done. You're stitched in. ...I'm sorry. I'm so pleased. Sorry."], event_id)
       else
         say(["The crack seals. Your nose is bleeding. So is everyone's.",
              "WYNSNOW: The cost. I did say. ...You saw the scraped name? Nobody's seen the scraped name."], event_id)
       end
       set_flag(:chronal_glimpse)
     else
-      say(["WYNSNOW: (deflating) No. Quite right. I'd only have been tying you to my tapestry.",
+      say(["WYNSNOW: No. Quite right. I'd only have been tying you to my tapestry.",
            "WYNSNOW: That was the plan. Stabilise the fracture by anchoring it to you. Forever.",
            "WYNSNOW: You're the stitches holding this century to the last. I was going to sew you in.",
            "WYNSNOW: ...Please don't tell the Council. Or do. I'd deserve it."], event_id)
       set_flag(:wynsnow_confessed)
     end
-    sayc([cl(:alberica, c == 2 ? "(rubbing her wrist) I can hear the tree in my pulse, darling. It hums flat." :
+    sayc([cl(:alberica, c == 2 ? "I can hear the tree in my pulse, darling. It hums flat." :
                                  "Darling, I've been tied to a lot of places. I'd rather choose the knots myself."),
           cl(:glimmer, "I've had enough of other people's anchors. Brightmane's is the one I'm keeping.")].compact)
     true
@@ -629,7 +629,7 @@ module FrostThaw
           "A tag: RAZ-MKIII.",
           "MIRA: That one hummed whenever the mirrors were loudest. She wanted it more than anything.",
           herald?(:meat_meat) ? "You know those scales before Mira says anything. Razzy shed them on the cold table." :
-                                cl(:meat_meat, "(very small) Those are Razzy's. He shed them on the cold table. Before we ran."),
+                                cl(:meat_meat, "Those are Razzy's. He shed them on the cold table. Before we ran."),
           "MIRA: A wyrmling scale core, the ledger says. Dormant. Take it. Keep it where she can't."].compact, event_id)
     give_key(:FT_SCALECORE)
     set_flag(:scale_core_given)
@@ -675,7 +675,7 @@ module FrostThaw
           "Ivran's sledge-ship creaks forward on runners, sails full of a wind you can't feel.",
           "Here and there in the ice: hulls. Crews, frozen at their oars, glass all the way through.",
           cl(:reptin, "The lake remembers. Every one of them."),
-          cl(:alerion, "(very quietly) Some of them are getting up.")].compact)
+          cl(:alerion, "Some of them are getting up.")].compact)
   end
 
   # Ivran's sledge-ship keeps pace with you: each revenant you put down, it
@@ -738,7 +738,7 @@ module FrostThaw
     pbSEPlay("Ice8", 70, 70) rescue nil
     sayc([flag?(:shivven_told) ? "IVRAN: Shivven saw her. I didn't believe him. ...I believe him." :
                                  "IVRAN: The old crews swore something lay under the ice. I didn't believe them.",
-          cl(:alberica, "(a hand over her rune, very pale) Home. Now. Please.")].compact, event_id)
+          cl(:alberica, "(a hand over her rune) Home. Now. Please.")].compact, event_id)
     transfer(2055, 36, 8, 4)
   end
 
@@ -851,7 +851,7 @@ module FrostThaw
             "For an hour #{herald?(:reptin) ? 'you hum' : 'he hums'} to it, like the wolf-mother once hummed. The pulse slows. A little."])
     else
       sayc(["Glimmer kneels at the root, the horn across his knees, the Shard glowing in his chest.",
-            "GLIMMER: (very softly) Brightmane. If any of your light's spare, it's for this.",
+            "GLIMMER: Brightmane. If any of your light's spare, it's for this.",
             "Gold runs down into the root like warm water. The fever lifts. A little."])
     end
     # (notes/15 E15: it shows at the next dawn, which says so: dawn_hue)
@@ -891,10 +891,10 @@ module FrostThaw
     else
       say(["You listen until it burns out. The voices fade one by one, like street-lamps at dawn.",
            "The last one says, very faintly, \"thank you for hearing\".",
-           "GUILD ASSESSOR: (shaking) I'm recommending the experiment be suspended. Indefinitely."], event_id)
+           "GUILD ASSESSOR: I'm recommending the experiment be suspended. Indefinitely."], event_id)
     end
     sayc([cl(:wyn, "Sap that's been made to scream. The spores knew. I knew."),
-          cl(:reptin, "(very quiet) Every lamp in the market. They've been lighting them with this.")].compact)
+          cl(:reptin, "Every lamp in the market. They've been lighting them with this.")].compact)
     add_counter(:story_beats)
   end
 
@@ -1016,7 +1016,7 @@ module FrostThaw
       say(["DARRUS: The vault's under the Root-Tier docks. The Smuggler's Run. Wards. Traps.",
            "DARRUS: Nothing a professional can't manage."], event_id)
       sayc([herald?(:meat_meat) ? "(Mirror Mother. You know that name. From under the table. From the dark.)" :
-                                  cl(:meat_meat, "(very still) Mirror Mother. Meat Meat knows that name. From the cold table."),
+                                  cl(:meat_meat, "Mirror Mother. Meat Meat knows that name. From the cold table."),
             cl(:alberica, "If he's offering you a job, sweetheart, he's decided what you are. Let's not.")].compact)
       side_goal(:reliquary, "Darrus wants the Guild's reliquary from the vault in the Smuggler's Run.",
                 done: [:darrus_paid, :darrus_chartered, :darrus_redeemed, :summer_ended, :heist_done])
@@ -1025,7 +1025,7 @@ module FrostThaw
     if ($PokemonBag.pbHasItem?(:FT_RELIQUARY) rescue false)
       return heist_delivery(event_id)
     end
-    say(["DARRUS: (not looking up) The hatch by the split crate. I don't know you."], event_id)
+    say(["DARRUS: The hatch by the split crate. I don't know you."], event_id)
   end
 
   def scene_smugglers_run_enter
@@ -1117,7 +1117,7 @@ module FrostThaw
   end
 
   def heist_delivery(event_id = nil)
-    say(["DARRUS: (very softly) You have it. Give it here. Quickly. Before she- before anyone sees."], event_id)
+    say(["DARRUS: You have it. Give it here. Quickly. Before she- before anyone sees."], event_id)
     c = pbMessage(_INTL("What do you do with the reliquary?"),
                   [_INTL("Give it to Darrus."), _INTL("Take it to the Council."), _INTL("Smash it.")], 1)
     take_key(:FT_RELIQUARY)
@@ -1140,7 +1140,7 @@ module FrostThaw
       selrae_here = $game_switches && (!$game_switches[3936] || $game_switches[3939])
       sayc(["You set the reliquary on the Council table, in front of the seats.",
             "KELYN: (reading the Guild seal) This is the Guild's. Darrus. Darrus, what is this?",
-            "DARRUS: (going grey) A construct came to me two years ago. One of hers. It had my ledgers.",
+            "DARRUS: A construct came to me two years ago. One of hers. It had my ledgers.",
             "DARRUS: It wanted the Heartroot. And the box. I've been giving it things. Little things.",
             selrae_here ? "SELRAE: Little things. Like a dig under the Heartroot, under a forged seal." :
                           "KELYN: Little things. Like a dig under the Heartroot, under a forged seal."], event_id)
@@ -1163,7 +1163,7 @@ module FrostThaw
       sayc(["Out pours a sound like a thousand mirrors breaking. Then one small voice: \"Thank you.\"",
             "Something pale rises out of the pieces, a girl of reflected light, up through the roof.",
             "Far below, very far, something screams in fury.",
-            "DARRUS: (white to the lips) What have you done. She'll know. She'll know it was you.",
+            "DARRUS: What have you done. She'll know. She'll know it was you.",
             cl(:meat_meat, "Good. Meat Meat wants her to know. Meat Meat wants her to know it was a goblin.")].compact, event_id)
       give(:MENTALHERB)
       say(["(The freed soul's thanks stays with you: a calm head when something tries to scare you.)"])
@@ -1177,7 +1177,7 @@ module FrostThaw
 
   def darrus_hiding(event_id = nil)
     if flag?(:darrus_redeemed)
-      return say(["DARRUS: (in a Corsair's coat, chewing clove bark) The Corsairs have me counting barrels.",
+      return say(["DARRUS: (in a Corsair's coat) The Corsairs have me counting barrels.",
                   "DARRUS: It's very soothing."], event_id)
     end
     if flag?(:darrus_found)
@@ -1194,7 +1194,7 @@ module FrostThaw
     end
     if pbConfirmMessage(_INTL("Tell Darrus you'll hold him to that?"))
       set_flag(:darrus_redeemed)
-      say(["DARRUS: (a breath he's held two years) Then I'll count every barrel twice. For the voyage."], event_id)
+      say(["DARRUS: Then I'll count every barrel twice. For the voyage."], event_id)
     end
   end
 
@@ -1205,7 +1205,7 @@ module FrostThaw
   def scene_frozen_cellar_enter
     sayc(["Frost on old brewing casks. Blue flame in cracked sconces. A biting cold, in high summer.",
           "Chanting from deeper in: \"Freeze it. Then burn what remains. Then nothing.\"",
-          cl(:wyn, "(very quietly) The Frozen Flame. Stillness, and then fire. Not either. Both. Gods."),
+          cl(:wyn, "The Frozen Flame. Stillness, and then fire. Not either. Both. Gods."),
           cl(:alberica, "Frost and fire in one prayer. Somebody's been very creative with their heresy.")].compact)
   end
 
@@ -1231,6 +1231,7 @@ module FrostThaw
           "EIRA VOSS: (her whisper filling the cellar like a cathedral) You found our little church.",
           "She tilts her head too far, like a bird. Her eyes glitter. Her lips don't move.",
           "EIRA VOSS: Eline wanted the cold. The forge wants fire. I want what comes after. Silence.",
+          "EIRA VOSS: Auril's stillness, all the way down. The rest of them stop halfway.",
           "EIRA VOSS: I sold stillness at the Shrine, a shard at a time. Down here I send souls."], event_id)
     if flag?(:watcher_raven)
       set_flag(:eira_raven_owned)
@@ -1289,7 +1290,7 @@ module FrostThaw
     set_self_switch(event_id, "A")
     if key == :lurker && !flag?(:summer_ended)
       sayc(["#{decision == 4 ? 'Caught' : 'Driven off'}: a watcher that lives in your own shadow. Its master is very close.",
-            cl(:alberica, "(very quietly) It smelled of mirrors, darling. I know that smell.")].compact)
+            cl(:alberica, "It smelled of mirrors, darling. I know that smell.")].compact)
     elsif key == :lurker
       say(["#{decision == 4 ? 'Caught' : 'Driven off'}: one of Avarice's own watchers. She was in your shadow the whole time."])
     else

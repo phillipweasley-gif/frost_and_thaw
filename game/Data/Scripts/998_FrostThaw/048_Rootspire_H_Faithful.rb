@@ -114,13 +114,13 @@ module FrostThaw
     sel = (Stage.actor(:winter_matron_selrae_vorn, $game_player.x + 1, $game_player.y + 2, 8) rescue nil)
     Stage.approach(sel) if sel
     sayc(["At first light, someone at the Hearth's back door. The Winter Matron, not coming in.",
-          "SELRAE: (before you can speak) Eline named me. You'll have heard. So: yes.",
+          "SELRAE: (before you can speak) Eline named me. You will have heard. So: yes.",
           "SELRAE: I give the Halo coin. I give them a roof. I gave them the Shrine.",
           "SELRAE: A tempered faith keeps the goddess appeased. A starved one goes looking for blood.",
           "She pulls her furs closer, though it's warm.",
           "SELRAE: I was her priestess once. I know her hungry. Better a cult I can see.",
           cl(:alerion, "And the Rite? Was that one you could see?"),
-          "SELRAE: (very quietly) No. That one, I didn't."].compact)
+          "SELRAE: No. That one, I did not."].compact)
     Stage.leave(sel, sel.x, sel.y + 6) if sel
     true
   end
@@ -216,7 +216,7 @@ module FrostThaw
       if key == :find && summer_sense?
         set_flag(:summer_sense_used)
         say([herald?(:meat_meat) ? "(Your skin prickles: the carved ones are warmer. Summer-Sense. You point them out.)" :
-                                   "MEAT MEAT: (sniffing) Those ones. Warmer. Meat Meat can feel them from here."])
+                                   "MEAT MEAT: Those ones. Warmer. Meat Meat can feel them from here."])
         hits += 1
         say([ok_line])
         next
@@ -248,7 +248,7 @@ module FrostThaw
     set_flag(:effigy_saved)
     say_staged(["The last rune goes dark. The aurora touches the Tree and lifts away. Nothing comes down.",
           "Rheven's wardens drag the effigy off. Mostly nobody notices. That's the point.",
-          "RHEVEN: (passing, very low) The Rootwardens owe you one. I'll remember. So will the Bough.",
+          "RHEVEN: (passing) The Rootwardens owe you one. I'll remember. So will the Bough.",
           cl(:reptin, "Nobody noticed. Best kind of saving. Nobody has to be frightened tomorrow.")].compact)
     set_flag(:rootwardens_favour)
     favour(:spring, 1)
@@ -279,8 +279,8 @@ module FrostThaw
     set_flag(:festival_casualties)
     Stage.theme("Lavender Town")            # (back in the Circle, the same quiet)
     say_staged(["In the Festival Circle the lanterns are out. Families count heads. Some come up short.",
-          "KELYN: (white-faced, to nobody) Eleven. Eleven, on the seventh night.",
-          cl(:alberica, "(very quietly) Sing for them, someone. I can't. Not yet.")].compact)
+          "KELYN: (white-faced) Eleven. Eleven, on the seventh night.",
+          cl(:alberica, "Sing for them, someone. I can't. Not yet.")].compact)
     wheel(2)
     Stage.theme(nil)
   end
@@ -305,7 +305,7 @@ module FrostThaw
           "ENVOY: Hope, that lets the frost return in its season. Or judgment, that burns it out.",
           "ENVOY: Brightmane will not choose for you. Choose, so she knows what she has made."], event_id)
     # (dialogue 15 §3: the Heralds answer each other, not only the envoy)
-    sayc([cl(:reptin, "(quietly) Hope doesn't mean soft, Glimmer. Hope's the hardest thing I know."),
+    sayc([cl(:reptin, "Hope doesn't mean soft, Glimmer. Hope's the hardest thing I know."),
           cl(:alerion, with_or_is?(:reptin) ? "Hope's slow, Reptin. Somebody has to say no to her." :
                                               "Judgment isn't cruel. Somebody has to say no to her."),
           cl(:meat_meat, "Meat Meat says: choose the one Shimmer would."), cl(:meat_meat, "Meat Meat doesn't know which. Shimmer did."),
@@ -320,7 +320,7 @@ module FrostThaw
     if hope
       set_flag(:glimmer_hope)
       sayc(["GLIMMER: Hope. I'll carry it in. Whatever's down there gets the chance Shimmer gave us.",
-            "ENVOY: (its face rings once, softly) Then her light will heal where it lands. At a cost.",
+            "ENVOY: (its face rings once) Then her light will heal where it lands. At a cost.",
             "It touches the Lumen Shard in his chest. The Shard goes warm and gold, like a hearth."])
       Stage.remove_actor(envoy) if envoy
       say(["Then the envoy is gone. Lumin gets up off his knees. The orb is green and white again."])
@@ -329,7 +329,7 @@ module FrostThaw
     else
       set_flag(:glimmer_judgment)
       sayc(["GLIMMER: Judgment. If her light comes back, I'll put it out. Every spark.",
-            "ENVOY: (its face rings once, low) Then her light will burn true. Mind what you set it on.",
+            "ENVOY: (its face rings once) Then her light will burn true. Mind what you set it on.",
             "It touches the Lumen Shard in his chest. The Shard flares white, so hot the air shakes."])
       Stage.remove_actor(envoy) if envoy
       say(["Then the envoy is gone. Lumin gets up off his knees. The orb is green and white again."])
@@ -384,7 +384,7 @@ module FrostThaw
     say(["EIRWEN: (at a table deep in leaves, glowing) I've finished it. Naerth's ledger.",
          "EIRWEN: Avarice was in the Speaker's ear before the Rime. His debts, his lottery: hers.",
          "She turns the ledger round so you can see the hand: small, tidy, frightened.",
-         "EIRWEN: The Frostmaiden's curse didn't make Ten-Towns cruel. Avarice taught it, for years.",
+         "EIRWEN: Auril's winter made Ten-Towns desperate. Avarice taught it to be cruel, and fed every name to Auril to buy her summer.",
          "EIRWEN: I'm going to put it on the open shelves. Tomorrow. Everyone should know.",
          "EIRWEN: ...Why are you all looking at me like that?"], event_id)
     sayc([cl(:alerion, "Because you're about to tell a city its miracle had an author."),
@@ -405,7 +405,7 @@ module FrostThaw
       favour(:spring, -1, quiet: true)
       say(["(Winter will remember that. So will Spring.)"])
     when 1
-      say(["EIRWEN: (very small) ...Sealed. Yes. Until it's over.",
+      say(["EIRWEN: ...Sealed. Yes. Until it's over.",
            "EIRWEN: I'll write the date on the seal, so I can't pretend I forgot.",
            "They put the ledger back in the oldest roots, and stand looking at it for a long time."], event_id)
       set_flag(:naerth_ledger_sealed)
@@ -421,8 +421,8 @@ module FrostThaw
       Stage.walk_to(sel, kel.x + 1, kel.y, face: 4) if sel && kel
       say(["Kelyn reads it standing, page by page. Her eyes come up red. Her voice is calm.",
            "KELYN: The Council has it. It will say when the city's ready. Thank you, Archivist."])
-      say([sel ? "SELRAE: The Council has had a great many things it decided the city wasn't ready for." :
-                 "EIRWEN: (very quietly) The Council decides we aren't ready for a lot of things."])
+      say([sel ? "SELRAE: The Council has had a great many things it decided the city was not ready for." :
+                 "EIRWEN: The Council decides we aren't ready for a lot of things."])
       favour(:spring, 1, quiet: true)
       favour(:winter, -1, quiet: true)
       say(["(Spring will remember that. So will Winter.)"])
@@ -441,16 +441,16 @@ module FrostThaw
       set_flag(:hellen_mourned)
       Stage.theme("Lavender Town")
       say(["The common room is full, and nobody's talking. Eleven candles on the bar, one a name.",
-           "HELLEN: (setting a bowl down, gently) Eat. You fought it. Half this room saw you.",
+           "HELLEN: (setting a bowl down) Eat. You fought it. Half this room saw you.",
            "HELLEN: The Moss-Hatter's girl was one. She used to bring me the morning bread."], event_id)
-      sayc([cl(:alberica, "(very quietly) Tell me their names, Hellen. All eleven. I'll keep them.")].compact)
+      sayc([cl(:alberica, "Tell me their names, Hellen. All eleven. I'll keep them.")].compact)
       Stage.theme(nil)
       return
     end
     if flag?(:badge_hearth) && !flag?(:hellen_passages)
       set_flag(:hellen_passages)
       say(["Hellen glances at the cellar door, then back at you.",
-           "HELLEN: (low, wiping a clean glass) You beat me in my own cellar. So: the secret.",
+           "HELLEN: You beat me in my own cellar. So: the secret.",
            "HELLEN: The cask by the cellar wall with the sun chalked on it. Push it from the left.",
            "She sets the glass down, finally.",
            # (notes/06 6.16)
@@ -469,7 +469,7 @@ module FrostThaw
            "HELLEN: This calls it in. A berth north, if the Heralds ever need one."], event_id)
       say(["Down the bar, a man in a grey cloak puts down his cup."])
       Stage.leave(cloak, cloak.x + 6, cloak.y) if cloak
-      say(["HELLEN: (lower) And don't let the Halo see it. They read everything they can steal."], event_id)
+      say(["HELLEN: And don't let the Halo see it. They read everything they can steal."], event_id)
       give_key(:FT_HELLENNOTE)
       say(["HELLEN: The Corsairs? Smugglers with a ship and manners. Mostly the ship."], event_id)
       side_goal(:hellen, "Hellen's sealed note, for Captain Ivran on the Split Dock. Quietly.")
@@ -497,7 +497,7 @@ module FrostThaw
       set_flag(:shrine_frost_thanked)
       say(["Hellen listens to all of it with a cloth forgotten in her hands.",
            flag?(:tobin_turned) ? "HELLEN: Tobin. Little Tobin from the bakery. ...I'll put a cup out for him." :
-           flag?(:tobin_arrested) ? "HELLEN: (quietly) The frost's stopped. I'll sleep. I keep seeing that boy on my stair." :
+           flag?(:tobin_arrested) ? "HELLEN: The frost's stopped. I'll sleep. I keep seeing that boy on my stair." :
                                     "HELLEN: The frost's gone, and it's not coming back. I'll sleep tonight.",
            flag?(:tobin_turned) ? "HELLEN: He can come and pray to you properly, in daylight, like everyone else." : nil,
            "HELLEN: That's two I owe you. Brightruns pay what they owe."].compact, event_id)
@@ -526,7 +526,7 @@ module FrostThaw
       trainer(:halo_silencer)
       say(["He goes into the water rather than be questioned. The note's still sealed in your pack."])
       Stage.remove_actor(cloak) if cloak
-      say(["IVRAN: (looking down the dock) Halo Silencer. They don't talk. They listen for a living."], event_id)
+      say(["IVRAN: Halo Silencer. They don't talk. They listen for a living."], event_id)
     end
     say(["He holds out a hand for the note. You give it to him.",
          "IVRAN: (breaking the seal with his thumb, and reading twice) Brightrun. Well, well.",
@@ -563,8 +563,8 @@ module FrostThaw
            "He wipes his nose on his sleeve."])
       say(["TOBIN: They've had the lantern-carvers cut hooks in the frost-glass. For the aurora.",
            "TOBIN: Half the lanterns, and she comes. ...Please don't tell my mam."])
-      sayc([cl(:alerion, "(very still) Hooks in the lanterns, on Cycle Night. That's a door, not a prayer."),
-            cl(:reptin, "(gently) Nobody's telling your mam anything. Go home. Pray loudly, in daylight."),
+      sayc([cl(:alerion, "Hooks in the lanterns, on Cycle Night. That's a door, not a prayer."),
+            cl(:reptin, "Nobody's telling your mam anything. Go home. Pray loudly, in daylight."),
             cl(:alberica, "And Tobin, sweetheart: if they ask, you painted it. Then tell us what they say.")].compact)
       set_flag(:tobin_turned)
       set_flag(:lantern_runes_known)
@@ -649,7 +649,7 @@ module FrostThaw
               "KELYN: Take this. My mother's. A brooch of living green, still growing, very slowly."], :MIRACLESEED],
     winter: [["A grey-robed clerk of the Order of Balance, very correct, with a parcel.",
               "CLERK: The Winter Matron notes your conduct favourably."], [:NEVERMELTICE, 1],
-             ["SELRAE: (at the back door, not coming in) You've been useful. I don't say it often.",
+             ["SELRAE: (at the back door, not coming in) You have been useful. I do not say it often.",
               "SELRAE: The Order's issue. A plain white stone, cold enough to sting."], :ICYROCK],
     autumn: [["A velvet-coated Wennen bows at the Hearth's door and presents a purse.",
               "COURIER: Autumn pays its friends, Heralds. Promptly."], [:NUGGET, 1],

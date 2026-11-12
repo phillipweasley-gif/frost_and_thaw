@@ -188,7 +188,7 @@ module FrostThaw
          "LIRIELLE: My people came from the Circle in Lonelywood. We carry the Moon Requiem with us.",
          "Her ears go flat.",
          "LIRIELLE: The night the frost egg hatched. You know it?",
-         "LIRIELLE: (sniffing) ...You were there. It's still on your coat. Snow, and a lullaby.",
+         "LIRIELLE: ...You were there. It's still on your coat. Snow, and a lullaby.",
          "LIRIELLE: Lately I dream every night. Roots burning. Sap screaming.",
          "She lowers her voice.",
          "LIRIELLE: Something below is burning the seasons alive.",
@@ -377,7 +377,7 @@ module FrostThaw
          "EIRWEN: I've never known who to show it to. And there's a sub-vault. Alberica's.",
          "EIRWEN: Her students wrote it into the founding charter: a case only she may open.",
          "EIRWEN: A lovely, safe, symbolic thing to write. Until about an hour ago.",
-         T.cl(:alberica, "(very quietly) A case. Of mine. ...Huh.") || "Somewhere in the shelves, a leaf rustles.",
+         T.cl(:alberica, "A case. Of mine. ...Huh.") || "Somewhere in the shelves, a leaf rustles.",
          T.with_or_is?(:alberica) ? "EIRWEN: (to #{T.herald?(:alberica) ? 'you' : 'Alberica'}, shy) I've read every verse you wrote. Here they're scripture." : nil,
          T.with_or_is?(:alberica) ? "EIRWEN: I never thought I'd have to stand in front of the author and be sensible about it." : nil,
          "EIRWEN: The chronal leaves are yours to read, whenever you like. They remember days."].compact
@@ -623,7 +623,7 @@ module FrostThaw
           "It sneezes. A puff of spores drifts out, and where it lands on the ice, moss grows."])
     if with_or_is?(:meat_meat)
       speak(:meat_meat, "Razzy. RAZZY. Meat Meat is here. Meat Meat heard you fall. Meat Meat came.",
-            "(very quiet) ...Hi, Razzy. Meat Meat came. Meat Meat promised.")
+            "...Hi, Razzy. Meat Meat came. Meat Meat promised.")
     end
     sayc([cl(:reptin, "Easy. Easy, little one. You know my voice. I gave you my blood once."),
           cl(:reptin, "You can have it again if you need it. ...Don't tell Meat Meat I offered."),
@@ -870,7 +870,7 @@ module FrostThaw
           "WYNSNOW: Never into a person. That's Joining, and it's forbidden.",
           ask_cl(:meat_meat, "...Why forbidden?", "...Why?"),
           "WYNSNOW: Because the last person who tried it made monsters. A pale woman. Long ago.",
-          cl(:alerion, "(very quietly) Naerth's pale lady."),
+          cl(:alerion, "Naerth's pale lady."),
           herald?(:meat_meat) ? "(You don't say anything. Your hands have gone cold.)" : (with_or_is?(:meat_meat) ? "Meat Meat doesn't say anything else. She puts her hands in her pockets." : nil),
           # (dialogue 06 §4: the subtext stays subtext)
           (with_or_is?(:meat_meat) && with_or_is?(:alberica) && !herald?(:meat_meat) ?
@@ -943,7 +943,7 @@ module FrostThaw
     sayc(["The light lets you go.",
           "LUMIN: ...It worked. Oh, it worked. Dragon Warriors. Partners. Never masters.",
           "LUMIN: Two roads each. The wyrms will follow whichever one you walk.",
-          cl(:shade, "(very quietly) Her eyes. In the street, when she hummed. I knew."),
+          cl(:shade, "Her eyes. In the street, when she hummed. I knew."),
           cl(:meat_meat, "Meat Meat saw a meadow. Razzy was in it. Meat Meat is keeping that one."),
           cl(:alerion, "I saw a forest with no dawn. ...It was quiet. I liked it. Don't tell anyone."),
           (with_or_is?(:alerion) && with_or_is?(:alberica) ? cl(:alberica, "Everyone heard you, pretty boy. We're all going to tell everyone.") : nil),
@@ -1080,7 +1080,7 @@ module FrostThaw
     end
     say(["The moment #{herald?(:alberica) ? 'you touch' : 'Alberica touches'} it, the case hums a melody.", "Nobody here remembers composing it."])
     speak(:alberica, "I know this. I wrote this. I haven't written it yet. ...Pour me a drink.",
-          "(very quietly) ...I know this one. I wrote it. I haven't written it yet.")
+          "...I know this one. I wrote it. I haven't written it yet.")
     sayc([cl(:reptin, "Then you'll write it beautifully. You always do. Eventually. After the drinks."),
           "The lock opens. Inside, on velvet: a slender tuning-key of silver and frost glass.",
           "Runes run down its shaft. They shift to match whatever's said near it."])
@@ -1131,7 +1131,7 @@ module FrostThaw
     say(["The Council Hall of Seasons is lit by four pulsing crystals: green, red, white and gold.",
          "The colours shift in a slow dance: spring to winter to autumn to summer.",
          "Archivist Eirwen Solglass is waiting, barefoot on the polished root floor.",
-         "EIRWEN: (whispering) It isn't my song. It's yours, Alberica. The crystals are waiting.",
+         "EIRWEN: It isn't my song. It's yours, Alberica. The crystals are waiting.",
          "EIRWEN: Before dawn. They won't hold the song past it."], event_id)
     if !with_or_is?(:alberica)
       return say(["EIRWEN: ...Ah. Not yours. The Key won't wake for anyone but the Dwarf of Song."])
@@ -1207,7 +1207,7 @@ module FrostThaw
     give(:FT_WHISPERKEY)
     say(["(The Key of Whispering Memory: held by a Pokémon, sound moves are 30% stronger.)"])
     # Eirwen's reward: a chronal leaf with a prophecy, and the lore of Verse XI.
-    sayc(["EIRWEN: (wiping their eyes) The chronicle's mended. I felt it close, like a door.",
+    sayc(["EIRWEN: The chronicle's mended. I felt it close, like a door.",
           "EIRWEN: Take this. A chronal leaf from the oldest case. It's been waiting for the song.",
           "On the leaf, in gold, a verse no one has sung yet:",
           "\"The Frost Saint will climb the Spire when the roots bleed.\"",
@@ -1318,7 +1318,7 @@ module FrostThaw
     say(["The staff hums, but a beat out of time with #{herald?(:reptin) ? 'you' : 'Reptin'}, like a song in the wrong key.",
          "Carved under the wolf's head, very small:",
          "REST AT THE EDGE OF THE LIGHT, AND LET THE YEAR GO ROUND YOU.",
-         cl(:wyn, "(softly) The old wardens bonded their staves at the Auroral Wall. One whole night.")].compact)
+         cl(:wyn, "The old wardens bonded their staves at the Auroral Wall. One whole night.")].compact)
     state[:goal] = "Bond the Heartwarden's Staff: a night's rest at the edge of the Auroral Wall (the Blooming Fields)." if with_or_is?(:reptin)
   end
 
@@ -1393,7 +1393,7 @@ module FrostThaw
           "The frost patterns on the walls aren't patterns. They're eyes. They follow you.",
           "Then Sephek's voice, close enough to feel: \"The lake remembers.\"",
           with_or_is?(:alerion) ? "And a boy's voice behind it, far off: \"Alerion? You said you'd come back for me.\"" : nil,
-          with_or_is?(:alerion) ? cl(:alerion, "(gone white) ...Talion?") : nil,
+          with_or_is?(:alerion) ? cl(:alerion, "...Talion?") : nil,
           "The frost on the walls opens like eyes. Two shapes step out of it:",
           "figures of mirror-glass, with your faces, cracked.",
           cl(:alerion, "Mirror wraiths. Back to back. Now."),
@@ -1415,8 +1415,8 @@ module FrostThaw
     sayc([flag?(:selrae_white_womb) ? cl(:alerion, "The White Vault. The Matron called it the White Womb.") : nil].compact)
     if with_or_is?(:alerion)
       set_flag(:talion_foreshadowed)
-      sayc([cl(:alerion, "(gone white) Talion. My brother. ...The lake took him."),
-            cl(:alberica, "(very gently) \"The lake remembers.\" Lakes are liars. Mostly.")].compact)
+      sayc([cl(:alerion, "Talion. My brother. ...The lake took him."),
+            cl(:alberica, "\"The lake remembers.\" Lakes are liars. Mostly.")].compact)
     end
     echoes_at_the_wall if respond_to?(:echoes_at_the_wall)
     true
@@ -1501,7 +1501,7 @@ module FrostThaw
       else
         sayc(["All four Still Ones are gone. Along the Wall the flowers have closed. The snow lies hard.",
               "Somewhere very deep, something pleased turns over in its sleep.",
-              cl(:reptin, "(very quiet) We broke them. The tree felt that too."),
+              cl(:reptin, "We broke them. The tree felt that too."),
               cl(:reptin, "It's leaning toward the cold now. I can feel it lean."),
               cl(:wyn, "...They wanted to finish. Not to end. Those aren't the same.")].compact)
         set_flag(:tree_leans_frost)
@@ -1524,7 +1524,7 @@ module FrostThaw
     say(["The hunter's lips are parted. Frost has written a word on them, fine as lace: TALION.",
          herald?(:alerion) ? "(Your brother's name. The one you tried to bring back.)" : "Alerion's brother's name. The one he tried to bring back."])
     set_flag(:talion_foreshadowed)
-    sayc([cl(:alberica, "(quietly, a hand on his arm) Pretty boy. Breathe."),
+    sayc([cl(:alberica, "Pretty boy. Breathe."),
           "As #{herald?(:alerion) ? 'you reach' : 'Alerion reaches'} for the cloak, the frozen hunter breathes.",
           "\"Finish the step I never could.\"",
           "Tracks lead away from him along the Wall: something big and hungry, heading for the city.",

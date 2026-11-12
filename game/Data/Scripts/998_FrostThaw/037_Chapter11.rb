@@ -41,10 +41,10 @@ module FrostThaw
     # Context 11 M11-1: an act card, then where and when this is.
     act_card("c", "ACT III. THE FROSTMAIDEN")
     say(["The Rooted Hearth, the night of the vote. The bard is playing the Heralds' song, badly.",
-         "HELLEN: (stopping, eyes wet) New verse. Glimmer's. The city calls him the Dagger Reborn.",
+         "HELLEN: New verse. Glimmer's. The city calls him the Dagger Reborn.",
          cl(:alerion, "(to Hellen) The verse is good. Keep going."),
          cl(:meat_meat, "Meat Meat has had four coffees. Meat Meat is vibrating."),
-         cl(:reptin, "(to the room) She means she's happy. Mostly."),
+         cl(:reptin, "She means she's happy. Mostly."),
          al ? "You set down your cup. The rune on your chest is glowing through your shirt." :
               "Alberica sets down her cup. The rune on her chest is glowing through her shirt.",
          "The room goes white. #{al ? 'Only you can move' : 'Only Alberica can move'}."].compact)
@@ -61,7 +61,7 @@ module FrostThaw
       c = pbMessage(_INTL("(She turns her head toward you.)"), [_INTL("(Look back.)"), _INTL("(Look away.)")], -1)
       if c == 0
         set_flag(:looked_at_auril)
-        say(["AURIL: (to you, pleased) There you are. The one who wasn't on my wheel. Now you are."])
+        say(["AURIL: (pleased) There you are. The one who wasn't on my wheel. Now you are."])
       else
         set_flag(:looked_away)
         say(["AURIL: You'll look, in the end. Everyone does."])
@@ -78,7 +78,7 @@ module FrostThaw
          "Her breath frosts the table between you.",
          "AURIL: Life and death march only so long as they move. Stop them, and all is mine.",
          "AURIL: And memory keeps the key. Keys open, Alberica. They also lock."])
-    speak(:alberica, "(through her teeth) Get out of my head.", "(barely) ...Get out.")
+    speak(:alberica, "(through her teeth) Get out of my head.", "...Get out.")
     # The omens she sent all through the city (048_E): she knows which ones you saw.
     if (counter(:omens_seen) rescue 0).to_i >= 3
       say(["AURIL: You've seen my signs. Frost on his shadow. Vines on her breath. Your throat, cold.",
@@ -89,7 +89,7 @@ module FrostThaw
     Stage.walk(auril, PBMoveRoute::Down) if auril
     say(["She leans in.",
          "AURIL: You are my vessel, little songbird. You always were."])
-    speak(:alberica, "(very quiet) I don't sing for you.", "(barely) ...I don't sing for you.")
+    speak(:alberica, "I don't sing for you.", "...I don't sing for you.")
     say(["AURIL: Guard them if you must. The wheel turns for me.",
          "AURIL: Come and be beautiful forever."])
     # Herald Alberica knows there was a bargain (her prologue): let her connect it (context 11 §6).
@@ -100,8 +100,8 @@ module FrostThaw
     say(["The room comes back."])
     stage_act(:alberica, :kneel, dx: 1, dy: 0, dir: 2)    # on her knees
     say(["#{al ? 'You are' : 'Alberica is'} on #{al ? 'your' : 'her'} knees. #{herald?(:meat_meat) ? 'You are' : 'Meat Meat is'} holding #{al ? 'your' : 'her'} hands."])
-    speak(:alberica, "(hoarse) She's coming. No. She's already here. ...Don't make a thing of it.",
-                     "(hoarse) ...Something's pulling me north. Don't make a thing of it.")
+    speak(:alberica, "She's coming. No. She's already here. ...Don't make a thing of it.",
+                     "...Something's pulling me north. Don't make a thing of it.")
     say([cl(:meat_meat, "Meat Meat is making a thing of it.")].compact)
     set_flag(:auril_whisper)
     add_counter(:story_beats)
@@ -202,8 +202,8 @@ module FrostThaw
     say(["The ice cracks. Sephek breathes in, four hundred years late.",
          "His eyes open, blue as a frozen lake.",
          flag?(:shard_destroyed) ? "SEPHEK: (in pieces) ...It's cold. It's so loud in here. Why is it so loud?" :
-                                   "SEPHEK: (very quietly) ...It's cold. Why is it still so cold?",
-         "ELINE: (kneeling) The Frost Saint walks again.",
+                                   "SEPHEK: ...It's cold. Why is it still so cold?",
+         "ELINE: The Frost Saint walks again.",
          herald?(:alerion) ? "You got here first. You always hear her first." :
                              "Alerion got here first. He always hears her first.",
          herald?(:alerion) ? "You're standing between them and Frostina. Your ring is white with frost." :
@@ -236,15 +236,15 @@ module FrostThaw
     if herald?(:alerion)
       pbMessage(_INTL("(Razzilith is still roaring. Get up?)"), [_INTL("(Get up.)"), _INTL("(Lie still a moment longer.)")], -1)
       stage_act(:alberica, :kneel, dx: 1, dy: 1, dir: 2) if down
-      speak(:alberica, "(kneeling, a hand on your back) Then up you get, pretty boy. Slowly.", "...Up. Slowly.")
+      speak(:alberica, "Then up you get, pretty boy. Slowly.", "...Up. Slowly.")
     else
       helped = pbConfirmMessage(_INTL("Help Alerion up?"))
       stage_act(:alberica, :kneel, dx: 1, dy: 1, dir: 2) if down
       if helped
         say(["You get an arm under him.",
-             cl(:alberica, "(kneeling, his other side) Then up you get, pretty boy. Slowly.")].compact)
+             cl(:alberica, "(his other side) Then up you get, pretty boy. Slowly.")].compact)
       elsif with_or_is?(:alberica)
-        speak(:alberica, "(kneeling, a hand on his back) Then up you get, pretty boy. Slowly.", "...Up. Slowly.")
+        speak(:alberica, "Then up you get, pretty boy. Slowly.", "...Up. Slowly.")
       end
     end
     Stage.pose(down, "P-ALE-03", 0, frames: [3, 2, 1, 0], per: 8) if down   # getting up, slowly
@@ -322,7 +322,7 @@ module FrostThaw
          (herald?(:alerion) ? "SEPHEK: (to you, and he means it) I'm sorry. I'm taking her home." :
                              "SEPHEK: (to Alerion, and he means it) I'm sorry. I'm taking her home."),
          "SEPHEK: To Solstice. To the nest she fell from. She was always going home.",
-         ask_as(:alerion, "(very quietly) She's not hers.", "...She's not hers.")])   # (said to Sephek: an input in his mode)
+         ask_as(:alerion, "She's not hers.", "...She's not hers.")])   # (said to Sephek: an input in his mode)
     # the bible's beat: Alerion, her Dragoon, is thrown down trying to stop them
     al = herald?(:alerion)
     goer = al ? nil : Stage.summon(:alerion)
@@ -364,37 +364,37 @@ module FrostThaw
          "LUMIN: \"Three is a summons.\"",
          flag?(:knows_three_hearts) ? cl(:reptin, "Luna Carver told us that. Four hundred years ago. Last month.") : nil].compact)
     if with_or_is?(:alerion)
-      say([as(:alerion, "(very low) Two, then. Frostina, and him. ...Who's the third?")])
+      say([as(:alerion, "Two, then. Frostina, and him. ...Who's the third?")])
     else
       say(["LUMIN: Shimmer's heart, sung into that egg. And his, beating in him. Two."])
     end
     speak(:alberica, "(a hand on her chest) And she wants me for the third.", "(a hand on her chest) ...And the third's me.")
     if with_or_is?(:alberica)
-      say([cl(:reptin, "(turning) ...You knew. How long have you known?")].compact)
+      say([cl(:reptin, "...You knew. How long have you known?")].compact)
       quiet = speak(:alberica, "Since the festival. She's been counting us off, one by one.",
                     "...Since the festival. I didn't tell you.")
       # Owner's decision 3: the family bargain, hinted here; the whole of it comes the night before the end.
-      say([as(:alberica, "(quieter) My family made her a bargain once. Nobody ever said the price.")])
+      say([as(:alberica, "My family made her a bargain once. Nobody ever said the price.")])
       say([as(:alberica, "Life and death, that's you, Reptin. Memory's me. And I didn't tell you.")]) if quiet == 0
-      say([cl(:alerion, "(flat) No. You didn't.")].compact)
+      say([cl(:alerion, "No. You didn't.")].compact)
     end
     # Selrae comes up the root-lift: she heard the scream from the Hall, and she knows this rite.
     selrae = Stage.actor(:selrae, 12, 33, 8, graphic: "FT_winter_matron_selrae_vorn")
     Stage.approach(selrae) if selrae
     say(["SELRAE: (out of breath) I heard the scream. I know this rite. I sat with them for years.",
-         "SELRAE: She'll do it on Solstice, her island. In her own house.",
-         "SELRAE: She'll pour herself into all three at once, and walk out of there in a body.",
-         "LUMIN: (very small) The old texts have a name for that. The Rewritten Auril."])
+         "SELRAE: She will do it on Solstice, her island. In her own house.",
+         "SELRAE: She will pour herself into all three at once, and walk out of there in a body.",
+         "LUMIN: The old texts have a name for that. The Rewritten Auril."])
     if with_or_is?(:reptin) && with_or_is?(:alberica)
       speak(:reptin, herald?(:alberica) ? "Then you stay here. In Rootspire. We go, and you stay." :
                                           "Then Alberica stays here. In Rootspire. We go, and she stays.", "...Then you stay here.")
-      speak(:alberica, "(very plain) No. She'd only come here for me. With all of you gone.",
-                       "(very plain) ...No. She'd only come here.")
+      speak(:alberica, "No. She'd only come here for me. With all of you gone.",
+                       "...No. She'd only come here.")
       if !herald?(:alberica) && !herald?(:reptin)
         # (a real disagreement, and the player has a say in it)
         c = pbMessage(_INTL("(Reptin looks at you.)"), [_INTL("She's right. She comes"), _INTL("She should stay")], -1)
         say([c == 1 ? "REPTIN: (to Alberica) You see? ...But it's your neck. It always was." :
-                      "REPTIN: (a long breath) ...Then I'm standing next to her. The whole way."])
+                      "REPTIN: ...Then I'm standing next to her. The whole way."])
       end
     end
     say([as(:meat_meat, "Meat Meat breaks her.")])
@@ -402,16 +402,16 @@ module FrostThaw
       speak(:reptin, "Frostina first. Then we decide what happens to Auril.", "...Frostina first. Then Auril.")
     end
     if with_or_is?(:wyn)
-      speak(:wyn, "(quietly) ...Nobody's taking Alberica. I won't let them.", "(quietly) ...Nobody's taking her.")
-      speak(:alberica, "(softly) ...Look at you. All fierce. Careful, I'll start believing you.",
-                       "(softly) ...Look at you.") if with_or_is?(:alberica)
+      speak(:wyn, "...Nobody's taking Alberica. I won't let them.", "...Nobody's taking her.")
+      speak(:alberica, "...Look at you. All fierce. Careful, I'll start believing you.",
+                       "...Look at you.") if with_or_is?(:alberica)
     end
     # The Act III doorway for the player (Bell, the walk-away test): two dragons turn the wheel.
     if outsider?
       say(["LUMIN: (to you) And your Wall. Two dragons turn the wheel. Never one.",
            "LUMIN: Without her the wheel stays stuck. The Wall stays up. Your time and theirs, apart.",
-           with_or_is?(:reptin) ? as(:reptin, "(to you, gently) You're home, dear. Nobody would blame you for staying.") :
-                                  "LUMIN: (to you) You're home, though. Nobody would blame you for staying."])
+           with_or_is?(:reptin) ? as(:reptin, "You're home, dear. Nobody would blame you for staying.") :
+                                  "LUMIN: You're home, though. Nobody would blame you for staying."])
       c = pbMessage(_INTL("(They wait.)"), [_INTL("I'm coming"), _INTL("I'm not done with that Wall"), _INTL("(Say nothing.)")], -1)
       c = 2 if !c || c < 0
       set_flag(%i[act3_coming act3_wall act3_silent][c])
@@ -424,7 +424,7 @@ module FrostThaw
       say(["LUMIN: Two dragons turn the wheel. Never one. With her gone, it stays stuck."])
     end
     # Divine Rejuvenation: the Halo seeded the Heartroot with Auril's relics.
-    say(["SELRAE: (very low) He got up again, after you broke him? Then it's begun.",
+    say(["SELRAE: He got up again, after you broke him? Then it has begun.",
          "SELRAE: The Halo carried three of her relics into the Heartroot. Black ice. I let them in.",
          "SELRAE: While one of them stands, the Saint stands back up. Every time.",
          cl(:alerion, "Then we break them first."),
@@ -473,16 +473,16 @@ module FrostThaw
     lines << "ANDUIN: The Wennen will ring the old bell. Something very large will answer." if flag?(:council_anduin)
     say(lines) if !lines.empty?
     # The Council asks the one person who isn't a Herald (context 11 M11-5 box 7)
-    ask = if flag?(:act3_coming) then "KELYN: (to you) Lumin says you've already said you're going. Then go with ours."
+    ask = if flag?(:act3_coming) then "KELYN: Lumin says you've already said you're going. Then go with ours."
           elsif flag?(:act3_wall) then "KELYN: (to you) For the Wall, Lumin says. Good. It's the city's Wall now too."
-          elsif flag?(:act3_silent) then "KELYN: (to you) You didn't say. You're here, though. I'll take that as an answer."
+          elsif flag?(:act3_silent) then "KELYN: You didn't say. You're here, though. I'll take that as an answer."
           elsif !outsider? then "KELYN: Heralds. The city can't order you north. It's asking."
           end
     say([ask]) if ask
     # (the decisive beat of the scene gets an input: the Council asks, you answer)
     pbMessage(_INTL("(The Council waits for an answer.)"), [_INTL("We're going north"), _INTL("(Nod.)")], -1)
     four_chairs_consequences if respond_to?(:four_chairs_consequences)
-    say([as(:alerion, "(bandaged, standing anyway) I'm coming.")])
+    say([as(:alerion, "(bandaged) I'm coming.")])
     speak(:reptin, "You can barely walk.", "...You can barely walk.") if with_or_is?(:reptin)
     say([as(:alerion, "I've walked on less. She's mine to watch. I'm not done watching."),
          cl(:meat_meat, "Ice Prince can lean on Meat Meat. Meat Meat is short. It will be funny.")].compact)

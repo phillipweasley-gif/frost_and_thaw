@@ -95,7 +95,7 @@ module FrostThaw
     duergar_keep_turl:  "TURL: Fire replaces frost!",
     duergar_gate_kell:  "KELL: Aim for the bridge! The bridge!",
     duergar_gate_morn:  "MORN: Root-keep holds!",
-    duergar_gate_sharl: "SHARL: (eyes hollow with fear) Please don't make me.",
+    duergar_gate_sharl: "SHARL: Please don't make me.",
     duergar_gate_ulf:   "ULF: Turn round. Turn round and I won't have to.",
     duergar_tower_grik: "GRIK: Intruders on the vantage!",
     duergar_tower_nall: "NALL: Down! Get down off my tower!",
@@ -213,7 +213,7 @@ module FrostThaw
     add_counter(:story_beats)
     sayc([cl(:meat_meat, "Raz-MKIII. Razzy. \"Showed resilience.\" Razzy showed TEETH.")])
     if with_or_is?(:alberica)
-      speak(:alberica, "(very quietly) Somebody screamed my name. Down here. Before I was ever here.", "...My name.")
+      speak(:alberica, "Somebody screamed my name. Down here. Before I was ever here.", "...My name.")
     end
     sayc([with_or_is?(:alberica) ? cl(:reptin, "(to #{herald?(:alberica) ? 'you' : 'Alberica'}, gently) Something of Auril's she cut open. And it knew you.") :
                                    cl(:reptin, "A frost-born subject. Something of Auril's she cut open, and it knew Alberica.")])
@@ -275,7 +275,7 @@ module FrostThaw
     # (dialogue 08 §4.4, §5: somebody pushes back, so it's an exchange, not a speech)
     sayc(["SOOTY DUERGAR: The thanes found the hag's old warrens, and thought: a fortress. Ours.",
           "SOOTY DUERGAR: She came out of a mirror and killed all six thanes, at their own table.",
-          cl(:reptin, "(quietly) And you stayed."),
+          cl(:reptin, "And you stayed."),
           "SOOTY DUERGAR: She burned the sigils in. You don't leave, after.",
           "SOOTY DUERGAR: She told us her name was Xardorok. Our old king's name. We had to say it.",
           "SOOTY DUERGAR: She talks of a Great Unchaining: the dragon flies, the seasons come loose.",
@@ -283,7 +283,7 @@ module FrostThaw
           "SOOTY DUERGAR: Summer forever, she says. The Dale goes to the Hells, warm. She goes up.",
           "SOOTY DUERGAR: That lever opens the Barricade gate from this side. Pull it. End her."])
     sayc([cl(:meat_meat, "Meat Meat will end her. Meat Meat has been practising."),
-          cl(:reptin, "(gently) What's your name, friend?"),
+          cl(:reptin, "What's your name, friend?"),
           "SOOTY DUERGAR: I had one. Before the sigils. Ask me after."])
     set_flag(:knows_great_unchaining)
   end
@@ -317,7 +317,7 @@ module FrostThaw
          "The walls are ribbed with petrified roots, charred at the tips. The air is warm and sour.",
          "Something deep below beats, slow and steady, like a heart too large to name."])
     sayc([cl(:alberica, "Oh, I remember this smell. Rot, sap, and old magic that doesn't know it's dead."),
-          cl(:wyn, "(very small) The tree is hurting down here. All the way down.")])
+          cl(:wyn, "The tree is hurting down here. All the way down.")])
   end
 
   # A11: the lagging mirror, and a future self.
@@ -576,8 +576,8 @@ module FrostThaw
     if c == 1
       set_flag(:myconid_carried)
       say(["Wyn holds it very gently while it lets go of itself, spore by spore, into Wyn's satchel.",
-           "MYCONID: (fading, almost a hum) ...Home. Thank you."])
-      sayc([cl(:wyn, "(very quietly) Hyphora will have it back. Nothing goes to waste. Not even this.")])
+           "MYCONID: (fading) ...Home. Thank you."])
+      sayc([cl(:wyn, "Hyphora will have it back. Nothing goes to waste. Not even this.")])
       wheel(1)
     else
       set_flag(:myconid_mercy)
@@ -592,7 +592,7 @@ module FrostThaw
   def broken_works(event_id = nil)
     say(["Part of the ceiling has come down. Mirror-rock glitters on the floor like shattered stars.",
          "Four duergar hide in the rubble, exhausted, terrified, sigils carved into their flesh.",
-         "DUERGAR: (whispering) Don't fight. She watches everything. The Forge-Mistress watches.",
+         "DUERGAR: Don't fight. She watches everything. The Forge-Mistress watches.",
          "DUERGAR: Even the roots obey her."], event_id)
     return if flag?(:broken_works_told)
     set_flag(:broken_works_told)
@@ -688,9 +688,9 @@ module FrostThaw
          "Its skull has been opened. Someone took its brain out with surgical precision."], event_id)
     return if flag?(:saw_mindflayer)
     set_flag(:saw_mindflayer)
-    sayc([cl(:alerion, "(crouching) Its last thoughts are still in the circle. Rage. Then nothing."),
+    sayc([cl(:alerion, "Its last thoughts are still in the circle. Rage. Then nothing."),
           # (dialogue 08 §4.12: her under-pressure habit, not Avarice's word)
-          cl(:alberica, "(quietly) Somebody ought to sing for it. Nobody will."),
+          cl(:alberica, "Somebody ought to sing for it. Nobody will."),
           cl(:wyn, "...She takes everything apart to see how it works. Even people. Even gods.")])
   end
 
@@ -735,8 +735,8 @@ module FrostThaw
     return if flag?(:barracks_broken_seen)
     set_flag(:barracks_broken_seen)
     # (dialogue 08 §4.16: his own "friend", not a speech)
-    sayc([cl(:reptin, "(crouching, gently) Friend? ...Friend."),
-          cl(:alberica, "(her hand on her rune, very quiet) ...Fire replaces frost.")])
+    sayc([cl(:reptin, "Friend? ...Friend."),
+          cl(:alberica, "(her hand on her rune) ...Fire replaces frost.")])
     c = pbMessage(_INTL("The broken duergar chant."), [_INTL("Leave them be"), _INTL("Try to shake one awake")], 0)
     return if c == 0
     say(["You shake the nearest one. Three rise at once, chanting louder, reaching for you!"])
@@ -785,7 +785,7 @@ module FrostThaw
          "A hag's silhouette flickers along the walls, muttering scraps of old spells."], event_id)
     set_flag(:thruuna_lore)
     add_counter(:story_beats)
-    sayc(["SILHOUETTE: (to nobody) Twenty stones for twenty winters. A little winter in each mirror.",
+    sayc(["SILHOUETTE: Twenty stones for twenty winters. A little winter in each mirror.",
           "SILHOUETTE: Break one, and the winter comes out. Break them all, and time comes loose.",
           # (dialogue 08 §4.17: not "as you know": what she never asked)
           cl(:alberica, "We broke twenty winters loose in that Chasm. Never asked where they went."),
@@ -879,7 +879,7 @@ module FrostThaw
     add_counter(:story_beats)
     say(["Root-columns glow from inside, green, white and red, like stained glass.",
          "At the far end, a doorway of braided roots opens and closes, like a breathing mouth."])
-    sayc([cl(:wyn, "(barely a whisper) Last chance. To turn round."),
+    sayc([cl(:wyn, "Last chance. To turn round."),
           cl(:wyn, "...I'm not turning round. I just thought someone should say it."),
           cl(:glimmer, "Noted, Wyn. Nobody's turning round.")])
   end
@@ -974,7 +974,7 @@ module FrostThaw
          "Auril's sigil and Avarice's, woven together, each overwriting the other.",
          "As you come close, both of them speak."], event_id)
     say(["FROST SIGIL: (a winter morning) Bring me what's left of my saint, I'll be kind.",
-         "FIRE SIGIL: (smiling) Leave the engine running. I'll make you summer's saints, every one."], event_id)
+         "FIRE SIGIL: Leave the engine running. I'll make you summer's saints, every one."], event_id)
     c = pbMessage(_INTL("The two sigils wait."), [_INTL("Answer the frost"), _INTL("Answer the fire"), _INTL("Break the shrine")], 2)
     if c == 0
       set_flag(:chapel_auril)

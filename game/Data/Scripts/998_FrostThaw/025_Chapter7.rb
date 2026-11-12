@@ -107,7 +107,7 @@ module FrostThaw
     else
       say(["KELYN: Find Var. Find what's burning. There are two ways down.",
            "KELYN: Wyn's Sap Gate in the Root-Tier, or Hew's dig and the Split Dock.",
-           "DARRUS: (not looking up) And watch what you sign for, down there."], event_id)
+           "DARRUS: And watch what you sign for, down there."], event_id)
     end
   end
 
@@ -152,7 +152,7 @@ module FrostThaw
          cl(:alerion, "Tonight's aurora is #{HUE_WORDS[hue][0].downcase}. Remember that."),
          with_or_is?(:alerion) ? cl(:reptin, "He means: everyone, please take notes.") : nil,
          with_or_is?(:alerion) && with_or_is?(:reptin) ? cl(:alerion, "I meant remember it.") : nil,
-         cl(:wyn, "(very softly) ...The tree's frightened. Sorry. I just... thought someone should say.")].compact)
+         cl(:wyn, "...The tree's frightened. Sorry. I just... thought someone should say.")].compact)
   end
 
   SEASON_RUNES = {

@@ -145,7 +145,7 @@ module FrostThaw
     c = pbMessage(_INTL("A sleeping Stantler, across the Ring..."), [_INTL("Step with the heartbeat, in the grooves."), _INTL("Tiptoe.")], 0)
     if c == 0
       say(["#{herald?(:reptin) ? 'You cross' : 'Reptin crosses'} the Ring and lays a hand on the Stantler's flank. It doesn't wake.",
-           "ARVIK: (very quietly, from right behind) ...The Quiet Step. Huh."])
+           "ARVIK: (from right behind) ...The Quiet Step. Huh."])
     else
       say(["Every board creaks. The Stantler wakes, looks at #{you_or(:reptin, 'Reptin')} with contempt, and sleeps.",
            "ARVIK: Tiptoeing's for burglars. Again. ...There. That one. That was the Quiet Step."])
@@ -159,7 +159,7 @@ module FrostThaw
          "He walks away. Nothing happens for a long time. Then a root-weight comes out of nowhere."], event_id)
     trainer(:arvik_ambush)
     say(["By sundown #{herald?(:reptin) ? 'your body moves before you think' : "Reptin's body moves before he thinks"}. Guided by the tree.",
-         "ARVIK: (sitting down hard) You dodge like a wolf. But you lose your magic when you dodge."])
+         "ARVIK: You dodge like a wolf. But you lose your magic when you dodge."])
     speak(:reptin, "Then let me teach you something back. Hold a spell like a breath. Move round it.",
           "...Here. Hold the spell like a breath.")
     say(["For an hour the student teaches the teacher: holding a spell while rolling and falling.",
@@ -183,7 +183,7 @@ module FrostThaw
          "ARVIK: The tree has begun to trust your weight."])
     say(["That night, under the full moon, #{you_or(:reptin, 'Reptin')} #{verb_for(:reptin, 'teaches', 'teach')} Arvik one more thing:",
          "how to heal in wild shape, as the wolf.",
-         "ARVIK: (afterwards, very gruff) Hold out your arm."])
+         "ARVIK: (afterwards) Hold out your arm."])
     # (dialogue 15 §4: the speech is two boxes, ending on the line)
     say(["He ties a wristband of living bark round #{your_or(:reptin, "Reptin's")} wrist. It shifts, and grows, to fit.",
          "ARVIK: The Rootwarden's Loop-Band. You didn't go through the training. You didn't have to.",
@@ -378,7 +378,7 @@ module FrostThaw
          "One by one, every power #{g_name} #{verb_for(:glimmer, 'carries', 'carry')}, sorted, like seeds.",
          "At sundown Lumin burns a single strand of frost-silk. It hisses like a voice cut off.",
          "LUMIN: That was her whisper. One of them.",
-         herald?(:glimmer) ? "(You feel it: the tether to Auril, weakening. The first fibre parting.)" : "GLIMMER: (very quietly) ...I felt that. Like a rope going slack."])
+         herald?(:glimmer) ? "(You feel it: the tether to Auril, weakening. The first fibre parting.)" : "GLIMMER: ...I felt that. Like a rope going slack."])
     say(["At dusk Lumin ties a mane-braid of gold thread round #{g_poss} neck, warm as a hand.",
          "LUMIN: For the holy symbol. Channel into it. Not a pact. Will."])
     give_key(:FT_MANEBRAID)
@@ -402,7 +402,7 @@ module FrostThaw
     dt_step!(:glimmer)
     wheel(1)
     add_counter(:story_beats)
-    sayc([cl(:alberica, "(wiping her eyes) That was the most beautiful thing I've ever seen. Again."),
+    sayc([cl(:alberica, "That was the most beautiful thing I've ever seen. Again."),
           cl(:reptin, "Step from frost into dawn. I'm stealing that."),
           cl(:meat_meat, "Fluffy one is shiny now. Meat Meat is proud.")].compact)
     say(["LUMIN: Brightmane listens closest on the day of acceptance. Ask your questions now."])
@@ -442,7 +442,7 @@ module FrostThaw
     Stage.remove_actor(bm) if bm
     set_flag(:brightmane_answered)
     set_flag(:chardalyn_vision)
-    sayc([cl(:glimmer, "(shaking) Chardalyn. Whatever that is. And a fire, under all of it."),
+    sayc([cl(:glimmer, "Chardalyn. Whatever that is. And a fire, under all of it."),
           cl(:alerion, "Chardalyn. Demon-crystal. If it's under the tree, somebody put it there.")].compact)
     true
   end
@@ -497,7 +497,7 @@ module FrostThaw
       set_flag(:razzy_summer_warning)
       # (dialogue 15 §3: she answers him)
       speak(:meat_meat, "Meat Meat will find Summer's face, Razzy. Then Meat Meat will bite it.",
-            "(very quiet) ...Meat Meat will find it, Razzy.")
+            "...Meat Meat will find it, Razzy.")
       say(["He pulls back, chirping, tail thrashing like a cat's. He crouches, wings half-fanned.",
            "RAZZILITH: Fly?"])
       if !pbConfirmMessage(_INTL(herald?(:meat_meat) ? "Climb on?" : "Let Meat Meat climb on?"))
@@ -567,7 +567,7 @@ module FrostThaw
          "A vendor wipes her brow: \"Feels like summer's holding its breath.\""])
     sayc([herald?(:meat_meat) ? "(Rootspire's acting weird again. You file it away. Growth slow. Heat too strong.)" :
                                 cl(:meat_meat, "Rootspire is acting weird again. Growing slow. Too hot. Meat Meat files it."),
-          cl(:reptin, "(quietly) The pulse is wrong. She's right.")].compact)
+          cl(:reptin, "The pulse is wrong. She's right.")].compact)
     # Heightened Summer-Sense (rootspire.md 5150-5156): for the next day, the
     # first thing that moves with heat doesn't get past her (048_H uses it).
     state[:summer_sense_day] = rs_day
@@ -617,7 +617,7 @@ module FrostThaw
            "LORN SCRIBE: The World Tree dreams, and I write its dreams down, so it remembers them.",
            "He dips the quill without looking up.",
            journey? ? "LORN SCRIBE: Four riddles, kept for the Heralds. You'll do to carry them, Herald's friend." :
-                      "LORN SCRIBE: (not looking up) Four of you. Four riddles. One at a time. The ink is slow."], event_id)
+                      "LORN SCRIBE: Four of you. Four riddles. One at a time. The ink is slow."], event_id)
     elsif flag?(:key_found) && !flag?(:scribe_backwards)
       set_flag(:scribe_backwards)
       talk(:lorn_scribe, event_id)      # (026: he writes backwards, once the key's found)
@@ -642,11 +642,11 @@ module FrostThaw
       say(["LORN SCRIBE: (still writing) The riddles are given. The ink is drying. Go and find them."], event_id)
     end
     if with_or_is?(:alberica) && !flag?(:codex_given)
-      say(["LORN SCRIBE: (stopping. For the first time, the quill stops.) Keeper of Memory.",
+      say(["LORN SCRIBE: (the quill stops.) Keeper of Memory.",
            herald?(:alberica) ? "He draws out a sheaf of pages: paper older than the tree, in your own hand." :
                                "He draws out a sheaf of pages: paper older than the tree, in Alberica's hand.",
            "LORN SCRIBE: Your journal. The pages you lost in the white. The tree found them."], event_id)
-      sayc([cl(:alberica, "(very still) I wrote those in the snow. I burned the rest for warmth.")].compact)
+      sayc([cl(:alberica, "I wrote those in the snow. I burned the rest for warmth.")].compact)
       if pbConfirmMessage(_INTL(herald?(:alberica) ? "Take the pages?" : "Let Alberica take the pages?"))
         set_flag(:codex_given)
         say(["LORN SCRIBE: Bind them. Write on the first blank page. The tree will do the rest."], event_id)
@@ -732,7 +732,7 @@ module FrostThaw
     set_flag(:codex_fragment_2)
     say(["The Codex closes itself with a soft thrum. There are two more pages, but they won't come today."])
     sayc([cl(:meat_meat, "(sliding a plate across) Meat Meat saved you the good bread. Most of it."),
-          cl(:alberica, "(very quietly, a hand flat on the Codex) Anchoring it. I was anchoring it.")].compact)
+          cl(:alberica, "(a hand flat on the Codex) Anchoring it. I was anchoring it.")].compact)
     dt_step!(:alberica)
   end
 
@@ -793,8 +793,8 @@ module FrostThaw
 
   def festival_voices
     # (dialogue 06 §4: what the leaves did, not what the Heralds heard from Darrus)
-    say([flag?(:met_eirwen) ? "EIRWEN: (quietly, beside you) The leaves wrote that down. They've never written a shudder." :
-                              "EIRWEN: (quietly, beside you) Eirwen, of the Library. The leaves have never shuddered like this.",
+    say([flag?(:met_eirwen) ? "EIRWEN: (beside you) The leaves wrote that down. They've never written a shudder." :
+                              "EIRWEN: (beside you) Eirwen, of the Library. The leaves have never shuddered like this.",
          "LIRIELLE: (a grey-furred Wennen, fur on end) The air smells wrong. Like hot metal."])
   end
 

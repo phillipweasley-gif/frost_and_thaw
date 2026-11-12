@@ -56,7 +56,7 @@ module FrostThaw
   TEXT.merge!(
     smuggler_dockworker: -> {
       flag?(:undercity_done) ? ["DOCKWORKER: I sleep now. Right through. Thank whatever you did down there."] :
-        ["DOCKWORKER: (shaking) A fungus down the Smuggler's Run. It sprouts eyes. It whispers.",
+        ["DOCKWORKER: A fungus down the Smuggler's Run. It sprouts eyes. It whispers.",
          "DOCKWORKER: It showed me things I shouldn't know. Now my dreams are full of shadows.",
          (herald?(:wyn) ? "DOCKWORKER: The hatch by the Split Dock barrels. You'll know it, Rootwarden." :
                           "DOCKWORKER: The hatch by the Split Dock barrels. Wyn knows it. The wardens won't go down.")] },
@@ -101,7 +101,7 @@ module FrostThaw
       return say(["Reptin's pack. It isn't yours to rummage in."], event_id)
     end
     say([herald?(:reptin) ? "Your pack. At the bottom, in a sock: the cedar charm. Forgotten. Never forgotten." :
-                            "REPTIN: (rummaging) It'll be at the bottom. It's always at the bottom. ...There.",
+                            "REPTIN: It'll be at the bottom. It's always at the bottom. ...There.",
          "A little charm carved from cedar, worn smooth. Four hundred years old, and a few weeks."], event_id)
     give_key(:FT_CEDARCHARM)
   end
@@ -128,7 +128,7 @@ module FrostThaw
          "SLAUDI: Caer-Konig. Was. Before the Rime ate it."], event_id)
     return if !pbConfirmMessage(_INTL("Ask Slaudi about the food caravans."))
     if challenge("Slaudi doesn't trust anyone from south of the Wall.", ["Ask about Caer-Konig, and listen", "Tell him you're Heralds", "Pay him"], 0)
-      say(["SLAUDI: (after a long time) The caravans. Every one up the Eastway, the last two winters.",
+      say(["SLAUDI: The caravans. Every one up the Eastway, the last two winters.",
            "SLAUDI: Turned round at the Wall. Food, furs, lamp-oil. Went south, into the light.",
            "SLAUDI: We ate our dogs. Then we ate... Never mind what we ate.",
            "He doesn't look up from the net.",
@@ -167,7 +167,7 @@ module FrostThaw
     if !flag?(:talion_foreshadowed)
       sayc(["And under the wind, very small, a boy's voice, from somewhere a long way down in the ice:",
             "BOY'S VOICE: ...Alerion? You said you'd come back.",
-            cl(:alerion, "(going white) ...No. No, that's not possible."),
+            cl(:alerion, "...No. No, that's not possible."),
             cl(:alberica, "Pretty boy? Who's Alerion's little friend?"),
             cl(:alerion, "Nobody. A long time ago. Leave it.")])
       set_flag(:talion_foreshadowed)
@@ -205,7 +205,7 @@ module FrostThaw
     end
     sayc(["A pocket of the world made entirely of mirror-ice. Corridors that reflect corridors.",
           "Somewhere in it, very far off, a figure is walking away from you, wearing your face.",
-          cl(:alerion, "(very quietly) That one's mine. I left it here. When the time broke, and we fell."),
+          cl(:alerion, "That one's mine. I left it here. When the time broke, and we fell."),
           cl(:alberica, "Then we'll fetch it, pretty boy. Nobody leaves bits of themselves lying about.")])
   end
 
@@ -229,7 +229,7 @@ module FrostThaw
         st[:bad] += 1
         if st[:bad] >= 2
           say(["The corridors turn, and turn again, and fold up like a letter. You're back at the start.",
-               cl(:alerion, "(breathing hard) It's still in there. It'll wait. It's very good at waiting. So am I.")].compact)
+               cl(:alerion, "It's still in there. It'll wait. It's very good at waiting. So am I.")].compact)
           state[:maze] = { ok: 0, bad: 0, done: [] }
           return
         end
@@ -255,7 +255,7 @@ module FrostThaw
     al = herald?(:alerion)
     say([herald?(:alerion) ? "A pane of ice, and your own face in it, staring back. Younger. It hasn't slept in years." :
                              "A pane of ice, and Alerion's face in it, staring back. Younger. It hasn't slept in years.",
-         al ? "(It's the part of you that stayed behind when the time broke.)" : "ALERION: (very quietly) That's the part of me that stayed behind."], event_id)
+         al ? "(It's the part of you that stayed behind when the time broke.)" : "ALERION: That's the part of me that stayed behind."], event_id)
     if !with_or_is?(:alerion)
       return say(["Without Alerion here, the reflection only watches you, and waits."])
     end
@@ -357,7 +357,7 @@ module FrostThaw
     set_flag(:undercity_entered)
     sayc(["Below the Smuggler's Run, the crack opens on the Undercity: older tunnels, dripping caves.",
           "Moss-steam rises off dark water. Glow-worm lanterns sway from root arches, sickly green.",
-          cl(:wyn, "(sniffing) ...Spores. Old ones. Hungry ones. This way.")])
+          cl(:wyn, "...Spores. Old ones. Hungry ones. This way.")])
   end
 
   # Following the densest spore clouds (Survival): a wrong turn and you breathe them.
@@ -365,10 +365,10 @@ module FrostThaw
     key = :"spore_trail_#{n}"
     return if flag?(key)
     fork = [["The spore-cloud thickens. It splits two ways.",
-              "(sniffing, then pointing) That way. Where it's cold. Breathe through your sleeve.",
+              "(then pointing) That way. Where it's cold. Breathe through your sleeve.",
               ["Follow Wyn, sleeve over your mouth", "Go the other way"], ["Where it's thickest and coldest", "Where it's thinnest"]],
              ["Water drips from the roof. One way is wet and dark; the other dry, lit by glow-worms.",
-              "(coughing) ...The wet way. Sorry. The lanterns are what it wants you to follow.",
+              "...The wet way. Sorry. The lanterns are what it wants you to follow.",
               ["The wet, dark way, with Wyn", "The dry way, by the lanterns"], ["The wet, dark way", "The dry way, by the lanterns"]],
              ["Whispering, from both ways at once. One way it's soft. The other way it's loud.",
               "There. Where it's loudest. It knows we're coming.",
@@ -406,7 +406,7 @@ module FrostThaw
       ok = challenge("Hold on to your own voice.", [(herald?(:wyn) ? "Breathe out; listen for your own voice" : "Breathe out; listen for Wyn's voice"), "Shout over it", "Let it talk"], 0)
     end
     if ok
-      say([as(:wyn, "(very softly) ...It's hungry. For stories. It eats them, and dreams them out bent."),
+      say([as(:wyn, "...It's hungry. For stories. It eats them, and dreams them out bent."),
            as(:wyn, "It doesn't mean to frighten anyone. It just doesn't know what else to do with them.")])
       c = pbMessage(_INTL("Pacify it?"), [herald?(:wyn) ? _INTL("Offer it a memory of your own") : _INTL("Offer it a memory of Wyn's"), _INTL("Feed it your Pokémon's strength"), _INTL("No")], 0)
       if c == 0
@@ -493,7 +493,7 @@ module FrostThaw
     end
     talk_ok = challenge("She stops. She's watching Wyn.", ["Let Wyn speak, through the spores", "Draw a weapon", "Ask her what she wants"], [0, 2])
     if talk_ok
-      say([as(:wyn, "(through the spores, very softly) ...You're so cold. Who made you carry that?"),
+      say([as(:wyn, "(through the spores) ...You're so cold. Who made you carry that?"),
            "GHOST: (like water under ice) The Halo. Fifty years ago. A shard of the hag's glass.",
            "GHOST: Mother Thruuna's. I wasn't to put it down.",
            "GHOST: I fell through. I'm still holding it. I can't let go."])
@@ -515,7 +515,7 @@ module FrostThaw
       set_flag(:lake_ghost_rested)
       give_key(:FT_MIRRORSHARD)
     else
-      say([as(:wyn, "(very quietly) Stay. Guard the lake. Come when I call."),
+      say([as(:wyn, "Stay. Guard the lake. Come when I call."),
            wyn_me ? "She bows her head, gives you the blade, and stays: a shape in the mist, watching." :
                     "She bows her head, gives the blade to Wyn, and stays: a shape in the mist, watching."])
       set_flag(:lake_ghost_bound)
@@ -552,7 +552,7 @@ module FrostThaw
            me ? "EIRWEN: Without it, your days come loose. A year of you, gone, like a torn-out page." :
                 "EIRWEN: Without it, her days come loose. A year of her, gone, like a torn-out page.",
            "EIRWEN: A Rootwarden patrol from the Bough circle went out past the Wall that night. They never came back."])
-      speak(:alberica, "(very pale) ...Somebody's got a piece of my life in their pocket.", "(very pale) ...That's mine.")
+      speak(:alberica, "...Somebody's got a piece of my life in their pocket.", "...That's mine.")
       say([as(:alberica, "I'd like it back.")])
       set_flag(:leaf_quest)
       side_goal(:leaf, "The chronal leaf: across the Glasswater, through the Auroral Wall.", done: :leaf_restored)
@@ -565,7 +565,7 @@ module FrostThaw
       say(["You give Eirwen the chronal leaf.",
            "EIRWEN: (both hands round it) Oh. It's whole. I can hear her. She's laughing, on it."])
       take_key(:FT_CHRONALLEAF)
-      say([cl(:alberica, "(very quietly) ...Laughing. Good. I'd hate to be crying on it.")].compact)
+      say([cl(:alberica, "...Laughing. Good. I'd hate to be crying on it.")].compact)
       set_flag(:leaf_restored)
       add_counter(:story_beats)
       Stage.cleanup rescue nil
@@ -574,7 +574,7 @@ module FrostThaw
       say(["EIRWEN: The pieces... They need mending, and a careful hand. Let me try."])
       if challenge("Help Eirwen mend it.", ["Hold the pieces in the order they hum", "Push them together", "Glue"], 0)
         say(["The pieces hum, find each other, and the leaf is whole. Cracked, but whole.",
-             cl(:alberica, "(very quietly) ...Cracked's all right. So am I.")].compact)
+             cl(:alberica, "...Cracked's all right. So am I.")].compact)
         set_flag(:leaf_restored)
       else
         say(["Not yet. The pieces don't want to be together yet."])
@@ -620,7 +620,7 @@ module FrostThaw
       set_flag(:wall_site_entered)
       return sayc(["Where the Wall stood. The snow falls here now, the ordinary way.",
                    "The frozen waves have slumped into the lake. Under the ice, the old village is thawing.",
-                   cl(:reptin, "(very quietly) Dougan's Hole. Four hundred years, and it's only weather now.")])
+                   cl(:reptin, "Dougan's Hole. Four hundred years, and it's only weather now.")])
     end
     return if flag?(:beyond_entered)
     set_flag(:beyond_entered)
@@ -628,7 +628,7 @@ module FrostThaw
     sayc(["The air crystallises in your lungs. Snowflakes hang suspended mid-fall.",
           "Frozen waves crest over the lake. Their mirrored faces hold stars that match no sky.",
           "Beyond, the ruins of an old village slumber under ice.",
-          cl(:reptin, "(very quietly) Dougan's Hole. The half the tree didn't swallow."),
+          cl(:reptin, "Dougan's Hole. The half the tree didn't swallow."),
           cl(:alberica, "Stay close. If anything replays, don't watch. Ask me how I know.")])
   end
 
@@ -689,7 +689,7 @@ module FrostThaw
            "You gather what you can."])
     end
     # (dialogue 10 §5: she went missing in the autumn just gone; keep her line)
-    say(["WARDEN BRISA: (coughing) ...How long? It was autumn. It was autumn a minute ago."])
+    say(["WARDEN BRISA: ...How long? It was autumn. It was autumn a minute ago."])
     if won
       say(["She opens her fist. The chronal leaf, whole."])
       give_key(:FT_CHRONALLEAF)

@@ -223,7 +223,7 @@ module FrostThaw
                "BROKER: Zhentarim. The Black Network, to most. We've friends in every town but this one.",
                "BROKER: The Speaker sends our coin back unopened. Everyone takes it eventually."]
       if T.flag?(:razzy_egg)
-        lines << T.cl(:reptin, "(pleasantly) We'll keep our coin, thank you.")
+        lines << T.cl(:reptin, "We'll keep our coin, thank you.")
         lines << "BROKER: A goblin egg. There's a woman in Luskan who'd pay a fortune for that."
         lines << "BROKER: Avarice, she calls herself. Think it over."
       end
@@ -534,7 +534,7 @@ module FrostThaw
     speak(:reptin, "Hello, little one. You're freezing. Here, take my...", "You're freezing. Here...")
     say(["He opens his mouth. No sound comes out."])
     s.emote(reptin, :question) if reptin && !reptin.equal?($game_player)
-    say([as(:reptin, "(very quiet) Someone cut that scar. On purpose.")])
+    say([as(:reptin, "Someone cut that scar. On purpose.")])
     if razzy
       (razzy.move_speed = 5) rescue nil                 # (he runs)
       s.walk_to(razzy, CHASM_MOUTH[0], CHASM_MOUTH[1], wait_for: false)
@@ -634,7 +634,7 @@ module FrostThaw
          "The shell softens. It isn't enough.",
          as(:shade, "(digging in a pack) I've carried this since the Saltmarsh job. A unicorn's horn."),
          as(:shade, "Never knew why I kept it."),
-         as(:shimmer, "(very still) ...You kept that.")])
+         as(:shimmer, "...You kept that.")])
     shade = s.actor(:shade, px + 1, py, 8)
     s.pose(shade, "P-SHA-02", 0, per: 8) if shade
     $game_screen.start_flash(Color.new(200, 255, 200, 140), 12) rescue nil
@@ -654,7 +654,7 @@ module FrostThaw
       say(["Reptin passes the egg to you.",
            "(Razzy. His name is Razzy. Meat Meat promises.)",
            "You say it out loud, to the egg. The egg warms against your chest.",
-           cl(:alberica, "(very softly) ...Oh, sweetheart.")].compact)
+           cl(:alberica, "...Oh, sweetheart.")].compact)
       set_flag(:razzy_named)
     end
     s.cleanup
@@ -873,7 +873,7 @@ module FrostThaw
     s.turn_to(duvessa, ilda) if duvessa && ilda
     say(["DUVESSA: ...No walk tonight. Go home. All of you."])
     s.hop(ilda) if ilda
-    say([cl(:reptin, "(quietly) Remind me never to argue with her in public."),
+    say([cl(:reptin, "Remind me never to argue with her in public."),
          cl(:shade, "You'd lose. So did the whole town.")].compact)
     s.face(auril, 4) if auril
     mood(:frostmaiden)
@@ -939,7 +939,7 @@ module FrostThaw
     s.turn_to(sephek, shim || $game_player) if sephek
     s.balloon(shim, "B-06") if shim
     sid = sephek ? sephek.id : nil      # (not the townsman on the square who gossips about him)
-    say([as(:shimmer, "(very still) Sephek. Nobody move. He wants someone to."),
+    say([as(:shimmer, "Sephek. Nobody move. He wants someone to."),
          "SEPHEK: A town that keeps its name owes her one. I'm sorry. She'll take what's hers."], sid)
     say([me ? "He looks past Ilda. Past you. At Shimmer." : "He looks past Ilda. Past Alberica. At Shimmer.",
          "SEPHEK: The Frostmaiden sends her regards. To the girl with the stone.",
@@ -948,7 +948,7 @@ module FrostThaw
          "SEPHEK: Come before the next moon, or I choose someone from this square instead."], sid)
     sephek_walks_out(sephek)
     s.balloon(shim, "B-01", frames: 60) if shim
-    say([cl(:shade, "(very quiet) ...Shimmer."),
+    say([cl(:shade, "...Shimmer."),
          as(:shimmer, "I know.")].compact)
     # "Again" becomes a question the next chapter answers (context 02 M2-5)
     speak(:alberica, "\"Again\"? You've said no to her before?", "...\"Again\"?")
@@ -964,7 +964,7 @@ module FrostThaw
         say([cl(:alerion, "Past the east gate. Shut till the Speaker says. North's the only road open.")].compact)
       else
         set_flag(:shimmer_first)
-        say([as(:shimmer, "(not looking at you) ...Stray. Thanks.")])
+        say([as(:shimmer, "...Stray. Thanks.")])
       end
     else
       speak(:alerion, "North gate's shut. Only the Speaker opens it.", "...Only the Speaker opens the north gate.")
@@ -1034,7 +1034,7 @@ module FrostThaw
       mother = s.actor(:ilda_mother, wx + 1, wy + 1, 2, graphic: "BW (62)")
     end
     say(["Morning. The square is empty. The lottery board is still up.",
-         herald?(:alberica) ? "ILDA: (from the Weaver's door, to you) Will you sing the summer one again?" :
+         herald?(:alberica) ? "ILDA: (from the Weaver's door) Will you sing the summer one again?" :
                               "ILDA: (from the Weaver's door, to Alberica) Will you sing the summer one again?"])
     speak(:alberica, "Every night till it comes back.", "...Yes.")
     s.leave_all([ilda, mother].compact, wx, wy) if ilda      # (home, through the Weaver's door)

@@ -99,7 +99,7 @@ module FrostThaw
          "Storn keeps glancing up at the sky, as if a white dragon might drop out of it.",
          "HRUNA: The sled's still out there. Fetch it, and there's a bloodstone each for ye.",
          "HRUNA: And Garn the Hammer's forge, down the street, will make ye a piece to fit.",
-         "STORN: (eyes on the sky) And a dwarf owes ye. That's rarer than dragons.",
+         "STORN: And a dwarf owes ye. That's rarer than dragons.",
          "HRUNA: Ye'll need snowshoes to make the trip in good time."])
     if ($Trainer.has_running_shoes rescue false)
       say(["KORUX: (pointing at your feet, wordlessly, and nodding once.)"])
@@ -267,8 +267,8 @@ module FrostThaw
          "The goblins freeze.",
          "IZOBAI: STOP! Who you? What you want? This our sled! We found it!"])
     # Izobai answers, so Meat Meat's line is spoken (context 14 §6).
-    speak(:meat_meat, "(stepping forward) Meat Meat was cold like goblins once. Very cold. In a cage.",
-                      "(quietly) Meat Meat was cold once. In a cage.") if with_or_is?(:meat_meat)
+    speak(:meat_meat, "Meat Meat was cold like goblins once. Very cold. In a cage.",
+                      "Meat Meat was cold once. In a cage.") if with_or_is?(:meat_meat)
     sayc([cl(:alberica, "Oh, you look frozen to the bone. Here.")])
     gift = if ($PokemonBag.pbHasItem?(:MOOMOOMILK) rescue false) then :MOOMOOMILK
            elsif ($PokemonBag.pbHasItem?(:FRESHWATER) rescue false) then :FRESHWATER
@@ -350,7 +350,7 @@ module FrostThaw
   def mugs_deliver(event_id = nil)
     say(["HRUNA: (pulling the burlap back and laughing, rough as gravel) The foaming mug!",
          "HRUNA: Every last ingot!",
-         "STORN: (looking up) And no dragons. See?",
+         "STORN: And no dragons. See?",
          "STORN: I said watch, and we watched, and there weren't any.",
          "KORUX: (just nods, and nods, and doesn't stop)"], event_id)
     if ($PokemonBag.pbHasItem?(:FT_OOBOKHEAD) rescue false)

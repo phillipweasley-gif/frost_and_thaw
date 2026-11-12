@@ -29,7 +29,7 @@ module FrostThaw
       say(["TALWYN: You came back! I knew you would. I saw you go up the root-stair. And down.",
            "TALWYN: Not following. Guarding. From a distance. A respectful distance."], event_id)
     else
-      say(["TALWYN: (very fast) I'm writing down everything you do. For the Hall. Sorry. Hi."], event_id)
+      say(["TALWYN: I'm writing down everything you do. For the Hall. Sorry. Hi."], event_id)
     end
     state[:talwyn] = n + 1
     talwyn_secret(event_id) if state[:talwyn] >= 3
@@ -130,7 +130,7 @@ module FrostThaw
          "She hums one bar of the dirge.",
          "SERELLE: Every time it's struck, somebody somewhere forgets their own name.",
          "She goes back to humming. The dirge has a melody now. You wish it didn't."], event_id)
-    sayc([cl(:glimmer, "(very quiet) Brightmane has wings like that."),
+    sayc([cl(:glimmer, "Brightmane has wings like that."),
           cl(:alberica, "Darling, nobody forges a god. They forge a very large problem and call it holy.")].compact)
   end
 
@@ -155,12 +155,12 @@ module FrostThaw
     if pimmlet_ready?
       giver_hello(event_id) if respond_to?(:giver_hello)
       set_flag(:shimmers_heart_scroll)
-      say(["PIMMLET: (very quietly, glancing at the shelves as if they'll tell) Shhh. Come here. Shhh.",
+      say(["PIMMLET: (glancing at the shelves as if they'll tell) Shhh. Come here. Shhh.",
            "PIMMLET: I'm not supposed to have this. Solvaran thinks it's locked under the floor.",
            "He unrolls a scroll of crystal leaf. A title in old Wennen: SHIMMER'S HEART."], event_id)
       say(["PIMMLET: The ritual that made the white wyrmling. A heart of ice, given willingly.",
            "PIMMLET: Put into a frost egg, and sung over with four notes. The same four. Every time."], event_id)
-      sayc([with_or_is?(:glimmer) ? cl(:glimmer, "(quietly, humming the four notes, off-key) ...") :
+      sayc([with_or_is?(:glimmer) ? cl(:glimmer, "(humming the four notes, off-key) ...") :
                                     cl(:shade, "(staring at the four notes) That's her song. That's Shimmer's song.")].compact)
       say(["PIMMLET: It says the egg doesn't hatch a dragon. It hatches an answer.",
            "PIMMLET: An answer to what? It doesn't say. Shhh. I've read it nine hundred times."], event_id)
@@ -280,7 +280,7 @@ module FrostThaw
                             "YORIN: (strumming) Here's one I've never sung before. Funny. I know every word."] + song[1], event_id)
     sung << i if !sung.include?(i)
     if i == 1 && with_or_is?(:glimmer) && first_time?(:yorin_gold_cat)
-      sayc([cl(:glimmer, "(after a long moment) ...Catchy."),
+      sayc([cl(:glimmer, "...Catchy."),
             cl(:alberica, "I don't like that song, Yorin. Sing a different one. Sing a rude one.")].compact)
     end
   end
@@ -346,7 +346,7 @@ module FrostThaw
            "GURK: The old Verdant Cask brewery, by the south steps. Thirty years shut.",
            "GURK: This morning, frost on its boards. A storm's coming up from under. Be the lightning."], event_id)
       sayc([cl(:alerion, "The Halo had another hideout. Rheven always said so."),
-            cl(:wyn, "(quietly) The Frozen Cellar. The spores in the gardens talk about it. Nobody goes.")].compact)
+            cl(:wyn, "The Frozen Cellar. The spores in the gardens talk about it. Nobody goes.")].compact)
       side_goal(:frozen_cellar, "The Frozen Cellar, under the old Verdant Cask brewery in the Verdant Halls.", done: :cellar_cleared)
     else
       say(["GURK: Quiet day at the anvil. Good. When it's loud, somebody's bleeding."], event_id)
@@ -365,7 +365,7 @@ module FrostThaw
     elsif flag?(:sliver_freed)
       say(["ELITHA: My best work, ruined. I've never been happier."], event_id)
     else
-      say(["ELITHA: (not looking at the dancer) She's been very still today. A good sign. Probably."], event_id)
+      say(["ELITHA: She's been very still today. A good sign. Probably."], event_id)
     end
   end
 
@@ -379,7 +379,7 @@ module FrostThaw
     # (notes/15 E10: she comes over, so the quiet line is said from beside you)
     eev = Stage.find("Elitha Snowmere")
     Stage.approach(eev) if eev
-    say(["ELITHA: (very quietly) My grandmother's grandmother trapped it. Four hundred years ago.",
+    say(["ELITHA: My grandmother's grandmother trapped it. Four hundred years ago.",
          "ELITHA: A sliver of Auril's will. It's been getting louder since you came. It knows her."])
     return if !pbConfirmMessage(_INTL("Break the sculpture and let the sliver out to fight?"))
     pbSEPlay("Ice1") rescue nil
@@ -443,7 +443,7 @@ module FrostThaw
            "SELENE: I'm writing your scripture. You're demigods, reborn. You don't have to agree."], event_id)
     end
     i = (state[:selene_verse] ||= 0)
-    say(["SELENE: (reading) The Book of the Heralds, verse #{i + 1}:"] + SELENE_VERSES[i % SELENE_VERSES.size], event_id)
+    say(["SELENE: The Book of the Heralds, verse #{i + 1}:"] + SELENE_VERSES[i % SELENE_VERSES.size], event_id)
     state[:selene_verse] = i + 1
     if i == 0
       sayc([cl(:alberica, "Darling, I've been called a lot of things. 'Demigod' is going on my door."),
@@ -480,7 +480,7 @@ module FrostThaw
       sayc([herald?(:alerion) ? "(You don't move. Your ring has gone so cold it burns.)" :
                                 "Alerion doesn't move. His ring has frosted white.",
             herald?(:alerion) ? nil : cl(:alerion, "...Talion."),
-            cl(:wyn, "(very gently) Alerion?"),
+            cl(:wyn, "Alerion?"),
             herald?(:alerion) ? nil : cl(:alerion, "Not now. ...Not now.")].compact)
     else
       say(["KROLF: (listening) ...Quiet today. The wind is waiting for someone."], event_id)
@@ -564,7 +564,7 @@ module FrostThaw
         sayc([cl(:alberica, "Publish and be damned, sweetheart. I'd love to see my signature. Is it pretty?")].compact)
       else
         set_flag(:harget_settled); set_flag(:harget_reported)
-        say(["HARGET: (going grey) ...Kethan. No need for Kethan. The charter's very old. Scratch."], event_id)
+        say(["HARGET: ...Kethan. No need for Kethan. The charter's very old. Scratch."], event_id)
       end
       harget_decree(event_id)
       return
@@ -572,7 +572,7 @@ module FrostThaw
     return harget_decree(event_id) if !flag?(:decree_examined)
     # (notes/15 E5: what you did with him, read back)
     say([flag?(:harget_paid) ? "HARGET: The charter? Lost. Tragically. I've no idea what you're talking about." :
-         flag?(:harget_reported) ? "HARGET: (not looking up) Captain Vale came by. We had a long talk about archives." :
+         flag?(:harget_reported) ? "HARGET: Captain Vale came by. We had a long talk about archives." :
                                    "HARGET: Still filling in the forms. Page nine hundred. You're very famous there."], event_id)
   end
 
@@ -637,7 +637,7 @@ module FrostThaw
     say(["Across the promenade, someone is walking toward you. They're wearing your coat. Your face.",
          "Your hair, exactly. Even the way you walk is nearly right."], event_id)
     Stage.approach(dbl) if dbl
-    say(["MIRA THYNELIGHT: (still sewing, very quietly) Oh. Oh no. It isn't finished yet.",
+    say(["MIRA THYNELIGHT: (still sewing) Oh. Oh no. It isn't finished yet.",
          "The garment-double smiles your smile at you, and lunges."], event_id)
     won = boss_battle(named_mon(:B132H122, 42, "Garment-Double"))
     Stage.remove_actor(dbl) if dbl
@@ -762,14 +762,14 @@ module FrostThaw
              "RILKA: In my time, children light him a candle on the longest night, and hum four notes."], event_id)
         say(["RILKA: I was sent to see you all survive. I failed one. He would not let me not.",
              "RILKA: He said it was what torches are like."], event_id)
-        sayc([cl(:alberica, "(very quiet) ...Of course he did. Of course he bloody did."),
+        sayc([cl(:alberica, "...Of course he did. Of course he bloody did."),
               cl(:meat_meat, "Fluffy one has a church. Meat Meat will go. Meat Meat will bring snacks."),
               cl(:alerion, "Four notes. He never got them right. ...Tell your children to sing them wrong.")].compact)
         return
       end
-      return say(["RILKA: (eyes closed) The wheel turns. I'm still watching the rest of you."], event_id)
+      return say(["RILKA: The wheel turns. I'm still watching the rest of you."], event_id)
     end
-    say(["RILKA: (eyes closed) Not yet. I'm not allowed to say yet.",
+    say(["RILKA: Not yet. I'm not allowed to say yet.",
          "RILKA: Stay close to each other. Especially the warm one."], event_id)
   end
 
@@ -787,7 +787,7 @@ module FrostThaw
     end
     talk(:mira_north_wind, event_id)
     if !flag?(:mirror_child_free)
-      say(["MIRA: (smiling at nothing) My daughter's at home. We- I put her to bed. Somewhere wet.",
+      say(["MIRA: My daughter's at home. We- I put her to bed. Somewhere wet.",
            "MIRA: She'll be up soon. She always looks in my mirrors when she thinks I'm not watching."], event_id)
     end
     # (notes/15 E19: the shard goes cold near a watcher, so say so)
@@ -822,7 +822,7 @@ module FrostThaw
          "Behind the boy's reflection, for a blink: a woman with hollow eyes, crowned in ice.",
          "CHILD: She says that a lot. Can you make her stop?"], event_id)
     if first
-      sayc([cl(:meat_meat, "(very still) That voice. Meat Meat knows that voice. From the cold table."),
+      sayc([cl(:meat_meat, "That voice. Meat Meat knows that voice. From the cold table."),
             cl(:meat_meat, "Variables. Her word for us. Things you change, to see what breaks."),
             cl(:alberica, "Shh, sweetheart. Look at me, not the glass."),
             cl(:alberica, "We'll find the other half and break it."),
@@ -847,7 +847,7 @@ module FrostThaw
       return
     end
     say([mm ? "(Not his face. Hers, wearing his. A spirit, caught in glass, with its fingers in him.)" :
-              "MEAT MEAT: (low) Not the boy. Something in the glass, wearing his face.",
+              "MEAT MEAT: Not the boy. Something in the glass, wearing his face.",
               mm ? "(You know how that feels.)" : "MEAT MEAT: Meat Meat knows how that feels."])
     c = pbMessage(_INTL(mm ? "How do you calm the boy?" : "How does Meat Meat calm the boy?"),
                   [_INTL("\"Meat Meat had a mirror lady too. Meat Meat got away. You will.\""),
@@ -862,9 +862,9 @@ module FrostThaw
          "In the mirror, the smirk goes flat.",
          "\"Clever. Now you're carrying me. Down you go, V-7. Down to my other half.\"",
          mm ? "(V-7. That was you, on the cold table. Seven. Razzy was Raz.)" :
-              "MEAT MEAT: (low) V-7. That was Meat Meat, on the cold table. Seven. Razzy was Raz.",
+              "MEAT MEAT: V-7. That was Meat Meat, on the cold table. Seven. Razzy was Raz.",
          cl(:alberica, "Not any more, it isn't. You're Meat Meat. Hold the glass, sweetheart."),
-         "CHILD: (flexing his fingers) It's quieter. She's... she's in your hands now. Is that bad?",
+         "CHILD: It's quieter. She's... she's in your hands now. Is that bad?",
          mm ? "(Very.)" : "MEAT MEAT: Very. But Meat Meat has strong hands."].compact)
     give_key(:FT_BOYSMIRROR)
     set_flag(:boy_mirror_taken)
@@ -887,7 +887,7 @@ module FrostThaw
   def corsair_sailor(event_id = nil)
     talk(:corsair_sailor, event_id)
     if flag?(:mira_left_possessed)
-      return say(["CORSAIR: (not looking at you) Captain says \"we\" all the time now.",
+      return say(["CORSAIR: Captain says \"we\" all the time now.",
                   "CORSAIR: The girl sleeps in the hold, by the humming thing.",
                   "CORSAIR: You were down there. You could've broken it. ...Move along."], event_id)
     end

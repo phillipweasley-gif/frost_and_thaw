@@ -368,6 +368,7 @@ module FrostThaw
       pkmn = starter_pokemon(s[:species])
       pbAddPokemonSilent(pkmn)
       state[:starter] = s[:species]
+      state[:starter_pid] = (pkmn.personalID rescue nil)      # (054: the partner beats)
       pbMessage(_INTL("\\me[Pkmn get]{1} received {2}!", $Trainer.name, name))
       break
     end

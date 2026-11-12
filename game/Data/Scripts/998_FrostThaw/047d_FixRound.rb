@@ -46,7 +46,7 @@ module FrostThaw
         ["WARDEN ON THE WALKWAY: Papers, Herald. Martial law. Selrae's orders. I hate it too.",
          "WARDEN ON THE WALKWAY: Go on. And don't run. Running looks like something."] :
         ["WARDEN ON THE WALKWAY: Just watching, Herald. Kelyn's compromise. The Rift, the walkways.",
-         "WARDEN ON THE WALKWAY: (lower) Watch you, too. Sorry."] }
+         "WARDEN ON THE WALKWAY: Watch you, too. Sorry."] }
   )
 
   module_function
@@ -328,7 +328,7 @@ module FrostThaw
       T.flag?(:sap_raided) ?
         ["The sap vats stand half empty. A myconid guard watches the ramp, and doesn't look at you."] :
         ["The sap vats on the Root-Tier stand under a fresh lock.", "Rootwarden and myconid guards share the watch now. Mostly they glare.",
-         "ROOTWARDEN ON WATCH: (grudging) A barrel a week, carried by the Heralds. That's the deal.", "ROOTWARDEN ON WATCH: ...Lis says it's working."] },
+         "ROOTWARDEN ON WATCH: A barrel a week, carried by the Heralds. That's the deal.", "ROOTWARDEN ON WATCH: ...Lis says it's working."] },
     tower_stair_shut: ["A narrow stair winds up the Council tower toward the Summer Marshal's quarters.",
                        "A Rootwarden sits on the bottom step, spear across his knees.", "\"Sealed,\" he says. \"Thirty years, sealed.\""],
     summer_quarters_sealed: ["The tower stair. A Council seal on the door at the top now, the wax still soft.",
@@ -372,7 +372,7 @@ module FrostThaw
         start_petition(:heralds)
       end
     when :neutral
-      say(["KELYN: (slowly) ...Neutral. The city will notice that, too. Some will call it wisdom.",
+      say(["KELYN: ...Neutral. The city will notice that, too. Some will call it wisdom.",
            "KELYN: Some will call it washing your hands. The Council won't know what you are. Nor I."])
       set_flag(:election_neutral)
     else
@@ -431,7 +431,7 @@ module FrostThaw
     friends.each do |fac|
       rival = FACTION_RIVAL[fac]
       next if friends.include?(rival)
-      say_staged([{ spring: "AUTUMN COURTIER: (loudly, to nobody) Spring's favourites. On trial for murder.",
+      say_staged([{ spring: "AUTUMN COURTIER: Spring's favourites. On trial for murder.",
              autumn: "SPRING WARDEN: (not quite to you) Gilded by the Court. The tree can smell bought gold.",
              winter: "OLD LOYALIST: (spitting) The Order's pets. The Marshal kept this city warm thirty years." }[fac]])
       trial[:mud] += 1
@@ -477,7 +477,7 @@ module FrostThaw
     seen << "The ghost's candle, still lit, in the sanctum." if flag?(:ghost_blessing)
     seen << "Wolves on the ridge above the lodge, fat for once, watching the road for him." if flag?(:reptin_wolf_calm) || flag?(:fed_pack)
     say(seen)
-    speak(:reptin, "(to the wolf, low) I said I'd come back. I will. When winter's done. Tell them.",
+    speak(:reptin, "(to the wolf) I said I'd come back. I will. When winter's done. Tell them.",
           "(to the wolf) ...I'll come back. Tell them.")
     say(["The wolf turns and lopes off toward the Wall, and the snow closes behind it."])
     set_flag(:chasm_watch_kept)
@@ -500,17 +500,17 @@ module FrostThaw
     pbFadeOutIn { $game_screen.start_tone_change(Tone.new(-40, -30, 10, 80), 0) rescue nil }
     pil = walk_on("PILGRIM")
     say(["A road of packed snow, and a hooded pilgrim walking it beside you, staff tapping the ice.",
-         "PILGRIM: (gently) It's so warm in that city. Doesn't it tire you? All that hurry.",
+         "PILGRIM: It's so warm in that city. Doesn't it tire you? All that hurry.",
          "PILGRIM: Take a little cold with you. A blessing. It keeps things the way they are.",
          "He holds out a hand. In it, a snowflake that doesn't melt."])
     if with_or_is?(:meat_meat)
       say([(herald?(:meat_meat) ? "PILGRIM: (to you, softer) " : "PILGRIM: (to Meat Meat, softer) ") + "And you. Prototype Verdant.", "PILGRIM: Your blood remembers the cold table. So do I.",
            herald?(:meat_meat) ? "(Nobody calls you that. Only the cold table did. Your skin crawls.)" :
-                                 "MEAT MEAT: (very small) Nobody calls Meat Meat that. Only the cold table did.",
+                                 "MEAT MEAT: Nobody calls Meat Meat that. Only the cold table did.",
            herald?(:meat_meat) ? nil : "MEAT MEAT: (smaller still) ...Meat Meat does not like this man."].compact)
     end
     if with_or_is?(:alerion)
-      say(["PILGRIM: (not looking at Alerion) And you, who listen for the cold. One of us is enough."])
+      say(["PILGRIM: And you, who listen for the cold. One of us is enough."])
     end
     c = pbMessage(_INTL("The pilgrim's cold blessing..."), [_INTL("Refuse it"), _INTL("Take it")], 0)
     wake = -> { walk_off(pil); pbFadeOutIn { $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 0) rescue nil } }
@@ -563,7 +563,7 @@ module FrostThaw
     when 1
       if challenge("Warden Lis has her hand on the cart.", ["\"Carry it with us. Tonight. By the tree's leave, so much a week.\"",
                                                             "\"The Council will hear about this.\"", "\"Take it and go.\""], 0)
-        say_staged(["WARDEN LIS: (a long breath) ...By the tree's leave. You carry the first barrel. Now.", "WARDEN LIS: In your nightclothes.",
+        say_staged(["WARDEN LIS: ...By the tree's leave. You carry the first barrel. Now.", "WARDEN LIS: In your nightclothes.",
              "You carry the first barrel. In your nightclothes. Luminara's spore-guard watch, and nod."])
         set_flag(:sap_settled)
         set_flag(:rootwarden_diplomacy)
@@ -635,7 +635,7 @@ module FrostThaw
           "Glyphs glow faintly on the floor between you and the desk: alarms, in a neat white hand.",
           "And in the alcove by the desk, something of bone and ice stands very, very still.",
           cl(:alberica, "Mind your feet. A woman who glyphs her own floor doesn't like guests."),
-          cl(:wyn, "(very quietly) Don't look at it. Things like that know when you look.")])
+          cl(:wyn, "Don't look at it. Things like that know when you look.")])
   end
 
   # The alarms: unwrite one, or wake a construct.
@@ -700,8 +700,8 @@ module FrostThaw
     set_flag(:ledger_found)
     set_flag(:ledger_from_quarters)
     add_counter(:story_beats)
-    speak(:alberica, "(very quiet) Bryn Shander's lottery. The Halo paid her to pick the names.",
-          "(very quiet) ...Bryn Shander's lottery. She sent them the names.") if with_or_is?(:alberica)
+    speak(:alberica, "Bryn Shander's lottery. The Halo paid her to pick the names.",
+          "...Bryn Shander's lottery. She sent them the names.") if with_or_is?(:alberica)
     sayc([cl(:reptin, "This is the sort of thing a Council asks to see. Keep it dry."),
           cl(:alerion, "It's been dry thirty years.")].compact)
   end
@@ -711,7 +711,7 @@ module FrostThaw
          "A Rootwarden's old cloak at the back, moth-eaten. A child's drawing of a bear on the door."], event_id)
     if flag?(:var_story_known)
       sayc([cl(:alerion, "Var's. From before. She kept his things the way you'd keep the lining of a coat."),
-            cl(:reptin, "(very quietly) Somebody drew him a bear.")])
+            cl(:reptin, "Somebody drew him a bear.")])
     else
       sayc([cl(:reptin, "Whose are these? Nothing in here is hers, except the order it's all in.")])
     end
@@ -723,7 +723,7 @@ module FrostThaw
          "When you turn it back the glass is dark.", "Then something at the very back of it moves, like a smile in a crowd."], event_id)
     return if !flag?(:avarice_faked_death) || flag?(:avarice_revealed)
     set_flag(:avarice_doubt)
-    sayc([cl(:meat_meat, "(very still) ...Meat Meat saw that."),
+    sayc([cl(:meat_meat, "...Meat Meat saw that."),
           cl(:alberica, "Saw what, sweetheart? There's nothing there."),
           # (context 09, M9-3: if the doubt was shared at the Forge, they already know)
           cl(:alerion, flag?(:avarice_doubt_shared) ? "(turning it back to the wall) Leave it. We already know." :
@@ -768,7 +768,7 @@ module FrostThaw
     set_flag(:eira_patrols_reported)
     say(["You tell Eira about the warden in the ice beyond the Wall.", "And the wight with a face like a stopped clock.",
          flag?(:leaf_shattered) ? "And the leaf, shattered in her fist." : "And Brisa, breathing again, with the chronal leaf whole in her hand.",
-         "EIRA: (a cold creek, very quiet) ...And my two? The spore-guard who walked with her?",
+         "EIRA: (a cold creek) ...And my two? The spore-guard who walked with her?",
          "You tell her what Brisa told you: they walked into the stopped snow, and didn't come out.",
          "EIRA: Then they're keeping watch out there still. We'll leave a light at the Echo Gate.",
          "EIRA: You looked. Nobody else would. The spore-guard owes you twice."])
@@ -861,7 +861,7 @@ module FrostThaw
       say(["(The Council's stores are yours to draw on, councillors.)"])
     elsif flag?(:council_uncertain)
       say_staged(["The new councillors look at you, then at each other. Nobody thanks you. Nobody knows how.",
-           "KELYN: (carefully) You didn't speak for any of us. We'll send you north.", "KELYN: We don't know what you'll be when you come back."])
+           "KELYN: You didn't speak for any of us. We'll send you north.", "KELYN: We don't know what you'll be when you come back."])
     elsif (ally = state[:council_ally]) && ALLY_GIFTS[ally]
       text, item, n = ALLY_GIFTS[ally]
       say_staged(text.respond_to?(:call) ? text.call : text)

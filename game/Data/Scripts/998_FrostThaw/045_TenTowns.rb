@@ -299,7 +299,7 @@ module FrostThaw
          "OWENN: It'll be summer again one day, they tell me.",
          "He polishes the same glass. Harder."] +
         (flag?(:climb_taken) ? [] : ["OWENN: Keegan Velryn's man went up the Cairn a tenday back. His dog came home alone."]), event_id)
-    sayc([cl(:alberica, "(softly) Oh, sweetheart. Somebody hug this man."),
+    sayc([cl(:alberica, "Oh, sweetheart. Somebody hug this man."),
           cl(:reptin, "(aside) Please don't hug the innkeeper.")])
   end
 
@@ -481,7 +481,7 @@ module FrostThaw
   def scramsax_collects(owed)
     say(["SCRAMSAX: Then we'll settle it the old way. Don't worry. I go easy on regulars. Ish."])
     if pbTrainerBattle(:FT_SELLSWORD, "Scramsax", nil, false, 0)
-      say(["SCRAMSAX: (wiping his mouth) Ha! Still got it. You've still got it more. Call it square.",
+      say(["SCRAMSAX: Ha! Still got it. You've still got it more. Call it square.",
            "SCRAMSAX: Don't tell anybody. Bad for business."])
       state[:scramsax_tab] = 0
     else
@@ -588,25 +588,25 @@ module FrostThaw
     # Alberica's lines are answered, so they're spoken (WRITING_GUIDE §5).
     if with_or_is?(:alberica)
       speak(:alberica, "Excuse me. Speakers. Hello. Who wrote \"necessary\" in that charter?",
-                       "(quietly) ...Who wrote \"necessary\"?")
+                       "...Who wrote \"necessary\"?")
       say(["NAERTH: All of us, my dear. Unanimously."])
-      speak(:alberica, "Then you can all unwrite it.", "(quietly) Then unwrite it.")
+      speak(:alberica, "Then you can all unwrite it.", "Then unwrite it.")
     end
     st.turn_to(sp[:duvessa]) if sp[:duvessa]
-    say(["DUVESSA: (quietly) We'd end it in a heartbeat. It says so. If She were appeased.",
+    say(["DUVESSA: We'd end it in a heartbeat. It says so. If She were appeased.",
          "DUVESSA: Or dealt with some other way."])
     # The player's input on the scene's turn (notes 14 E23): ask, or let the table ask.
     c = pbMessage(_INTL("The table goes quiet. Duvessa's eyes find you."),
                   [_INTL("Ask what \"some other way\" means."), _INTL("Say nothing.")], -1)
     if c == 0
       if with_or_is?(:reptin)
-        speak(:reptin, "(gently) Speaker, what would \"some other way\" look like, to this council?",
-                       "(quietly) What would \"some other way\" look like?")
+        speak(:reptin, "Speaker, what would \"some other way\" look like, to this council?",
+                       "What would \"some other way\" look like?")
       else
         say(["You ask it out loud: what would \"some other way\" look like?"])
       end
     else
-      say(["DUVESSA: (to the table, when nobody else will) Well? What would it look like?"])
+      say(["DUVESSA: (when nobody else will) Well? What would it look like?"])
     end
     look.(:oarus)
     say(["OARUS: Like somebody walking out of that door and doing something none of us can."])

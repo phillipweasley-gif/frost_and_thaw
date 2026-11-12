@@ -182,7 +182,7 @@ module FrostThaw
 
     if first && !me
       # (dialogue 15 §4, dialogue 06: her voice sheet's line, lightly, and no pet word)
-      sayc([cl(:alberica, "(lightly, to nobody) Something's pulling me north. Don't make a thing of it.")].compact)
+      sayc([cl(:alberica, "Something's pulling me north. Don't make a thing of it.")].compact)
     end
   end
 
@@ -371,7 +371,7 @@ module FrostThaw
           flag?(:twins_met) ? (herald?(:alerion) ? "(Through the bond, cold and clear: she can hear hammers. She hates their song.)" :
                                                    cl(:alerion, "(a hand to his chest) Frostina's awake. She can hear them too. Hammers.")) : nil,
           with_or_is?(:glimmer) ? (herald?(:glimmer) ? "(And you can hear it now, under everything. Hammers. Deep in the roots, keeping time.)" :
-                                                       "GLIMMER: (very quietly) Hammers. Deep in the roots. They're keeping time.") : nil].compact)
+                                                       "GLIMMER: Hammers. Deep in the roots. They're keeping time.") : nil].compact)
     side_goal(:patrol, "The Rootwardens' missing patrol: scorch marks at the Echo Gate, on the west road.", done: :chardalyn_found)
     true
   end
@@ -392,8 +392,8 @@ module FrostThaw
         ev = (Stage.summon(:meat_meat) rescue nil)
         Stage.emote(ev, :exclaim) rescue nil if ev
       end
-      speak(:meat_meat, "(very still) That mark. The mirror with the A in it. It was on the cold table.",
-                "(very still) ...That mark. The cold table.")
+      speak(:meat_meat, "That mark. The mirror with the A in it. It was on the cold table.",
+                "...That mark. The cold table.")
       say([as(:meat_meat, "On the jars. On the straps. On Meat Meat's arm, once.")])
       # Meat Meat answers her, so Alberica's line is spoken (WRITING_GUIDE §5)
       if mm
@@ -542,7 +542,7 @@ module FrostThaw
       $Trainer.money += 3000 rescue nil
     when 1
       favour(:spring, 1, quiet: true); favour(:winter, 1, quiet: true); favour(:autumn, -1, quiet: true)
-      say(["EMISSARY: (a soft laugh behind the mask) Nobody. How very... Wintry of you.",
+      say(["EMISSARY: Nobody. How very... Wintry of you.",
            "EMISSARY: The Court will remember that too.",
            "(Spring and Winter will remember it. So will Autumn.)"])
     else
@@ -598,7 +598,7 @@ module FrostThaw
           "Out of the hanging snow, something huge and white is waiting. She doesn't move.",
           "You set the cub down. It runs to her. She sniffs it all over, very carefully.",
           "Then she looks at you for a long moment, and leaves something in the snow, and is gone.",
-          cl(:reptin, "(very softly) That's a mother's thank-you. You don't get many of those from yetis.")].compact)
+          cl(:reptin, "That's a mother's thank-you. You don't get many of those from yetis.")].compact)
     # (notes/15 E19: the never-melting ice is Elitha's; the yeti mother gives a mother's gift)
     give(:SITRUSBERRY, 3)
     give(:ICEHEAL, 2)
@@ -742,7 +742,7 @@ module FrostThaw
             "In it, your reflection blinks a moment out of sync."])
       give(:FT_STILLSHARD)
       # (notes/10 E34: a hook for it)
-      sayc([cl(:alberica, "(very still) ...Throw that in the lake, darling. Please."),
+      sayc([cl(:alberica, "...Throw that in the lake, darling. Please."),
             "(It goes cold when something hidden is watching. Jast on the Root-Tier buys them, too.)"].compact)
     }],
     [:halo_stillness, ROOT_MAPS, -> { flag?(:wardens_emeritus) }, -> {
@@ -810,7 +810,7 @@ module FrostThaw
 
   DOWN_THE_ROOT = [
     [:root_divination, [2191], -> { flag?(:met_ysera) }, ["Ysera Dorn kneels before her water-bowl, scrying. The water boils dry.",
-                                                          "YSERA: (tightly) Third time today. The dead won't show me where they're going."]],
+                                                          "YSERA: Third time today. The dead won't show me where they're going."]],
     [:root_cask_spies, [2180], -> { flag?(:met_gurk) || flag?(:met_lumea) }, ["Two velvet-coated Wennen loiter across from the old brewery, both reading one leaflet.",
                                                                                "Autumn's spies. Watching the brewery doors."]],
     [:root_mirror_sigil, [2197, 2050], -> { flag?(:met_jast) || flag?(:met_mirror_child) }, ["In the Bazaar's mirrors, for a breath, every reflection has a sigil burned on its brow.",
@@ -883,7 +883,7 @@ module FrostThaw
          "\"Help...\""], event_id)
     set_flag(:sapling_heard)
     sayc(["Its roots, where they go down between the boards, are black. Not dark: black. Rotten.",
-          cl(:reptin, "(crouching, very serious) Root-rot. Coming up from below.") || "Root-rot, coming up from below.",
+          cl(:reptin, "(very serious) Root-rot. Coming up from below.") || "Root-rot, coming up from below.",
           "Somebody's dug round the rot recently, very neatly, and packed fresh moss over it.",
           "There's a Spring-green thread caught on the moss."].compact)
   end

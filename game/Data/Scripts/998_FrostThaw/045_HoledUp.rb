@@ -39,7 +39,7 @@ module FrostThaw
     lodge_exterior: ["Jutting up out of the tundra: a towering edifice built entirely of ice.",
                      "Three tall openings on its east face, three times the height of anything in Ten-Towns."],
     wolves_wait: ["KORAN: We'll stand guard out here. Garagai isn't home. Go on in.",
-                  "KANAN: (not looking at you) Take the corridor in the middle. It's quickest."],
+                  "KANAN: Take the corridor in the middle. It's quickest."],
     ice_corridor: ["The passage is choked with ice.", "Icicles hang overhead in clusters, points sharp as daggers."]
   )
 
@@ -127,7 +127,7 @@ module FrostThaw
     end
     pbReceiveItem(:REVIVE, 2) rescue nil
     sayc([cl(:meat_meat, "Meat Meat not crying. That is snow."),
-          cl(:alberica, "(sniffing loudly) Somebody give me a drink. For the wind.")])
+          cl(:alberica, "Somebody give me a drink. For the wind.")])
     durmoot = (Stage.actor(:durmoot, 14, 11, 2, graphic: "FT_speaker_edgra_durmoot") rescue nil)
     Stage.pan_to(14, 10)
     say(["DURMOOT: (from her door, after a while) ...Lodge. Now. I said I'd fight you myself."])
@@ -162,7 +162,7 @@ module FrostThaw
       bad_wolf
     else
       sayc(["KORAN: This way. This way. Quickly, before the snow fills my tracks.",
-            cl(:reptin, "(quietly) There's two of them. I can smell the other one."),
+            cl(:reptin, "There's two of them. I can smell the other one."),
             cl(:meat_meat, "Meat Meat will walk next to the doggy. Close. Very friendly.")])
       set_flag(:followed_koran)
     end
@@ -199,8 +199,8 @@ module FrostThaw
          "KANAN: So you'll walk with us. Or you'll be dinner. Choose."])
     c = pbMessage(_INTL("What do you do?"), [_INTL("Change your mind."), _INTL("Stand firm.")], 0)
     if c == 0
-      sayc([cl(:reptin, "(very calm) We'll come. No need for teeth. Teeth are so... last resort."),
-            "KANAN: (sitting back, satisfied) Good."])
+      sayc([cl(:reptin, "We'll come. No need for teeth. Teeth are so... last resort."),
+            "KANAN: (satisfied) Good."])
       set_flag(:followed_koran)
       return
     end
@@ -222,7 +222,7 @@ module FrostThaw
           shield ? "Koran and a second white wolf fall in on the windward side, taking the worst of it." :
           flag?(:met_wolves) ? "The wolves' tracks run ahead, west, filling with snow almost as fast as you find them." :
                                "Under the drifts there are tracks: two wolves, enormous ones, heading west.",
-          shield ? cl(:reptin, "(quietly) Very thoughtful of them. Suspiciously thoughtful.") : nil,
+          shield ? cl(:reptin, "Very thoughtful of them. Suspiciously thoughtful.") : nil,
           cl(:shade, "Thirteen miles of this. Wonderful."),
           cl(:alberica, "Think of it as a long, cold walk with excellent company."),
           cl(:shade, "I am. That's the problem.")].compact)
@@ -290,7 +290,7 @@ module FrostThaw
     end
     if with_or_is?(:alerion)
       sayc([as(:alerion, "When is it?"),
-            me ? "Not looking at your hand. (Soon.)" : "REPTIN: (not looking at his hand) Soon."])
+            me ? "Not looking at your hand. (Soon.)" : "REPTIN: Soon."])
     end
     Stage.cleanup rescue nil
     set_flag(:reptin_bitten)
@@ -305,12 +305,12 @@ module FrostThaw
   def scene_lodge_approach
     return if !flag?(:met_wolves) || flag?(:kids_freed)
     say(["Two white wolves sit in the snow before the lodge, as if they've been there for hours.",
-         "KORAN: (sniffing the air, nose high) He's not home. Garagai. Out hunting whales.",
+         "KORAN: (nose high) He's not home. Garagai. Out hunting whales.",
          flag?(:kanan_named) ? "KANAN: We'll stand guard out here. In case he comes back." :
                                "KORAN: My brother Kanan and I will stand guard. In case he comes back.",
          "KORAN: Go in by the corridor. The middle one. It's quickest to the children."])
     set_flag(:kanan_named)
-    sayc([cl(:reptin, "(pleasantly) How thoughtful. And you won't come in yourselves?"),
+    sayc([cl(:reptin, "How thoughtful. And you won't come in yourselves?"),
           "KANAN: ...Wolves don't like ice houses.",
           cl(:shade, "(under their breath) Somebody's home."),
           cl(:alerion, "They won't go in."),
@@ -331,7 +331,7 @@ module FrostThaw
           "From deeper in comes a sound like a bellows: something enormous, breathing slowly.",
           "And under it, very faintly, a child coughing.",
           cl(:reptin, "Quiet."),
-          cl(:meat_meat, "(very quiet, very fast) Meat Meat hears it. Meat Meat is going.")])
+          cl(:meat_meat, "Meat Meat hears it. Meat Meat is going.")])
   end
 
   # L4: the icicle corridor. Creep through, or the noise wakes the tomb.
@@ -415,7 +415,7 @@ module FrostThaw
             "Norsu listens to every word."])
     elsif c == 1
       sayc(["You leave something small on the ice over his chest. Norsu looks at it for a long time.",
-            cl(:reptin, "(quietly) Grief takes gifts it'll never use. That's rather the point.")])
+            cl(:reptin, "Grief takes gifts it'll never use. That's rather the point.")])
     end
     set_flag(:norsu_calmed)
     set_flag(:norsu_met)
@@ -649,7 +649,7 @@ module FrostThaw
     lv += 2 if $game_switches && $game_switches[SW_HU_BLIZZARD]
     sayc(["(You saw it coming. You're ready before they are.)", cl(:alerion, "Right leg.")]) if flag?(:caught_koran)
     say(["(The throne's blizzard is in their eyes and their noses. They can barely find you.)"]) if $game_switches && $game_switches[SW_HU_BLIZZARD]
-    sayc([cl(:reptin, "(to the kids, not looking back) Behind me. Now.")])
+    sayc([cl(:reptin, "(to the kids) Behind me. Now.")])
     if boss_battle(named_mon(:B503H272, 26 - lv, "Koran"), named_mon(:B272H310, 27 - lv, "Kanan"))
       kids_behind_you if Stage.find("stage_silja").nil? rescue nil
       wolves = ($game_map.events.values.select { |e| %w[Koran Kanan].include?(e.name) && !e.character_name.to_s.empty? } rescue [])

@@ -32,7 +32,7 @@ module FrostThaw
     key = keys[c]
     label, _stat, seen, word = COFFEES[key]
     lines = [seen]
-    lines << "WYN: (very quietly) ...You picked mine." if key == :mushroom && !herald?(:wyn)
+    lines << "WYN: ...You picked mine." if key == :mushroom && !herald?(:wyn)
     say(lines)
     state[:coffee] = [key, COFFEE_BATTLES]
     set_flag(:"coffee_#{key}")

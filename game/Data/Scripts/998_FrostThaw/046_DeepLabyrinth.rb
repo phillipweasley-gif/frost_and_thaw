@@ -115,7 +115,7 @@ module FrostThaw
       ["A side tunnel breaks off from the shaft. The air in it is thicker and older.",
        "Beyond, the dark tastes of stone and mushrooms: the true Underdark, past the tree's reach.",
        herald?(:wyn) ? "(My post was the door to this. ...This is the back of the door.)" :
-         (with_or_is?(:wyn) ? "WYN: (very quietly) My post was the door to that. ...This is the back of the door." : nil),
+         (with_or_is?(:wyn) ? "WYN: My post was the door to that. ...This is the back of the door." : nil),
        "(The tunnel runs on, deeper than any lantern. Not today.)"].compact
     },
     root_pen: ["Root-pens, woven from living wood. Bark-mottled scales on the rails where something rubs."],
@@ -295,7 +295,7 @@ module FrostThaw
          "Where it stood, a seed has pushed up through the broken glass, pulsing like a heartbeat."])
     give(:FT_VERDANTSEED)
     sayc([cl(:reptin, "I'm going to need a drink. And then another drink. And then a nap."),
-          cl(:alberica, "(very quietly) Did anyone else's look like it was enjoying itself?"),
+          cl(:alberica, "Did anyone else's look like it was enjoying itself?"),
           cl(:alerion, "Mine.")])
     open_reflection_ring(true)
   end
@@ -468,7 +468,7 @@ module FrostThaw
     when :hag
       say(["The amber cracks. Whatever was inside was dust a long time ago.",
            "The dust settles in the shape of a child, and then not."])
-      sayc([cl(:alberica, "(softly) Thredra's pantry. Even down here."),
+      sayc([cl(:alberica, "Thredra's pantry. Even down here."),
             cl(:meat_meat, "Meat Meat will remember this one. Somebody should.")])
     when :captive
       # (notes 07 E5: the man is drawn, and he goes)
@@ -574,7 +574,7 @@ module FrostThaw
       c = pbMessage(_INTL("The root-drakes rise."), [_INTL("Calm them"), _INTL("Fight")], 0)
       if c == 0
         if with_or_is?(:reptin)
-          speak(:reptin, "(crouching, palm low) Easy. Easy. Nobody's riding anybody today.", "...Easy.")
+          speak(:reptin, "(palm low) Easy. Easy. Nobody's riding anybody today.", "...Easy.")
         else
           speak(:meat_meat, "(holding out mushroom jerky) Lizards. Snack. Meat Meat shares. Once.", "...Snack.")
         end
@@ -676,7 +676,7 @@ module FrostThaw
     say(["Amber pods float among the roots, each holding something not quite human.",
          STASIS_PODS[n]], event_id)
     if n == 3 && with_or_is?(:reptin)
-      speak(:reptin, "(very still) ...She tried to make one of me. Before there was a me to copy.", "...That's me. Nearly.")
+      speak(:reptin, "...She tried to make one of me. Before there was a me to copy.", "...That's me. Nearly.")
     elsif n == 5 && with_or_is?(:meat_meat)
       speak(:meat_meat, "RAZ-MKI. Before Razzy. Meat Meat is going to break every pod in this place.", "...Before Razzy.")
     elsif n == 6
@@ -721,7 +721,7 @@ module FrostThaw
       set_flag(:stasis_notes_read)
       add_counter(:story_beats)
       sayc([cl(:meat_meat, "Proved it. On Meat Meat. On Razzy. Meat Meat is a proof."),
-            herald?(:meat_meat) ? nil : cl(:reptin, "(a hand on her shoulder) You're a person. Proofs don't bite.")])
+            herald?(:meat_meat) ? nil : cl(:reptin, "You're a person. Proofs don't bite.")])
     end
     say(["The last page is half torn. Under a sketch of a sleeping woman in a pod:",
          "\"Vessel IX: viable. Keep it warm. If they come, let them find me.\""])
@@ -748,7 +748,7 @@ module FrostThaw
     # comes first, then the goblin it wants back, then whoever else is in the room.)
     entries = [
       [:meat_meat, ["CATALOGUER: SPECIMEN: GOBLIN, V-SERIES, SEVEN. ESCAPED. RECAPTURE PRIORITY: HIGHEST.",
-                    as(:meat_meat, "(very quiet, very fast) Recapture. Come and try.")]],
+                    as(:meat_meat, "Recapture. Come and try.")]],
       [:reptin,    ["CATALOGUER: SPECIMEN: ELF, LUPINE TAINT. EARLIER ATTEMPT: POD THREE. SUPERIOR."]],
       [:alberica,  ["CATALOGUER: SPECIMEN: DWARF, MARKED. THE RUNE ON HER CHEST IS NOT OURS. DO NOT TOUCH."]],
       [:alerion,   ["CATALOGUER: SPECIMEN: ELADRIN, NECROMANTIC. NOTE: HE IS COLD ALREADY. INTERESTING.",
@@ -778,7 +778,7 @@ module FrostThaw
     # (dialogue 07 §4: no explaining what we just read; Reptin without the pet name)
     sayc([cl(:alerion, "Sephek's heart. With Auril still in it."),
           ask_cl(:wyn, "So when it stops burning... what's left in it?", "...What's left?"),
-          cl(:reptin, "(gently) Ask me again when we're standing in front of it.")])
+          cl(:reptin, "Ask me again when we're standing in front of it.")])
   end
 
   # Autumn's laboratories (for the trial): his sigil on her crates.
@@ -841,7 +841,7 @@ module FrostThaw
       Stage.leave(driver, driver.x, driver.y - 8) if driver
       say(["The driver goes up the shaft toward the light, and doesn't look back. The recruit stays.",
            "RECRUIT: No. I'll keep a fire here. For whoever comes back hurt. That's what wardens do."])
-      say(["RECRUIT: (to you) You didn't wake it. The fourth pod. ...Thank you."]) if flag?(:core_left)
+      say(["RECRUIT: You didn't wake it. The fourth pod. ...Thank you."]) if flag?(:core_left)
       recruit_camp(event_id)
     end
   end
@@ -890,7 +890,7 @@ module FrostThaw
       say([reader == :alberica ? (herald?(:alberica) ? "You hum the script into order. Bards know every alphabet, if you hum it." :
                                                         "ALBERICA: Hush, everyone. Bards know every alphabet. You just hum it.") :
                                  (herald?(:alerion) ? "You read it the way you read old graves: slowly, without touching." :
-                                                      "ALERION: (reading, without touching) Old Infernal. Mirror-grammar. Give me a minute.")])
+                                                      "ALERION: (without touching) Old Infernal. Mirror-grammar. Give me a minute.")])
     end
     if !safe
       say(["Your fingertip touches the script, and the ink comes up out of the pool after it.",
@@ -1141,7 +1141,7 @@ module FrostThaw
     say(["In the dark, Var is still standing in the mirror, glaive in his hands, looking out at you."])
     target = with_or_is?(:alerion) ? :alerion : nil
     if target == :alerion && herald?(:alerion)
-      say(["VAR: (to you) The frost-one, from the carvings. I've waited #{long_ago} to see you."])
+      say(["VAR: The frost-one, from the carvings. I've waited #{long_ago} to see you."])
       speak(:alerion, "Then look. I'm standing.", "...I'm here.")
     elsif target == :alerion
       say(["VAR: (to Alerion) The frost-one, from the carvings. I've waited #{long_ago} to see you.",
@@ -1156,7 +1156,7 @@ module FrostThaw
     # (notes 07 §3: not the battle's own defeat line again; someone answers him)
     say(["VAR: (laughing, leaning on the glaive) Ha! Held. You held it."])
     if with_or_is?(:alerion)
-      speak(:alerion, "(breathing hard) ...Just.", "...Just.")
+      speak(:alerion, "...Just.", "...Just.")
     end
     say([unmasked ? "VAR: She's wearing me, isn't she. Up there. Thirty years of my face, smiling at Kelyn." :
                     "VAR: Tell Kelyn I kept the peace.",   # (before the Heart Chamber nothing says he's trapped: whole read T4)
@@ -1170,7 +1170,7 @@ module FrostThaw
     set_flag(:var_glaive)
     set_flag(:corsair_arms_deal)
     add_counter(:story_beats)
-    sayc([cl(:alerion, "(after a long while) He waited #{long_ago} for that."),
+    sayc([cl(:alerion, "He waited #{long_ago} for that."),
           cl(:alberica, "Then we owe him the rest of the story, pretty boy. Out loud, at the Council."),
           cl(:reptin, "A Corsair arms deal behind the Council's back. Kelyn's going to love that.")])
   end

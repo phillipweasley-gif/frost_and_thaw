@@ -118,7 +118,7 @@ module FrostThaw
        "MARTA: Everyone does, if they can.",
        "MARTA: They found her on the ice a week later. A knife of ice in her. In her own coat.",
        "MARTA: A man in his shirtsleeves was seen on our street that night. He didn't even shiver.",
-       T.flag?(:naerth_terms) ? T.cl(:shimmer, "(very quietly) Sephek. He's been here.") : nil].compact
+       T.flag?(:naerth_terms) ? T.cl(:shimmer, "Sephek. He's been here.") : nil].compact
     },
     lantern_child: ["Is the sun real? Mama says it used to come up every day.", "Every day! That sounds made up."],
 

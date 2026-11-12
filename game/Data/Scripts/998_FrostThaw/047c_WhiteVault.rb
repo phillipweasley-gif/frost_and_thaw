@@ -149,8 +149,8 @@ module FrostThaw
            "Your hand goes to your throat, where the pendant hung. Something cold pulses there."])
       speak(:alberica, "Gran's door. The one that had to stay shut.", "...I know that door.")
     elsif with_or_is?(:alberica)
-      say([seen ? "ALBERICA: (quietly) The well showed me a map with that on it. I thought it was a bird." :
-                  "ALBERICA: (very quietly) Wings over a frozen eye. I've dreamed that door.",
+      say([seen ? "ALBERICA: The well showed me a map with that on it. I thought it was a bird." :
+                  "ALBERICA: Wings over a frozen eye. I've dreamed that door.",
            "Where her pendant used to hang, something cold pulses. Brightest facing north.",
            "ALBERICA: (a hand at her throat) Gran's door. The one that had to stay shut."])
     end
@@ -161,7 +161,7 @@ module FrostThaw
       cline(:alberica, "I don't know. Nobody ever said what's behind it. We'd have to open it to see.",
             "...I don't know. Nobody ever said.")
       if flag?(:bargain_pushed)
-        say(["ALBERICA: (to you) You said it wasn't mine to pay. Let's find out whose it is."])
+        say(["ALBERICA: You said it wasn't mine to pay. Let's find out whose it is."])
       end
     end
     sayc([cl(:alerion, "Then it's waiting for us."),
@@ -270,7 +270,7 @@ module FrostThaw
     say(["Something falls out of the whirlwind and rings on the altar stone: a crystal that hums."])
     seph.opacity = 255 if seph rescue nil
     say(["Then the ice runs back together, flake by flake, and Sephek stands up again.",
-         "SEPHEK: (almost sorry) Not here. Not while her relics stand under this tree.", "SEPHEK: Here, I come back."])
+         "SEPHEK: Not here. Not while her relics stand under this tree.", "SEPHEK: Here, I come back."])
     if !flag?(:sigil_sephek)
       give(:FT_FROSTSIGIL)
       set_flag(:sigil_sephek)
@@ -353,7 +353,7 @@ module FrostThaw
   # Sephek, the Major Avatar (SC 13.07, at the Crown) - the fight
   #-----------------------------------------------------------------------------
   def sephek_major_fight
-    say(["SEPHEK: (quietly) Then I'm sorry. Again."])     # (dialogue 13: quietly sorry, not a stock taunt)
+    say(["SEPHEK: Then I'm sorry. Again."])     # (dialogue 13: quietly sorry, not a stock taunt)
     ok = trainer(:crown_druid_ansel, nil)
     ok = trainer(:crown_druid_ilse, nil) && ok
     return false if !ok
@@ -393,7 +393,7 @@ module FrostThaw
           "The path of glass ends at a door carved with wings spread over a frozen eye.",
           cl(:alberica, "(her rune prickling) I dreamed this door. Before the Chasm. Before any of it."),
           cl(:meat_meat, "Meat Meat smells hot metal. Under ice. That is wrong."),
-          cl(:reptin, "(quietly) Everyone stay close. And nobody touch anything that hums.")])
+          cl(:reptin, "Everyone stay close. And nobody touch anything that hums.")])
   end
 
   def vault_door(event_id = nil)
@@ -456,7 +456,7 @@ module FrostThaw
     say(["#{al ? 'You set' : 'Alberica sets'} the pendant in the hollow. It fits like it was cut for it. It was.",
          "The door of wings swings inward, very slowly, with a sound like ice letting go of a ship."])
     set_flag(:vault_door_unlocked)
-    cline(:alberica, "(very quietly) Somewhere south, Ironhollow just felt that. My village.", "...Ironhollow felt that.")
+    cline(:alberica, "Somewhere south, Ironhollow just felt that. My village.", "...Ironhollow felt that.")
     true
   end
 
@@ -487,14 +487,14 @@ module FrostThaw
     sayc(["White hair. Infernal sigils. A smile like arithmetic.",
           "AVARICE: (from every mirror at once) Variables that refused to die. How untidy.",
           nil])
-    cline(:alberica, "(very still) We froze you. At her throne. We watched it hold.", "(very still) ...We froze you.")
+    cline(:alberica, "We froze you. At her throne. We watched it hold.", "...We froze you.")
     sayc([al ? "AVARICE: You froze a mirror, songbird. Did you think I kept only one?" :
                "AVARICE: You froze a mirror, Alberica. Did you think I kept only one?",
           "AVARICE: A little of me lived in every mirror I made. A little is all I've ever needed."])
     if with_or_is?(:meat_meat)
       say([herald?(:meat_meat) ? "(She says your number. V-7. Then, softly, the sound you made the day you were born.)" :
                                  "AVARICE: (to Meat Meat) V-7. I still have the sound you made the day you were made."])
-      cline(:meat_meat, "(very quiet, very fast) Meat Meat's name is Meat Meat.", "...Meat Meat's name is Meat Meat.")
+      cline(:meat_meat, "Meat Meat's name is Meat Meat.", "...Meat Meat's name is Meat Meat.")
     end
     if with_or_is?(:alerion)
       say(["AVARICE: (to Alerion) The boy in the lake. Who taught you to call him back?"])
@@ -502,11 +502,11 @@ module FrostThaw
     end
     if with_or_is?(:reptin)
       say(["AVARICE: (to Reptin) And the wolf. I heard it bite, through a puddle."])
-      cline(:reptin, "(smiling) Listening at puddles. How lonely for you.")
+      cline(:reptin, "Listening at puddles. How lonely for you.")
     end
     if with_or_is?(:wyn)
       say(["AVARICE: (to Wyn) Little shadow. You'd make a lovely lens."])
-      cline(:wyn, "(very quietly) ...Sableye doesn't like you. He's usually right.")
+      cline(:wyn, "...Sableye doesn't like you. He's usually right.")
     end
     say(["AVARICE: Razzy's scale core. V-7's blood. And a season I can wind like a clock."])
     cline(:meat_meat, "Razzy's OLD scales. From the lab. Razzy is a DRAGON now.", "...Razzy's old scales. Razzy is a dragon now.")
@@ -567,7 +567,7 @@ module FrostThaw
               "In it, Mira of the North Wind sits up. Her black hair has gone white.",
               "Her skin is turning to crystal, from the fingertips in.",
               "AVARICE: (in Mira's voice) You left her to me. On her own ship. Her daughter watching.",
-              herald?(:meat_meat) ? "(You remember. You said you would.)" : cl(:meat_meat, "(white to the lips) Meat Meat said. Meat Meat SAID she would remember.")], event_id)
+              herald?(:meat_meat) ? "(You remember. You said you would.)" : cl(:meat_meat, "Meat Meat said. Meat Meat SAID she would remember.")], event_id)
         Stage.hop(av) if av
         sayc(["Mira's body stands. Machinery unfolds around it like a dress being fitted."], event_id)
       else
@@ -578,7 +578,7 @@ module FrostThaw
       case_ev = stage_event("Case of ice")
       Stage.pan_to(case_ev.x, case_ev.y + 2) if case_ev
       sayc(["Behind her, in a case of ice, a crystal grown round green scales: RAZ-MKIII.",
-            "AVARICE: (stretching, with a sound like a chandelier) There you are. Right on time."], event_id)
+            "AVARICE: (with a sound like a chandelier) There you are. Right on time."], event_id)
       Stage.pan_back if case_ev
       if with_or_is?(:meat_meat)
         mev = mm ? $game_player : Stage.summon(:meat_meat)
@@ -586,7 +586,7 @@ module FrostThaw
         sayc([mm ? "A needle of mirror-glass slides out of the cradle toward your arm." :
                    "A needle of mirror-glass slides out of the cradle toward Meat Meat's arm.",
               "AVARICE: A drop. Only a drop, V-7. You owe me at least that.",
-              mm ? "(You bite the needle in half.)" : "MEAT MEAT: (biting the needle in half) Meat Meat owes you NOTHING."], event_id)
+              mm ? "(You bite the needle in half.)" : "MEAT MEAT: Meat Meat owes you NOTHING."], event_id)
         if with_or_is?(:reptin) && !herald?(:reptin) && mev
           rep = Stage.summon(:reptin)
           Stage.walk_to(rep, mev.x, mev.y - 1, face: 8) if rep && !mm
@@ -618,7 +618,7 @@ module FrostThaw
          "Something pours out of it that isn't light: her, a smear of mirror, fleeing into glass."])
     if flag?(:mira_left_possessed)
       sayc(["What's left in the cradle is Mira, or most of her: crystal to the elbows, breathing.",
-            "MIRA: (one voice, very small) ...Is my girl warm? Somebody tell me she's warm.",
+            "MIRA: (one voice) ...Is my girl warm? Somebody tell me she's warm.",
             cl(:alberica, "(taking her crystal hands) She's warm. She's on the ship. She's waiting."),
             "Mira never sails again. But she lives."], event_id)
       set_flag(:mira_freed_late)
@@ -632,7 +632,7 @@ module FrostThaw
     broken = circuits
     if flag?(:chapel_avarice)
       # (the Silent Chapel: you answered the fire, and a door you open stays open)
-      say(["AVARICE'S REFLECTION: (warmly) You answered me once, in my little chapel.",
+      say(["AVARICE'S REFLECTION: You answered me once, in my little chapel.",
            "AVARICE'S REFLECTION: Leave the engine running, I said. You listened.",
            "AVARICE'S REFLECTION: A door you open for me stays open, failures."])
       broken = [circuits - 1, 0].max
@@ -643,7 +643,7 @@ module FrostThaw
       Stage.fx("E-06", refl, frames: 10, oy: 16) rescue nil if refl
       Stage.remove_actor(refl) if refl
       sayc(["Her reflection shatters, and every splinter of it goes dark.",
-            "AVARICE: (very small, from no mirror at all) ...Recalculating...",
+            "AVARICE: (from no mirror at all) ...Recalculating...",
             cl(:meat_meat, "That is for Razzy's voice. Meat Meat is DONE.")])
     else
       Stage.remove_actor(refl) if refl
@@ -666,7 +666,7 @@ module FrostThaw
     end
     sayc([cl(:alberica, "Why do the clever ones never stay dead?"),
           caught ? cl(:wyn, "...It's quiet down here now. She's stopped counting.") :
-                   cl(:wyn, "(very quietly) ...Like spores. You never get all of them.")])
+                   cl(:wyn, "...Like spores. You never get all of them.")])
     set_flag(:avarice_revealed)
     set_flag(:avarice_body_broken)
     set_flag(:avarice_soul_shattered) if caught
@@ -705,7 +705,8 @@ module FrostThaw
               "You knew. You saw her arms in the Forge, bare. You said nothing, even after the shard." : nil,
             flag?(:mira_left_possessed) ? "AVARICE: (in Mira's voice) You watched a coat burn. I had another: you left her for me." :
                                           "AVARICE: You watched a coat burn. I keep a wardrobe.",   # (dialogue 12 §4)
-            "AVARICE: A god in a gem. The last variable. Thank you for weighing her out for me."])
+            "AVARICE: A god in a gem. The last variable. Thank you for weighing her out for me.",
+            "AVARICE: You always thought I was the storm. I only ever sold her weather."])
       trainer_intro(:avarice_reforged)          # (notes 12 E21: her last line before the fight)
       type, name = TRAINERS[:avarice_reforged]
       $ft_avarice_circuits = 0
@@ -806,7 +807,7 @@ module FrostThaw
     say(["#{owner} #{name} stirs. It knows this ring."])      # (whose it is: first-time player 11)
     return false if !pbConfirmMessage(_INTL("Hold the {1} to the circuit?", name))
     say(lines)
-    sayc([cl(who, who == :reptin ? "(very quietly) Steady. Hold. That's all a root ever does." :
+    sayc([cl(who, who == :reptin ? "Steady. Hold. That's all a root ever does." :
                   who == :alerion ? "Let her look for herself in the fog." :
                                     "(turning the key) Keys open. They also lock. A goddess told me that.")].compact)
     set_flag(key)
@@ -838,7 +839,7 @@ module FrostThaw
     say(["Var's mirror-shard glaive hums in your pack: the same note as the frost in Sephek's chest.",
          flag?(:var_story_known) ? "Var forged it to cut a frost-touched thing. Thirty years on, it still remembers what for." :
                                    "Whoever forged it meant it for something like him."])
-    sayc([cl(:alerion, "(very quietly) It knows him. So do I.")].compact)
+    sayc([cl(:alerion, "It knows him. So do I.")].compact)
   end
 
   #-----------------------------------------------------------------------------
@@ -855,14 +856,14 @@ module FrostThaw
     if c == 0
       set_flag(:eline_spared)
       say(["You step back. Eline looks up, and for a moment she doesn't understand.",
-           "ELINE: (slowly) ...Silence is mercy. I taught it for years. I never once felt it.",
+           "ELINE: ...Silence is mercy. I taught it for years. I never once felt it.",
            "She gets up, and goes to stand beside him again. But she doesn't raise her hands."])
     else
       set_flag(:eline_captured)
       say(["Rootwardens come up the steps with cords of woven root. Eline doesn't fight them.",
            "She prays the whole way down. It takes you a while to hear that every word runs backwards.",
            "ELINE: ...hcaer ruoy dnoyeb ylno si ecnelis. ...ecnelis, ecnelis, ecnelis."])
-      sayc([cl(:wyn, "(very quietly) She's saying it backwards so the goddess can't hear her asking. I think."),
+      sayc([cl(:wyn, "She's saying it backwards so the goddess can't hear her asking. I think."),
             cl(:alberica, "Or so we can't. Either way, darling, somebody should sit with her.")].compact)
     end
   end
@@ -881,7 +882,7 @@ module FrostThaw
       type, name = TRAINERS[:eline_sephek]
       if pbTrainerBattle(type, name, nil, false, 0, true)
         say(["Eline falls back against the crystal. The frost on her hands goes out like a candle.",
-             "ELINE: (to Sephek, very softly) I'm sorry. I was so sure."])
+             "ELINE: (to Sephek) I'm sorry. I was so sure."])
         set_flag(:eline_fate)
         set_flag(:eline_final_foe)
       end
@@ -899,8 +900,8 @@ module FrostThaw
       sayc(["When it passes, she's kneeling where she stood, frosted white to her open hands.",
             "She doesn't get up.",
             "SEPHEK: (on his knees beside her) ...Eline. Eline, you didn't have to. You never had to.",
-            cl(:wyn, "(very quietly) She chose. Somebody let her, once."),
-            cl(:alberica, "(quietly) ...Somebody should sit with her. After.")])
+            cl(:wyn, "She chose. Somebody let her, once."),
+            cl(:alberica, "...Somebody should sit with her. After.")])
       set_flag(:eline_fate)
       set_flag(:eline_martyred)
     end

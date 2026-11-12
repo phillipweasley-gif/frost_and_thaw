@@ -223,7 +223,7 @@ module FrostThaw
   def darmo_mazlu(event_id = nil)
     if flag?(:mine_done)
       return say(["DARMO: The gemstone mine is OPEN! Speaker Masthew says it's SAFE! Heroes from the south!",
-                  "DARMO: (quieter) That's you. I'm shouting about you."], event_id)
+                  "DARMO: That's you. I'm shouting about you."], event_id)
     end
     if giver_coming?(event_id)
       # crossing the square, you hear him (no stop: talk to him for the rest)
@@ -272,7 +272,7 @@ module FrostThaw
       # (Oarus answers it, so it's spoken: WRITING_GUIDE §5)
       if with_or_is?(:alerion)
         speak(:alerion, "(eyeing the officers by the wall) Those are your militia. Standing there.",
-                        "(quietly) Your militia. Standing there.")
+                        "Your militia. Standing there.")
       else
         say(["Two militia officers lean on the Blue Clam's wall, watching you talk."])
       end
@@ -317,8 +317,8 @@ module FrostThaw
             "MARTA: It beat Gran and Grandad senseless. She got away. Nobody saw her after.",
             "She touches a chain round her neck. On it, a plain ring.",
             "MARTA: This is it. It's always warm. Always. Even now."])
-      sayc([cl(:shimmer, "(very quietly) A woman running from the wind."),
-            cl(:reptin, "(gently) Keep it on, Marta. Someone ran a long way to give it away.")])
+      sayc([cl(:shimmer, "A woman running from the wind."),
+            cl(:reptin, "Keep it on, Marta. Someone ran a long way to give it away.")])
     end
     if !flag?(:marta_ring) && pbConfirmMessage(_INTL("Ask Marta for the ring?"))
       say(["MARTA: (her hand closing round it) It's all I've got of them."])
@@ -327,9 +327,9 @@ module FrostThaw
       if c == 0
         # (Marta answers them, so they're spoken: WRITING_GUIDE §5)
         speak(:alberica, "Marta. We're going north, after what's making this winter. All the way.",
-                         "(quietly) We're going north. After the thing making this winter.") if with_or_is?(:alberica)
+                         "We're going north. After the thing making this winter.") if with_or_is?(:alberica)
         speak(:reptin, "Whoever she was, she ran from the same cold. Let it help us run toward it.",
-                       "(gently) Let it help us run toward the cold, not from it.") if with_or_is?(:reptin)
+                       "Let it help us run toward the cold, not from it.") if with_or_is?(:reptin)
         say(["You tell her where you're going: north, after whatever is making this winter."]) if !with_or_is?(:alberica) && !with_or_is?(:reptin)
         sayc(["MARTA: ...You mean it. You actually mean it.",
               "She unclasps the chain and puts the ring in your hand. It's warm as a hand.",
@@ -338,7 +338,7 @@ module FrostThaw
         set_flag(:marta_ring)
         wheel(1)
       else
-        say(["MARTA: (relieved) Thank you. If it ever could help... come back and ask me again."])
+        say(["MARTA: Thank you. If it ever could help... come back and ask me again."])
       end
     end
     return if !pbConfirmMessage(_INTL("Rest at the Eastside?"))
@@ -534,7 +534,7 @@ module FrostThaw
     say(["TREX: A yeti chased us out of the foothills of Kelvin's Cairn. We sought refuge here.",
          "TREX: The preternatural cold dulls our wits. We only want a place out of this weather.",
          "TREX: We can work. Termalaine would be richer for having us."])
-    sayc([cl(:shade, "(very quietly) \"Preternatural.\" He said preternatural."),
+    sayc([cl(:shade, "\"Preternatural.\" He said preternatural."),
           cl(:shade, "That kobold can't spell kobold."),
           cl(:alerion, "(his hand on his ring) Something's riding him. My ring's gone ice cold."),
           cl(:meat_meat, "Little lizard smells like old books. Meat Meat does not like it.")])
@@ -542,7 +542,7 @@ module FrostThaw
     c = pbMessage(_INTL("What do you do?"), opts, 0)
     case c
     when 0
-      say(["TREX: (smiling far too widely for a kobold) Thank you.",
+      say(["TREX: Thank you.",
            "TREX: Thank you. Termalaine. Yes. Somewhere... important."])
       set_flag(:kobolds_to_town)
       set_flag(:janth_unresolved)
@@ -596,7 +596,7 @@ module FrostThaw
       end
       Stage.cleanup
       sayc(["He fades like breath on a window.",
-            cl(:reptin, "(softly) Rest, scholar. The tundra will grow you more.")])
+            cl(:reptin, "Rest, scholar. The tundra will grow you more.")])
       set_flag(:janth_rested)
     else
       say(["You set the satchel down on a rock by the tunnel wall, gently.",
@@ -662,7 +662,7 @@ module FrostThaw
            "He doesn't come out. That evening, the miners refuse to go in after him.",
            "Termalaine has no speaker."])
       sayc([cl(:alerion, "...The thing in the dark. We left it there."),
-            cl(:reptin, "(very quietly) We should have gone back for it.")])
+            cl(:reptin, "We should have gone back for it.")])
       # An honest failure (context 14, M14-6): nobody pays, and the counter says why.
       say(["SHAELEN: (at the Blue Clam door) There's no one to pay you. There's no one to pay anyone."])
       set_flag(:oarus_dead)
@@ -680,7 +680,7 @@ module FrostThaw
            "OARUS: ...I'm sorry. What was I saying?",
            "He pays you five thousand.",
            "His handwriting on the receipt is beautiful, and nothing like a half-orc's."])
-      sayc([cl(:alerion, "(very low) That isn't him. Not all of him."),
+      sayc([cl(:alerion, "That isn't him. Not all of him."),
             cl(:shade, "Lovely handwriting, for a half-orc.")])
       set_flag(:oarus_possessed)
     else
@@ -708,7 +708,7 @@ module FrostThaw
   # important. You can still lay him to rest: the satchel is on Oarus's desk.
   def janth_in_oarus(event_id = nil)
     say(lines_for(:oarus_after), event_id)
-    speak(:alerion, "(his ring ice-cold) Janth. We know you're in there.", "(quietly) Janth. We know.") if with_or_is?(:alerion)
+    speak(:alerion, "(his ring ice-cold) Janth. We know you're in there.", "Janth. We know.") if with_or_is?(:alerion)
     sayc([
           "The half-orc's face goes still, and an old man looks out of it.",
           "OARUS: ...I only need a little longer. My samples...",
@@ -717,7 +717,7 @@ module FrostThaw
     sayc(["You shake the satchel's moss and lichen out over the lake. The wind takes it all.",
           "Behind you, Oarus sits down hard in the snow.",
           "OARUS: ...Have I been... talking about moss? For DAYS?",
-          cl(:reptin, "(gently) Rest, scholar. The tundra will grow you more."),
+          cl(:reptin, "Rest, scholar. The tundra will grow you more."),
           cl(:shade, "He'll be fine. He was already a Speaker nobody listens to. Now he has a reason.")])
     set_flag(:janth_rested)
     set_flag(:oarus_possessed, false)

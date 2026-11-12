@@ -38,7 +38,7 @@ module FrostThaw
     halls_greeter: -> {
       next ["CLERK: Shops round the ring, the Rootwarden Hall up in the tower. Mind the ledgers."] if T.flag?(:visited_halls_greeter)
       T.set_flag(:visited_halls_greeter)
-      ["CLERK: (looking up from a ledger) Welcome to the Verdant Halls, the civic ring.",
+      ["CLERK: Welcome to the Verdant Halls, the civic ring.",
        "CLERK: Shops on every terrace. The Rootwarden Hall's the tower. Mushrooms run the bank.",
        "CLERK: And don't feed the counting spores. They lose count."]
     },
@@ -143,7 +143,7 @@ module FrostThaw
            "BRYN: Summer, I think. Something in the heat that isn't heat.",
            "BRYN: Please don't make me say it's something until you know what it is."], event_id)
       sayc([cl(:reptin, "You did right to tell someone. Now you've told the Heralds. That's two someones."),
-            cl(:wyn, "(quietly) Hyphora's roots felt it too. Under the gardens. Like a fever.")].compact)
+            cl(:wyn, "Hyphora's roots felt it too. Under the gardens. Like a fever.")].compact)
     elsif flag?(:engine_dead)
       say(["BRYN: The rot's stopped spreading. Since something below went quiet.",
            "BRYN: It's alright. It's alright. ...For once, I mean it."], event_id)
@@ -181,7 +181,7 @@ module FrostThaw
       set_flag(:gorran_confronted)
       take_key(:FT_WARMORE)
       say(["You set the lump of black ore from the Smuggler's Run on his anvil. It's still warm.",
-           "GORRAN: (very still) Where did you get that.",
+           "GORRAN: Where did you get that.",
            "GORRAN: ...It's from the south. Fell off a boat. Ask Jorik.",
            "His hammer taps the anvil: tap, tap-tap, tap. Faster now.",
            "GORRAN: Special commissions. That's all. I don't ask who wants the work.",
@@ -189,11 +189,11 @@ module FrostThaw
            "GORRAN: Leave it, Heralds. Some fires you don't stand close to."], event_id)
       sayc([cl(:meat_meat, "Fire man is lying. Meat Meat knows lying. Meat Meat was raised by it."),
             # (Jorik begged not to be named: dialogue 15 #14)
-            flag?(:jorik_confessed) ? cl(:reptin, "(quietly) Jorik asked us not to say his name. Gorran just said it for him.") : nil,
+            flag?(:jorik_confessed) ? cl(:reptin, "Jorik asked us not to say his name. Gorran just said it for him.") : nil,
             cl(:alerion, "Same boat Jorik's fell off. Busy boat.")].compact)
     elsif flag?(:watcher_ember_rat) && !flag?(:gorran_rat_owned)
       set_flag(:gorran_rat_owned)
-      say(["GORRAN: (not looking up) You caught my rat. It follows heat. I follow the money.",
+      say(["GORRAN: You caught my rat. It follows heat. I follow the money.",
            "GORRAN: It watches the Suncleft for me. Somebody pays me to know who goes near it.",
            "GORRAN: Don't ask me who. I've never asked."], event_id)
     elsif flag?(:engine_dead)
@@ -396,7 +396,7 @@ module FrostThaw
       return say(["A locked case of letters written on thin sheets of mirror-glass."], event_id)
     end
     if first_time?(:mirror_letters_read)
-      say(["MIRNA: (quietly) You want the case. Everyone who's anyone wants the case.",
+      say(["MIRNA: You want the case. Everyone who's anyone wants the case.",
            "MIRNA: Letters on mirror-glass. From before the Reversal. Signed with one letter: A.",
            "She unlocks it. The glass is cold, and the writing moves, as if it's being written now.",
            "\"Variables that refuse to die are the only ones worth measuring.\"",
@@ -404,7 +404,7 @@ module FrostThaw
            "\"Tell the merchant to keep selling mirrors. Every glass is an eye.\"",
            "MIRNA: I stopped reading them when one of them answered."], event_id)
       sayc([herald?(:meat_meat) ? "(Your hands have gone cold. You know that handwriting. You were written in it.)" :
-                                  cl(:meat_meat, "(very small) Meat Meat knows that writing. Meat Meat does not want to."),
+                                  cl(:meat_meat, "Meat Meat knows that writing. Meat Meat does not want to."),
             cl(:alberica, "Lock it, darling. Lock it and put a book on it. A heavy one.")].compact)
     else
       say(["The letters lie in their case. One, you'd swear, has a new line at the bottom."], event_id)
@@ -686,7 +686,7 @@ module FrostThaw
     sayc(["Dust hangs in slow waves of heat. Nothing's been touched in decades. Nothing's rotted.",
           "Firestones on velvet. Charcoal in jars. Flame-orbs that are still warm.",
           cl(:alberica, "Thirty years shut and not a cobweb. Somebody's been dusting. Somebody warm."),
-          cl(:wyn, "(very quietly) The floor's warm. Like... like it's breathing out.")].compact)
+          cl(:wyn, "The floor's warm. Like... like it's breathing out.")].compact)
   end
 
   def helion_mural(event_id = nil)
@@ -724,8 +724,8 @@ module FrostThaw
          "The shaft has been sealed from below with molten iron."], event_id)
     set_flag(:suncleft_tunnel)
     sayc([cl(:alerion, "Somebody poured it shut. From below."),
-          flag?(:brightmane_answered) ? cl(:glimmer, "(quietly) Brightmane said I'd know the fire. That's not it. That's its chimney.") :
-                                        cl(:glimmer, "(very quietly) That's not the fire. That's its chimney.")].compact)
+          flag?(:brightmane_answered) ? cl(:glimmer, "Brightmane said I'd know the fire. That's not it. That's its chimney.") :
+                                        cl(:glimmer, "That's not the fire. That's its chimney.")].compact)
   end
 
   #-----------------------------------------------------------------------------
@@ -765,7 +765,7 @@ module FrostThaw
             cl(:alberica, "Robes for someone nobody's met. Darling, that's not fashion. That's a warrant.")].compact)
     elsif flag?(:watcher_weasel) && !flag?(:maera_weasel_owned)
       set_flag(:maera_weasel_owned)
-      say(["MAERA: (not looking up from her pins) My weasel. It fetched me your measurements.",
+      say(["MAERA: My weasel. It fetched me your measurements.",
            "MAERA: Hair, cloth, scent. Who you lean on. For the procession, I was told.",
            "MAERA: Heralds in the procession. Lifelike. ...That's all it was for. I'm almost sure."], event_id)
     else

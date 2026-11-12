@@ -116,6 +116,11 @@ module FrostThaw
       else
         say(["TAMSIN: Fine. Be mysterious. You're still on my wall."])
       end
+      # (the player's stake, said by the person it's about)
+      if journey?
+        say(["TAMSIN: And come BACK. Mum says if she wins, the tree never grows.",
+             "TAMSIN: No tree, no Hearth. No Hearth, no me. So don't lose. I'm not finished with you."])
+      end
     end
     mine = state[:starter]
     ace = { B7H220: :B330H152, B330H152: :WICKIT, WICKIT: :B7H220 }[mine] || :B330H152
@@ -139,7 +144,7 @@ module FrostThaw
       say(["TAMSIN: (after) Okay. Okay! You can go.",
            "TAMSIN: Come back and tell me everything. Every single thing. In order."])
     else
-      say(["TAMSIN: (after, very quietly) ...Huh. I didn't think I'd actually win.",
+      say(["TAMSIN: (after) ...Huh. I didn't think I'd actually win.",
            "TAMSIN: That's worse. That's so much worse. Train on the way. Please."])
     end
     cline(:meat_meat, "Meat Meat will train. Meat Meat will train SO hard. After coffee.", "...Meat Meat will train. After coffee.")
@@ -225,7 +230,7 @@ module FrostThaw
       end
       if flag?(:darrus_redeemed)
         say(["Down in the hold, a tiefling in a Corsair's coat is counting barrels. Twice.",
-             "DARRUS: (not looking up) Every one paid for. Go on. Somebody has to keep count."])
+             "DARRUS: Every one paid for. Go on. Somebody has to keep count."])
       end
     when :griffons
       say(["Griffons, beating hard over a white sea.",
@@ -448,8 +453,8 @@ module FrostThaw
           "(a hand on Dawnfang) ...Meat Meat would miss snow a little.")
     cline(:reptin, "Kill a god and her faithful pray her back. Then we do this again, older.",
           "...Kill her, and they pray her back.")
-    cline(:alberica, "(very still) Or somebody holds her. Keeps her still. I'm good at keeping.",
-          "(very still) ...Or somebody holds her.")
+    cline(:alberica, "Or somebody holds her. Keeps her still. I'm good at keeping.",
+          "...Or somebody holds her.")
     cline(:alerion, "No.", "...No. Not you.")
     cline(:wyn, "...Um. In the spore beds nothing's ever gone. It rests. Then it comes back.",
           "...Nothing in the spore beds is ever gone.")
@@ -457,17 +462,17 @@ module FrostThaw
           "...Shimmer said there was a third way.")
     asker = herald?(:reptin) ? :alberica : :reptin
     if outsider?
-      sayc([cl(asker, asker == :reptin ? "(to you) You've been quiet, dear. And it's your Wall riding on it." :
-                                         "(to you) You've been quiet, wolf. And it's your Wall riding on it.")])
+      sayc([cl(asker, asker == :reptin ? "You've been quiet, dear. And it's your Wall riding on it." :
+                                         "You've been quiet, wolf. And it's your Wall riding on it.")])
       if has_key?(:FT_OWLFEATHER)
         if companions.include?(:wyn)
-          say(["WYN: (very quietly) And she's marked you. Like Alberica. I saw the feather."])
+          say(["WYN: And she's marked you. Like Alberica. I saw the feather."])
         elsif companions.include?(:alberica)
-          say(["ALBERICA: (very quietly) And she's marked you. Like me. I saw the feather."])
+          say(["ALBERICA: And she's marked you. Like me. I saw the feather."])
         end
       end
     else
-      sayc([cl(asker, asker == :reptin ? "(to you) You haven't said, dear." : "(to you) You haven't said, wolf.")])
+      sayc([cl(asker, asker == :reptin ? "You haven't said, dear." : "You haven't said, wolf.")])
     end
     c = pbMessage(_INTL("What do we do with her?"),
                   [_INTL("\"End her.\""), _INTL("\"Give winter back its place.\""), _INTL("\"I don't know yet.\"")], 2)
@@ -481,7 +486,7 @@ module FrostThaw
       end
     when 1
       set_flag(:camp_view_place)
-      sayc([herald?(:wyn) ? nil : cl(:wyn, "(brightening, a little) ...Like the spore beds."),
+      sayc([herald?(:wyn) ? nil : cl(:wyn, "(a little) ...Like the spore beds."),
             cl(:alerion, "Then we find out what that means.")])
     else
       set_flag(:camp_view_unsure)
@@ -534,7 +539,7 @@ module FrostThaw
         speak(:alberica, "The price was a door. The White Vault. It stays shut, and we stay spared.")
         speak(:alberica, "Gran kept the key: the pendant. \"Keep it close. It keeps the far future out.\"")
         speak(:alberica, "I threw it in the sea once. It came back. It always does.")
-        say([who == :reptin ? "REPTIN: (very gently) Then tomorrow we find out together. That's the price of me." :
+        say([who == :reptin ? "REPTIN: Then tomorrow we find out together. That's the price of me." :
                               "#{name}: (very quietly) Then tomorrow we find out what's behind it. Together."])
       else
         set_flag(:bargain_kept)
@@ -543,8 +548,8 @@ module FrostThaw
       return
     end
     set_flag(:bargain_told)
-    say([outsider? ? "ALBERICA: (low, to you) You came in from outside all this. So you get told. Nobody else." :
-                     "ALBERICA: (low, to you) You've known me a month. That's longer than most. So you get told.",
+    say([outsider? ? "ALBERICA: You came in from outside all this. So you get told. Nobody else." :
+                     "ALBERICA: You've known me a month. That's longer than most. So you get told.",
          "ALBERICA: My family made a bargain with Auril, long ago. Our village never drew a name.",
          "ALBERICA: No lottery. No frost in the wells. Two years of Rime, and we ate every night.",
          "She touches the empty place at her throat, where the pendant used to hang.",
@@ -561,7 +566,7 @@ module FrostThaw
                               "ALBERICA: ...Thank you. Don't tell Reptin. He'll make a plan."])
     else
       set_flag(:bargain_pushed)
-      say(["ALBERICA: (a tired laugh) Everybody says that until it's due. ...Go to sleep."])
+      say(["ALBERICA: Everybody says that until it's due. ...Go to sleep."])
     end
   end
 
@@ -627,7 +632,7 @@ module FrostThaw
     sayc(["A field of ice sculptures, too perfect for any hand.",
           "Bears. Elk. Sabertooths. Yetis. Dragons with their wings half open.",
           "Every whisker. Every feather. Every scale."])
-    cline(:meat_meat, "(whispering) Are they alive?", "(whispering) ...Alive?")
+    cline(:meat_meat, "Are they alive?", "...Alive?")
     sayc([cl(:alerion, "They were.")])
     cline(:alberica, "Nobody touch anything. I mean it. Hands in pockets, sweethearts.", "...Nobody touch anything.")
     sayc([cl(:reptin, "Says the woman who has never once in her life kept her hands to herself.")])
@@ -643,7 +648,7 @@ module FrostThaw
     asp = Stage.actor(:snow_aspect, px + 1, py, 4, graphic: "FT_auril_furs")
     asp.opacity = 170 if asp
     say(["The snow round your feet rises into a woman seven feet tall, with Auril's face.",
-         "SNOW ASPECT: (in Auril's voice, very soft) Defilers."])
+         "SNOW ASPECT: (in Auril's voice) Defilers."])
     boss_battle(named_mon(:B124H144, 59, "Snow Aspect"))
     Stage.fx("E-09", asp, frames: 9, oy: 16) rescue nil if asp
     Stage.remove_actor(asp) if asp
@@ -658,7 +663,7 @@ module FrostThaw
     end
     say(["At the far edge, one statue isn't an animal.",
          "A young woman, arms open, smiling into the wind.",
-         as(:alerion, "(stopping dead) ...Shimmer.")], event_id)
+         as(:alerion, "...Shimmer.")], event_id)
     cline(:alberica, "It's her. Auril kept her. Like a flower pressed in a book.", "...Auril kept her.")
     speak(:alerion, "(touching the cold cheek) She didn't keep anything. That's not her.",
           "(touching the cold cheek) ...No.", event_id)
@@ -666,7 +671,7 @@ module FrostThaw
     cline(:meat_meat, "Shade would have said something clever here. Meat Meat will say it instead.",
           "...Shade would know what to say.")
     sayc([cl(:meat_meat, "...Meat Meat does not know what it was."),
-          cl(:reptin, "(softly) That was it, Meat Meat. That was exactly it.")], event_id)
+          cl(:reptin, "That was it, Meat Meat. That was exactly it.")], event_id)
     set_flag(:fields_crossed)
     set_switch(SW_FIELDS_ROPE, true)   # a rope back up from the entrance, from now on
     add_counter(:story_beats)

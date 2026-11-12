@@ -259,7 +259,7 @@ module FrostThaw
     sayc([cl(:alberica, "Keep the cider warm. We'll want it on the way back."),
           cl(:reptin, "We'll bring him home, Keegan. That's a promise, not a pleasantry."),
           "Boy is already at the door.",
-          "KEEGAN: (to the dog, very quietly) Go with them, Boy. Find him."])
+          "KEEGAN: (to the dog) Go with them, Boy. Find him."])
     boy = Stage.find("Boy (waiting)")
     Stage.walk_to(boy, VELRYN_DOOR[1], VELRYN_DOOR[2] + 1, adjacent: true) if boy
     set_flag(:climb_taken)
@@ -405,7 +405,7 @@ module FrostThaw
          "A rugged, bearded man in his prime. Garret Velryn.",
          "His weapons and a climber's kit, and nothing else."], event_id)
     say(["Boy throws himself on Garret, whining, licking, shoving with his whole body.",
-         "GARRET: (faint) ...Boy? Boy. Good boy. Good boy, you went for help."]) if flag?(:boy_with_you)
+         "GARRET: ...Boy? Boy. Good boy. Good boy, you went for help."]) if flag?(:boy_with_you)
     say(["You tend his wounds. He comes round enough to talk.",
          "GARRET: A yeti. It came out from under a drift by a cave, higher up. Took us by surprise.",
          "GARRET: I lured it away from the others. Got it to chase me down the mountain.",
@@ -462,7 +462,7 @@ module FrostThaw
         set_flag(:garret_with_you)
       end
     else
-      say(["GARRET: (getting up, swaying) Good. I know the route. What's left of it."])
+      say(["GARRET: (getting up) Good. I know the route. What's left of it."])
       set_flag(:garret_with_you)
     end
     set_switch(SW_MC_GARRET, true)
@@ -544,12 +544,12 @@ module FrostThaw
       say(["One head belongs to a dwarf, his beard braided with iron rings.",
            "A Battlehammer clasp. Oobok.",
            "Another, older, wears the frost of a month: a dwarf with a miner's look. Barthoom."])
-      sayc([cl(:alberica, "(very quietly) Oh, you poor lads."),
+      sayc([cl(:alberica, "Oh, you poor lads."),
             cl(:alerion, "We take the dwarf home. His friends will want him.")])
     else
       say(["One head belongs to a dwarf, his beard braided with iron rings. A clasp: a foaming mug.",
            "Another, older, wears the frost of a month: a dwarf with a miner's look."])
-      sayc([cl(:alberica, "(very quietly) Oh, you poor lads."),
+      sayc([cl(:alberica, "Oh, you poor lads."),
             cl(:alerion, "A clan mark. Somebody in Bryn Shander will know him. We take him with us.")])
     end
     if pbConfirmMessage(met ? _INTL("Wrap Oobok's remains and take them back to his friends?") :
@@ -584,7 +584,7 @@ module FrostThaw
     if c == 0
       sayc(["Nobody moves.",
             "Slowly, you point at the halfling, then at yourselves, then back the way you came.",
-            cl(:reptin, "(softly, palms out) We only want our friend. Not your child. Not your home."),
+            cl(:reptin, "(palms out) We only want our friend. Not your child. Not your home."),
             "The mother yeti watches you a long time.",
             "Then she sits down, and pulls her tyke into her lap.",
             "She lets you take the halfling."])
@@ -710,7 +710,7 @@ module FrostThaw
     # the player answers the oath's last part (an input mid-payout; read back in Alerion's chat)
     if pbMessage(_INTL("What do you say?"), [_INTL("\"Spring, then. Count us in.\""), _INTL("Say nothing.")], -1) == 0
       set_flag(:mokingo_promised)
-      say(["GARRET: (a long breath) Spring."])
+      say(["GARRET: Spring."])
     else
       say(["Garret nods, as if you'd said it anyway."])
     end
