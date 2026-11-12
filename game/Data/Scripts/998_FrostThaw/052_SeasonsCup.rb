@@ -221,3 +221,17 @@ module FrostThaw
     end
   end
 end
+
+# The Cup shows in the Goal menu until you've won it once
+module FrostThaw
+  class << self
+    unless method_defined?(:ft_k_side_goals)
+      alias ft_k_side_goals side_goals
+      def side_goals
+        list = ft_k_side_goals
+        list += ["Postgame: Tamsin's running the Cup of Seasons. Find her at the Hearth."] if cup_open? && !flag?(:cup_champion) rescue list
+        list
+      end
+    end
+  end
+end

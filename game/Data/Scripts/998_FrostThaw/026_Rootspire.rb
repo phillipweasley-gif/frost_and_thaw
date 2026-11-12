@@ -96,20 +96,20 @@ module FrostThaw
   )
   TRAINERS.merge!(
     # Gym 4: the Hearth's regulars, then Hellen. Normal, blended (the Bible: a "blender").
-    hearth_dunstan: [:WORKER, "Dunstan", [[:B208H162, 38], [:B76H20, 38]],
+    hearth_dunstan: [:WORKER, "Dunstan", [[:B208H162, 36], [:B76H20, 36]],
                      "Fair's fair. Down you go. Mind the third step."],
-    hearth_mellow:  [:BEAUTY, "Mellow", [[:B36H39, 38], [:LOPUNNY, 39]],
+    hearth_mellow:  [:BEAUTY, "Mellow", [[:B36H39, 36], [:LOPUNNY, 37]],
                      "Oh, Hellen will be thrilled. She hates an easy guest."],
-    hearth_corrie:  [:FISHERMAN, "Old Corrie", [[:B55H161, 38], [:B130H128, 39]],
+    hearth_corrie:  [:FISHERMAN, "Old Corrie", [[:B55H161, 36], [:B130H128, 37]],
                      "Four hundred years my family waited to lose to you. Worth it."],
-    hearth_tallis:  [:GENTLEMAN, "Tallis", [[:GIRAFARIG, 38], [:B124H40, 39]],
+    hearth_tallis:  [:GENTLEMAN, "Tallis", [[:GIRAFARIG, 36], [:B124H40, 37]],
                      "I'll put this in the song. I'll sound better in the song."],
-    hellen_gym:     [:FT_HEARTH_LEADER, "Hellen", [[:B184H241, 37], [:B266H217, 38], [:B38H128, 38], [:B149H143, 40]],   # (whole read P3: was ace 42, the most-lost fight)
+    hellen_gym:     [:FT_HEARTH_LEADER, "Hellen", [[:B184H241, 35], [:B266H217, 36], [:B38H128, 36], [:B149H143, 38]],   # (whole read P3: was ace 42; launch pass 2026-11-12: ace 38. Still the most-lost fight, right after the fall from Lv ~32)
                      "Well. The wall had you right, love.", [:HYPERPOTION, :FULLRESTORE]],
     # Tamsin, Hellen's kid: the starter that beats yours
-    tamsin_i: [:FT_TAMSIN_I, "Tamsin", [[:FURRET, 37], [:JUMPLUFF, 38], [:B331H154, 40]], "No. No! ...Okay. Rematch. Soon."],
-    tamsin_g: [:FT_TAMSIN_G, "Tamsin", [[:FURRET, 37], [:JUMPLUFF, 38], [:FORGEL, 40]], "No. No! ...Okay. Rematch. Soon."],
-    tamsin_f: [:FT_TAMSIN_F, "Tamsin", [[:FURRET, 37], [:JUMPLUFF, 38], [:B9H221, 40]], "No. No! ...Okay. Rematch. Soon."],
+    tamsin_i: [:FT_TAMSIN_I, "Tamsin", [[:FURRET, 35], [:JUMPLUFF, 36], [:B331H154, 38]], "No. No! ...Okay. Rematch. Soon."],
+    tamsin_g: [:FT_TAMSIN_G, "Tamsin", [[:FURRET, 35], [:JUMPLUFF, 36], [:FORGEL, 38]], "No. No! ...Okay. Rematch. Soon."],
+    tamsin_f: [:FT_TAMSIN_F, "Tamsin", [[:FURRET, 35], [:JUMPLUFF, 36], [:B9H221, 38]], "No. No! ...Okay. Rematch. Soon."],
     # The Blooming Fields
     bough_teo:      [:FT_ROOTWARDEN, "Teo", [[:BRELOOM, 36], [:STANTLER, 37]], "Bough circle's still standing. Mostly."],
     pilgrim_ysolde: [:PICNICKER, "Ysolde", [[:SKIPLOOM, 36], [:SUNFLORA, 36], [:B36H182, 37]], "Nine days' walk to lose in one turn. Fair."],

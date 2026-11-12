@@ -1115,5 +1115,16 @@ check("the partner beats exist, and the stake and spine lines are in the story")
   %i[partner_keeps_you_warm door_helper partner_answers_auril first_partner].all? { |m| FT.respond_to?(m) } &&
     ["No Hearth, no me", "I only ever sold her weather", "what Auril's winter makes of anyone", "That one grew"].all? { |n| src.include?(n) } }
 
+check("step goals move forwards through a long stretch, and never overwrite another goal") {
+  keep = FT.state[:goal]; fl = %i[deep_shaft_entered prisoners_freed rootkeep_gate_open].map { |f| [f, FT.flag?(f)] }
+  FT.state[:goal] = "Back to the Barricade gate. It's open now: east, and down into the hag's old lair."
+  FT.set_flag(:deep_shaft_entered); a = FT.state[:goal]
+  FT.set_flag(:prisoners_freed);    b = FT.state[:goal]
+  FT.set_flag(:deep_shaft_entered); c = FT.state[:goal]
+  FT.state[:goal] = "Somewhere else entirely."
+  FT.set_flag(:rootkeep_gate_open); d = FT.state[:goal]
+  FT.state[:goal] = keep; fl.each { |f, v| v ? FT.set_flag(f) : FT.state[:flags]&.delete(f) }
+  a.start_with?("Down the Deep Root Shaft") && b.start_with?("Up into the Root-Throne") && c == b && d == "Somewhere else entirely." }
+
 puts "\n#{$checks - $fails}/#{$checks} checks passed"
 exit($fails == 0 ? 0 : 1)

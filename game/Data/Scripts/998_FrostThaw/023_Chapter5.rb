@@ -75,7 +75,7 @@ module FrostThaw
                      "Rangers don't go into the chasm. I can see why you might."],
     channeler_odda: [:CHANNELER,       "Odda",  [[:HAUNTER, 29], [:B200H427, 30]],
                      "The voices in the chasm aren't ghosts, child. That's what frightens me."],
-    thredra:        [:FT_HAG,          "Thredra", [[:B429H124, 31], [:B255H200, 32], [:B124H429, 32]],   # (whole read P4)
+    thredra:        [:FT_HAG,          "Thredra", [[:B429H124, 30], [:B255H200, 31], [:B124H429, 32]],   # (whole read P4; launch pass: lead two down one, the joint most-lost fight)
                      "Heh... heh... Won, have you? Look in the mirror, dearies.", [:HYPERPOTION, :FULLHEAL]]
   )
 

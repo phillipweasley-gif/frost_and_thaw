@@ -66,7 +66,7 @@ module FrostThaw
                    "The thaw is a fever. Someone has to sit with the patient while it breaks."],
     halo_ascetic: [:FT_HALO_F, "Sister Wenna",  [[:B124H227, 37], [:DEWGONG, 38]],
                    "I was a Rootwarden once. I listened to the tree. It's so tired."],
-    eline:        [:FT_HALO_MATRON, "Eline", [[:JYNX, 38], [:B91H225, 39], [:B221H124, 40]],
+    eline:        [:FT_HALO_MATRON, "Eline", [[:JYNX, 37], [:B91H225, 38], [:B221H124, 39]],   # (launch pass: was 38-40)
                    "Still... the sky was still... for one moment, it was still...", [:HYPERPOTION, :FULLHEAL]]
   )
 
