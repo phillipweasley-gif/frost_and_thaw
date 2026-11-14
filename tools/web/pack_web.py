@@ -2,6 +2,11 @@
 """Pack an Infinite Fusion + Frost & Thaw folder into packs for the browser player.
 
     python3 tools/web/pack_web.py GAME_DIR OUT_DIR [--mod-tree game/ | --mod-list FILE] [--version X]
+                                  [--state FILE --time-budget SECONDS]
+
+With --state and --time-budget it stops after about that many seconds and picks up
+where it left off on the next run (for shells that can't run for long); the
+manifest is written once every pack is done.
 
 Writes OUT_DIR/manifest.json and OUT_DIR/p-<hash>.zip packs: uncompressed zips of
 up to ~64 MB. Packs are named by their contents, so after an update only the
@@ -9,7 +14,7 @@ changed packs are new. Frost & Thaw's own files (everything under the repo's
 game/ folder, plus Data/Scripts) go in their own packs, so a mod update doesn't
 reshuffle the 3 GB of base-game packs.
 """
-import hashlib, io, json, os, sys, unicodedata, zipfile
+import hashlib, io, json, os, sys, time, unicodedata, zipfile
 
 PACK_LIMIT = 64 * 1024 * 1024
 SKIP_DIRS = {"_ft_backups", "_ft_source_backup", "_ft_staging", "_ft_tools", "_ft_web_upload", "_to_delete",
@@ -97,29 +102,56 @@ def main():
         mod_files.add("mkxp.json")
     mod = [(a, p) for a, p in files if a in mod_files or a.startswith("Data/Scripts/") or a == "Game.ini"]
     base = [(a, p) for a, p in files if not (a in mod_files or a.startswith("Data/Scripts/") or a == "Game.ini")]
-    packs, total = [], 0
+    state_path = args[args.index("--state") + 1] if "--state" in args else None
+    budget = float(args[args.index("--time-budget") + 1]) if "--time-budget" in args else None
+    state = {}
+    if state_path and os.path.exists(state_path):
+        with open(state_path, encoding="utf-8") as fh:
+            state = json.load(fh)
+    started = time.time()
+    groups = []
     for group in (mod, base):
         cur, cur_size = [], 0
-        def flush():
-            nonlocal cur, cur_size, total
-            if not cur:
-                return
-            data, h = build_pack(cur)
-            name = "p-" + h[:20] + ".zip"
-            path = os.path.join(out, name)
-            if not os.path.exists(path):
-                with open(path, "wb") as fh:
-                    fh.write(data)
-            packs.append({"name": name, "size": len(data), "sha256": h, "files": len(cur)})
-            total += len(data)
-            cur, cur_size = [], 0
         for arc, path in group:
             sz = os.path.getsize(path) if path else 0
             if cur and cur_size + sz > PACK_LIMIT:
-                flush()
+                groups.append(cur)
+                cur, cur_size = [], 0
             cur.append((arc, path))
             cur_size += sz
-        flush()
+        if cur:
+            groups.append(cur)
+    packs, total, pending = [], 0, 0
+    for items in groups:
+        # Same files, sizes and dates -> same pack, so a resumed run can reuse it
+        key = hashlib.sha256("\n".join(
+            f"{a}|{os.path.getsize(p) if p else -1}|{int(os.path.getmtime(p)) if p else 0}" for a, p in items
+        ).encode("utf-8")).hexdigest()
+        rec = state.get(key)
+        if rec and os.path.exists(os.path.join(out, rec["name"])) and os.path.getsize(os.path.join(out, rec["name"])) == rec["size"]:
+            packs.append(rec)
+            total += rec["size"]
+            continue
+        if budget is not None and time.time() - started > budget:
+            pending += 1
+            continue
+        data, h = build_pack(items)
+        name = "p-" + h[:20] + ".zip"
+        path = os.path.join(out, name)
+        if not os.path.exists(path) or os.path.getsize(path) != len(data):
+            with open(path + ".part", "wb") as fh:
+                fh.write(data)
+            os.replace(path + ".part", path)
+        rec = {"name": name, "size": len(data), "sha256": h, "files": len(items)}
+        packs.append(rec)
+        total += len(data)
+        state[key] = rec
+        if state_path:
+            with open(state_path, "w", encoding="utf-8") as fh:
+                json.dump(state, fh)
+    if pending:
+        print(f"{len(packs)} of {len(groups)} packs done ({total / 1e9:.2f} GB); run again to continue")
+        return
     manifest = {"version": version, "launch": "Game.ini", "packs": packs}
     with open(os.path.join(out, "manifest.json"), "w") as fh:
         json.dump(manifest, fh, indent=1)

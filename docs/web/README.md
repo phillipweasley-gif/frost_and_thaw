@@ -18,18 +18,37 @@ The browser build runs the same game files as the PC install, inside a web page:
 
 ## Making the packs
 
-    python3 tools/web/pack_web.py <InfiniteFusion folder> <out folder> --mod-tree game/ --version 0.9.0
+    python3 tools/web/pack_web.py <InfiniteFusion folder> <out folder> --mod-tree game/ --version 0.9.1
 
 Upload everything in `<out folder>` to the site's `packs/` folder. Pack names are their
 content hashes, so old packs can stay until every player has updated.
 
+## The upload folder
+
+Everything the site serves sits in one folder:
+
+    index.html, assets/, coi-serviceworker.min.js      the player page (fork, branch ft-web, `vite build`)
+    manifest.webmanifest, icon-*.png, apple-touch-icon.png   Home Screen app
+    mkxp-z_libretro.js, mkxp-z_libretro.wasm           the engine (fork, branch ft-dist)
+    packs/manifest.json, packs/p-*.zip                 the game (pack_web.py)
+    .htaccess                                          from tools/web/htaccess.txt
+
 ## What the host must do
 
-- Serve the page with cross-origin isolation (the bundled `coi-serviceworker.min.js`
-  does this on hosts that can't set headers), or set
-  `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp`.
-- Serve `.wasm` as `application/wasm`.
+- Apache or LiteSpeed hosting (reads `.htaccess`): it sets cross-origin isolation
+  (`Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Embedder-Policy:
+  require-corp`), serves `.wasm` as `application/wasm`, lets phones cache the packs
+  for good and keeps the page and pack list fresh. If the host ignores the headers,
+  `coi-serviceworker.min.js` supplies isolation instead (one extra reload on first visit).
 - Allow files of ~64 MB (packs) and ~42 MB (the engine).
+- Login: the host's "Directory Privacy" / "Password Protect Directories" tool on the
+  folder (one shared username and password; the browser asks once and remembers).
+
+## Known engine quirk
+
+The threaded web engine sometimes stalls for good right after mounting the browser's
+storage (about half of starts in testing, no user action involved). The page watches
+for it and reloads itself after 10 seconds; a healthy start passes that point at once.
 
 ## What players need to know
 

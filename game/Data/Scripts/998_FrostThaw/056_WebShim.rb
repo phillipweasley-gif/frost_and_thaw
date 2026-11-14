@@ -114,7 +114,12 @@ module Audio
     %i[bgm_play bgs_play me_play se_play].each do |m|
       next if !method_defined?(m) || method_defined?(:"ft_web_#{m}")
       alias_method :"ft_web_#{m}", m
-      define_method(m) { |name, *rest| send(:"ft_web_#{m}", FrostThaw.web_fold(name), *rest) }
+      # Infinite Fusion passes nil for "default" volume/pitch (cries do); the PC engine
+      # takes that as the default, the browser engine refuses it
+      define_method(m) do |name, *rest|
+        rest = rest.each_with_index.map { |v, i| v.nil? ? [100, 100, 0][i] : v }
+        send(:"ft_web_#{m}", FrostThaw.web_fold(name), *rest)
+      end
     end
   end
 end
@@ -195,12 +200,142 @@ if FrostThaw.web_build?
   def downloadAllowed?(*_a)
     false
   end
-  # Infinite Fusion's start-up notices tell players to download things from its Discord
+  # The web engine's HTTPLite has no JSON reader either, and Infinite Fusion reads its
+  # outfits, hairstyles, Pokédex entries and some text from local JSON files with it
+  module HTTPLite
+    module JSON
+      TOKEN = /\s*(?:("(?:[^"\\]|\\.)*")|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(true|false|null)|([\[\]{}:,]))/m
+      ESC = { '"' => '"', "\\" => "\\", "/" => "/", "b" => "\b", "f" => "\f", "n" => "\n", "r" => "\r", "t" => "\t" }
+
+      def self.unescape(str)
+        return str unless str.include?("\\")
+        str.gsub(/\\u([dD][89abAB]\h\h)\\u([dD][c-fC-F]\h\h)|\\u(\h{4})|\\(.)/m) do
+          if $1
+            (((($1.hex - 0xD800) << 10) | ($2.hex - 0xDC00)) + 0x10000).chr(Encoding::UTF_8)
+          elsif $3
+            $3.hex.chr(Encoding::UTF_8)
+          else
+            ESC[$4] || $4
+          end
+        end
+      end
+
+      def self.parse(src)
+        src = src.to_s.dup.force_encoding(Encoding::UTF_8)
+        src = src.delete_prefix("\uFEFF")
+        stack = []
+        keys = []
+        result = nil
+        have = false
+        put = lambda do |v|
+          top = stack.last
+          if top.nil?
+            result = v
+            have = true
+          elsif top.is_a?(Array)
+            top << v
+          elsif keys.last.equal?(:none)
+            keys[-1] = v
+          else
+            top[keys.last] = v
+            keys[-1] = :none
+          end
+        end
+        # One linear pass over the tokens (anything between tokens is skipped)
+        src.scan(TOKEN) do
+          str, num, word, punct = $1, $2, $3, $4
+          if str
+            put.call(unescape(str[1..-2]))
+          elsif num
+            put.call(num.match?(/[.eE]/) ? num.to_f : num.to_i)
+          elsif word
+            put.call(word == "true" ? true : (word == "false" ? false : nil))
+          else
+            case punct
+            when "["
+              stack << []
+            when "{"
+              stack << {}
+              keys << :none
+            when "]", "}"
+              v = stack.pop
+              keys.pop if v.is_a?(Hash)
+              put.call(v)
+            end
+          end
+        end
+        raise ArgumentError, "unfinished JSON" unless stack.empty? && have
+        result
+      end
+
+      def self.stringify(obj)
+        case obj
+        when Hash then "{" + obj.map { |k, v| stringify(k.to_s) + ":" + stringify(v) }.join(",") + "}"
+        when Array then "[" + obj.map { |v| stringify(v) }.join(",") + "]"
+        when String
+          '"' + obj.gsub(/["\\\x00-\x1f]/) { |c| { '"' => '\\"', "\\" => "\\\\", "\n" => "\\n", "\r" => "\\r", "\t" => "\\t" }[c] || format("\\u%04x", c.ord) } + '"'
+        when Symbol then stringify(obj.to_s)
+        when nil then "null"
+        when true, false, Numeric then obj.to_s
+        else stringify(obj.to_s)
+        end
+      end
+    end
+  end
+  # Fusion Pokédex entries come from a 23 MB file that Infinite Fusion re-reads every time
+  # one is shown; in the browser that's seconds of waiting and a lot of memory. Read it
+  # once, keep only an index by sprite.
+  if defined?(PokemonPokedexInfo_Scene) && PokemonPokedexInfo_Scene.method_defined?(:getCustomDexEntry)
+    class PokemonPokedexInfo_Scene
+      def getCustomDexEntry(pif_sprite)
+        sprite = pif_sprite.to_filename
+        index = FrostThaw.web_custom_dex_index
+        entries = index[sprite]
+        entries && !entries.empty? ? entries : nil
+      end
+    end
+    module FrostThaw
+      def self.web_custom_dex_index
+        @web_custom_dex_index ||= begin
+          index = {}
+          HTTPLite::JSON.parse(File.read(Settings::CUSTOM_DEX_ENTRIES_PATH)).each do |e|
+            (index[e["sprite"]] ||= []) << [e["entry"], e["author"]] if e.is_a?(Hash)
+          end
+          index
+        rescue StandardError => e
+          web_trace("custom dex entries unavailable: #{e.class} #{e.message}")
+          {}
+        end
+      end
+    end
+  end
+  unless defined?(::JSON)
+    module ::JSON
+      def self.parse(src, *_opts) = HTTPLite::JSON.parse(src)
+      def self.generate(obj, *_opts) = HTTPLite::JSON.stringify(obj)
+    end
+  end
+
+  # Infinite Fusion's start-up notices tell players to download things from its Discord,
+  # and its start-menu links (Discord, FAQ, Wiki) can't open anything from inside the page
   module Settings
-    %i[STARTUP_MESSAGES_KANTO STARTUP_MESSAGES_HOENN].each do |c|
+    { STARTUP_MESSAGES_KANTO: "", STARTUP_MESSAGES_HOENN: "", MAIN_MENU_LINKS: {} }.each do |c, v|
       next unless const_defined?(c, false)
       remove_const(c)
-      const_set(c, "")
+      const_set(c, v)
+    end
+  end
+  # "Quit Game" would close the game and leave the player in the engine's own menu. It's
+  # always the last command, so dropping it doesn't move any other command's number.
+  if defined?(PokemonLoad_Scene) && PokemonLoad_Scene.method_defined?(:pbStartScene)
+    class PokemonLoad_Scene
+      unless method_defined?(:ft_web_pbStartScene)
+        alias_method :ft_web_pbStartScene, :pbStartScene
+        def pbStartScene(commands, *rest)
+          commands.pop if commands.is_a?(Array) && commands.last == _INTL("Quit Game")
+          ft_web_pbStartScene(commands, *rest)
+        end
+      end
     end
   end
 end
@@ -214,7 +349,7 @@ module FrostThaw
     return if owner.method_defined?(orig) || owner.private_method_defined?(orig)
     owner.send(:alias_method, orig, name)
     owner.send(:define_method, name) do |*a, &b|
-      FrostThaw.web_trace("> #{label}")
+      FrostThaw.web_trace("> #{label}#{[String, Integer, Symbol].any? { |k| a[0].is_a?(k) } ? ' ' + a[0].inspect[0, 62] : ''}")
       r = send(orig, *a, &b)
       FrostThaw.web_trace("< #{label}")
       r
@@ -241,7 +376,9 @@ module FrostThaw
             [(PIFSpriteExtracter rescue nil), :load_sprite],
             [(BaseSpriteExtracter rescue nil), :load_bitmap_from_spritesheet],
             [(CustomSpriteExtracter rescue nil), :load_bitmap_from_spritesheet],
-            [(AutogenExtracter rescue nil), :load_bitmap_from_spritesheet]]
+            [(AutogenExtracter rescue nil), :load_bitmap_from_spritesheet],
+            [(Game_Map rescue nil), :setup], [Object, :pbTrainerBattle], [Object, :pbWildBattle],
+            [Object, :pbSave], [(FrostThaw.singleton_class rescue nil), :start_new_game]]
     list.each { |owner, name| web_wrap(owner, name, "#{owner}##{name}") if owner }
     count = 0
     @web_raise_tp = TracePoint.new(:raise) do |tp|
