@@ -1,0 +1,36 @@
+# Frost & Thaw web player: upload as ".htaccess" into the game's folder on the site
+# (Apache or LiteSpeed hosting). The password itself is set with the host's
+# "Directory Privacy" / "Password Protect Directories" tool, which adds its own
+# lines to this file; keep these lines too.
+
+# The engine runs on several threads, which browsers only allow on an isolated page
+<IfModule mod_headers.c>
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Cross-Origin-Embedder-Policy "require-corp"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+</IfModule>
+
+AddType application/wasm .wasm
+AddType application/json .json
+
+# Shrink the engine and page code on the way out (the game packs are already compact)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/wasm application/javascript text/javascript text/html text/css application/json
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Game packs are named after their contents: they never change, so phones can keep them
+  <FilesMatch "^p-[0-9a-f]+\.zip$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # The page and the pack list must always be fresh, so updates reach players
+  <FilesMatch "(^index\.html$|^manifest\.json$|^coi-serviceworker\.min\.js$)">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# Keep search engines out
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+Options -Indexes

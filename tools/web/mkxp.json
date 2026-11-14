@@ -1,0 +1,7 @@
+{
+    // Frost & Thaw's browser build. Infinite Fusion is written in modern Ruby,
+    // so the engine must run the scripts as they are (no Ruby 1.8 rewrite).
+    "rgssVersion": 1,
+    "syntaxTransform": 0,
+    "windowTitle": "Pokémon Frost & Thaw"
+}

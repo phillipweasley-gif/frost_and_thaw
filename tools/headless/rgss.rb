@@ -43,12 +43,18 @@ end
 
 # Size of a picture file, read from its PNG header (so layout code that
 # measures bitmaps gets real numbers).
+require "set"
+if ENV["ASSET_LOG"]
+  $asset_log = Set.new
+  at_exit { File.write(ENV["ASSET_LOG"], $asset_log.to_a.sort.join("\n")) }
+end
 module HeadlessImages
   def self.size(path)
     return [32, 32] if !path
     cands = [path, path + ".png", path + ".PNG", path + ".gif", path + ".jpg"]
     f = cands.find { |c| File.file?(c) }
     return nil if !f
+    $asset_log << f if $asset_log                 # ASSET_LOG: which files the game really opens (web build)
     head = File.binread(f, 32)
     if head[1, 3] == "PNG" then head[16, 8].unpack("NN")
     elsif head[0, 3] == "GIF" then head[6, 4].unpack("vv")
@@ -200,7 +206,14 @@ end
 module Audio
   class << self
     attr_reader :log
-    def method_missing(n, *a); (@log ||= []) << [n, a.first]; @log.shift if @log.size > 200; nil; end
+    def method_missing(n, *a)
+      (@log ||= []) << [n, a.first]; @log.shift if @log.size > 200
+      if $asset_log && n.to_s =~ /_play\z/ && a.first
+        nm = a.first.is_a?(String) ? a.first : (a.first.name rescue nil)
+        $asset_log << "AUDIO:#{n.to_s.sub('_play', '')}:#{nm}" if nm && !nm.empty?
+      end
+      nil
+    end
   end
 end
 
