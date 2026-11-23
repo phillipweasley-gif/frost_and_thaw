@@ -2,14 +2,18 @@
 """Pack an Infinite Fusion + Frost & Thaw folder into packs for the browser player.
 
     python3 tools/web/pack_web.py GAME_DIR OUT_DIR [--mod-tree game/ | --mod-list FILE] [--version X]
-                                  [--state FILE --time-budget SECONDS]
+                                  [--pack-mb N] [--state FILE --time-budget SECONDS]
+
+--pack-mb caps each pack, zip overhead included (default 64; Cloudflare Pages needs 24 or
+less, since it refuses files over 25 MiB). A game file bigger than that is split across
+packs as pieces named "<path>#ftpart:<offset>:<total size>", which the player puts back together.
 
 With --state and --time-budget it stops after about that many seconds and picks up
 where it left off on the next run (for shells that can't run for long); the
 manifest is written once every pack is done.
 
 Writes OUT_DIR/manifest.json and OUT_DIR/p-<hash>.zip packs: uncompressed zips of
-up to ~64 MB. Packs are named by their contents, so after an update only the
+up to --pack-mb. Packs are named by their contents, so after an update only the
 changed packs are new. Frost & Thaw's own files (everything under the repo's
 game/ folder, plus Data/Scripts) go in their own packs, so a mod update doesn't
 reshuffle the 3 GB of base-game packs.
@@ -56,10 +60,30 @@ def walk(src):
             yield arc, os.path.join(root, f)
 
 
+def entry_cost(arc, length):
+    # what an entry takes in a stored zip: local header + central directory record + data
+    n = len(arc.encode("utf-8"))
+    return 30 + n + 46 + n + length
+
+
+def split_big(items, limit):
+    """Whole files as (arc, path, None, None); a file over the limit as pieces (arc#ftpart:off:total, path, off, len)."""
+    out = []
+    for arc, path in items:
+        size = os.path.getsize(path) if path else 0
+        if path is None or entry_cost(arc, size) <= limit:
+            out.append((arc, path, None, None))
+            continue
+        piece = limit - 2 * (len(arc.encode("utf-8")) + 40) - 200
+        for off in range(0, size, piece):
+            out.append((f"{arc}#ftpart:{off}:{size}", path, off, min(piece, size - off)))
+    return out
+
+
 def build_pack(items):
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_STORED, allowZip64=False) as z:
-        for arc, path in items:
+        for arc, path, off, length in items:
             if path is None:            # empty folder
                 info = zipfile.ZipInfo(arc, FIXED_TIME)
                 info.external_attr = (0o40755 << 16) | 0x10
@@ -69,7 +93,11 @@ def build_pack(items):
             info.compress_type = zipfile.ZIP_STORED
             info.external_attr = 0o644 << 16
             with open(path, "rb") as fh:
-                z.writestr(info, fh.read())
+                if off is None:
+                    z.writestr(info, fh.read())
+                else:
+                    fh.seek(off)
+                    z.writestr(info, fh.read(length))
     data = buf.getvalue()
     return data, hashlib.sha256(data).hexdigest()
 
@@ -79,6 +107,8 @@ def main():
     src, out = args[0], args[1]
     mod_tree = args[args.index("--mod-tree") + 1] if "--mod-tree" in args else None
     version = args[args.index("--version") + 1] if "--version" in args else "dev"
+    limit = int(float(args[args.index("--pack-mb") + 1]) * 1024 * 1024) if "--pack-mb" in args else PACK_LIMIT
+    limit -= 22                  # the zip's end record
     os.makedirs(out, exist_ok=True)
     mod_files = set()
     if "--mod-list" in args:     # one path per line, relative to the game folder (Frost & Thaw's own files)
@@ -112,12 +142,13 @@ def main():
     groups = []
     for group in (mod, base):
         cur, cur_size = [], 0
-        for arc, path in group:
-            sz = os.path.getsize(path) if path else 0
-            if cur and cur_size + sz > PACK_LIMIT:
+        for item in split_big(group, limit):
+            arc, path, off, length = item
+            sz = entry_cost(arc, length if off is not None else (os.path.getsize(path) if path else 0))
+            if cur and cur_size + sz > limit:
                 groups.append(cur)
                 cur, cur_size = [], 0
-            cur.append((arc, path))
+            cur.append(item)
             cur_size += sz
         if cur:
             groups.append(cur)
@@ -125,7 +156,7 @@ def main():
     for items in groups:
         # Same files, sizes and dates -> same pack, so a resumed run can reuse it
         key = hashlib.sha256("\n".join(
-            f"{a}|{os.path.getsize(p) if p else -1}|{int(os.path.getmtime(p)) if p else 0}" for a, p in items
+            f"{a}|{os.path.getsize(p) if p else -1}|{int(os.path.getmtime(p)) if p else 0}|{o}|{n}" for a, p, o, n in items
         ).encode("utf-8")).hexdigest()
         rec = state.get(key)
         if rec and os.path.exists(os.path.join(out, rec["name"])) and os.path.getsize(os.path.join(out, rec["name"])) == rec["size"]:
