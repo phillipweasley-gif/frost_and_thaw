@@ -18,31 +18,31 @@ The browser build runs the same game files as the PC install, inside a web page:
 
 ## Making the packs
 
-    python3 tools/web/pack_web.py <InfiniteFusion folder> <out folder> --mod-tree game/ --version 0.9.1
+    python3 tools/web/pack_web.py <InfiniteFusion folder> <site>/packs --mod-list <list> --version 0.9.1 --pack-mb 24
 
-Upload everything in `<out folder>` to the site's `packs/` folder. Pack names are their
-content hashes, so old packs can stay until every player has updated.
+Only Game.ini and the Audio, Data, Fonts and Graphics folders go in, minus working files
+(psd, docx, logs). `--pack-mb 24` keeps every file under Cloudflare Pages' 25 MiB cap; the
+two ~29 MB message files are split into pieces that the player joins back together.
+Pack names are content hashes, so an update re-uploads only the packs that changed.
 
-## The upload folder
+## Where it's hosted: Cloudflare Pages (free)
 
-Everything the site serves sits in one folder:
+weasleystudios.com is on Elementor's own hosting (nginx, no `.htaccess`, 10-275 GB of
+downloads a month, and its terms bar file storage and large files), so the game lives on
+a free Cloudflare Pages project, linked from a hidden page on the site.
+
+The site folder (`_ft_web_upload/frost-thaw-cloudflare` on Phil's Mac, ~3.2 GB, 164 files):
 
     index.html, assets/, coi-serviceworker.min.js      the player page (fork, branch ft-web, `vite build`)
+    _headers                                           cross-origin isolation and caching (Pages reads it)
     manifest.webmanifest, icon-*.png, apple-touch-icon.png   Home Screen app
-    mkxp-z_libretro.js, mkxp-z_libretro.wasm           the engine (fork, branch ft-dist)
-    packs/manifest.json, packs/p-*.zip                 the game (pack_web.py)
-    .htaccess                                          from tools/web/htaccess.txt
+    mkxp-z_libretro.js, mkxp-z_libretro.wasm.gz        the engine (fork, branch ft-dist); gzipped to fit
+                                                       under 25 MiB, unpacked by the player as it downloads
+    packs/manifest.json, packs/p-*.zip                 the game
 
-## What the host must do
-
-- Apache or LiteSpeed hosting (reads `.htaccess`): it sets cross-origin isolation
-  (`Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Embedder-Policy:
-  require-corp`), serves `.wasm` as `application/wasm`, lets phones cache the packs
-  for good and keeps the page and pack list fresh. If the host ignores the headers,
-  `coi-serviceworker.min.js` supplies isolation instead (one extra reload on first visit).
-- Allow files of ~64 MB (packs) and ~42 MB (the engine).
-- Login: the host's "Directory Privacy" / "Password Protect Directories" tool on the
-  folder (one shared username and password; the browser asks once and remembers).
+Deploy: Workers & Pages > the project > Create deployment > drag the folder in.
+Login: Cloudflare Access (Zero Trust, free up to 50 people) on `<project>.pages.dev`, one
+emailed code per player; see "Enable Access on your *.pages.dev domain" in the Pages docs.
 
 ## Known engine quirk
 
