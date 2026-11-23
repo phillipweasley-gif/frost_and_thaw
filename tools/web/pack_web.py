@@ -22,7 +22,8 @@ import hashlib, io, json, os, sys, time, unicodedata, zipfile
 
 PACK_LIMIT = 64 * 1024 * 1024
 GAME_DIRS = {"Audio", "Data", "Fonts", "Graphics"}
-SKIP_EXT = {".exe", ".dll", ".bat", ".command", ".log", ".lnk", ".pdf", ".zip", ".md", ".txt"}
+SKIP_EXT = {".exe", ".dll", ".bat", ".command", ".log", ".lnk", ".pdf", ".zip", ".md", ".txt",
+            ".psd", ".docx", ".db"}
 KEEP_TOP = {"Game.ini"}
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)   # same bytes for the same files, so pack names stay stable
 
@@ -53,11 +54,10 @@ def walk(src):
             arc = os.path.normpath(os.path.join(rel, f)).replace(os.sep, "/")
             if f.startswith("."):
                 continue
-            if rel == "." and f not in KEEP_TOP and os.path.splitext(f)[1].lower() in SKIP_EXT | {".ini", ".rxproj"}:
+            if rel == "." and f not in KEEP_TOP:          # at the top, only Game.ini
                 continue
-            if os.path.splitext(f)[1].lower() in SKIP_EXT and rel != ".":
-                if not arc.startswith(("Data/", "Graphics/", "Audio/", "Fonts/")):
-                    continue
+            if rel != "." and os.path.splitext(f)[1].lower() in SKIP_EXT:   # working files and logs
+                continue
             yield arc, os.path.join(root, f)
 
 
