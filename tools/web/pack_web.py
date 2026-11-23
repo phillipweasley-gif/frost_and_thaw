@@ -21,8 +21,7 @@ reshuffle the 3 GB of base-game packs.
 import hashlib, io, json, os, sys, time, unicodedata, zipfile
 
 PACK_LIMIT = 64 * 1024 * 1024
-SKIP_DIRS = {"_ft_backups", "_ft_source_backup", "_ft_staging", "_ft_tools", "_ft_web_upload", "_to_delete",
-             "Rootspire_Campaign_Export", "REQUIRED_BY_INSTALLER_UPDATER"}
+GAME_DIRS = {"Audio", "Data", "Fonts", "Graphics"}
 SKIP_EXT = {".exe", ".dll", ".bat", ".command", ".log", ".lnk", ".pdf", ".zip", ".md", ".txt"}
 KEEP_TOP = {"Game.ini"}
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)   # same bytes for the same files, so pack names stay stable
@@ -43,7 +42,9 @@ def web_fold(name):
 def walk(src):
     for root, dirs, files in os.walk(src):
         rel = os.path.relpath(root, src)
-        dirs[:] = sorted(d for d in dirs if not (rel == "." and d in SKIP_DIRS) and not d.startswith("."))
+        # Only the folders the game reads: nothing else in the game folder (backups, reports,
+        # reference material, tools) may end up on a web server
+        dirs[:] = sorted(d for d in dirs if (rel != "." or d in GAME_DIRS) and not d.startswith("."))
         if rel != "." and not dirs and not [f for f in files if not f.startswith(".")]:
             # An empty folder the game expects to exist (it lists or writes into it)
             yield os.path.normpath(rel).replace(os.sep, "/") + "/", None
